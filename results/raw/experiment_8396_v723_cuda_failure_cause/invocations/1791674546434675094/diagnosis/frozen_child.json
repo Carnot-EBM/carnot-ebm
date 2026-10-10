@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/usr/bin/prlimit",
+    "--fsize=10485760:10485760",
+    "/usr/bin/strace",
+    "-f",
+    "-yy",
+    "-s",
+    "128",
+    "-e",
+    "trace=openat,open,ioctl,access,readlink,newfstatat",
+    "-o",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/diagnosis/driver.strace",
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+    "--driver-init"
+  ],
+  "child_deadline_s": 90,
+  "diagnosis_deadline_s": 900,
+  "trace_cap_bytes": 10485760,
+  "tracing_permission": "owned descendant only"
+}

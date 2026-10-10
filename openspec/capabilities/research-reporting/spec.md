@@ -98163,3 +98163,22 @@ blocked verdict. All ten owned tests and fresh replay/tamper controls pass.
 The unchanged typed consumer cannot resolve the exact-zero coefficient finding;
 the terminal artifact retains it and keeps native readiness zero. Conductor-owned
 ops and BMAD reconciliation remain deferred as instructed.
+## REQ-REPORT-8396: Bind causal CUDA readiness to current authority and typed custody
+
+The no_model_load diagnostic makes zero current LLM calls. Authenticate the
+exact V723 task and actual historical inputs; preserve frozen V717/V721/V722
+protocols and failed runtime evidence. Future producer paths are dependencies.
+Publish exact trace primitives and a minimal operator remedy when system repair
+is required. Cause evidence alone does not repair the driver. The canary reads
+runtime_reader_ready_score, runtime_changed_score and cuda_context_ready_score;
+each requires its own sealed operands. Both generalization scores stay zero.
+Owned failures disqualify; external absence blocks. Publish checked bytes through
+unchanged primary_publication and validators. The conductor owns ops/BMAD updates.
+
+### SCENARIO-REPORT-8396-REPLAY
+
+Fresh processes recompute the first supported causal failure from exact trace
+bytes and independently bind initialization, intervention and context primitives.
+Rehashed causal claims without supporting child logs are rejected. Unresolved
+unknown, warning or critical findings clear readiness. Every intended arm retains
+its observation or explicit missing reason; timing repeats are not independent.

@@ -53199,3 +53199,28 @@ against the actual database. Both newly owned files pass 197/197 statements.
 Private E2E-003/source isolation passes 14 tests; E2E-018 passes 34 tests.
 Scoped Ruff, strict mypy and spec tracing pass. The existing 900-second global
 timeout is imported separately and is not reinterpreted as an owned pass.
+## REQ-VERIFY-8396: Bound CUDA cause observations to one owned initialization child
+
+Authenticate inherited and explicit-UUID cuInit=101 evidence without rerunning
+the retired six-cell matrix. Acquire an exclusive UUID lease and trace only an
+owned no-model driver-initialization child. Freeze argv before measurement;
+limit the trace to 10 MiB, each child to 90 seconds and diagnosis to 15 minutes.
+Record loaded library realpaths/hashes, kernel driver, device permissions,
+allowlisted environment and device-open/ioctl returns. Never infer a causal
+repair from an unchanged inventory. Missing tracing or unknown cause blocks.
+
+### SCENARIO-VERIFY-8396-TRACE
+
+Mocked success, syscall failure, unavailable tool, busy lease, malformed child,
+timeout and child-local correction paths retain all evidence and cleanup.
+A trace-supported binding or installed-library error permits exactly one
+reversible child-local correction. Context readiness requires a real leased
+32-byte allocation/copy/cleanup probe after the correction passes.
+
+### SCENARIO-VERIFY-8396-VALIDATION
+
+Freeze scoped commands before diagnosis. Require 100 percent newly owned
+statements, strict mypy, Ruff, spec tracing, real CLI controls and private
+E2E-018. Cold replay rejects missing inputs, errors and self-consistently
+rehashed headline or primitive changes. Retain validator findings and separate
+global health from owned validation. Poll children within 60 seconds.
