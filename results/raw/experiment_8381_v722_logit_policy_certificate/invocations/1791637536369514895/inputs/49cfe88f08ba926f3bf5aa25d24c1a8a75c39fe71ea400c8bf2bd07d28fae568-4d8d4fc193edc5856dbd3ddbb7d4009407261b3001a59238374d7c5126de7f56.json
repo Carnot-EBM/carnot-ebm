@@ -1,0 +1,148 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8362_v721_threshold_guard.json",
+  "primary_sha256": "sha256:4d8d4fc193edc5856dbd3ddbb7d4009407261b3001a59238374d7c5126de7f56",
+  "report": {
+    "adversarial": {
+      "dispositions": [],
+      "findings": [],
+      "passed": true,
+      "receipt": {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 2.867655325,
+        "ended_monotonic_ns": 1261120818109395,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/adversarial.stdout",
+        "log_sha256": "sha256:0cd7086450f743bc69dbd08656e2681a742e65828b27763d5e81942df19f2c76",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1261117950454070,
+        "started_wall_ns": 1791600209739624695,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/adversarial.stdout",
+        "stdout_sha256": "sha256:0cd7086450f743bc69dbd08656e2681a742e65828b27763d5e81942df19f2c76",
+        "timed_out": false
+      },
+      "report": {
+        "candidate_sha256": "sha256:4d8d4fc193edc5856dbd3ddbb7d4009407261b3001a59238374d7c5126de7f56",
+        "flagged_count": 0,
+        "reports": [
+          {
+            "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json",
+            "exp_id": 8362,
+            "flag_count": 0,
+            "flags": [],
+            "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e",
+            "honest_verdict": "complete_null_empirical_threshold_guard",
+            "loaded": true,
+            "max_severity": -1,
+            "title": ""
+          }
+        ],
+        "verifier_sha256": "sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c"
+      }
+    },
+    "checks": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8362_v721_threshold_guard.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8362_v721_threshold_guard.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json",
+        "deadline_s": 120,
+        "duration_s": 3.61989966,
+        "ended_monotonic_ns": 1261117947662691,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/terminal_cold.stdout",
+        "log_sha256": "sha256:54502f28ef73cd7f1e156a9287591c2782e5588095547cfe913208c1bd45a947",
+        "name": "terminal_cold",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1261114327763031,
+        "started_wall_ns": 1791600206116933876,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/terminal_cold.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/terminal_cold.stdout",
+        "stdout_sha256": "sha256:54502f28ef73cd7f1e156a9287591c2782e5588095547cfe913208c1bd45a947",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 2.867655325,
+        "ended_monotonic_ns": 1261120818109395,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/adversarial.stdout",
+        "log_sha256": "sha256:0cd7086450f743bc69dbd08656e2681a742e65828b27763d5e81942df19f2c76",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1261117950454070,
+        "started_wall_ns": 1791600209739624695,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/adversarial.stdout",
+        "stdout_sha256": "sha256:0cd7086450f743bc69dbd08656e2681a742e65828b27763d5e81942df19f2c76",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 0.032197104,
+        "ended_monotonic_ns": 1261120855114233,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1261120822917129,
+        "started_wall_ns": 1791600212612088285,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8362_v721_threshold_guard/invocations/1791599833622305915/terminal/0/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ],
+    "passed": true
+  }
+}

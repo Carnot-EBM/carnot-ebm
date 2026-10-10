@@ -2,6 +2,42 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8381: Certify the isolated dyadic logit action contract
+
+The default-off dyadic_logit_v1 prototype SHALL compare exact rational spline
+logits and binary64 temperature with +/-0x1.193ea7aad030bp+0. Equality escalates.
+Original binary64 knots SHALL remain exact operands. Audit the 65-point int16
+table endpoint errors and piecewise polynomial second derivatives independently.
+Use exact global arithmetic and outward interval conversion. Fast actions require
+one whole policy region; otherwise use exact rational evaluation. No expit
+allowance enters the proof. Preserve every old SciPy action difference.
+
+### SCENARIO-VERIFY-8381-BOUND
+
+4096 seeded label-free vectors, every knot, threshold ties and nextafter neighbors
+have zero certified escapes and zero disagreements with an independent rational
+polynomial evaluator. Under-bounds, changed rounding, stale heads/tables and
+saturation cannot authorize fast actions. Refreshed delayed coefficients receive
+new certificates. Random fast coverage >=0.5 defines usefulness, never safety.
+
+### SCENARIO-VERIFY-8381-CLI
+
+Private real CLI and child controls cover valid, missing-input, deliberate failure
+and repaired-hash tampering. Newly owned statements require 100 percent coverage.
+Private E2E-018, unchanged consumers, Ruff, strict mypy and spec checks SHALL run.
+
+Implementation 2026-10-10: `python/carnot/verify/dyadic_logit_v1.py` uses exact
+global arithmetic, independently audited endpoint residuals and rational cubic
+polynomials. Runtime checks reject interval conversion that fails enclosure.
+The measured panel has 4,166 vectors, including 4,096 seeded random vectors.
+All 88 imported delayed coefficient refreshes pass their independent checks.
+Observed interval escapes and action disagreements are zero. Random fast coverage
+is 1.0. Eight owned tests pass; all 449 newly owned statements are covered.
+The 42 private authority/publication consumers pass. Scoped Ruff, strict mypy and
+spec tracing pass. The separately bounded full-suite diagnostic times out after
+unrelated errors; it does not qualify repository-wide health.
+
+
 ## REQ-VERIFY-8372: Qualify the bounded missing-evidence ledger
 
 Freeze scoped validation argv before measurement. Use private disk-backed scratch and bounded children.

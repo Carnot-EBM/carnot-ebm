@@ -441,3 +441,9 @@ Additional official ARC-AGI-3 Semi-Private results absent from your supplied fin
 
 - **September 29 — GPT-6.1 Sol verified results:** **52.7%** on ARC-AGI-3 Semi-Private with the Standard harness at max reasoning; **96.4%** with the Provider Adapter harness at xhigh reasoning. [Official results](https://arcprize.org/results/openai-gpt-6-1-sol).
 
+## 2026-10-10 13:12 UTC -- NEW
+
+- **Leaderboard shakeup:** Yi-Chia Chen now leads at **59.17%**, ahead of Tufa Labs at **56.52%**, according to the latest [Kaggle standings mirror](https://clist.by/standings/arc-prize-2026-arc-agi-3-general-knowledge-and-reasoning-artificial-intelligence-custom-metric-66453356/).
+
+- **September 3 — GPT-6 Astra results:** ARC Prize reported **62.7%** on ARC-AGI-3 Semi-Private with the Standard harness at max reasoning, and **99.9%** with the Provider Adapter harness at high reasoning. [Official announcement](https://arcprize.org/blog/astra).
+

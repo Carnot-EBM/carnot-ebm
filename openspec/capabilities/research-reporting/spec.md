@@ -2,6 +2,32 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8381: Publish a separately versioned action certificate
+
+Bind this invocation, full active task hash, qualified historical inputs, code,
+primitive rows and validation logs. Cold replay SHALL independently recompute
+meaning after hash repairs. Publish only atomically checked terminal bytes through
+unchanged validators. External absence is blocked; owned failure is disqualified.
+Use circular_positive for qualified oracle correctness. Both generalization scores,
+current LLM calls, production migration and confidence certification remain zero
+or false. Future producer paths are dependencies, not observations. The conductor
+owns ops and BMAD reconciliation after this task.
+
+### SCENARIO-REPORT-8381-REPLAY
+
+Valid primitives reproduce all action and interval metrics. Missing inputs retain
+their path/hash, field, operator, expected and observed values. Rehashed altered
+rows, task authority, certificates and readiness fail fresh-process replay.
+
+Implementation 2026-10-10: `logit_policy_certificate_8381.py` binds the full
+active task, qualified producer seals, original table and delayed coefficients.
+`logit_policy_execution_8381.py` adapts bounded children and unchanged atomic
+publication. The thin experiment runner retains primitive rows and command logs
+under its raw directory. One observed difference from the historical SciPy policy
+remains explicit. Certificate qualification grants no production migration,
+calibrated confidence, semantic benefit, direct-service gate or ARC gate.
+
+
 ## REQ-REPORT-8372: Carry exact GateMate reopening evidence without retry
 
 Publish a read-only V721 ledger bound to activated full-task authority and V717 protocol bytes.
