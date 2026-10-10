@@ -1,0 +1,186 @@
+{
+  "MODEL_SPECS": [],
+  "arm_order": [
+    "off",
+    "on"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_arc_supervisor_delta_7874.py",
+        "tests/python/test_experiment_7708_v671_arc_generalization_runner.py",
+        "tests/python/test_arc_submitted_agent_parity.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/wrapper"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E017_and_wrapper",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_arc_supervisor_live_panel_8384.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/owned-tests"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/arc_supervisor_live_panel_8384.py",
+        "python/carnot/agentic/arc_live_panel_runtime_8384.py",
+        "scripts/experiments/experiment_8384_v722_arc_supervisor_live_panel.py",
+        "tests/python/test_arc_supervisor_live_panel_8384.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/arc_supervisor_live_panel_8384.py",
+        "python/carnot/agentic/arc_live_panel_runtime_8384.py",
+        "scripts/experiments/experiment_8384_v722_arc_supervisor_live_panel.py",
+        "tests/python/test_arc_supervisor_live_panel_8384.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/arc_supervisor_live_panel_8384.py",
+        "python/carnot/agentic/arc_live_panel_runtime_8384.py",
+        "scripts/experiments/experiment_8384_v722_arc_supervisor_live_panel.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_arc_supervisor_live_panel_8384.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8384-private/invocation-n0ahk6m3/global"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "repository_health_once",
+      "scope": "global"
+    }
+  ],
+  "heartbeat_s": 30,
+  "seeds": [
+    11,
+    22
+  ],
+  "task_cap_s": 4800,
+  "window": 120
+}

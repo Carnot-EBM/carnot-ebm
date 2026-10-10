@@ -1,0 +1,146 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "-q",
+        "--cov",
+        "--cov-config=/home/ianblenke/.cache/carnot-exp8376-private/invocation-ebdzjy25/coverage.ini",
+        "tests/python/test_direct_atomic_state_8376.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8376-private/invocation-ebdzjy25/unit"
+      ],
+      "deadline_s": 600,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8376-private/invocation-ebdzjy25/e2e"
+      ],
+      "deadline_s": 600,
+      "name": "consumer_E2E018_020",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/direct_atomic_state_8376.py",
+        "python/carnot/reporting/direct_atomic_state_8376.py",
+        "python/carnot/reporting/direct_atomic_runner_8376.py",
+        "scripts/experiments/experiment_8376_v722_direct_atomic_state.py",
+        "tests/python/test_direct_atomic_state_8376.py"
+      ],
+      "deadline_s": 60,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/direct_atomic_state_8376.py",
+        "python/carnot/reporting/direct_atomic_state_8376.py",
+        "python/carnot/reporting/direct_atomic_runner_8376.py",
+        "scripts/experiments/experiment_8376_v722_direct_atomic_state.py",
+        "tests/python/test_direct_atomic_state_8376.py"
+      ],
+      "deadline_s": 60,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/verify/direct_atomic_state_8376.py",
+        "python/carnot/reporting/direct_atomic_state_8376.py",
+        "python/carnot/reporting/direct_atomic_runner_8376.py",
+        "scripts/experiments/experiment_8376_v722_direct_atomic_state.py"
+      ],
+      "deadline_s": 120,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_direct_atomic_state_8376.py"
+      ],
+      "deadline_s": 120,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--keep",
+        "--append"
+      ],
+      "deadline_s": 60,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8376-private/invocation-ebdzjy25/coverage.json"
+      ],
+      "deadline_s": 60,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--fail-under=100"
+      ],
+      "deadline_s": 60,
+      "name": "coverage_100",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8376-private/invocation-ebdzjy25/global"
+      ],
+      "deadline_s": 900,
+      "name": "repository_health_once",
+      "scope": "global"
+    }
+  ]
+}

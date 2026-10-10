@@ -1,0 +1,67 @@
+{
+  "branch_replay": {
+    "passed": false,
+    "status": "not_executed_pre_gate"
+  },
+  "checks": [
+    {
+      "artifact_field": "runtime_changed_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8382_v722_runtime_evidence_delta.json",
+      "sha256": "sha256:6318011848533abc0b4bd14372f35fb5b6e3137ca5a14233298cfbbc5a9d0080",
+      "upstream": "exp8382-runtime-evidence-delta"
+    },
+    {
+      "artifact_field": "runtime_reader_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8382_v722_runtime_evidence_delta.json",
+      "sha256": "sha256:6318011848533abc0b4bd14372f35fb5b6e3137ca5a14233298cfbbc5a9d0080",
+      "upstream": "exp8382-runtime-evidence-delta"
+    },
+    {
+      "artifact_field": "cuda_context_ready_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8382_v722_runtime_evidence_delta.json",
+      "sha256": "sha256:6318011848533abc0b4bd14372f35fb5b6e3137ca5a14233298cfbbc5a9d0080",
+      "upstream": "exp8382-runtime-evidence-delta"
+    }
+  ],
+  "closure": [
+    {
+      "exists": true,
+      "expected_sha256": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8383_changed_runtime_canary.json",
+      "sha256": "sha256:9a9632ea60547c99b44f03833fe416f8551863dc0f1a0e86a20b62f529d768bb",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8387_v722_capstone/invocations/1791652412487376613/custody/9a9632ea60547c99b44f03833fe416f8551863dc0f1a0e86a20b62f529d768bb.json"
+    }
+  ],
+  "disposition": "conductor_pre_gate",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 373.1640625,
+      "peak_rss_mb": 390.09765625
+    },
+    "before": {
+      "current_rss_mb": 373.15234375,
+      "peak_rss_mb": 390.09765625
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.0,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "selected": {},
+  "verdict_class": "blocked"
+}

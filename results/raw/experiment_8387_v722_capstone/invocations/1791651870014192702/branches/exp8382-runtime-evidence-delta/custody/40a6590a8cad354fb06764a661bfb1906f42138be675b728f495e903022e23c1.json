@@ -1,0 +1,237 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import coverage,pytest,ruff,mypy,shutil,pathlib,sys;p=pathlib.Path(sys.argv[1]);p.write_bytes(b\"private\");assert p.read_bytes()==b\"private\";assert shutil.disk_usage(p.parent).free>10000000;print(sys.version)",
+        "/tmp/carnot8353-p9ynz9pc/probe"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "tools_and_private_scratch",
+      "scope": "external_preconditions"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "-p",
+        "--rcfile",
+        "/tmp/carnot8353-p9ynz9pc/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_runtime_reader_8353.py",
+        "--basetemp=/tmp/carnot8353-p9ynz9pc/owned"
+      ],
+      "deadline": 360,
+      "expected": 0,
+      "name": "owned_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile",
+        "/tmp/carnot8353-p9ynz9pc/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile",
+        "/tmp/carnot8353-p9ynz9pc/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_reader_8353.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_reader_execution_8353.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot8353-p9ynz9pc/coverage.json"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_runtime_localization_8290.py",
+        "tests/python/test_runtime_change_boundary_8307.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/tmp/carnot8353-p9ynz9pc/consumers"
+      ],
+      "deadline": 360,
+      "expected": 0,
+      "name": "E2E018_runtime_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/runtime_reader_8353.py",
+        "python/carnot/verify/runtime_reader_execution_8353.py",
+        "scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+        "tests/python/test_runtime_reader_8353.py",
+        "tests/python/test_runtime_change_boundary_8307.py"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/runtime_reader_8353.py",
+        "python/carnot/verify/runtime_reader_execution_8353.py",
+        "scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+        "tests/python/test_runtime_reader_8353.py",
+        "tests/python/test_runtime_change_boundary_8307.py"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "--config-file=/dev/null",
+        "python/carnot/verify/runtime_reader_8353.py",
+        "python/carnot/verify/runtime_reader_execution_8353.py",
+        "scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_runtime_reader_8353.py",
+        "tests/python/test_runtime_change_boundary_8307.py"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+        "--authority",
+        "2026.10.720",
+        "--root",
+        "/tmp/carnot8353-p9ynz9pc/valid_current"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "valid_current",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+        "--authority",
+        "2026.10.717",
+        "--root",
+        "/tmp/carnot8353-p9ynz9pc/valid_old"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "valid_old",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+        "--authority",
+        "2026.10.720",
+        "--root",
+        "/tmp/carnot8353-p9ynz9pc/wrong_milestone"
+      ],
+      "deadline": 60,
+      "expected": 1,
+      "name": "wrong_milestone",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+        "--authority",
+        "2026.10.720",
+        "--root",
+        "/tmp/carnot8353-p9ynz9pc/corrupt_contract"
+      ],
+      "deadline": 60,
+      "expected": 1,
+      "name": "corrupt_contract",
+      "scope": "owned"
+    }
+  ],
+  "frozen_before_measurement": true,
+  "heartbeat_s": 20,
+  "terminal_argv": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8353_v720_runtime_reader_qualification.py",
+      "--cold-replay",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8353_v720_runtime_reader_qualification/terminal_candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8353_v720_runtime_reader_qualification/terminal_candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8353_v720_runtime_reader_qualification/terminal_candidate.json"
+    ]
+  ],
+  "terminal_deadline_s": 60
+}

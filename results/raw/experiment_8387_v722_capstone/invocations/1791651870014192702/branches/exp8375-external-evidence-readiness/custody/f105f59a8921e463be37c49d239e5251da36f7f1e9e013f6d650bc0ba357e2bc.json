@@ -1,0 +1,109 @@
+{
+  "amendment": "Owned coverage uses exact file includes to avoid coverage package discovery reentering JAX extension initialization; consumer filename corrected and format check frozen.",
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "tests/python/test_external_evidence_8375.py",
+        "--cov-fail-under=100",
+        "--cov",
+        "--cov-report=term-missing",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8375-private/invocation-cre09i20/owned_coverage"
+      ],
+      "deadline_s": 600,
+      "name": "owned_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8375-private/invocation-cre09i20/consumers_E2E018"
+      ],
+      "deadline_s": 300,
+      "name": "consumers_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/external_evidence_8375.py",
+        "python/carnot/reporting/external_evidence_runner_8375.py",
+        "scripts/experiments/experiment_8375_v722_external_evidence_readiness.py",
+        "tests/python/test_external_evidence_8375.py"
+      ],
+      "deadline_s": 60,
+      "name": "ruff",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/external_evidence_8375.py",
+        "python/carnot/reporting/external_evidence_runner_8375.py",
+        "scripts/experiments/experiment_8375_v722_external_evidence_readiness.py",
+        "tests/python/test_external_evidence_8375.py"
+      ],
+      "deadline_s": 60,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/external_evidence_8375.py",
+        "python/carnot/reporting/external_evidence_runner_8375.py",
+        "scripts/experiments/experiment_8375_v722_external_evidence_readiness.py"
+      ],
+      "deadline_s": 90,
+      "name": "mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_external_evidence_8375.py"
+      ],
+      "deadline_s": 60,
+      "name": "spec",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8375-private/invocation-cre09i20/global_health_once"
+      ],
+      "deadline_s": 900,
+      "name": "global_health_once",
+      "scope": "global"
+    }
+  ],
+  "frozen_at_ns": 1791624711894851514,
+  "retrieval_cap_bytes": 209715200,
+  "retrieval_cap_s": 900,
+  "task_cap_s": 4800
+}

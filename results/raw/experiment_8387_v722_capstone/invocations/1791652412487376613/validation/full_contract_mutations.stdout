@@ -1,0 +1,73 @@
+F.........F.............                                                 [100%]
+=================================== FAILURES ===================================
+_________________________________ test_natural _________________________________
+
+natural = (PosixPath('/var/tmp/exp8387-owned-wnaihd4m/contracts/v7220/experiment_8374_v722_contract_methods.json'), {'MODEL_SPEC...oid_certificate': False, 'requires_table_certificate': False, ...}, ...}, 'ended_monotonic_ns': 1313863012641417, ...})
+
+    def test_natural(natural):
+        """SCENARIO-REPORT-8374-METHODS: direct input custody survives absent design."""
+        output, value, work = natural
+>       assert e.replay(output)
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7f820b808180>(PosixPath('/var/tmp/exp8387-owned-wnaihd4m/contracts/v7220/experiment_8374_v722_contract_methods.json'))
+E        +    where <function replay at 0x7f820b808180> = e.replay
+
+tests/python/test_v722_contract_methods_8374.py:41: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8374] phase=resource_preconditions_checked completed=0 pending=0
+[exp8374] phase=authority_before completed=0 pending=0
+[exp8374] phase=authority_after completed=14 pending=0
+[exp8346] phase=source_bound completed=13 pending=2
+[exp8346] phase=heads_bound completed=35 pending=1
+[exp8346] phase=predictions_bound completed=59 pending=0
+[exp8374] phase=kernel_authentication_before completed=0 pending=0
+[exp8374] phase=kernel_authentication_after completed=1 pending=0
+[exp8374] phase=trajectory_authentication_before completed=0 pending=0
+[exp8374] phase=trajectory_authentication_after completed=1 pending=0
+[exp8374] phase=inputs_sealed completed=159 pending=0
+___________________________ test_missing_and_failure ___________________________
+
+tmp_path = PosixPath('/var/tmp/exp8387-owned-wnaihd4m/contracts/test_missing_and_failure0')
+natural = (PosixPath('/var/tmp/exp8387-owned-wnaihd4m/contracts/v7220/experiment_8374_v722_contract_methods.json'), {'MODEL_SPEC...oid_certificate': False, 'requires_table_certificate': False, ...}, ...}, 'ended_monotonic_ns': 1313863012641417, ...})
+
+    def test_missing_and_failure(tmp_path, natural):
+        """SCENARIO-VERIFY-8374-CLI: owned failure differs from external absence."""
+        _, value, work = natural
+        failed = e.build(
+            work,
+            [dict(passed=False, name="deliberate_error")],
+            Path(value["work_reference"]["path"]).parent,
+            tmp_path / (e.NAME + ".json"),
+        )
+        assert failed["verdict_class"] == "disqualified"
+        assert failed["direct_inputs_ready_score"] == 0
+        output = tmp_path / (e.NAME + ".json")
+        result = cli("--root", tmp_path / "absent", "--output", output, "--private-fixture")
+        assert result.returncode == 0, result.stdout + result.stderr
+        blocked = json.loads(output.read_bytes())
+        assert blocked["verdict_class"] == "blocked" and len(blocked["rows"]) == 14
+        assert blocked["gate_check_summary"][0]["observed"] is None
+>       assert blocked["direct_inputs_ready_score"] == 0 and e.replay(output)
+E       AssertionError: assert (0 == 0 and False)
+E        +  where False = <function replay at 0x7f820b808180>(PosixPath('/var/tmp/exp8387-owned-wnaihd4m/contracts/test_missing_and_failure0/experiment_8374_v722_contract_methods.json'))
+E        +    where <function replay at 0x7f820b808180> = e.replay
+
+tests/python/test_v722_contract_methods_8374.py:149: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8374] phase=resource_preconditions_checked completed=0 pending=0
+[exp8374] phase=authority_before completed=0 pending=0
+[exp8374] phase=authority_after completed=14 pending=0
+[exp8346] phase=source_bound completed=1 pending=2
+[exp8346] phase=heads_bound completed=2 pending=1
+[exp8346] phase=predictions_bound completed=3 pending=0
+[exp8374] phase=inputs_sealed completed=7 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v722_contract_methods_8374.py::test_natural - Assert...
+FAILED tests/python/test_v722_contract_methods_8374.py::test_missing_and_failure
+2 failed, 22 passed, 1 warning in 62.55s (0:01:02)

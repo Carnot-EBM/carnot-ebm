@@ -1,0 +1,247 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import coverage,pytest,ruff,mypy; print('required tools importable')"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "tools",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile",
+        "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_runtime_evidence_delta_8382.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/owned"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile",
+        "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile",
+        "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_evidence_delta_8382.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/runtime_evidence_execution_8382.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+        "--fail-under=100",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/coverage.json"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_typed_runtime_8368.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/consumers"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "typed_runtime_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_v722_contract_methods_8374.py::test_private_e2e018",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/e2e018"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/verify/runtime_evidence_delta_8382.py",
+        "python/carnot/verify/runtime_evidence_execution_8382.py",
+        "scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+        "tests/python/test_runtime_evidence_delta_8382.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/runtime_evidence_delta_8382.py",
+        "python/carnot/verify/runtime_evidence_execution_8382.py",
+        "scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+        "tests/python/test_runtime_evidence_delta_8382.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/verify/runtime_evidence_delta_8382.py",
+        "python/carnot/verify/runtime_evidence_execution_8382.py"
+      ],
+      "deadline": 90,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_runtime_evidence_delta_8382.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/usr/bin/df",
+        "-T",
+        "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob"
+      ],
+      "deadline": 10,
+      "expected": 0,
+      "name": "private_disk_scratch",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/global"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "repository_health_once",
+      "scope": "global"
+    }
+  ],
+  "control_argv": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+      "--cold-replay",
+      "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/valid.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+      "--cold-replay",
+      "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/absent"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+      "--cold-replay",
+      "/home/ianblenke/.cache/carnot-exp8382-private/invocation-zif16pob/tamper.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "raise SystemExit(1)"
+    ]
+  ],
+  "frozen_before_measurement": true,
+  "heartbeat_s": 20,
+  "task_cap_s": 4800,
+  "terminal_argv": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8382_v722_runtime_evidence_delta.py",
+      "--cold-replay",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8382_v722_runtime_evidence_delta/terminal_candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8382_v722_runtime_evidence_delta/terminal_candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8382_v722_runtime_evidence_delta/terminal_candidate.json"
+    ]
+  ]
+}

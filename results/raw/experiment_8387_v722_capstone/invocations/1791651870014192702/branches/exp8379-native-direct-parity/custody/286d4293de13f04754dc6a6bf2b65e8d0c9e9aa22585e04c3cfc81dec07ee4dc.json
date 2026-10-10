@@ -1,0 +1,372 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--fail-under=100"
+      ],
+      "deadline_s": 60,
+      "name": "coverage_100",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/coverage_100.receipt.json",
+        "sha256": "sha256:bb0fce788862cbdb44c9234e68669b269288fb63f303cd70ad90b7a570162fc3"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--keep",
+        "--append"
+      ],
+      "deadline_s": 60,
+      "name": "coverage_combine",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/coverage_combine.receipt.json",
+        "sha256": "sha256:b7981858af984d57801873dfbe4702d1d29e8698962fa31a2bc0511178dddd99"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/coverage.json"
+      ],
+      "deadline_s": 60,
+      "name": "coverage_json",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/coverage_json.receipt.json",
+        "sha256": "sha256:68582d61d041be8d8f78d5a9ddf886559fbc47c7ee29e4fbe9c3b02f368d07dc"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "-q",
+        "--cov",
+        "--cov-config=/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/coverage.ini",
+        "tests/python/test_native_direct_parity_8379.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/unit"
+      ],
+      "deadline_s": 600,
+      "name": "owned_tests",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/owned_tests.receipt.json",
+        "sha256": "sha256:0b81b6a6699e1d68ac951eb9b231edf11a93d18eb29e4f77acff81ffccbd68d6"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/native_direct_8379.py",
+        "python/carnot/reporting/native_direct_8379.py",
+        "python/carnot/reporting/native_direct_runner_8379.py",
+        "scripts/experiments/experiment_8379_v722_native_direct_parity.py",
+        "tests/python/test_native_direct_parity_8379.py"
+      ],
+      "deadline_s": 60,
+      "name": "ruff_check",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/ruff_check.receipt.json",
+        "sha256": "sha256:1b74d913664c819f43ebdd8beb9bbe068cea3c5ccb7da524da9c0e21868867a4"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/native_direct_8379.py",
+        "python/carnot/reporting/native_direct_8379.py",
+        "python/carnot/reporting/native_direct_runner_8379.py",
+        "scripts/experiments/experiment_8379_v722_native_direct_parity.py",
+        "tests/python/test_native_direct_parity_8379.py"
+      ],
+      "deadline_s": 60,
+      "name": "ruff_format",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/ruff_format.receipt.json",
+        "sha256": "sha256:b08263e1d2ced0e3afbfcbe52082b437ea20bea2a7360d9011cc34223cd63b98"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_native_direct_parity_8379.py",
+        "crates/carnot-core/tests/direct_spline_8379.rs"
+      ],
+      "deadline_s": 60,
+      "name": "spec_coverage",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/spec_coverage.receipt.json",
+        "sha256": "sha256:eec444df8c9fd5c8187360abb043959f37034df1715c908e9f2cea89dbedc02c"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/verify/native_direct_8379.py",
+        "python/carnot/reporting/native_direct_8379.py",
+        "python/carnot/reporting/native_direct_runner_8379.py",
+        "scripts/experiments/experiment_8379_v722_native_direct_parity.py"
+      ],
+      "deadline_s": 120,
+      "name": "strict_mypy",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/qualification-validation/logs/strict_mypy.receipt.json",
+        "sha256": "sha256:1a4101faf43614b017602b2f64e225d8bab38ba6f1c5e308d0692b9d1b7069f8"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "--manifest-path",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/Cargo.toml",
+        "--release",
+        "--offline"
+      ],
+      "deadline_s": 360,
+      "name": "cargo_build",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/cargo_build.receipt.json",
+        "sha256": "sha256:a441669a7fb6afa1a826ea9d4cc4ec0041ad4b10f6f600e499af80e6d46843af"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--manifest-path",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/Cargo.toml",
+        "--workspace",
+        "--offline"
+      ],
+      "deadline_s": 360,
+      "name": "cargo_check",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/cargo_check.receipt.json",
+        "sha256": "sha256:308a83b0a13fa40728257e0a69b1d1655334a56fa526535ebcf02bdc4d0a632d"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "deadline_s": 360,
+      "name": "cargo_clippy",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/cargo_clippy.receipt.json",
+        "sha256": "sha256:162efb6d1d27e70d228de1ee73a60ea4a5fa33d125847f70c3200fe78f6fed2a"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/Cargo.toml",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "deadline_s": 360,
+      "name": "cargo_fmt",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/cargo_fmt.receipt.json",
+        "sha256": "sha256:b07a6a421200addfc9bd0b4d5b48f49e7c96416431c04cfe33ea62d66f37bf97"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/Cargo.toml",
+        "-p",
+        "carnot-core",
+        "--offline"
+      ],
+      "deadline_s": 360,
+      "name": "cargo_test",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/cargo_test.receipt.json",
+        "sha256": "sha256:ef95cf3004d6b919150484b69ca181e35fe20b3f8b42c1f7ef21c6e6d21e7d98"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8379-private/global-once"
+      ],
+      "deadline_s": 900,
+      "name": "repository_health_once",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/global-receipts/repository_health_once.receipt.json",
+        "sha256": "sha256:e6fb9b8ed9fbffdf7ae823eb3b01b7f1ea4da2dc49e2bc17b427664c0c7c69cd"
+      },
+      "scope": "global"
+    },
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8379-private/e2e018-only"
+      ],
+      "deadline_s": 600,
+      "name": "private_E2E018_consumers",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/e2e018-only-receipts/private_E2E018_consumers.receipt.json",
+        "sha256": "sha256:20d3bd80f4a492c72f29d84a83217ffab75c294eee06a47ff0c02d3f2ae40d69"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "llvm-profdata",
+        "merge",
+        "-sparse",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658379-4986226618451943561_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658561-8647262901922607829_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658610-11896267659689565602_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658613-12743648066390780098_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658681-926845613161716246_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658725-5099570413133240711_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658789-6944480615619115236_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658863-2299193166039967732_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658894-12936919729889616163_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658899-4171364558857887436_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658986-4466305216178596135_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658986-6936618874648639346_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658995-4466305216178596135_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2658995-6936618874648639346_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659143-18405354549488808587_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659144-9032877071406519439_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659171-4466305216178596135_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659171-6936618874648639346_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659172-4466305216178596135_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659172-6936618874648639346_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659310-11474815455273696593_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659364-7346972379265093545_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659370-9893804853987645390_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659442-1572709361174934925_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659479-3523561850134393784_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659563-16159262365966036286_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659646-14760021851509870043_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659669-3362367692447746005_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659675-1779759347252023709_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659763-15652120693850562235_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659763-17278627932714073689_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659810-15652120693850562235_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2659810-17278627932714073689_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2660435-4986226618451943561_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2660608-4986226618451943561_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2660667-4986226618451943561_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2660837-4986226618451943561_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2660891-4986226618451943561_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2660995-4986226618451943561_0.profraw",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/build/rust-2661086-4986226618451943561_0.profraw",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/rust_coverage/native.profdata"
+      ],
+      "deadline_s": 60,
+      "name": "rust_profile_merge",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/rust_coverage/rust_profile_merge.receipt.json",
+        "sha256": "sha256:457423d0583022afee910aaf10935e010952ffd027e3b0bb23f334d7b72aae60"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "llvm-cov",
+        "export",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/target/release/libcarnot_python.so",
+        "-instr-profile=/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/rust_coverage/native.profdata",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/core/src/direct_spline_8379.rs",
+        "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/native/binding/src/direct_spline_8379.rs"
+      ],
+      "deadline_s": 60,
+      "name": "rust_owned_coverage_100",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/sealed-native-build/rust_coverage/rust_owned_coverage_100.receipt.json",
+        "sha256": "sha256:ec19c9d2f40a69b5fc475d02a4ec0fe23cd56f43c72dd17bd3c398bdc00047af"
+      },
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_local_consumer_qualification_8347.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8379-private/private-e2e-once"
+      ],
+      "deadline_s": 600,
+      "name": "unchanged_legacy_consumer_8347",
+      "receipt_reference": {
+        "path": "/home/ianblenke/.cache/carnot-exp8379-private/legacy_consumer_8347.receipt.json",
+        "sha256": "sha256:fa566b7645c1fa5f460c3312b117e468a69128dc56582d5c527c4eccba3a783c"
+      },
+      "scope": "external"
+    }
+  ]
+}

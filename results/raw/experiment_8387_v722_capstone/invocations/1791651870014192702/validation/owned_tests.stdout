@@ -1,0 +1,101 @@
+...F..                                                                   [100%]
+=================================== FAILURES ===================================
+_______________ test_natural_cold_reduction_and_primitive_tamper _______________
+
+tmp_path = PosixPath('/var/tmp/exp8387-owned-3pqga5ae/owned-tests/test_natural_cold_reduction_an0')
+natural_work = ({'authority_refs': [{'exists': True, 'expected_sha256': None, 'path': '/home/ianblenke/github.com/ianblenke/carnot/op...cae6c145ce4829', 'operator': '==', ...}, ...], ...}, PosixPath('/var/tmp/exp8387-owned-3pqga5ae/owned-tests/natural0'))
+
+    def test_natural_cold_reduction_and_primitive_tamper(tmp_path, natural_work):
+        """SCENARIO-VERIFY-8387-REPLAY: rehashed primitives cannot replace task or utility meaning."""
+        work, raw = natural_work
+        path = tmp_path / "natural.json"
+        value = e.build(work, [dict(passed=True)], raw, tmp_path / (e.NAME + ".json"))
+        atomic_json(path, value)
+        assert e.replay(path)
+        for control in ["absent", "task", "utility", "history"]:
+            changed = deepcopy(work)
+            if control == "absent":
+                changed["inputs"][6]["summary"]["selected"] = dict(invented_cost=0)
+            elif control == "task":
+                changed["inputs"][6]["task"]["id"] = "exp8380-foreign"
+            elif control == "utility":
+                changed["history"][0]["selected"]["H1"]["bootstrap_summary"]["all_intended"][
+                    "mean_gain"
+                ] = 1
+            else:
+                changed["history"][0]["honest_verdict"] = "complete_positive_foreign"
+            destination = tmp_path / control
+>           candidate = e.build(
+                changed, [dict(passed=True)], destination, tmp_path / (e.NAME + ".json")
+            )
+
+tests/python/test_v722_capstone_8387.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v722_capstone_evidence.py:557: in build
+    value: Json = dict(BUILD(work, receipts, raw, output))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v721_capstone_evidence.py:763: in build
+    value = reduce(work, receipts)
+            ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'authority_refs': [{'exists': True, 'expected_sha256': None, 'path': '/home/ianblenke/github.com/ianblenke/carnot/ope...bserved': 'sha256:3534a4e917d2d8900490f96cbfde74b343ce5be277ccfa5a47cae6c145ce4829', 'operator': '==', ...}, ...], ...}
+receipts = [{'passed': True}]
+
+    def reduce(work: Json, receipts: list[Json]) -> Json:
+        """Recompute all dispositions while preserving zero semantic and learning benefit."""
+        with binding():
+            auth = old.authority(work)
+        if work["tasks"] != auth["tasks"] or work["canonical_tasks_sha256"] != canonical_hash(
+            auth["tasks"]
+        ):
+>           raise ValueError("full_task_authority")
+E           ValueError: full_task_authority
+
+python/carnot/reporting/v722_capstone_evidence.py:389: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8351] phase=before_benchmark_moving_block_bootstrap completed=0 pending=10000
+[exp8351] phase=after_benchmark_moving_block_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8350] phase=before_benchmark_cluster_bootstrap completed=0 pending=10000
+[exp8350] phase=after_benchmark_cluster_bootstrap completed=10000 pending=0
+[exp8351] phase=before_benchmark_moving_block_bootstrap completed=0 pending=10000
+[exp8351] phase=after_benchmark_moving_block_bootstrap completed=10000 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v722_capstone_8387.py::test_natural_cold_reduction_and_primitive_tamper
+1 failed, 5 passed, 1 warning in 324.38s (0:05:24)

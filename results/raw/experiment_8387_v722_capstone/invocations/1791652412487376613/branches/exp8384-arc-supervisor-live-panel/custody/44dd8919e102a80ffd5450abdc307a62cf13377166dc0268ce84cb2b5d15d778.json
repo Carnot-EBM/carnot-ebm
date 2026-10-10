@@ -1,0 +1,118 @@
+{
+  "actual_wrapper_path": {
+    "cascade": true,
+    "choose_action": 256,
+    "factory": "make_carnot_agent",
+    "is_done": 256,
+    "policy": "E3AgentPolicy"
+  },
+  "adapter_withheld": {
+    "cached_action_effect_memory": true,
+    "per_game_learned_adapters": true,
+    "per_game_routes": true,
+    "stored_solutions": true
+  },
+  "censoring": "action_limit",
+  "duration_s": 0.7914649560116231,
+  "error": null,
+  "llm_invocation_count": 0,
+  "model_tripwire_attempts": [],
+  "model_tripwire_failed": false,
+  "model_tripwire_passed": true,
+  "pending_supervisor_events": [],
+  "supervisor_receipt": {
+    "actions_observed": 255,
+    "arms_enabled": [
+      "drop_goal_bias",
+      "allow_reinduction",
+      "force_exploration_diversity"
+    ],
+    "arms_used": [
+      "force_exploration_diversity"
+    ],
+    "enabled": false,
+    "mode": "shadow",
+    "observe_errors": 0,
+    "stagnations_unredirected": 1,
+    "unredirected_windows": [
+      {
+        "action_index": 240,
+        "arms_enabled": [
+          "drop_goal_bias",
+          "allow_reinduction",
+          "force_exploration_diversity"
+        ],
+        "arms_used": [
+          "force_exploration_diversity"
+        ],
+        "attempt_cap_reached": false,
+        "diversity_active": false,
+        "evidence_floor_met": false,
+        "goal_bias_installed": false,
+        "induced": true,
+        "induction_attempts": 1,
+        "level": 0,
+        "new_transitions_since_induction": 187,
+        "stretch_level": 0
+      }
+    ],
+    "unredirected_windows_dropped": 0,
+    "window": 120,
+    "would_have_arm_credit": {
+      "allow_reinduction": {
+        "helped_share": 0.0,
+        "helped_sole": 0
+      },
+      "drop_goal_bias": {
+        "helped_share": 0.0,
+        "helped_sole": 0
+      },
+      "force_exploration_diversity": {
+        "helped_share": 0.0,
+        "helped_sole": 0
+      },
+      "tool_loop_reinduction": {
+        "helped_share": 0.0,
+        "helped_sole": 0
+      }
+    },
+    "would_have_arm_outcomes": {
+      "allow_reinduction": {
+        "fired": 0,
+        "helped": 0
+      },
+      "drop_goal_bias": {
+        "fired": 0,
+        "helped": 0
+      },
+      "force_exploration_diversity": {
+        "fired": 1,
+        "helped": 0
+      },
+      "tool_loop_reinduction": {
+        "fired": 0,
+        "helped": 0
+      }
+    },
+    "would_have_redirects": [
+      {
+        "action_index": 120,
+        "actions_to_levelup_without_redirect": null,
+        "arm": "force_exploration_diversity",
+        "co_credited_count": null,
+        "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+        "level": 0,
+        "levelup_followed_without_redirect": false,
+        "stretch_level": 0
+      }
+    ]
+  },
+  "unit": {
+    "arm": "off",
+    "episode_id": "tn36-ef4dde99:22:off",
+    "game": "tn36-ef4dde99",
+    "max_actions": 256,
+    "max_seconds": 180,
+    "seed": 22
+  }
+}

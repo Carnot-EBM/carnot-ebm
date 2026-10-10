@@ -1,0 +1,83 @@
+..F....F                                                                 [100%]
+=================================== FAILURES ===================================
+__________________ test_measured_source_closure_and_boundary ___________________
+
+tmp_path = PosixPath('/tmp/carnot8353-p9ynz9pc/owned/test_measured_source_closure_a0')
+
+    def test_measured_source_closure_and_boundary(tmp_path):
+        """SCENARIO-VERIFY-8353-BOUNDARY: immutable failures precede any natural probe."""
+        source = json.loads((q.ROOT / q.UPSTREAM).read_bytes())
+        identity = json.loads(Path(source["runtime_binding_path"]).read_bytes())
+        with (
+            patch.object(q.old, "inventory", return_value=(identity, [])),
+            patch.object(
+                q.old, "probe_changed", side_effect=AssertionError("unchanged probe forbidden")
+            ),
+        ):
+            work = q.measure(q.ROOT, tmp_path / "raw")
+        assert work["historical_fixture_manifest"]
+        assert work["historical"]["verdict_class"] == "disqualified"
+        assert not work["diagnostic"]["rows"]
+        work["boundary_path"] = str(tmp_path / "raw/measurement.json")
+        atomic_json(tmp_path / "raw/measurement.json", work)
+        value = q.build(work, tmp_path / "raw", [dict(passed=True, scope="owned")])
+>       assert value["runtime_reader_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_runtime_reader_8353.py:65: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8353] phase=historical_closure_before completed=0 pending=0
+[exp8353] phase=authority_and_source_before completed=0 pending=0
+[exp8353] phase=authority_and_source_after completed=0 pending=0
+__________________ test_closure_missing_and_rejected_terminal __________________
+
+tmp_path = PosixPath('/tmp/carnot8353-p9ynz9pc/owned/test_closure_missing_and_rejec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb84615ecc0>
+
+    def test_closure_missing_and_rejected_terminal(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8353-BOUNDARY: missing bound bytes never become zero evidence."""
+        primary = tmp_path / q.UPSTREAM
+        atomic_json(
+            primary, dict(primitive_reference=dict(path=str(tmp_path / "absent"), sha256="invalid"))
+        )
+        with pytest.raises(FileNotFoundError):
+            q.closure(tmp_path, tmp_path / "raw")
+        monkeypatch.setattr(
+            q.old, "read_bound_sidecar", lambda primary, sidecar: dict(report=dict(passed=False))
+        )
+        with pytest.raises(ValueError, match="terminal_rejected"):
+>           q.closure(q.ROOT, tmp_path / "rejected")
+
+tests/python/test_runtime_reader_8353.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/runtime_reader_8353.py:157: in closure
+    walk(value)
+python/carnot/verify/runtime_reader_8353.py:143: in walk
+    walk(item)
+python/carnot/verify/runtime_reader_8353.py:142: in walk
+    retain(Path(item), value[key[:-5] + "_sha256"])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('Bind the current invocation and its primitive evidence; no independent science claim follows.')
+expected = 'Exp8313 must revalidate these exact operands immediately before load.'
+
+    def retain(path: Path, expected: str | None = None) -> None:
+        key = str(path)
+        if key in seen:
+            return
+        if not path.is_file():
+            if expected is not None:
+>               raise FileNotFoundError(key)
+E               FileNotFoundError: Bind the current invocation and its primitive evidence; no independent science claim follows.
+
+python/carnot/verify/runtime_reader_8353.py:114: FileNotFoundError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_runtime_reader_8353.py::test_measured_source_closure_and_boundary
+FAILED tests/python/test_runtime_reader_8353.py::test_closure_missing_and_rejected_terminal
+2 failed, 6 passed, 1 warning in 101.15s (0:01:41)

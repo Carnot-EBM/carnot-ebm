@@ -1,0 +1,217 @@
+.................FE...EE............                                     [100%]
+==================================== ERRORS ====================================
+__________________ ERROR at setup of test_independent_scores ___________________
+
+tmp_path = PosixPath('/tmp/carnot8307-v3g_4wno/checks/consumers/test_independent_scores0')
+
+    @pytest.fixture
+    def work(tmp_path):
+        """Use authenticated historical mechanics as a private adapter fixture."""
+        old = json.loads(
+            (q.ROOT / "results/experiment_8276_v715_current_contract_readiness.json").read_bytes()
+        )
+        value = json.loads(Path(old["work_reference"]["path"]).read_bytes())
+        historical_refs = value["refs"][4:]
+>       value.update(q.authority_work(authorities(tmp_path), tmp_path / "authority"))
+                                      ^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_runtime_localization_8290.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_runtime_localization_8290.py:155: in authorities
+    tasks = q.parse_design((root / q.DESIGN).read_text(), milestone=q.MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot research roadmap V717: Local sentence calibration and exact continuous updates\n\n**Created:** 2026-10-08. *... modify scripts/research_conductor.py.",\n      "model": "opus"\n    }\n  ]\n}\n```\n<!-- V717_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V716 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_measure_adapter_private ________________
+
+tmp_path = PosixPath('/tmp/carnot8307-v3g_4wno/checks/consumers/test_measure_adapter_private0')
+
+    @pytest.fixture
+    def work(tmp_path):
+        """Use authenticated historical mechanics as a private adapter fixture."""
+        old = json.loads(
+            (q.ROOT / "results/experiment_8276_v715_current_contract_readiness.json").read_bytes()
+        )
+        value = json.loads(Path(old["work_reference"]["path"]).read_bytes())
+        historical_refs = value["refs"][4:]
+>       value.update(q.authority_work(authorities(tmp_path), tmp_path / "authority"))
+                                      ^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_runtime_localization_8290.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_runtime_localization_8290.py:155: in authorities
+    tasks = q.parse_design((root / q.DESIGN).read_text(), milestone=q.MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot research roadmap V717: Local sentence calibration and exact continuous updates\n\n**Created:** 2026-10-08. *... modify scripts/research_conductor.py.",\n      "model": "opus"\n    }\n  ]\n}\n```\n<!-- V717_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V716 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_______________ ERROR at setup of test_build_and_replay_private ________________
+
+tmp_path = PosixPath('/tmp/carnot8307-v3g_4wno/checks/consumers/test_build_and_replay_private0')
+
+    @pytest.fixture
+    def work(tmp_path):
+        """Use authenticated historical mechanics as a private adapter fixture."""
+        old = json.loads(
+            (q.ROOT / "results/experiment_8276_v715_current_contract_readiness.json").read_bytes()
+        )
+        value = json.loads(Path(old["work_reference"]["path"]).read_bytes())
+        historical_refs = value["refs"][4:]
+>       value.update(q.authority_work(authorities(tmp_path), tmp_path / "authority"))
+                                      ^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_runtime_localization_8290.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_runtime_localization_8290.py:155: in authorities
+    tasks = q.parse_design((root / q.DESIGN).read_text(), milestone=q.MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot research roadmap V717: Local sentence calibration and exact continuous updates\n\n**Created:** 2026-10-08. *... modify scripts/research_conductor.py.",\n      "model": "opus"\n    }\n  ]\n}\n```\n<!-- V717_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V716 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+=================================== FAILURES ===================================
+________________________________ test_authority ________________________________
+
+tmp_path = PosixPath('/tmp/carnot8307-v3g_4wno/checks/consumers/test_authority0')
+
+    def test_authority(tmp_path):
+        """SCENARIO-REPORT-8290-AUTHORITY: activation requires all fourteen full tasks."""
+>       root = authorities(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_runtime_localization_8290.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_runtime_localization_8290.py:155: in authorities
+    tasks = q.parse_design((root / q.DESIGN).read_text(), milestone=q.MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot research roadmap V717: Local sentence calibration and exact continuous updates\n\n**Created:** 2026-10-08. *... modify scripts/research_conductor.py.",\n      "model": "opus"\n    }\n  ]\n}\n```\n<!-- V717_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V716 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_runtime_localization_8290.py::test_authority - Value...
+ERROR tests/python/test_runtime_localization_8290.py::test_independent_scores
+ERROR tests/python/test_runtime_localization_8290.py::test_measure_adapter_private
+ERROR tests/python/test_runtime_localization_8290.py::test_build_and_replay_private
+1 failed, 32 passed, 1 warning, 3 errors in 52.99s

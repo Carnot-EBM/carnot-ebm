@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-FbI3Pa1lfeYQiAW8TqEsv.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+<script>
+// extropic.ai proxies this page at /writing/<slug> AND /writing/<slug>/ (Netlify cannot 301 one to the
+// other without looping). Every asset URL below is relative, so give the document its
+// trailing slash before the parser resolves any of them: replaceState for Chromium, and a
+// <base> for WebKit, which keeps resolving against the original URL.
+(function(){var p=location.pathname;if(!/\/$/.test(p)&&!/\.[a-z0-9]+$/i.test(p)){p+='/';history.replaceState(null,'',p+location.search+location.hash);document.write('<base href="'+p+'">');}})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>First Sparks of Thermodynamic Recursive Intelligence | Extropic</title>
+<meta name="description" content="Introducing our first post-trained Thermo AI researcher: an open-source model that learns to reproduce classic thermo ML experiments">
+<meta property="og:title" content="First Sparks of Thermodynamic Recursive Intelligence">
+<meta property="og:description" content="Introducing our first post-trained Thermo AI researcher: an open-source model that learns to reproduce classic thermo ML experiments">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://extropic.ai/writing/baby-thermo-rsi/">
+<link rel="canonical" href="https://extropic.ai/writing/baby-thermo-rsi/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ScholarlyArticle","headline":"First Sparks of Thermodynamic Recursive Intelligence","description":"Introducing our first post-trained Thermo AI researcher: an open-source model that learns to reproduce classic thermo ML experiments","datePublished":"2026-10-01","inLanguage":"en","url":"https://extropic.ai/writing/baby-thermo-rsi/","mainEntityOfPage":"https://extropic.ai/writing/baby-thermo-rsi/","image":"https://recursive-intelligence.vercel.app/assets/og-card.png?v=5","author":{"@type":"Organization","name":"Extropic","url":"https://extropic.ai"},"publisher":{"@type":"Organization","name":"Extropic","url":"https://extropic.ai"},"about":["thermodynamic computing","AI research agents","post-training","Boltzmann machines","THRML"]}
+</script>
+<meta property="og:image" content="https://recursive-intelligence.vercel.app/assets/og-card.png?v=5">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="First Sparks of Thermodynamic Recursive Intelligence">
+<meta name="twitter:description" content="Introducing our first post-trained Thermo AI researcher: an open-source model that learns to reproduce classic thermo ML experiments">
+<meta property="og:site_name" content="Extropic">
+<meta name="twitter:image" content="https://recursive-intelligence.vercel.app/assets/og-card.png?v=5">
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32.png">
+<link rel="icon" href="./favicon.ico" sizes="48x48" type="image/vnd.microsoft.icon">
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+    svg: { fontCache: "global" },
+    options: { enableMenu: false },
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async=""></script>
+
+<style>
+  @font-face { font-family: 'Kessler'; src: url('./fonts/kessler.woff2') format('woff2'); font-display: swap; }
+  @font-face { font-family: 'Suisse'; src: url('./fonts/suisse.otf') format('opentype'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'SuisseMono'; src: url('./fonts/suissemono.otf') format('opentype'); font-weight: 400; font-display: swap; }
+
+  :root {
+    --ground: #1C0101;
+    --ground-2: #250503;
+    --panel: #2B0A05;
+    --ink: #FFF1C8;
+    --ink-80: rgba(255,241,200,.84);
+    --ink-60: rgba(255,241,200,.62);
+    --ink-40: rgba(255,241,200,.40);
+    --gold: #F5D54C;
+    --rule: rgba(255,241,200,.16);
+    --rule-soft: rgba(255,241,200,.09);
+    --orange-rule: rgba(245,213,76,.34);
+    --wash: rgba(245,213,76,.07);
+    --ease: cubic-bezier(.2,.6,.2,1);
+    --serif: 'Kessler', Georgia, serif;
+    --sans: 'Suisse', 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'SuisseMono', 'SF Mono', Menlo, monospace;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--ground); scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--ground);
+    font-family: var(--sans); color: var(--ink-80);
+    font-size: 18px; line-height: 1.72;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--gold); color: var(--ground); }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative; isolation: isolate;
+    min-height: calc(100svh - 60px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 7vw; overflow: hidden;
+  }
+  .hero-photo {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 62% 38%; z-index: 0;
+    filter: brightness(.82) saturate(.94);
+  }
+  canvas.hero-photo { filter: none; }
+  .hero-scrim {
+    position: absolute; inset: 0; z-index: 2;
+    background:
+      radial-gradient(ellipse 74% 62% at 50% 54%, rgba(16,1,1,.82) 0%, rgba(16,1,1,.44) 48%, rgba(16,1,1,0) 76%),
+      linear-gradient(to bottom, rgba(16,1,1,.66) 0%, rgba(16,1,1,.06) 26%, rgba(16,1,1,0) 55%, var(--ground) 100%);
+  }
+  .hero-inner { position: relative; z-index: 3; max-width: 960px; width: 100%; text-align: center; margin: 0 auto; }
+  .hero-meta {
+    display: flex; justify-content: space-between; gap: 16px;
+    font-family: var(--mono); font-size: 14px; letter-spacing: -0.01em; text-transform: uppercase;
+    color: var(--ink-80); margin: 0 0 34px;
+  }
+  h1.hero-title {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(37px, 6vw, 72px);
+    line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 30px;
+    color: var(--ink); text-wrap: balance;
+  }
+  /* the Prime Intellect butterfly: one file used as a mask, so it takes the surrounding text colour */
+  .pi-mark { display: inline-block; width: 1.3em; height: 1em; vertical-align: -0.16em; margin-right: .3em; background: currentColor; -webkit-mask: url(./assets/icons/prime-intellect-mark.svg) center / contain no-repeat; mask: url(./assets/icons/prime-intellect-mark.svg) center / contain no-repeat; }
+  .hero-with { font-family: var(--mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-60); margin: 0; }
+  /* ============ Authors (end of body) ============ */
+  .authors { margin: 56px 0 8px; padding-top: 26px; border-top: 1px solid var(--rule); font-family: var(--mono); }
+  .authors-eyebrow { display: block; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .authors-name { display: block; font-size: 15px; letter-spacing: .01em; color: var(--ink); line-height: 1.9; }
+  .authors-affil { display: block; margin-top: 12px; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
+  .authors-eyebrow.second { margin-top: 30px; } .authors .pi-mark, .hero-with .pi-mark { color: var(--gold); }
+  .hero-scroll {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 3;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .22em; color: var(--ink-40); text-transform: uppercase;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-inner { animation: rise .9s ease-out both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  }
+  @media (max-width: 767px) {
+    .hero { min-height: 78svh; padding: 92px 20px; }
+    .hero-scroll { display: none; }
+  }
+
+  /* ============ Article ============ */
+  .article { max-width: 704px; margin: 0 auto; padding: 26px 24px 0; }
+  .article p { margin: 0 0 28px; }
+  .article strong { color: var(--ink); font-weight: 700; }
+  .article a {
+    color: var(--ink); text-decoration: underline; text-decoration-color: rgba(245,213,76,.55);
+    text-underline-offset: 3px; text-decoration-thickness: 1px; border: 0;
+    transition: color .16s var(--ease), text-decoration-color .16s var(--ease);
+  }
+  .article a:hover { color: var(--gold); text-decoration-color: var(--gold); }
+  .breakout { max-width: 900px; margin-left: auto; margin-right: auto; padding: 0 24px; }
+
+  .section-head { margin: 72px 0 26px; border-top: 1px solid var(--rule); padding-top: 26px; }
+  /* A section demoted to a subsection in the editor (h2 -> h3) drops the
+     divider chrome; an emptied eyebrow stops reserving its line. */
+  .section-head .eyebrow:empty { display: none; }
+  .section-head:has(> h3) { margin: 40px 0 16px; border-top: 0; padding-top: 0; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12.5px; line-height: 1;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 12px; display: inline-block;
+  }
+  h2 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(31px, 4.6vw, 42px);
+    line-height: 1.12; letter-spacing: -0.015em;
+    color: var(--ink); margin: 0; text-wrap: balance;
+  }
+  /* editor-added h2 (retagged block outside a .section-head) gets section spacing */
+  .article > h2 { margin: 64px 0 24px; }
+  h3 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 3vw, 27px);
+    line-height: 1.2; letter-spacing: -0.01em;
+    color: var(--ink); margin: 52px 0 20px;
+  }
+  .lead { font-size: inherit; line-height: inherit; color: var(--ink-80); }
+  @media (max-width: 767px) {
+    .section-head { margin: 56px 0 20px; padding-top: 22px; }
+    h3 { margin: 40px 0 16px; }
+  }
+
+  .mono { font-family: var(--mono); font-size: .92em; color: var(--ink); letter-spacing: -0.1em; }
+  sup { line-height: 0; }
+  /* ============ Equations ============ */
+  .eq { margin: 30px 0 30px; padding: 4px 0; overflow-x: clip; color: var(--ink); }
+  .eq mjx-container { color: var(--ink); max-width: 100%; }
+  .eq mjx-container > svg { max-width: calc(100% - 16px); height: auto; }
+  /* ============ CTA boxes ============ */
+  .cta-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 38px 0 10px; }
+  .article a.cta {
+    display: flex; align-items: center; gap: 16px; padding: 18px 20px;
+    border: 1px solid var(--orange-rule); background: var(--wash); color: var(--ink);
+    text-decoration: none; transition: background .2s, border-color .2s;
+  }
+  .cta-logo {
+    flex: 0 0 auto; width: 44px; height: 44px; display: grid; place-items: center;
+    border: 1px solid var(--rule); border-radius: 6px; background: var(--ground); color: var(--ink-80);
+  }
+  .cta-logo svg { display: block; }
+  .cta-text { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .article a.cta:hover { background: rgba(245,213,76,.13); border-color: var(--gold); color: var(--ink); }
+  .cta-eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); }
+  .cta-title { font-size: 19px; line-height: 1.25; }
+  .article a.cta { position: relative; padding-right: 40px; }
+  .article a.cta::after { content: "\2197"; position: absolute; top: 16px; right: 16px; color: var(--ink-60); font-size: 18px; line-height: 1; }
+  @media (max-width: 700px) { .cta-row { grid-template-columns: 1fr; } }
+
+  /* ============ Figures ============ */
+  figure { margin: 40px 0; }
+  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--rule-soft); background: var(--panel); }
+  figcaption {
+    font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--ink-60);
+    padding: 14px 4px 0;
+  }
+  figcaption .fig-no { color: var(--gold); }
+
+  /* ============ Fabric visual (one-to-one-billion recap treatment) ============ */
+  .fabric-visual {
+    position: relative;
+    width: min(732px, 100vw - 48px);
+    margin: 48px 0 48px calc(50% - min(366px, 50vw - 24px));
+  }
+  .fabric-visual-frame { position: relative; overflow: hidden; aspect-ratio: 16 / 9; }
+  /* feather the frame into the page ground: decoders drift video blacks a few
+     RGB points off the baked #1C0101, and a hard edge shows on a flat field */
+  .fabric-visual-frame::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    box-shadow: inset 0 0 72px 32px var(--ground);
+  }
+  .fabric-visual .duet-frame { aspect-ratio: 1200 / 420; }
+  .fabric-visual .duet-frame::after { display: none; }
+  .fabric-visual .figcap { max-width: 704px; margin: 0 auto; }
+  .figcap .fig-no { color: var(--gold); }
+  /* figure caption for editor-safe figures (matches figcaption) */
+  .figcap {
+    font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--ink-60);
+    padding: 14px 4px 0;
+  }
+  /* like .figcap but invisible to the editor's positional key space:
+     use for captions added after content keys were frozen */
+  .figlabel {
+    font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--ink-60);
+    padding: 14px 4px 0;
+  }
+  .figlabel .fig-no { color: var(--gold); }
+  /* every caption sits centred under its figure */
+  figure { text-align: center; }
+  figcaption, .figcap, .figlabel { text-align: center; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+  /* ============ Full-width canvas figure ============ */
+  .fig56-wide-breakout {
+    position: relative; left: 50%; transform: translateX(-50%);
+    width: min(96vw, 1200px); max-width: none;
+    margin: 0; padding: 0 16px; box-sizing: border-box;
+  }
+
+  /* ============ Scroll reveal: one primitive, everything settles the same way ============ */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.is-visible { opacity: 1; transform: none; }
+  }
+
+  /* page spacing above the shared footer */
+  .xc-footwrap { margin-top: 120px; }
+</style>
+
+
+<noscript><style>.reveal{opacity:1!important;transform:none!important;letter-spacing:inherit!important;}</style></noscript>
+
+<!-- xc:head -->
+<link rel="stylesheet" href="assets/chrome/chrome.css">
+<script defer src="assets/chrome/chrome.js"></script>
+<!-- /xc:head -->
+</head>
+<body>
+<!-- xc:header -->
+<header class="xc-header" data-xc-header>
+  <div class="xc-header-inner">
+    <div class="xc-header-scrim"></div>
+    <div class="xc-header-row">
+      <a class="xc-logo" aria-label="Go to Homepage" href="https://extropic.ai/"><svg width="160" height="14.18" viewBox="0 0 278.7 24.7" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Extropic"><path fill="#fff" d="M107.4,2.5l-2,1.8h-10.4v18.3l-1.8,2-1.8-2V4.3h-10.4l-2-1.8,2-1.8h24.3l2,1.8Z"/><path fill="#fff" d="M186.1,2.5v19.7l-2,1.8h-27.6l-2.1-1.8V2.5l2-1.8h27.6l2,1.8ZM158,6.1v12.5l2,1.8h20.4l2-1.8V6.1l-2-1.8h-20.4l-2,1.8Z"/><path fill="#fff" d="M224.9,2.5v11l-2,1.8h-21s-2,1.8-2,1.8v5.5l-1.8,2-1.8-2v-9.1l2-1.8h21l2-1.8v-3.8l-2-1.8h-21.1l-2-1.8,2.1-1.8h24.6l2.1,1.8Z"/><path fill="#fff" d="M278.7,2.5l-2.1,1.8h-22.3l-2,1.8v12.5l2,1.8h22.3l2.1,1.8-2,1.8h-25.9s-2-1.8-2-1.8V2.5l2-1.8h25.9l2.1,1.8Z"/><path fill="#fff" d="M238.7,2v20.6s-1.8,2.1-1.8,2.1l-1.8-2.1V2l1.8-2,1.8,2Z"/><path fill="#fff" d="M143.6,2.5v11s-2,1.8-2,1.8h-5.5l2.9,5.1h2.6l2,1.8-2,1.8h-4.7l-5-8.6h-11.2l-2,1.8v5.5l-1.8,2.1-1.8-2.1v-9.1l2-1.8h20.9l2-1.8v-3.8l-2-1.8h-21s-2-1.8-2-1.8l2-1.8h24.6s2,1.8,2,1.8Z"/><path fill="#fff" d="M73.7,2.5l-2,1.8h-3.8s-5.7,8-5.7,8l5.7,8.1h3.7l2.1,1.8-2.1,1.8h-5.5l-7-9.8h-8.3l-6.8,9.8h-5.7l-2-1.8,2-1.8h3.8s5.6-8.1,5.6-8.1l-5.6-8h-3.8l-2.1-1.8,2.1-1.8h5.6l6.8,9.9h8.3l6.9-9.9h5.6s2,1.8,2,1.8Z"/><path fill="#fff" d="M29.9,22.2l-2,1.8H2l-2-1.8,2-1.8h25.8l2,1.8Z"/><path fill="#fff" d="M17.2,12.4l-2,1.8H2L0,12.4l2-1.8h13.1l2,1.8Z"/><path fill="#fff" d="M29.9,2.5l-2.1,1.8H2L0,2.5,2,.7h25.8s2,1.8,2,1.8Z"/></svg>
+</a>
+      <div class="xc-pills">
+        <a href="https://extropic.ai/hardware">Hardware</a>
+        <a href="https://extropic.ai/software">Software</a>
+        <a href="https://extropic.ai/writing">Writing</a>
+        <a href="https://extropic.ai/about">About</a>
+        <a href="https://extropic.ai/about#careers">Careers</a>
+      </div>
+      <div class="xc-mobile" data-xc-mobile>
+        <button class="xc-menu-btn" aria-label="Open menu" aria-expanded="false" data-xc-menu-btn>
+          <img src="assets/chrome/logo-mark.webp" alt="logo" width="100" height="100">
+        </button>
+        <div class="xc-menu">
+          <div class="xc-menu-inner">
+            <div class="xc-menu-links">
+              <a href="https://extropic.ai/hardware"><p class="xc-menu-num">01</p><h2 class="xc-menu-title">Hardware</h2></a>
+              <a href="https://extropic.ai/software"><p class="xc-menu-num">02</p><h2 class="xc-menu-title">Software</h2></a>
+              <a href="https://extropic.ai/writing"><p class="xc-menu-num">03</p><h2 class="xc-menu-title">Writing</h2></a>
+              <a href="https://extropic.ai/about"><p class="xc-menu-num">04</p><h2 class="xc-menu-title">About</h2></a>
+              <a href="https://extropic.ai/about#careers"><p class="xc-menu-num">05</p><h2 class="xc-menu-title">Careers</h2></a>
+            </div>
+            <div class="xc-menu-foot">
+              <p>EXTROPIC CORPORATION</p>
+              <p data-xc-year>2026</p>
+            </div>
+          </div>
+        </div>
+        <div class="xc-overlay" data-xc-overlay></div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- /xc:header -->
+
+<header class="hero">
+  <canvas class="hero-photo" id="hero-lattice" aria-label="A full-bleed lattice of gold dots running a continuous cellular automaton: three species of self-organising creatures drift, collide, and split."></canvas>
+  <div class="hero-scrim" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <p class="hero-meta"><span>October 1st, 2026</span><span>Research</span></p>
+    <h1 class="hero-title">First Sparks of Thermodynamic <br>Recursive Intelligence</h1>
+    <p class="hero-with">In collaboration with <span class="pi-mark" aria-hidden="true"></span>Prime Intellect</p>
+  </div>
+  <p class="hero-scroll" aria-hidden="true">Scroll</p>
+</header>
+
+<article>
+  <div class="article">
+    <div class="section-head reveal">
+      <p class="eyebrow">Motivation</p>
+      <h2>What evolves together fits together</h2>
+    </div>
+    <p class="lead">Our goal at Extropic is to build a new substrate for intelligence, which is fundamentally a full-stack undertaking involving hardware-algorithmic co-design. As algorithms on our hardware can be between <a href="https://extropic.ai/writing/z1t/" target="_blank" rel="noopener">100x</a> and <a href="https://arxiv.org/abs/2510.23972" target="_blank" rel="noopener">10,000x</a> more efficient, there is urgency to port as much inference to this novel hardware as soon as possible.</p>
+    <p>Modern deep learning grew out of roughly fifteen years of researchers honing the architectures, objectives, optimizers, and training recipes in a way that is best suited to matrix multiplication accelerators such as GPUs and TPUs. One can view this decades-long process as a distributed evolutionary search over the hyperparameter space of deep learning models and methods. In order to successfully migrate most of AI inference to our hardware, we need thermo ML algorithms to be as mature as classic deep learning.</p>
+    <p>As thermodynamic computing represents a fundamentally different species of hardware, we need a corresponding new species of algorithms that are optimized for this substrate. We recently open sourced our thermodynamic programming stack to accelerate the search over thermodynamic algorithms and Thermo Model hyperparameters. From high-level programming with <a href="https://arxiv.org/abs/2608.01612" target="_blank" rel="noopener">Torx</a>, to compiling stochastic differentiable programs to our thermo hardware fabric with <a href="https://arxiv.org/abs/2608.01615" target="_blank" rel="noopener">Thermalizers</a>, to our low-level sampling framework <a href="https://docs.thrml.ai/en/latest/" target="_blank" rel="noopener">THRML</a>, we have created this stack to accelerate thermodynamic algorithm discovery.</p>
+    <p>Building the stack was only the first step. Most top programmers today program in natural language using LLM models trained on coding tasks. Unfortunately, as Thermo ML and stochastic differentiable programming are fairly nascent subfields, there is not as much literature and data in the pre-training runs of most frontier LLMs.</p>
+    <p>In order to both greatly accelerate the speed of research in thermo ML, and to make the migration for new users as smooth as possible, we are post-training our own language models on thermo ML tasks so as to build synthetic agents that are specialized Thermo AI researchers. This will in turn allow us to simply throw more compute towards rapid algorithmic maturation for this new substrate.</p>
+
+    <div class="section-head reveal">
+      <p class="eyebrow">Mission</p>
+      <h2>Dreams of Thermo RSI</h2>
+    </div>
+    <p>As we seek to accelerate the search over architectures and hyperparameters for Thermo ML, we would like to emulate the algorithmic maturation of a distributed research process carried out by an academic community by instead using LLM-based AI agents. This will effectively allow us to &ldquo;speedrun&rdquo; decades of algorithmic progress in a few short years, ensuring algorithmic maturity as thermodynamic hardware <a href="https://extropic.ai/writing/from-one-to-one-billion/" target="_blank" rel="noopener">begins to scale</a>.</p>
+    <p>We are therefore post-training models to carry out Thermodynamic ML research: proposing methods, implementing them, running experiments, and revising their approach in light of results. Our aim is to bring this process to <a href="https://docs.thrml.ai/en/latest/" target="_blank" rel="noopener">THRML</a>, our framework for building probabilistic models, and to our <a href="https://extropic.dev/" target="_blank" rel="noopener">simulator API</a>, so agents can search for algorithms that compile and run well on our hardware.</p>
+    <p>This post introduces the first step in this mission: training an open-source model to reproduce classic experiments from the Hinton tradition. After 100 steps of RL, we roughly triple its base score on held-out tasks and get to results competitive with much larger frontier models.</p>
+    <figure class="fabric-visual">
+      <div class="fabric-visual-frame duet-frame">
+        <iframe src="./assets/research-loop.html?v=4" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;height:100%;border:0;background:var(--ground)" title="The research loop: propose, implement, run, revise."></iframe>
+      </div>
+      <div class="figcap"><span class="fig-no">THE RESEARCH LOOP</span> &nbsp;Each lap is one experiment: propose a change, implement it, run it, revise. Changes that lower the error are kept, the rest are reverted. The runs shown are illustrative.</div>
+    </figure>
+
+    <div class="section-head reveal">
+      <p class="eyebrow">Background</p>
+      <h2>Why start with classic experiments</h2>
+    </div>
+    <p>Before GPUs made backpropagation through large feedforward networks the standard, a branch of Machine Learning research treated learning as a problem of probability and energy. These were the early days of what we call Thermodynamic ML. Methods like Boltzmann machines and the wake-sleep algorithm, among others, learn by drawing samples from a probabilistic model, and on deterministic digital hardware that sampling is expensive, which is part of why the field moved on.</p>
+    <p>Our thermodynamic sampling units (TSUs) change that trade-off: TSUs are built to sample from probabilistic energy-based models natively, so the operation that made these methods costly becomes the one our hardware does best.</p>
+    <p>Reproducing these experiments also teaches an agent the right habits: translating a paper's description into working code, setting up sampling procedures correctly, and judging whether its results match the original. These are skills we will need to reach thermo RSI.</p>
+  </div>
+
+  <div class="fig56-wide-breakout">
+    <figure class="reveal">
+      <iframe class="wide-canvas" src="./assets/bars-rbm.html?v=4" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;aspect-ratio:1200/420;height:auto;border:0;background:var(--ground)" title="bars-rbm: an RBM learning the eight bars."></iframe>
+      <div class="figlabel"><span class="fig-no">BARS-RBM</span> &nbsp;One task from the suite, running live. Each 4×4 image is a random overlay of 8 bars. A restricted Boltzmann machine with 8 hidden pbits learns them by CD-1, and the receptive field drawn above each pbit settles on one bar.</div>
+    </figure>
+  </div>
+
+  <div class="article">
+    <div class="section-head reveal">
+      <p class="eyebrow">Post-training</p>
+      <h2>Learning to reproduce foundational experiments</h2>
+    </div>
+    <p class="pi-credit"><span class="pi-mark" aria-hidden="true" style="color:var(--gold)"></span><em>We ran post-training on <a href="https://www.primeintellect.ai/" target="_blank" rel="noopener">Prime Intellect</a>, who provided optimized inference and training tools, reproducible code sandboxes, and GPU resources to train and benchmark open-source models for this project.</em></p>
+    <p>We begin with roughly 50 coding tasks adapted from open-source reproductions of classic connectionist experiments in the Hinton tradition, including Boltzmann machines and wake-sleep.</p>
+    <p>We post-train <strong>Qwen3.6-35B-A3B</strong> on these tasks using a GRPO objective, with Nemotron 3 Super 120B as an LLM judge for reward scoring. The reward combines two signals, an execution score and a rubric score:</p>
+    <div class="eq">\[ r = 0.7 \cdot \text{exec} + 0.3 \cdot \text{rubric} \]</div>
+    <p>The execution score is deterministic, so no LLM judge is needed. It rewards an implementation first for running successfully (0.15 of the score), then for reproducing the reference task's core metrics, such as FID or loss (the remaining 0.85). Together, these tests measure whether the model writes code that both runs and recovers the behavior of the original experiment.</p>
+    <p>The rubric score uses Nemotron 3 Super 120B as an LLM judge. It checks the implementation against a task-specific set of criteria derived in advance from the original work. These criteria capture what the metrics can miss: whether the architecture matches the original, whether the experimental procedure was followed, and whether the implementation is reproducible.</p>
+    <p>We chose to weight execution more heavily because it is the harder signal to game: code either runs and hits the target metrics we set or it doesn't.</p>
+  </div>
+
+  <div class="fig56-wide-breakout">
+    <figure class="reveal">
+      <iframe class="wide-canvas" src="./assets/grpo-group.html?v=4" loading="lazy" scrolling="no" frameborder="0" style="display:block;width:100%;aspect-ratio:1200/470;height:auto;border:0;background:var(--ground)" title="One GRPO step over eight attempts."></iframe>
+      <div class="figlabel"><span class="fig-no">ONE GRPO STEP</span> &nbsp;Eight attempts at one task, each scored r = 0.7 exec + 0.3 rubric. Attempts above the group mean send credit back to the policy, and those below it are pushed down. Scores are illustrative.</div>
+    </figure>
+  </div>
+
+  <div class="article">
+    <p>After 100 training steps, reward on held-out problems nearly triples, rising from <span class="mono">0.127</span> to <span class="mono">0.361</span>.</p>
+  </div>
+
+  <div class="breakout reveal">
+    <figure>
+      <img src="./assets/fig-training.png" loading="lazy" decoding="async" alt="Reward or pass rate against GRPO step from 0 to 100: a cream critical-pass-rate curve and a gold training-reward curve, both smoothed over faint raw curves, and orange held-out evaluation points every 25 steps.">
+      <figcaption><span class="fig-no">Fig. 1</span> &nbsp;Training reward and critical pass rate, with 8-step exponential smoothing over the faint raw curves. Orange points show held-out reward every 25 steps.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+    <div class="section-head reveal">
+      <p class="eyebrow">Evaluation</p>
+      <h2>Comparing against frontier models</h2>
+    </div>
+    <p>We next compare our post-trained model against larger general-purpose models run zero-shot on the same suite of tasks. Post-training takes a small open-source model, Qwen3.6 (35B total, 3B active), from <span class="mono">0.127</span> to <span class="mono">0.361</span> on held-out reproduction tasks, about 3x its base score.</p>
+    <p>Our model is highly competitive with much larger frontier models on the research workflows we're optimizing for.</p>
+  </div>
+
+  <div class="breakout reveal">
+    <figure>
+      <img src="./assets/fig-heldout.png" loading="lazy" decoding="async" alt="Horizontal bars of reward on the held-out test split. GPT-5.5 0.747 and Claude Opus 4.8 0.464 in pale gold; Qwen3.6 post-trained 0.361 and Qwen3.5 post-trained 0.356 in bright gold; Qwen3.6 base 0.127 in copper; Qwen3-30B-Instruct 0.109 and GLM-5.2 0.073 in pale gold. Whiskers mark standard error.">
+      <figcaption><span class="fig-no">Fig. 2</span> &nbsp;Scores on problems excluded from training. Gold rows show our post-trained models, the copper row shows the Qwen3.6 base model before post-training, and the remaining rows show off-the-shelf models. Whiskers indicate standard error across rollouts.</figcaption>
+    </figure>
+  </div>
+
+  <div class="article">
+    <div class="section-head reveal">
+      <p class="eyebrow">Outlook</p>
+      <h2>Big things have small beginnings</h2>
+    </div>
+    <p>These results are the first sparks of a broader effort to post-train relatively small models with useful research capabilities for thermodynamic computing. The natural next step is to move beyond reproducing established experiments toward discovering new algorithms.</p>
+    <p>Reproducing established experiments lays the groundwork for agents to devise new learning rules for our thermodynamic sampling units (TSUs), new algorithms, and new architectures. We plan to test those ideas in simulation, then, as our first large-scale chips come online in 2027, use measurements from real thermodynamic chips as feedback to inform subsequent experiments, thus creating the first automated Thermo ML research loop with real TSUs.</p>
+    <p>Deep learning's recipes were found by thousands of researchers over more than a decade. Thermodynamic computing doesn't and shouldn't have to wait that long. Agents that can read an idea, build it, test it, and learn from the result can explore the space of thermodynamic and stochastic algorithms far faster than we ever could in the past.</p>
+    <p>Our ambition is to enable recursive discovery for our thermodynamic platform: agents uncover thermo algorithms that expand what the hardware can do, and the hardware, in turn, can be co-evolved with the newly discovered algorithms. Ultimately, our novel hardware can also accelerate the inference of the agentic rollout, and thus make more discoveries per joule than ever before.</p>
+    <p>This is only the beginning. We plan to create far more ambitious post-training runs in the future, offer TSU-based sandboxes as environments, and offer inference on post-trained models.</p>
+    <p>We believe this will kick off a race for recursively self-improving hardware substrates optimizing for power efficiency.</p>
+
+    <div class="section-head reveal">
+      <p class="eyebrow">Resources</p>
+      <h2>Get involved</h2>
+    </div>
+    <p>If the above sounds exciting to you, consider <a href="https://extropic.ai/about#careers" target="_blank" rel="noopener">joining our team</a>, or explore our <a href="https://extropic.ai/software" target="_blank" rel="noopener">software tools</a> to post-train your own models to accelerate thermo AI research.</p>
+    <p>Note that everything in this post runs on tools you can use today. You can build probabilistic models with <a href="https://docs.thrml.ai/en/latest/" target="_blank" rel="noopener">THRML</a>, try your own algorithms on the <a href="https://extropic.dev/" target="_blank" rel="noopener">simulator API</a>, or explore the <a href="https://github.com/cybertronai/hinton-problems" target="_blank" rel="noopener">task data</a> behind these results.</p>
+
+    <div class="cta-row reveal">
+      <a class="cta" href="https://docs.thrml.ai/en/latest/" target="_blank" rel="noopener">
+        <span class="cta-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h14v14.5A2.5 2.5 0 0 1 17.5 21H5a2 2 0 0 1-2-2V9h3"></path><path d="M6 4v15a2 2 0 0 1-2 2"></path><rect x="9" y="7.5" width="4" height="4"></rect><path d="M15.5 8h2M15.5 11h2M9 14.5h8.5M9 17.5h8.5"></path></svg>
+        </span>
+        <span class="cta-text">
+          <span class="cta-eyebrow">Docs</span>
+          <span class="cta-title">Read the THRML docs</span>
+        </span>
+      </a>
+      <a class="cta" href="https://extropic.dev/" target="_blank" rel="noopener">
+        <span class="cta-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M7 9l3 3-3 3M12 15h5"></path></svg>
+        </span>
+        <span class="cta-text">
+          <span class="cta-eyebrow">Simulator</span>
+          <span class="cta-title">Try the simulator API</span>
+        </span>
+      </a>
+      <a class="cta" href="https://github.com/cybertronai/hinton-problems" target="_blank" rel="noopener">
+        <span class="cta-logo" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="22" height="22" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </span>
+        <span class="cta-text">
+          <span class="cta-eyebrow">Data</span>
+          <span class="cta-title">Explore the task data</span>
+        </span>
+      </a>
+    </div>
+
+    <div class="authors reveal">
+      <span class="authors-eyebrow">Authors</span>
+      <span class="authors-name">Alexander Neagoe</span>
+      <span class="authors-name">Guillaume Verdon</span>
+      <span class="authors-name">Seth Morton</span>
+      <span class="authors-affil">Extropic San Francisco</span>
+      <span class="authors-eyebrow second">Post-training platform</span>
+      <span class="authors-name"><a href="https://www.primeintellect.ai/" target="_blank" rel="noopener"><span class="pi-mark" aria-hidden="true"></span>Prime Intellect</a></span>
+    </div>
+  </div>
+</article>
+
+
+<script src="./assets/hero-lattice.js?v=4" defer=""></script>
+<script src="./assets/reveal.js" defer=""></script>
+<!-- xc:footer -->
+<div class="xc-footwrap">
+  <iframe title="Symbols Background" src="https://playground.asimovcollective.com/47-emergent-gradient" class="xc-foot-iframe" loading="lazy"></iframe>
+  <div class="xc-foot-glyphs"></div>
+  <footer class="xc-footer">
+    <div class="xc-footer-inner">
+      <div class="xc-foot-links">
+        <p><a href="https://extropic.ai/hardware">Hardware</a></p>
+        <p><a href="https://extropic.ai/software">Software</a></p>
+        <p><a href="https://extropic.ai/writing">Writing</a></p>
+        <p><a href="https://extropic.ai/about">About</a></p>
+        <p><a href="https://extropic.ai/about#careers">Careers</a></p>
+      </div>
+      <div class="xc-foot-bottom">
+        <div class="xc-foot-legal">
+          <p>Extropic Corp.</p>
+          <p>&copy;<span data-xc-year>2026</span> All rights reserved</p>
+        </div>
+        <div class="xc-foot-right">
+          <div class="xc-news" data-xc-news>
+            <div class="xc-news-cover" data-xc-news-cover>
+              <p>Stay Thermodynamically Informed</p>
+            </div>
+            <form class="xc-news-form" data-xc-news-form>
+              <input class="xc-news-input" type="email" placeholder="Email address" required>
+              <div class="xc-news-divider"></div>
+              <button class="xc-news-btn" type="submit">Submit</button>
+            </form>
+          </div>
+          <div class="xc-foot-terms">
+            <p><a rel="noopener noreferrer" target="_blank" href="mailto:contact@extropic.ai">Contact Us</a></p>
+            <p><a href="https://extropic.ai/privacy-policy">Privacy Policy</a></p>
+            <p><a href="https://extropic.ai/terms-of-service">Terms of Service</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- /xc:footer -->
+</body></html>
