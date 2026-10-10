@@ -3910,3 +3910,9 @@ Documentation freshness and the test mutation gate pass. Repository-wide
 reconciliation retains the previously recorded 1,142 missing spec references;
 the scoped repair adds no untraced tests or repository-health claim.
 | REQ-REPORT-V719-PLAN / SCENARIO-REPORT-V719-PLAN | Exp8332–Exp8345 (planned) | Exact fourteen-task design/YAML; direct source custody, independent local qualification, frozen H1/H2, and staged-only validation in `docs/research-notes/v719-plan-validation.md` |
+
+| Requirement / Scenario | Status | Evidence |
+|---|---|---|
+| REQ-REPORT-8373 / SCENARIO-REPORT-8373-ACCOUNTING | Scaffolding | Exp8373: honest_verdict=complete_blocked_v721_capstone; fourteen slots preserved; H2 mean_gain=0; deployment operations remain unmeasured; [artifact](../results/experiment_8373_v721_capstone.json) |
+| REQ-VERIFY-8373 / SCENARIO-VERIFY-8373-REPLAY | Scaffolding | Exp8373: honest_verdict=complete_blocked_v721_capstone; bounded custody and replay qualification do not close the three PRD gaps; [artifact](../results/experiment_8373_v721_capstone.json) |
+| SCENARIO-HARNESS-5930-DISK-SCRATCH | Scaffolding | Added in the Exp8373 commit; honest_verdict=complete_blocked_v721_capstone; disk-backed fixture storage supports validation without establishing scientific benefit; [artifact](../results/experiment_8373_v721_capstone.json) |
