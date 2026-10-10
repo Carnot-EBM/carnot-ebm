@@ -19992,3 +19992,4 @@ code |
 | 2026-10-10 03:40 UTC | Run a bounded Qwen canary only after typed runtime | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8368-typed-runtime-closure.runtime_changed_score (actual=0 == expected=1) |
 | 2026-10-10 03:42 UTC | Conductor re-exec: fresh committed source | OK | 4d9dffebf124 -> 8af429226e55; argv preserved |
 | 2026-10-10 04:08 UTC | Read only new live supervisor outcomes for cross-g | OK | cache hit: 96 passed, 1 warning in 54.82s |
+| 2026-10-10 04:37 UTC | Map measured local transactions to KV260 operation | OK | 98 passed, 1 warning in 92.89s (0:01:32) |
