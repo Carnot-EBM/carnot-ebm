@@ -97888,3 +97888,47 @@ aliases, primitive rows, child receipts and independent score reductions.
 Rehashing changed headlines or substituted historical evidence SHALL fail.
 Private fixture publication and real CLI negative controls cannot set readiness.
 The unchanged primary publisher and terminal validators SHALL check publication.
+
+## REQ-REPORT-8384: Fresh adapter-withheld public ARC supervisor panel
+
+Freeze two installed SDK game IDs by metadata-only salted hash order, seeds11/22,
+and supervisor shadow/off then applied/on. Run eight real SDK episodes through
+make_carnot_agent(cascade=True), choose_action and is_done, with window120,
+256 actions and180 seconds per episode. Reuse withheld_policy_inputs; deny
+stored solutions, routes, learned game adapters and all model paths before load.
+Set CARNOT_ARC_DISABLE_INDUCTION=1. Tests and constructed frames qualify mechanics
+only. Preserve raw observations, actions, hashes, supervisor snapshots and emitted
+receipts, including pending and censored outcomes. Recompute receipts in a cold
+process. Never adapt the schedule or thresholds after measurement.
+
+Authenticate the exact active task and imported bytes. Missing external authority
+or SDK access blocks readiness; an owned validation failure disqualifies it.
+The user's direct runtime instruction permits observations while independent
+roadmap authority remains absent. Record that absence as an exact gate operand.
+No exposed public transition earns fresh solve credit or either generalization
+score. Keep protocol bytes, submitted defaults and historical results unchanged.
+Future producers remain dependencies, never assumed existing inputs.
+
+### SCENARIO-REPORT-8384-LIVE
+
+Keep all eight intended game/seed/arm units, paired reset seeds, measured action
+costs, progress, redirect outcomes and registry reproduction evidence. A zero
+firing panel is a fixed-panel null. No missing observation may become zero.
+
+### SCENARIO-REPORT-8384-REPLAY
+
+Fresh processes accept sealed primitives and reject missing inputs, deliberate
+errors and rehashed derived claims. Rebuild supervisor receipts from actual
+snapshot operands. Publish only checked terminal bytes through primary_publication.
+
+Status: specified before tests. Ops and traceability reconciliation belong to the conductor.
+
+Implementation 2026-10-10: `arc_live_panel_runtime_8384.py` records the real
+cascade action seam and native supervisor operands. `arc_supervisor_live_panel_8384.py`
+freezes the SDK panel, reduces persisted observations, and uses the unchanged
+primary publisher. The thin script runs bounded episodes in fresh children.
+Requirement-linked tests cover all newly owned statements, including actual CLI
+errors and private replay controls. Cached per-game action-effect memory is
+withheld through the existing loader's switch. The common small numeric head
+remains distinct from LLM calls. Missing independent V722 design authority keeps
+readiness blocked even when direct user-authorized observations are collected.

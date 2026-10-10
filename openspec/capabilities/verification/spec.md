@@ -53016,3 +53016,34 @@ children and fresh-process valid, missing, deliberate-error and tamper controls.
 Require 100 percent new statements including CLI and child failure paths,
 existing reader/consumer tests, private E2E-018, Ruff, strict mypy and spec tracing.
 Record repository health separately. Publish only atomically checked bytes.
+
+## REQ-VERIFY-8384: Bounded live panel qualification
+
+Freeze scoped commands before outcomes. Run private E2E-017/018 and existing
+wrapper tests before the eight live episodes. Use private disk-backed scratch,
+unbuffered output, child deadlines,30-second polling and a4800-second cap.
+Require100 percent newly owned statements including CLI, child and failure paths;
+run scoped Ruff, strict mypy, requirement coverage and unchanged consumers.
+Run the global Python suite once and report its health separately.
+Keep every adversarial finding. Only the existing typed consumer may resolve
+independently recomputed information; unknown, warning and critical findings
+block readiness. Retain command, exit, duration and log hashes.
+
+### SCENARIO-VERIFY-8384-TRIPWIRE
+
+A model import, proposer construction or enabled induction must fail before load.
+Restore isolation and submitted environment defaults after every episode.
+
+### SCENARIO-VERIFY-8384-CLI
+
+Test real script entry, date rejection, missing operands, bounded child failure,
+valid cold reduction and self-consistently rehashed tampering. Private constructed
+controls supply no research rows. All owned checks precede atomic publication.
+
+Status: specified before tests. Conductor owns ops and traceability reconciliation.
+
+Implementation 2026-10-10: focused tests cover the runtime, reduction, isolation,
+real CLI, child errors, private publication and negative replay. The frozen
+execution plan checks E2E-017/018 and wrapper consumers before measurement.
+New statements, Ruff, strict types and spec tracing qualify independently of
+repository-wide health. The terminal report preserves unchanged-validator findings.
