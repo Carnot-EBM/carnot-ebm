@@ -97472,3 +97472,23 @@ verdict, a specific changed prerequisite or scope, and
 match the corrected YAML. Removing this block in a private copy SHALL reproduce
 the original refusal. The corrected copy SHALL pass the unchanged exclusion and
 ARC activation lints. No guard or exclusion-manifest change is authorized.
+
+## REQ-REPORT-8362: Publish qualified threshold evidence with proof limits
+
+Bind exact V721 task authority, original head, table, panel, V717 protocol and
+terminal sidecars. Current model loads and calls are zero. Cached observations
+remain exposed development. Keep generalization scores zero. Separate safety,
+usefulness and sampled error. Missing external bytes block; owned failures
+disqualify. Publish only checked terminal bytes atomically. The conductor owns
+ops and BMAD reconciliation after this task.
+
+### SCENARIO-REPORT-8362-REPLAY
+
+Private CLI controls exercise valid, invalid and rehashed summary and primitive
+mutations. Recompute bounds, vector rows, refresh and all metrics from pinned
+inputs. Failed children clear qualification. Readers select the exact primary.
+
+Implementation 2026-10-10: the thin threshold runner reuses bounded children,
+unchanged typed validators and atomic publication. Cold replay rechecks original
+operand pins and both authority copies before recomputing primitive evidence.
+Private controls cover altered vectors, repaired hashes and actual child failures.

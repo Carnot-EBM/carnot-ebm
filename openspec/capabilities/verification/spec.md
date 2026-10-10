@@ -52664,3 +52664,40 @@ ownership and atomic publication pipeline. It selects private XFS scratch,
 freezes scoped commands, records disk receipts and enforces the task cap.
 Fresh-process controls recompute authority and reusable-input meaning. Terminal
 receipts determine qualification; the conductor handles ops and BMAD records.
+
+## REQ-VERIFY-8362: Bound interpolation and preserve exact typed actions
+
+Derive each signed-int16 table cell bound from exact binary-rational spline
+coefficients. Split derivative evaluation at knots. Use the interpolation
+h squared times the second-derivative supremum divided by eight, quantization,
+and outward float64 rounding. Check extrema independently with SciPy PPoly.
+Observed panel error SHALL NOT supply a universal bound. Keep training,
+thresholds, global terms and sparse refresh unchanged.
+
+### SCENARIO-VERIFY-8362-BOUND
+
+Reproduce all three original table flips. Inspect the frozen 4096 random vectors,
+knots, thresholds and nextafter neighbors. Preserve each vector and interval.
+Reject underbounds, swapped tables, saturation, missing bounds and stale versions.
+Reject invalid features and temperature. Overflow and saturation use direct fallback.
+
+### SCENARIO-VERIFY-8362-PROOF
+
+Separate analytic spline proof from numerical-policy proof. An unresolved
+sigmoid or arithmetic assumption clears guard_ready_score. Such a guard SHALL
+use direct fallback and expose its empirical interval separately. Exact threshold
+ties escalate. Certified fast results require a complete numerical proof.
+Useful means at least 50 percent actual fast paths on the frozen random panel.
+
+### SCENARIO-VERIFY-8362-EXECUTION
+
+Freeze scoped validation argv before measurement. Use private disk scratch,
+real bounded children and a 4800-second cap. Require all newly owned statements,
+strict types, Ruff, spec tracing and private E2E-018 consumers. Cold replay SHALL
+recompute primitive meaning and reject self-consistently rehashed mutations.
+Use unchanged publication and typed finding consumers. Preserve failed checks.
+
+Implementation 2026-10-10: `threshold_guard_8362.py` derives rational cell
+bounds and checks independent polynomial extrema. It retains all frozen vectors
+and adjacent-float controls. Unresolved sigmoid arithmetic forces direct
+fallback. An empirical candidate fraction grants no safety or usefulness score.
