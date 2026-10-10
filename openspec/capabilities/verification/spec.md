@@ -53136,3 +53136,21 @@ Implementation 2026-10-10: thin Exp8385 adapters reuse the unchanged bounded chi
 supervisor, typed finding consumer, primary publisher and row validator. Private
 CLI controls include owned exit-three failure and rehashed primitive mutations.
 Invocation-only coverage includes all added modules and the standalone CLI.
+
+## REQ-VERIFY-8389: Check human custody with bounded private children
+
+Freeze scoped pytest, Ruff, strict mypy, spec tracing and private E2E-018 commands
+before measurement. Require 100 percent newly owned statements, including real
+CLI and failure paths. Use private disk-backed scratch and no current model calls.
+Poll owned children within 60 seconds. The complete invocation cap is 4800 seconds.
+Authenticate current V723 authority and actual input hashes. Future producers are
+dependencies. Keep external absence separate from owned validation failure.
+
+### SCENARIO-VERIFY-8389-REPLAY
+
+Fresh processes accept sealed primitives and reject missing input, deliberate
+error and self-consistently rehashed aggregate/source mutations. Use unchanged
+primary_publication, adversarial verifier and strict row consistency consumers.
+Retain findings; unknown, warning and critical findings prevent readiness.
+Publish only checked terminal bytes atomically. The conductor owns ops and BMAD
+reconciliation for this task.

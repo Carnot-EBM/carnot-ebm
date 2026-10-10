@@ -98056,6 +98056,37 @@ remain intact. Planning SHALL NOT run a proposed experiment or activate a plan.
 
 Status: planning only; all fourteen experiments remain unexecuted.
 
+## REQ-REPORT-8389: Acquire question-level human label custody
+
+Use only the public LPHB author mirror at commit
+`c2cf053567d5ae458656ee0e420509e35d73406d`. Authenticate both released CSVs,
+the column dictionary and the four license/readme operands against reviewed git
+blobs. Limit acquisition to 50 MiB and 600 seconds. Do not regenerate labels.
+Record the planning Dataverse HTTP 403 without attempting to bypass it.
+
+Freeze the target mapping before reading targets inside the manifest validator.
+`annotator1_label` is primary factual correctness: 0 correct, 1 hallucination,
+-1 uncertain/missing. `annotator2_label` is the partial sensitivity subset.
+Automatic judgments and reference scores SHALL remain separate cached signals.
+Keep all 900 intended response slots and 300 question clusters, including absence.
+Join answers and audit labels by question, dataset and generator, with response
+hashes. Normalize question text with Unicode NFKC, case folding and whitespace.
+All answers to one normalized question share one independent cluster.
+
+Readiness requires complete release identity, permitted local use, aligned audit,
+at least 80 authenticated disjoint questions and 8 question clusters supporting
+each primary class. A cluster may support both classes across different generators;
+it still counts once as an independent question. Opaque prior source hashes leave
+overlap unknown and block readiness. Missing bytes block; they do not measure null
+benefit. Both generalization scores remain zero. Preserve historical protocols.
+
+### SCENARIO-REPORT-8389-CUSTODY
+
+Reject changed target mapping, swapped human/automatic columns, duplicate question
+aliases, wrong generator joins, truncated release and rehashed source contamination.
+Record partial annotation and disagreement without substituting automatic targets.
+Write a read-only source manifest and retain primitive release bytes privately.
+
 ## REQ-REPORT-8388: Bind current authority without inventing historical design
 
 The V723 receipt SHALL compare fourteen visible rows, complete JSON objects,
