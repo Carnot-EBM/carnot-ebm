@@ -19978,3 +19978,5 @@ code |
 | 2026-10-10 00:31 UTC | Activation REFUSED: milestone 2026.10.721 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp8367-native-service-cost. NEXT_ROADMAP_FILE left in place for operator inspection. |
 | 2026-10-10 00:31 UTC | Activation replan 1/2: 2026.10.721 | OK | refused roadmap quarantined to roadmap-2026.10.721-refusal1.yaml; replanning with lint report |
 | 2026-10-10 00:33 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 2: OPEN 2 |
+| 2026-10-10 00:41 UTC | Plan milestone 2026.10.721 | OK | 14 tasks proposed |
+| 2026-10-10 00:53 UTC | Milestone 2026.10.721 activated | OK | 14 tasks queued |
