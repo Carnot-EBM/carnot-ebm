@@ -11,10 +11,15 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 6 |
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 5 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
-## experiment_8362_v721_threshold_guard.json
+## experiment_8379_v722_native_direct_parity.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_8381_v722_logit_policy_certificate.json
 
 **CLAIM_SUPPORTED**
 
@@ -22,31 +27,31 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-This run produced zero certified fast paths and therefore demonstrated no certified usefulness while the numerical-policy proof remained unresolved.
+The dyadic_logit_v1 policy passed numerical qualification with zero interval escapes or action disagreements and 100% certified fast-path coverage on the constructed random panel.
 
 ## WHAT WOULD REFUTE IT
-A counted vector actually taking a certified fast path would contradict the zero-use claim; empirical eligibility alone would not.
+A reference logit outside its reported interval, an action differing from the exact reference action, or certified random-panel coverage below the stated 0.5 usefulness threshold.
 
 ## WAS THAT CHECKED
-Yes, at aggregate level: all 4,218 completed vectors are accounted for by fallback reasons, and actual fast-path coverage is zero. Per-vector execution and validity rows are absent from the supplied excerpt.
+Yes. Rows report intervals, reference logits, actions, and reference actions; aggregate counts report zero escapes and mismatches. Coverage is reported separately, and the panel includes knot and threshold neighbors.
 
-The unresolved proof forces fallback, so zero action mismatches cannot establish added value over always evaluating the direct reference—the cheapest serious baseline. The artifact reports an honest operational null; its positive empirical candidate coverage does not become a certification or generalization claim.
+The approximate interval calculation and independent rational reference can disagree, so this numerical qualification could fail. The oracle defines numerical correctness; the artifact claims no added semantic benefit. Its generalization scores are zero and its development exposure is disclosed.
+
+Direct exact-policy evaluation is the serious correctness comparator already represented by the reference fields. Comparative speed or verifier value would require further controls, but neither is the stated claim. No exclusions are reported, and the relevant comparison fields exist on the displayed rows. The recorded old-policy disagreement does not contradict correctness under the explicitly new policy.
 
 ## EVIDENCE
-
-- `fast_path_fraction`: `0.0`
-- `completed_count`: `4218`
-- `fallback_counts`: `threshold_intersection`: `10`; `unproven_numerical_policy`: `4208`
-- `numerical_policy_proof_passed`: `false`
-- `empirical_candidate_fast_path_fraction`: `1.0`
-- `guarded_action_mismatch_count`: `0`
-- `useful`: `false`
-- `independent_generalization_score`: `0`
+- `methodology_note`: `Independent rational polynomial checks an exact new action policy. Oracle-checked numerical correctness grants no semantic benefit or production migration. Missing inputs are absent, not measured zero.`
+- `independent_remainder_audit` = `true`; `verifier_is_oracle` = `true`.
+- `interval_escape_count` = `0`; `action_mismatch_count` = `0`; `fast_path_fraction` = `1.0`.
+- `useful_score`: `Safety-qualified random fast coverage >=0.5; never changes the safety threshold.`
+- `completed_count` = `4166`; `excluded_count` = `0`.
+- `exposure_scope`: `constructed_label_free_panel_from_exposed_development_head`.
+- `independent_generalization_score` = `0`; `generalized_learning_benefit_score` = `0`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8363_atomic_table_state.json
+## experiment_8382_v722_runtime_evidence_delta.json
 
 **NO_CLAIM**
 
@@ -57,100 +62,24 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the title describes intended work, and the artifact records a blocked prerequisite rather than claiming success.
+An authenticated receipt showing an environment change, or a successful current CUDA context/copy probe, would overturn the recorded blocked disposition. The artifact makes no comparative method-value claim.
 
 ## WAS THAT CHECKED
-The prerequisite was checked in gates_evaluated: actual 0 versus expected 1, with passed false. Atomic publication and recovery were not evaluated.
+No current runtime refutation was tested: all seven environment operands were censored, and zero current probes ran. The receipt gates were checked and failed. This establishes missing evidence; physical environmental equality remains untested.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `blocked_at_layer`: `conductor_pre_gate`; `artifact_field`: `guard_ready_score`; `actual`: `0`; `expected`: `1`; `passed`: `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8368_v721_typed_runtime_closure.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-An authenticated difference between current and previous causal environment operands would contradict the recorded unchanged disposition. The artifact makes no comparative benefit claim to falsify.
-
-## WAS THAT CHECKED
-Yes, for environment identity: seven change-evidence rows compare observed and previous operands and report no change. Current CUDA functionality was not tested, so this receipt does not establish continued CUDA failure.
-
-## EVIDENCE
+- `verdict_class`: `blocked`
 - `honest_verdict`: `complete_blocked_cuda_environment_unchanged`
-- `change_evidence`, `available`: `true`, `changed`: `false`
-- `current_probe_count`: `0`
-- `methodology_note`: `Read full versioned authority, authenticate failed historical execution and compare current causal identity bytes. No unchanged CUDA matrix or scientific measurement runs.`
-- `Retain exact invocation, byte custody and measured execution; no scientific benefit follows.`
-- `root_cause_status`: `unproved`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8369_changed_runtime_canary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no experimental headline to falsify. All gate rows passing would contradict this receipt’s reported gate failure.
-
-## WAS THAT CHECKED
-Yes. The gate rows record one passing prerequisite and two failing prerequisites, consistent with the reported block. No canary outcome or comparative value is claimed.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `gate_check_summary`: `gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8368-typed-runtime-closure.runtime_changed_score (actual=0 == expected=1)`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8370_v721_arc_outcome_delta.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. An authenticated new post-Exp8355 environment outcome would contradict the receipt’s reported no-change status.
-
-## WAS THAT CHECKED
-Authentication and inspection are recorded for the receipt. No comparative refutation was tested; the artifact contains no outcome or comparison rows.
-
-## EVIDENCE
-- `honest_verdict`: `complete_null_no_supervisor_outcomes`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `phase`: `authenticate_and_inspect`
-- `new_outcome_count`: `0`
-- `rows`: `[]`
-- `per_game_arm_rows`: `[]`
-- `selection_recommendations`: `[]`
-- `solve_credit_claimed`: `false`
+- `censored_count`: `7`; `completed_count`: `0`
+- `current_probe_count`: `0`
+- `missing_reason`: `new_authenticated_operand_absent`
+- `methodology_note`: `Authenticate the qualified typed reader and immutable aliases, compare only explicitly supplied new environment receipts, then admit one direct driver context/copy probe. No model or semantic-benefit measurement.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8371_v721_hardware_operation_boundary.json
+## experiment_8383_changed_runtime_canary.json
 
 **NO_CLAIM**
 
@@ -161,23 +90,79 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A valid current hardware execution with a compatible kernel, complete transport timing, and measured service benefit would contradict the recorded disqualification. No comparative scientific claim is asserted.
+Not applicable: this artifact records blocked prerequisites and makes no claim of canary success or comparative value.
 
 ## WAS THAT CHECKED
-No current hardware trial is shown. This artifact aggregates historical evidence and records unmet qualification gates; its unmeasured benefit is not an experimental finding of zero benefit.
+No canary outcome was tested. The prerequisite checks in `gates_evaluated` recorded two failures, blocking execution before the canary.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`  
+`status`: `blocked`  
+`honest_verdict`: `blocked_gate_check_failed`  
+`gate_check_summary`: `gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8382-runtime-evidence-delta.runtime_changed_score (actual=0 == expected=1)`  
+`blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8384_v722_arc_supervisor_live_panel.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative scientific headline to falsify. The artifact reports completed bounded execution with blocked readiness, without asserting supervisor benefit or generalization.
+
+## WAS THAT CHECKED
+Yes—the paired supervisor-on/off comparison was recorded in per-game results. Both arms show zero progress in every pair. All supervisor outcome windows remain censored, so this supports neither superiority nor a conclusion that later benefit is impossible. The artifact withholds positive credit.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_fresh_public_supervisor_panel`
+- `scientific_benefit`: `false`
+- `generalized_learning_benefit_score`: `0`
+- `independent_generalization_score`: `0`
+- Paired `arm` values: `off`, `on`; every row has `progress_count`: `0` and `peak_level`: `0`.
+- `outcome_window_status`: `pending_censored`
+- `No causal semantic benefit is established by numerical or wrapper parity.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8385_v722_board_operation_evidence.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative claim is asserted. An authenticated current board execution satisfying compatibility, authority, and complete transport-inclusive timing requirements would contradict the reported blocked readiness.
+
+## WAS THAT CHECKED
+No current execution establishing those conditions is shown. This artifact aggregates historical evidence and records unmet prerequisites; it does not assert verifier value, generalization, or superiority over a comparator. Unmeasured speedup is not a measured null result.
 
 ## EVIDENCE
 - `actual_substrate`: `host_CPU_aggregation`
 - `current_device_execution_count`: `0`
-- `compatible_fraction_status`: `unmeasured`
+- `current_contract_ready_score`: `0`
+- `acceptance_gates`: `authority`: `false`, `compatible_kernel`: `false`, `complete_transport`: `false`, `scientific_benefit`: `false`
 - `full_service_speedup`: `null`
-- `acquisition_relevance`: `defer_no_measured_compatible_service_benefit_no_V721_acquisition`
-- `scope`: `historical_only_zero_current_calls`
+- `compatible_fraction_status`: `unmeasured`
+- `claim_class`: `historical`
+- `terminal_criterion_met`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8372_v721_gatemate_missing_evidence.json
+## experiment_8386_v722_gatemate_obligation_delta.json
 
 **NO_CLAIM**
 
@@ -188,52 +173,24 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a receipt recording an obligation and unresolved evidence, without claiming comparative value, execution readiness, or generalization.
+There is no scientific or comparative headline to falsify. An authenticated completion receipt for an obligation still reported as missing would contradict the bookkeeping.
 
 ## WAS THAT CHECKED
-No comparative refutation test is reported. The rows show one completed read-only obligation and three censored source/hardware items, consistent with the blocked verdict. The oracle verifier supports bookkeeping here; no added-value claim is made. Zero generalization scores make no generalization assertion, and the censored rows are counted separately from completion.
+No comparative refutation test is shown or required for this receipt. The supplied-evidence list is empty; the rows consistently show one completed continuity record and six censored obligations. Oracle-based validation is not presented as added scientific value.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_gatemate_missing_evidence`
+- `honest_verdict`: `complete_blocked_gatemate_obligation_delta`
 - `verdict_class`: `blocked`
-- `obligation_recorded_score`: `1`
-- `completed_count`: `1`; `censored_count`: `3`
-- `history_authenticated`: `false`; `hardware_execution`: `false`
 - `scientific_benefit`: `false`
-- `independent_generalization_score`: `0`
 - `generalized_learning_benefit_score`: `0`
-- `no_model_load`: `true`
+- `supplied_evidence_delta`: `[]`
+- `completed_count`: `1`
+- `censored_count`: `6`
+- `arm`: `read_only_obligation`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8373_v721_capstone.json
+## experiment_8387_v722_capstone.json
 
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The exposed development comparisons demonstrate no decision-cost benefit from spline34 over RBF34 or from online updating over frozen baselines.
-
-## WHAT WOULD REFUTE IT
-A positive paired decision-cost gain for either method over its serious comparator, with a lower uncertainty bound above zero and the gain surviving accounting for unqualified rows.
-
-## WAS THAT CHECKED
-Yes, in H1’s paired-cost/bootstrap summaries and H2’s paired-cost/block-bootstrap summaries. H1 reports negative gain; H2 reports zero gain despite changed probabilities. The comparisons could register improvement.
-
-The oracle defines the measured costs, but the headline claims no verifier added value. The artifact explicitly labels the data exposed and descriptive. Cheap serious controls are present: linear6 ties spline34’s decision cost, while frozen and calibration-only arms tie online updating. These ties support the reported null.
-
-Unqualified rows are disclosed with explicit costs and bounds, and qualified denominators are reported separately. No wrong-key error is evident in the supplied text. H1 leaves representation-level conclusions unqualified.
-
-## EVIDENCE
-
-- `H1`: `science_disposition` = `null_optimization_limited`; `mean_gain` = `-0.00390625` under `all_intended` and `-0.005154639175257732` under `complete_case`; `procedure_null_informative` = `true`; `geometry_qualified` = `false`.
-- `H2`: `science_disposition` = `null_delayed_decision_benefit`; `mean_gain` = `0.0`; `online_sparse` has `probability_changes` = `66` and `action_changes` = `0`.
-- `frozen_spline`, `online_sparse`, and `calibration_only`: `cost_mean` = `0.4431818181818182`.
-- `scope` = `descriptive_exposed_development_not_confirmatory`; `semantic_benefit` = `false`; `whole_service_benefit` = `false`.
-- H2’s `missing_bounds`: `qualified` = `false`; `frozen_cost` = `0.5`; `online_cost` = `0.5`; `gain_lower` = `0.0`; `gain_upper` = `0.0`.
-
-## RECOMMENDATION
-KEEP
+**SKIPPED_ALREADY_FLAGGED**

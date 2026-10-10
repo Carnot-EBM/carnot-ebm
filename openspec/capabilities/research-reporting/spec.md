@@ -98028,3 +98028,30 @@ complete, partial, pre-gate and absent dispositions. Fifteen private tests pass.
 Original Exp8371 source-hash rejection and immutable alias replay both execute.
 All newly owned statements, including direct CLI children, have measured coverage.
 The research note keeps direct costs and PolarFire CPU graduation separate.
+
+## REQ-REPORT-V723-PLAN: Stage complete research contracts after V722
+
+The V723 plan SHALL contain exactly fourteen ordered tasks, Exp8388–Exp8401,
+in four phases. The visible table, full JSON task objects and staged YAML SHALL
+agree, including prompts, lineage, gates, models, routing and deliverables.
+Preserve the incomplete V722 design verbatim. Do not repair historical authority
+by inventing missing historical sections. Preserve V717/V721/V722 protocols.
+
+The plan SHALL target independent label criteria, continuous calibrated learning
+and complete native service costs. State qualification SHALL use current task
+authority independently of historical replay. Preserve closed H1/H2 findings.
+A CUDA task SHALL add causal diagnosis, not repeat unchanged evidence inspection.
+A bounded canary SHALL name Qwen3.8-27B and use model_bounded_generation.
+ARC generalization and unfinished board obligations SHALL remain explicit.
+Each prompt SHALL require flushed progress, bounded calls and terminal verdicts.
+
+### SCENARIO-REPORT-V723-PLAN: Validate a staged plan without activation
+
+Compare all task objects and their canonical digest. Reject changed, removed,
+reordered and truncated contracts in private copies. Check producer gate fields,
+complete failure lineage, model classes, schema, exclusion and ARC/harness lints.
+Run relevant existing unit tests and private E2E-018. Record baseline failures
+separately. Confirm active roadmap, conductor, frozen protocols and old evidence
+remain intact. Planning SHALL NOT run a proposed experiment or activate a plan.
+
+Status: planning only; all fourteen experiments remain unexecuted.
