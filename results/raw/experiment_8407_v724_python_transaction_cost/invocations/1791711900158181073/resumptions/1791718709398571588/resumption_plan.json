@@ -1,0 +1,127 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8407-private/invocation-im50j90q/E2E020",
+        "-p",
+        "carnot.testing.historical_roots_8402",
+        "--historical-fixture-manifest=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791693561388694586/fixtures/manifest.json",
+        "--historical-current-root=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791693561388694586/current/pinned"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "private_E2E020",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8407-private/invocation-im50j90q/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8407-private/invocation-im50j90q/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8407-private/invocation-im50j90q/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8407-private/invocation-im50j90q/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/python_transaction_cost_8407.py",
+        "python/carnot/reporting/python_transaction_cost_8407.py",
+        "python/carnot/reporting/python_transaction_runner_8407.py",
+        "scripts/experiments/experiment_8407_v724_python_transaction_cost.py",
+        "tests/python/test_python_transaction_cost_8407.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/python_transaction_cost_8407.py",
+        "python/carnot/reporting/python_transaction_cost_8407.py",
+        "python/carnot/reporting/python_transaction_runner_8407.py",
+        "scripts/experiments/experiment_8407_v724_python_transaction_cost.py",
+        "tests/python/test_python_transaction_cost_8407.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/python_transaction_cost_8407.py",
+        "python/carnot/reporting/python_transaction_cost_8407.py",
+        "python/carnot/reporting/python_transaction_runner_8407.py",
+        "scripts/experiments/experiment_8407_v724_python_transaction_cost.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_python_transaction_cost_8407.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ],
+  "original_plan": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8407_v724_python_transaction_cost/invocations/1791711900158181073/validation_plan.json",
+    "sha256": "sha256:2c47aa7e26a571d1d993bc5bf619cb589f99271d88bfc7184922141d3d1c6480"
+  }
+}
