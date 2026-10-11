@@ -52194,3 +52194,21 @@ Research selection: finish the retrospective released-label criterion test and
 durable small-head learning. Resolve the exact failed consumer fixtures before those
 runs. Preserve the closed exposed-development utility results. No generator
 weight update, new corpus substitution or hardware purchase follows this scan.
+
+### 2026-10-11: Exp8409 released factuality criterion replication
+
+The local audit uses the pinned LPHB release commit
+`c2cf053567d5ae458656ee0e420509e35d73406d` through Exp8389 and qualified
+Exp8403 custody. Original released CSV operands determine every measurement.
+The inherited contrast is `0.5*((FPR_p1-FPR_p2t)+(FPR_p1s-FPR_p2))` on identical
+paired A1=0 answers. Whole normalized-question clusters are bootstrapped 10000
+times with seed7238388. A2 agreement is reliability sensitivity. The output
+reports all missing conditions and worst-case bounds. This entry makes no new
+claim about the paper beyond the authenticated released operands.
+
+Previously opened labels support retrospective replication only. Human agreement
+does not prove world truth or independent Carnot detector superiority. Exp8403's
+independent-evaluation gate and unresolved exposures remain preserved. A genuine
+independent study needs disjoint unexposed questions, separately adjudicated
+factuality, adequate class support and sealed detector predictions before target
+access. See `docs/research-notes/v724-label-criterion.md` for exact limits.

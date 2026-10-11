@@ -53488,3 +53488,23 @@ shipped direct scoring and sparse updates. It batches only consecutive predictio
 events and flushes every remainder before feedback. The independent reducer
 rejects early releases, lost tails, changed work counts, default clocks and
 rehashed snapshots. Genuine private child shards cover the new CLI and failures.
+
+## REQ-VERIFY-8409: Qualify retrospective reduction in bounded private children
+
+Reuse shipped authority, execution, publication and typed validator consumers.
+Freeze exact scoped unit, private E2E-018/019, Ruff, strict mypy, spec-coverage
+and genuine child-coverage commands before measurement. Require 100 percent
+newly owned statements. Record private disk scratch, memory, tools, input hashes,
+4800-second cap, phase progress, child exits, durations and log hashes.
+
+### SCENARIO-VERIFY-8409-REPLAY
+
+Fresh bounded processes accept valid and blocked candidates. Missing input,
+deliberate error and self-consistently rehashed primitive changes fail replay.
+Unchanged adversarial verification and strict row lint check terminal bytes.
+Retain findings; unknown, warning and critical findings close readiness.
+Publish only checked terminal bytes atomically. New CLI accepts 20261011;
+historical date contracts and frozen protocols remain unchanged. Use
+aggregation_from_upstream_artifacts, no_model_load and zero LLM calls.
+
+Status: specified before tests. Conductor owns ops and BMAD reconciliation.

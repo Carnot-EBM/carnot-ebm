@@ -98495,3 +98495,32 @@ primitive request and transaction clocks, and publishes only checked bytes.
 Missing inputs retain27360 intended units. Readiness consumes the unchanged
 hashed coverage reader. Cold replay reconstructs cost from immutable operands.
 Ops and BMAD reconciliation remain assigned to the conductor.
+
+## REQ-REPORT-8409: Replicate the frozen released factuality criterion
+
+Require independently pinned Exp8403 release_criterion_ready_score=1. Preserve
+its disjoint_eval_ready_score and every unresolved exposure obligation. Authenticate
+reviewed release CSV blobs. No detector fit, prompt selection, label generation,
+current LLM inference or independent scientific benefit occurs. Keep 900 intended
+answers and all four arms joined by item, dataset-qualified question, generator
+and exact answer hash. A1 is primary; A2 is reliability sensitivity.
+
+### SCENARIO-REPORT-8409-FACTORIAL
+
+Compute paired FPR on identical A1=0 eligible answers using
+0.5*((FPR_p1-FPR_p2t)+(FPR_p1s-FPR_p2)). Bootstrap whole normalized-question
+clusters 10000 times with seed7238388. Keep all generator answers together.
+Report 95 percent intervals, FP/FN, kappa, annotation disagreement and all
+strata. Preserve every missing pair and worst-case missing-output bounds.
+A positive lower limit above zero describes released evidence only. A null or
+negative effect is terminal. Agreement with A1 never proves world truth.
+
+### SCENARIO-REPORT-8409-CUSTODY
+
+Cold recomputation starts from original authenticated CSV operands. Swapped
+conditions, duplicated question clusters, changed human labels and rehashed
+joins cannot authorize changed evidence. External absence blocks measurement;
+failed owned validation disqualifies. Qualified audit readiness can equal one
+for a null result. Generalization and learning-benefit scores stay zero.
+
+Status: specified before tests. Conductor owns ops and BMAD reconciliation.
