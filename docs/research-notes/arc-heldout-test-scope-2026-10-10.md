@@ -111,6 +111,40 @@ attempts, can answer one narrow question (do any plans install at all) but canno
 with a tight interval. It also needs the conductor to hold off its own generator, and a lease
 check I did not look into.
 
+## Correction and first induction run (2026-10-11, append-only)
+
+**Correction.** Item 2 above says it "needs the GPU lease and the existing instrumentation, not new
+code." That was wrong. The July driver (`results/first_win_llm_on_20260727/firstwin.py`) is bound
+to the retired Qwen3.5-9B generator and to the main checkout path. A new driver was needed:
+`scripts/experiments/outer_loop_arc_induction_plans_20261010.py`. It builds the shipped proposer,
+pins one card by PCI bus order, and joins the server PID to the GPU UUID. Check at the start and
+end of the run: confirmed on UUID `GPU-7971baff...` both times.
+
+**Run.** 25 public games, variant 1, 4 cells in parallel, 200-action budget, one server. Wall time
+29,905 s (8.3 h). Raw cells: `results/arc_induction_plans_20261010/cells/`.
+
+| Count | Value |
+|---|---|
+| Induce attempts | 26 |
+| Plan installed (planned) | 1 (tn36) |
+| `proposer_failed` | 23 |
+| `no_active_transitions` | 1 (vc33) |
+| Games reaching level 1 | sp80, vc33 |
+
+**This run does not give a rate.** In 23 of 26 attempts the proposer got zero responses. The
+server log shows 94 `Context size has been exceeded` errors. The server ran 4 slots with a
+unified KV cache of 106,496 tokens shared by all slots. Four concurrent induce calls, each near
+the 62,490-token median, overflow it. This is my driver's choice (4 parallel cells). It is not
+evidence about the model. The scored kernel plays one game at a time, so it does not hit this.
+
+**What the run does show.** The one attempt with room (tn36) got a response and installed a
+plan. July had 0 of 136 installed on the retired generator. One of one is not a rate. The
+`FRAME-CHANGE SCORER LOAD FAILED` warning appeared in every cell, so the action-effect prior was
+inert in this worktree. I have not checked whether the scored kernel sees the same failure.
+
+**Next step if wanted.** Re-run with one cell at a time (`--k 1`). About 26 attempts at roughly
+1,700 s each is about 12 hours on one card.
+
 ## GPU lease findings (2026-10-10, after the reboot)
 
 I looked at the lease code and at what actually protects a GPU run today. Nothing was launched.

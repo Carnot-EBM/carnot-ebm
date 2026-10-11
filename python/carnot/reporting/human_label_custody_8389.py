@@ -9,7 +9,7 @@ import io
 import json
 from pathlib import Path
 import time
-from typing import Any, cast
+from typing import Any
 import unicodedata
 import urllib.request
 
@@ -104,7 +104,7 @@ def authenticate(name: str, ref: Json) -> bytes:
     ).hexdigest()
     if blob != RELEASE_FILES[name]:
         raise ValueError("reviewed_blob:" + name)
-    return cast(bytes, data)
+    return data
 
 
 def acquire(raw: Path) -> Json:
