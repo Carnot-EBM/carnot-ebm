@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-10-10
+**Last Reconciled:** 2026-10-11
 
 Exp8084 publication custody was reviewed for SCENARIO-REPORT-8084-WORKER-OUTPUT.
 The seal worker owns its explicit output independently of the primary publisher.
@@ -493,3 +493,24 @@ on the old qualified five-input workload as a separate deployment branch.
 A supplied causal CUDA repair receipt gates the bounded mandated-Qwen canary.
 ARC uses newly qualified supervisor receipts. Hardware work preserves actual
 board operation limits. These are planned checks, not deployed capabilities.
+
+## 2026-10-11 — V726 executable criterion and feedback plan
+
+The preceding V725 section describes intentions. Only four tasks activated;
+its authority mismatch blocked the scientific chain. V726 stages fourteen
+matching tasks (Exp8429–Exp8442), with the full contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and staged queue in
+`research-roadmap-next.yaml`. The active V725 queue is preserved.
+
+The proposed nine-input energy head uses released human labels for exposed
+retrospective decisions. Its checkpoint qualification is a separate prerequisite
+for bounded online feedback. Two transactions per block seal predictions and
+then commit released updates. Recovery distinguishes a sealed checkpoint from
+an already committed updated block, using stable acknowledgment IDs.
+
+Native proof reuse is deferred because the existing consumer expects a different
+metric name. Complete qualified Python clocks instead support disjoint arithmetic
+attribution and conditional acceleration ceilings. No ceiling certifies a native
+or FPGA speedup. Current Qwen generation remains a separately gated bounded canary.
+Live ARC evidence and board readers preserve their actual support and operations.
+These are planned experiments; no new serving capability is deployed here.

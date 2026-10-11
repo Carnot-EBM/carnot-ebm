@@ -9,41 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 5 |
 | CANNOT_DETERMINE | 3 |
-
-## experiment_8408_native_transaction_cost.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The comparison was blocked because upstream `native_parity_ready_score` was 0, while the gate required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8409_v724_retrospective_label_criterion.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-All listed acceptance gates are met, including a positive primary lower bound.
-
-## WHAT IS MISSING
-Per-unit primary metric rows identifying each question/cluster and arm or condition. "acceptance_gates.positive_primary_lower_bound" records only `true`; "authority.contract_rows" contains contract checks, not primary comparison outcomes.
-
-## THE CHECK A READER CANNOT DO
-Is the claimed positive comparison supported broadly across question clusters, or driven by a few outliers?
 
 ## experiment_8410_v724_cuda_reader_qualification.json
 
@@ -53,13 +20,13 @@ Is the claimed positive comparison supported broadly across question clusters, o
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible excerpt marks the cached-reader gate accepted, but ends before revealing the current terminal verdict.
+The visible fragment reports `"cached_reader": true`, but ends mid-prompt before showing a terminal headline verdict.
 
 ## WHAT IS MISSING
-The remainder of the artifact: current `"honest_verdict"`, `"verdict_class"`, and reader-qualification outcome rows. `"acceptance_gates"` contains booleans; `"execution_authority.contract_rows"` documents task matching; the excerpt ends inside `"execution_authority.tasks[1].prompt"`.
+The remainder of the artifact, including terminal `"honest_verdict"` and `"verdict_class"` values and outcome rows or diagnostics. `"acceptance_gates"`, `"environment_delta_rows"`, and `"contract_rows"` are present; `"execution_authority.gate_check_summary"` is empty.
 
 ## THE CHECK A READER CANNOT DO
-Does `"cached_reader": true` follow from recorded per-unit qualification results?
+Does the terminal verdict assert a comparative result without supporting per-unit measurements, report an undiagnosed blocker, or do neither?
 
 ## experiment_8411_bounded_qwen_canary.json
 
@@ -69,7 +36,7 @@ Does `"cached_reader": true` follow from recorded per-unit qualification results
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The canary was blocked because `runtime_changed_score` and `cuda_context_ready_score` each equaled 0 while their gates required 1.
+The Qwen evidence canary was blocked because `runtime_changed_score` and `cuda_context_ready_score` were both 0, while each gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -79,29 +46,13 @@ none
 
 ## experiment_8412_v724_arc_panel_qualification.json
 
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The eight-episode panel qualified without establishing scientific benefit.
-
-## WHAT IS MISSING
-The eighth episode’s “per_game_results” row, for “lf52-271a04aa:22:on”, including “absolute_metric”, “progress_count”, and “status”; the artifact cuts off inside row seven, while “intended_count” and “completed_count” both report 8.
-
-## THE CHECK A READER CANNOT DO
-Did supervisor-on produce different progress from supervisor-off for lf52-271a04aa at seed 22?
-
-## experiment_8413_v724_board_operation_boundary.json
-
 **CHECKABLE**
 
 ## VERDICT
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-KV260 offload remains unqualified because compatible kernels and complete transport/cost evidence are missing, as documented in "acceptance_gates" and "board_operation_rows".
+Panel qualification completed, but scientific benefit and independent generalization were not established.
 
 ## WHAT IS MISSING
 nothing
@@ -109,20 +60,40 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
+## experiment_8413_v724_board_operation_boundary.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible portion reports unmet board-acceptance gates, but no final verdict or comparative headline claim is visible.
+
+## WHAT IS MISSING
+The complete headline claim/verdict: the artifact cuts off mid-entry in "cited_upstream_artifacts". Visible "acceptance_gates" records failed checks, and "board_operation_rows" includes "reason" and "missing_reason", so blocker diagnostics are present.
+
+## THE CHECK A READER CANNOT DO
+Does the omitted remainder claim a comparative benefit, and provide per-unit evidence supporting it?
+
 ## experiment_8414_v724_gatemate_obligation.json
 
 **CHECKABLE**
 
 ## VERDICT
+
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The GateMate obligation is recorded, but historical authentication and hardware execution remain blocked by missing source bytes and physical/device evidence.
+
+The obligation is recorded, while historical authentication and hardware execution remain blocked by missing exact source bytes and physical/device evidence.
 
 ## WHAT IS MISSING
+
 nothing
 
 ## THE CHECK A READER CANNOT DO
+
 none
 
 ## experiment_8415_v724_capstone.json
@@ -133,10 +104,42 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible H1 summary reports no cost improvement for spline34 over RBF34, with “mean_gain” = −0.00390625 across 128 intended units.
+H1 reports a negative descriptive mean cost gain for spline34 versus RBF34, with geometry unqualified.
 
 ## WHAT IS MISSING
-“paired_cost_rows” is truncated in its 100th row at “gain_l”; remaining fields, including “gain_lower”, “gain_upper”, “spline_cost”, and “qualified”, and rows 101–128 are missing.
+Complete "paired_cost_rows": slot 100 is truncated and slots 101–128 are absent, despite "intended_count": 128 and "bootstrap_summary" reporting "mean_gain". The geometry diagnostic is present in "qualification_reason" and "residuals".
 
 ## THE CHECK A READER CANNOT DO
-Do the complete 128 paired cost rows reproduce the reported “mean_gain” of −0.00390625?
+Do the 128 per-unit cost differences reproduce the reported all-intended mean gain of −0.00390625?
+
+## experiment_8416_v725_contract_methods.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Methods are frozen, but the contract is blocked by a missing independent design binding, only 4 of 13 task objects being present, and a missing runtime-repair receipt, all diagnosed in "gate_check_summary".
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8417_criterion_feature_panel.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because upstream `methods_ready_score` was 0, failing the required equality check against 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none

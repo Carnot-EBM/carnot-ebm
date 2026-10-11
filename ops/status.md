@@ -2,6 +2,30 @@
 
 **Last Updated:** 2026-10-11
 
+## 2026-10-11 — V726 research plan staged
+
+Milestone 2026.10.726 stages exactly fourteen tasks, Exp8429–Exp8442, in four
+phases. Both required files now share the complete task contract:
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. V725's thirteen-task document is preserved at
+`openspec/change-proposals/research-roadmap-v725-preserved-20261011.md`.
+
+Actual V725 activated only four tasks. Exp8416 blocked on the authority mismatch;
+Exp8417 was pre-gated and Exp8418/8419 were cascade-skipped. No criterion or
+learning result ran. V726 measures those untested questions through retrospective
+human-label calibration and bounded continuous feedback, with separate checkpoint
+qualification. Qualified complete Python costs support conditional acceleration
+ceilings; the unchanged native-consumer mismatch is not retried. ARC and board
+readers preserve their evidence limits. The only LLM task is a conditional
+Qwen3.8-27B-GGUF bounded canary.
+
+Planning validation: 125 focused tests pass, including private E2E-018 CLI;
+full-object equality, twelve authority mutations, ten gate edges and 189 existing
+path checks pass. Retirement lint is clean. Existing spec-reference and formatting
+debt is detailed in the design's Planning validation section. The active V725
+roadmap, conductor source and exclusion manifest remain byte-identical. No
+experiment ran, milestone activated or external publication occurred here.
+
 ## 2026-10-11 — V724 CUDA reader environment repair
 
 The reader now compares driver execution operands while retaining full

@@ -3969,3 +3969,28 @@ YAML share an exact task contract. Active V724 and conductor code are preserved.
 
 No task is marked implemented by this planning entry. The dated literature scan
 in research-references.md precedes the design. Historical H1/H2 nulls remain closed.
+
+## 2026-10-11 — V726 staged plan; V725 execution correction
+
+V725's preceding planning entry is an intended thirteen-task design, not the
+executed queue. Actual V725 contained only Exp8416–Exp8419: the contract task
+blocked, Exp8417 was pre-gated and Exp8418/8419 were cascade-skipped. No criterion
+fit or learning result exists. Its design is preserved as
+`openspec/change-proposals/research-roadmap-v725-preserved-20261011.md`.
+
+V726 stages exactly fourteen tasks, Exp8429–Exp8442, in four phases. The visible
+contract, full embedded task objects, canonical digest and staged YAML agree.
+
+| Requirement / priority | Planned tasks | Evidence boundary |
+|---|---|---|
+| REQ-REPORT-PLAN-V726 / SCENARIO-REPORT-PLAN-V726-CONTRACT | Exp8429 and all fourteen slots | Private authority and mutation checks; staged planning, not activation |
+| FR-12 / SCENARIO-REPORT-PLAN-V726-SCIENCE | Exp8430–Exp8432 | Retrospective human-label calibration; no independently correct current-Qwen headline |
+| FR-11 continuous self-learning | Exp8433–Exp8435 | Qualified block checkpoints, causal sparse updates, finite admission and simultaneous retention |
+| FR-05/08 and NFR-01 | Exp8436–Exp8438 | Complete Python cost attribution and conditional acceleration ceilings; Qwen canary requires causal runtime evidence |
+| ARC generalization floor | Exp8439 | Existing live supervisor censoring/shared support; no duplicate solve or repeated exposed panel |
+| Hardware continuity | Exp8440–Exp8441 | Existing board-reader failure qualification and bounded GateMate physical obligation |
+| FR-09/10 research reconciliation | Exp8442 | Fourteen terminal slots, explicit missing evidence and preserved historical nulls |
+
+The references scan precedes design. Validation results are recorded in the
+V726 design's Planning validation section. Execution remains pending; no
+implementation, experiment result or activation is implied by this entry.

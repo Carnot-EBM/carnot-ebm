@@ -98769,3 +98769,40 @@ contract admission blocked. CUDA receipt absence remains an independent optional
 gate. Invocation primitives and terminal validation belong under
 `results/raw/experiment_8416_v725_contract_methods/`. No historical protocol or
 active roadmap was changed. Global repository health remains unmeasured.
+
+## REQ-REPORT-PLAN-V726: Bind the complete staged research milestone
+
+The V726 design SHALL describe exactly fourteen ordered tasks, Exp8429–Exp8442,
+matching every task object in `research-roadmap-next.yaml`. Its visible table,
+embedded JSON and canonical full-task SHA-256 SHALL bind prompts, routing,
+substrates, gates and complete retirement metadata. A private activation copy
+SHALL test authority equality; planning SHALL NOT change the active roadmap or
+conductor. Preserve the preceding V725 design byte-for-byte. V725's four-task
+activation mismatch and absent science SHALL remain explicit historical facts.
+
+### SCENARIO-REPORT-PLAN-V726-CONTRACT
+
+Private checks accept the complete staged authority and reject dropped/reordered
+tasks and changed prompt, model, gate, routing or retirement fields. Every gate
+names an earlier producer and an identically spelled required artifact field.
+Each prompt requires numbered progress/heartbeat and bounded-write steps, actual
+substrate classification, per-unit evidence, verdict_class, gate diagnostics,
+exact deliverables and executable commands. The optional current-LLM task declares
+`unsloth/Qwen3.8-27B-GGUF` and `model_bounded_generation`.
+
+### SCENARIO-REPORT-PLAN-V726-SCIENCE
+
+Public human-label calibration SHALL remain retrospective. Deterministic duplicate
+fits SHALL NOT inflate independent support. Continuous learning SHALL seal
+predictions before admitted feedback and qualify the new checkpoint schema
+separately. Recovery SHALL distinguish sealed predictions from committed updates
+and preserve idempotent acknowledgment IDs. Retention uses a simultaneous maximum
+window bound. Conditional Amdahl ceilings SHALL include the complete transaction
+boundary and SHALL NOT be reported as measured native/FPGA acceleration. Old
+H1/H2 nulls and board-operation limits remain intact. Missing optional CUDA or
+hardware evidence SHALL NOT block independent CPU studies.
+
+Status: planning contract only. The existing authority lifecycle, gate/schema
+checks and private E2E-018 validate reused mechanisms. Future execution tasks
+add focused requirements and tests before implementation. No science result or
+production behavior is established by staging this plan.

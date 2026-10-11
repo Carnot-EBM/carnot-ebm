@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-10-11 — Stage research milestone 2026.10.726
+
+- Created matching fourteen-task design and YAML, Exp8429–Exp8442, across four
+  phases; included the full-object JSON contract, visible table and digest.
+- Preserved V725's design and corrected its intended-versus-activated history:
+  four queued tasks, contract failure and no calibration/learning results.
+- Added a dated literature scan before design. Planned human-label decisions,
+  capacity-limited continuous learning, independent checkpoint qualification,
+  complete-service acceleration bounds and the conditional mandated-Qwen canary.
+- Included exact gate producer fields, complete retirement lineage, per-unit
+  rows, verdict classes, progress/heartbeat steps and bounded writes in every prompt.
+- Reconciled reporting specs, traceability, architecture and status. Planning
+  checks include 125 passing tests/private E2E-018, twelve rejected authority
+  mutations, ten valid gates and 189 resolvable existing-path references.
+- Retained existing traceability/formatting debt explicitly in the design.
+  Active roadmap, conductor and exclusion manifest are unchanged; no activation,
+  experiment execution or push is part of this planning work.
+
 ## 2026-10-11 — Operational retrospective for milestone 2026.10.725
 
 - Wrote `results/operational_retro_2026_10_725.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.725`. Authoritative disk-mtime fallback data records 1 experiment completed (0 compute-bound, 1 synthesis-only) across 2.1 total wall-time minutes (average 2 minutes per experiment).

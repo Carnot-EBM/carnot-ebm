@@ -52300,3 +52300,89 @@ The next design should use human labels for an explicitly retrospective
 calibration study. It should test capacity-limited delayed updates separately
 from the closed V717 learning hypothesis. Independent current-Qwen factuality
 claims still require qualified GPU execution and new adjudicated targets.
+
+## 2026-10-11 — V726 planning scan: execute the unmeasured calibration study
+
+This scan precedes the V726 design. V725 stopped at its document/queue mismatch.
+Its blocked tasks supply no calibration or learning result. The sources below
+are external research, not Carnot measurements. Rechecked leads are marked.
+
+### Selected methods and new leads
+
+- **Rechecked human criteria:** Valjakka et al.,
+  [The Labeling Problem](https://arxiv.org/abs/2610.08026), submitted October 6,
+  2026, separates factual correctness from reference faithfulness. Use the
+  already pinned author release for retrospective calibration. Preserve its
+  question clusters, exposure limits and annotator sensitivity. Do not infer
+  unseen factuality performance from this public panel.
+- **Rechecked error strata:** [The Detectability Gap](https://arxiv.org/abs/2609.35860),
+  September 25, 2026, explicitly identifies coupling between agreement-defined
+  groups and agreement-based detection. Freeze dataset and generator strata
+  before evaluation. Do not use detector outcomes to define favorable groups.
+- **Rechecked continuous learning:** Hoang, Gupta and Harris,
+  [Online KAN](https://arxiv.org/abs/2602.02056), revised June 19, 2026,
+  uses local spline support for sparse fixed-point updates. Measure coefficient
+  changes, causal predictions and retention with Carnot's existing small head.
+  Its FPGA result does not certify the attached board's operations.
+- **Rechecked finite feedback:** Ryabchenko, Attias and Roy,
+  [Capacity-Constrained Online Convex Optimization](https://arxiv.org/html/2606.11711v1),
+  June 10, 2026, studies randomized tracking and weighted delayed feedback.
+  Test bounded block admission separately from durable storage correctness.
+  FIFO versus uniform block admission is a paper-inspired ablation, not their
+  scheduler implementation or a transfer of its regret theorem.
+- **New benchmark lead:** [HalluScoring 2026](https://arxiv.org/abs/2609.38355),
+  September 29, separates unseen-question from unseen-generator evaluation in
+  Arabic QA. Keep those two axes separate in future dataset qualification.
+  The current English source-feature study cannot inherit its labels, language
+  coverage or reported performance. File as a future corpus lead, not an added
+  benchmark or a reason to move the current test partition.
+- **Rechecked systems cost:** Yin et al.,
+  [FPGA–ASIC Ising co-design](https://arxiv.org/abs/2602.15985), revised September 4,
+  2026, treats decomposition and orchestration as system costs. Use complete
+  paired transactions, including persistence and delayed-feedback drain.
+  Kernel parity alone cannot establish application speed.
+
+### Coverage of other requested arXiv topics
+
+| Topic | Inspected source | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), 2025/2026 | Architectural context; neither establishes factual truth or reopens Carnot's closed generator results. |
+| Structured verification | [Distributional EBMs](https://arxiv.org/abs/2605.18871), 2026 | Separate deterministic penalties from learned calibration; preserve controls for model identity. |
+| Neural constraint satisfaction | [Certified Correctness](https://arxiv.org/abs/2608.14569), 2026 | Instance verification remains necessary; indexed submission metadata disagrees, so no precise date is inferred. |
+| Ising inference in ML | [Dynamical Ising inference](https://arxiv.org/abs/2607.03039), 2026 | Generalization needs measured distribution shifts, not density-prior shortcuts. |
+| Energy-guided generation | [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), 2025; [Draft-Conditioned Constrained Decoding](https://arxiv.org/abs/2603.03305), 2026 | Vision transfer and structured-output costs are distinct questions. Keep text decoding intervention deferred until runtime and verifier utility qualify. |
+| Hardware sampling | [Parallel inertial Ising](https://arxiv.org/abs/2604.17109), 2026 | Optimization success does not certify a Gibbs sampling distribution. No new sampler sweep. |
+
+### Secondary sources and retrieval limits
+
+- **OpenReview:** searched 2026 EBM and verification submissions. The
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) required a browser
+  challenge. The [indexed proceedings PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  was also checked. No inaccessible review or acceptance detail is inferred.
+- **Semantic Scholar:** attempted citation lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Both were inaccessible through the browser. Site queries returned no usable
+  inventory. Citation coverage is incomplete; this is not evidence of zero citations.
+- **Hugging Face papers:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and [CiteTracer](https://huggingface.co/papers/2605.08583). Field-level citation
+  adjudication is a discovery lead. The present plan does not adopt its metrics
+  or add a citation product. Paper methods, not generated feed summaries, govern.
+- **GitHub Trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were four weeks old. No current rank is asserted. Rechecked the author-owned
+  [irithyll repository](https://github.com/evilrat420/irithyll), which advertises
+  streaming Rust learners. It remains an unaudited dependency lead.
+- **Extropic:** checked [Writing](https://extropic.ai/writing), September 4's
+  [Z1T](https://extropic.ai/writing/z1t/) and October's
+  [recursive intelligence update](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T describes sparse model/hardware co-design with FPGA orchestration and
+  estimated efficiency. No local TSU availability or Carnot speedup follows.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The vendor description motivates energy-based reasoning. No inspected
+  reproducible implementation changes the local experiment gates.
+
+Selection: execute the previously unmeasured calibrated-decision and feedback
+questions with a complete contract. Separate checkpoint qualification from the
+learning run. Preserve independent factuality as an open gap. No generator
+training, hardware purchase, external publication or new third-party learner.
