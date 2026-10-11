@@ -1,0 +1,207 @@
+...........F                                                             [100%]
+=================================== FAILURES ===================================
+___________________ test_runner_validation_and_coverage_copy ___________________
+
+tmp_path = PosixPath('/var/tmp/exp8430-coverage1/owned-tests/test_runner_validation_and_cov0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2b669c1b20>
+
+    def test_runner_validation_and_coverage_copy(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8430-REPLAY: real subprocess coverage shards survive publication."""
+        import coverage
+    
+        private = tmp_path / "private"
+        private.mkdir()
+        cov = coverage.Coverage(data_file=str(private / ".coverage.actual"), config_file=False)
+        source = private / "measured.py"
+        source.write_text("print('genuine coverage primitive')\n")
+        cov.start()
+        exec(compile(source.read_text(), str(source), "exec"))
+        cov.stop()
+        cov.save()
+        atomic_json(private / "coverage.json", dict(scope="private measured copy control"))
+        monkeypatch.setattr(
+            r,
+            "manifest",
+            lambda _: [
+                dict(
+                    name="actual_validation_child",
+                    argv=[sys.executable, "-u", "-c", "print('bounded actual child')"],
+                    expected=0,
+                    deadline=30,
+                    scope="owned",
+                )
+            ],
+        )
+        output = tmp_path / "results" / (e.NAME + ".json")
+        assert r.run(e.ROOT, output, private) == 0
+        value = json.loads(output.read_bytes())
+        assert e.replay(output)
+        for mutation in ["operand", "receipt", "primitive", "blocked_value"]:
+            changed = deepcopy(value)
+            work = json.loads(Path(value["primitive_reference"]["path"]).read_bytes())
+            if mutation == "receipt":
+                changed["validation_receipts"][0]["stdout_sha256"] = "sha256:foreign"
+            else:
+                if mutation == "operand":
+                    work["source_refs"][0]["sha256"] = "sha256:foreign"
+                elif mutation == "primitive":
+                    work["panel"]["rows"][0]["x"][0] = 0.91
+                else:
+                    work["public_rows"] = []
+                path = tmp_path / (mutation + ".json")
+                atomic_json(path, work)
+                changed["primitive_reference"] = e.reference(path)
+            changed["reproducibility_checksum"] = e.checksum(changed)
+            path = tmp_path / ("candidate_" + mutation + ".json")
+            atomic_json(path, changed)
+            assert not e.replay(path)
+        bad = deepcopy(value)
+        bad["inference_substrate"] = "unrecognized substrate"
+        candidate = tmp_path / "flagged.json"
+        atomic_json(candidate, bad)
+        checks, findings = r.scan(candidate, tmp_path / "flagged_scan")
+>       assert findings and not checks[0]["passed"]
+E       assert ([])
+
+tests/python/test_v726_feature_panel_8430.py:242: AssertionError
+----------------------------- Captured stdout call -----------------------------
+genuine coverage primitive
+[exp8430] phase=preconditions completed=0 pending=900
+[exp8403] phase=factorial_join completed=0 pending=900
+[exp8403] phase=factorial_join completed=100 pending=800
+[exp8403] phase=factorial_join completed=200 pending=700
+[exp8403] phase=factorial_join completed=300 pending=600
+[exp8403] phase=factorial_join completed=400 pending=500
+[exp8403] phase=factorial_join completed=500 pending=400
+[exp8403] phase=factorial_join completed=600 pending=300
+[exp8403] phase=factorial_join completed=700 pending=200
+[exp8403] phase=factorial_join completed=800 pending=100
+[exp8430] phase=feature_extraction completed=0 pending=900
+[exp8430] phase=feature_extraction completed=100 pending=800
+[exp8430] phase=feature_extraction completed=200 pending=700
+[exp8430] phase=feature_extraction completed=300 pending=600
+[exp8430] phase=feature_extraction completed=400 pending=500
+[exp8430] phase=feature_extraction completed=500 pending=400
+[exp8430] phase=feature_extraction completed=600 pending=300
+[exp8430] phase=feature_extraction completed=700 pending=200
+[exp8430] phase=feature_extraction completed=800 pending=100
+[exp8430] phase=feature_panel_complete completed=900 pending=0
+[exp8205] phase=validation completed=0 pending=1
+[exp8205] phase=before_subprocess_actual_validation_child completed=0 pending=1
+[exp8205] phase=after_subprocess_actual_validation_child completed=1 pending=0
+[exp8205] phase=validation_complete completed=1 pending=0
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_error completed=0 pending=1
+[exp8205] phase=after_subprocess_error completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8403] phase=factorial_join completed=0 pending=900
+[exp8403] phase=factorial_join completed=100 pending=800
+[exp8403] phase=factorial_join completed=200 pending=700
+[exp8403] phase=factorial_join completed=300 pending=600
+[exp8403] phase=factorial_join completed=400 pending=500
+[exp8403] phase=factorial_join completed=500 pending=400
+[exp8403] phase=factorial_join completed=600 pending=300
+[exp8403] phase=factorial_join completed=700 pending=200
+[exp8403] phase=factorial_join completed=800 pending=100
+[exp8430] phase=feature_extraction completed=0 pending=900
+[exp8430] phase=feature_extraction completed=100 pending=800
+[exp8430] phase=feature_extraction completed=200 pending=700
+[exp8430] phase=feature_extraction completed=300 pending=600
+[exp8430] phase=feature_extraction completed=400 pending=500
+[exp8430] phase=feature_extraction completed=500 pending=400
+[exp8430] phase=feature_extraction completed=600 pending=300
+[exp8430] phase=feature_extraction completed=700 pending=200
+[exp8430] phase=feature_extraction completed=800 pending=100
+[exp8430] phase=feature_panel_complete completed=900 pending=0
+[exp8430] phase=finished completed=900 pending=0
+[exp8403] phase=factorial_join completed=0 pending=900
+[exp8403] phase=factorial_join completed=100 pending=800
+[exp8403] phase=factorial_join completed=200 pending=700
+[exp8403] phase=factorial_join completed=300 pending=600
+[exp8403] phase=factorial_join completed=400 pending=500
+[exp8403] phase=factorial_join completed=500 pending=400
+[exp8403] phase=factorial_join completed=600 pending=300
+[exp8403] phase=factorial_join completed=700 pending=200
+[exp8403] phase=factorial_join completed=800 pending=100
+[exp8430] phase=feature_extraction completed=0 pending=900
+[exp8430] phase=feature_extraction completed=100 pending=800
+[exp8430] phase=feature_extraction completed=200 pending=700
+[exp8430] phase=feature_extraction completed=300 pending=600
+[exp8430] phase=feature_extraction completed=400 pending=500
+[exp8430] phase=feature_extraction completed=500 pending=400
+[exp8430] phase=feature_extraction completed=600 pending=300
+[exp8430] phase=feature_extraction completed=700 pending=200
+[exp8430] phase=feature_extraction completed=800 pending=100
+[exp8430] phase=feature_panel_complete completed=900 pending=0
+[exp8403] phase=factorial_join completed=0 pending=900
+[exp8403] phase=factorial_join completed=100 pending=800
+[exp8403] phase=factorial_join completed=200 pending=700
+[exp8403] phase=factorial_join completed=300 pending=600
+[exp8403] phase=factorial_join completed=400 pending=500
+[exp8403] phase=factorial_join completed=500 pending=400
+[exp8403] phase=factorial_join completed=600 pending=300
+[exp8403] phase=factorial_join completed=700 pending=200
+[exp8403] phase=factorial_join completed=800 pending=100
+[exp8430] phase=feature_extraction completed=0 pending=900
+[exp8430] phase=feature_extraction completed=100 pending=800
+[exp8430] phase=feature_extraction completed=200 pending=700
+[exp8430] phase=feature_extraction completed=300 pending=600
+[exp8430] phase=feature_extraction completed=400 pending=500
+[exp8430] phase=feature_extraction completed=500 pending=400
+[exp8430] phase=feature_extraction completed=600 pending=300
+[exp8430] phase=feature_extraction completed=700 pending=200
+[exp8430] phase=feature_extraction completed=800 pending=100
+[exp8430] phase=feature_panel_complete completed=900 pending=0
+[exp8403] phase=factorial_join completed=0 pending=900
+[exp8403] phase=factorial_join completed=100 pending=800
+[exp8403] phase=factorial_join completed=200 pending=700
+[exp8403] phase=factorial_join completed=300 pending=600
+[exp8403] phase=factorial_join completed=400 pending=500
+[exp8403] phase=factorial_join completed=500 pending=400
+[exp8403] phase=factorial_join completed=600 pending=300
+[exp8403] phase=factorial_join completed=700 pending=200
+[exp8403] phase=factorial_join completed=800 pending=100
+[exp8430] phase=feature_extraction completed=0 pending=900
+[exp8430] phase=feature_extraction completed=100 pending=800
+[exp8430] phase=feature_extraction completed=200 pending=700
+[exp8430] phase=feature_extraction completed=300 pending=600
+[exp8430] phase=feature_extraction completed=400 pending=500
+[exp8430] phase=feature_extraction completed=500 pending=400
+[exp8430] phase=feature_extraction completed=600 pending=300
+[exp8430] phase=feature_extraction completed=700 pending=200
+[exp8430] phase=feature_extraction completed=800 pending=100
+[exp8430] phase=feature_panel_complete completed=900 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v726_feature_panel_8430.py::test_runner_validation_and_coverage_copy
+1 failed, 11 passed, 1 warning in 136.65s (0:02:16)

@@ -98837,3 +98837,34 @@ Private zero decision-loss and nonzero compatibility controls retain all finding
 without changing inherited consumers, validators or readiness rules.
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+## REQ-REPORT-8430: Freeze a question-grouped public source-feature panel
+
+Exp8430 SHALL authenticate activated V726 authority and Exp8429 methods, reuse
+Exp8416's exact 150/50/100 question IDs, and preserve all 900 released answers
+and four prompt conditions. It SHALL join original answer/reference bytes by
+authenticated IDs. The nine inputs SHALL be released GPT-5-mini p2 q followed
+by evidence_features_7980's eight public values. Unknown operands stay missing.
+Dataset and generator identity SHALL remain reporting strata, never predictors.
+Only fit/tune targets SHALL enter trainer custody; test targets stay separate.
+Usable whole-question floors SHALL be 128/32/80, with eight questions carrying
+each class in tune/test. No reseeding or current model inference is permitted.
+Readiness SHALL describe reproducible retrospective inputs, never factual truth.
+
+### SCENARIO-REPORT-8430-PANEL
+
+Original release bytes reproduce q, source features, immutable roles, strata,
+per-question exclusions and separate trainer/evaluator views. Missing source,
+q or target stays missing and blocks fitting when registered support fails.
+
+### SCENARIO-REPORT-8430-CUSTODY
+
+Label and ID changes cannot enter numeric features. Unknown old overlap stays
+unknown. A failed owned validation disqualifies; missing required upstream
+bytes block. Optional CUDA, board and V722 evidence cannot block this CPU panel.
+
+Status: implemented by `python/carnot/reporting/v726_feature_panel.py` and the
+thin Exp8430 runner. `tests/python/test_v726_feature_panel_8430.py` covers
+original joins, immutable roles, missing inputs, leakage and terminal custody.
+The artifact records executed qualification receipts and retrospective limits.
+Conductor owns ops and BMAD reconciliation for this task.

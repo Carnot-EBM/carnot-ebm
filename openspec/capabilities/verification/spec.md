@@ -53730,3 +53730,27 @@ Fresh worker peak and growth bounds accept their exact limits and reject either
 exceeded bound. Authentication failure still records actual child memory.
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+## REQ-VERIFY-8430: Replay and qualify frozen feature-panel evidence
+
+Exp8430 SHALL cold-reconstruct primitive rows in a bounded fresh process,
+independently reconstruct a fixed sample, reject rehashed tampering, missing
+operands and deliberate errors, and use unchanged primary publication,
+adversarial verification and strict row consumers. Private E2E-018/E2E-021,
+scoped serial tests, Ruff, strict mypy and spec coverage SHALL produce bound
+receipts. Genuine child coverage SHALL cover 100 percent newly owned statements.
+Unknown, warning or critical findings SHALL prevent readiness; findings remain
+in evidence. Atomic terminal publication SHALL expose only verified bytes.
+
+### SCENARIO-VERIFY-8430-REPLAY
+
+A fresh real CLI accepts authenticated panel bytes and rejects changed features,
+partitions, target custody, readiness and primitive inputs even when their
+local checksums are recomputed. Missing replay input exits one; deliberate
+error exits seven. Private CLI output never replaces historical artifacts.
+
+Status: implemented by `python/carnot/reporting/v726_feature_panel_runner.py`.
+Focused tests exercise genuine CLI/child coverage, cold authority and methods
+reduction, missing operands, deliberate errors, scanner findings and rehashed
+feature/target-custody tampering. Executed commands and qualification outcomes
+are retained under the task's raw invocation. Conductor owns ops reconciliation.
