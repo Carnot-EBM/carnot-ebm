@@ -20075,3 +20075,4 @@ code |
 | 2026-10-11 22:08 UTC | Milestone 2026.10.726 activated | OK | 14 tasks queued |
 | 2026-10-11 22:36 UTC | Bind fourteen executable tasks and preserve the un | OK | 103 passed, 1 warning in 44.98s |
 | 2026-10-11 23:09 UTC | Build the frozen question-grouped source-feature p | OK | 93 passed, 1 warning in 82.86s (0:01:22) |
+| 2026-10-11 23:42 UTC | Train calibrated source energies with matched-info | OK | 88 passed, 1 warning in 99.29s (0:01:39) |
