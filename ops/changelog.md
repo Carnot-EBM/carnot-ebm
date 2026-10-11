@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-10-11 — Fix CUDA reader admission under the conductor environment
+
+- Preserve full environment observations while excluding CUDA_HOME/CUDA_PATH
+  toolkit discovery hints from the absolute driver binding's execution delta.
+- Retain device visibility, loader, driver, missing-operand and cold-replay gates.
+- Add 13 regressions covering discovery-hint changes, execution variables,
+  missing evidence and the conductor's environment. Seven regressions and
+  both reported failures were red before the code repair.
+
+Validation: 115 affected tests and 56 unchanged consumer/private E2E-018/
+fix-erasure checks pass. Fresh unit/subprocess coverage is 332/332 statements
+across both reader modules and CLI, with zero excluded lines. Scoped Ruff,
+formatting, strict typing and spec references pass. Original tests, runner,
+CLI and conductor source are byte-identical to task start. Reports live in
+`/var/tmp/carnot-8410-fix-validation/`; global spec tracing retains 1,142
+unrelated gaps.
+
 ## 2026-10-10 — Stage research milestone 2026.10.724
 
 - Created matching fourteen-task V724 design and staged YAML, Exp8402–Exp8415;

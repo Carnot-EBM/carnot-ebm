@@ -1,6 +1,23 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-10
+**Last Updated:** 2026-10-11
+
+## V724 CUDA reader environment repair — 2026-10-11
+
+| Requirement / Scenario | Implementation | Regression evidence |
+|---|---|---|
+| REQ-VERIFY-8410 / SCENARIO-VERIFY-8410-TOOLKIT-HINTS | `cuda_reader_8410.compare` preserves observed environment metadata and compares driver execution operands; CUDA_HOME/CUDA_PATH discovery hints alone grant no probe admission | `test_cuda_reader_environment_8410.py`: addition, removal, replacement, missing-environment and conductor-environment controls; device visibility, loader and driver changes still count |
+| REQ-REPORT-8410 / SCENARIO-REPORT-8410-REPLAY | Existing independent reader/runtime/context scores and cold replay remain intact | Original cached/no-probe, real CLI, receipt and rehashed-tamper assertions pass unchanged |
+
+Both reported failures reproduce with CUDA_PATH unset before the repair.
+The original 102-test subset plus 13 new regressions passes 115/115 under
+the conductor environment. Another 56 unchanged consumer, private E2E-018
+and REQ-CONDUCTOR-FIXGATE-1 tests pass. Fresh unit/subprocess coverage is
+332/332 statements across both reader modules and the direct CLI, without
+excluded lines. Scoped Ruff, formatting, strict types and spec references pass.
+Original tests, runner, CLI and conductor source retain their task-start bytes.
+Reports: `/var/tmp/carnot-8410-fix-validation/`. Global spec tracing still
+reports 1,142 unrelated gaps; no full-repository coverage claim is made.
 
 ## Planned V724 research milestone — 2026-10-10
 

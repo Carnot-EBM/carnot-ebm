@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-10-10
+**Last Updated:** 2026-10-11
+
+## 2026-10-11 — V724 CUDA reader environment repair
+
+The reader now compares driver execution operands while retaining full
+environment observations. CUDA_HOME/CUDA_PATH discovery hints cannot change
+the absolute, hashed driver binding or authorize a repeated CUDA probe.
+Device visibility, loader configuration and driver changes still count.
+
+The reported two failures reproduce with CUDA_PATH unset before the fix.
+All 115 affected tests (the original 102 plus 13 new regressions) pass in
+the conductor environment; 56 unchanged consumer, private E2E-018 and
+fix-erasure checks also pass. Fresh unit/subprocess statement coverage is
+332/332 across both reader modules and CLI, with zero exclusions. Scoped
+lint, formatting, strict typing and spec references pass. The original tests,
+runner, CLI, conductor source and published evidence remain intact.
+
+Reports are in `/var/tmp/carnot-8410-fix-validation/`. The global spec audit
+retains 1,142 unrelated traceability gaps; this result qualifies the repaired
+CUDA reader code and its validation suite. Final reconciliation confirms fresh
+documentation and flags only that existing global spec-reference issue.
 
 ## 2026-10-10 — V724 research plan staged
 

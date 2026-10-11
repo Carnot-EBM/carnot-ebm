@@ -98524,3 +98524,36 @@ failed owned validation disqualifies. Qualified audit readiness can equal one
 for a null result. Generalization and learning-benefit scores stay zero.
 
 Status: specified before tests. Conductor owns ops and BMAD reconciliation.
+
+## REQ-REPORT-8410: Publish independently qualified CUDA reader and runtime facts
+
+Bind the complete V724 design and actual20261011 invocation. Publish
+runtime_reader_ready_score independently of runtime_changed_score and
+cuda_context_ready_score. Qualification grants zero generalization or learning
+benefit; closed exposed-development H1=-0.00390625 and H2=0 remain closed.
+Keep all intended reader, inventory and context units with missing reasons.
+External absence is complete_blocked; owned validation failure is disqualified.
+
+### SCENARIO-REPORT-8410-REPLAY
+
+A fresh bounded child authenticates primitive operands and independently reduces
+reader and runtime facts. Positive, missing-input, deliberate-error and consistently
+rehashed tamper controls use unchanged primary publication, adversarial and strict
+row validators. Retain every finding; unknown/warning/critical findings block.
+Publish checked bytes atomically. Preserve all earlier primaries and protocols.
+Future producer paths are dependencies, never existing inputs. The conductor
+owns ops/status/changelog and BMAD reconciliation after this task exits.
+
+Implementation2026-10-11: the thin Exp8410 runner freezes scoped validation,
+seals genuine Coverage.py child shards, executes original private consumers,
+and runs fresh positive/missing/error/rehashed-tamper controls. Cold replay
+reconstructs current authority and cached primitives. Checked terminal bytes
+use unchanged publication and terminal validators. Ops and BMAD reconciliation
+remain assigned to the conductor after exit.
+
+Repair 2026-10-11: SCENARIO-VERIFY-8410-TOOLKIT-HINTS keeps toolkit discovery
+metadata visible without granting runtime_changed_score or device-probe
+admission. The original assertions and published evidence are preserved.
+115 affected tests and 56 unchanged consumer/E2E-018/fix-erasure checks pass;
+the two reader modules and CLI have 332/332 fresh covered statements with no
+excluded lines. This repair records its own ops and BMAD validation evidence.

@@ -447,3 +447,18 @@ Additional official ARC-AGI-3 Semi-Private results absent from your supplied fin
 
 - **September 3 — GPT-6 Astra results:** ARC Prize reported **62.7%** on ARC-AGI-3 Semi-Private with the Standard harness at max reasoning, and **99.9%** with the Provider Adapter harness at high reasoning. [Official announcement](https://arcprize.org/blog/astra).
 
+## 2026-10-11 13:10 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen **27.9% ($25,000)**; Lord Han Solo **23.8% ($7,500)**; Lohit Siriki **22.5% ($5,000)**. All three open-sourced their solutions. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734)
+
+Additional official ARC-AGI-3 Semi-Private results, showing each harness’s best score:
+
+| Model and source | Standard | Provider Adapter |
+|---|---:|---:|
+| [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+
+- **Research Summit announced:** ARC Prize will host its 2026 Research Summit in Boston on **October 23**, in collaboration with MIT. [Official event page](https://arcprize.org/events/research-summit-2026)
+

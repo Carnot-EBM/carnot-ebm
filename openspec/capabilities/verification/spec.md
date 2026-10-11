@@ -53508,3 +53508,56 @@ historical date contracts and frozen protocols remain unchanged. Use
 aggregation_from_upstream_artifacts, no_model_load and zero LLM calls.
 
 Status: specified before tests. Conductor owns ops and BMAD reconciliation.
+
+## REQ-VERIFY-8410: Separate cached CUDA reader qualification from runtime admission
+
+Authenticate Exp8402 administrative bytes and its independently sealed runtime
+family, requiring historical_runtime_consumers_ready_score=1. Execute unchanged
+runtime assertions with the immutable V722 task objects. Cold-reduce Exp8396
+trace bytes, loaded-library hashes, environment and namespace operands. Preserve
+cuInit=999, driver_initialization, cause_unproved and no correction/intervention.
+Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls.
+
+### SCENARIO-VERIFY-8410-DELTA
+
+Read a bounded inventory of driver/library contents, boot identity, namespace,
+device visibility and any explicitly supplied, hash-bound operator repair receipt.
+Absent historical operands remain unknown. Code and fixture repair are not runtime
+changes. Without an authenticated execution delta execute zero device probes.
+With a delta and exclusive lease admit one owned context/allocation/copy/free
+child, deadline120 seconds. Preserve errors and release only owned resources.
+A successful post-reboot copy establishes readiness, never the reboot cause.
+
+### SCENARIO-VERIFY-8410-VALIDATION
+
+Freeze scoped commands before measurement. Require 100 percent newly owned
+statements with genuine child coverage shards, strict typing, Ruff, spec coverage,
+private E2E-018 and original runtime lease/tamper controls. Keep global repository
+health separate. No drivers, permissions, shared resets or model loads change.
+
+Implementation2026-10-11: `cuda_reader_8410.py` authenticates independently
+sealed historical runtime authority and reuses shipped trace reduction, child
+supervision and exclusive leases. The new CLI accepts20261011 while earlier
+runners retain their dates. The metadata inventory does not open CUDA devices;
+absent old boot and namespace operands cannot manufacture a delta. Focused tests
+include real unavailable-driver children and private lease cleanup.
+
+### SCENARIO-VERIFY-8410-TOOLKIT-HINTS
+
+For the driver child bound to an absolute, hashed library path, CUDA_HOME and
+CUDA_PATH are toolkit discovery hints, not driver execution operands. Preserve
+their observed values in the inventory and comparison rows, but their addition,
+removal or change alone must not admit a device probe or claim runtime change.
+Device visibility/order and loader environment changes remain execution operands;
+changed driver bytes still admit one owned probe. Missing environments remain
+unknown. Qualify both the login-shell and conductor environments with the
+original assertions intact.
+
+Repair 2026-10-11: `compare` retains full environment observations while
+excluding only CUDA_HOME/CUDA_PATH from driver execution operands. Both original
+failures reproduce with CUDA_PATH unset before the fix. The original 102-test
+subset plus 13 new regressions passes 115/115 in that environment; 56 unchanged
+consumer/private E2E-018/fix-erasure checks pass. Fresh unit and subprocess
+coverage is 332/332 statements across both reader modules and the direct CLI,
+with zero excluded lines. Scoped Ruff, formatting, strict typing and spec
+references pass. Ops and BMAD repair reconciliation is recorded in this task.
