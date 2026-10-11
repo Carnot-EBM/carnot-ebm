@@ -110,3 +110,64 @@ Consequence: a 136-attempt rerun is not practical now. A smaller run, on the ord
 attempts, can answer one narrow question (do any plans install at all) but cannot give a rate
 with a tight interval. It also needs the conductor to hold off its own generator, and a lease
 check I did not look into.
+
+## GPU lease findings (2026-10-10, after the reboot)
+
+I looked at the lease code and at what actually protects a GPU run today. Nothing was launched.
+
+**Both cards are back.** After the reboot `nvidia-smi` lists two idle RTX 3090s. The index order
+changed: index 0 is now bus 03:00.0 (UUID `GPU-b52387a2...`), index 1 is bus 62:00.0 (UUID
+`GPU-7971baff...`). The conductor still pins `CARNOT_ARC_GENERATOR_CUDA_GPU=0`, so it now
+points at the other physical card than before the reboot. No llama-server is running.
+
+**The GPU lease is not what protects a run.**
+
+- `python/carnot/gpu_lease_phase_journal.py` is a sound design: one kernel `flock` per device UUID
+  plus a checksummed JSON journal. It is used only by older experiment modules (6633, 6647,
+  6764, 6899, 6986, 7013, 7079, 7086 and similar). `scripts/research_conductor.py` does not
+  reference it, and neither does the live roadmap (0 matches).
+- The default lease directory is `/tmp/carnot-gpu-leases` (override
+  `CARNOT_GPU_LEASE_RUNTIME_DIR`). That is tmpfs, it does not exist now, and it is wiped by every
+  reboot. A lease held in the default directory protects nothing across a reboot, and a lease
+  nothing else checks protects nothing.
+- What the real generator launcher does instead (`_cuda_gpu_has_headroom` and
+  `_generator_cuda_min_free_mb` in `arc_executable_world_model.py`) is a free-VRAM check. It
+  refuses to launch unless the card has the predicted need plus 1,500 MiB free. That is a race:
+  two launches that start together can both pass it.
+
+**So coordination today is convention plus that check.** The conductor uses index 0, the outer
+loop uses index 1 (CLAUDE.md, 2026-06-27 allocation). I recommend not introducing a lease for
+this run. It would add a mechanism nothing else honors.
+
+**Launch recipe for item 2, from `memory/feedback_gguf_outer_loop_gpu_pinning.md` and the code.**
+
+1. Pin one card, the one the conductor does not use. Set `CARNOT_ARC_GENERATOR_CUDA_GPU=1`.
+   Do not copy the `"1,0"` default in `scripts/arc_holdout_generalization_probe.py`; that
+   layer-splits across both cards and takes the conductor's.
+2. Index and UUID can disagree between `nvidia-smi` and CUDA. After the model loads, join
+   `nvidia-smi --query-compute-apps` by PID to the GPU UUID and confirm it is
+   `GPU-7971baff...`. Record that join in the artifact.
+3. Use a non-default port. The launcher reuses any healthy server on port 8919, including a slow
+   iGPU one.
+4. Set `CARNOT_LLAMA_SERVER` to the exact CUDA binary, and `CARNOT_ARC_SERVER_LOG_DIR` to the run
+   directory. A mid-run relaunch can otherwise move to the iGPU with no visible sign.
+5. Expect about 20,557 MiB predicted (20,352 MiB measured) at `n_ctx` 98,304 with 4 slots.
+   Check `nvidia-smi` shows 24 GiB free on that card before the launch.
+
+**Reapers that could kill the server.**
+
+- `ExperimentTemplate.kill_gpu_zombies` killed servers until 2026-08-23. It now exempts
+  llama-server and vLLM command lines (REQ-INFRA-079). I did not re-test this.
+- `scripts/run_stop_authority.py` reaps an orphan llama-server only if all hold: parent PID 1,
+  no systemd service cgroup, port referenced by no live process, no established connection, older
+  than 2 hours, seen on two scans at least 25 minutes apart. A server whose launcher is alive and
+  connected is safe. If the launcher dies, the server becomes reapable after 2 hours. Kill the
+  server on exit.
+
+**Residual risk.** A conductor task that loads a model with `llama_cpp` and `n_gpu_layers=-1`
+may spread across both cards. If it starts while the measurement runs, one of the two fails
+for memory. Check `nvidia-smi` before launch and record per-PID residency during the run.
+Not measured: whether any current conductor task does this.
+
+**Time.** About 1,730 s per median induction at 36 tok/s. Twenty attempts one after another
+take roughly 10 hours. The conductor keeps running throughout, because it does not use card 1.
