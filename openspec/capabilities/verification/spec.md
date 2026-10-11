@@ -53454,3 +53454,37 @@ transition and sparse optimizer. Private tests exercise real exits32/64, exact
 resume, rejected feedback, immutable issues and missing/hash failure gates.
 The runner freezes scoped validation and genuine subprocess/_exit coverage.
 Deployment readiness requires the hashed report to cover every owned statement.
+
+## REQ-VERIFY-8407: Durable transactions conserve delayed work
+
+Reuse the qualified direct writer, spline evaluator and sparse optimizer.
+Time input validation and Python conversion, snapshot pinning, scoring, scheduling,
+release, learning, serialization, file/directory fsync, publication and response.
+Retain every remainder batch, request ID, initial state and event order.
+Only each cycle's last prediction receives designated feedback at issued_tick+8.
+Start with an empty pending queue. Drain remaining release ticks in a timed tail.
+Missing features yield a completed escalation. Invalid predictions never acquire
+labels or manufacture updates. Record scheduled attempts separately from actual
+coefficient updates. Preserve clock order, nesting, bytes and state/input hashes.
+
+### SCENARIO-VERIFY-8407-DELAY
+
+Reject early release, lost tail, manufactured updates, zero clocks, stage drift,
+duplicate IDs and self-consistently rehashed work-count changes. Independently
+reconstruct sealed state transitions and verify actual durable snapshot bytes.
+
+### SCENARIO-VERIFY-8407-VALIDATION
+
+Freeze scoped pytest -n0 -o addopts= --no-cov, Ruff check/format, strict mypy,
+spec coverage and private E2E-018/020 before timing. Use genuine Coverage.py
+child shards in private disk-backed scratch. Require100 percent new statements,
+including real CLI/failure paths. Bound children and poll within60s under4800s.
+Keep global repository health separate. Accept20261011 only in the new CLI.
+
+Status: specified before implementation and tests.
+
+Implementation: the cost adapter reuses QualifiedStore's durable writes and
+shipped direct scoring and sparse updates. It batches only consecutive prediction
+events and flushes every remainder before feedback. The independent reducer
+rejects early releases, lost tails, changed work counts, default clocks and
+rehashed snapshots. Genuine private child shards cover the new CLI and failures.

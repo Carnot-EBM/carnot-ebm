@@ -20054,3 +20054,4 @@ code |
 | 2026-10-11 07:38 UTC | Qualify direct state after immutable consumer and  | OK | 93 passed, 1 warning in 561.08s (0:09:21) |
 | 2026-10-11 08:09 UTC | Qualify the existing native spline binding after t | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 92 passed, 1 warning in 105.84s (0:01:45) |
 | 2026-10-11 09:14 UTC | Measure causal small-head updates through durable  | OK | 91 passed, 1 warning in 208.83s (0:03:28) |
+| 2026-10-11 10:38 UTC | Measure complete durable Python transactions with  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: e. exec /bin/ |

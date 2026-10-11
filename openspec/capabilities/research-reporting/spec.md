@@ -98466,3 +98466,32 @@ objects, direct producer receipt and frozen historical operands. The thin CLI
 runs three sparse_local service variants, records864 intended rows and reduces
 complete raw step states. Fresh children reject aggregate, primitive and source
 identity tampering. Ops and BMAD reconciliation remain assigned to the conductor.
+
+## REQ-REPORT-8407: Complete durable Python decision cost
+
+Authenticate the complete fourteen-task V724 authority and exact qualified Exp8404
+bytes before timing. Freeze ordinary/boundary/natural workloads, batches1/8/32,
+ratios1/8/64, one discarded warmup and five measured repeats. Each repeat has
+8*r prediction attempts and eight designated feedback attempts. Natural,batch1,
+ratio8 is primary. Every attempted unit stays in the complete wall denominator.
+Report135 summaries, primitive request rows, descriptive repeat-block bootstrap
+intervals with10000 draws and seed7248407. Timing repeats add no source independence.
+Declare no_model_load, empty MODEL_SPECS and zero current LLM invocations.
+H1=-0.00390625 and H2=0 remain closed. Qualification gives no semantic benefit.
+
+### SCENARIO-REPORT-8407-CUSTODY
+
+External absence blocks with named path/hash/field/operator/expected/observed checks.
+Owned failure disqualifies. Cold replay pins original sources and independently
+reduces primitive rows. Reject missing inputs, deliberate errors and rehashed
+work-count changes. Publish checked terminal bytes through unchanged validators.
+Conductor owns ops/status/changelog and BMAD reconciliation after task exit.
+
+Status: specified before implementation and tests.
+
+Implementation: `python_transaction_cost_8407.py` binds the full current authority
+and frozen direct producer. The thin CLI measures the fixed27 cells, keeps
+primitive request and transaction clocks, and publishes only checked bytes.
+Missing inputs retain27360 intended units. Readiness consumes the unchanged
+hashed coverage reader. Cold replay reconstructs cost from immutable operands.
+Ops and BMAD reconciliation remain assigned to the conductor.
