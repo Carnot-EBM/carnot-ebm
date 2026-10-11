@@ -2,6 +2,38 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8431: Fit matched retrospective calibrated source energies
+
+Use only authenticated Exp8430 fit/tune targets. Freeze q-only scalar logistic,
+nine-input logistic and the shipped 109-coefficient cubic spline, raw p2 and
+source-permuted spline. Use zero initialization, seeds17/29/43/71/101, 200
+full-batch steps, rate0.01 and L2=0.001. Scaling uses fit rows alone. Tune
+log loss selects T0.5/1/2; ties prefer1 then the smaller. Exact E0=0,E1=-eta/T
+normalization and sigmoid are an identity control. Duplicate seed heads are
+not independent replicates. Permute eight values jointly within dataset across
+whole question groups, preserving generator slots, q and targets; use
+725/7252/7251 for fit/tune/test and retain actual donor mappings.
+
+### SCENARIO-VERIFY-8431-NUMERIC
+
+Finite differences, changed coefficients, sparse locality, normalization parity
+and deterministic cold refitting qualify frozen bytes. Numeric failures stop
+training; absent benefit does not. Poisoned test targets cannot reach training.
+
+### SCENARIO-VERIFY-8431-CONTROLS
+
+Private disk-backed CLI children accept valid evidence and reject missing inputs,
+deliberate errors and self-consistently rehashed tampering. Combine genuine child
+coverage and require100 percent newly owned statements. Run private E2E-018 and
+E2E-021, Ruff/format, strict mypy and scoped spec tracing. Keep historical bytes
+and validators unchanged. Unknown/warning/critical findings block readiness.
+
+Status: implemented by `python/carnot/verify/v726_criterion_energy_fit.py`, its
+reporting adapter and thin runner. Seven focused tests pass with100 percent
+new statement coverage, including genuine children and negative replay paths.
+The production invocation retains private E2E and terminal validator receipts.
+Conductor owns ops/BMAD reconciliation.
+
 ## REQ-VERIFY-8414: Qualify documentation without new hardware observations
 
 Freeze scoped commands before measurement. Reuse original missing receipt,

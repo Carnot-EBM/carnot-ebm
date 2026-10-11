@@ -47,6 +47,28 @@ remain visible. The active roadmap and all historical protocols stay unchanged.
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8431: Publish frozen calibrated heads without generalization claims
+
+Authenticate activated V726 authority and the pinned Exp8430 primary and trainer
+view. Preserve all25 arm/seed slots with metrics or missing reasons. Record
+fit/tune losses, fitted bytes, hashes, scaling, donor mappings and zero test label
+reads. Zero current model calls and empty MODEL_SPECS distinguish numeric fitting
+from historical GPT-5-mini judgments. Public labels and unknown old overlap keep
+both generalization scores zero. Valid fitting earns circular_positive readiness;
+external missing inputs block and owned validation failures disqualify. Publish
+only unchanged-consumer-verified terminal bytes atomically with replay operands.
+
+### SCENARIO-REPORT-8431-CUSTODY
+
+Readers select the exact frozen-head primary. Independent upstream seals reject
+rehashed head/loss/readiness changes. Optional CUDA, board and historical V722
+absence cannot block CPU training. No test scoring or architecture sweep runs.
+
+Status: implemented by the frozen-head module, reporting adapter and Exp8431
+runner. `tests/python/test_v726_criterion_energy_fit_8431.py` verifies custody,
+matched controls, duplicate seeds, numeric failures and rehashed primitive
+tampering. Conductor owns ops/BMAD reconciliation.
+
 ## REQ-REPORT-8386: Retain GateMate obligations through a bounded evidence delta
 
 Exp8386 SHALL authenticate its exact active task and sealed Exp8372 primary,
