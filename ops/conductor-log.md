@@ -20071,3 +20071,5 @@ code |
 | 2026-10-11 19:44 UTC | Build question-grouped source features and stratif | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8416-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-11 19:46 UTC | Train small calibrated source energies against mat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8417-criterion-feature-panel) |
 | 2026-10-11 19:46 UTC | Measure retrospective typed decisions on held-ques | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8418-criterion-energy-fit) |
+| 2026-10-11 21:55 UTC | Plan milestone 2026.10.726 | OK | 14 tasks proposed |
+| 2026-10-11 22:08 UTC | Milestone 2026.10.726 activated | OK | 14 tasks queued |
