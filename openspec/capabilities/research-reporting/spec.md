@@ -98208,3 +98208,28 @@ missing inputs, deliberate errors and self-consistently rehashed summaries.
 Checked terminal bytes publish atomically through unchanged primary_publication.
 
 Status: specified before tests. The conductor owns ops and BMAD reconciliation.
+## REQ-REPORT-8399: Bind complete transactions to supported board operations
+
+Exp8399 SHALL authenticate the exact V723 task, active design, qualified Exp8385
+reader and original PolarFire dispatch. Preserve V717/V721/V722 protocol bytes.
+Only qualified optional Exp8393/8394 operation primitives supply costs. Map each
+frozen transaction stage plus calibration and transfer. Missing or zero-total
+costs yield a null eligible fraction. The installed KV260 capability remains
+quadratic Ising energy with k<=5; spline arithmetic and durable host work remain
+unsupported. PolarFire graduation remains board-local Linux CPU dispatch.
+Use aggregation_from_upstream_artifacts, no model loads and no device commands.
+NPU/TSU remain unavailable; published hardware performance remains separate.
+
+### SCENARIO-REPORT-8399-BOUNDARY
+
+Absent optional producers retain both intended arms and explicit missing reasons.
+Complete measured stages can yield zero eligibility; incomplete costs cannot.
+Reader qualification is separate from current board execution readiness.
+
+### SCENARIO-REPORT-8399-REPLAY
+
+Sealed primitive operands replay in fresh processes. Changed authority, reader,
+dispatch, protocols or self-consistently rehashed summaries fail replay.
+External absence remains blocked. Owned validation failure is disqualified.
+
+Status: specified before tests; ops and BMAD reconciliation belongs to conductor.

@@ -53243,3 +53243,20 @@ exercise the inherited tripwires, SDK errors and withheld memory. Consumer
 checks must select the exact terminal identity and hash.
 
 Status: specified before tests. The conductor owns ops and BMAD reconciliation.
+## REQ-VERIFY-8399: Validate operation boundaries with unchanged consumers
+
+Freeze owned tests, Ruff, strict mypy, requirement tracing and private E2E-018
+before aggregation. Require 100 percent newly owned statements, including real
+children and failure paths. Use private disk scratch, flushed progress, bounded
+children and a 4800-second cap. Keep global health separate from owned checks.
+Use unchanged primary_publication, adversarial verification and strict row lint.
+Retain every finding; unresolved findings block readiness. Publish checked bytes
+atomically. Preserve all original assertions, validators and historical artifacts.
+
+### SCENARIO-VERIFY-8399-CONTROLS
+
+Real CLI children accept sealed positive controls and honestly blocked evidence.
+They reject missing inputs, deliberate errors, source drift and rehashed tamper.
+Consumer selection binds the terminal task and exact published bytes.
+
+Status: specified before tests; ops and BMAD reconciliation belongs to conductor.
