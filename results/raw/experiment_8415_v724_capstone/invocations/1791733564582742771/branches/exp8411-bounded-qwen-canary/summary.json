@@ -1,0 +1,80 @@
+{
+  "branch_replay": {
+    "passed": false,
+    "status": "pre_gate_nonexecution"
+  },
+  "checks": [
+    {
+      "artifact_field": "runtime_reader_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+      "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+      "upstream": "exp8410-cuda-reader-qualification"
+    },
+    {
+      "artifact_field": "runtime_changed_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+      "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+      "upstream": "exp8410-cuda-reader-qualification"
+    },
+    {
+      "artifact_field": "cuda_context_ready_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+      "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+      "upstream": "exp8410-cuda-reader-qualification"
+    }
+  ],
+  "closure": [
+    {
+      "exists": true,
+      "expected_sha256": "sha256:68195475cd2592ef87dc352cb84ecb5f0e075f5dc5e7e49c1f03bab4fc64d137",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8411_bounded_qwen_canary.json",
+      "sha256": "sha256:68195475cd2592ef87dc352cb84ecb5f0e075f5dc5e7e49c1f03bab4fc64d137",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/68195475cd2592ef87dc352cb84ecb5f0e075f5dc5e7e49c1f03bab4fc64d137.json"
+    },
+    {
+      "exists": true,
+      "expected_sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+      "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/branches/exp8411-bounded-qwen-canary/pregates/c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e.json"
+    }
+  ],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 389.78125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.78125,
+      "prior_exec_lifetime_peak_mb": 484.609375
+    },
+    "before": {
+      "current_rss_mb": 389.5078125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.5078125,
+      "prior_exec_lifetime_peak_mb": 484.609375
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.2734375,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "original_honest_verdict": "blocked_gate_check_failed",
+  "original_verdict_class": "blocked",
+  "producer_executed": false,
+  "selected": {},
+  "verdict_class": "blocked"
+}

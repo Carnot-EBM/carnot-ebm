@@ -20063,3 +20063,4 @@ code |
 | 2026-10-11 13:52 UTC | Measure adapter-withheld live-wrapper transfer aft | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 88 passed, 1 warning in 83.24s (0:01:23) |
 | 2026-10-11 14:20 UTC | Map qualified transaction costs to KV260 and prese | OK | 86 passed, 1 warning in 124.24s (0:02:04) |
 | 2026-10-11 14:39 UTC | Preserve the GateMate physical obligation with bou | OK | 84 passed, 1 warning in 40.10s |
+| 2026-10-11 16:03 UTC | Reconcile fourteen terminal outcomes with immutabl | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: k_fixtures", l |

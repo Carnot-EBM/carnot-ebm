@@ -53632,3 +53632,38 @@ validate the exact terminal bytes before atomic publication; retain findings.
 Real private CLI children accept positive and missing-source blocked receipts,
 reject missing replay input and deliberate error, and disqualify owned failure.
 Current mutable roadmap files cannot change frozen historical evidence.
+
+## REQ-VERIFY-8415: Validate bounded capstone children and checked terminal bytes
+
+Freeze scoped tests, private E2E-018/E2E-021, full-task mutations, Ruff,
+formatting, strict mypy and spec tracing before measurement. Require 100 percent
+newly owned statements through genuine Coverage.py subprocess shards. Use
+serial pytest with addopts cleared and private disk-backed scratch. Poll each
+owned child within sixty seconds and enforce the 4800-second task cap. Fresh
+branch workers enforce 1500 MiB peak and 500 MiB growth, independent of parent
+watermarks. Run the unchanged five failed V723 consumers against authentic
+Exp8402 roots and unrelated current design/YAML bytes. Global health remains
+separate; reuse only exact authenticated scope or report unknown.
+Cold replay independently reduces sealed primitives and rejects missing input,
+deliberate errors and self-consistently rehashed tamper. Unchanged primary
+publication, adversarial verification and strict row consistency check the
+atomically published bytes. Preserve findings; unknown, warning and critical
+findings block readiness. External absence is blocked; owned failure is
+disqualified. Historical failures do not disqualify unrelated current science.
+
+### SCENARIO-VERIFY-8415-CONTROLS
+
+Real private CLI and fresh workers exercise accepted, missing, erroneous and
+rehashed controls. New date is 20261011; historical date contracts stay fixed.
+
+### SCENARIO-VERIFY-8415-HISTORY
+
+Original historical assertions and source aliases stay unchanged across both
+current-file rotations. Original failed receipts remain auditable as failures.
+
+### SCENARIO-VERIFY-8415-MEMORY
+
+Fresh worker peak and growth bounds accept their exact limits and reject either
+exceeded bound. Authentication failure still records actual child memory.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.

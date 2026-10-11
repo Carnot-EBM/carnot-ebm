@@ -1,0 +1,174 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8348_v720_continuous_local_learning.json",
+  "primary_sha256": "sha256:c98cbd678aef6aa5055cd7033a2c36404dc8d20337a5e601bd90b2d7dba00f07",
+  "report": {
+    "adversarial": {
+      "dispositions": [
+        {
+          "evidence": {
+            "deliberate_error_rejected": true,
+            "independent_scalar_error_max": 6.938893903907228e-18,
+            "recomputed": true,
+            "scope": "arithmetic_only_not_learning_benefit"
+          },
+          "finding": {
+            "detail": "dense_sparse_error_max=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          "resolved": true
+        }
+      ],
+      "findings": [
+        {
+          "detail": "dense_sparse_error_max=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "passed": true,
+      "receipt": {
+        "actual_exit": 1,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 4.62128472,
+        "ended_monotonic_ns": 1220485340481552,
+        "exit_code": 1,
+        "expected_exit": 1,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal_findings/adversarial.stdout",
+        "log_sha256": "sha256:71b672dc2ade0942a57458e1eb27f8c5f2b194676cbadefa98ad0dc0c1cf4857",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1220480719196832,
+        "started_wall_ns": 1791559572508367547,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal_findings/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal_findings/adversarial.stdout",
+        "stdout_sha256": "sha256:71b672dc2ade0942a57458e1eb27f8c5f2b194676cbadefa98ad0dc0c1cf4857",
+        "timed_out": false
+      },
+      "report": {
+        "candidate_sha256": "sha256:c98cbd678aef6aa5055cd7033a2c36404dc8d20337a5e601bd90b2d7dba00f07",
+        "flagged_count": 1,
+        "reports": [
+          {
+            "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json",
+            "exp_id": 8348,
+            "flag_count": 1,
+            "flags": [
+              {
+                "detail": "dense_sparse_error_max=0.0 (exactly zero). Confirm this is not a stub default.",
+                "kind": "IMPLAUSIBLE_PERFECT",
+                "severity": "info"
+              }
+            ],
+            "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e",
+            "honest_verdict": "complete_null_continuous_local_learning",
+            "loaded": true,
+            "max_severity": 0,
+            "title": ""
+          }
+        ],
+        "verifier_sha256": "sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c"
+      }
+    },
+    "checks": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8348_v720_continuous_local_learning.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8348_v720_continuous_local_learning.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json",
+        "deadline_s": 120,
+        "duration_s": 7.226034234,
+        "ended_monotonic_ns": 1220480713808826,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal/terminal_cold.stdout",
+        "log_sha256": "sha256:31e093626572a26bebd0f9d580393f3bbe713f865c121cd286ee2e9156ac82be",
+        "name": "terminal_cold",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1220473487774592,
+        "started_wall_ns": 1791559565276945398,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal/terminal_cold.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal/terminal_cold.stdout",
+        "stdout_sha256": "sha256:31e093626572a26bebd0f9d580393f3bbe713f865c121cd286ee2e9156ac82be",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 1,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 4.62128472,
+        "ended_monotonic_ns": 1220485340481552,
+        "exit_code": 1,
+        "expected_exit": 1,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal_findings/adversarial.stdout",
+        "log_sha256": "sha256:71b672dc2ade0942a57458e1eb27f8c5f2b194676cbadefa98ad0dc0c1cf4857",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1220480719196832,
+        "started_wall_ns": 1791559572508367547,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal_findings/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal_findings/adversarial.stdout",
+        "stdout_sha256": "sha256:71b672dc2ade0942a57458e1eb27f8c5f2b194676cbadefa98ad0dc0c1cf4857",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 0.063814322,
+        "ended_monotonic_ns": 1220485413603568,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 1220485349789246,
+        "started_wall_ns": 1791559577138959791,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8348_v720_continuous_local_learning/invocations/1791558628939831473/terminal/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ],
+    "passed": true
+  }
+}

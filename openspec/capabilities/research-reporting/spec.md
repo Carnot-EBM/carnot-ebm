@@ -98645,3 +98645,53 @@ Cold replay authenticates sealed operands and independently recomputes rows.
 Missing input, source drift, deliberate error and self-consistently rehashed
 task, dispatch or summary changes are rejected. External absence is blocked;
 owned validation failure is disqualified. Conductor owns ops reconciliation.
+
+## REQ-REPORT-8415: Reconcile fourteen V724 terminals through immutable consumers
+
+Authenticate the complete V724 task objects and frozen protocols before reading
+measurements. Account for Exp8402 through Exp8415 in contract order. Resolve
+actual conductor receipt filenames. Keep executed producers, pre-gate receipts,
+cascade skips, absent primaries and this capstone distinct. Preserve original
+V723 counts and all five failed historical consumer assertions. Reuse Exp8402
+fixture roots. A missing independent V722 design blocks only that branch.
+Engineering qualification cannot reopen exposed H1=-0.00390625 or H2=0.
+Keep criterion truth, causal adaptation/recovery and full native costs separate.
+Retrospective labels remain exposed, ARC remains a two-game non-headline panel,
+CUDA canaries remain feasibility only, and dyadic logits remain undeployed.
+Record zero current model loads and generations. Import stable G1–G4 from the
+unchanged publication gate. Retire only independently authenticated exact prior
+verdicts with substantively identical scope; blocked nonexecution retires no
+hypothesis. Preserve exclusion prefix bytes and source aliases. No activation,
+generator weight update, external publication or historical receipt mutation.
+
+### SCENARIO-REPORT-8415-ACCOUNTING
+
+Every intended slot retains its primary or scheduling receipt, original verdict,
+metric, missing reason and falsifiable continuation condition. Counts partition
+all fourteen slots; scheduling labels grant no measured success or independence.
+
+### SCENARIO-REPORT-8415-SCIENCE
+
+Closed utility nulls remain independently reduced from authenticated operands.
+Engineering and retrospective oracle positives keep both generalization scores
+zero. Native and board disqualifications retain their exact failed check fields.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+SCENARIO-REPORT-8415-ACCOUNTING also preserves post-publication flag changes.
+A primary whose flagged_adversarial field changed after its bound terminal
+publication is disqualified for import. Preserve the checked original bytes,
+original verdict and exact changed field; archive labels cannot override it.
+
+Large imported primitive row arrays SHALL remain in their sealed producer
+artifacts. Capstone slot metrics name the source hash, JSON pointer and row
+count. Do not duplicate those arrays into scheduling summaries. Fresh producer
+consumers still reduce the complete arrays; no intended unit or arm is dropped.
+
+Implementation: `python/carnot/reporting/v724_capstone_evidence.py` binds
+primitive operands and terminal dispositions. `v724_capstone.py` reuses shipped
+bounded execution and unchanged publication validators. The thin runner is
+`scripts/experiments/experiment_8415_v724_capstone.py`. Focused tests live in
+`tests/python/test_v724_capstone_8415.py`. Cached provenance arrays also retain
+sealed source references, rather than recursive duplicate histories. Final
+qualification receipts and genuine child coverage belong in the raw invocation.

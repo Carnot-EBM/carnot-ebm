@@ -1,0 +1,94 @@
+{
+  "branch_replay": {
+    "passed": false,
+    "status": "pre_gate_nonexecution"
+  },
+  "checks": [
+    {
+      "artifact_field": "direct_state_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8404_v724_direct_state_qualification.json",
+      "sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+      "upstream": "exp8404-direct-state-qualification"
+    },
+    {
+      "artifact_field": "native_parity_ready_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8405_v724_native_parity_qualification.json",
+      "sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+      "upstream": "exp8405-native-parity-qualification"
+    },
+    {
+      "artifact_field": "python_cost_ready_score",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8407_v724_python_transaction_cost.json",
+      "sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+      "upstream": "exp8407-python-transaction-cost"
+    }
+  ],
+  "closure": [
+    {
+      "exists": true,
+      "expected_sha256": "sha256:d3951fcc7032dd586e1502a2c3ff1537e1479e44e7aafb39054c25438db7b80e",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8408_native_transaction_cost.json",
+      "sha256": "sha256:d3951fcc7032dd586e1502a2c3ff1537e1479e44e7aafb39054c25438db7b80e",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791732619289966087/custody/d3951fcc7032dd586e1502a2c3ff1537e1479e44e7aafb39054c25438db7b80e.json"
+    },
+    {
+      "exists": true,
+      "expected_sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8404_v724_direct_state_qualification.json",
+      "sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791732619289966087/branches/exp8408-native-transaction-cost/pregates/186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67.json"
+    },
+    {
+      "exists": true,
+      "expected_sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8405_v724_native_parity_qualification.json",
+      "sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791732619289966087/branches/exp8408-native-transaction-cost/pregates/b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270.json"
+    },
+    {
+      "exists": true,
+      "expected_sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8407_v724_python_transaction_cost.json",
+      "sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791732619289966087/branches/exp8408-native-transaction-cost/pregates/033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f.json"
+    }
+  ],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 393.05859375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 471.37109375,
+      "prior_exec_lifetime_peak_mb": 484.2734375
+    },
+    "before": {
+      "current_rss_mb": 389.27734375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.27734375,
+      "prior_exec_lifetime_peak_mb": 484.2734375
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 82.09375,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "original_honest_verdict": "blocked_gate_check_failed",
+  "original_verdict_class": "blocked",
+  "producer_executed": false,
+  "selected": {},
+  "verdict_class": "blocked"
+}

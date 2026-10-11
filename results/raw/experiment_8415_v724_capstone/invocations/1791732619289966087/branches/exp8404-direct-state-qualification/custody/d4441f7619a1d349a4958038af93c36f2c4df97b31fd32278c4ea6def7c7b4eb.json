@@ -1,0 +1,183 @@
+{
+  "MODEL_SPECS": [],
+  "benchmark": {
+    "batches": [
+      1,
+      8,
+      32
+    ],
+    "pair_order": "alternate direct/guarded order by repeat; same input/state per pair",
+    "paired_repeats": 5,
+    "predictions_per_update": [
+      1,
+      8,
+      64
+    ],
+    "timings": "descriptive; repeated rows are not independent observations",
+    "warmups": 1
+  },
+  "checkpoint": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8334_v719_sentence_spline_fit/invocations/1791529973592511938/frozen_heads.json",
+    "sha256": "sha256:c76b68dc99911ac1dbb2471ead9f787c1ebedb2e0562ac861d8960c88bb3b97e"
+  },
+  "engineering_gates": {
+    "action_disagreements": 0,
+    "crash_resume": "exact",
+    "same_version_state": "exact",
+    "speed_readiness_prerequisite": false,
+    "stale_mixed_reads": 0,
+    "unsafe_interval_escapes": 0
+  },
+  "exposure_scope": "exposed_cached_development_and_constructed",
+  "generalized_learning_benefit_score": 0,
+  "generator_weight_updates": false,
+  "head": {
+    "arm": "spline34",
+    "coefficients": [
+      0.14173259972910465,
+      0.35117037914234955,
+      -0.06616636520755273,
+      0.0,
+      0.0029989474831392856,
+      0.015915629308855234,
+      0.05815383656111121,
+      0.16403015382099498,
+      0.15024072875339678,
+      0.024250829012712385,
+      -0.06616636520755273,
+      0.0,
+      -0.00013731570297607207,
+      -0.003158261168449657,
+      -0.0007591137356400441,
+      0.04055170823586778,
+      0.19930630838795296,
+      0.17978679892345484,
+      0.03455308942883167,
+      0.01592970053446055,
+      0.041578199690175614,
+      0.05286739588762796,
+      0.055168831932706455,
+      0.034575193406683656,
+      0.018549819769064054,
+      0.09620152908310695,
+      0.18859759272208607,
+      0.03983912672570892,
+      0.0621481675954436,
+      0.03205656585809811,
+      0.009349181981278626,
+      0.0021613843995765903,
+      0.002114704777430115,
+      0.013157035673035182
+    ],
+    "degree": 3,
+    "knots": [
+      0,
+      0,
+      0,
+      0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1,
+      1,
+      1,
+      1
+    ],
+    "temperature": 2.0
+  },
+  "independent_generalization_score": 0,
+  "panels": {
+    "both_action_boundaries": true,
+    "data_roles": "unchanged scientific_protocol.original_roles and label_authority; H1/H2 already exposed",
+    "every_knot": true,
+    "later_source_support": 67,
+    "metadata": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8360_v721_contract_methods/methods/vector_metadata.json",
+      "sha256": "sha256:a7b04930d1c01696be76d60fe7f3d59ad5cc101f70b7a4b11164d2388df208cc"
+    },
+    "nextafter_neighbors": true,
+    "random_vectors": 4096,
+    "retention_windows": [
+      0,
+      32,
+      64,
+      96
+    ],
+    "seed": 7208352,
+    "stream_intended": 96,
+    "stream_missing_slots": 22,
+    "stream_trajectory": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8348_v720_continuous_local_learning.json",
+      "sha256": "sha256:c98cbd678aef6aa5055cd7033a2c36404dc8d20337a5e601bd90b2d7dba00f07"
+    },
+    "stream_usable": 74,
+    "total_vectors": 4174,
+    "update_fault_seeds": [
+      11,
+      22,
+      33
+    ],
+    "vectors": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8360_v721_contract_methods/methods/frozen_vectors.npy",
+      "sha256": "sha256:29bcc0e284bf6e8609e360f6db5839f64a01ab359929483af8632dd785389c86"
+    }
+  },
+  "policy": {
+    "accept_below": 0.25,
+    "cost_correct": 0,
+    "cost_escalate": 0.5,
+    "cost_incorrect": 1,
+    "missing_features": "escalate",
+    "reject_above": 0.75,
+    "ties": "escalate"
+  },
+  "reference": {
+    "direct": "original B-spline eta/T then sigmoid",
+    "dtype": "float64",
+    "equivalent_sigmoid": "same coefficients and temperature; E0=0 E1=-eta/T",
+    "independent_reference": "scipy.interpolate.BSpline"
+  },
+  "run_date": "20261010",
+  "schema": "v721_deployment_protocol_v1",
+  "science_changed": false,
+  "scientific_protocol": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v717-local-learning-protocol.json",
+    "sha256": "sha256:853709123024de763e96dd688e819f0430205ae6d97d6561a2b95cca23b81c6f"
+  },
+  "table": {
+    "features": 4,
+    "fractional_bits": 11,
+    "grid_points": 65,
+    "guard": "outward interval bounds; direct fallback if interval touches either action boundary; invalid inputs rejected",
+    "interpolation": "linear",
+    "observed_original_action_flips": 3,
+    "original_table": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8352_v720_spline_table_fidelity/invocations/1791569426454947801/65-int16-linear-table.npy",
+      "sha256": "sha256:e880d04aa8e51c74fc0f823b6cab713644cc5096817b856692007a67125904e0"
+    },
+    "range": [
+      -32768,
+      32767
+    ],
+    "rounding": "ties_to_even",
+    "scale": 2048,
+    "storage": "signed_int16",
+    "table_bytes": 520
+  },
+  "transaction": {
+    "commit": "atomic same-version coefficients/table/bounds/feedback ledger; fsync then response",
+    "llm_acquisition_included": false,
+    "recovery": "exact crash resume; no duplicate released feedback",
+    "steps": [
+      "input_validation",
+      "direct_or_guarded_scoring",
+      "delayed_feedback",
+      "coefficient_update",
+      "table_and_bound_refresh",
+      "serialization",
+      "durable_commit",
+      "response"
+    ]
+  }
+}

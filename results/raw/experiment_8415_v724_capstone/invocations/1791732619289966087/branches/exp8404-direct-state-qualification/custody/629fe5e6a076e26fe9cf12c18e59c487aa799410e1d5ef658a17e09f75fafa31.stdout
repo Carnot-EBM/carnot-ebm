@@ -1,0 +1,904 @@
+.........F......FE......EEEEEEEEEE.EEEFE..............                   [100%]
+==================================== ERRORS ====================================
+_____________ ERROR at setup of test_analytic_cells_and_reference ______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_invalid_features[bad0] _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_invalid_features[bad1] _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_invalid_features[bad2] _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_invalid_features[bad3] _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_invalid_features[bad4] _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_invalid_temperature[0] _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_invalid_temperature[-1] ________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_______________ ERROR at setup of test_invalid_temperature[inf] ________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_______________ ERROR at setup of test_invalid_temperature[nan] ________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_bound_and_table_faults _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+____________ ERROR at setup of test_replay_and_typed_qualification _____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_________ ERROR at setup of test_rehashed_primitive_and_operand_faults _________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_____________ ERROR at setup of test_sidecar_and_input_rejections ______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ ERROR at setup of test_cold_primitive_control _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'),...e/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def operands(tmp_path_factory):
+        """REQ-REPORT-8362: use original coefficients, never replacement observations."""
+>       return e.authenticate(e.ROOT, tmp_path_factory.mktemp("threshold-inputs"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+=================================== FAILURES ===================================
+______________________ test_reduction_and_rehashed_tamper ______________________
+
+measured = ({'audit': {'basis_error_max': 1.1102230246251565e-16, 'boundary_actions': ['escalate', 'escalate'], 'finite_differenc...sts': [], ...}, PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020/8347-primitives0'))
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020/test_reduction_and_rehashed_ta0')
+
+    def test_reduction_and_rehashed_tamper(measured, tmp_path):
+        """SCENARIO-VERIFY-8347-REPLAY: causal evidence rejects rehashed claims."""
+        from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+    
+        work, raw = measured
+        value = e.build(work, raw, [{"name": "unit_control", "passed": True}])
+        path = tmp_path / (e.NAME + ".json")
+        atomic_json(path, value)
+        assert e.replay(path)
+        assert value["local_kernel_ready_score"] == 0
+>       assert value["verdict_class"] == "disqualified"
+E       AssertionError: assert 'blocked' == 'disqualified'
+E         
+E         - disqualified
+E         + blocked
+
+tests/python/test_local_consumer_qualification_8347.py:76: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8347] phase=preconditions_before completed=0 pending=0
+[exp8347] phase=preconditions_after completed=0 pending=48
+----------------------------- Captured stdout call -----------------------------
+[exp8347] phase=cold_replay_before completed=0 pending=0
+[exp8347] phase=cold_replay_after completed=1 pending=0
+________________________ test_primitive_rejection_paths ________________________
+
+measured = ({'audit': {'basis_error_max': 1.1102230246251565e-16, 'boundary_actions': ['escalate', 'escalate'], 'finite_differenc...sts': [], ...}, PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020/8347-primitives0'))
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020/test_primitive_rejection_paths0')
+
+    def test_primitive_rejection_paths(measured, tmp_path):
+        """SCENARIO-VERIFY-8347-REPLAY: rehashed primitive changes fail independent replay."""
+        from copy import deepcopy
+        from carnot.reporting.current_work_receipt import atomic_json
+    
+        original, _ = measured
+        path = tmp_path / (e.NAME + ".json")
+    
+        def candidate(work, name):
+            raw = tmp_path / name
+            raw.mkdir()
+            protocol = json.loads(Path(original["protocol_reference"]["path"]).read_bytes())
+            if name == "protocol":
+                protocol["seed"] = -1
+            atomic_json(raw / "protocol.json", protocol)
+            work["protocol_reference"] = e.base.reference(raw / "protocol.json")
+            atomic_json(raw / "measurement.json", work)
+            value = e.build(work, raw, [{"name": "unit_control", "passed": True}])
+            atomic_json(path, value)
+            assert not e.replay(path)
+    
+        candidate(dict(original), "protocol")
+>       candidate(dict(original, numeric={"passed": False}), "numeric")
+
+tests/python/test_local_consumer_qualification_8347.py:234: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'audit': {'basis_error_max': 1.1102230246251565e-16, 'boundary_actions': ['escalate', 'escalate'], 'finite_difference...8333.py', 'sha256': 'sha256:f19b77cffd924d81e0d2a8c69fc49c977a4eedaa3467711dc86bff37d0815d0e'}, ...], 'costs': [], ...}
+name = 'numeric'
+
+    def candidate(work, name):
+        raw = tmp_path / name
+        raw.mkdir()
+        protocol = json.loads(Path(original["protocol_reference"]["path"]).read_bytes())
+        if name == "protocol":
+            protocol["seed"] = -1
+        atomic_json(raw / "protocol.json", protocol)
+        work["protocol_reference"] = e.base.reference(raw / "protocol.json")
+        atomic_json(raw / "measurement.json", work)
+        value = e.build(work, raw, [{"name": "unit_control", "passed": True}])
+        atomic_json(path, value)
+>       assert not e.replay(path)
+E       AssertionError: assert not True
+E        +  where True = <function replay at 0x7f9568f74f40>(PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020/test_primitive_rejection_paths0/experiment_8347_v720_local_consumer_qualification.json'))
+E        +    where <function replay at 0x7f9568f74f40> = e.replay
+
+tests/python/test_local_consumer_qualification_8347.py:231: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8347] phase=cold_replay_before completed=0 pending=0
+[exp8347] phase=cold_replay_before completed=0 pending=0
+[exp8347] phase=cold_replay_after completed=1 pending=0
+_____________________________ test_private_e2e018 ______________________________
+
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8390-private/invocation-s1v2y8yw/e2e020/test_private_e2e0180')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9565231c40>
+
+    def test_private_e2e018(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8362-EXECUTION: real children and unchanged readers exercise private publication."""
+        from carnot.reporting import spline_table_execution_8352 as base
+        from carnot.reporting.primary_publication import reader_receipt, read_bound_sidecar
+    
+        # Unit-only coverage data exercises lifecycle gates. Production obtains
+        # its coverage from the real frozen coverage commands, never this fixture.
+        def private_plan(private):
+            report = {
+                "totals": {"percent_covered": 100},
+                "files": {p: {"summary": {"missing_lines": 0}} for p in e.OWNED},
+            }
+            code = (
+                "from pathlib import Path; Path("
+                + repr(str(private / "coverage.json"))
+                + ").write_text("
+                + repr(json.dumps(report))
+                + "); print('private lifecycle child')"
+            )
+            return [
+                {
+                    "name": "private_child",
+                    "argv": [sys.executable, "-c", code],
+                    "expected": 0,
+                    "deadline": 20,
+                    "scope": "owned",
+                }
+            ]
+    
+        monkeypatch.setattr(runner, "manifest", private_plan)
+        output = tmp_path / "results" / (e.NAME + ".json")
+>       assert runner.main(["--date", "20261010", "--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_threshold_guard_8362.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/threshold_guard_execution_8362.py:110: in main
+    return int(base.main(args))
+               ^^^^^^^^^^^^^^^
+python/carnot/reporting/spline_table_execution_8352.py:188: in main
+    inputs = e.authenticate(args.root, raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/threshold_guard_8362.py:73: in authenticate
+    t for t in parse_design(design.read_text(), milestone="2026.10.721")[1] if t["id"] == TASK
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8362] phase=start completed=0 pending=0
+[exp8362] phase=start completed=0 pending=0
+[exp8362] phase=before_authentication completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_local_consumer_qualification_8347.py::test_reduction_and_rehashed_tamper
+FAILED tests/python/test_local_consumer_qualification_8347.py::test_primitive_rejection_paths
+FAILED tests/python/test_threshold_guard_8362.py::test_private_e2e018 - Value...
+ERROR tests/python/test_threshold_guard_8362.py::test_analytic_cells_and_reference
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_features[bad0]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_features[bad1]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_features[bad2]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_features[bad3]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_features[bad4]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_temperature[0]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_temperature[-1]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_temperature[inf]
+ERROR tests/python/test_threshold_guard_8362.py::test_invalid_temperature[nan]
+ERROR tests/python/test_threshold_guard_8362.py::test_bound_and_table_faults
+ERROR tests/python/test_threshold_guard_8362.py::test_replay_and_typed_qualification
+ERROR tests/python/test_threshold_guard_8362.py::test_rehashed_primitive_and_operand_faults
+ERROR tests/python/test_threshold_guard_8362.py::test_sidecar_and_input_rejections
+ERROR tests/python/test_threshold_guard_8362.py::test_cold_primitive_control
+3 failed, 36 passed, 1 warning, 15 errors in 1002.63s (0:16:42)
