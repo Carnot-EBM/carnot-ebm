@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-10-10
 
-Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -14,33 +14,35 @@ Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21)
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 7 |
+| `SILENT_NON_FIRING` | 8 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_engine_selection_game_rows` — json { "experiment": "structural_energy_vs_accuracy_gate", "schema_version": "s2", "honest_verdict": "complete_no_value", "energy_minus_accuracy_lift": 0.0, "game_results": [ { "candidate_rows": [ {"heldout_cell_recall": 0.7}, {"heldout_cell_recall": 0.7} ] } ], "duration_s": 62.3, "random_seed": 4811 } ``` This S2 comparison has a behaviorally identical candidate pool; the full verifier reports z
-- `adversarial_verify.py::_candidate_outcome_values` — Twelve S2 selection games whose candidates both report `"heldout_cell_recall": {"principle": "Selection delta is measured in held-out recall.", "value": 0.5}`, while their structural energies are 10.0 and 200.0.
-- `adversarial_verify.py::_count_effective_selection_games` — Fifteen repeated `"game": "cn04"` records carrying its real experiment-4791 candidate outcomes, with `"n_available_games": 25`: repeated trials masquerade as fifteen distinct effective games.
-- `adversarial_verify.py::_draws_selection_conclusion` — Each reproduced fragment returns false: ```json {"honest_verdict":"PASS","energy_minus_accuracy_delta":0.12} ``` ```json {"honest_verdict":"complete_s2_trust_win","energy_minus_accuracy_delta":0.12} ``` ```json {"honest_verdict":"complete_s2: energy provides no value over accuracy"} ``` ```json {"honest_verdict":"complete_s2_energy_loses_to_accuracy","energy_minus_accuracy_gap":-0.2} ``` ```json {
-- `adversarial_verify.py::check_engine_selection_candidate_diversity` — complete_structural_energy_s2_energy_beats_accuracy` with `energy_minus_accuracy_delta: 0.21` and identical candidate outcomes.
-- `adversarial_verify.py::check_world_model_trust_degeneracy` — This affirmative pass claim produces no degeneracy flag despite declaring circularity and zero correct transitions: ```json { "experiment": "experiment_4611_arc_world_model_trust_fixture", "honest_verdict": "success: world_model_trust_passed_6of6", "verifier_is_oracle": true, "n_correct_grid_changing_transitions": 0 }
-- `adversarial_verify.py::_is_arc_outer_loop_calibration_solve` — json { "experiment": "arc_hidden_route_evaluation", "game": "tu93", "honest_verdict": "success: solved tu93 level 3", "offline_bfs_used": true } ``` The function returns false; its caller emits no flag. The field name is existing repository vocabulary. Replacing that declaration with the following also produces false and no flag: ```json "offline_ground_truth_bfs": { "principle": "Disclose oracle 
+- `adversarial_verify.py::check_arc_outer_loop_solve` — The existing incident-regression fragment, with explicitly declared outer-loop provenance, produces no flags: ```json { "experiment": "experiment_hazard_l3_calibration", "honest_verdict": "success: facing_aware_omni_lethal_zone_CLEAN_winpath_unpruned_on_tu93_L3", "bfs_nodes": 22, "solve_provenance": "outer_loop_re" }
+- `adversarial_verify.py::_verify_artifact_impl` — Real corpus path: `results/experiment_1400_biprm_retrospective_verification_probe.json`. A reproduction using its actual schema/title: ```json { "schema": "biprm_retrospective_verification_probe_v1", "title": "BiPRM R2L Retrospective Verification Probe on FoVer Pairs", "status": "complete_ready", "honest_verdict": "complete_ready: measured BiPRM pivot precision on 75 FoVer cases", "n_samples": 75,
+- `adversarial_verify.py::verify_artifact` — cross_family_delta: 0.92`, with `vote_at_1: 0.01` and verdict `cross_family_selector_transfer_supported`, after the demonstrated on-disk threshold tightening to 0.90.
+- `adversarial_verify.py::sweep_milestone_range` — results/experiment_3841.json
+- `adversarial_verify.py::_claims_live_model` — "inference_substrate_class": "model_full_generation"
+- `adversarial_verify.py::backfill_stamps` — Verification emits a critical duration flag for this fragment; backfill silently returns an empty list: ```json { "experiment": 9002, "duration_s": 0.5, "model_specs": [ {"name": "Qwen3.6-35B-A3B-GGUF"} ], "honest_verdict": "complete: generated 100 held-out responses with Qwen3.6-35B-A3B via llama.cpp", "methodology_note": "This task loaded the GGUF and generated all 100 responses locally; no cach
+- `adversarial_verify.py::main` — results/arc3_gap3_stage0_qhalt_energy.json` This committed artifact qualifies under direct backfill verification and is never discovered by the CLI backfill glob.
+- `worktree_import_guard.py` — Child import origin `/tmp/main/python/carnot/cli.py`, with tests loaded from `/tmp/wt/tests/integration/test_cli_commands.py` and the parent package loaded from `/tmp/wt/python/carnot/__init__.py`.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_engine_selection_game_rows` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_candidate_outcome_values` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_count_effective_selection_games` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_draws_selection_conclusion` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_engine_selection_candidate_diversity` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_world_model_trust_degeneracy` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_arc_outer_loop_calibration_solve` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_arc_outer_loop_solve` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_verify_artifact_impl` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::verify_artifact` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::sweep_milestone_range` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_live_model` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::backfill_stamps` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::main` — **SILENT_NON_FIRING**
+- `worktree_import_guard.py` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_engine_selection_game_rows
+## adversarial_verify.py::check_arc_outer_loop_solve
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -48,145 +50,71 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-Recognizes S2 engine-selection candidate rows while closing `renamed-delta evasion (FN-1)` and incidental `energy_delta` false positives.
+Enforce ARC live-agent self-discovery by requiring solve provenance and flagging outer-loop, off-path, and duplicate solves.
 
 ## FINDINGS
 
-1. **A/B — Renamed metrics still evade detection.** The MISSED INPUT declares S2 through standard schema-version metadata and reports identical candidate outcomes, but the full verifier emits zero flags. `has_delta = any(("delta" in k.lower() or "margin" in k.lower()) for k in d)` recognizes two spellings of comparative outcome differences; lift and gain are omitted. The inspected schema helper also omits schema-version metadata, defeating the claimed renamed-delta protection.
+1. **A/F — Declaring forbidden provenance disables detection.** `if _is_arc_outer_loop_calibration_solve(d) and d.get("solve_provenance") != "outer_loop_re":` suppresses the calibration flag when outer-loop provenance is declared. Then `if not _is_arc_solve_claim(d):` returns for a prose-only solve without the structural game/level/reproduction fields. Adding the declaration requested by the diagnostic changes a critical finding into **zero flags**. Reproduced.
 
-2. **F — Missing evidence disables the audit.** `if not isinstance(gr, list) or not gr:` returns `None` before examining schema signals. An explicitly S2 success verdict with an empty results list passes the full verifier with zero flags. Likewise, `if not any(isinstance(g, dict) and "candidate_rows" in g for g in gr):` silently skips an S2 comparison when every game omits candidate evidence. Missing evidence and an unrelated artifact receive the same result.
+2. **B — The input-marker list samples the forbidden-dependency concept.** `_ARC_OUTER_LOOP_INPUT_FLAGS` represents game-source access, exhaustive oracle search, and hand calibration. It omits used_game_source, an actual top-level field in experiment 6167. A true value is ignored. `_ARC_VALID_PROVENANCE` is an explicitly closed enum; no missing required label was established.
 
-3. **Field extraction — Wrapper support depends on preprocessing.** `gr = d.get("game_results")` assumes a bare list; a principle/value wrapper fails `isinstance(gr, list)` and silently returns `None`. None and other types receive the same treatment. The full verifier unwraps top-level fields first, so this is a direct-call defect, not a demonstrated top-level wrapper bypass through that entry point. Dictionary keys are assumed to be strings by `k.lower()`, consistent with the declared input type and JSON objects.
+3. **Claim narrower than implementation — No reachability enforcement.** The docstring prohibits a parallel solver the live agent cannot reach. The function validates the provenance label but never verifies reachability. A structurally valid self-discovery claim with live_path_reachable set to false received no flags in the probe. That field already exists in the artifact corpus.
 
-4. **Substring matching and docstring contradiction.** `or has_delta` admits unrelated artifacts solely through field-name substrings. An incidental energy-delta field triggers precisely the false positive the docstring claims to close. Marginal-likelihood metadata also matches `"margin" in k.lower()`. Conversely, `"candidate_rows" in g` is exact dictionary-key membership and has no substring-boundary defect.
+4. **Field extraction — Direct calls assume bare scalar fields.** `prov = d.get("solve_provenance")` followed by `if prov not in _ARC_VALID_PROVENANCE:` raises TypeError for a wrapped dict or list because the provenance collection is a set. `bad = [k for k in _ARC_OUTER_LOOP_INPUT_FLAGS if d.get(k) is True]` ignores wrapped true values. Wrapped game and level fields also fail the structural helper’s gate; `str(d.get("game"))` provides no unwrapping. None provenance produces the documented warning. **The full verifier currently unwraps top-level principle fields before calling this function**, so the wrapper failures concern direct calls; list provenance remains a crash.
 
-5. **Negation/context blindness.** `if not (_has_s2_schema_signal(d) or has_delta):` accepts a schema mention even when the inspected helper finds it inside an explicit statement that engine selection was not attempted. Metric-name matching also ignores values and context: a boolean annotation saying a margin was not computed still establishes scope. Both cases were reproduced.
+5. **Substring/context blindness in the called calibration helper.** The supplied body has no direct free-text substring operation, but `_is_arc_outer_loop_calibration_solve(d)` scans experiment names and verdicts. In the checkout, it interprets an honest detector-testing receipt as a solve and flags it critical. It also accepts the flagged stem inside “lethality”; calibration of death probabilities need not claim a game solve. Naming the guard or explicitly denying a solve does not prevent the flag.
 
-6. **C — Mutation-surviving rules and misleading regression.** All 15 existing selection regressions remain green after removing the entire delta fallback, either individual metric token, or the candidate-row-presence guard. The regression named for incidental energy-delta protection contains no energy-delta field. Removing the schema-scope guard does fail that regression; its coverage concerns unrelated artifacts without the supposed offending field.
+6. **F — Registry failure silently disables duplicate detection.** `if lvl is not None and reg is not None and lvl <= reg:` skips the duplicate check when the registry helper returns None. That helper swallows registry-read failures without emitting a diagnostic. An exact-equality duplicate produced a critical flag with the registry available and **zero flags** when its read was made to fail. Missing verification is indistinguishable from passing verification.
 
-7. **Numeric boundaries / D / E / G.** No numeric threshold, hardcoded absolute target, tracked-state write, or measurement-before-work operation occurs in this function. The inspected artifact-writing tests use temporary roots.
+7. **C/4 — Concrete surviving mutations.** All 14 focused tests passed. They remained green after individually deleting used_env_source, read_game_source, exhaustive_bfs_calibration, or hand_calibrated_per_game; removing the initial outer-loop exemption; or changing `lvl <= reg` to strict inequality. The inclusive comparison is correct, but equality is untested. Four calibration-name regex alternatives also survived individual deletion. The helper’s bare winpath alternative is subsumed by its optional-separator alternative and survived deletion. Disabling each complete top-level branch did fail tests; those branches are not wholly decorative.
+
+8. **5 — The documented quarantine contract is contradicted.** `CRITICAL sub-checks only fire once provenance is DECLARED` is false: the first calibration branch emits critical findings without any provenance. The existing regression test explicitly exercises that behavior.
 
 ## COUNTEREXAMPLE
+Honest QA work incorrectly receives a critical flag:
 
 ```json
 {
-  "experiment": "ising_sampler_comparison",
-  "honest_verdict": "complete_no_value",
-  "energy_delta": 0.0,
-  "game_results": [
-    {
-      "candidate_rows": [
-        {"heldout_accuracy": 0.7},
-        {"heldout_accuracy": 0.7}
-      ]
-    }
-  ],
-  "duration_s": 62.3,
-  "random_seed": 4811
+  "experiment": "arc_solve_calibration_guard",
+  "honest_verdict": "complete: all detector fixtures passed; no game solve attempted",
+  "solve_provenance": "development_proxy"
 }
 ```
 
-An honest sampler comparison is classified as S2 and receives a critical DEGENERATE_CANDIDATE_POOL flag. Independently reproduced variants replace the energy field with `"marginal_likelihood": -4.2`, or remove it and use `"honest_verdict": "complete_no_value; engine_selection_not_attempted"`.
+Additional reproduced field failures:
+
+```json
+{"solve_provenance": {"principle": "Declare solve origin.", "value": "live_agent_self_discovery"}}
+```
+
+This raises TypeError when inserted into a structurally valid solve passed directly to the function.
+
+```json
+{"used_game_source": true, "live_path_reachable": false}
+```
+
+Both fields are ignored when inserted into an otherwise accepted self-discovery claim.
 
 ## MISSED INPUT
+The existing incident-regression fragment, with explicitly declared outer-loop provenance, produces no flags:
 
 ```json
 {
-  "experiment": "structural_energy_vs_accuracy_gate",
-  "schema_version": "s2",
-  "honest_verdict": "complete_no_value",
-  "energy_minus_accuracy_lift": 0.0,
-  "game_results": [
-    {
-      "candidate_rows": [
-        {"heldout_cell_recall": 0.7},
-        {"heldout_cell_recall": 0.7}
-      ]
-    }
-  ],
-  "duration_s": 62.3,
-  "random_seed": 4811
+  "experiment": "experiment_hazard_l3_calibration",
+  "honest_verdict": "success: facing_aware_omni_lethal_zone_CLEAN_winpath_unpruned_on_tu93_L3",
+  "bfs_nodes": 22,
+  "solve_provenance": "outer_loop_re"
 }
 ```
-
-This S2 comparison has a behaviorally identical candidate pool; the full verifier reports zero flags.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Scope depends on incidental vocabulary, so legitimate metadata causes quarantine while equivalent comparison claims escape detection. Recognize comparison semantics explicitly and distinguish missing required evidence from an unrelated artifact. All 15 focused tests and lint pass; repository spec coverage fails on 1,142 existing missing traceability references.
+Truthfully declaring outer-loop provenance suppresses the only applicable detector for a prose-only calibration solve, while unavailable registry data silently becomes a pass. The failures are reproduced despite a green focused suite; this function contains no baked absolute write target, tracked-artifact write, or prematurely computed measurement.
 
 
-## adversarial_verify.py::_candidate_outcome_values
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Extract per-candidate outcome values in a `field-agnostic` way, preferring held-out recall, then structural energy, then accuracy, so genuinely diverse pools are not miscounted as degenerate.
-
-## FINDINGS
-
-1. **A — Confirmed silent miss.** Principle-wrapped, identical primary recalls are discarded, allowing differing structural energies to establish apparent diversity. Reproduced through the actual artifact verifier: twelve such games produce no diversity flag; the identical artifact with bare recalls produces a critical degeneracy flag.
-
-2. **Field extraction — Both reads assume bare numbers.** The line `float(r[field]) for r in rows if isinstance(r, dict) and _is_finite_number(r.get(field))` never unwraps annotated values. Dictionaries, lists, and None are filtered out. Rejecting a legitimate annotated number causes either the silent fallback above or a false positive: wrapped recalls of 0.3 and 0.7 return no values and honest diversity is rejected.
-
-3. **B / Docstring mismatch — Three names are not a field-agnostic concept.** The tuple `("heldout_cell_recall", "offpath_structural_energy", "heldout_accuracy")` represents per-candidate outcome metrics. Actual candidate rows in experiment 4801 also contain heldout_change_consistency. A pool logging its differing held-out outcomes solely under that existing field returns no values and is counted as degenerate.
-
-4. **C — Several decisions lack effective regression coverage.** All 17 focused existing tests stayed green after separately deleting the accuracy fallback, deleting `isinstance(r, dict)`, or deleting `return []`. Swapping recall/energy precedence and accepting one numeric value also survived. Deleting the recall or energy entry did fail tests. These mutation results concern the focused tests; the full repository suite was not run.
-
-5. **F — The terminal default is not itself fail-open.** `return []` causes the caller to count zero effective games, rather than approve an unknown metric. Its defect is conflating unavailable or unrecognized evidence with measured degeneracy. The confirmed silent approval comes from selecting the fallback after discarding wrapped primary evidence.
-
-6. **Other requested classes — No additional issue found.** There is no free-text matching or negation scanning. `if len(vals) >= 2:` correctly accepts exactly two values. The supplied function has no filesystem targets, writes, or prematurely evaluated measurements.
-
-## COUNTEREXAMPLE
-
-```python
-{
-    "experiment": "structural_energy_s2_offpath_trust_gate",
-    "honest_verdict": "complete_s2_no_value",
-    "energy_minus_accuracy_delta": 0.0,
-    "game_results": [
-        {
-            "candidate_rows": [
-                {
-                    "heldout_cell_recall": {
-                        "principle": "Selection delta is measured in held-out recall.",
-                        "value": 0.5
-                    },
-                    "offpath_structural_energy": 10.0
-                },
-                {
-                    "heldout_cell_recall": {
-                        "principle": "Selection delta is measured in held-out recall.",
-                        "value": 0.5
-                    },
-                    "offpath_structural_energy": 200.0
-                }
-            ]
-        }
-        for _ in range(12)
-    ]
-}
-```
-
-The helper returns `[10.0, 200.0]`. The diversity gate accepts all twelve games despite identical primary outcomes.
-
-## MISSED INPUT
-
-Twelve S2 selection games whose candidates both report `"heldout_cell_recall": {"principle": "Selection delta is measured in held-out recall.", "value": 0.5}`, while their structural energies are 10.0 and 200.0.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-Annotation alone changes a critical rejection into acceptance without changing any measurement. Unwrap before validating and choosing the preferred metric, and add regressions covering both error directions and coexisting metrics. The 17 baseline tests, source lint, and targeted spec-coverage check passed despite the demonstrated defect.
-
-
-## adversarial_verify.py::_count_effective_selection_games
+## adversarial_verify.py::_verify_artifact_impl
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -196,159 +124,80 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-Counts effective and total games, requiring a “MEANINGFUL outcome range” exceeding `_EFFECTIVE_SPREAD_EPS` for effectiveness.
+`Run all checks on a single artifact. Return a report dict.` claims comprehensive verification, but text-based exemptions and normalization order bypass substantive checks.
 
 ## FINDINGS
 
-1. **A — Repeated games inflate coverage silently.** `total += 1` and `effective += 1` count records without checking game identity. Fifteen copies of the real cn04 result from experiment 4791 return fifteen effective games despite representing one distinct game. Reproduced against the caller with a declared 25-game corpus: no diversity flag. The implementation counts qualifying records, which is broader than counting games.
+1. **A — Real scoring workload exempted.** `"retro" in path.name.lower()` and `"retro" in schema.lower()` exclude the project’s actual BiPRM retrospective-verification experiment. Its retrospective terminology describes scoring from subsequent answer context, not summarizing other experiments. A reproduction using its actual schema/title and terminal-ready status produced zero flags for perfect precision on 75 samples; removing the exemption labels restored the perfect-score warning.
 
-2. **Field extraction — Valid annotated fields cause false positives.** `rows = g.get("candidate_rows")` followed by `if not isinstance(rows, list) or len(rows) < 2:` assumes an unwrapped list. A permitted principle/value wrapper containing that same list is silently classified as ineffective. Reproduced: twelve diverse unwrapped games return twelve effective games; wrapping their candidate lists returns zero and triggers a critical diversity flag. Missing values and None also become ineffective without distinguishing missing evidence from measured degeneracy.
+2. **2/3 — All four exemption patterns are unsafe.** `"retro" in path.name.lower()`, `"retro" in schema.lower()`, `"retrospective" in title.lower()`, and `schema.startswith("blocked")` establish neither word boundaries nor artifact meaning. Retrodictive workloads match the first two; explicitly non-retrospective titles match the third; blocked matrix-multiplication benchmarks match the fourth. These matches return before every fabrication check. Concrete strings appear below.
 
-3. **C — The claimed float-noise protection lacks an effective regression test.** Replacing `> _EFFECTIVE_SPREAD_EPS` with a positive-spread comparison leaves all 15 directly relevant existing test functions passing. The named float-noise regression uses five games, while the caller requires at least ten; it still flags after the epsilon protection disappears. Deleting the non-dictionary guard also passes those tests; removing `len(rows) < 2` passes because the downstream helper already requires two numeric values. These are scoped mutation results, not a claim about the entire repository suite.
+3. **1 — Metadata bypasses wrapper normalization.** `schema_raw = d_raw.get("schema", "") or ""` followed by `schema = schema_raw if isinstance(schema_raw, str) else ""` erases an annotated schema. `title_raw = d_raw.get("title") or d_raw.get("name") or ""` followed by `title = title_raw if isinstance(title_raw, str) else ""` erases annotated titles/names; a truthy wrapped title also prevents fallback to a valid bare name. Wrapping alone changes exemption behavior and can expose honest summaries or diagnostics to inappropriate checks. Lists and None become empty strings without a shape warning.
 
-4. **Remaining classes:** The strict comparison correctly rejects a spread exactly equal to the threshold, matching “exceeds.” The supplied function contains no free-text matching, negation handling, enumerated marker lists, absolute paths, writes, default permission-to-skip return, or timing measurement.
+4. **1 — Report identity remains unnormalized.** Both occurrences of `d_raw.get("experiment") or d_raw.get("experiment_id")` return wrappers or lists unchanged. They do not assume a scalar internally, but the report receives an annotated object instead of its identifier value. The later normalization does not repair these reads.
+
+5. **A/5 — Wrapped metric containers silently lose checks.** `d = _flatten_metrics(d_raw)` precedes `d = _normalize_principle_wrapped_fields(d)`. With an annotated metrics container, flattening examines the annotation instead of its enclosed measurements. Unwrapping afterward leaves those measurements nested. The concrete artifact below returned zero flags; its bare-container equivalent produced a perfect-score warning.
+
+6. **B — Literal markers substitute for artifact classes.** The blocked prefix stands for conductor diagnostics; the retrospective markers stand for experiment summaries. Supported annotated schemas/titles are omitted from both recognizers, while unrelated workloads inherit their exemptions. No additional missing-token finding was established.
+
+7. **C — Four independently removable rules survived regression testing.** Disabling each retrospective alternative individually, and separately disabling `schema.startswith("blocked")`, left all **96 selected tests passing** in each run. The selection covered verification guards, wrapper handling, and readiness tests. One historical Exp6228 assertion failed in the unchanged baseline and was excluded consistently; whole-suite survival was not established.
+
+8. **4/D/E/F/G — No additional defect established in this body.** The 80-character slices truncate report text; no numeric floor comparison appears. There is no baked absolute target, direct write, or duration measurement. The default path runs checks rather than skipping unknown recognizers. Unsupported top-level payloads are explicitly marked. Helper internals cannot be certified from the supplied excerpt.
 
 ## COUNTEREXAMPLE
 
-```python
-artifact = {
-    "experiment": "structural_energy_s2_offpath_trust_gate",
-    "honest_verdict": "complete_structural_energy_s2_no_live_trust_value",
-    "n_available_games": 25,
-    "game_results": [
-        {
-            "game": "cn04",
-            "candidate_rows": [
-                {"heldout_cell_recall": 0.04477611940298507},
-                {"heldout_cell_recall": 0.04477611940298507},
-                {"heldout_cell_recall": 0.05099502487562189},
-            ],
-        }
-        for _ in range(15)
-    ],
-}
-```
-
-Returns `(15, 15)` and the caller emits no diversity flag, although only one distinct game was tested.
-
-A separate false positive:
+At `artifact.json`:
 
 ```json
 {
-  "candidate_rows": {
-    "principle": "Different held-out outcomes make selection informative.",
-    "value": [
-      {"heldout_cell_recall": 0.3},
-      {"heldout_cell_recall": 0.7}
-    ]
+  "n_samples": 400,
+  "metrics": {
+    "principle": "Report measured held-out classifier performance",
+    "value": {
+      "auroc": 1.0
+    }
   }
 }
 ```
 
-This genuinely diverse pool is counted as ineffective.
+Observed: zero flags. Replacing the annotated metrics container with `{"auroc": 1.0}` produces `IMPLAUSIBLE_PERFECT`.
+
+On a baseline declaring live GGUF inference, duration 3.4 seconds, AUROC 1.0, and 400 samples, each tested selector below suppressed every flag:
+
+- Title: `Live GGUF evaluation; not a retrospective`
+- Title: `Non-retrospective live GGUF evaluation`
+- Schema: `retrodictive_world_model_probe_v1`
+- Schema: `blocked_matmul_benchmark_v1`
 
 ## MISSED INPUT
 
-Fifteen repeated `"game": "cn04"` records carrying its real experiment-4791 candidate outcomes, with `"n_available_games": 25`: repeated trials masquerade as fifteen distinct effective games.
+Real corpus path: `results/experiment_1400_biprm_retrospective_verification_probe.json`.
 
-## RECOMMENDATION
+A reproduction using its actual schema/title:
 
-NEEDS_REDESIGN
-
-## RATIONALE
-
-Count distinct validated game identities and unwrap annotated fields before evaluating candidate spread. Add independent regressions for duplicate games, wrapped candidate lists, and float-noise pools large enough to satisfy the caller’s coverage floor; the current tests allow the advertised noise protection to disappear silently.
-
-
-## adversarial_verify.py::_draws_selection_conclusion
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Recognize selection conclusions comprising `a no-value/bounded null OR` `a PASS/trust win`, including zero or negative selection deltas.
-
-## FINDINGS
-1. **A/F — PASS silently bypasses checking.** A bare `PASS` verdict with a positive selection delta returns `False`. `_PASS_VERDICT_TOKENS` omits that spelling, and the numeric branch cannot rescue a substantially positive delta. The caller consequently skips the diversity flag. `return False` conflates an unrecognized affirmative conclusion with no conclusion.
-
-2. **B — Vocabulary is narrower than its concepts.** `_NO_VALUE_VERDICT_TOKENS` represents no-value/bounded conclusions but omits ordinary space-separated wording. `_PASS_VERDICT_TOKENS` represents PASS/trust wins but omits bare PASS and ordinary trust-win wording. `"delta" in kl or "margin" in kl` represents selection-effect measurements but omits gap terminology. `"energy" in kl or "select" in kl or "trust" in kl` represents selection-domain measurements but omits S2-only naming. Concrete omissions appear below.
-
-3. **Field extraction assumes scalar values.** `verdict = str(d.get("honest_verdict", "")).lower()` serializes dictionaries, lists, and None instead of extracting or validating a verdict; wrapper principle text can trigger detection. `for k, v in d.items():` followed by `_is_finite_number(v)` rejects principle-wrapped numeric deltas. The main verifier normalizes top-level wrappers first, mitigating these failures on that route; direct helper/check calls remain exposed.
-
-4. **Substring boundaries are absent.** Both `any(t in verdict for t in _NO_VALUE_VERDICT_TOKENS)` and `any(t in verdict for t in _PASS_VERDICT_TOKENS)` accept embedded substrings. A cancellation word containing the null token returns true despite asserting no selection result.
-
-5. **Negation is ignored.** Both verdict branches treat mentions as assertions. An explicitly blocked, unattempted trust gate returns true and receives a critical diversity flag despite drawing no conclusion.
-
-6. **Numeric field names do not establish measurement semantics.** The key substring tests accept configuration thresholds as outcome deltas or margins. A zero-valued trust-gate margin threshold therefore produces a selection conclusion even when the verdict explicitly reports blocked work.
-
-7. **Threshold disagrees with the stated sign rule.** `float(v) <= 1e-9` includes strictly positive values through exactly `1e-9`, whereas the comment says `zero or negative = no value`. Zero is correctly included; the implementation also admits an undocumented positive interval.
-
-8. **C — Regression tests do not isolate these rules.** All 15 dedicated diversity regressions passed after deleting the entire no-value verdict branch, and separately after deleting the entire numeric-delta loop. Removing each of the 16 verdict tokens individually also preserved all 15 passes. The negative-delta and renamed-field regressions remain satisfied by their verdict text. These mutation results cover the dedicated regressions, not the full project suite.
-
-9. **D/E/G — None established.** This function contains no absolute path, filesystem write, or measurement taken before its measured operation. The 15 exercised regressions do not overwrite tracked research artifacts.
-
-## COUNTEREXAMPLE
 ```json
 {
-  "experiment": "structural_energy_s2_offpath_trust_gate",
-  "honest_verdict": "PASS",
-  "energy_minus_accuracy_delta": 0.12,
-  "game_results": [
-    {
-      "candidate_rows": [
-        {"heldout_cell_recall": 0.5},
-        {"heldout_cell_recall": 0.5}
-      ]
-    }
-  ]
+  "schema": "biprm_retrospective_verification_probe_v1",
+  "title": "BiPRM R2L Retrospective Verification Probe on FoVer Pairs",
+  "status": "complete_ready",
+  "honest_verdict": "complete_ready: measured BiPRM pivot precision on 75 FoVer cases",
+  "n_samples": 75,
+  "biprm_r2l_pivot_precision": 1.0
 }
 ```
 
-Expected: recognize the PASS conclusion and flag the degenerate candidate pool. Actual: predicate returns false; no diversity flag.
-
-Additional reproduced misclassifications:
-
-| Fragment | Actual predicate | Failure |
-|---|---:|---|
-| `{"honest_verdict":"blocked_s2_trust_gate_not_attempted"}` | true | Negated/unattempted gate becomes a conclusion |
-| `{"honest_verdict":"annulled_before_candidate_evaluation"}` | true | “null” matches inside “annulled” |
-| `{"honest_verdict":{"principle":"Only report a bounded null after evaluating candidate engines.","value":"blocked_missing_candidates"}}` | true | Principle text overrides the actual blocked value |
-| `{"honest_verdict":"blocked_missing_candidates","trust_gate_margin_threshold":0.0}` | true | Configuration becomes a measured conclusion |
-| `{"honest_verdict":"complete_s2_energy_loses_to_accuracy","energy_minus_accuracy_delta":{"principle":"Measure the paired selection effect.","value":-0.2}}` | false | Wrapped negative delta disappears in direct calls |
-
-## MISSED INPUT
-Each reproduced fragment returns false:
-
-```json
-{"honest_verdict":"PASS","energy_minus_accuracy_delta":0.12}
-```
-
-```json
-{"honest_verdict":"complete_s2_trust_win","energy_minus_accuracy_delta":0.12}
-```
-
-```json
-{"honest_verdict":"complete_s2: energy provides no value over accuracy"}
-```
-
-```json
-{"honest_verdict":"complete_s2_energy_loses_to_accuracy","energy_minus_accuracy_gap":-0.2}
-```
-
-```json
-{"honest_verdict":"complete_s2_energy_loses_to_accuracy","s2_delta":-0.2}
-```
+Observed: zero flags. The perfect precision was injected for this probe; removing the retrospective labels restored its warning.
 
 ## RECOMMENDATION
+
 NEEDS_REDESIGN
 
 ## RATIONALE
-A documented PASS case bypasses the diversity gate because vocabulary recognition is treated as proof that no conclusion exists. The same recognizer promotes substrings, negated statements, annotations, and configuration values into conclusions. Extract actual values, distinguish asserted conclusions from blocked or unrecognized states, and test each detection path independently.
+
+Author-controlled text disables every fabrication check, and a supported annotation hides measurements from verification. Normalize before classification and container extraction, replace prose-based exemptions with validated artifact kinds, and distinguish unchecked artifacts from verified passes.
 
 
-## adversarial_verify.py::check_engine_selection_candidate_diversity
+## adversarial_verify.py::verify_artifact
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -358,61 +207,36 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-Flag S2 engine-selection conclusions based on a `behaviorally-DEGENERATE candidate pool`, enforcing an independent diversity and corpus-coverage floor.
+“Run the current on-disk verifier, including through a cached caller alias.”
 
 ## FINDINGS
 
-1. **A/F — Unrecognized conclusions silently bypass enforcement.** `if not _draws_selection_conclusion(d):` returns without a flag even when the artifact explicitly claims energy beats accuracy on identical candidates. Repository helper inspection and execution confirmed the counterexample below escapes both this function and its invocation through the full verifier. The claim `bar also applies to PASS verdicts` is narrower in implementation: only recognized verdict spellings trigger it for positive deltas.
+1. **A / 5 — Current-source execution is not guaranteed.** The repository helper invoked by `module = _module_with_current_source()` can reload cached bytecode after a same-length source edit within one integer modification-time second. Reproduced with a threshold change from 0.95 to 0.90: an artifact reporting 0.92 returned zero flags; forcing source execution produced a critical flag. The helper marked the source current, so subsequent calls continued missing the check.
 
-2. **Field extraction assumes bare numbers.** `declared = d.get("min_heldout_games")` and `n_available = d.get("n_available_games")` feed numeric predicates without unwrapping. Wrapped dictionaries, lists, strings, and None become zero, silently discarding the declared constraint. Reproduced: 12 diverse games with a wrapped corpus declaration of 25 pass; unwrapping correctly requires 15 and flags them. **Scope qualification:** the normal verifier already unwraps top-level annotations, so this particular defect affects direct callers. `d.get('honest_verdict')!r` only formats the diagnostic and safely represents dictionaries, lists, and None.
+2. **Provenance falsely certifies that execution.** `report.setdefault("gate_version", module.LOADED_GATE_VERSION)` attached the new disk version to the report produced by old bytecode. This directly defeats the comment’s promise that a stamper cannot pair a verdict with a version that did not produce it.
 
-3. **Nested annotations still cause false positives through the normal verifier.** `_count_effective_selection_games(gr)` delegates to helpers that require bare candidate lists and bare numeric outcomes. Top-level normalization does not unwrap these nested fields. Fifteen genuinely diverse games whose candidate recall measurements are principle-wrapped are counted as zero effective games and receive a critical flag.
+3. **C — The regression suite misses this case.** All 32 focused reload and provenance tests passed. The cached-alias refresh test changes source length, avoiding the demonstrated bytecode-cache collision. No deletable rule was established through mutation testing.
 
-4. **Substring matching and negation are blind.** There are no free-text comparisons directly in the supplied body, but the helper invoked by `_draws_selection_conclusion(d)` uses substring membership. Its bounded marker matches inside the unrelated word unbounded. Its positive markers also match a blocked verdict explicitly stating that authorization was not attempted. Both false positives were reproduced with the numeric delta omitted, isolating the text recognizer.
-
-5. **Repeated rows manufacture corpus coverage.** `_count_effective_selection_games(gr)` counts rows without checking unique game identities. Consequently, `effective >= required` can certify repeated measurements as distinct held-out games. Reproduced using the actual Exp4801 artifact: its five effective games trigger the flag; copying those same five rows three times and declaring the 25-game corpus produces 15 effective games and no flag. No new game was tested.
-
-6. **B — Marker and metric lists substitute vocabulary for concepts.** Repository helpers enumerate spellings for positive conclusions, no-value conclusions, and candidate behavioral outcomes. The concrete omitted members below respectively produce a missed positive conclusion, a missed null conclusion, and a false degeneracy flag. No concrete omitted S2 scope marker was established; the supplied function itself contains no hardcoded token lists.
-
-7. **C — Existing guards do not independently exercise critical rules.** Calling all 18 existing diversity guard tests directly remained green after individually deleting every schema or verdict marker, or deleting the numeric zero/negative-delta conclusion fallback. Removing `declared` from `required = max(10, math.ceil(0.6 * corpus), declared)` also passed all 18. Changing ceiling to floor, or changing the inclusive threshold to an exclusive comparison, likewise passed. These are verified coverage holes in that guard set, not a claim about the entire repository suite.
-
-8. **Threshold documentation contradicts implementation.** The docstring promises `max(5, ceil(0.6*total), declared)`; implementation uses `max(10, math.ceil(0.6 * corpus), declared)`. Five diverse games satisfy the documented formula but are flagged. The implemented `effective >= required` correctly accepts exact equality; no actual off-by-one defect was established.
-
-9. **D/E/G — No finding in the supplied function.** It contains no absolute filesystem target, artifact write, or duration measurement evaluated before work. Its intended side effect is `flags.append(`.
+4. **Other requested classes:** This wrapper contains no artifact-field extraction, free-text matching, negation checks, numeric comparisons, token lists, absolute write targets, artifact writes, recognizer defaults, or duration measurements. No independent defect in those classes was established.
 
 ## COUNTEREXAMPLE
 
-```python
-d = {
-    "experiment": "structural_energy_s2_offpath_trust_gate",
-    "honest_verdict": "complete_structural_energy_s2_energy_beats_accuracy",
-    "energy_minus_accuracy_delta": 0.21,
-    "min_heldout_games": 5,
-    "n_available_games": 25,
-    "game_results": [
-        {
-            "game": "ar25",
-            "candidate_rows": [
-                {"heldout_cell_recall": 0.3},
-                {"heldout_cell_recall": 0.3},
-            ],
-        }
-    ],
+Retain a cached alias and timestamp bytecode cache, then edit the on-disk degenerate-delta threshold from 0.95 to 0.90 while preserving file length and the integer modification-time second. Verify:
+
+```json
+{
+  "honest_verdict": "cross_family_selector_transfer_supported",
+  "cross_family_delta": 0.92,
+  "vote_at_1": 0.01,
+  "duration_s": 1.0
 }
 ```
 
-Actual result: zero flags despite identical candidate outcomes and insufficient coverage.
-
-Additional reproduced inputs:
-
-- With the delta omitted, `blocked_s2_trust_gate_not_attempted_no_selection_conclusion` falsely triggers.
-- With the delta omitted, `blocked_s2_evaluation_unbounded_memory_no_selection_conclusion` falsely triggers because bounded matches inside unbounded.
-- `complete_structural_energy_s2_no_improvement` with `energy_minus_accuracy_difference: 0.0` and identical candidates receives no flag.
-- Fifteen distinct games logging diverse outcomes solely as `heldout_change_consistency: 0.3` and `heldout_change_consistency: 0.7` are falsely counted as zero effective games. That metric exists in the project's actual candidate records.
+Observed: `flags: []`, with the new disk version recorded. Executing the edited source correctly emits `DEGENERATE_SEPARATION`.
 
 ## MISSED INPUT
 
-`complete_structural_energy_s2_energy_beats_accuracy` with `energy_minus_accuracy_delta: 0.21` and identical candidate outcomes.
+`cross_family_delta: 0.92`, with `vote_at_1: 0.01` and verdict `cross_family_selector_transfer_supported`, after the demonstrated on-disk threshold tightening to 0.90.
 
 ## RECOMMENDATION
 
@@ -420,10 +244,10 @@ NEEDS_REDESIGN
 
 ## RATIONALE
 
-Unrecognized conclusion wording becomes indistinguishable from a genuine pass, while repeated game rows can manufacture the required coverage. The existing diversity guards remain green when load-bearing rules disappear, so their current success does not establish that this gate enforces its stated contract.
+The reproduced failure silently skips an updated check and labels the stale verdict with the updated version. Execute the verified source bytes and derive provenance from those same bytes; add a regression covering same-length edits within one timestamp second.
 
 
-## adversarial_verify.py::check_world_model_trust_degeneracy
+## adversarial_verify.py::sweep_milestone_range
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -431,143 +255,253 @@ Unrecognized conclusion wording becomes indistinguishable from a genuine pass, w
 SILENT_NON_FIRING
 
 ## CLAIM
-`Flag circular or degenerate ARC world-model trust-pass claims.` by requiring oracle independence and at least one correctly predicted grid-changing transition.
+“Verify all experiment_NNNN_*.json files where low <= NNNN <= high.”
 
 ## FINDINGS
 
-1. **A — Policy thresholds masquerade as evidence.** The repository helper called by `evidence = _grid_changing_correct_evidence(d)` accepts min_correct_changed_cells=1 as achieved evidence because its name contains a recognized substring. This field actually occurs in experiments 6011 and 6012 alongside zero correct changed cells. Adding it to a degenerate trust-pass artifact suppresses this flag, including through the full verifier.
-
-2. **F — Unrecognized affirmative claims silently skip enforcement.** `if not _claims_world_model_trust_pass(d):` returns without a flag when affirmative pass wording misses the helper’s vocabulary. The missed input below declares a circular verifier and zero correct transitions, yet produces no degeneracy flag. Canonical object-valued trust metrics containing positive nested values can also escape recognition.
-
-3. **Field extraction assumes a bare boolean.** `if d.get("verifier_is_oracle") is not False:` rejects a principle-wrapped false value when this function is called directly. The full verifier normalizes top-level wrappers, mitigating that particular pipeline case. Nested principle-wrapped transition counts remain unreadable to the evidence helper and falsely flag honest work. The repeated `d.get('verifier_is_oracle')` only formats diagnostics; lists and None correctly fail the boolean requirement.
-
-4. **Substring and context blindness produce false positives.** The claim helper uses unrestricted substring matching: update wording contains an affirmative marker, and explicitly negated improvement wording still triggers the check. The evidence helper likewise ignores whether matching numbers describe achieved results, policy requirements, or a separate positive control. A positive control’s correct transition can clear an identity model’s claim.
-
-5. **The numeric requirement is weaker than advertised.** The detail promises `show >=1`, but the evidence helper accepts any finite positive number. A transition count of 0.5 clears the check; zero fails and exactly one passes. It also accepts individual correct-cell counts without establishing that any complete grid-changing transition was correctly predicted.
-
-6. **B — Helper lists substitute vocabulary for concepts.** The verdict-marker list represents affirmative trust-pass claims but omits ordinary passed wording. The rate-key list represents positive pass metrics but ignores nested canonical metric objects. The evidence-key list represents correct-change measurements but misses a natural singular transition-count spelling. The metadata exclusion set represents containers that cannot establish achieved evidence but omits admission policies and separate controls. No corresponding lists appear directly in the supplied function.
-
-7. **C — Dedicated tests leave recognizers unprotected.** The three dedicated regressions passed. In-memory mutation checks left all three green after deleting the claim gate, the entire verdict-marker list, the entire rate-key list, the positive-numerator rule, the metadata exclusion set, or any individual evidence token. One evidence token survives deletion because another matches its substring. Deleting the oracle check, missing-evidence check, or clean-return branch did fail a dedicated test. These results concern those three regressions; the complete repository suite was not mutation-tested.
-
-8. **D/E/G — No finding in this function.** It contains no filesystem path, disk write, or duration/counter calculation. Its intended side effect is appending to flags. The exercised regression tests and audit reproductions wrote artifact fixtures into temporary directories.
+1. **A/B/F — Confirmed silent exclusion.** `pattern = re.compile(r"experiment_(\d+)_.*\.json$")` stands in for numbered experiment artifacts but requires an underscore after the number. Real numbered artifacts without descriptive suffixes exist; `if not m:` followed by `continue` silently excludes them. Direct verification of one existing artifact produces two flags; the sweep omits it entirely.
+2. **Docstring scope.** The implementation matches its narrowly stated filename convention. That convention fails to cover actual historical experiment artifacts, undermining the broader milestone sweep purpose.
+3. **C — Coverage unverified.** Repository search found no direct test references to `sweep_milestone_range`. Whether deleting its filename filters or range condition leaves the full suite green was not mutation-tested.
+4. **Other requested classes:** No artifact dict-field reads, free-text matching, or negation checks occur here. `low <= exp <= high` correctly includes both endpoints, confirmed by an isolated probe. The function contains no hardcoded absolute path, writes, or measurements; its delegated verifier reads artifacts without rewriting them.
 
 ## COUNTEREXAMPLE
-
-False negative: the policy threshold clears a claim reporting zero correct transitions.
+Existing `results/experiment_3841.json` contains:
 
 ```json
 {
-  "experiment": "experiment_4611_arc_world_model_trust_fixture",
-  "honest_verdict": "success: world_model_trust_energy_pass_rate_up_1_first_win_up",
-  "verifier_is_oracle": false,
-  "n_correct_grid_changing_transitions": 0,
-  "admission_policy": {
-    "min_correct_changed_cells": 1
-  }
+  "honest_verdict": "complete: external_research_refresh_353_section_intact_references_appended_numbers_as_reported",
+  "duration_s": 0.006045341491699219,
+  "inference_substrate": "none"
 }
 ```
 
-Other reproduced misclassifications:
-
-- False positive verdict: `"complete: world_model_trust_pass_rate_up_not_observed; identity model rejected"`.
-- False positive verdict: `"complete: world_model_trust_pass_rate_update_shipped_no_trust_claim"`.
-- False negative evidence: `"n_correct_grid_changing_transitions": 0.5`.
-- Missed valid evidence spelling: `"correct_grid_changing_transition_count": 1`.
+Direct verification returns two flags: `SUBSTRATE_HAS_NO_DURATION_FLOOR` and `SUBSTRATE_CLASS_MISSING`. Sweeping `results` over 3840–3842 reports the neighboring artifacts but omits this one.
 
 ## MISSED INPUT
+`results/experiment_3841.json`
 
-This affirmative pass claim produces no degeneracy flag despite declaring circularity and zero correct transitions:
+## RECOMMENDATION
+WIDEN_PATTERN_TO_CONCEPT
+
+## RATIONALE
+An existing in-range artifact produces two flags when verified directly and receives no verification during the sweep. Recognize supported numbered filename forms and report rejected candidates so omissions are visible instead of silently disappearing from the audit.
+
+
+## adversarial_verify.py::_claims_live_model
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+`True when attributable provenance says this task ran a live model.`
+
+## FINDINGS
+
+1. **A/5/F — Explicit live-generation claims silently disappear.** In the repository implementation, `_classify_current_task_inference_claim(d)` ignores inference_substrate_class. The artifact below declares full model generation but receives an ambiguous classification; `return claim["state"] in {CLAIM_STATE_LIVE, CLAIM_STATE_CONTRADICTORY}` therefore returns false. Reproduced consequence: verification emits a critical duration flag, but duration-only backfill returns an empty list.
+
+2. **C — Contradictory-state acceptance lacks effective regression coverage.** Removing `CLAIM_STATE_CONTRADICTORY` from this function’s return set, in memory, left all 134 tests passing across four targeted verifier, claim-provenance, substrate-class, and stamp-provenance test files. Those tests do not protect this wrapper’s handling of contradictions; this result does not establish full-suite mutation survival.
+
+## COUNTEREXAMPLE
 
 ```json
 {
-  "experiment": "experiment_4611_arc_world_model_trust_fixture",
-  "honest_verdict": "success: world_model_trust_passed_6of6",
-  "verifier_is_oracle": true,
-  "n_correct_grid_changing_transitions": 0
+  "inference_substrate_class": "model_full_generation",
+  "inference_substrate": "vllm_cuda_generation",
+  "model_specs": {"name": "Qwen3.6-35B-A3B-GGUF"},
+  "honest_verdict": "complete_generation_eval",
+  "duration_s": 0.5
+}
+```
+
+Expected: recognize an explicit live-model claim. Actual: false, suppressing its critical duration finding during backfill.
+
+## MISSED INPUT
+
+`"inference_substrate_class": "model_full_generation"`
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+Duration enforcement recognizes the authoritative model class while this predicate ignores it, so the backfill silently discards a finding already established by verification. Use the same class-aware provenance decision for both paths and add direct wrapper tests for model classes and contradictions. The supplied wrapper has exact membership matching and no direct artifact-field extraction, free-text scans, numeric thresholds, filesystem paths, writes, or measurements.
+
+
+## adversarial_verify.py::backfill_stamps
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+Re-verify unstamped artifacts, stamp qualifying critical findings without altering existing fields, and report the complete qualifying scope.
+
+## FINDINGS
+
+1. **A/F — Confirmed silent false negative.** `f.get("kind") != "DURATION_TOO_SHORT" or _claims_live_model(d)` discards a critical duration finding when the delegated recognizer misses an explicit generation claim. The MISSED INPUT produces a critical duration flag from verification but an empty backfill result.
+
+2. **Error suppression hides failed verification.** Both `except Exception:` blocks silently `continue`. Read failures and verifier crashes disappear from the output instead of being reported as unverified. A verifier crash on valid JSON containing list-valued provenance metadata reproduced this empty-result behavior.
+
+3. **Field-shape bug aborts stamping.** `d.setdefault("corrigendum_pending", []).extend(crit)` assumes an existing value is a bare list. A principle wrapper, null, or string raises AttributeError during apply; the artifact remains unstamped and subsequent artifacts are never processed. Dry-run reports the same artifact as qualifying.
+
+4. **Correction evidence is overwritten.** `d["corrigendum_note"] = (` unconditionally replaces an existing operator correction. This directly contradicts the claim that the function never “deletes or alters existing fields.” Reproduced: apply replaced a substantive correction note with the generic backfill message. The provenance assignment likewise replaces any existing provenance block.
+
+5. **Negation blindness causes quarantine of honest work.** `_claims_live_model(d)` accepts the COUNTEREXAMPLE’s explicit statement that live evaluation was avoided as evidence of invocation. With apply enabled, backfill wrote `flagged_adversarial` as true. The precision guard therefore fails its stated purpose of protecting aggregation/audit artifacts.
+
+6. **C — Kind filtering lacks effective regression coverage.** Removing `if kinds_filter is not None:` and its filtering assignment left all eight directly relevant tests passing. Those tests do not enforce requested kind exclusions. Deleting the duration precision guard did fail a test.
+
+7. **Remaining extraction assumptions.** `rep.get("flags", [])`, `f.get("severity", "")`, `f.get("kind")`, and `rep.get("gate_version")` assume the verifier’s generated report schema. No artifact-wrapper defect was established for those internal fields; the demonstrated artifact-field failure is the pending-correction read above.
+
+8. **Other requested classes.** This function contains no direct free-text substring matching, numeric threshold, baked-in absolute target, or work-duration measurement. Its exact kind identifiers do not establish a concept-list omission. Writes use caller-supplied paths and require apply; the inspected tests use temporary targets. The destructive correction-note replacement remains a confirmed write defect.
+
+## COUNTEREXAMPLE
+
+Honest completed audit, reproduced as falsely quarantined with apply enabled:
+
+```json
+{
+  "experiment": 9003,
+  "duration_s": 0.001,
+  "notes": "The Qwen3.6-35B-A3B-GGUF model was unavailable; only upstream results were inspected.",
+  "honest_verdict": "complete: live_eval_correctly_avoided; no model was invoked"
+}
+```
+
+## MISSED INPUT
+
+Verification emits a critical duration flag for this fragment; backfill silently returns an empty list:
+
+```json
+{
+  "experiment": 9002,
+  "duration_s": 0.5,
+  "model_specs": [
+    {"name": "Qwen3.6-35B-A3B-GGUF"}
+  ],
+  "honest_verdict": "complete: generated 100 held-out responses with Qwen3.6-35B-A3B via llama.cpp",
+  "methodology_note": "This task loaded the GGUF and generated all 100 responses locally; no cached responses were used."
 }
 ```
 
 ## RECOMMENDATION
+
 NEEDS_REDESIGN
 
 ## RATIONALE
-Repository-helper inspection and temporary-artifact replay confirmed silent bypasses through the full verifier. Recognition needs explicit claim semantics, and evidence must identify achieved measurements belonging to the claimed model rather than accepting arbitrary matching numbers. Independent regression cases must distinguish requirements, controls, negated claims, annotated evidence, and unrecognized affirmative claims.
+
+The backstop silently drops a critical duration violation, quarantines an explicit no-invocation audit, and overwrites correction evidence. Preserve existing correction history and field wrappers, report verification failures separately from clean results, and test affirmative claims, negations, and kind exclusions independently.
 
 
-## adversarial_verify.py::_is_arc_outer_loop_calibration_solve
+## adversarial_verify.py::main
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+The CLI verifies selected artifacts and provides a `Completion-gate backstop` that scans results for unstamped critical artifacts.
+
+## FINDINGS
+
+1. **A/B — Real qualifying artifacts escape discovery.** `paths = sorted(args.results_dir.glob("experiment_*.json"))` substitutes one filename convention for the concept “experiment artifacts.” The committed results/arc3_gap3_stage0_qhalt_energy.json is excluded, although direct backfill verification identifies a qualifying MOAT_CLAIM_RIGOR critical flag. Two neighbouring stage artifacts have the same omission. Reproduced with a temporary copy: direct backfill qualifies it; CLI backfill scans zero files and returns 0.
+
+2. **A/F — Failed verification becomes success.** `flagged = [r for r in reports if r.get("flag_count", 0) > 0]` ignores whether verification loaded the artifact successfully. Both a missing experiment artifact and malformed JSON produced reports containing load errors but zero flags; the CLI printed “Scanned 1 artifact(s); 0 flagged.” and returned 0 through `return 1 if flagged else 0`. The ordinary text output conceals the failure completely.
+
+3. **A/F — An invalid scan directory passes.** `args.results_dir.glob("experiment_*.json")` does not establish that the directory exists. A nonexistent directory yielded zero paths, zero records, and exit 0 through `return 1 if recs else 0`. A broken scan is accepted as a clean scan.
+
+4. **E — Backfill ignores requested scope and can mutate additional historical records.** `if args.backfill:` returns before the positional-artifact loop and milestone selection. Combining backfill/apply with a range selecting only experiment 9001 stamped both 9001 and 9002 in the reproduction. Reject incompatible selections or honour them before calling `backfill_stamps(paths, apply=args.apply, kinds_filter=kinds_filter)`.
+
+5. **Numeric validation — Invalid time windows disable discovery.** `type=float` accepts NaN and negative hours. With NaN, `cutoff = time.time() - args.since_hours * 3600.0` becomes NaN and every `p.stat().st_mtime >= cutoff` comparison fails. Both NaN and −1 hours reproduced a zero-file scan and exit 0 despite existing files. Require finite, nonnegative hours.
+
+6. **Claim mismatch — JSON output is silently ignored during backfill.** The option promises `Output full JSON report`, but the backfill branch prints text and returns before `if args.json:`. This reproduced with both options supplied.
+
+7. **C — Existing backfill tests do not exercise these CLI rules.** Replacing `main` in memory with a function that raises left seven existing backfill regression tests green, with zero calls to that replacement. Discovery, selection, window filtering, JSON formatting, and exit decisions therefore escaped those tests. `# pragma: no cover` also excludes the function from coverage enforcement. Whole-suite mutation survival was not established.
+
+8. **Field extraction inventory — Type assumptions exist, but no annotation bug is demonstrated here.** `r.get("flag_count", 0)` expects a number; `r.get("max_severity", -1)` expects a hashable severity rank; `r.get("flags", [])` expects iterable flag dictionaries; `f['severity'].upper()` and `f['kind']:30s` expect strings. `Path(r['path']).name` expects a path-compatible value, and `r["written"]` uses truthiness. These reads consume internally generated report records, whose producers supply those types. `r.get('exp_id')`, `r.get('title')`, `r.get('flag_count')`, `r['kinds']`, and `f['detail']` are formatted for display; they do not inspect artifact claims.
+
+9. **Remaining classes — No demonstrated defect.** There is no free-text substring or negation recognizer in this function. The positive flag-count comparison is correct, and the exact timestamp cutoff is included; that boundary was reproduced. The severity mapping covers the producer’s ranks; no omitted member of `HIGH_PRECISION_KINDS` was established. `default=Path(__file__).resolve().parent.parent / "results"` derives the directory from the source file. Default execution does not write artifacts; writes require apply. No workload duration or counter is measured here.
+
+## COUNTEREXAMPLE
+
+Save this as `arc3_review_live_eval.json` in an otherwise empty results directory:
+
+```json
+{
+  "experiment": "arc3_review_live_eval",
+  "honest_verdict": "complete: live_eval_finished",
+  "inference_substrate": "live_llm_inference",
+  "model_invoked": true,
+  "duration_s": 0.5,
+  "model_specs": [{"name": "Qwen3.6-35B-A3B-GGUF"}]
+}
+```
+
+Direct backfill verification produces a qualifying `DURATION_TOO_SHORT` record. CLI `--backfill --results-dir <directory>` scans zero artifacts and returns 0. Reproduced.
+
+## MISSED INPUT
+
+`results/arc3_gap3_stage0_qhalt_energy.json`
+
+This committed artifact qualifies under direct backfill verification and is never discovered by the CLI backfill glob.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+The CLI equates an absence of flags with successful verification, even when loading or discovery failed. Its backfill selection also omits qualifying records and ignores explicit scope restrictions before writing. Fix discovery, failure accounting, option validation, and write scope together; helper tests currently leave these entry-point failures undetected.
+
+
+## worktree_import_guard.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-Detect ARC artifacts deriving a game solve or level claim from offline ground-truth BFS or per-game calibration, using experiment-name signatures or declared outer-loop inputs.
+## CONCEPT
+Prevent tests and mutation proofs from validating Carnot code from a checkout different from the one containing their tests.
 
 ## FINDINGS
-
-1. **A/B/F — Real declarations silently escape detection.** `_ARC_OUTER_LOOP_INPUT_FLAGS` represents declarations of outer-loop-only inputs, but omits offline_bfs_used and game_source_read, names already emitted by this repository’s ARC experiments. With an unmatched experiment name, those declarations reach `if not sig:` and `return False`. The caller also emits no flag for the prose-only MISSED INPUT below; an unrecognized declaration looks identical to a clean pass.
-
-2. **Field extraction — Wrapped booleans disable detection.** `d.get(k) is True for k in _ARC_OUTER_LOOP_INPUT_FLAGS` accepts only the singleton bare boolean. A principle-wrapped true value fails this test, as do lists, None, numeric values and strings. Wrapped true is the concrete correctness bug; unsupported shapes receive no validation or diagnostic.
-
-3. **Field extraction — Strings are obtained through representation, not extraction.** `name = str(d.get("experiment", ""))` and `claim_text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')}"` stringify entire dictionaries, lists and None. Wrapped strings can still match, but their principle annotations also become searchable evidence. Reproduction confirmed that annotations discussing forbidden calibration and solving can trigger a critical flag while the actual values describe an ordinary evaluation blocked by unavailable hardware.
-
-4. **String boundaries remain defective.** `_ARC_CALIBRATION_NAME_RE.search(name)` uses an unbounded calibration stem that also matches descriptions of uncalibrated baselines. `_ARC_GAME_SOLVE_CLAIM_RE.search(claim_text)` retains an unbounded lethal marker that matches the adjective meaning nonlethal. Its solve stem has a left boundary check but no right boundary, and experiment names describing solver infrastructure count as affirmative claims.
-
-5. **B — The recognizers omit ordinary members of their concepts.** The calibration-name regex represents offline ground-truth BFS and per-game calibration but misses space-separated ground-truth wording. The claim regex represents game solves and level attainment but misses explicit completed-level prose and underscore-delimited level tokens. The ARC identity helper’s game-ID list omits g50t, already present in experiment 5548; a prose-only claim naming that game can fail `if not _is_arc_artifact(d):` without reaching either recognizer.
-
-6. **Negation/context blindness — Explicitly denied solves trigger quarantine.** `return bool(_ARC_GAME_SOLVE_CLAIM_RE.search(claim_text))` checks token presence without determining whether the artifact claims, denies, or merely discusses a solve. The COUNTEREXAMPLE returns true and causes a critical flag despite explicitly stating that no solve was attempted and no winning path was found.
-
-7. **Docstring mismatch — Names substitute for results and provenance.** The docstring requires an artifact that `derives a game solve` and `makes a game` `solve/level claim`. The implementation can satisfy both conditions using the experiment name alone, even when the verdict is None. Its stated protection for an honest `'no offline BFS'` note only excludes methodology prose from the signature search; it does not protect negated verdicts or generic calibration work.
-
-8. **C — Multiple rules lack independent regression protection.** All 14 existing ARC tests passed when executed against the extracted source definitions. In-memory deletion of each of four flags—used_env_source, read_game_source, exhaustive_bfs_calibration and hand_calibrated_per_game—left those tests green. Deleting any of four non-calibration name alternatives, or the initial ARC-identity guard, also left them green. Both winning-path alternatives survived individual deletion in those tests; the literal winpath alternative is additionally redundant with the optional-separator alternative. These results concern the focused ARC tests, not a claimed full-suite mutation run.
-
-9. **Numeric boundaries / D / E / G — No finding in the supplied function.** It contains no numeric threshold comparison, filesystem path, write operation or measured duration/counter. The inspected ARC tests do not overwrite fixed research artifacts; the reproductions and mutations ran in memory.
+1. **L56–57, L73–75: subprocess imports escape verification.** A local parent package satisfies `if package_dir == tests_root / "python" / "carnot":`, producing `return None` and no refusal. Tests can subsequently spawn an interpreter that imports foreign Carnot code. Reproduced using the real guard, tree-wide conftest, and repository CLI help test: a deliberately broken worktree CLI still produced a passing test.
+2. **Scope:** repository conftests cover collection throughout tests/, including archive tests. They do not check subprocess imports. The launcher in tests/integration/test_cli_commands.py:28–39 inherits the environment without checking the child’s package origin. Direct executions that never invoke `check` are likewise outside this module’s reach; it performs no Git-diff inspection.
+3. **L71–72: inherited bypass.** `CARNOT_ALLOW_FOREIGN_CARNOT_IMPORT` equal to `"1"` skips verification silently. This documented escape hatch can unintentionally persist into later runs through inherited environments.
+4. **Untested normalization:** deleting L44 or L45 independently leaves all 13 direct and wiring tests green. Mutations disabling origin comparison, refusal, or the override do fail tests. The suite does not exercise a local parent with a foreign child.
+5. **Pattern audit:** the canonical source-layout literals and exact override value define configured boundaries; there is no sampled field/token list or regex with omitted members.
+6. **Errors/defaults/metrics:** no exception-catching fallback exists; resolution exceptions propagate. Mismatched directories produce a refusal message, so there is no unrecognized-input default exemption. No duration, count, or size metric is consumed.
+7. **Write targets/state mutation:** no operational absolute path or write exists in this module. The related foreign-checkout fixture writes into temporary directories, rather than historical artifacts or curated documents.
 
 ## COUNTEREXAMPLE
+In temporary checkout fixtures, `/tmp/wt/python/carnot/cli.py` raises immediately, while `/tmp/main/python/carnot/cli.py` supplies working help output. The override is unset. From `/tmp/wt`, run:
 
-```json
-{
-  "experiment": "arc_hazard_calibration",
-  "game": "tu93",
-  "honest_verdict": "blocked_no_solve_attempted_no_winpath_found"
-}
+```bash
+PYTHONPATH=/tmp/main/python python -m pytest \
+  -o pythonpath=python \
+  tests/integration/test_cli_commands.py::TestCLIHelp::test_help_flag
 ```
 
-The function returns true; its caller emits a critical ARC_OUTER_LOOP_SOLVE flag.
+Pytest’s configuration selects the worktree package in the parent, satisfying the guard. The CLI subprocess inherits the foreign `PYTHONPATH`.
+
+Measured with the repository’s actual conftest and CLI test in temporary fixtures: **foreign child: 1 passed; local child: 1 failed**.
 
 ## MISSED INPUT
-
-```json
-{
-  "experiment": "arc_hidden_route_evaluation",
-  "game": "tu93",
-  "honest_verdict": "success: solved tu93 level 3",
-  "offline_bfs_used": true
-}
-```
-
-The function returns false; its caller emits no flag. The field name is existing repository vocabulary.
-
-Replacing that declaration with the following also produces false and no flag:
-
-```json
-"offline_ground_truth_bfs": {
-  "principle": "Disclose oracle access used for the route",
-  "value": true
-}
-```
-
-Other reproduced misses:
-
-- Experiment `arc_ground_truth_route_evaluation`, game `tu93`, verdict `complete_reached_L3_on_tu93`.
-- The same experiment and game with verdict `success: completed level 3 on tu93`.
-- Experiment `experiment_hidden_ground_truth_route_evaluation`, verdict `success: solved g50t level 3`, without a separate game field.
-- Experiment `arc ground truth route evaluation`, game `tu93`, verdict `success: solved tu93 level 3`.
+Child import origin `/tmp/main/python/carnot/cli.py`, with tests loaded from `/tmp/wt/tests/integration/test_cli_commands.py` and the parent package loaded from `/tmp/wt/python/carnot/__init__.py`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The detector silently drops supported wrapped declarations and existing corpus vocabulary while treating denied solves and descriptive names as affirmative evidence. Normalize field values, establish explicit provenance and affirmative-claim semantics, and independently test every recognizer; adding isolated tokens will preserve the underlying failure mode.
+A correct parent package directory does not establish which checkout a subprocess tests. Pin and verify the package origin in child interpreters, and add the demonstrated parent-local/child-foreign regression case.
 

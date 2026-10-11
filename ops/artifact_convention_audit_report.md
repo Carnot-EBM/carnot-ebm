@@ -9,58 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| CANNOT_DETERMINE | 5 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_8379_v722_native_direct_parity.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-Native and Python computations pass finite parity, while the run remains disqualified from readiness.
-
-## WHAT IS MISSING
-The complete "rows" array: the artifact ends mid-record despite "completed_count" being 4533. The remaining artifact is also unavailable, so empty "gate_check_summary" and null "owned_failure" cannot establish that diagnostics are absent everywhere.
-
-## THE CHECK A READER CANNOT DO
-Do all 4533 completed units support the reported zero action mismatches and maximum probability error of 1.1102230246251565e-16?
-
-## experiment_8381_v722_logit_policy_certificate.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible fragment reports certificate readiness and passing acceptance gates.
-
-## WHAT IS MISSING
-The remainder of the artifact: it cuts off inside "cited_upstream_artifacts", preventing inspection of any final verdict, comparative results, per-unit rows, or blocker diagnostics.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact report a comparative or blocked verdict with the evidence needed to check it?
-
-## experiment_8382_v722_runtime_evidence_delta.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The headline claim is unavailable in the truncated artifact.
-
-## WHAT IS MISSING
-The artifact’s remainder: it cuts off inside "cited_upstream_artifacts" at "snapshot_path", leaving the final verdict and any comparative evidence unavailable. "acceptance_gates" does identify two failed checks: "authenticated_change": false and "current_context_copy": false.
-
-## THE CHECK A READER CANNOT DO
-Does the missing portion make a comparative claim and provide per-unit rows supporting it?
-
-## experiment_8383_changed_runtime_canary.json
+## experiment_8393_python_transaction_cost.json
 
 **CHECKABLE**
 
@@ -68,7 +20,7 @@ Does the missing portion make a comparative claim and provide per-unit rows supp
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The canary was blocked because `runtime_changed_score` and `cuda_context_ready_score` were both 0 while their gates required 1.
+Experiment 8393 was blocked because upstream `direct_state_ready_score` was 0, failing the required equality check against 1.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8384_v722_arc_supervisor_live_panel.json
+## experiment_8395_label_criterion_audit.json
 
 **CHECKABLE**
 
@@ -84,7 +36,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-All eight bounded panel episodes completed without established scientific benefit, while readiness remained blocked by “independent_design_contract_available” observing null instead of true in “gate_check_summary”.
+Experiment 8395 was blocked because `released_label_panel_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8385_v722_board_operation_evidence.json
+## experiment_8396_v723_cuda_failure_cause.json
 
 **CANNOT_DETERMINE**
 
@@ -100,15 +52,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible fragment reports failed qualification gates, but the headline verdict is unavailable.
+The visible "acceptance_gates" are all false, but the artifact is truncated before its headline verdict.
 
 ## WHAT IS MISSING
-The artifact truncates mid-"original_path" inside "cited_upstream_artifacts", leaving subsequent verdict and result fields unavailable. "acceptance_gates" and "board_obligations.kv260.missing" do record failure diagnostics.
+The final verdict and any blocker diagnostics, such as "gate_check_summary"; the visible "acceptance_gates" contain only false booleans.
 
 ## THE CHECK A READER CANNOT DO
-Does the headline verdict make a comparative claim supported by per-unit metrics?
+Does the complete artifact report a blocked outcome and identify the failed check and observed value?
 
-## experiment_8386_v722_gatemate_obligation_delta.json
+## experiment_8397_bounded_qwen_canary.json
 
 **CHECKABLE**
 
@@ -116,7 +68,7 @@ Does the headline verdict make a comparative claim supported by per-unit metrics
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The continuity obligation was recorded, while historical authentication and hardware execution remain blocked by missing source bytes and physical/device evidence.
+The bounded Qwen canary was blocked because all three upstream qualification gates observed 0 instead of the required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +76,55 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8387_v722_capstone.json
+## experiment_8398_v723_arc_generalization_panel.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The panel was disqualified with all eight intended episodes unstarted; no comparative result is claimed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8399_v723_board_operation_boundary.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible portion reports unmet kernel-compatibility, transport-completeness, and scientific-benefit gates.
+
+## WHAT IS MISSING
+The artifact’s remainder: it cuts off inside "cited_upstream_artifacts", leaving any headline verdict and comparative results unseen. "acceptance_gates" and "board_obligations.kv260.missing" already record failed checks and missing prerequisites.
+
+## THE CHECK A READER CANNOT DO
+Does the omitted remainder make a comparative claim without per-unit metrics?
+
+## experiment_8400_v723_gatemate_continuity.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The continuity obligation is recorded, while historical authentication and hardware execution remain blocked by two missing sources and four unmet physical prerequisites.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8401_v723_capstone.json
 
 **CANNOT_DETERMINE**
 
@@ -135,7 +135,7 @@ CANNOT_DETERMINE
 H1 reports a negative mean cost gain for spline34 versus RBF34: −0.00390625 across 128 intended units.
 
 ## WHAT IS MISSING
-The artifact ends mid-field inside "paired_cost_rows" at slot 100; that row’s remainder and slots 101–128 are unavailable, while "intended_count" and "bootstrap_summary.all_intended.source_count" both report 128.
+Complete `"paired_cost_rows"`: slot 100 truncates at `"gain_l"`, and slots 101–128 are absent despite `"intended_count": 128`. Their `"spline_cost"`, `"comparator_cost"`, and `"qualified"` values are needed. The optimizer blocker has a recorded `"qualification_reason"`.
 
 ## THE CHECK A READER CANNOT DO
-Do all 128 paired cost differences reproduce "bootstrap_summary.all_intended.mean_gain" of −0.00390625?
+Do the paired costs across all 128 units reproduce the reported `"mean_gain"` of −0.00390625?

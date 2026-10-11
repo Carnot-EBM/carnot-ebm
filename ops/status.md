@@ -2,6 +2,28 @@
 
 **Last Updated:** 2026-10-10
 
+## 2026-10-10 — V724 research plan staged
+
+Milestone 2026.10.724 is planned, not activated: exactly fourteen tasks,
+Exp8402–Exp8415, across four phases. The design is
+`openspec/change-proposals/research-roadmap-vNEXT.md`; the matching queue is
+`research-roadmap-next.yaml`. V723's design is preserved byte-for-byte at
+`openspec/change-proposals/research-roadmap-v723-preserved-20261010.md`.
+
+The plan repairs observed historical fixture, fsync-hook coverage and native
+typing failures before durable continuous-learning and complete-cost runs.
+Released human labels support a fixed retrospective criterion audit; strict
+independent evaluation retains its separate unresolved exposure gate. Qualified
+H1=-0.00390625 and H2=0 remain closed. The only current LLM task is a bounded
+Qwen3.8-27B-GGUF canary, conditional on real changed CUDA evidence. The live
+ARC panel is a two-game engineering comparison, with no new solve headline.
+
+The dated references scan covers the requested primary and secondary sources,
+including inaccessible citation lists and stale trending snapshots. Board
+continuity uses existing evidence and zero device commands. No experiment ran
+as part of planning; active roadmap, conductor and exclusion manifest remain
+unchanged. Validation results are recorded in the design's planning section.
+
 ## 2026-10-10 — V721 worker memory isolation repair
 
 Embedded capstone worker calls now authenticate in a fresh bounded process.

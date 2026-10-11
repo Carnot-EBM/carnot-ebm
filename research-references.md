@@ -52101,3 +52101,96 @@ The GitHub snapshot was three weeks old. Both Semantic Scholar citation
 endpoints listed above again failed retrieval. No new method adoption,
 hardware-access claim or complete citation survey follows. The only task
 change is the missing Exp8367 failure-lineage declaration.
+
+## 2026-10-10 — V724 planning scan: independent criteria and durable online decisions
+
+This entry precedes the V724 task design. It separates fresh source checks from
+new discoveries. Publication dates come from primary pages. External results
+are hypotheses for Carnot, never local measurements.
+
+### Findings selected for the next bounded study
+
+- **Label criterion validity:** Valjakka et al., October 6, 2026,
+  [The Labeling Problem in Hallucination Detection Benchmarks](https://arxiv.org/abs/2610.08026),
+  [full methods](https://arxiv.org/html/2610.08026v1), and
+  [author release](https://github.com/jova486/LPHB). Human factuality labels
+  differ from reference-faithfulness labels. The released factorial prompt
+  comparison separates criterion from prompt structure. Carnot already has
+  900 cached release rows. Its failed overlap check reads summary manifests
+  without question identities. Recover identities from authenticated raw
+  inputs before deciding corpus eligibility. Do not call unknown overlap zero.
+  Reuse released judge outputs without new API calls. Historical generators
+  are dataset provenance, not models invoked by a Carnot experiment.
+- **Sparse online adaptation:** Hoang, Gupta and Harris,
+  [Online KAN, 2602.02056v4](https://arxiv.org/abs/2602.02056), revised June 19,
+  2026, reports compact spline support and fixed-point FPGA online training.
+  Apply locality to Carnot's existing small energy head. Test causal updates,
+  durable feedback, recovery and whole-transaction cost. Exact kernel parity
+  cannot establish improved factuality or a local FPGA speedup.
+- **Finite pending feedback:** Ryabchenko, Attias and Roy,
+  [2606.11711](https://arxiv.org/abs/2606.11711), June 10, 2026, formalizes
+  delayed online learning with finite tracking capacity. Preserve pending,
+  dropped and released feedback in the durable learner. Do not import its
+  regret guarantees into a different update rule or rerun the settled scheduler.
+- **Whole-system Ising cost:** Yin et al.,
+  [2602.15985v2](https://arxiv.org/abs/2602.15985), revised September 4, 2026,
+  now has the title *An FPGA-ASIC Co-Design Framework for Capacity-Constrained
+  Physics-Based Ising Chips*. The older title remains in prior notes.
+  The paper makes orchestration a first-class cost. Measure binding copies,
+  serialization and persistence alongside arithmetic. Its separate chip and
+  board results do not demonstrate support for Carnot's spline learner.
+- **Rust implementation lead:** [irithyll](https://github.com/evilrat420/irithyll)
+  and its [release notes](https://github.com/evilrat420/irithyll/releases)
+  describe StreamingKAN and bounded-memory learning. This is a newly checked
+  comparison lead, not an audited dependency. Review normalization, coefficient
+  updates and licensing before adoption. Do not replace Carnot's fixed policy
+  while qualifying numerical equivalence.
+
+### Coverage of the requested research topics
+
+| Topic | Primary source checked | Decision |
+|---|---|---|
+| EBM verification and reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [structured EBM, 2605.18871](https://arxiv.org/abs/2605.18871) | Keep deterministic penalties separate from learned quality. Do not reopen retired external-text ranking. |
+| Neural constraint satisfaction | [Certified reasoning, 2608.14569](https://arxiv.org/abs/2608.14569) | Require instance checks. The search record has inconsistent dates; no precise submission date is claimed. |
+| Ising in ML | [OOD dynamical Ising inference, 2607.03039](https://arxiv.org/abs/2607.03039) | Density priors can mimic generalization. Retain matched controls and independent units. |
+| Hallucination detection and mitigation | Labeling Problem above | Question-level custody and a factorial criterion comparison. |
+| Kolmogorov-Arnold Networks | Online KAN above | Sparse updates through durable serving, with calibration measured. |
+| Energy-guided generation | [2507.07731](https://arxiv.org/abs/2507.07731) | Vision-language result; defer transfer to text until runtime and verifier utility qualify. |
+| FPGA and thermodynamic sampling | FPGA-ASIC study above; Extropic below | Complete cost boundaries; no inferred device access. |
+| Continual constraint learning | Delayed-capacity OCO and Online KAN above | Causal release, frozen predictions, recovery, retention and actual parameter updates. |
+
+### Secondary channels and limits
+
+- **OpenReview:** searched ICLR/ICML 2026 EBM work. Indexed EBT proceedings
+  were visible, but both the [forum](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  and PDF retrieval met a browser challenge. The arXiv paper remains the
+  inspected methods source. No fresh submission decision is inferred.
+- **Semantic Scholar:** attempted citation lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both failed browser retrieval. Citation coverage is incomplete. Rechecked
+  [ARM–EBM v4](https://arxiv.org/abs/2512.15605), revised May 25, 2026:
+  representational equivalence alone supplies no empirical verifier advantage.
+- **Hugging Face Papers:** checked the
+  [verification feed](https://huggingface.co/papers?q=verifier).
+  Search summaries support discovery only; no feed claim becomes a local result.
+- **GitHub Trending:** checked weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly). Both returned snapshots
+  crawled four weeks earlier. No current ranking is asserted. Follow-up repository
+  search found the StreamingKAN lead above.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and October 1's
+  [recursive research update](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T's latency model includes orchestration and transfers but excludes final
+  vocabulary logits. The [systems roadmap](https://extropic.ai/writing/from-one-to-one-billion)
+  states planned early access in 2027. These are vendor reports and estimates,
+  not authenticated Carnot TSU runs or a reason to add a hardware dependency.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and its current site. The vendor description supplies architecture context,
+  but no inspected reproducible recipe changes this milestone.
+
+Research selection: finish the retrospective released-label criterion test and
+durable small-head learning. Resolve the exact failed consumer fixtures before those
+runs. Preserve the closed exposed-development utility results. No generator
+weight update, new corpus substitution or hardware purchase follows this scan.

@@ -2,6 +2,24 @@
 
 **Last Updated:** 2026-10-10
 
+## Planned V724 research milestone — 2026-10-10
+
+| Requirement / existing anchor | Planned experiments | Evidence boundary |
+|---|---|---|
+| FR-09/10; REQ-REPORT-7837, REQ-REPORT-7891-V685 | Exp8402, Exp8415 | Full fourteen-object design/YAML contract and immutable historical family receipts; planning only |
+| FR-12; REQ-REPORT-8388 and existing human-label custody | Exp8403, Exp8409, Exp8411 | Recovered question identity, retrospective fixed criterion contrast, separately gated live Qwen feasibility; no independent superiority claim |
+| FR-11; REQ-VERIFY-8376, REQ-REPORT-8390, REQ-VERIFY-8348 | Exp8404, Exp8406 | Genuine recovery and causal sparse updates; H1/H2 utility nulls stay closed |
+| FR-05/08; NFR-01/02; REQ-REPORT-8391 | Exp8405, Exp8407, Exp8408 | Native finite parity and full matched transaction cost; readiness separate from 10x local-cell benefit |
+| REQ-VERIFY-8398 and live ARC provenance | Exp8412 | Unchanged adapter-withheld two-game panel; no duplicate solve or hidden-game generalization claim |
+| Existing hardware custody and REQ-REPORT-8401 | Exp8410, Exp8413–Exp8415 | Real runtime delta required; KV260 operation boundary, terminal PolarFire CPU scope, exact GateMate external prerequisites |
+
+The complete plan is `openspec/change-proposals/research-roadmap-vNEXT.md`,
+mirrored by `research-roadmap-next.yaml`. Each executing task must extend its
+own REQ-* and SCENARIO-* and write focused failing tests before implementation.
+No new runtime requirement is marked implemented during this planning pass.
+Scoped planning tests, source/gate checks and contract mutations are recorded
+in the design; they do not establish full repository health.
+
 ## V721 worker memory isolation repair — 2026-10-10
 
 | Requirement / Scenario | Implementation | Regression evidence |

@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-10-03
+**Last Reconciled:** 2026-10-10
 
 Exp8084 publication custody was reviewed for SCENARIO-REPORT-8084-WORKER-OUTPUT.
 The seal worker owns its explicit output independently of the primary publisher.
@@ -9,6 +9,27 @@ bytes before atomic replacement. Repair revalidation retains original primitive
 evidence, archives the previous primary, and binds current code and validation
 logs to the published result. The source grouping and numerical methods are
 unchanged; the cohort remains blocked by its original history and pool operands.
+
+## Planned V724 qualification boundary — 2026-10-10
+
+The next milestone stages fourteen tasks, Exp8402–Exp8415, in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. It keeps the existing direct sparse head and
+PyO3 kernel. Historical authority is supplied through independently sealed
+family receipts, so mutable current roadmap files cannot stand in for original
+consumer inputs. Missing historical authority remains explicitly missing.
+
+The proposed complete-service boundary includes feature gathering, typed
+prediction, causal delayed feedback, sparse coefficient writes, serialization,
+file/directory fsync and response. Matched Python/native costs include the
+feedback tail drain and distinguish scheduled attempts from applied updates.
+Durable trajectory equivalence is separate from beneficial online learning.
+Released-label criterion analysis is retrospective; strict independent
+question custody remains a separate gate. The Qwen canary requires changed
+CUDA evidence, and board mappings retain actual supported-operation limits.
+
+These are planned checks, not deployed changes or new scientific results.
+The active V723 roadmap and historical protocols are preserved.
 
 ## Overview
 

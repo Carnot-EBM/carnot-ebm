@@ -1,5 +1,20 @@
 
 
+## Planned V724 authority and evidence — 2026-10-10
+
+The staged V724 design and YAML contain exactly fourteen complete task objects,
+Exp8402–Exp8415. Existing REQ-REPORT-7837 and REQ-REPORT-7891-V685 govern the
+planning contract and private authority-lifecycle checks. The previous V723
+design is preserved at
+`openspec/change-proposals/research-roadmap-v723-preserved-20261010.md`.
+
+This note records planning scope, not implemented behavior. Task prompts
+require their own REQ-* and SCENARIO-* before implementation. The planned
+boundaries include independent historical-family receipts, delayed feedback
+with a timed tail drain, readiness independent of measured benefit, and
+retrospective versus independent label custody. Source and scientific failures
+remain visible. The active roadmap and all historical protocols stay unchanged.
+
 # Research Reporting Capability Specification
 
 ## REQ-REPORT-8386: Retain GateMate obligations through a bounded evidence delta

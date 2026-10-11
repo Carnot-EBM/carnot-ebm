@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-10-10 — Stage research milestone 2026.10.724
+
+- Created matching fourteen-task V724 design and staged YAML, Exp8402–Exp8415;
+  preserved the previous V723 design byte-for-byte before replacing vNEXT.
+- Added the dated arXiv/OpenReview/citation/vendor/repository scan to
+  `research-references.md` before experiment design, with source access limits.
+- Planned independently sealed historical consumer receipts, real durable
+  sparse learning, matched full Python/native cost and a retrospective human
+  criterion contrast. Delayed-feedback cost includes a timed tail drain and
+  distinguishes scheduled feedback from applied updates.
+- Retained separate strict independence, CUDA-change and native-benefit gates;
+  included mandated Qwen3.8 bounded generation, live ARC provenance, and board
+  continuity without repeated probes. Every prompt has progress and bounded
+  write/call requirements, exact deliverables and complete prior-failure fields.
+- Planning validation is recorded in the design. This does not activate the
+  milestone, execute experiments, alter conductor source or publish externally.
+
 ## 2026-10-11 — Operational retrospective for milestone 2026.10.723
 
 - Wrote `results/operational_retro_2026_10_723.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.723`. Authoritative disk-mtime fallback data records 9 experiments completed (0 compute-bound, 9 synthesis-only) across 91.2 total wall-time minutes (average 10 minutes per experiment).

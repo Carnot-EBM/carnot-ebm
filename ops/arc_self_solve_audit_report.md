@@ -16,9 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR:** Zero recent artifacts means **no demonstrated SELF_DISCOVERY_ADVANCE**. Reachability passes; autonomous discovery remains unproven.
+**TL;DR: No recent solve artifacts to classify; no demonstrated SELF_DISCOVERY_ADVANCE.**
 
-**Per-artifact:** None supplied (`[]`); no artifact verdicts to assign. Recommended action: substantiate future solve claims with live-entrypoint traces showing the agent’s attempts, runtime reverse-engineering, successful execution, and registry novelty.
+Per-artifact: none (`0`, `[]`).
+- **Evidence:** The reachability pre-pass passes for 97 modules. It establishes wiring, not actual live execution or autonomous discovery.
+- **Recommended action:** Require each future solve claim to include live-entrypoint execution traces, the agent’s attempts and runtime discoveries, and a registry check for duplicates.
 
-**Pattern watch:** No drift can be established from this empty sample. The 97-module closure proves reachability only. Source-derived models, offline ground-truth BFS, and hand-built per-game adapters remain **OUTER_LOOP_RE**, even when wired into the live agent.
+**Pattern watch:** Reachable code can still contain outer-loop solutions. Reading game source, offline ground-truth BFS, or hand-built per-game models warrants **OUTER_LOOP_RE**, even when integrated into the live agent. No artifacts here establish that drift—or rule it out.
 
