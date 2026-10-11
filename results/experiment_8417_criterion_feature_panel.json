@@ -1,0 +1,51 @@
+{
+  "experiment": 8417,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-11",
+  "started_at": "2026-10-11T19:39:58.164533+00:00",
+  "finished_at": "2026-10-11T19:39:58.164533+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Build question-grouped source features and stratify criterion errors",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8416-contract-methods",
+  "failed_field": "methods_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8416_v725_contract_methods.json",
+  "failed_evidence_sha256": "sha256:4b59073d714eb0a2dc52ad5a1d16b2451991ce72c832f6003a9f852e00e73f91",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8416-contract-methods",
+    "failed_field": "methods_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8416_v725_contract_methods.json",
+    "failed_evidence_sha256": "sha256:4b59073d714eb0a2dc52ad5a1d16b2451991ce72c832f6003a9f852e00e73f91"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8416-contract-methods.methods_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8416-contract-methods",
+      "artifact_field": "methods_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8416_v725_contract_methods.json",
+      "artifact_sha256": "sha256:4b59073d714eb0a2dc52ad5a1d16b2451991ce72c832f6003a9f852e00e73f91"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
