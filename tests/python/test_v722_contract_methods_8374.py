@@ -88,7 +88,9 @@ def test_protocol(natural):
 )
 def test_private_e2e018(tmp_path, mutation):
     """SCENARIO-REPORT-8374-AUTHORITY: full objects and visible rows must agree."""
-    tasks = yaml.safe_load((e.ROOT / e.ACTIVE).read_bytes())["tasks"]
+    from carnot.reporting.historical_consumer_roots_8402 import historical_tasks
+
+    tasks = historical_tasks(722)
     table = "\n".join(
         f"| {i + 1} | {t['id']} | {t['title']} | {t['phase']} | {t['deliverable']} |"
         for i, t in enumerate(tasks)

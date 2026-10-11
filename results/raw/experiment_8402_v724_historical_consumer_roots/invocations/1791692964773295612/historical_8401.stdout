@@ -1,0 +1,282 @@
+.FFFFF.                                                                  [100%]
+=================================== FAILURES ===================================
+____________ test_natural_capture_preserves_declared_source_aliases ____________
+
+tmp_path = PosixPath('/var/tmp/exp8401-owned-1viduhgn/qualified_branch_consumers/test_natural_capture_preserves0')
+
+    def test_natural_capture_preserves_declared_source_aliases(tmp_path):
+        """SCENARIO-VERIFY-8373-REPLAY: authentic utility replay uses its own sealed manifest."""
+>       task = e.contract.authority(e.ROOT, tmp_path / "authority")["tasks"][1]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v721_capstone_frozen_aliases_8373.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v721_contract_methods.py:51: in authority
+    tasks = parse_design((root / DESIGN).read_text(), milestone=milestone)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+___________ test_embedded_worker_ignores_unrelated_host_memory_peak ____________
+
+tmp_path = PosixPath('/var/tmp/exp8401-owned-1viduhgn/qualified_branch_consumers/test_embedded_worker_ignores_u0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb97be0fb60>
+
+    def test_embedded_worker_ignores_unrelated_host_memory_peak(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8373-REPLAY: valid input survives an earlier 2139 MiB host peak."""
+>       request, output = worker_request(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v721_capstone_worker_memory_8373.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v721_capstone_worker_memory_8373.py:13: in worker_request
+    task = e.contract.authority(e.ROOT, tmp_path / "authority")["tasks"][12]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v721_contract_methods.py:51: in authority
+    tasks = parse_design((root / DESIGN).read_text(), milestone=milestone)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______ test_child_enforces_absolute_and_growth_memory_bounds[1000-1500-0] ______
+
+tmp_path = PosixPath('/var/tmp/exp8401-owned-1viduhgn/qualified_branch_consumers/test_child_enforces_absolute_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb97be0f920>
+before = 1000, after = 1500, exit_code = 0
+
+    @pytest.mark.parametrize(
+        "before,after,exit_code",
+        [(1000, 1500, 0), (1500, 1501, 1), (500, 1001, 1)],
+    )
+    def test_child_enforces_absolute_and_growth_memory_bounds(
+        tmp_path, monkeypatch, before, after, exit_code
+    ):
+        """REQ-VERIFY-8373: either exceeded child bound fails; exact limits still pass."""
+>       request, output = worker_request(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v721_capstone_worker_memory_8373.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v721_capstone_worker_memory_8373.py:13: in worker_request
+    task = e.contract.authority(e.ROOT, tmp_path / "authority")["tasks"][12]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v721_contract_methods.py:51: in authority
+    tasks = parse_design((root / DESIGN).read_text(), milestone=milestone)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______ test_child_enforces_absolute_and_growth_memory_bounds[1500-1501-1] ______
+
+tmp_path = PosixPath('/var/tmp/exp8401-owned-1viduhgn/qualified_branch_consumers/test_child_enforces_absolute_a1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb97be0f830>
+before = 1500, after = 1501, exit_code = 1
+
+    @pytest.mark.parametrize(
+        "before,after,exit_code",
+        [(1000, 1500, 0), (1500, 1501, 1), (500, 1001, 1)],
+    )
+    def test_child_enforces_absolute_and_growth_memory_bounds(
+        tmp_path, monkeypatch, before, after, exit_code
+    ):
+        """REQ-VERIFY-8373: either exceeded child bound fails; exact limits still pass."""
+>       request, output = worker_request(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v721_capstone_worker_memory_8373.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v721_capstone_worker_memory_8373.py:13: in worker_request
+    task = e.contract.authority(e.ROOT, tmp_path / "authority")["tasks"][12]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v721_contract_methods.py:51: in authority
+    tasks = parse_design((root / DESIGN).read_text(), milestone=milestone)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______ test_child_enforces_absolute_and_growth_memory_bounds[500-1001-1] _______
+
+tmp_path = PosixPath('/var/tmp/exp8401-owned-1viduhgn/qualified_branch_consumers/test_child_enforces_absolute_a2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb9ce54af90>
+before = 500, after = 1001, exit_code = 1
+
+    @pytest.mark.parametrize(
+        "before,after,exit_code",
+        [(1000, 1500, 0), (1500, 1501, 1), (500, 1001, 1)],
+    )
+    def test_child_enforces_absolute_and_growth_memory_bounds(
+        tmp_path, monkeypatch, before, after, exit_code
+    ):
+        """REQ-VERIFY-8373: either exceeded child bound fails; exact limits still pass."""
+>       request, output = worker_request(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v721_capstone_worker_memory_8373.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v721_capstone_worker_memory_8373.py:13: in worker_request
+    task = e.contract.authority(e.ROOT, tmp_path / "authority")["tasks"][12]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v721_contract_methods.py:51: in authority
+    tasks = parse_design((root / DESIGN).read_text(), milestone=milestone)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap v723: Independent Labels and Continuous Direct Services\n\n**Created:** 2026-10-10  \n**Mil...CONTRACT_END -->\n\nCanonical full-task SHA-256: `57a48a0ad59eac291f03434d4a576e86a525b85832a96f3cc30d405137028a52`.\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V721 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v721_capstone_frozen_aliases_8373.py::test_natural_capture_preserves_declared_source_aliases
+FAILED tests/python/test_v721_capstone_worker_memory_8373.py::test_embedded_worker_ignores_unrelated_host_memory_peak
+FAILED tests/python/test_v721_capstone_worker_memory_8373.py::test_child_enforces_absolute_and_growth_memory_bounds[1000-1500-0]
+FAILED tests/python/test_v721_capstone_worker_memory_8373.py::test_child_enforces_absolute_and_growth_memory_bounds[1500-1501-1]
+FAILED tests/python/test_v721_capstone_worker_memory_8373.py::test_child_enforces_absolute_and_growth_memory_bounds[500-1001-1]
+5 failed, 2 passed, 1 warning in 4.32s

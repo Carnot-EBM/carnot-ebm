@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8376_v722_direct_atomic_state.py", line 12, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/direct_atomic_runner_8376.py", line 197, in main
+    return e.worker(args.worker, args.state_directory, args.barrier, args.two_readers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/direct_atomic_state_8376.py", line 111, in worker
+    result = store.apply(event, hook)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/direct_atomic_state_8376.py", line 232, in apply
+    self.commit(after, hook)
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/direct_atomic_state_8376.py", line 207, in commit
+    temporary.replace(target)
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+    os.replace(self, target)
+  File "/tmp/carnot-child-results-guard-amo0s5o8/sitecustomize.py", line 76, in moved
+    return real(src, dest if dest is not None else dst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/scratch/direct-rotated/atomic-evidence0/raw/11/uninterrupted-none/.state.tmp' -> '/tmp/carnot-pytest-artifacts-egqeyu0_/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/scratch/direct-rotated/atomic-evidence0/raw/11/uninterrupted-none/version-3e578be3f40df3f4c7295222a2cfea244e9e71fe5a7af19994ed3728438f297b.json'

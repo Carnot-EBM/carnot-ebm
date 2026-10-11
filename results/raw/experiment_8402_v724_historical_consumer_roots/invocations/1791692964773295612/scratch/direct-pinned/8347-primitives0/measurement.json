@@ -1,0 +1,124 @@
+{
+  "audit": {
+    "basis_error_max": 1.1102230246251565e-16,
+    "boundary_actions": [
+      "escalate",
+      "escalate"
+    ],
+    "finite_difference_error_max": 5.382361223382759e-12,
+    "static_slope": 1.0509450022900344
+  },
+  "checks": [
+    {
+      "artifact_field": "experiment8347_not_retired",
+      "expected": [],
+      "hash": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0",
+      "observed": [],
+      "op": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "current_retirement_policy"
+    },
+    {
+      "artifact_field": "authenticated_external_operands",
+      "expected": true,
+      "hash": null,
+      "observed": "V720 JSON contract missing",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "upstream": "exp8333_and_current_authority"
+    }
+  ],
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/local_consumer_qualification_8347.py",
+      "sha256": "sha256:4103e60958394565ac8457af8f7e861abea39ae79d01c378b49600fb13caae5e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/local_consumer_execution_8347.py",
+      "sha256": "sha256:46c4c4bf886ada03eaee67727bb45a2455bd3b7049c6ef5fe51730f4a1549353"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8347_v720_local_consumer_qualification.py",
+      "sha256": "sha256:98570b080922758e4ff73d3ff7cc0771e5c0c2bdc8a9d4c6487bfcd4c0cd0af7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_local_consumer_qualification_8347.py",
+      "sha256": "sha256:3db78a4b751d174d6292e6e4551d765907c57cdf737334c000a6ff5e19d93cb1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_hard_exit_learning_qualification_8206.py",
+      "sha256": "sha256:e35a9bf809590b970f5062118cc7da637e44790aa13f56922412e147ec55c60b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/local_qualification_8333.py",
+      "sha256": "sha256:f19b77cffd924d81e0d2a8c69fc49c977a4eedaa3467711dc86bff37d0815d0e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/local_qualification_8333.py",
+      "sha256": "sha256:f223e2bd88825512ca4cd4f7c5ce0e045a4f5ae7d60441f9a6a984cb1e50a65c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/local_qualification_execution_8333.py",
+      "sha256": "sha256:dbc8488aec6893096536ee10b0630a4f2203cf4d1c12a4b112b2715206af2a74"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8333_v719_local_evidence_qualification.py",
+      "sha256": "sha256:7002f2d496de47afe759bfef6106cf0637796db7af92b13a1ad03b5f4686dfff"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v709_execution.py",
+      "sha256": "sha256:07c8a183d066c1eaefed6ac721181f2bb935d1a68ef192e125cd6bb798445a11"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    }
+  ],
+  "costs": [],
+  "crash_parity": false,
+  "crashes": [],
+  "duration_s": 0.10290787600024487,
+  "false_zero": {},
+  "first_failed_operand": {},
+  "fixture": false,
+  "historical": [],
+  "historical_fixture_manifest": {},
+  "negative": {
+    "action_changed": true,
+    "detected": true,
+    "fresh_probability": 0.252758723502032,
+    "reference_action": "escalate",
+    "stale_probability": 0.24899999999999997,
+    "unsafe_action": "accept"
+  },
+  "numeric": {},
+  "phase_spans": [
+    {
+      "duration_s": 0.10293358499984606,
+      "phase": "authenticate_and_recompute",
+      "start_s": 0
+    }
+  ],
+  "protocol_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/scratch/direct-pinned/8347-primitives0/protocol.json",
+    "sha256": "sha256:e37c29961b88756cec46b4fb8ce9e365c85949075eb1b6507c6075b8dde43a8e"
+  },
+  "recovered_states": [],
+  "refs": [],
+  "rows": [],
+  "states": []
+}

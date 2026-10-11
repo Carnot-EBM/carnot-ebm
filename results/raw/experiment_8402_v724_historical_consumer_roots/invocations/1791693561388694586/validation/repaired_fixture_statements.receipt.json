@@ -1,0 +1,28 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-c",
+    "import coverage,pathlib; c=coverage.Coverage(config_file='/var/tmp/exp8402-owned-z4zkwgcd/coverage.ini'); c.load(); p=pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v722_contract_methods_8374.py'); lines=c.get_data().lines(str(p)); owned=[i+1 for i,s in enumerate(p.read_text().splitlines()) if 'import historical_tasks' in s or 'tasks = historical_tasks(722)' in s]; assert len(owned)==2 and all(i in lines for i in owned); print('repaired fixture statements: 2/2, 100 percent')"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import coverage,pathlib; c=coverage.Coverage(config_file='\"'\"'/var/tmp/exp8402-owned-z4zkwgcd/coverage.ini'\"'\"'); c.load(); p=pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v722_contract_methods_8374.py'\"'\"'); lines=c.get_data().lines(str(p)); owned=[i+1 for i,s in enumerate(p.read_text().splitlines()) if '\"'\"'import historical_tasks'\"'\"' in s or '\"'\"'tasks = historical_tasks(722)'\"'\"' in s]; assert len(owned)==2 and all(i in lines for i in owned); print('\"'\"'repaired fixture statements: 2/2, 100 percent'\"'\"')'",
+  "deadline_s": 30,
+  "duration_s": 0.064516499,
+  "ended_monotonic_ns": 15219790604137,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791693561388694586/validation/repaired_fixture_statements.stdout",
+  "log_sha256": "sha256:da415dda13c0043c02bc79b0c6e3d89c4409f8c9372ec70dba2f25231b2fe997",
+  "name": "repaired_fixture_statements",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 15219726087638,
+  "started_wall_ns": 1791695464505946090,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791693561388694586/validation/repaired_fixture_statements.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791693561388694586/validation/repaired_fixture_statements.stdout",
+  "stdout_sha256": "sha256:da415dda13c0043c02bc79b0c6e3d89c4409f8c9372ec70dba2f25231b2fe997",
+  "timed_out": false
+}

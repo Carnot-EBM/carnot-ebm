@@ -53319,3 +53319,26 @@ parent current RSS and inherited lifetime peaks remain separate. Complete
 terminal cold replay has a bounded 180-second deadline. Unchanged validators
 check terminal bytes before atomic publication. Historical failures and baseline
 health retain their exact source/log hashes; no current global pass is claimed.
+
+## REQ-VERIFY-8402: Qualify historical family custody and classification
+
+Freeze scoped commands before measurement. Require 100 percent newly owned
+statements, including real child, CLI and rejection paths, with genuine
+Coverage.py child shards. Run scoped pytest, Ruff check/format, strict mypy,
+spec tracing and private E2E-018/E2E-021. Keep global health separate. Use
+private disk-backed scratch, unbuffered phase boundaries, 30-second child
+polls, bounded calls and a 4800-second task cap. Cold replay primitive rows
+in a fresh child. Unchanged publication, adversarial and strict row validators
+check candidate bytes before atomic publication. Retain every finding; only
+an existing typed consumer may resolve independently recomputed information.
+
+### SCENARIO-VERIFY-8402-CONTROLS
+
+Real children accept positive/blocked evidence, reject missing inputs,
+deliberate errors and self-consistently rehashed summaries. Family commands,
+assertions, exits, input hashes and terminal hashes are sealed independently.
+Exp8404/Exp8410 authenticate the administrative receipt and their family seal.
+Unknown/warning/critical findings close readiness. Owned failure disqualifies;
+external absence blocks. No historical failed assertion becomes a passed test.
+
+Status: specified before tests. Conductor owns ops and BMAD reconciliation.

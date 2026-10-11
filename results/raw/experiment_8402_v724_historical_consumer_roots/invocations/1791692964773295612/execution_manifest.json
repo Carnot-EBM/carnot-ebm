@@ -1,0 +1,349 @@
+{
+  "child_poll_s": 30,
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/var/tmp/exp8402-owned-br28zkpr/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_historical_consumer_roots_8402.py",
+        "--basetemp=/var/tmp/exp8402-owned-br28zkpr/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/var/tmp/exp8402-owned-br28zkpr/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/var/tmp/exp8402-owned-br28zkpr/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/var/tmp/exp8402-owned-br28zkpr/coverage.ini",
+        "--show-missing",
+        "--fail-under=100",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/historical_consumer_roots_8402.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/historical_consumer_runner_8402.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/historical_roots_8402.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8402_v724_historical_consumer_roots.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/var/tmp/exp8402-owned-br28zkpr/coverage.ini",
+        "-o",
+        "/var/tmp/exp8402-owned-br28zkpr/coverage.json",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/historical_consumer_roots_8402.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/historical_consumer_runner_8402.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/testing/historical_roots_8402.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8402_v724_historical_consumer_roots.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/historical_consumer_roots_8402.py",
+        "python/carnot/reporting/historical_consumer_runner_8402.py",
+        "python/carnot/testing/historical_roots_8402.py",
+        "scripts/experiments/experiment_8402_v724_historical_consumer_roots.py",
+        "tests/python/test_historical_consumer_roots_8402.py",
+        "tests/python/test_v722_contract_methods_8374.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/historical_consumer_roots_8402.py",
+        "python/carnot/reporting/historical_consumer_runner_8402.py",
+        "python/carnot/testing/historical_roots_8402.py",
+        "scripts/experiments/experiment_8402_v724_historical_consumer_roots.py",
+        "tests/python/test_historical_consumer_roots_8402.py",
+        "tests/python/test_v722_contract_methods_8374.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/historical_consumer_roots_8402.py",
+        "python/carnot/reporting/historical_consumer_runner_8402.py",
+        "python/carnot/testing/historical_roots_8402.py",
+        "scripts/experiments/experiment_8402_v724_historical_consumer_roots.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_historical_consumer_roots_8402.py",
+        "tests/python/test_v722_contract_methods_8374.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import coverage,pathlib; c=coverage.Coverage(config_file='/var/tmp/exp8402-owned-br28zkpr/coverage.ini'); c.load(); p=pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v722_contract_methods_8374.py'); lines=c.get_data().lines(str(p)); owned=[i+1 for i,s in enumerate(p.read_text().splitlines()) if 'import historical_tasks' in s or 'tasks = historical_tasks(722)' in s]; assert len(owned)==2 and all(i in lines for i in owned); print('repaired fixture statements: 2/2, 100 percent')"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "repaired_fixture_statements",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "--basetemp=/var/tmp/exp8402-owned-br28zkpr/e2e021"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E021",
+      "scope": "owned"
+    }
+  ],
+  "consumer_assertion_sources": {
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_direct_atomic_state_8376.py": {
+      "assertions_sha256": "sha256:b9f98a4f445a16650a887bb8abfb4282e5fabaff11f848f4eb8032ad16b1c979",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_direct_atomic_state_8376.py",
+        "sha256": "sha256:5cd655a17b558ff2b8a5bb2ba827cc52175a8e4c0602e876328f180945871ea3"
+      }
+    },
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py": {
+      "assertions_sha256": "sha256:d3422bd54eda4c9c7a53b42197fd5f0cda1bdacd52aa1b7319baf7c4d3428057",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+      }
+    },
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_hard_exit_learning_qualification_8206.py": {
+      "assertions_sha256": "sha256:5944d9d41ff8ac533149263970218aa2e995a677ce3f2fa17f93533562b7f681",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_hard_exit_learning_qualification_8206.py",
+        "sha256": "sha256:e35a9bf809590b970f5062118cc7da637e44790aa13f56922412e147ec55c60b"
+      }
+    },
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_local_consumer_qualification_8347.py": {
+      "assertions_sha256": "sha256:03a35f60481019594f2e7951eab0c69898438e3559809e6e15ccbf733a128e76",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_local_consumer_qualification_8347.py",
+        "sha256": "sha256:3db78a4b751d174d6292e6e4551d765907c57cdf737334c000a6ff5e19d93cb1"
+      }
+    },
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_threshold_guard_8362.py": {
+      "assertions_sha256": "sha256:67eb7fa2bd1aafc606ffa299f960cc8bba49290c12fc6292163fc3f0b76b4b1f",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_threshold_guard_8362.py",
+        "sha256": "sha256:6c0e5004e233c10350a6cca9c83e8fe417a21767f7457c0388351acd589922bf"
+      }
+    },
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v721_capstone_frozen_aliases_8373.py": {
+      "assertions_sha256": "sha256:dfbc4347f2d65b6427a4bd4e30517e10052e8703d92268bda7d77016818f8d98",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v721_capstone_frozen_aliases_8373.py",
+        "sha256": "sha256:18f55568921896b712d6940a3e16ff3b747782239a2b9079c14d72a3ff78711e"
+      }
+    },
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v721_capstone_worker_memory_8373.py": {
+      "assertions_sha256": "sha256:1c16a0084a6818665d7f150ac9717a3ebdb9b9189674cd6dc3ce4b9684a164bd",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v721_capstone_worker_memory_8373.py",
+        "sha256": "sha256:369d9ab4e0058a826eaf941f8d591baa5734da554688dd521ab6e8aa45331d70"
+      }
+    },
+    "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v722_contract_methods_8374.py": {
+      "assertions_sha256": "sha256:ca125b68372b8336156e6177fa073d1de74f459e105ce1e14e0bb72ab0514f11",
+      "source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v722_contract_methods_8374.py",
+        "sha256": "sha256:16341ef570818f6e0eea8bcc4a324a8b900fbeca8e7a36dc0dd95082bed61b93"
+      }
+    }
+  },
+  "coverage_shards": "invocation-only genuine Coverage.py patch=subprocess",
+  "historical_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-v",
+        "-p",
+        "carnot.testing.historical_roots_8402",
+        "--historical-fixture-manifest=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/fixtures/manifest.json",
+        "--historical-current-root=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/current/pinned",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "tests/python/test_local_consumer_qualification_8347.py",
+        "tests/python/test_threshold_guard_8362.py",
+        "tests/python/test_direct_atomic_state_8376.py",
+        "tests/python/test_v721_capstone_frozen_aliases_8373.py",
+        "tests/python/test_v721_capstone_worker_memory_8373.py",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/scratch/direct-pinned"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "family": "direct",
+      "name": "direct_pinned",
+      "rotation": "pinned",
+      "scope": "historical"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-v",
+        "-p",
+        "carnot.testing.historical_roots_8402",
+        "--historical-fixture-manifest=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/fixtures/manifest.json",
+        "--historical-current-root=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/current/rotated",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "tests/python/test_local_consumer_qualification_8347.py",
+        "tests/python/test_threshold_guard_8362.py",
+        "tests/python/test_direct_atomic_state_8376.py",
+        "tests/python/test_v721_capstone_frozen_aliases_8373.py",
+        "tests/python/test_v721_capstone_worker_memory_8373.py",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/scratch/direct-rotated"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "family": "direct",
+      "name": "direct_rotated",
+      "rotation": "rotated",
+      "scope": "historical"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-v",
+        "-p",
+        "carnot.testing.historical_roots_8402",
+        "--historical-fixture-manifest=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/fixtures/manifest.json",
+        "--historical-current-root=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/current/pinned",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_v722_contract_methods_8374.py::test_private_e2e018",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/scratch/runtime-pinned"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "family": "runtime",
+      "name": "runtime_pinned",
+      "rotation": "pinned",
+      "scope": "historical"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-v",
+        "-p",
+        "carnot.testing.historical_roots_8402",
+        "--historical-fixture-manifest=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/fixtures/manifest.json",
+        "--historical-current-root=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/current/rotated",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_v722_contract_methods_8374.py::test_private_e2e018",
+        "--basetemp=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791692964773295612/scratch/runtime-rotated"
+      ],
+      "deadline": 180,
+      "expected": 0,
+      "family": "runtime",
+      "name": "runtime_rotated",
+      "rotation": "rotated",
+      "scope": "historical"
+    }
+  ],
+  "owned": [
+    "python/carnot/reporting/historical_consumer_roots_8402.py",
+    "python/carnot/reporting/historical_consumer_runner_8402.py",
+    "python/carnot/testing/historical_roots_8402.py",
+    "scripts/experiments/experiment_8402_v724_historical_consumer_roots.py"
+  ],
+  "task_cap_s": 4800
+}

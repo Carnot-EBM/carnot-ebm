@@ -98311,3 +98311,35 @@ Source verdicts, native coverage manifests, imported-field citations, closed
 exposed H1/H2 and the separate dyadic policy remain distinct. No retirement
 is appended without qualified exact scope equality. Ops and BMAD reconciliation
 remain conductor-owned. Terminal qualification is recorded in the artifact receipts.
+
+## REQ-REPORT-8402: Bind V724 and isolate authentic historical dependencies
+
+Exp8402 SHALL bind exactly fourteen full task objects, Exp8402–Exp8415, to the
+visible V724 table and canonical digest. Freeze current authority separately
+from independently pinned historical designs and original task objects. Preserve
+all original assertions, acceptance thresholds, receipts and protocol bytes.
+V722's absent machine design stays blocked; its authentic original tasks may
+supply a synthetic authority-mutation test fixture, never historical authority.
+Publish V724 methods before measurement. Freeze the three service variants,
+864 intended stream slots, full cost estimand, eight-cycle delayed event tape
+and inherited retrospective criterion contrast. No current model calls occur.
+Separate direct/runtime family receipts and readiness. A failed family zeros
+only its own score. Required checks concern owned custody and faithful outcome
+classification. Owned failure zeros all readiness; external absence is blocked.
+
+### SCENARIO-REPORT-8402-ROOTS
+
+Historical tests use explicit immutable dependency roots. Run identical node
+IDs and assertions twice, with pinned historical inputs and then unrelated
+valid current roadmap/design bytes. Authentic historical reads must retain
+source identity through current rotation. Rehashed tasks, source aliases,
+missing design and wrong roots are rejected without changing validators.
+
+### SCENARIO-REPORT-8402-METHODS
+
+Retain all fourteen future dependencies. Cost tapes schedule 8*r predictions
+and eight designated feedback attempts, release after eight logical ticks and
+include a deterministic timed tail. Missing inputs never produce fake updates.
+H1=-0.00390625 and H2=0 stay closed; generalization scores remain zero.
+
+Status: specified before tests. Conductor owns ops and BMAD reconciliation.
