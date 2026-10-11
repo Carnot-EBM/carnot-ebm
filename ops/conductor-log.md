@@ -20068,3 +20068,6 @@ code |
 | 2026-10-11 18:49 UTC | Plan milestone 2026.10.725 | OK | 4 tasks proposed |
 | 2026-10-11 19:01 UTC | Milestone 2026.10.725 activated | OK | 4 tasks queued |
 | 2026-10-11 19:37 UTC | Bind thirteen tasks and seal retrospective criteri | OK | 108 passed, 1 warning in 51.22s |
+| 2026-10-11 19:44 UTC | Build question-grouped source features and stratif | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8416-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-11 19:46 UTC | Train small calibrated source energies against mat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8417-criterion-feature-panel) |
+| 2026-10-11 19:46 UTC | Measure retrospective typed decisions on held-ques | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8418-criterion-energy-fit) |
