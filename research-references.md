@@ -52212,3 +52212,91 @@ independent-evaluation gate and unresolved exposures remain preserved. A genuine
 independent study needs disjoint unexposed questions, separately adjudicated
 factuality, adequate class support and sealed detector predictions before target
 access. See `docs/research-notes/v724-label-criterion.md` for exact limits.
+
+## 2026-10-11 — V725 planning scan: criterion-aware decisions and delayed learning
+
+This scan precedes the V725 experiment design. It covers the eight requested
+research topics and all six secondary channels. Paper results are author claims.
+They are not measurements of Carnot. Access failures below limit the scan.
+
+### Methods worth testing
+
+- **Label criterion:** [The Labeling Problem in Hallucination Detection
+  Benchmarks](https://arxiv.org/abs/2610.08026), October 2026, distinguishes
+  reference support from factual correctness. Carnot's Exp8409 already
+  reproduced a retrospective criterion contrast on the pinned release.
+  Next investigate calibration and errors by dataset and generator. Do not
+  repeat the aggregate contrast or call opened human labels an unseen test.
+- **Heterogeneity:** [The Detectability Gap](https://arxiv.org/html/2609.35860v1),
+  September 2026, separates descriptive agreement-defined groups from tests
+  using other signals. Its labels include answer-alias rules, which differ
+  from independently adjudicated factual truth. Useful adaptation: freeze
+  dataset/generator strata without outcome access. Compare paired errors on
+  the same question groups. Do not define a subgroup with the detector score
+  and then claim independent detection skill within that subgroup.
+- **Continual learning:** [Capacity-Constrained Online Convex Optimization
+  with Delayed Feedback](https://arxiv.org/html/2606.11711v1), June 2026,
+  treats pending-feedback capacity as a resource. It studies randomized
+  tracking and weighted feedback. Useful test: compare FIFO and randomized
+  admission under equal pending capacity, while recording inclusion
+  probabilities, lost observations and later prediction loss. Its convex-loss
+  bounds do not automatically cover a nonconvex Carnot selector or censored
+  empirical labels. Record a paper-inspired experiment, not a theorem transfer.
+- **Sparse updates:** [Ultrafast On-Chip Online Learning via Spline Locality
+  in Kolmogorov-Arnold Networks](https://arxiv.org/abs/2602.02056), v4 June
+  2026, reports local B-spline updates and fixed-point FPGA learning.
+  Reuse Carnot's sparse head. Measure actual coefficient changes, retained
+  decisions and complete durable transactions. A published FPGA result does
+  not establish compatibility with the attached KV260 bitstream.
+- **Whole-system cost:** [An FPGA-ASIC Co-Design Framework for
+  Capacity-Constrained Physics-Based Ising Chips](https://arxiv.org/abs/2602.15985),
+  v2 September 2026, identifies orchestration as a bottleneck around a fast
+  Ising chip. This supports timing serialization, feedback scheduling and
+  persistence alongside arithmetic. It does not establish Carnot speedup.
+
+### Other requested primary topics
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), v4 May 2026 | Keep energy scoring distinct from generator improvement. Representation equivalence is not a local advantage. |
+| Structured verification | [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 2026 | Separate learned confidence from deterministic constraints. Retain matched-information controls. |
+| Neural constraints | [Certified Correctness Requires Symbolic Integration](https://arxiv.org/abs/2608.14569) | Check each encoded instance. Search metadata has inconsistent submission dates; do not infer a precise date. |
+| Ising in ML | [OOD Neural Inference in Dynamical Ising Models](https://arxiv.org/abs/2607.03039), July 2026 | Treat transfer as an empirical question; do not substitute a favorable density prior for evidence. |
+| Guided generation | [Energy-Guided Decoding for Object Hallucination Mitigation](https://arxiv.org/abs/2507.07731), July 2025 | The result concerns vision-language models. Text decoding transfer remains deferred until runtime and source verification qualify. |
+| Learned verification | [Verify to Amplify](https://arxiv.org/abs/2603.03538), v5 September 2026 | Expert-feedback access is an assumption. Cached offline labels do not establish interactive soundness guarantees. |
+| Benchmark design | [Rethinking Evaluation for LLM Hallucination Detection](https://arxiv.org/abs/2605.11330), May 2026 | Record label noise and criterion explicitly. A new benchmark name cannot repair unknown historical exposure. |
+
+### Secondary channels checked and limitations
+
+- **OpenReview:** searched 2026 EBM and verification submissions. The
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser
+  challenge. The [official ICLR proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html)
+  were accessible. No inaccessible reviewer judgment is inferred.
+- **Semantic Scholar:** attempted citing-paper lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Both returned retrieval errors. Citation coverage remains incomplete;
+  this is not a finding of zero citations.
+- **Hugging Face:** checked the [source-verification feed](https://huggingface.co/papers?q=source+verification).
+  The direct LPHB paper page failed retrieval. Feed entries are discovery
+  leads; adopted claims above use primary papers.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) trending pages.
+  Returned snapshots were four weeks old. No current ranking is asserted.
+  Rechecked [irithyll](https://github.com/evilrat420/irithyll), which advertises
+  streaming Rust learners including StreamingKAN. This remains an unaudited
+  implementation lead, not a dependency or a measured speed comparison.
+- **Extropic:** checked [Writing](https://extropic.ai/writing), September's
+  [Z1T](https://extropic.ai/writing/z1t/) and October's
+  [recursive research update](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T describes sparse probabilistic hardware with FPGA orchestration and
+  estimated performance. These are vendor results. No attached TSU access,
+  Carnot kernel support or local energy-efficiency measurement follows.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Its vendor architecture description motivates constraint reasoning. This
+  scan found no inspected reproducible implementation that changes the plan.
+
+The next design should use human labels for an explicitly retrospective
+calibration study. It should test capacity-limited delayed updates separately
+from the closed V717 learning hypothesis. Independent current-Qwen factuality
+claims still require qualified GPU execution and new adjudicated targets.

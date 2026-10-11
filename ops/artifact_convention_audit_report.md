@@ -9,10 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
+| CHECKABLE | 4 |
+| AGGREGATE_ONLY | 1 |
 | CANNOT_DETERMINE | 3 |
 
-## experiment_8393_python_transaction_cost.json
+## experiment_8408_native_transaction_cost.json
 
 **CHECKABLE**
 
@@ -20,7 +21,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Experiment 8393 was blocked because upstream `direct_state_ready_score` was 0, failing the required equality check against 1.
+The comparison was blocked because upstream `native_parity_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -28,23 +29,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8395_label_criterion_audit.json
+## experiment_8409_v724_retrospective_label_criterion.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-Experiment 8395 was blocked because `released_label_panel_ready_score` was 0, while the gate required 1.
+All listed acceptance gates are met, including a positive primary lower bound.
 
 ## WHAT IS MISSING
-nothing
+Per-unit primary metric rows identifying each question/cluster and arm or condition. "acceptance_gates.positive_primary_lower_bound" records only `true`; "authority.contract_rows" contains contract checks, not primary comparison outcomes.
 
 ## THE CHECK A READER CANNOT DO
-none
+Is the claimed positive comparison supported broadly across question clusters, or driven by a few outliers?
 
-## experiment_8396_v723_cuda_failure_cause.json
+## experiment_8410_v724_cuda_reader_qualification.json
 
 **CANNOT_DETERMINE**
 
@@ -52,15 +53,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible "acceptance_gates" are all false, but the artifact is truncated before its headline verdict.
+The visible excerpt marks the cached-reader gate accepted, but ends before revealing the current terminal verdict.
 
 ## WHAT IS MISSING
-The final verdict and any blocker diagnostics, such as "gate_check_summary"; the visible "acceptance_gates" contain only false booleans.
+The remainder of the artifact: current `"honest_verdict"`, `"verdict_class"`, and reader-qualification outcome rows. `"acceptance_gates"` contains booleans; `"execution_authority.contract_rows"` documents task matching; the excerpt ends inside `"execution_authority.tasks[1].prompt"`.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact report a blocked outcome and identify the failed check and observed value?
+Does `"cached_reader": true` follow from recorded per-unit qualification results?
 
-## experiment_8397_bounded_qwen_canary.json
+## experiment_8411_bounded_qwen_canary.json
 
 **CHECKABLE**
 
@@ -68,7 +69,7 @@ Does the complete artifact report a blocked outcome and identify the failed chec
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The bounded Qwen canary was blocked because all three upstream qualification gates observed 0 instead of the required 1.
+The canary was blocked because `runtime_changed_score` and `cuda_context_ready_score` each equaled 0 while their gates required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -76,23 +77,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8398_v723_arc_generalization_panel.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The panel was disqualified with all eight intended episodes unstarted; no comparative result is claimed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8399_v723_board_operation_boundary.json
+## experiment_8412_v724_arc_panel_qualification.json
 
 **CANNOT_DETERMINE**
 
@@ -100,15 +85,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion reports unmet kernel-compatibility, transport-completeness, and scientific-benefit gates.
+The eight-episode panel qualified without establishing scientific benefit.
 
 ## WHAT IS MISSING
-The artifact’s remainder: it cuts off inside "cited_upstream_artifacts", leaving any headline verdict and comparative results unseen. "acceptance_gates" and "board_obligations.kv260.missing" already record failed checks and missing prerequisites.
+The eighth episode’s “per_game_results” row, for “lf52-271a04aa:22:on”, including “absolute_metric”, “progress_count”, and “status”; the artifact cuts off inside row seven, while “intended_count” and “completed_count” both report 8.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted remainder make a comparative claim without per-unit metrics?
+Did supervisor-on produce different progress from supervisor-off for lf52-271a04aa at seed 22?
 
-## experiment_8400_v723_gatemate_continuity.json
+## experiment_8413_v724_board_operation_boundary.json
 
 **CHECKABLE**
 
@@ -116,7 +101,7 @@ Does the omitted remainder make a comparative claim without per-unit metrics?
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The continuity obligation is recorded, while historical authentication and hardware execution remain blocked by two missing sources and four unmet physical prerequisites.
+KV260 offload remains unqualified because compatible kernels and complete transport/cost evidence are missing, as documented in "acceptance_gates" and "board_operation_rows".
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +109,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8401_v723_capstone.json
+## experiment_8414_v724_gatemate_obligation.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The GateMate obligation is recorded, but historical authentication and hardware execution remain blocked by missing source bytes and physical/device evidence.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8415_v724_capstone.json
 
 **CANNOT_DETERMINE**
 
@@ -132,10 +133,10 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-H1 reports a negative mean cost gain for spline34 versus RBF34: −0.00390625 across 128 intended units.
+The visible H1 summary reports no cost improvement for spline34 over RBF34, with “mean_gain” = −0.00390625 across 128 intended units.
 
 ## WHAT IS MISSING
-Complete `"paired_cost_rows"`: slot 100 truncates at `"gain_l"`, and slots 101–128 are absent despite `"intended_count": 128`. Their `"spline_cost"`, `"comparator_cost"`, and `"qualified"` values are needed. The optimizer blocker has a recorded `"qualification_reason"`.
+“paired_cost_rows” is truncated in its 100th row at “gain_l”; remaining fields, including “gain_lower”, “gain_upper”, “spline_cost”, and “qualified”, and rows 101–128 are missing.
 
 ## THE CHECK A READER CANNOT DO
-Do the paired costs across all 128 units reproduce the reported `"mean_gain"` of −0.00390625?
+Do the complete 128 paired cost rows reproduce the reported “mean_gain” of −0.00390625?

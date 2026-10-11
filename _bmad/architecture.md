@@ -475,3 +475,21 @@ but audit completion does not create a positive science claim.
 The architecture keeps oracle, archive, toy, software, hardware, and
 publication boundaries separate. The Exp6615 artifact preserves missing and
 blocked branches and records all same-roadmap gate contracts.
+
+## 2026-10-11 — Planned V725 criterion and admission study
+
+V725 stages thirteen experiments. It adapts the existing nine-input sparse energy
+head to an explicitly retrospective human-factuality target. Whole-question
+roles separate fitting, tuning and evaluation within the already exposed release.
+The learning experiment admits fixed-size blocks of delayed feedback and compares
+FIFO with randomized admission under equal capacity.
+
+The old direct durable store accepts five inputs and34 coefficients. V725's
+nine-input109-coefficient learner therefore requires its own small block
+checkpoint and causal replay checks. Only atomic write/sync primitives are reused;
+old recovery certification does not transfer. Native cost measurement continues
+on the old qualified five-input workload as a separate deployment branch.
+
+A supplied causal CUDA repair receipt gates the bounded mandated-Qwen canary.
+ARC uses newly qualified supervisor receipts. Hardware work preserves actual
+board operation limits. These are planned checks, not deployed capabilities.

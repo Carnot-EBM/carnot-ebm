@@ -3951,3 +3951,21 @@ the scoped repair adds no untraced tests or repository-health claim.
 | REQ-REPORT-8373 / SCENARIO-REPORT-8373-ACCOUNTING | Scaffolding | Exp8373: honest_verdict=complete_blocked_v721_capstone; fourteen slots preserved; H2 mean_gain=0; deployment operations remain unmeasured; [artifact](../results/experiment_8373_v721_capstone.json) |
 | REQ-VERIFY-8373 / SCENARIO-VERIFY-8373-REPLAY | Scaffolding | Exp8373: honest_verdict=complete_blocked_v721_capstone; bounded custody and replay qualification do not close the three PRD gaps; [artifact](../results/experiment_8373_v721_capstone.json) |
 | SCENARIO-HARNESS-5930-DISK-SCRATCH | Scaffolding | Added in the Exp8373 commit; honest_verdict=complete_blocked_v721_capstone; disk-backed fixture storage supports validation without establishing scientific benefit; [artifact](../results/experiment_8373_v721_capstone.json) |
+
+## 2026-10-11 — V725 research planning; execution pending
+
+The user requested the next milestone after V724. The staged plan contains
+thirteen tasks, Exp8416–Exp8428, in four phases. The full design and conductor
+YAML share an exact task contract. Active V724 and conductor code are preserved.
+
+| Requirement | Planned tasks | Evidence boundary |
+|---|---|---|
+| FR-12 verifiable reasoning | Exp8417–8419, Exp8424 | Human-label calibration is retrospective; Qwen canary is conditional feasibility |
+| FR-11 self-learning | Exp8420–8421 | Fixed-capacity delayed admission, later loss, retention and separately qualified block recovery |
+| FR-05/08 and NFR-01 | Exp8422–8423, Exp8426 | Existing native five-input service parity and complete cost; no transfer to the new learner |
+| FR-09/10; REQ-REPORT-PLAN-V725 | Exp8416, Exp8428 and every task | Full-object contract, scoped checks, primitive rows and immutable historical inputs |
+| ARC generalization floor | Exp8425 | Qualified supervisor receipts; no duplicate solves or repeated two-game panel |
+| Hardware continuity | Exp8426–8427 | KV260/PolarFire scope and bounded GateMate obligation; no unchanged device probes |
+
+No task is marked implemented by this planning entry. The dated literature scan
+in research-references.md precedes the design. Historical H1/H2 nulls remain closed.

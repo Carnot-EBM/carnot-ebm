@@ -98695,3 +98695,34 @@ bounded execution and unchanged publication validators. The thin runner is
 `tests/python/test_v724_capstone_8415.py`. Cached provenance arrays also retain
 sealed source references, rather than recursive duplicate histories. Final
 qualification receipts and genuine child coverage belong in the raw invocation.
+
+## V725 planning contract — 2026-10-11 (planned; execution pending)
+
+### REQ-REPORT-PLAN-V725
+
+The staged V725 design and YAML SHALL contain the same thirteen complete tasks,
+Exp8416–Exp8428, in conductor order. Their visible task table, embedded JSON and
+canonical digest SHALL agree. Planning SHALL preserve active V724 roadmap bytes
+and its archived design. No V725 result is implied by a planned requirement.
+
+### SCENARIO-REPORT-PLAN-V725-CONTRACT
+
+Private activation validation accepts matching staged task objects. It rejects
+a dropped/reordered task or changed prompt, model, gate, routing or retirement
+flag. Every gate names an earlier producer and its declared artifact field.
+Every named existing source path resolves. Optional external inputs remain optional.
+
+### SCENARIO-REPORT-PLAN-V725-CLAIMS
+
+The released human-label study remains retrospective. It SHALL retain unknown
+older question exposure and zero independent-generalization scores. The new
+block learner SHALL qualify its own nine-input checkpoint schema. The older
+five-input native service measurement SHALL NOT certify that new learner.
+Continuous-learning findings SHALL retain frozen, FIFO, uniform and paired
+shuffled-label controls. A bounded Qwen canary SHALL declare the mandated model
+and model_bounded_generation substrate, with actual CUDA evidence.
+
+Status: planning requirements only. Execution tasks add their focused REQ-* and
+SCENARIO-* before implementation. Existing authority/gate tests and private
+E2E-018 cover reused planning mechanisms; direct V725 contract mutation checks
+validate these staged files. No production behavior changes in this plan.
