@@ -1,0 +1,180 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_continuous_direct_learning_8406.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/owned-tests"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/E2E021"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "private_E2E021",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/E2E020",
+        "-p",
+        "carnot.testing.historical_roots_8402",
+        "--historical-fixture-manifest=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791693561388694586/fixtures/manifest.json",
+        "--historical-current-root=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8402_v724_historical_consumer_roots/invocations/1791693561388694586/current/pinned"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "private_E2E020",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8406-private/invocation-9ldfv0pc/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/continuous_direct_learning_8406.py",
+        "python/carnot/reporting/continuous_direct_learning_8406.py",
+        "python/carnot/reporting/continuous_direct_runner_8406.py",
+        "scripts/experiments/experiment_8406_v724_continuous_direct_learning.py",
+        "tests/python/test_continuous_direct_learning_8406.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/continuous_direct_learning_8406.py",
+        "python/carnot/reporting/continuous_direct_learning_8406.py",
+        "python/carnot/reporting/continuous_direct_runner_8406.py",
+        "scripts/experiments/experiment_8406_v724_continuous_direct_learning.py",
+        "tests/python/test_continuous_direct_learning_8406.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/continuous_direct_learning_8406.py",
+        "python/carnot/reporting/continuous_direct_learning_8406.py",
+        "python/carnot/reporting/continuous_direct_runner_8406.py",
+        "scripts/experiments/experiment_8406_v724_continuous_direct_learning.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_continuous_direct_learning_8406.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ]
+}

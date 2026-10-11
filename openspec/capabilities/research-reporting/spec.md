@@ -98432,3 +98432,37 @@ Implementation: `native_parity_8405.py` adapts the shipped bounded runner and
 Exp8391 custody with complete V724 authority. The thin Exp8405 CLI accepts
 20261011; historical entry points retain their dates. Focused regressions live
 in `tests/python/test_native_parity_qualification_8405.py`.
+
+## REQ-REPORT-8406: Causal sparse learning through qualified direct serving
+
+Bind the actual Exp8406 task and all fourteen V724 design objects before measurement.
+Authenticate Exp8404 direct_state_ready_score=1 and the frozen spline34 head.
+Use no_model_load, MODEL_SPECS=[], and zero current LLM calls. Historical controls
+remain labeled references. H1=-0.00390625 and H2=0 stay closed exposed findings.
+Run only three sparse_local deployment variants at seeds11/22/33 and96 slots:
+in_memory_uninterrupted, durable_uninterrupted, durable_crash_resume. Preserve
+864 intended rows, including22 missing source slots per variant/seed. Seeds and
+service copies do not increase independent source counts. Report coefficient
+changes, touched coordinates, Brier, typed decisions, utility and fixed retention
+at0/32/64/96. These exposed metrics establish no generalization benefit.
+
+### SCENARIO-REPORT-8406-CUSTODY
+
+Missing external inputs block measurement with exact path/hash/field/expected/observed
+checks. Owned failures disqualify. Preserve all historical bytes and date contracts.
+Cold replay reconstructs reductions from sealed primitive step states and pinned
+inputs. Reject self-consistently rehashed aggregate and primitive tampering.
+
+### SCENARIO-REPORT-8406-PUBLICATION
+
+Run positive, missing-input, deliberate-error and tamper controls in real bounded
+children. Unchanged primary_publication, adversarial verifier and strict row lint
+check terminal bytes before atomic publication. Retain every finding. Only the
+existing typed consumer may resolve independently recomputed informational findings.
+Unknown/warning/critical findings block readiness. Conductor owns ops and BMAD updates.
+
+Implementation: `continuous_direct_learning_8406.py` binds the full current task
+objects, direct producer receipt and frozen historical operands. The thin CLI
+runs three sparse_local service variants, records864 intended rows and reduces
+complete raw step states. Fresh children reject aggregate, primitive and source
+identity tampering. Ops and BMAD reconciliation remain assigned to the conductor.

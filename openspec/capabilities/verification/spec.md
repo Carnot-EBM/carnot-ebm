@@ -53422,3 +53422,35 @@ Implementation: Exp8391's `summary` is annotated `Json`. The Exp8405 adapter
 retains the real native finite panel, independently reduces paired updates,
 and checks Coverage.py database identities before the unchanged combine and
 report commands. The invocation's receipts determine qualification.
+
+## REQ-VERIFY-8406: Durable delayed feedback preserves immutable decisions
+
+Reuse the qualified direct store and shipped sparse optimizer. Preserve delay8,
+learning_rate0.01, gradient(p-y)/T, norm cap1 and bounds[-4,4]. Freeze intercept,
+holistic slope, temperature, knots and generator weights. Seal each prediction
+before due feedback opens. Genuine process exits at slots32/64 resume exactly.
+Record every update ID, pending capacity, lost/duplicate/stale feedback and raw
+step state. Require exact service trajectories, zero future-label reads and zero
+issued-prediction mutations. Hardware scope is sparse CPU writes; FPGA requires
+a supported future kernel. A deployment gate does not retire a null hypothesis.
+
+### SCENARIO-VERIFY-8406-CAUSAL
+
+A label tripwire rejects early and unsealed access. Deliberate duplicate/conflicting,
+stale and reordered feedback controls cannot write coefficients. Identical retries
+return the saved receipt without another update. Fresh replay checks every issued
+prediction and delayed coefficient transition against source identities.
+
+### SCENARIO-VERIFY-8406-CHILD-COVERAGE
+
+Freeze validation before measurement. Use private disk-backed scratch, real
+Coverage.py subprocess and _exit shards, pytest -n0 -o addopts= --no-cov, private
+E2E-018/020/021, Ruff check/format, strict mypy and owned spec coverage. Require100
+percent newly owned statements, including failures and genuine child paths.
+Flush progress at phase boundaries and poll children within60s under4800s cap.
+
+Implementation: the direct learning adapter reuses QualifiedStore, the shipped
+transition and sparse optimizer. Private tests exercise real exits32/64, exact
+resume, rejected feedback, immutable issues and missing/hash failure gates.
+The runner freezes scoped validation and genuine subprocess/_exit coverage.
+Deployment readiness requires the hashed report to cover every owned statement.
