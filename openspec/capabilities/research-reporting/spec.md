@@ -2,6 +2,36 @@
 
 ## Planned V724 authority and evidence — 2026-10-10
 
+## REQ-REPORT-8414: Preserve the GateMate physical obligation under V724 authority
+
+Bind the full current task and all fourteen design tasks to sealed hashes.
+Reuse Exp8400 exact missing-source hashes and physical records. Read only
+explicit supplied receipt paths within sixty seconds. Current replacement
+source cannot establish historical custody. Preserve original IDCODE0xffffffff;
+reopening requires dated cable/port/power change, GM1Ax IDCODE0x20000001,
+authenticated n16 flash and device sample/hash smoke. Run zero device commands
+and zero model calls. Keep execution readiness and scientific benefit zero.
+External absence is complete_blocked; owned validation failure is disqualified.
+
+### SCENARIO-REPORT-8414-CONTINUITY
+
+No receipt preserves one continuity unit, two missing sources and four physical
+prerequisites. Supplied evidence changes only its authenticated obligation.
+Preserve all old receipts and V717/V721/V722/V723 protocols. H1=-0.00390625
+and H2=0 remain closed exposed-development findings.
+
+### SCENARIO-REPORT-8414-REPLAY
+
+Fresh bounded replay accepts sealed primitives and rejects missing input,
+changed full design, deliberate errors and self-consistently rehashed tamper.
+Unchanged validators check terminal bytes before atomic publication.
+The conductor owns ops and BMAD reconciliation after this task exits.
+
+Implementation2026-10-11: the thin Exp8414 runner and continuity adapter reuse
+the shipped Exp8400 receipt consumer, source custody checks and publication.
+Three focused tests cover exact obligations, whole-design drift, explicit
+receipts, owned failure, live consumer selection and real child replay.
+
 The staged V724 design and YAML contain exactly fourteen complete task objects,
 Exp8402–Exp8415. Existing REQ-REPORT-7837 and REQ-REPORT-7891-V685 govern the
 planning contract and private authority-lifecycle checks. The previous V723

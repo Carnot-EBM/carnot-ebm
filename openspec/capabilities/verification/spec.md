@@ -2,6 +2,27 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8414: Qualify documentation without new hardware observations
+
+Freeze scoped commands before measurement. Reuse original missing receipt,
+source-hash and tamper controls and private E2E-018. Require100 percent newly
+owned statements including failures and real CLI children. Use disk-backed
+private scratch, genuine Coverage.py subprocess shards, unbuffered progress,
+sixty-second receipt inspection and the4800-second invocation deadline.
+Retain all findings; unresolved findings block qualification. Keep authenticated
+prior global health separate and do not repeat the full repository suite.
+
+### SCENARIO-VERIFY-8414-CONTROLS
+
+Real consumers select the exact primary and hash. Real positive, missing-input,
+deliberate-error and rehashed-tamper children preserve their command, exit,
+duration and log hashes. Ruff, strict mypy and owned spec tracing must pass.
+The conductor owns ops and BMAD reconciliation after this task exits.
+
+Implementation2026-10-11: Exp8414 freezes owned coverage, original source/tamper
+controls and private E2E-018 before reading inputs. Shipped bounded children
+and unchanged terminal validators check the exact atomic publication bytes.
+
 ## REQ-VERIFY-8386: Qualify the GateMate delta without repeating physical failure
 
 Freeze validation commands before measurement; check tools, disk-backed private
