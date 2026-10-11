@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-11 — Operational retrospective for milestone 2026.10.723
+
+- Wrote `results/operational_retro_2026_10_723.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.723`. Authoritative disk-mtime fallback data records 9 experiments completed (0 compute-bound, 9 synthesis-only) across 91.2 total wall-time minutes (average 10 minutes per experiment).
+- Execution wall time was led by synthesis tasks: 'Qualify the existing direct state under complete current authority' (36.77 minutes), 'Bind complete task authority and isolate historical replay failures' (20.73 minutes), 'Reconcile fourteen outcomes and decide continuation from qualified evidence' (13.13 minutes), 'Measure adapter-withheld supervisor behavior through the live ARC wrapper' (4.38 minutes), and 'Acquire the new human label release with question-level source custody' (4.21 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on the dual RTX 3090 GPUs with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for direct state qualification, task authority binding, and fourteen-outcome reconciliation when upstream dependencies remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-10 — Operational retrospective for milestone 2026.10.722
 
 - Wrote `results/operational_retro_2026_10_722.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.722`. Authoritative disk-mtime fallback data records 9 experiments completed (1 compute-bound, 8 synthesis-only) across 143.7 total wall-time minutes (average 16 minutes per experiment).
@@ -22033,3 +22040,7 @@ Recorded 8 completed experiments in 51.2 minutes (0.9 hours), including 1 comput
 - 2026-10-11: Map complete transactions to KV260 operations and retain PolarFire graduation (⚠️ Blocked) — honest_verdict=complete_blocked_board_operation_boundary; results/experiment_8399_v723_board_operation_boundary.json
 - 2026-10-11: Preserve the exact GateMate evidence obligation without another unchanged probe (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_continuity; results/experiment_8400_v723_gatemate_continuity.json
 - 2026-10-11: Reconcile fourteen outcomes and decide continuation from qualified evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_v723_capstone; results/experiment_8401_v723_capstone.json
+
+### Milestone 2026.10.723 — operational retrospective
+
+Recorded 9 completed experiments in 91.2 minutes (1.5 hours), including 0 compute-bound tasks. Qualify the existing direct state under complete current authority (36.77 min), Bind complete task authority and isolate historical replay failures (20.73 min), Reconcile fourteen outcomes and decide continuation from qualified evidence (13.13 min), Measure adapter-withheld supervisor behavior through the live ARC wrapper (4.38 min), and Acquire the new human label release with question-level source custody (4.21 min) led the listed timings. Proposed incremental receipt caching and evidence memoization for direct state qualification, task authority binding, and fourteen-outcome reconciliation, granular intra-task phase timers for synthesis tasks, direct receipt timestamp logging, and strict DualGPURunner boundaries for concurrent multi-model pipelines. Locked artifact fields remain unchanged; GPU idle on compute-bound tasks is null, parallel-model dispatch had no data available this milestone, and estimated time savings remain 0%. Artifact: `results/operational_retro_2026_10_723.json`.
