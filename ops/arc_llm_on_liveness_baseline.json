@@ -1,6 +1,29 @@
 {
  "generated_utc": "2026-07-27T15:06:29+00:00",
  "known_failing": [
+  "results/arc_induction_plans_20261010/cells/llm_on__ar25_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__bp35_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__cd82_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__cn04_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__dc22_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__ft09_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__g50t_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__ka59_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__lf52_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__lp85_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__ls20_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__m0r0_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__r11l_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__re86_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__s5i5_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__sb26_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__sc25_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__sk48_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__sp80_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__su15_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__tr87_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__tu93_color01.json::/liveness_witness::NO_COMPLETIONS",
+  "results/arc_induction_plans_20261010/cells/llm_on__wa30_color01.json::/liveness_witness::NO_COMPLETIONS",
   "results/first_win_llm_on_20260727/cells/llm_on_16k__cn04_color01.json::/liveness_witness::MOSTLY_FAILED_CALLS",
   "results/first_win_llm_on_20260727/cells/llm_on_16k__ka59_color01.json::/liveness_witness::MOSTLY_FAILED_CALLS",
   "results/first_win_llm_on_20260727/cells/llm_on_16k_probe__lp85_color01.json::/liveness_witness::DEAD_GENERATOR",
@@ -57,6 +80,6 @@
   "results/outer_loop_scored_path_lever_ab_llm_on_20260726.json::/rows[25]::SERVER_STORM",
   "results/outer_loop_scored_path_lever_ab_llm_on_20260726.json::/rows[26]::SERVER_STORM"
  ],
- "n_known_failing": 55,
- "why": "Forward-only enforcement baseline. Every key here is an LLM-on row this gate will NOT refuse, because it was already in the tree when the gate was wired. These are real recordings of the 2026-07-26 generator concurrency fault and its probe arms -- evidence the fix rests on, preserved per never-prune. Adding an entry is an operator decision: it exempts a row from the gate."
+ "n_known_failing": 78,
+ "why": "Forward-only enforcement baseline. Every key here is an LLM-on row this gate will NOT refuse, because it was already in the tree when the gate was wired. These are real recordings of the 2026-07-26 generator concurrency fault and its probe arms -- evidence the fix rests on, preserved per never-prune. Adding an entry is an operator decision: it exempts a row from the gate. 2026-10-11 addition: 23 rows from results/arc_induction_plans_20261010 are invalid runs (driver used 4 parallel cells on a shared 106,496-token KV cache; 94 context-exceeded errors). Kept as evidence of the fault, not as a rate."
 }

@@ -98,7 +98,7 @@ def authenticate(path: Path) -> Json:
     report = json_document(Path(value["terminal_validation_sidecar_path"]))
     if report.get("publication", {}).get("primary_sha256") != PIN or not report.get("passed"):
         raise ValueError("terminal_report")
-    return cast(Json, value)
+    return value
 
 
 def summarize(rows: list[Json], frontier: Json) -> Json:
@@ -123,7 +123,7 @@ def summarize(rows: list[Json], frontier: Json) -> Json:
     value["reopen_condition"] = (
         "New authenticated post-Exp8355 receipt IDs with environment outcomes. Descriptive comparison requires eight shared games, twenty resolved events per arm and five firings per game-arm cell."
     )
-    return cast(Json, value)
+    return value
 
 
 def inspect(locator: Path, previous: Json, raw: Path) -> Json:
