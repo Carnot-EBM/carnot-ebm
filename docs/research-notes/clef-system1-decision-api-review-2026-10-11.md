@@ -92,3 +92,41 @@ G4 needs a positive control. A null result with a degenerate corpus is not a fin
 - `docs/research-notes/limite-1b-violetto-review-2026-10-10.md` (same gated-note format)
 - CLAUDE.md: ARC Live-Path Reachability, Energy-Based Calibrated-Decision Training Floor
   (a typed, calibrated decision API is the same capability class)
+
+## Spike results, 2026-10-11 (append-only)
+
+Setup: card 1 (RTX 3090, bus 62:00.0), upstream llama.cpp `ad1de39e0` plus the trevest patch,
+built for sm_86 with CUDA 13.4. Base `Qwen3.8-27B-Q4_K_M.gguf`, MTP file, `mmproj-F16.gguf`,
+Clef LoRA at scale 0, `-c 16384 -np 1 -ub 2048`, `--spec-draft-n-max 2`. Sidecar on CPU.
+Ternary Bonsai was NOT run. Ian authorized it later in the session. It needs PrismML's fork.
+
+| Gate | Result |
+|---|---|
+| G0 audit | Pass. The patch touches only the embeddings path and the speculative-draft context. The sidecar talks only to the engine URL and reads the GGUF. `safetensors` load, no pickle, no exec |
+| G1 serve | Pass. Server up, 22,320 MiB used on a 24 GB card, one card, chat plus LoRA plus MTP plus mmproj |
+| G2 chat unchanged | Partial pass. Greedy chat output is identical before and after a Clef call. This shows no state leak. It is NOT a comparison against a server with no LoRA loaded |
+| G3 decisions | Pass. 3 of 3 correct on a hand-made ticket test, each repeated twice with identical probabilities. 238 to 242 tokens take 0.41 s on a warm run (first call 0.85 s). Card claim: 0.3 to 0.6 s |
+| Chat speed | 63 tok/s on the first short request, 77 tok/s on a longer greedy one, with MTP |
+
+Limits: 3 hand-made tickets are a smoke test, not a quality measure. The card's accuracy table
+is still the card's claim. Image input to Clef is untested (G5). Text-only sidecar rejects images.
+
+Next: G4 needs a labeled set of live-agent decisions. See the section below.
+
+### G4 design (what the live agent already has)
+
+The run cells show the agent already carries two small decision components:
+`candidate_router` and `frame_change_scorer` (witness keys `candidate_router_loaded`,
+`frame_change_scorer_loaded`). The second one failed to load in every induction cell on
+2026-10-11 and is still unexamined. So the baseline for G4 is those components, not a constant.
+
+Witness keys named `generator_vllm_*` also show the scored path can use vLLM. The Clef patch is
+llama.cpp only. Open question 1 above stays the first thing to settle.
+
+G4 plan, in order:
+1. Find why `frame_change_scorer` did not load. If it is a worktree-only fault, Clef has no gap to fill there.
+2. Collect labeled decisions from existing run evidence (`results/arc_e3/*/attempts`, read only):
+   state before action, candidate actions, which action first changed the frame.
+3. Set the sample size before scoring. Compare: Clef on a text rendering of the state, the existing
+   router, and a constant baseline. Include a corpus where the best action is not the default one.
+4. Pass only if Clef beats the existing router on the held-out set. A tie means no integration.
