@@ -20062,3 +20062,4 @@ code |
 | 2026-10-11 13:25 UTC | Run a bounded Qwen evidence canary after actual CU | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8410-cuda-reader-qualification.runtime_changed_score (actual=0 == expected=1) |
 | 2026-10-11 13:52 UTC | Measure adapter-withheld live-wrapper transfer aft | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 88 passed, 1 warning in 83.24s (0:01:23) |
 | 2026-10-11 14:20 UTC | Map qualified transaction costs to KV260 and prese | OK | 86 passed, 1 warning in 124.24s (0:02:04) |
+| 2026-10-11 14:39 UTC | Preserve the GateMate physical obligation with bou | OK | 84 passed, 1 warning in 40.10s |
