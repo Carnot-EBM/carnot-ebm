@@ -20056,3 +20056,4 @@ code |
 | 2026-10-11 09:14 UTC | Measure causal small-head updates through durable  | OK | 91 passed, 1 warning in 208.83s (0:03:28) |
 | 2026-10-11 10:38 UTC | Measure complete durable Python transactions with  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: e. exec /bin/ |
 | 2026-10-11 12:02 UTC | Measure complete durable Python transactions with  | OK | cache hit: 127 passed, 1 warning in 222.97s (0:03:42) |
+| 2026-10-11 12:07 UTC | Compare complete Python and Rust transactions in p | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8405-native-parity-qualification.native_parity_ready_score (actual=0 == expected=1) |
