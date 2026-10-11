@@ -53283,3 +53283,25 @@ Implementation: `gatemate_continuity_runner_8400.py` reuses bounded children
 and unchanged terminal validators. It enforces hard 60-second receipt and
 4800-second task timers. Five owned tests pass with private outputs. The
 terminal artifact carries frozen commands, exits, durations and log hashes.
+
+## REQ-VERIFY-8401: Bound V723 replay and validate checked terminal bytes
+
+Freeze scoped commands before measurement. Use shipped custody, child and
+publication modules through small adapters, disk scratch and a 4800-second cap.
+Fresh workers enforce 1500 MiB peak and 500 MiB growth; parent current RSS is
+separate from its historical peak. Qualify historical replay only through
+Exp8388 explicit receipts while retaining the two named original V722 failures.
+Run private E2E-018/E2E-021, full-contract mutations and consumer checks, Ruff,
+strict mypy, spec tracing and 100 percent newly owned statement coverage.
+Authenticate unchanged baseline global-health logs rather than repeat timeouts.
+Unknown, warning and critical findings block readiness. Owned validation
+failure disqualifies; terminal external absence blocks and never implies partial.
+
+### SCENARIO-VERIFY-8401-CONTROLS
+
+Real children accept sealed positive and blocked controls, reject missing
+inputs, deliberate errors and self-consistently rehashed task, source, row,
+gate and receipt tampering. Cold reduction independently checks primitives.
+Unchanged adversarial and strict row validators check atomically published bytes.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.

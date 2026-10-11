@@ -98262,3 +98262,23 @@ Implementation: `gatemate_continuity_8400.py` records the unchanged obligation
 through the thin Exp8400 CLI. Five owned tests cover continuity, exact sources,
 current receipt dates, timers, real publication and replay tampering. Terminal
 validation receipts reside below `results/raw/experiment_8400_v723_gatemate_continuity/`.
+
+## REQ-REPORT-8401: Reconcile fourteen V723 slots from sealed evidence
+
+Exp8401 SHALL bind all full task objects in contract order, Exp8388–Exp8401.
+Resolve actual conductor receipt filenames explicitly. Distinguish executed
+producers, pre-gates, logged cascade skips, absent primaries and this capstone.
+Preserve original disqualifications, false readiness, all intended denominators,
+closed exposed H1/H2 and the separate undeployed dyadic-logit certificate.
+Report independent target/extraction validity, causal learning/recovery and
+complete native performance as separate PRD gaps. Import stable publication
+gates from their unchanged CLI. Retirement requires exact verdict and scope
+equality; absent proof means no append. No current LLM calls or weight updates.
+
+### SCENARIO-REPORT-8401-ACCOUNTING
+
+Eight executed upstream producers, four explicit pre-gate receipts and one
+logged cascade skip yield fourteen slots including this capstone. Missing
+metrics remain null; producer rows retain their own intended unit counts.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
