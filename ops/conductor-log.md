@@ -20052,3 +20052,4 @@ code |
 | 2026-10-11 05:42 UTC | Recover source question identities and qualify the | SKIP | Pre-tests failing, self-heal failed: receipts = [*value["validation_receipts"], dict(name="global", scope="global", passed=False)] |
 | 2026-10-11 06:12 UTC | Recover source question identities and qualify the | OK | 100 passed, 1 warning in 56.70s |
 | 2026-10-11 07:38 UTC | Qualify direct state after immutable consumer and  | OK | 93 passed, 1 warning in 561.08s (0:09:21) |
+| 2026-10-11 08:09 UTC | Qualify the existing native spline binding after t | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 92 passed, 1 warning in 105.84s (0:01:45) |
