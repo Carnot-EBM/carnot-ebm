@@ -98343,3 +98343,39 @@ include a deterministic timed tail. Missing inputs never produce fake updates.
 H1=-0.00390625 and H2=0 stay closed; generalization scores remain zero.
 
 Status: specified before tests. Conductor owns ops and BMAD reconciliation.
+
+## REQ-REPORT-8403: Recover released question identities without reopening science
+
+Authenticate the complete V724 task authority and pinned Exp8389, Exp8305 and
+Exp8375 bytes before reading fields. Reuse the reviewed author git blobs and
+SHA256 values. Preserve 900 intended responses and 300 question clusters.
+Recover source IDs and raw source bytes only through measurement.bundle.slots.
+Independently check pinned RAGTruth bytes before reading source_info.question.
+Match dataset-qualified identifiers or NFKC/casefold/whitespace question hashes.
+A source-byte hash is not a question hash. Preserve missing identities and
+cross-dataset aliases. Empty multi_hop_qa references leave exposure unknown.
+
+### SCENARIO-REPORT-8403-IDENTITY
+
+Same qid in different datasets cannot match by ID. Unicode aliases match by
+question text. Missing source identities remain present. Changed source bytes
+or a self-consistently rehashed join fail independent reconstruction.
+
+### SCENARIO-REPORT-8403-FACTORIAL
+
+Join item, dataset, question, generator and exact response text across the
+released master and factorial audit. Reject swapped generators and target
+columns. Require valid p1/p1s/p2t/p2 outputs for every row. A complete permitted
+panel enables release_criterion_ready_score only. disjoint_eval_ready_score
+also needs every old overlap obligation resolved, 80 disjoint clusters and
+eight per class. Preserve the legacy independent gate. Previously opened
+human targets stay exposed. No fitted Carnot model or semantic benefit is
+measured. Both generalization scores remain zero.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+Implementation receipt, 2026-10-11: Exp8403 uses a thin CLI and a question
+custody adapter. Nineteen scoped tests cover the new requirements. All 325
+new statements have measured coverage. The 900-response, 300-cluster release
+panel qualifies for retrospective criterion audit. The disjoint gate remains
+closed. Recovered identities do not reopen H1/H2 or establish semantic benefit.

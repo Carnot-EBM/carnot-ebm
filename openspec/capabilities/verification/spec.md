@@ -53342,3 +53342,30 @@ Unknown/warning/critical findings close readiness. Owned failure disqualifies;
 external absence blocks. No historical failed assertion becomes a passed test.
 
 Status: specified before tests. Conductor owns ops and BMAD reconciliation.
+
+## REQ-VERIFY-8403: Bound and replay question identity qualification
+
+Freeze scoped validation commands before measurement. Record private disk
+scratch, tools, memory, deadlines, invocation, exact logs and child exits.
+Use no_model_load, MODEL_SPECS=[], zero LLM loads and generations. Keep flushed
+phase counts and poll owned subprocesses within 60 seconds. Run private
+E2E-018/019, Ruff, strict mypy and spec coverage. Require 100 percent newly
+owned statements with genuine Coverage.py child shards. Global health is a
+separate observation. Preserve historical validators, assertions and receipts.
+
+### SCENARIO-VERIFY-8403-REPLAY
+
+Fresh bounded children accept real positive and blocked bytes, reject missing
+input and deliberate errors, and reject self-consistently rehashed primitives
+and joins. Unchanged primary_publication, adversarial verification and strict
+row lint check terminal bytes. Retain every finding. Unknown/warning/critical
+findings close readiness. Owned failure disqualifies; external absence blocks.
+Publish checked terminal bytes atomically. Accept 20261011 only in the new CLI.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+Implementation receipt, 2026-10-11: Exp8403 freezes bounded private checks and
+uses genuine Coverage.py subprocess shards. Nineteen scoped tests cover every
+new statement, including real positive and failure children. Cold replay binds
+the primitive reduction to independently pinned release and source bytes.
+Ops and BMAD reconciliation remain assigned to the conductor.
