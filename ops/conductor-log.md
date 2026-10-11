@@ -20051,3 +20051,4 @@ code |
 | 2026-10-11 05:14 UTC | Bind fourteen tasks and repair historical consumer | OK | Deliverable already exists in repo |
 | 2026-10-11 05:42 UTC | Recover source question identities and qualify the | SKIP | Pre-tests failing, self-heal failed: receipts = [*value["validation_receipts"], dict(name="global", scope="global", passed=False)] |
 | 2026-10-11 06:12 UTC | Recover source question identities and qualify the | OK | 100 passed, 1 warning in 56.70s |
+| 2026-10-11 07:38 UTC | Qualify direct state after immutable consumer and  | OK | 93 passed, 1 warning in 561.08s (0:09:21) |
