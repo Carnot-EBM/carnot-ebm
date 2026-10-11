@@ -1,0 +1,178 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8405_v724_native_parity_qualification.json",
+  "primary_sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+  "report": {
+    "adversarial": {
+      "dispositions": [
+        {
+          "evidence": {
+            "deliberate_error_rejected": true,
+            "max_error": 0.0,
+            "operand_sha256": "sha256:b07a890f5619bbaf1abb1066ee5d03c16b8b072fc03d221c41f89f08d6209deb",
+            "paired_update_count": 192,
+            "recomputed": true
+          },
+          "finding": {
+            "detail": "max_coefficient_error=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          "resolved": false
+        }
+      ],
+      "findings": [
+        {
+          "detail": "max_coefficient_error=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "passed": false,
+      "receipt": {
+        "actual_exit": 1,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 3.621640388,
+        "ended_monotonic_ns": 25258099461892,
+        "exit_code": 1,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/adversarial/adversarial.stdout",
+        "log_sha256": "sha256:51d9280fea08cb0a676e478791870bd7608ec1321ab3cf84542ef5a07849dc67",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": false,
+        "scope": "owned",
+        "started_monotonic_ns": 25254477821504,
+        "started_wall_ns": 1791705499257680007,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/adversarial/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/adversarial/adversarial.stdout",
+        "stdout_sha256": "sha256:51d9280fea08cb0a676e478791870bd7608ec1321ab3cf84542ef5a07849dc67",
+        "timed_out": false
+      },
+      "report": {
+        "candidate_sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+        "flagged_count": 1,
+        "reports": [
+          {
+            "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json",
+            "exp_id": 8405,
+            "flag_count": 1,
+            "flags": [
+              {
+                "detail": "max_coefficient_error=0.0 (exactly zero). Confirm this is not a stub default.",
+                "kind": "IMPLAUSIBLE_PERFECT",
+                "severity": "info"
+              }
+            ],
+            "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e",
+            "honest_verdict": "complete_disqualified_native_parity_qualification",
+            "loaded": true,
+            "max_severity": 0,
+            "title": ""
+          }
+        ],
+        "verifier_sha256": "sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c"
+      }
+    },
+    "checked_failure_publication": true,
+    "checks": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8405_v724_native_parity_qualification.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8405_v724_native_parity_qualification.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json",
+        "deadline_s": 120,
+        "duration_s": 7.227591458,
+        "ended_monotonic_ns": 25254445261520,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/cold.stdout",
+        "log_sha256": "sha256:ae9d9332fcdd7d966667c5313fd532cf41b35dd4df2d873d507c295abd50854f",
+        "name": "cold",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 25247217670062,
+        "started_wall_ns": 1791705491997528264,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/cold.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/cold.stdout",
+        "stdout_sha256": "sha256:ae9d9332fcdd7d966667c5313fd532cf41b35dd4df2d873d507c295abd50854f",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 1,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 3.621640388,
+        "ended_monotonic_ns": 25258099461892,
+        "exit_code": 1,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/adversarial/adversarial.stdout",
+        "log_sha256": "sha256:51d9280fea08cb0a676e478791870bd7608ec1321ab3cf84542ef5a07849dc67",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": false,
+        "scope": "owned",
+        "started_monotonic_ns": 25254477821504,
+        "started_wall_ns": 1791705499257680007,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/adversarial/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/adversarial/adversarial.stdout",
+        "stdout_sha256": "sha256:51d9280fea08cb0a676e478791870bd7608ec1321ab3cf84542ef5a07849dc67",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 0.164476423,
+        "ended_monotonic_ns": 25258276438061,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 25258111961638,
+        "started_wall_ns": 1791705502891819860,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8405_v724_native_parity_qualification/invocations/1791705239493181593/terminal/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ],
+    "passed": true,
+    "qualification_passed": false
+  }
+}

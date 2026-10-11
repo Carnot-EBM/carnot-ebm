@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8405_v724_native_parity_qualification.py", line 12, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/native_parity_8405.py", line 284, in main
+    return retain_shards(Path(args[1])) if len(args) == 2 else 1
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/native_parity_8405.py", line 184, in retain_shards
+    identities = [shard_identity(p) for p in sorted(saved.glob(".coverage.*"))]
+                  ^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/native_parity_8405.py", line 169, in shard_identity
+    raise ValueError("empty_coverage_database")
+ValueError: empty_coverage_database

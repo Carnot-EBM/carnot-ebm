@@ -1,0 +1,140 @@
+......F.F.                                                               [100%]
+=================================== FAILURES ===================================
+_________________________ test_replay_and_cli_controls _________________________
+
+e = <module 'carnot.reporting.native_parity_8405' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/native_parity_8405.py'>
+measured = {'binding_conversion_bytes': 414608, 'binding_copy_bytes': 410864, 'code_config_hashes': [{'path': '/home/ianblenke/gi...256': 'sha256:b07a890f5619bbaf1abb1066ee5d03c16b8b072fc03d221c41f89f08d6209deb', 'paired_update_count': 192, ...}, ...}
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8405-private/invocation-3gnzqk5s/owned-tests/test_replay_and_cli_controls0')
+
+    def test_replay_and_cli_controls(e, measured, tmp_path):
+        """SCENARIO-REPORT-8405-REPLAY: real children reject invented invocation counts."""
+        path = tmp_path / (e.NAME + ".json")
+        value = e.build(measured, [dict(passed=True)])
+        assert value["native_parity_ready_score"] == 0
+        atomic_json(path, value)
+        assert e.replay(path)
+        assert not e.replay(tmp_path / "absent")
+        bad = deepcopy(value)
+        bad["native_invocation_count"] += 1
+        bad.pop("reproducibility_checksum")
+        bad["reproducibility_checksum"] = canonical_hash(bad)
+        atomic_json(tmp_path / "tamper.json", bad)
+        for name, args, expected in [
+            ("valid", ["--cold-replay", str(path)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+            ("error", ["--deliberate-error"], 1),
+            ("date", ["--date", "20000101"], 2),
+            ("tamper", ["--cold-replay", str(tmp_path / "tamper.json")], 1),
+            ("custody", ["--coverage-custody", str(tmp_path)], 1),
+            ("custody_bad", ["--coverage-custody"], 1),
+        ]:
+>           assert child(
+                name,
+                [sys.executable, "-u", str(e.ROOT / e.CLI), *args],
+                tmp_path / "logs",
+                expected=expected,
+                deadline=120,
+            )["passed"]
+E           assert False
+
+tests/python/test_native_parity_qualification_8405.py:164: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8379] before_actual_extension_import
+[exp8379] after_actual_extension_import
+[exp8405] phase=direct_batch completed=128 pending=4205
+[exp8405] phase=direct_batch completed=256 pending=4077
+[exp8405] phase=direct_batch completed=384 pending=3949
+[exp8405] phase=direct_batch completed=512 pending=3821
+[exp8405] phase=direct_batch completed=640 pending=3693
+[exp8405] phase=direct_batch completed=768 pending=3565
+[exp8405] phase=direct_batch completed=896 pending=3437
+[exp8405] phase=direct_batch completed=1024 pending=3309
+[exp8405] phase=direct_batch completed=1152 pending=3181
+[exp8405] phase=direct_batch completed=1280 pending=3053
+[exp8405] phase=direct_batch completed=1408 pending=2925
+[exp8405] phase=direct_batch completed=1536 pending=2797
+[exp8405] phase=direct_batch completed=1664 pending=2669
+[exp8405] phase=direct_batch completed=1792 pending=2541
+[exp8405] phase=direct_batch completed=1920 pending=2413
+[exp8405] phase=direct_batch completed=2048 pending=2285
+[exp8405] phase=direct_batch completed=2176 pending=2157
+[exp8405] phase=direct_batch completed=2304 pending=2029
+[exp8405] phase=direct_batch completed=2432 pending=1901
+[exp8405] phase=direct_batch completed=2560 pending=1773
+[exp8405] phase=direct_batch completed=2688 pending=1645
+[exp8405] phase=direct_batch completed=2816 pending=1517
+[exp8405] phase=direct_batch completed=2944 pending=1389
+[exp8405] phase=direct_batch completed=3072 pending=1261
+[exp8405] phase=direct_batch completed=3200 pending=1133
+[exp8405] phase=direct_batch completed=3328 pending=1005
+[exp8405] phase=direct_batch completed=3456 pending=877
+[exp8405] phase=direct_batch completed=3584 pending=749
+[exp8405] phase=direct_batch completed=3712 pending=621
+[exp8405] phase=direct_batch completed=3840 pending=493
+[exp8405] phase=direct_batch completed=3968 pending=365
+[exp8405] phase=direct_batch completed=4096 pending=237
+[exp8405] phase=direct_batch completed=4224 pending=109
+[exp8405] phase=direct_batch completed=4333 pending=0
+[exp8405] phase=update_panel completed=1 pending=191
+[exp8405] phase=update_panel completed=33 pending=159
+[exp8405] phase=update_panel completed=65 pending=127
+[exp8405] phase=update_panel completed=97 pending=95
+[exp8405] phase=update_panel completed=129 pending=63
+[exp8405] phase=update_panel completed=161 pending=31
+[exp8405] phase=durable_coordinator_before_seed_11 completed=0 pending=0
+[exp8405] phase=durable_coordinator_after_seed_11 completed=0 pending=0
+[exp8405] phase=durable_coordinator_before_seed_22 completed=0 pending=0
+[exp8405] phase=durable_coordinator_after_seed_22 completed=0 pending=0
+[exp8405] phase=durable_coordinator_before_seed_33 completed=0 pending=0
+[exp8405] phase=durable_coordinator_after_seed_33 completed=0 pending=0
+[exp8205] phase=before_subprocess_valid completed=0 pending=1
+[exp8205] phase=after_subprocess_valid completed=1 pending=0
+________________________ test_gates_and_actual_coverage ________________________
+
+e = <module 'carnot.reporting.native_parity_8405' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/native_parity_8405.py'>
+measured = {'binding_conversion_bytes': 414608, 'binding_copy_bytes': 410864, 'code_config_hashes': [{'path': '/home/ianblenke/gi...256': 'sha256:b07a890f5619bbaf1abb1066ee5d03c16b8b072fc03d221c41f89f08d6209deb', 'paired_update_count': 192, ...}, ...}
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8405-private/invocation-3gnzqk5s/owned-tests/test_gates_and_actual_coverage0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6e59c97620>
+
+    def test_gates_and_actual_coverage(e, measured, tmp_path, monkeypatch):
+        """REQ-VERIFY-8405: coverage reports must match actual databases and receipt failures."""
+        with monkeypatch.context() as patch:
+            patch.setattr(e, "ROOT", tmp_path)
+            patch.setattr(e, "OWNED", ["probe.py"])
+            patch.setattr(e.old, "ROOT", tmp_path)
+            patch.setattr(e.old, "OWNED", ["probe.py"])
+            probe = tmp_path / "probe.py"
+            probe.write_text('print("child")\n')
+            config = tmp_path / "probe.ini"
+            config.write_text(
+                f"[run]\nparallel=true\ndata_file={tmp_path / '.coverage'}\ninclude={probe}\n"
+            )
+            for i in range(2):
+                assert child(
+                    f"shard_{i}",
+                    [sys.executable, "-m", "coverage", "run", "--rcfile=" + str(config), str(probe)],
+                    tmp_path / "logs",
+                )["passed"]
+>           assert e.retain_shards(tmp_path) == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = <function retain_shards at 0x7f6e5a546ca0>(PosixPath('/home/ianblenke/.cache/carnot-exp8405-private/invocation-3gnzqk5s/owned-tests/test_gates_and_actual_coverage0'))
+E            +    where <function retain_shards at 0x7f6e5a546ca0> = <module 'carnot.reporting.native_parity_8405' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/native_parity_8405.py'>.retain_shards
+
+tests/python/test_native_parity_qualification_8405.py:208: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_shard_0 completed=0 pending=1
+[exp8205] phase=after_subprocess_shard_0 completed=1 pending=0
+[exp8205] phase=before_subprocess_shard_1 completed=0 pending=1
+[exp8205] phase=after_subprocess_shard_1 completed=1 pending=0
+[exp8391] phase=coverage_custody_before completed=0 pending=0
+[exp8391] phase=coverage_custody_after completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_native_parity_qualification_8405.py::test_replay_and_cli_controls
+FAILED tests/python/test_native_parity_qualification_8405.py::test_gates_and_actual_coverage
+2 failed, 8 passed, 1 warning in 65.79s (0:01:05)

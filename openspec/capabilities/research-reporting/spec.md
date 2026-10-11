@@ -98410,3 +98410,25 @@ all findings; unresolved informational and unknown/warning/critical findings
 block readiness. Recompute aggregates from sealed complete recovered states.
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
+## REQ-REPORT-8405: Requalify native parity against complete V724 authority
+
+Bind the exact Exp8405 task and all fourteen current design objects before
+measurement. Preserve V717/V721/V722/V723 protocols and every old receipt.
+Use no_model_load, empty MODEL_SPECS, zero current LLM loads/generation calls,
+and zero generalization/semantic benefit scores. Future producers are dependencies.
+Publish only source-bound cold-replayed terminal bytes through unchanged consumers.
+External absence blocks; owned validation failure disqualifies. The conductor
+owns ops/status/changelog and BMAD reconciliation after this task exits.
+
+### SCENARIO-REPORT-8405-REPLAY
+
+Positive, missing-input, deliberate-error and rehashed aggregate/primitive controls
+must run in bounded fresh processes. Independently recompute coefficient error
+from paired operands and reject a deliberately changed coefficient. Retain all
+findings; only the unchanged typed consumer may resolve informational findings.
+Its refusal is an owned failed qualification, never an exemption or semantic win.
+
+Implementation: `native_parity_8405.py` adapts the shipped bounded runner and
+Exp8391 custody with complete V724 authority. The thin Exp8405 CLI accepts
+20261011; historical entry points retain their dates. Focused regressions live
+in `tests/python/test_native_parity_qualification_8405.py`.

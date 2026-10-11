@@ -231,7 +231,7 @@ def coverage_evidence(private: Path) -> Json:
     for name in OWNED:
         path = ROOT / name
         _, lines, _, absent, _ = cov.analysis2(str(path))
-        summary = next(
+        summary: Json = next(
             (
                 v["summary"]
                 for k, v in value["files"].items()

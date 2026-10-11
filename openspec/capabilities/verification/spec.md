@@ -53400,3 +53400,25 @@ spec coverage. Keep global health separate. Poll children within60s and flush
 phase counts. Declare no_model_load, MODEL_SPECS=[], zero LLM calls, task cap4800s.
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
+## REQ-VERIFY-8405: Repair typing and retain real finite native evidence
+
+Annotate the Exp8391 coverage summary truthfully without changing arithmetic,
+tolerances, thresholds or exclusions. Build the actual Rust/PyO3 extension in
+private disk-backed scratch with the existing toolchain. Keep the 4174-vector
+panel, knots, nextafter action boundaries, malformed cases and update fault seeds.
+Record native calls, binary hash, ABI, copy/ownership scope and toolchain.
+Require strict mypy, scoped Ruff, Rust fmt/check/clippy/tests, private E2E-018,
+source-bound cold replay and 100 percent newly owned statement coverage.
+
+### SCENARIO-VERIFY-8405-TYPING-COVERAGE
+
+The unannotated original must fail strict mypy; the exact annotation must pass.
+Collect real unit and CLI child shards in one invocation, check SQLite/schema
+and recorded file identities before combination, and bind reports to database
+line sets. Missing, corrupt, changed or uncovered evidence clears readiness.
+Finite parity establishes no universal equivalence, speedup or scientific benefit.
+
+Implementation: Exp8391's `summary` is annotated `Json`. The Exp8405 adapter
+retains the real native finite panel, independently reduces paired updates,
+and checks Coverage.py database identities before the unchanged combine and
+report commands. The invocation's receipts determine qualification.
