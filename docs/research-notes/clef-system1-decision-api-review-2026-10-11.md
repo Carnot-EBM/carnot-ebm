@@ -130,3 +130,19 @@ G4 plan, in order:
 3. Set the sample size before scoring. Compare: Clef on a text rendering of the state, the existing
    router, and a constant baseline. Include a corpus where the best action is not the default one.
 4. Pass only if Clef beats the existing router on the held-out set. A tie means no integration.
+
+### Findings, 2026-10-11 (append-only)
+
+1. **The frame-change scorer failure is a worktree artifact.** `load_live_action_effect_scorer`
+   returns None when both its inputs are missing: `data/arc_transition_corpus/*.npz` and
+   `results/experiment_4629_live_frame_change_cnn.pt`. The main checkout holds both (25 files,
+   5.3 MB, and a 14 KB checkpoint). This worktree holds neither. The checkpoint is git-ignored
+   (`results/**/*.pt`). So the 2026-10-11 induction run played with the action-effect prior off.
+   The scored kernel is not affected by this cause. A rerun must copy both inputs in first.
+2. **Open question 1 is answered.** `scripts/kaggle/submission_kernel/main.py` runs the bundled
+   `llama-server` plus a GGUF by default. vLLM is chosen only when the NVFP4 safetensors dataset is
+   attached. So the llama.cpp patch applies to the default path. It still needs a rebuilt
+   server binary for the Kaggle card (not sm_86) and the 1.3 GB LoRA shipped in the kernel dataset.
+   The vLLM path would have no Clef support.
+3. **G4 baseline.** The existing router and scorer need their inputs present. G4 must run where
+   they load, or the baseline is a broken component and any Clef win means nothing.
