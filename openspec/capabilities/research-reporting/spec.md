@@ -98806,3 +98806,34 @@ Status: planning contract only. The existing authority lifecycle, gate/schema
 checks and private E2E-018 validate reused mechanisms. Future execution tasks
 add focused requirements and tests before implementation. No science result or
 production behavior is established by staging this plan.
+
+## REQ-REPORT-8429: Authenticate V726 and preserve the unmeasured methods
+
+Exp8429 SHALL bind all fourteen complete activated task objects, visible order
+and canonical digest using assess_authorities for 2026.10.726, first ID 8429.
+It SHALL snapshot actual active, staged and design bytes; consumed staging is
+recorded as absent. Before fitting it SHALL freeze the V726 protocol and note,
+copying V725 partition, features, fit, decision, feedback and cost definitions
+without changes. Only tune-source permutation 7252, explicit block transaction
+and update order, and simultaneous maximum-window retention are clarifications.
+Field-by-field deltas distinguish authority repair from scientific changes.
+Current deployment uses primitive attribution and conditional acceleration ceilings.
+Zero current model calls, historical model provenance and zero generalization
+scores SHALL remain explicit. Missing V722 history and optional CUDA/board
+inputs SHALL NOT block independent CPU methods. No fitting runs in this task.
+
+### SCENARIO-REPORT-8429-AUTHORITY
+
+Private copies accept fourteen matching objects and consumed staging; deletion,
+reordering, changed prompts, arbitrary fields, model, routing, gates, retirement
+flags and self-consistently rehashed design changes cannot earn readiness.
+
+### SCENARIO-REPORT-8429-PROTOCOL
+
+All exact question IDs, v725 hash order, seeds, losses, thresholds and intended
+counts match the pinned V725 protocol. Dated literature includes HalluScoring's
+separate unseen-question and unseen-generator axes only as a future lead.
+Private zero decision-loss and nonzero compatibility controls retain all findings
+without changing inherited consumers, validators or readiness rules.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.

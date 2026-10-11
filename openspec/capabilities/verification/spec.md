@@ -53331,6 +53331,37 @@ Unchanged adversarial and strict row validators check atomically published bytes
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
 
+## REQ-VERIFY-8429: Qualify V726 methods with real private children
+
+The dated no-model runner SHALL check disk-backed private scratch, memory,
+tools, required named hashes and a 4800-second cap with at least 900 seconds
+reserved for validation. Flushed boundaries and bounded child polling SHALL
+retain commands, exits, durations and hashed logs. Scoped serial pytest,
+genuine Coverage.py subprocess shards, 100 percent newly owned statement
+coverage, Ruff, strict mypy, spec coverage and private E2E-018 SHALL qualify
+owned code. No full repository suite or device scan runs.
+Fresh replay SHALL reconstruct authority rows from sealed bytes, verify fixed
+protocol seals and reject missing operands, deliberate errors and rehashed
+tampering. Unchanged primary_publication, adversarial_verify and strict row
+consistency SHALL check exact terminal bytes before atomic publication.
+External absence is blocked; owned validation failures are disqualified.
+Unknown, warning or critical current findings forbid methods readiness.
+
+### SCENARIO-VERIFY-8429-REPLAY
+
+Real private CLI publication and consumers accept qualified bytes and reject
+missing, erroneous and rehashed candidates. Failure paths and real child paths
+are covered. Every required field and extra field has an explicit principle.
+
+### SCENARIO-VERIFY-8429-RUNTIME
+
+Read only a supplied repair receipt with the qualified typed reader for at most
+60 seconds. Authenticated changed causal execution operands and a matching
+successful context/copy/free transcript are necessary for runtime readiness.
+Absence yields score zero and exact diagnostics while preserving CPU readiness.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
 ## REQ-VERIFY-8416: Validate bounded contract readers and cold primitive replay
 
 Use real private CLI children, E2E-018, full-object mutations, scoped unit tests,
