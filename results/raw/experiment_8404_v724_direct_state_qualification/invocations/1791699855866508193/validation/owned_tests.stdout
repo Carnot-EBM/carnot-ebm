@@ -1,0 +1,136 @@
+.........F.                                                              [100%]
+=================================== FAILURES ===================================
+_________________ test_real_publication_entry_and_owned_error __________________
+
+work = {'code_config_hashes': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/direct_state_qua...9db3c7382e054515098e71056bb91d4521afe47792b2c34', ...}, 'duration_s': 443.3479092610032, 'gate_check_summary': [], ...}
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8404-private/invocation-0vlgpm0d/owned-tests/test_real_publication_entry_an0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6f5a50d4c0>
+
+    def test_real_publication_entry_and_owned_error(work, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8404-PUBLICATION: actual runner seals real coverage and checked bytes."""
+        import coverage
+        from carnot.reporting import direct_state_runner_8404 as runner
+    
+        copied = deepcopy(work)
+        copied["work_path"] = str(tmp_path / "work.json")
+        copied["terminal_validation_sidecar_path"] = str(tmp_path / "terminal.json")
+        copied["code_config_hashes"] = [
+            e.reference(Path(r["path"])) for r in copied["code_config_hashes"]
+        ]
+        monkeypatch.setattr(e, "measure", lambda *args: deepcopy(copied))
+        monkeypatch.setattr(runner, "SCRATCH", tmp_path / "scratch")
+    
+        def private_plan(private):
+            # This is a real statement trace. Its limited coverage cannot authorize
+            # readiness; production uses the complete frozen unit/child command set.
+            config = private / "coverage.ini"
+            config.write_text(
+                "[run]\ninclude=" + str(e.ROOT / e.OWNED[0]) + "\n[report]\nexclude_lines=\n"
+            )
+            trace = coverage.Coverage(config_file=str(config), data_file=str(private / ".coverage"))
+            trace.start()
+            e.build(copied, [dict(passed=True)])
+            trace.stop()
+            trace.save()
+            trace.json_report(outfile=str(private / "coverage.json"))
+            shard = coverage.Coverage(
+                config_file=str(config), data_file=str(private / ".coverage.unit")
+            )
+            shard.get_data().update(trace.get_data())
+            shard.save()
+            return [
+                dict(
+                    name="real_cli_error",
+                    argv=[sys.executable, "-u", str(e.ROOT / e.CLI), "--deliberate-error"],
+                    deadline_s=30,
+                    scope="owned",
+                    expected=1,
+                )
+            ]
+    
+        # The runner's normal manifest expects exit0 for validation; use a harmless
+        # real cold replay child instead of changing that contract for this fixture.
+        def passing_plan(private):
+            private_plan(private)
+            return [
+                dict(
+                    name="real_cli",
+                    argv=[sys.executable, "-c", "print('private CLI fixture')"],
+                    deadline_s=30,
+                    scope="owned",
+                )
+            ]
+    
+        monkeypatch.setattr(e, "plan", passing_plan)
+        output = tmp_path / "results" / (e.NAME + ".json")
+>       assert e.main(["--date", "20261011", "--output", str(output)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f6f5a8816c0>(['--date', '20261011', '--output', '/home/ianblenke/.cache/carnot-exp8404-private/invocation-0vlgpm0d/owned-tests/test_real_publication_entry_an0/results/experiment_8404_v724_direct_state_qualification.json'])
+E        +    where <function main at 0x7f6f5a8816c0> = e.main
+
+tests/python/test_direct_state_qualification_8404.py:239: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8376] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=0
+[exp8376] phase=owned_failure_FileNotFoundError_[Errno 2] No such file or directory: '/home/ianblenke/.cache/carnot-exp8404-private/invocation-0vlgpm0d/owned-tests/test_real_publication_entry_an0/work.json' completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_direct_state_qualification_8404.py::test_real_publication_entry_and_owned_error
+1 failed, 10 passed, 1 warning in 139.17s (0:02:19)
+self._collectors:
+  <Collector at 0x7f7072e2e180: CTracer>
+                      <module> : /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage:10
+                          main : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py:1164
+                  command_line : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py:853
+                        do_run : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py:1040
+                         start : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py:702
+               _init_for_start : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py:601
+                      __init__ : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/collector.py:119
+  <Collector at 0x7f6f5a839e80: CTracer>
+                      <module> : /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage:10
+                          main : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py:1164
+                  command_line : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py:853
+                        do_run : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py:1043
+                           run : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py:213
+                      <module> : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pytest/__main__.py:9
+                  console_main : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:223
+                          main : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:199
+                      __call__ : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512
+                     _hookexec : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120
+                    _multicall : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+           pytest_cmdline_main : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:365
+                  wrap_session : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:318
+                         _main : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:372
+                      __call__ : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512
+                     _hookexec : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120
+                    _multicall : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+            pytest_runtestloop : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:396
+                      __call__ : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512
+                     _hookexec : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120
+                    _multicall : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+       pytest_runtest_protocol : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/runner.py:118
+               runtestprotocol : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/runner.py:137
+               call_and_report : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/runner.py:244
+                     from_call : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/runner.py:353
+                      <lambda> : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/runner.py:245
+                      __call__ : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512
+                     _hookexec : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120
+                    _multicall : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+           pytest_runtest_call : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/runner.py:179
+                       runtest : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/python.py:1720
+                      __call__ : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512
+                     _hookexec : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120
+                    _multicall : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+            pytest_pyfunc_call : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/python.py:166
+test_real_publication_entry_and_owned_error : /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_direct_state_qualification_8404.py:239
+                          main : /home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/direct_state_qualification_8404.py:380
+                          main : /home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/direct_state_runner_8404.py:65
+                  passing_plan : /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_direct_state_qualification_8404.py:227
+                  private_plan : /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_direct_state_qualification_8404.py:204
+                         start : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py:702
+               _init_for_start : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py:601
+                      __init__ : /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/collector.py:119

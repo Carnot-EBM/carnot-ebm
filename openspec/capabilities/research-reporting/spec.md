@@ -98271,7 +98271,10 @@ port or power change queues the correct IDCODE, n16 flash and device smoke.
 Fresh processes reject missing operands, changed full task authority and
 self-consistently rehashed claims. Checked terminal bytes publish atomically.
 
-Status: specified before tests; conductor owns ops and BMAD reconciliation.
+Exp8404 implementation: the thin runner, custody adapter and twelve focused
+tests implement this requirement. Current qualification is recorded separately
+in results/experiment_8404_v724_direct_state_qualification.json. Failed owned
+invocations remain in its raw directory. Conductor owns ops and BMAD reconciliation.
 
 Implementation: `gatemate_continuity_8400.py` records the unchanged obligation
 through the thin Exp8400 CLI. Five owned tests cover continuity, exact sources,
@@ -98379,3 +98382,31 @@ custody adapter. Nineteen scoped tests cover the new requirements. All 325
 new statements have measured coverage. The 900-response, 300-cluster release
 panel qualifies for retrospective criterion audit. The disjoint gate remains
 closed. Recovered identities do not reopen H1/H2 or establish semantic benefit.
+## REQ-REPORT-8404: Requalify direct state from immutable consumer custody
+
+Before measurement, authenticate the full fourteen-task V724 design, this task,
+pinned Exp8402 administrative bytes and its independent direct family seal.
+Require historical_direct_consumers_ready_score=1; unrelated missing V722
+design authority remains in Exp8402 and does not replace this family gate.
+Read original Exp8390 failed logs and preserve its disqualification. All new
+receipts bind exact inputs, private disk scratch, resources and frozen commands.
+Missing external gates yield complete_blocked with absent values, no invented
+crashes. Owned failure yields complete_disqualified. H1=-0.00390625 and H2=0
+remain closed; qualification gives zero learning and generalization benefit.
+
+### SCENARIO-REPORT-8404-CUSTODY
+
+Authenticate the actual producer and separate family receipt. Reject missing,
+changed or rehashed terminal/family operands. Future producer paths remain
+dependencies. Replay the original controls and new primitive rows in fresh
+bounded children. Accept 20261011 only in the new runner.
+
+### SCENARIO-REPORT-8404-PUBLICATION
+
+Positive, missing, deliberate-error and rehashed tamper controls run through
+the actual CLI. Unchanged primary_publication, adversarial verification and
+strict row lint validate terminal bytes before atomic publication. Preserve
+all findings; unresolved informational and unknown/warning/critical findings
+block readiness. Recompute aggregates from sealed complete recovered states.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.

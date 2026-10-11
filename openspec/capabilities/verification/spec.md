@@ -53277,7 +53277,11 @@ Real child processes accept valid continuity evidence, reject missing input
 and rehashed tamper, and record deliberate errors. Live consumers select the
 exact primary identity and hash. Historical assertions remain unchanged.
 
-Status: specified before tests; conductor owns ops and BMAD reconciliation.
+Exp8404 implementation: genuine child barrier and corruption controls retain
+complete state evidence. The scoped unit and child shards cover all 290 newly
+owned statements with zero exclusions; terminal readiness additionally requires
+the frozen current validation and private E2E checks. Failed invocation evidence
+remains under raw/. Conductor owns ops and BMAD reconciliation.
 
 Implementation: `gatemate_continuity_runner_8400.py` reuses bounded children
 and unchanged terminal validators. It enforces hard 60-second receipt and
@@ -53369,3 +53373,30 @@ uses genuine Coverage.py subprocess shards. Nineteen scoped tests cover every
 new statement, including real positive and failure children. Cold replay binds
 the primitive reduction to independently pinned release and source bytes.
 Ops and BMAD reconciliation remain assigned to the conductor.
+## REQ-VERIFY-8404: Observe all direct barriers with real child coverage
+
+Keep shipped DirectStore, coefficients and causal optimizer unchanged. Run
+seeds11/22/33 through temporary_write, file_fsync, pointer_publication,
+directory_fsync and acknowledgment, both restart and two pinned reader arms,
+plus uninterrupted controls. Preserve all previous corruption and retry checks.
+Recover complete coefficients, issued decisions, pending feedback, applied IDs
+and cursor exactly. Require zero mixed reads, lost acknowledgments, duplicate
+updates, changed issued predictions and recovery mismatches. Process death
+does not certify power-loss durability.
+
+### SCENARIO-VERIFY-8404-DIRECTORY-CHILD
+
+A genuine child reaches the post-pointer directory fsync hook and saves real
+Coverage.py executed lines before SIGKILL. The terminal ready score requires
+observed directory hooks, complete current authority and 100 percent newly
+owned statements, including real children and failures; no fabricated coverage.
+
+### SCENARIO-VERIFY-8404-VALIDATION
+
+Freeze commands before measurement. Use pytest -n0 -o addopts= --no-cov and
+genuine private child shards. Run immutable historical consumers and private
+E2E-018/020 with unchanged assertions, Ruff check/format, strict mypy and traced
+spec coverage. Keep global health separate. Poll children within60s and flush
+phase counts. Declare no_model_load, MODEL_SPECS=[], zero LLM calls, task cap4800s.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
