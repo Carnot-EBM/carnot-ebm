@@ -20058,3 +20058,4 @@ code |
 | 2026-10-11 12:02 UTC | Measure complete durable Python transactions with  | OK | cache hit: 127 passed, 1 warning in 222.97s (0:03:42) |
 | 2026-10-11 12:07 UTC | Compare complete Python and Rust transactions in p | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8405-native-parity-qualification.native_parity_ready_score (actual=0 == expected=1) |
 | 2026-10-11 12:33 UTC | Reproduce the frozen factuality criterion contrast | OK | 90 passed, 1 warning in 44.08s |
+| 2026-10-11 13:19 UTC | Qualify cached CUDA causal evidence and admit only | OK | 115 passed, 1 warning in 57.55s |
