@@ -22088,3 +22088,4 @@ Recorded 9 completed experiments in 91.2 minutes (1.5 hours), including 0 comput
 - 2026-10-11: Measure adapter-withheld live-wrapper transfer after scratch isolation repair (⚠️ Research Finding) — honest_verdict=complete_null_v724_arc_panel_qualification; results/experiment_8412_v724_arc_panel_qualification.json
 - 2026-10-11: Map qualified transaction costs to KV260 and preserve PolarFire terminal scope (⚠️ Research Finding) — honest_verdict=complete_disqualified_board_operation_boundary; results/experiment_8413_v724_board_operation_boundary.json
 - 2026-10-11: Preserve the GateMate physical obligation with bounded evidence-only continuity (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_obligation; results/experiment_8414_v724_gatemate_obligation.json
+- 2026-10-11: Reconcile fourteen terminal outcomes with immutable historical consumers (⚠️ Blocked) — honest_verdict=complete_blocked_v724_capstone; results/experiment_8415_v724_capstone.json
