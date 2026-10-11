@@ -53260,3 +53260,26 @@ They reject missing inputs, deliberate errors, source drift and rehashed tamper.
 Consumer selection binds the terminal task and exact published bytes.
 
 Status: specified before tests; ops and BMAD reconciliation belongs to conductor.
+## REQ-VERIFY-8400: Qualify bounded GateMate documentation with private controls
+
+Freeze scoped tests, Ruff, strict mypy and spec tracing before measurement.
+Require 100 percent newly owned statements, including real CLI and failures.
+Run existing source-hash, missing-receipt and tamper controls plus private
+E2E-018. Keep global health separate; do not repeat the full repository suite.
+Use private disk scratch, unbuffered progress, per-call deadlines, polling
+within 60 seconds and a 4800-second cap. Retain every validator finding.
+Unresolved findings close readiness. Owned failure is disqualified; external
+absence is blocked. Use unchanged publication and strict row validators.
+
+### SCENARIO-VERIFY-8400-CONTROLS
+
+Real child processes accept valid continuity evidence, reject missing input
+and rehashed tamper, and record deliberate errors. Live consumers select the
+exact primary identity and hash. Historical assertions remain unchanged.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+Implementation: `gatemate_continuity_runner_8400.py` reuses bounded children
+and unchanged terminal validators. It enforces hard 60-second receipt and
+4800-second task timers. Five owned tests pass with private outputs. The
+terminal artifact carries frozen commands, exits, durations and log hashes.

@@ -98233,3 +98233,32 @@ dispatch, protocols or self-consistently rehashed summaries fail replay.
 External absence remains blocked. Owned validation failure is disqualified.
 
 Status: specified before tests; ops and BMAD reconciliation belongs to conductor.
+## REQ-REPORT-8400: Preserve the exact GateMate obligation under V723 authority
+
+Exp8400 SHALL bind the full current task independently to the V723 design.
+Import the exact Exp8386 source hashes, original IDCODE and four physical
+conditions. Current replacement source cannot authenticate historical custody.
+Inspect only explicit operator receipts for at most 60 seconds. Preserve
+missing inputs as null observations and external blocked evidence. Use no
+model loads, device commands, flash, benchmark or source reconstruction.
+Keep continuity credit separate from execution readiness and scientific benefit.
+Preserve all original artifacts and frozen V717/V721/V722 protocols.
+
+### SCENARIO-REPORT-8400-CONTINUITY
+
+With no supplied receipt, retain one completed continuity unit, two missing
+source units and four missing physical units. Hardware readiness remains zero.
+Matching source bytes reopen only their custody condition. A dated cable,
+port or power change queues the correct IDCODE, n16 flash and device smoke.
+
+### SCENARIO-REPORT-8400-REPLAY
+
+Fresh processes reject missing operands, changed full task authority and
+self-consistently rehashed claims. Checked terminal bytes publish atomically.
+
+Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+Implementation: `gatemate_continuity_8400.py` records the unchanged obligation
+through the thin Exp8400 CLI. Five owned tests cover continuity, exact sources,
+current receipt dates, timers, real publication and replay tampering. Terminal
+validation receipts reside below `results/raw/experiment_8400_v723_gatemate_continuity/`.
