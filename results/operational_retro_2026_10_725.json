@@ -1,0 +1,40 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.725",
+  "generated_at": "2026-10-11T19:53:04Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 2.1,
+  "experiments_completed": 1,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Bind thirteen tasks and seal retrospective criteria and feedback admission",
+      "duration_minutes": 2.08,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.725 completed 1 experiment (0 compute-bound, 1 synthesis-only) across 2.1 total wall-time minutes (2 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by the synthesis-only task 'Bind thirteen tasks and seal retrospective criteria and feedback admission' taking 2.08 minutes. With zero compute-bound experiments and gpu_idle_on_compute_bound_tasks recorded as null, the point-in-time GPU monitor observation of 0% utilization across both NVIDIA GeForce RTX 3090 GPUs reflects expected idle behavior for non-GPU synthesis tasks rather than an accelerator bottleneck, and no multi-model parallel workload required DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "The sole completed experiment ('Bind thirteen tasks and seal retrospective criteria and feedback admission') accounted for 100% of milestone execution time (2.08 minutes out of 2.1 wall-time minutes) executing serially as a synthesis-only task.",
+    "Synthesis task execution lacked incremental receipt caching or evidence memoization when validating already-staged task definitions and retrospective criteria.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Experiment receipts lack intra-task sub-phase telemetry (such as setup, schema validation, contract binding, and artifact serialization) to localize specific execution latency within the 2.08-minute synthesis run."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for task binding and retrospective criteria validation when upstream dependencies remain unchanged.",
+    "Instrument synthesis tasks with granular sub-phase execution timers (setup, schema verification, task contract binding, artifact serialization) to pinpoint intra-task latency.",
+    "Persist explicit synchronous execution timestamps (start, completion, duration) directly into experiment receipts to eliminate dependence on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Sample continuous in-flight accelerator utilization and memory telemetry during compute-bound execution intervals rather than relying solely on post-run point-in-time GPU monitor polling."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for task binding and retrospective validation workflows when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, validation, execution, serialization).",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.725 concluded in 2.1 total wall-time minutes across 1 synthesis-only experiment ('Bind thirteen tasks and seal retrospective criteria and feedback admission', 2.08 minutes) with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% GPU utilization on both NVIDIA GeForce RTX 3090 GPUs represented expected idle behavior for non-GPU synthesis workloads, with no multi-model parallel workload requiring DualGPURunner dispatch. Operational focus for future milestones should center on synchronous lifecycle timestamp persistence in receipts and granular intra-phase telemetry for task-binding workflows, with estimated time savings held at 0% until empirically demonstrated."
+}

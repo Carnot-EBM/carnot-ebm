@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-11 — Operational retrospective for milestone 2026.10.725
+
+- Wrote `results/operational_retro_2026_10_725.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.725`. Authoritative disk-mtime fallback data records 1 experiment completed (0 compute-bound, 1 synthesis-only) across 2.1 total wall-time minutes (average 2 minutes per experiment).
+- Execution wall time was led by the synthesis task 'Bind thirteen tasks and seal retrospective criteria and feedback admission' (2.08 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on both RTX 3090 GPUs (4MB allocated on GPU 0, 22400MB allocated on GPU 1); `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for task binding and retrospective criteria validation when upstream dependencies remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-11 — Operational retrospective for milestone 2026.10.724
 
 - Wrote `results/operational_retro_2026_10_724.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.724`. Authoritative disk-mtime fallback data records 12 experiments completed (0 compute-bound, 12 synthesis-only) across 181.5 total wall-time minutes (average 15 minutes per experiment).
