@@ -82,3 +82,31 @@ them. Item 3 waits on item 2.
 Whether to spend the GPU lease on item 2 while the conductor is running. The conductor owns GPU
 0 and the outer loop owns GPU 1 (CLAUDE.md, 2026-06-27 allocation), so item 2 would fit on one
 card, but that has not been checked against the current model size.
+
+## GPU fit check for item 2 (2026-10-10, later)
+
+Checked on the live machine; nothing was launched.
+
+- **One 3090 is visible, not two.** `nvidia-smi` lists one card (bus 62:00.0, 24,576 MiB, 2 MiB
+  used, no processes). The PCI bus shows a second RTX 3090 at 03:00.0 with no driver bound.
+  Kernel and userspace driver versions match (615.71.09), so this is not a version split. The
+  kernel log shows `nvidia-modeset` errors for `GPU:1` at 03:00 each day. I did not find the
+  cause. The "outer loop owns GPU 1" allocation from CLAUDE.md therefore does not exist right
+  now.
+- **The conductor's generator targets that same card.** The service sets
+  `CARNOT_ARC_GENERATOR_CUDA_GPU=0`, and the card is idle at the moment, with no llama-server
+  running. A second generator would compete with the conductor's the day it starts one.
+- **Memory fits one idle card.** Qwen3.8-27B Q4_K_M at `n_ctx` 98,304 with 4 slots: the envelope
+  constants in `arc_executable_world_model.py` give about 20,557 MiB (my arithmetic from
+  `_VRAM_QWEN38_*`); the measured point at that shape is 20,352 MiB. With the 1,500 MiB guard
+  margin that is about 22,057 MiB of 24,576 MiB. It needs zero CPU offload on a free card. It
+  does not fit beside another generator.
+- **Time is the real limit.** The file records a median induction of 62,490 tokens, about
+  1,730 s at a measured 36 tok/s on this card. August's denominator of 136 induce attempts
+  would take roughly 65 hours one after another. 20 attempts would take roughly 10 hours.
+  Parallel slots may shorten that; I did not measure it.
+
+Consequence: a 136-attempt rerun is not practical now. A smaller run, on the order of 20
+attempts, can answer one narrow question (do any plans install at all) but cannot give a rate
+with a tight interval. It also needs the conductor to hold off its own generator, and a lease
+check I did not look into.
