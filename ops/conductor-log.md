@@ -20049,3 +20049,4 @@ code |
 | 2026-10-11 03:50 UTC | Milestone 2026.10.724 activated | OK | 14 tasks queued |
 | 2026-10-11 05:12 UTC | Bind fourteen tasks and repair historical consumer | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: rror, match="h |
 | 2026-10-11 05:14 UTC | Bind fourteen tasks and repair historical consumer | OK | Deliverable already exists in repo |
+| 2026-10-11 05:42 UTC | Recover source question identities and qualify the | SKIP | Pre-tests failing, self-heal failed: receipts = [*value["validation_receipts"], dict(name="global", scope="global", passed=False)] |
