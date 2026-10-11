@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/tmp/v723-historical-bootstrap.py", line 15, in <module>
+    (private/'test_v722_preserved.py').write_bytes(Path(str(private/'test_v722_preserved.py')).read_bytes())
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/test_v722_preserved.py'

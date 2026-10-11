@@ -1,0 +1,159 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_board_operation_boundary_8399.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,sys,pytest; from carnot.reporting import board_operation_boundary_8399 as e; p=e.ROOT/e.TERMINAL; assert e.base.sha256_file(p)==e.TERMINAL_PIN; refs=json.loads(p.read_bytes())['source_artifact_hashes']; \nwith e.prior.source_aliases(refs):\n raise SystemExit(pytest.main(sys.argv[1:]))\n",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_hardware_operation_boundary_8371.py::test_typed_map",
+        "tests/python/test_v721_contract_methods_8360.py::test_private_e2e018",
+        "tests/python/test_kv260_workload_cost_8356.py::test_table_operation_semantics",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki/consumers"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "private_E2E018_board_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki/coverage.ini"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki/coverage.ini",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/board_operation_boundary_8399.py",
+        "python/carnot/reporting/board_operation_runner_8399.py",
+        "scripts/experiments/experiment_8399_v723_board_operation_boundary.py",
+        "tests/python/test_board_operation_boundary_8399.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/board_operation_boundary_8399.py",
+        "python/carnot/reporting/board_operation_runner_8399.py",
+        "scripts/experiments/experiment_8399_v723_board_operation_boundary.py",
+        "tests/python/test_board_operation_boundary_8399.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/board_operation_boundary_8399.py",
+        "python/carnot/reporting/board_operation_runner_8399.py",
+        "scripts/experiments/experiment_8399_v723_board_operation_boundary.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_board_operation_boundary_8399.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/usr/bin/df",
+        "-T",
+        "/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki"
+      ],
+      "deadline": 10,
+      "expected": 0,
+      "name": "private_disk_scratch",
+      "scope": "owned"
+    }
+  ],
+  "heartbeat_s": 30,
+  "no_model_load": true,
+  "private_scratch": "/home/ianblenke/.cache/carnot-exp8399-private/invocation-j1_mnpki",
+  "task_cap_s": 4800
+}

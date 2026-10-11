@@ -98282,3 +98282,17 @@ logged cascade skip yield fourteen slots including this capstone. Missing
 metrics remain null; producer rows retain their own intended unit counts.
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+### SCENARIO-REPORT-8401-SEALED-REDUCTION
+
+The capstone SHALL recompute every slot from its sealed primary and exact task.
+A forged primitive disposition, changed gate operand, or invented readiness
+SHALL fail cold replay even when its aggregate checksum is updated.
+
+Implementation Exp8401 (2026-10-11): `v723_capstone_evidence.py` and the thin
+`experiment_8401_v723_capstone.py` bind the fourteen full objects and explicit
+receipt filenames. Primitive custody remains below the experiment raw tree.
+Source verdicts, native coverage manifests, imported-field citations, closed
+exposed H1/H2 and the separate dyadic policy remain distinct. No retirement
+is appended without qualified exact scope equality. Ops and BMAD reconciliation
+remain conductor-owned. Terminal qualification is recorded in the artifact receipts.

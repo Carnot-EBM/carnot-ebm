@@ -1,0 +1,232 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import coverage,pytest,ruff,mypy; print('required tools importable')"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "tools",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile",
+        "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_cuda_failure_cause_8396.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/owned"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile",
+        "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile",
+        "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/cuda_failure_cause_8396.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/cuda_failure_runner_8396.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+        "--fail-under=100",
+        "-o",
+        "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/coverage.json"
+      ],
+      "deadline": 20,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_typed_runtime_8368.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_v723_contract_methods_8388.py",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/consumers"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "typed_runtime_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_v722_contract_methods_8374.py::test_private_e2e018",
+        "--basetemp=/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/e2e018"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E018",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/verify/cuda_failure_cause_8396.py",
+        "python/carnot/verify/cuda_failure_runner_8396.py",
+        "scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+        "tests/python/test_cuda_failure_cause_8396.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/cuda_failure_cause_8396.py",
+        "python/carnot/verify/cuda_failure_runner_8396.py",
+        "scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+        "tests/python/test_cuda_failure_cause_8396.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/verify/cuda_failure_cause_8396.py",
+        "python/carnot/verify/cuda_failure_runner_8396.py"
+      ],
+      "deadline": 90,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_cuda_failure_cause_8396.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/usr/bin/df",
+        "-T",
+        "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf"
+      ],
+      "deadline": 10,
+      "expected": 0,
+      "name": "private_disk_scratch",
+      "scope": "owned"
+    }
+  ],
+  "control_argv": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+      "--cold-replay",
+      "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/valid.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+      "--cold-replay",
+      "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/absent"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+      "--cold-replay",
+      "/home/ianblenke/.cache/carnot-exp8396-private/invocation-2g4d3glf/tamper.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "raise SystemExit(1)"
+    ]
+  ],
+  "frozen_before_measurement": true,
+  "heartbeat_s": 20,
+  "task_cap_s": 4800,
+  "terminal_argv": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8396_v723_cuda_failure_cause.py",
+      "--cold-replay",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/terminal_candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/terminal_candidate.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/terminal_candidate.json"
+    ]
+  ]
+}

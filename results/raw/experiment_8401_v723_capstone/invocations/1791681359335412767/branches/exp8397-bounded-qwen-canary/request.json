@@ -1,0 +1,61 @@
+{
+  "closure": null,
+  "primary": {
+    "exists": true,
+    "expected_sha256": null,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8397_bounded_qwen_canary.json",
+    "sha256": "sha256:93a3ebe5a0172644b5ff19d896ee22cc043d41d5535cc8899c8d9bae31415210",
+    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8401_v723_capstone/invocations/1791681359335412767/custody/93a3ebe5a0172644b5ff19d896ee22cc043d41d5535cc8899c8d9bae31415210.json"
+  },
+  "task": {
+    "MODEL_SPECS": [
+      {
+        "quantization": "Q4_K_M",
+        "repo_id": "unsloth/Qwen3.8-27B-GGUF",
+        "role": "sole_current_llm"
+      }
+    ],
+    "deliverable": "results/experiment_8397_v723_bounded_qwen_canary.json",
+    "estimated_wall_time_min": 55,
+    "gated_on": [
+      {
+        "artifact_field": "runtime_reader_ready_score",
+        "op": "==",
+        "upstream": "exp8396-cuda-failure-cause",
+        "value": 1
+      },
+      {
+        "artifact_field": "runtime_changed_score",
+        "op": "==",
+        "upstream": "exp8396-cuda-failure-cause",
+        "value": 1
+      },
+      {
+        "artifact_field": "cuda_context_ready_score",
+        "op": "==",
+        "upstream": "exp8396-cuda-failure-cause",
+        "value": 1
+      }
+    ],
+    "id": "exp8397-bounded-qwen-canary",
+    "inference_substrate_class": "model_bounded_generation",
+    "max_turns": 50,
+    "milestone": "2026.10.723",
+    "per_unit_rows": true,
+    "phase": 3,
+    "prior_failures": [
+      {
+        "addressed_by": "Execute only after the new causal diagnosis produces actual changed-runtime and context evidence; no unconditional same-environment load.",
+        "experiment_id": "exp8383-changed-runtime-canary",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V722 completed scheduling, not every measurement. Its design ended after Phase 2 without an exact task contract. Direct state controls passed but authority stayed blocked. Native evidence failed coverage combination; the capstone failed two historical replay tests. H1=-0.00390625 and H2=0 remain closed exposed-development findings. The dyadic-logit certificate is a separate numerical policy, not a semantic win. Preserve original artifacts and frozen V717/V721/V722 protocols.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; scripts/experiment_template.py; python/carnot/verify/runtime_evidence_execution_8382.py; results/experiment_8383_changed_runtime_canary.json; openspec/change-proposals/v714-evidence-execution-contract.json; tests/python/test_prospective_request_recorder_8213.py\nTASK:\nRun a bounded Qwen canary after causal CUDA qualification. Deliver results/experiment_8397_v723_bounded_qwen_canary.json. Create thin runner scripts/experiments/experiment_8397_v723_bounded_qwen_canary.py. Keep primitive evidence in results/raw/experiment_8397_v723_bounded_qwen_canary/. Future producer paths are dependencies, not existing inputs.\nCONCRETE STEPS:\n1. PRECONDITIONS: Print a flushed start line. Authenticate this task, current design and actual input hashes. Check tools, private disk-backed scratch, memory and deadlines before work. Record missing external inputs in gate_check_summary. Never fabricate observations.\n2. Print a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess. Emit completed/pending counts inside long loops. Poll owned children at least every 60 seconds. Keep every output gap below 600 seconds, including synthesis. Use unbuffered output and per-call deadlines inside the 4800-second task cap. Write files over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between calls. Never use one huge write or pad elapsed time.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Preserve existing assertions and validation thresholds. Reuse shipped modules through small adapters. Put real runners in scripts/experiments/ and probes in /tmp. Freeze scoped validation commands before measurement. Do not modify research-roadmap.yaml.\n4. Declare model_bounded_generation and inference_substrate=live_llm_inference. MODEL_SPECS must include unsloth/Qwen3.8-27B-GGUF. The 10-second floor classifies real bounded work; never sleep to satisfy it. No invocation means a blocked no_model_load artifact with zero current calls.\n5. Require all three exact Exp8396 gates. Recheck the qualified runtime binding hashes and exclusive lease. Resolve the cached mandated unsloth/Qwen3.8-27B-GGUF Q4_K_M bytes, tokenizer, chat template and actual CUDA offload. A cache miss, changed runtime or lease conflict is terminal blocked. Do not substitute another model, CPU generation or a download.\n6. Freeze four fit-side source IDs and two evidence views before execution. Run at most eight requests with 128 output tokens per request. Use 600 seconds for model load and 180 seconds per request; keep a 600-second output gap impossible through owned-child polling. The whole task remains inside 4800 seconds. Capture raw request/response bytes, actual tokens, model hashes, device memory and call counts.\n7. Emit every intended request, including parse failures, truncations and timeouts. Measure transport completeness and view effects per source. Four sources are a feasibility canary, not a powered semantic test. No resulting token or target may enter the frozen V717 evaluation or retroactively replace the new external corpus.\n8. Use model_bounded_generation, whose floor is 10 seconds, rather than model_full_generation. A load-only early failure records its actual stage and zero generated tokens. Set canary_ready_score only from qualified current CUDA-backed receipts. Run private E2E-018 and E2E-022 recording/replay controls. Mocks qualify mechanics only, never live science.\n9. Run scoped unit tests and real consumer/CLI checks. Run scoped Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Require 100 percent newly owned statements, including failure and real child paths. Use pytest -n 0 -o addopts= with private disk-backed scratch. Record commands, exits, duration and log hashes. Run applicable named private E2E checks. Do not launch the full repository suite in every task; report global health separately from owned validation.\n10. Cold-replay primitive rows in a fresh process. Exercise positive, missing-input, deliberate-error and self-consistently rehashed tamper controls. Use unchanged primary_publication, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Retain every finding. Only an existing typed consumer may resolve independently recomputed informational findings. Unknown, warning and critical findings block readiness. Do not alter validators or exemptions. Publish checked terminal bytes atomically. Owned validation failure is disqualified; unchanged external absence is blocked. Reserve partial for retryable unfinished owned work. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not update generator weights or publish externally.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual invocation and authority.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal verdict. Closed class: positive | circular_positive | null | blocked | disqualified | partial. External absence is blocked, never partial.\ngate_check_summary: principle: For blocked_* or complete_blocked_* verdicts, name the check, upstream, path/hash, field, operator, expected and observed values. Distinguish absence from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Distinguish current LLM calls, cached signals and small numeric heads.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Preserve every intended unit and arm with its own metric and missing reason. Repeated timings are not independent examples.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle-checked positives use circular_positive. Exposed data, feasibility and deployment fidelity keep both generalization scores zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Successful execution does not establish scientific benefit.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Recompute measurements from sealed operands, not pooled claims.\ncited_upstream_artifacts, field_principles: principle: Name imported fields and producer hashes. Explain every added field.\ncanary_ready_score, runtime_binding_sha256, model_sha256, tokenizer_sha256, chat_template_sha256, gpu_uuid: principle: Current local provenance must match the qualified runtime and mandated model.\nrequest_response_rows, actual_output_tokens, token_budget, phase_durations, offload_evidence: principle: Bounded generation is measured transport, not an invented full benchmark.\nRun command: cd {project_root} && PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8397_v723_bounded_qwen_canary.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+    "requires_gpu": true,
+    "title": "Run a bounded Qwen canary after causal CUDA qualification",
+    "track": "research"
+  },
+  "task_sha256": "sha256:abe20eec9e0b5729239246e9bc4fffe19389a947f41643f72282fab24e729f4b"
+}

@@ -1,0 +1,78 @@
+{
+  "branch_replay": {
+    "passed": false,
+    "status": "not_executed_pre_gate"
+  },
+  "checks": [
+    {
+      "artifact_field": "cuda_context_ready_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8396_v723_cuda_failure_cause.json",
+      "sha256": "sha256:ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b",
+      "upstream": "exp8396-cuda-failure-cause"
+    },
+    {
+      "artifact_field": "runtime_changed_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8396_v723_cuda_failure_cause.json",
+      "sha256": "sha256:ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b",
+      "upstream": "exp8396-cuda-failure-cause"
+    },
+    {
+      "artifact_field": "runtime_reader_ready_score",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8396_v723_cuda_failure_cause.json",
+      "sha256": "sha256:ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b",
+      "upstream": "exp8396-cuda-failure-cause"
+    }
+  ],
+  "closure": [
+    {
+      "exists": true,
+      "expected_sha256": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8397_bounded_qwen_canary.json",
+      "sha256": "sha256:93a3ebe5a0172644b5ff19d896ee22cc043d41d5535cc8899c8d9bae31415210",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8401_v723_capstone/invocations/1791681359335412767/custody/93a3ebe5a0172644b5ff19d896ee22cc043d41d5535cc8899c8d9bae31415210.json"
+    },
+    {
+      "exists": true,
+      "expected_sha256": "sha256:ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8396_v723_cuda_failure_cause.json",
+      "sha256": "sha256:ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8401_v723_capstone/invocations/1791681359335412767/branches/exp8397-bounded-qwen-canary/pregates/ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b.json"
+    }
+  ],
+  "disposition": "conductor_pre_gate",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 355.5390625,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 355.5390625,
+      "prior_exec_lifetime_peak_mb": 384.42578125
+    },
+    "before": {
+      "current_rss_mb": 352.90234375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 352.90234375,
+      "prior_exec_lifetime_peak_mb": 384.42578125
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 2.63671875,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "selected": {},
+  "verdict_class": "blocked"
+}

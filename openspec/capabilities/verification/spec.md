@@ -53305,3 +53305,17 @@ gate and receipt tampering. Cold reduction independently checks primitives.
 Unchanged adversarial and strict row validators check atomically published bytes.
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
+
+### SCENARIO-VERIFY-8401-MEMORY
+
+Real successful and failed workers SHALL report fresh peak and growth limits.
+Parent validation SHALL use current RSS, separately from historical host peak.
+Historical failed assertions and unchanged baseline health SHALL remain evidence.
+
+Implementation Exp8401 (2026-10-11): `v723_capstone.py` freezes invocation-only
+coverage, private E2E-018/021, full-contract mutations and consumer commands.
+Fresh workers use `/proc/self/status` VmHWM with unchanged 1500/500 MiB limits;
+parent current RSS and inherited lifetime peaks remain separate. Complete
+terminal cold replay has a bounded 180-second deadline. Unchanged validators
+check terminal bytes before atomic publication. Historical failures and baseline
+health retain their exact source/log hashes; no current global pass is claimed.

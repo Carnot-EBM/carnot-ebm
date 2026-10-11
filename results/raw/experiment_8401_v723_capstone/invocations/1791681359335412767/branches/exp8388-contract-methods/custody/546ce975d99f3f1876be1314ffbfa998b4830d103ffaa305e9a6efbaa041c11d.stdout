@@ -1,0 +1,295 @@
+F..............F...FF...                                                 [100%]
+=================================== FAILURES ===================================
+_________________________________ test_natural _________________________________
+
+natural = (PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/v7220/experiment_8374_v722_contr...oid_certificate': False, 'requires_table_certificate': False, ...}, ...}, 'ended_monotonic_ns': 1323673886910741, ...})
+
+    def test_natural(natural):
+        """SCENARIO-REPORT-8374-METHODS: direct input custody survives absent design."""
+        output, value, work = natural
+>       assert e.replay(output)
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7f51f46431a0>(PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/v7220/experiment_8374_v722_contract_methods.json'))
+E        +    where <function replay at 0x7f51f46431a0> = e.replay
+
+tests/python/test_v722_contract_methods_8374.py:41: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8374] phase=resource_preconditions_checked completed=0 pending=0
+[exp8374] phase=authority_before completed=0 pending=0
+[exp8374] phase=authority_after completed=14 pending=0
+[exp8346] phase=source_bound completed=13 pending=2
+[exp8346] phase=heads_bound completed=35 pending=1
+[exp8346] phase=predictions_bound completed=59 pending=0
+[exp8374] phase=kernel_authentication_before completed=0 pending=0
+[exp8374] phase=kernel_authentication_after completed=1 pending=0
+[exp8374] phase=trajectory_authentication_before completed=0 pending=0
+[exp8374] phase=trajectory_authentication_after completed=1 pending=0
+[exp8374] phase=inputs_sealed completed=159 pending=0
+______________ test_rehashed_primitives[historical_dispositions] _______________
+
+natural = (PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/v7220/experiment_8374_v722_contr...oid_certificate': False, 'requires_table_certificate': False, ...}, ...}, 'ended_monotonic_ns': 1323673886910741, ...})
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/test_rehashed_primitives_histo0')
+field = 'historical_dispositions'
+
+    @pytest.mark.parametrize(
+        "field",
+        [
+            "contract",
+            "inputs",
+            "deployment",
+            "methods",
+            "historical_dispositions",
+            "trajectory",
+            "kernel",
+        ],
+    )
+    def test_rehashed_primitives(natural, tmp_path, field):
+        """SCENARIO-VERIFY-8374-REPLAY: hashing forged primitive meaning cannot qualify it."""
+        _, value, work = natural
+        changed = deepcopy(work)
+        if field == "contract":
+            changed[field]["tasks"][0]["prompt"] += " forged"
+        elif field == "inputs":
+            changed[field]["heads"]["manifest"]["heads"][0]["coefficients"][0] += 0.125
+        elif field == "deployment":
+            changed[field]["policy"]["accept_below"] = 0.5
+        elif field == "methods":
+            changed[field]["science_changed"] = True
+        elif field == "historical_dispositions":
+>           changed[field]["utility"]["H2_gain"] = 0.02
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'utility'
+
+tests/python/test_v722_contract_methods_8374.py:181: KeyError
+___________________________ test_owned_child_failure ___________________________
+
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'cached_support': False, 'current_authority': False, 'direct_inputs': False, ...experiment_8305_v717_cached_sentence_custody.json', 'role': 'experiment_8305_v717_cached_sentence_custody', ...}], ...}
+output = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/test_owned_child_failure0/experiment_8374_v722_contract_methods.json')
+raw = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/test_owned_child_failure0/raw/experiment_8374_v722_contract_methods/invocations/1791662810592840973')
+
+    def publish(value: Json, output: Path, raw: Path) -> None:
+        """Failed owned checks clear readiness before checked failure publication."""
+        attempts: list[Json] = []
+    
+        def validate(candidate: Path) -> Json:
+            logs = raw / "terminal" / str(len(attempts))
+            cold = child(
+                "terminal_cold",
+                [
+                    str(e.ROOT / ".venv/bin/python"),
+                    "-u",
+                    str(e.ROOT / e.CLI),
+                    "--cold-replay",
+                    str(candidate),
+                ],
+                logs,
+                deadline=60,
+                heartbeat=20,
+            )
+            found = audit(candidate, logs, {})
+            rows = child(
+                "strict_rows",
+                [
+                    str(e.ROOT / ".venv/bin/python"),
+                    "-u",
+                    "scripts/verdict_row_consistency_lint.py",
+                    "--strict",
+                    str(candidate),
+                ],
+                logs,
+                deadline=60,
+                heartbeat=20,
+            )
+            report = dict(
+                passed=all(r["passed"] for r in [cold, found["receipt"], rows]),
+                checks=[cold, found["receipt"], rows],
+                adversarial=found,
+            )
+            attempts.append(report)
+            return report
+    
+        try:
+>           publication = publish_primary(output, value, validate)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/carnot/reporting/v718_replay_runner.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/test_owned_child_failure0/experiment_8374_v722_contract_methods.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'cached_support': False, 'current_authority': False, 'direct_inputs': False, ...experiment_8305_v717_cached_sentence_custody.json', 'role': 'experiment_8305_v717_cached_sentence_custody', ...}], ...}
+validator = <function publish.<locals>.validate at 0x7f51ca4b9e40>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/test_owned_child_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f52e0b7be90>
+
+    def test_owned_child_failure(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8374-CLI: a real failed child must disqualify readiness."""
+        from carnot.reporting.v709_execution import child
+    
+        def fail(plan, logs):
+            return [
+                child(
+                    "deliberate_error",
+                    [sys.executable, "-u", "-c", "raise SystemExit(3)"],
+                    logs,
+                    deadline=10,
+                )
+            ]
+    
+        monkeypatch.setattr(r.qualified, "execute", fail)
+        output = tmp_path / (e.NAME + ".json")
+>       assert r.main(["--date", "20261010", "--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v722_contract_methods_8374.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v722_contract_runner.py:97: in main
+    return int(qualified.main(args))
+               ^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v718_replay_runner.py:356: in main
+    publish(value, output, raw)
+python/carnot/reporting/v718_replay_runner.py:141: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/test_owned_child_failure0/experiment_8374_v722_contract_methods.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'cached_support': False, 'current_authority': False, 'direct_inputs': False, ...experiment_8305_v717_cached_sentence_custody.json', 'role': 'experiment_8305_v717_cached_sentence_custody', ...}], ...}
+validator = <function publish.<locals>.validate at 0x7f51ca4b9e40>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8374] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=0
+[exp8374] phase=start completed=0 pending=0
+[exp8374] phase=preconditions_checked completed=0 pending=0
+[exp8374] phase=resource_preconditions_checked completed=0 pending=0
+[exp8374] phase=authority_before completed=0 pending=0
+[exp8374] phase=authority_after completed=14 pending=0
+[exp8346] phase=source_bound completed=13 pending=2
+[exp8346] phase=heads_bound completed=35 pending=1
+[exp8346] phase=predictions_bound completed=59 pending=0
+[exp8374] phase=kernel_authentication_before completed=0 pending=0
+[exp8374] phase=kernel_authentication_after completed=1 pending=0
+[exp8374] phase=trajectory_authentication_before completed=0 pending=0
+[exp8374] phase=trajectory_authentication_after completed=1 pending=0
+[exp8374] phase=inputs_sealed completed=159 pending=0
+[exp8205] phase=before_subprocess_deliberate_error completed=0 pending=1
+[exp8205] phase=after_subprocess_deliberate_error completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_valid completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_valid completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_negative completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_negative completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_rehashed_tamper completed=1 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+_________________________ test_global_health_separate __________________________
+
+natural = (PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/v7220/experiment_8374_v722_contr...oid_certificate': False, 'requires_table_certificate': False, ...}, ...}, 'ended_monotonic_ns': 1323673886910741, ...})
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8388-private/historical-bootstrap/pytest/test_global_health_separate0')
+
+    def test_global_health_separate(natural, tmp_path):
+        """REQ-VERIFY-8374: pre-existing global failures cannot erase qualified inputs."""
+        _, value, work = natural
+        receipts = [*value["validation_receipts"], dict(name="global", scope="global", passed=False)]
+        result = e.build(
+            work, receipts, Path(value["work_reference"]["path"]).parent, tmp_path / (e.NAME + ".json")
+        )
+>       assert result["required_checks_passed"] and result["direct_inputs_ready_score"] == 1
+E       assert (True and 0 == 1)
+
+tests/python/test_v722_contract_methods_8374.py:240: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v722_contract_methods_8374.py::test_natural - Assert...
+FAILED tests/python/test_v722_contract_methods_8374.py::test_rehashed_primitives[historical_dispositions]
+FAILED tests/python/test_v722_contract_methods_8374.py::test_owned_child_failure
+FAILED tests/python/test_v722_contract_methods_8374.py::test_global_health_separate
+4 failed, 20 passed, 2 warnings in 70.19s (0:01:10)
