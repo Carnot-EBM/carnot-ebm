@@ -146,3 +146,29 @@ G4 plan, in order:
    The vLLM path would have no Clef support.
 3. **G4 baseline.** The existing router and scorer need their inputs present. G4 must run where
    they load, or the baseline is a broken component and any Clef win means nothing.
+
+### G4 result: the designed test is not valid, 2026-10-11 (append-only)
+
+I read the labeled corpus (`data/arc_transition_corpus`, 25 games, 25,000 transitions) before
+building anything. Three facts stop the frame-change test:
+
+1. **No headroom.** The "frame changed" label is true for 90% to 100% of rows in every game
+   (most games above 95%). A constant "changed" answer would score about 0.97. Any decision
+   method ties it. This is the degenerate-corpus case the false-negative rule describes.
+2. **The state does not fit.** One 64x64 frame as run-length text is about 2,900 characters and
+   3,084 Clef tokens. The sidecar refuses it (413) at the 2,048-token batch limit. It would need
+   `-ub 4096` and a smaller state.
+3. **The only informative label is rare.** Level-up appears in 2 to 10 transitions per game, about
+   170 in all. Predicting it from one frame needs the game's goal, which Clef has no way to know.
+
+So G4 as written cannot show that Clef helps. I did not run it, because a result from it would
+look like evidence and carry none. Clef's measured strength is text states with meaning in the
+words (tickets, routing, yes/no questions). ARC grids are far from that.
+
+What would be a valid test: a decision whose state is already compact text and whose label has
+headroom. The best candidate is the induction gate (`_should_enter_induction`): it takes a short
+text summary, and the label is whether the induction call installed a plan. That needs the
+`--k 1` rerun to produce enough labeled attempts first. So the rerun comes first.
+
+Decision: Clef stays at "works, fast, not shown useful for ARC". No integration. Re-open after the
+rerun gives labeled induction attempts.
