@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8412_v724_arc_panel_qualification.py", line 65, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8412_v724_arc_panel_qualification.py", line 59, in main
+    return p.run(args.output, Path(private), private_e2e=args.private_e2e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_panel_qualification_8412.py", line 191, in run
+    ):
+       
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_generalization_panel_8398.py", line 314, in run
+    receipts = execute(specs, raw / "checks")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_panel_qualification_8412.py", line 172, in execute
+    def execute(specs: list[Json], logs: Path) -> list[Json]:
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v709_execution.py", line 100, in execute
+    child(
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v709_execution.py", line 58, in child
+    process.wait(timeout=max(0.001, min(heartbeat, remaining)))
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 2047, in _wait
+    time.sleep(delay)
+KeyboardInterrupt

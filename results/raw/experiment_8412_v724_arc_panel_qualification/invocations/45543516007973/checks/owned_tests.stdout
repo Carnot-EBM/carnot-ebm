@@ -1,0 +1,46 @@
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+________________ test_measured_firing_cells_remain_unauthorized ________________
+
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8412-private/invocation-4al8b3ug/owned-tests/test_measured_firing_cells_rem0')
+
+    def test_measured_firing_cells_remain_unauthorized(tmp_path):
+        """REQ-REPORT-8412: firing support does not authorize a two-game refinement."""
+        unit = dict(
+            episode_id="fixture:11:on",
+            game="fixture",
+            seed=11,
+            arm="on",
+            max_actions=125,
+            max_seconds=180,
+        )
+        episode_raw = tmp_path / "episode"
+        terminal = p.runtime.episode(unit, Arcade(), episode_raw)
+        row = p.base.reduce_episode(unit, terminal, episode_raw)
+>       assert row["supervisor_outcome_rows"]
+E       assert []
+
+tests/python/test_arc_panel_qualification_8412.py:171: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8384] episode_before fixture:11:on
+[exp8384] numeric_head_load_before no_LLM_load
+[exp8384] numeric_head_load_after no_LLM_load
+[exp8384] fixture:11:on completed=1 pending=124
+[exp8384] fixture:11:on completed=2 pending=123
+[exp8384] fixture:11:on completed=3 pending=122
+[exp8384] fixture:11:on completed=4 pending=121
+[exp8384] fixture:11:on completed=5 pending=120
+[exp8384] fixture:11:on completed=6 pending=119
+[exp8384] fixture:11:on completed=7 pending=118
+[exp8384] fixture:11:on completed=8 pending=117
+[exp8384] fixture:11:on completed=9 pending=116
+[exp8384] episode_after fixture:11:on completed=9 error=None
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_panel_qualification_8412.py::test_measured_firing_cells_remain_unauthorized
+1 failed, 6 passed, 1 warning in 113.40s (0:01:53)

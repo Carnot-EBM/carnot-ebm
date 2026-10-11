@@ -98557,3 +98557,37 @@ admission. The original assertions and published evidence are preserved.
 115 affected tests and 56 unchanged consumer/E2E-018/fix-erasure checks pass;
 the two reader modules and CLI have 332/332 fresh covered statements with no
 excluded lines. This repair records its own ops and BMAD validation evidence.
+
+## REQ-REPORT-8412: Qualify adapter-withheld live transfer after scratch repair
+
+The V724 receipt SHALL authenticate its complete current task and design, keep
+all old artifacts and V717/V721/V722/V723 protocols unchanged, and reuse the
+V722 two-game panel: seeds 11/22, off/on, eight episodes, 256 actions,
+180 seconds per episode and window 120. Missing games keep blocked slots.
+Only the shipped cascade choose_action/is_done path supplies observations.
+Withhold game adapters, stored routes, learned game adapters and cached memory;
+disable induction and enforce existing fail-before-load model tripwires.
+Current LLM loads and generations remain zero. Preserve primitive actions,
+observations, redirect outcomes and censoring. Exposed engineering qualification
+keeps generalization, semantic benefit and headline solve credit zero. Arm
+refinement stays unauthorized: new support needs three overlapping games and
+five firings per shared cell. A zero firing count is a measured null.
+
+### SCENARIO-REPORT-8412-PANEL
+
+Installed roster changes cannot replace either frozen game or its budgets.
+All eight units retain their seed, arm, metric and any missing reason.
+Registry prechecks disclose prior reproduced levels before live observations.
+
+### SCENARIO-REPORT-8412-REPLAY
+
+Fresh bounded children accept sealed primitive rows and reject missing input,
+deliberate summary errors and self-consistently rehashed tamper. Unchanged
+publication and validators check the exact atomically published terminal bytes.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
+
+Implementation for REQ-REPORT-8412: the new qualification module and thin direct
+CLI reuse the shipped collector and isolated live wrapper. The receipt is
+`results/experiment_8412_v724_arc_panel_qualification.json`; primitive evidence
+and preserved qualification attempts stay below its `results/raw/` directory.

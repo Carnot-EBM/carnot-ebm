@@ -495,3 +495,15 @@ No attributable public ARC implementation or technique writeup was found. **Clas
 
 Neither described mechanism depends on game-source access or hardcoded per-game solutions.
 
+## 2026-10-11 13:34 UTC -- NEW
+
+**Son & Mark & Ronen — newly discovered techniques from a [current top-ten contender](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard).** These are public research artifacts; attribution to its current scoring submission remains unverified.
+
+- **Train the speculative draft while freezing the main generator.** The published notebook documents retraining only dense MTP tensors on the target model’s gameplay traces, leaving experts, embeddings, and output head unchanged. It reports **6.4% higher draft acceptance and 5.6% higher token throughput** on GCP. The trained checkpoints are private. **Classification: (b), general-purpose serving as described; no game-source reading or per-game policy rules in this mechanism.** [Published notebook](https://github.com/sonpham-org/arc-3/blob/a5fe8f114d1c7782c282a52d6ac9776cd5a4a05f/kaggle/level-start-sprint/arc3-level-start-sprint.ipynb)
+
+  **POSSIBLE CARNOT LEVER:** Train a speculative draft on Carnot’s verifier-loop traces to accelerate candidate generation without RL or changing the main generator.
+
+- **Cache the CPU tool path.** Its `toolfast` patch caches serialized history entries and frame payloads, avoids reparsing state just written by the same process, and reconstructs numeric grids lazily from text. The notebook documents the original per-action overhead growing from **0.12 seconds around 50 actions to 1.35 seconds around 500**. **Classification: (b), general-purpose processing of observed frames/history; no source exploitation or per-game rules.** [Implementation](https://github.com/sonpham-org/arc-3/blob/a5fe8f114d1c7782c282a52d6ac9776cd5a4a05f/kaggle/level-start-sprint/arc3-level-start-sprint.ipynb)
+
+- **Newly located July negative result: prediction checking alone failed.** Qwen ignored optional `predict()` entirely across 1,750 actions. A prescriptive prompt produced 1,346 predictions, but scored **1.19 versus 1.44 for the control**, excluding `ft09`. Both variants were single runs. **Classification: (b), general-purpose observation-based prediction checking.** [Experiment record](https://github.com/sonpham-org/arc-3/blob/f099995626b2db36f9518b27ee38f9bf37d89647/harnesses/predict-check/MANIFEST.md)
+

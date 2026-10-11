@@ -53561,3 +53561,34 @@ consumer/private E2E-018/fix-erasure checks pass. Fresh unit and subprocess
 coverage is 332/332 statements across both reader modules and the direct CLI,
 with zero excluded lines. Scoped Ruff, formatting, strict typing and spec
 references pass. Ops and BMAD repair reconciliation is recorded in this task.
+
+## REQ-VERIFY-8412: Preserve historical assertions with owned scratch parents
+
+Reproduce the historical sixteen scratch errors and three passing controls
+before repair. Create the private parent before pytest and bind the original
+source and authority closure explicitly. Preserve all nineteen assertions.
+Freeze scoped tests, genuine child Coverage.py shards, 100 percent newly owned
+statements, Ruff, strict mypy, spec tracing and private E2E-011/017/018 before
+measurement. Historical global suite timeout stays separate. Each child has a
+bounded deadline and at most sixty-second polling; invocation cap is 4800
+seconds. External absence is blocked; owned failure is disqualified. Every
+validator finding is retained and unresolved findings close readiness.
+
+### SCENARIO-VERIFY-8412-SCRATCH
+
+A nested nonexistent scratch parent is provisioned before pytest. Historical
+checks use frozen source and authority bytes despite an unrelated current
+roadmap. No old receipt, assertion or threshold changes.
+
+### SCENARIO-VERIFY-8412-CONTROLS
+
+Real private CLI and consumers bind exact identity and hashes, exercise failure
+paths and preserve absent metrics. Only the new runner accepts 20261011;
+historical date contracts remain unchanged.
+
+Status: specified before tests; conductor owns ops and traceability reconciliation.
+
+Implementation for REQ-VERIFY-8412: nested-parent and unrelated-roadmap
+regressions preserve the frozen historical closure. The parent repair passes
+all nineteen unchanged wrapper tests. Qualification retains real subprocess
+coverage shards, scoped validation commands and terminal validator reports.
