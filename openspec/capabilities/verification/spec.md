@@ -53331,6 +53331,38 @@ Unchanged adversarial and strict row validators check atomically published bytes
 
 Status: specified before tests; conductor owns ops and BMAD reconciliation.
 
+## REQ-VERIFY-8416: Validate bounded contract readers and cold primitive replay
+
+Use real private CLI children, E2E-018, full-object mutations, scoped unit tests,
+Ruff check/format, strict mypy and per-file spec coverage. Require 100 percent
+newly owned statements with genuine Coverage.py subprocess shards, serial pytest
+and disk-backed private scratch. Keep global repository health unmeasured.
+Cold replay recomputes primitive meaning and rejects missing operands, changed
+summaries, deliberate errors and self-consistently rehashed tamper. Unchanged
+primary publication, adversarial verification and strict row lint check terminal
+bytes. Preserve all findings; unhandled informational, unknown, warning or critical
+findings disqualify owned validation. External authority or receipt absence is
+blocked, never partial. Poll children within 60 seconds and enforce a 4800-second
+cap with validation reserve. Inspect only a supplied CUDA repair receipt within
+30 seconds, authenticate causal change and context/copy/free success using the
+shipped typed reader, and run zero device probes.
+
+### SCENARIO-VERIFY-8416-REPLAY
+
+Real children accept intact receipts and reject missing input, changed operands,
+rehashed primitive tamper and deliberate failure. Failed required validation
+sets readiness to zero and disqualified. Absent external inputs retain null
+observations, exact path/hash and field/operator/expected diagnostics.
+
+Status: specified before tests. Conductor owns ops and BMAD reconciliation.
+
+Implementation: the focused V725 tests exercise real private CLI publication,
+complete synthetic authority mutations, supplied runtime evidence and cold
+tampering controls. The runner reuses shipped serial validation, E2E-018,
+Coverage.py subprocess capture and the unchanged terminal publisher/validators.
+Final receipts and coverage databases are retained in the invocation raw tree;
+they qualify faithful classification, never missing external authority.
+
 ### SCENARIO-VERIFY-8401-MEMORY
 
 Real successful and failed workers SHALL report fresh peak and growth limits.

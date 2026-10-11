@@ -98726,3 +98726,46 @@ Status: planning requirements only. Execution tasks add their focused REQ-* and
 SCENARIO-* before implementation. Existing authority/gate tests and private
 E2E-018 cover reused planning mechanisms; direct V725 contract mutation checks
 validate these staged files. No production behavior changes in this plan.
+
+## REQ-REPORT-8416: Seal retrospective methods and authenticate thirteen task slots
+
+Bind thirteen complete objects, their independent visible table and canonical
+digest against actual activated bytes. Missing objects or design bindings SHALL
+block contract and methods admission; never synthesize absent authority. Preserve
+V724 archive and V717/V721/V724 protocols. Publish the V725 method protocol and
+research note before reduction. Freeze question partitions, support floors,
+features, numeric arms, losses, bootstrap units, delayed admission, retention,
+and the seven inherited cost cells exactly as specified in the V725 design.
+Released labels remain exposed; reserve 80 unexposed clusters and eight per
+class for independent evaluation. No model loads, generations or device scans.
+Only supplied causal runtime evidence may admit the optional canary; its absence
+does not independently invalidate the methods contract. The old .111 reduction
+is completed; GRPO, puzzle and generator tracks remain retired.
+
+### SCENARIO-REPORT-8416-AUTHORITY
+
+Private complete authorities match; dropped/reordered tasks and changed prompt,
+model, gate, routing or prior retirement flag fail. An incomplete actual roadmap
+emits thirteen rows, retaining missing objects as missing rather than zero facts.
+
+### SCENARIO-REPORT-8416-METHODS
+
+The protocol fixes five 20-question blocks, capacities 8/16, seeds 17/29/43/71/101,
+three sibling predictions before release, equal update budgets, later blocks
+1–4 and tune retention. Every planned cost operation and durability rule stays
+unchanged. All independent-generalization and generalized-benefit scores stay 0.
+
+Status: specified before tests. Conductor owns ops and BMAD reconciliation.
+
+Implementation: `python/carnot/reporting/v725_contract_methods.py` and
+`v725_contract_runner.py`, with thin runner
+`scripts/experiments/experiment_8416_v725_contract_methods.py` and focused tests
+`tests/python/test_v725_contract_methods_8416.py`. Frozen methods and all 300
+question roles are in `openspec/change-proposals/v725-methods-protocol.json`;
+`docs/research-notes/v725-methods.md` describes their limits. Actual activation
+contains four full objects and nine absent objects. The independent visible
+table and complete design digest are absent. These external authority gaps keep
+contract admission blocked. CUDA receipt absence remains an independent optional
+gate. Invocation primitives and terminal validation belong under
+`results/raw/experiment_8416_v725_contract_methods/`. No historical protocol or
+active roadmap was changed. Global repository health remains unmeasured.

@@ -1,0 +1,1994 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gates": {
+    "current_contract": false,
+    "methods_frozen": true,
+    "optional_cuda": false,
+    "owned_classification": true,
+    "scientific_benefit": false
+  },
+  "adversarial_findings": [],
+  "canonical_tasks_sha256": null,
+  "censored_count": 9,
+  "cited_upstream_artifacts": [
+    {
+      "historical_model_provenance": [
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8182,
+          "imported_counts": {
+            "generate": 211,
+            "model_loads_attempted": 1,
+            "model_loads_completed": 1
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8184,
+          "imported_counts": {
+            "generate": 155,
+            "model_loads_attempted": 1,
+            "model_loads_completed": 1
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8153,
+          "imported_counts": {
+            "generation_calls_attempted": 432,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 432,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8155,
+          "imported_counts": {
+            "generation_calls_attempted": 256,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 256,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          }
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8402,
+      "producer_hash": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d"
+    },
+    {
+      "historical_model_provenance": [
+        {
+          "current_calls": 0,
+          "generator": "gemma-2-9b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "generator": "llama3-8b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "generator": "mistral-7b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "judge": "GPT-5-mini",
+          "kind": "cached_factorial_outputs"
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8403,
+      "producer_hash": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b"
+    },
+    {
+      "historical_model_provenance": {
+        "current_calls_imported": false,
+        "failure_layer": [
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {
+              "cuInit": 101
+            },
+            "layer": "driver",
+            "native_stderr": null
+          },
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {
+              "cudaGetDeviceCount": 101
+            },
+            "layer": "runtime",
+            "native_stderr": null
+          },
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {},
+            "layer": "native",
+            "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {
+              "cuInit": 101
+            },
+            "layer": "driver",
+            "native_stderr": null
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {
+              "cudaGetDeviceCount": 101
+            },
+            "layer": "runtime",
+            "native_stderr": null
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {},
+            "layer": "native",
+            "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+          }
+        ],
+        "imported_from": "results/experiment_8307_v717_runtime_change_boundary.json",
+        "model_invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        }
+      },
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8410,
+      "producer_hash": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e"
+    },
+    {
+      "historical_model_provenance": [
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8402_v724_historical_consumer_roots.json",
+                "sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d.json"
+              }
+            }
+          ],
+          "task_id": "exp8402-historical-consumer-roots"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8403_v724_released_question_identity.json",
+                "sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b.json"
+              }
+            }
+          ],
+          "task_id": "exp8403-released-question-identity"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8404_v724_direct_state_qualification.json",
+                "sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67.json"
+              }
+            }
+          ],
+          "task_id": "exp8404-direct-state-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8405_v724_native_parity_qualification.json",
+                "sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270.json"
+              }
+            }
+          ],
+          "task_id": "exp8405-native-parity-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8406_v724_continuous_direct_learning.json",
+                "sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a.json"
+              }
+            }
+          ],
+          "task_id": "exp8406-continuous-direct-learning"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8407_v724_python_transaction_cost.json",
+                "sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f.json"
+              }
+            }
+          ],
+          "task_id": "exp8407-python-transaction-cost"
+        },
+        {
+          "provenance": [],
+          "task_id": "exp8408-native-transaction-cost"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8409_v724_retrospective_label_criterion.json",
+                "sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8.json"
+              }
+            }
+          ],
+          "task_id": "exp8409-retrospective-label-criterion"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+                "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e.json"
+              }
+            }
+          ],
+          "task_id": "exp8410-cuda-reader-qualification"
+        },
+        {
+          "provenance": [],
+          "task_id": "exp8411-bounded-qwen-canary"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8412_v724_arc_panel_qualification.json",
+                "sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb.json"
+              }
+            }
+          ],
+          "task_id": "exp8412-arc-panel-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8413_v724_board_operation_boundary.json",
+                "sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50.json"
+              }
+            }
+          ],
+          "task_id": "exp8413-board-operation-boundary"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8414_v724_gatemate_obligation.json",
+                "sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a.json"
+              }
+            }
+          ],
+          "task_id": "exp8414-gatemate-obligation"
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8415,
+      "producer_hash": "sha256:125505046358d3debe531593528da1cfd75d4cbc7d100caef850292b3b6cd9d0"
+    }
+  ],
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v725_contract_methods.py",
+      "sha256": "sha256:003a196225e345a43a3e3b17ba7a8228fc20fcdf7814f731d87c66b386b0ef10"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v725_contract_runner.py",
+      "sha256": "sha256:3d7b2239c38db310594e90847c578c377ab43f1f0f4472f23285e6c7496fdacf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py",
+      "sha256": "sha256:b261f291a36d1edc588180ac8d13dcd24bd0675a5d633038b67a88a8115800a9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v725_contract_methods_8416.py",
+      "sha256": "sha256:1746a32d538e97c43f1ea44bd35d624e0bc9b8c431521c4bcdd20c857c4f0db7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/roadmap_contract.py",
+      "sha256": "sha256:eed75373b8b00f3dc6442fbf878cc833ec7bcf44f6c258019eebcb3e89e4ea63"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py",
+      "sha256": "sha256:55b92ca0498aa0f0305ef48c85bf36116ec69a8d960dabe705ab7b23b5059897"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v709_execution.py",
+      "sha256": "sha256:07c8a183d066c1eaefed6ac721181f2bb935d1a68ef192e125cd6bb798445a11"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+    }
+  ],
+  "completed_count": 4,
+  "current_contract_ready_score": 0,
+  "current_device_probe_count": 0,
+  "duration_s": 125.000850541,
+  "excluded_count": 0,
+  "experiment_id": 8416,
+  "exposure_obligations": {
+    "minimum_per_class": 8,
+    "minimum_unexposed_question_clusters": 80,
+    "older_overlap": "unknown",
+    "public_relabeling_can_satisfy": false,
+    "ready_score": 0
+  },
+  "exposure_scope": "administrative contract; released human labels exposed; older overlap unknown",
+  "failed_count": 0,
+  "field_principles": {
+    "MODEL_SPECS": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "acceptance_gates": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "adversarial_findings": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "canonical_tasks_sha256": "Independent complete-task design digest; null when its binding is absent.",
+    "censored_count": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "cited_upstream_artifacts": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "code_config_hashes": "Pin newly owned files, test assertions and unchanged shipped readers and validators.",
+    "completed_count": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "current_contract_ready_score": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "current_device_probe_count": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "duration_s": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "excluded_count": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "experiment_id": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "exposure_obligations": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "exposure_scope": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "failed_count": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "field_principles": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "flagged_adversarial": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "future_dependencies": "Name planned producer IDs without reading absent future files or claiming they ran.",
+    "gate_check_summary": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "generalized_learning_benefit_score": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "historical_model_provenance": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "honest_verdict": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "independent_count": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "independent_eval_ready_score": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "independent_generalization_score": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "inference_substrate": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "inference_substrate_class": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "intended_count": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "literature_mapping": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "methodology_note": "Limit oracle administrative qualification to observed task objects and exposed methods.",
+    "methods_frozen_score": "Sealed methods exist; admission still requires the complete current contract and owned qualification.",
+    "methods_note_path": "Name the explanatory note published before reduction.",
+    "methods_note_sha256": "Fix exact note bytes independently of candidate summary hashes.",
+    "methods_protocol_path": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "methods_protocol_sha256": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "methods_ready_score": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "milestone": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "model_invocation_counts": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "observed_active_tasks_sha256": "Hash only the actually observed full objects; never substitute this for the absent complete design digest.",
+    "phase_spans": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "preconditions_checked": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "primitive_reference": "Bind the invocation measurement and preserved authority bytes used by fresh cold replay.",
+    "publication_output": "Name the one reader-visible primary that receives only checked terminal bytes.",
+    "random_seed": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "raw_shard_hashes": "Retain actual invocation primitives and genuine Coverage.py child database bytes.",
+    "repository_health": "Global health is explicitly unmeasured and cannot be inferred from scoped qualification.",
+    "reproducibility_checksum": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "required_checks_passed": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "rows": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "run_date": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "runtime_repair_ready_score": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "runtime_repair_receipt": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "sample_size_budget": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "scope_reduction_compliance": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "source_artifact_hashes": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "task_id": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "terminal_validation_sidecar_path": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "validation_receipts": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "verdict_class": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit.",
+    "verifier_is_oracle": "Bind this field to sealed invocation operands; qualification cannot establish scientific benefit."
+  },
+  "flagged_adversarial": false,
+  "future_dependencies": [
+    {
+      "experiment_id": 8417,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8418,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8419,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8420,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8421,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8422,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8423,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8424,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8425,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8426,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8427,
+      "status": "future_dependency_not_observation"
+    },
+    {
+      "experiment_id": 8428,
+      "status": "future_dependency_not_observation"
+    }
+  ],
+  "gate_check_summary": [
+    {
+      "artifact_field": "independent_visible_table_complete_tasks_digest",
+      "artifact_hash": "sha256:37803440c884cd8385be61a8d2068135da856008a5676bf3cc513abcae1bfbf5",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "check": "independent_visible_table_complete_tasks_digest",
+      "expected": true,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "upstream_id": "exp8416-contract-methods"
+    },
+    {
+      "artifact_field": "complete_task_count",
+      "artifact_hash": "sha256:a96efa7235fa5523618008fb794467fa4ef2c9e4c7d22ee7e32997d532109bcc",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "check": "complete_task_count",
+      "expected": 13,
+      "observed": 4,
+      "op": "==",
+      "passed": false,
+      "upstream_id": "exp8416-contract-methods"
+    },
+    {
+      "artifact_field": "supplied_causal_runtime_repair",
+      "artifact_hash": null,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/cuda-runtime-repair-receipt.json",
+      "check": "supplied_causal_runtime_repair",
+      "expected": true,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "upstream_id": "exp8416-contract-methods"
+    }
+  ],
+  "generalized_learning_benefit_score": 0,
+  "historical_model_provenance": [
+    {
+      "historical_model_provenance": [
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8182,
+          "imported_counts": {
+            "generate": 211,
+            "model_loads_attempted": 1,
+            "model_loads_completed": 1
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8184,
+          "imported_counts": {
+            "generate": 155,
+            "model_loads_attempted": 1,
+            "model_loads_completed": 1
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8153,
+          "imported_counts": {
+            "generation_calls_attempted": 432,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 432,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8155,
+          "imported_counts": {
+            "generation_calls_attempted": 256,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 256,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          }
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8402,
+      "producer_hash": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d"
+    },
+    {
+      "historical_model_provenance": [
+        {
+          "current_calls": 0,
+          "generator": "gemma-2-9b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "generator": "llama3-8b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "generator": "mistral-7b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "judge": "GPT-5-mini",
+          "kind": "cached_factorial_outputs"
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8403,
+      "producer_hash": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b"
+    },
+    {
+      "historical_model_provenance": {
+        "current_calls_imported": false,
+        "failure_layer": [
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {
+              "cuInit": 101
+            },
+            "layer": "driver",
+            "native_stderr": null
+          },
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {
+              "cudaGetDeviceCount": 101
+            },
+            "layer": "runtime",
+            "native_stderr": null
+          },
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {},
+            "layer": "native",
+            "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {
+              "cuInit": 101
+            },
+            "layer": "driver",
+            "native_stderr": null
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {
+              "cudaGetDeviceCount": 101
+            },
+            "layer": "runtime",
+            "native_stderr": null
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {},
+            "layer": "native",
+            "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+          }
+        ],
+        "imported_from": "results/experiment_8307_v717_runtime_change_boundary.json",
+        "model_invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        }
+      },
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8410,
+      "producer_hash": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e"
+    },
+    {
+      "historical_model_provenance": [
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8402_v724_historical_consumer_roots.json",
+                "sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d.json"
+              }
+            }
+          ],
+          "task_id": "exp8402-historical-consumer-roots"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8403_v724_released_question_identity.json",
+                "sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b.json"
+              }
+            }
+          ],
+          "task_id": "exp8403-released-question-identity"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8404_v724_direct_state_qualification.json",
+                "sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67.json"
+              }
+            }
+          ],
+          "task_id": "exp8404-direct-state-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8405_v724_native_parity_qualification.json",
+                "sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270.json"
+              }
+            }
+          ],
+          "task_id": "exp8405-native-parity-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8406_v724_continuous_direct_learning.json",
+                "sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a.json"
+              }
+            }
+          ],
+          "task_id": "exp8406-continuous-direct-learning"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8407_v724_python_transaction_cost.json",
+                "sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f.json"
+              }
+            }
+          ],
+          "task_id": "exp8407-python-transaction-cost"
+        },
+        {
+          "provenance": [],
+          "task_id": "exp8408-native-transaction-cost"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8409_v724_retrospective_label_criterion.json",
+                "sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8.json"
+              }
+            }
+          ],
+          "task_id": "exp8409-retrospective-label-criterion"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+                "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e.json"
+              }
+            }
+          ],
+          "task_id": "exp8410-cuda-reader-qualification"
+        },
+        {
+          "provenance": [],
+          "task_id": "exp8411-bounded-qwen-canary"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8412_v724_arc_panel_qualification.json",
+                "sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb.json"
+              }
+            }
+          ],
+          "task_id": "exp8412-arc-panel-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8413_v724_board_operation_boundary.json",
+                "sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50.json"
+              }
+            }
+          ],
+          "task_id": "exp8413-board-operation-boundary"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8414_v724_gatemate_obligation.json",
+                "sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a.json"
+              }
+            }
+          ],
+          "task_id": "exp8414-gatemate-obligation"
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8415,
+      "producer_hash": "sha256:125505046358d3debe531593528da1cfd75d4cbc7d100caef850292b3b6cd9d0"
+    }
+  ],
+  "honest_verdict": "complete_blocked_v725_contract_methods",
+  "independent_count": 0,
+  "independent_eval_ready_score": 0,
+  "independent_generalization_score": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "intended_count": 13,
+  "literature_mapping": [
+    {
+      "limits": "Public labels remain retrospective; no current Qwen skill",
+      "method": "Human factuality target distinct from reference support",
+      "source": "Labeling Problem",
+      "tasks": [
+        8417,
+        8418,
+        8419
+      ],
+      "url": "https://arxiv.org/abs/2610.08026"
+    },
+    {
+      "limits": "Alias-based paper labels are not independently adjudicated truth",
+      "method": "Freeze dataset/generator strata independently of detector scores",
+      "source": "Detectability Gap",
+      "tasks": [
+        8417,
+        8419
+      ],
+      "url": "https://arxiv.org/html/2609.35860v1"
+    },
+    {
+      "limits": "FPGA paper is not KV260 compatibility or local speed evidence",
+      "method": "Shipped cubic basis and sparse coefficient updates with retention checks",
+      "source": "Online KAN",
+      "tasks": [
+        8418,
+        8420
+      ],
+      "url": "https://arxiv.org/abs/2602.02056"
+    },
+    {
+      "limits": "No convex regret theorem transfer to this adaptive empirical learner",
+      "method": "Uniform admission with explicit finite capacity and inclusion probability",
+      "source": "Capacity-constrained delayed OCO",
+      "tasks": [
+        8420,
+        8421
+      ],
+      "url": "https://arxiv.org/html/2606.11711v1"
+    }
+  ],
+  "methodology_note": "Oracle contract custody only; 4 actual task objects, 9 absent. Sealed retrospective methods grant no semantic or independent benefit.",
+  "methods_frozen_score": 1,
+  "methods_note_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/v725-methods.md",
+  "methods_note_sha256": "sha256:bb37ae02133e8a3f71ca7cbf231f6907083007a2890e3a65db09d1db13731808",
+  "methods_protocol_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v725-methods-protocol.json",
+  "methods_protocol_sha256": "sha256:9bf6669dde2b92a3aea196b036f59f7bfbb5b72d4bd53c1e013f42c5899f6a48",
+  "methods_ready_score": 0,
+  "milestone": "2026.10.725",
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "observed_active_tasks_sha256": "c31308fea7c831394ef9d1b2025d3f475df37bbcd8aef62e46b3e4f84fb508d4",
+  "phase_spans": [
+    {
+      "duration_s": 0.018982433,
+      "name": "preconditions_authority_methods"
+    },
+    {
+      "duration_s": 93.370541043,
+      "name": "owned_tests"
+    },
+    {
+      "duration_s": 21.09982628,
+      "name": "private_E2E018_consumers"
+    },
+    {
+      "duration_s": 0.06416325,
+      "name": "coverage_combine"
+    },
+    {
+      "duration_s": 0.115226895,
+      "name": "coverage_report"
+    },
+    {
+      "duration_s": 0.116516465,
+      "name": "coverage_json"
+    },
+    {
+      "duration_s": 0.016200541,
+      "name": "ruff_check"
+    },
+    {
+      "duration_s": 0.015575156,
+      "name": "ruff_format"
+    },
+    {
+      "duration_s": 0.114188594,
+      "name": "strict_mypy"
+    },
+    {
+      "duration_s": 0.033380409,
+      "name": "spec_coverage"
+    },
+    {
+      "duration_s": 1.817895432,
+      "name": "cold_valid"
+    },
+    {
+      "duration_s": 1.817795557,
+      "name": "cold_negative"
+    },
+    {
+      "duration_s": 1.817496858,
+      "name": "cold_rehashed_tamper"
+    },
+    {
+      "duration_s": 1.819288955,
+      "name": "missing"
+    },
+    {
+      "duration_s": 1.868577277,
+      "name": "error"
+    },
+    {
+      "duration_s": 0.616550731,
+      "name": "adversarial_preterminal"
+    },
+    {
+      "duration_s": 0.03235295,
+      "name": "all_findings_accounted"
+    }
+  ],
+  "preconditions_checked": {
+    "available_memory_bytes": 125052641280,
+    "current_llm_calls": 0,
+    "filesystem": "xfs",
+    "free_disk_bytes": 334722813952,
+    "heartbeat_s": 20,
+    "measurement_cap_s": 3000,
+    "minimum_memory_bytes": 536870912,
+    "no_model_load": true,
+    "private_disk_backed_scratch": true,
+    "scratch_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855",
+    "time_budget_s": 4800,
+    "tool_paths": {
+      "coverage": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "mypy": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "pytest": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "ruff": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff"
+    },
+    "validation_reserve_s": 1200
+  },
+  "primitive_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/measurement.json",
+    "sha256": "sha256:579a2265ca9f7dc248143c619923082fe8d0a036f5668d39f5b5ed74456c032c"
+  },
+  "publication_output": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8416_v725_contract_methods.json",
+  "random_seed": 7258416,
+  "raw_shard_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/measurement.json",
+      "sha256": "sha256:579a2265ca9f7dc248143c619923082fe8d0a036f5668d39f5b5ed74456c032c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/coverage_shards/.coverage",
+      "sha256": "sha256:b936aa09a8300a95b9a46c1ea207ea394146206da910349af1844d61e48ba8c4"
+    }
+  ],
+  "repository_health": {
+    "reason": "scoped task; global health separate",
+    "status": "not_run"
+  },
+  "reproducibility_checksum": "sha256:84dccd7f0fea3c24b6b2f655847d959c34d66321d4d9551243396ee2ee85b64b",
+  "required_checks_passed": true,
+  "rows": [
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": false,
+      "checks": {
+        "activated_task_present": true,
+        "independent_design_contract": false,
+        "sequence": true
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8416",
+      "matched": false,
+      "missing_reason": "independent_design_binding_absent",
+      "order": 1,
+      "raw_denominator": 3,
+      "raw_numerator": 2,
+      "seed": null,
+      "status": "completed",
+      "unit_id": "exp8416-contract-methods"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": false,
+      "checks": {
+        "activated_task_present": true,
+        "independent_design_contract": false,
+        "sequence": true
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8417",
+      "matched": false,
+      "missing_reason": "independent_design_binding_absent",
+      "order": 2,
+      "raw_denominator": 3,
+      "raw_numerator": 2,
+      "seed": null,
+      "status": "completed",
+      "unit_id": "exp8417-criterion-feature-panel"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": false,
+      "checks": {
+        "activated_task_present": true,
+        "independent_design_contract": false,
+        "sequence": true
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8418",
+      "matched": false,
+      "missing_reason": "independent_design_binding_absent",
+      "order": 3,
+      "raw_denominator": 3,
+      "raw_numerator": 2,
+      "seed": null,
+      "status": "completed",
+      "unit_id": "exp8418-criterion-energy-fit"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": false,
+      "checks": {
+        "activated_task_present": true,
+        "independent_design_contract": false,
+        "sequence": true
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8419",
+      "matched": false,
+      "missing_reason": "independent_design_binding_absent",
+      "order": 4,
+      "raw_denominator": 3,
+      "raw_numerator": 2,
+      "seed": null,
+      "status": "completed",
+      "unit_id": "exp8419-criterion-decision-audit"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8420",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 5,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8420"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8421",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 6,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8421"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8422",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 7,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8422"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8423",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 8,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8423"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8424",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 9,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8424"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8425",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 10,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8425"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8426",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 11,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8426"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8427",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 12,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8427"
+    },
+    {
+      "absolute_metric": 0,
+      "arm": "active_contract",
+      "censored": true,
+      "checks": {
+        "activated_task_present": false,
+        "independent_design_contract": false,
+        "sequence": false
+      },
+      "effective_independent_groups": 0,
+      "excluded": false,
+      "family": "exp8428",
+      "matched": false,
+      "missing_reason": "complete_task_object_absent",
+      "order": 13,
+      "raw_denominator": 3,
+      "raw_numerator": 0,
+      "seed": null,
+      "status": "unstarted",
+      "unit_id": "exp8428"
+    }
+  ],
+  "run_date": "20261011",
+  "runtime_repair_ready_score": 0,
+  "runtime_repair_receipt": null,
+  "sample_size_budget": {
+    "independent_questions": 0,
+    "intended_task_slots": 13,
+    "retrospective_questions_reserved": 300,
+    "seeds_and_siblings_are_not_independent": true
+  },
+  "scope_reduction_compliance": {
+    "old_111_directive_completed": true,
+    "reopened": false,
+    "retired_tracks": [
+      "GRPO",
+      "puzzle",
+      "energy_as_generator",
+      "external_text_reranking"
+    ]
+  },
+  "source_artifact_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/0.bin",
+      "sha256": "sha256:a96efa7235fa5523618008fb794467fa4ef2c9e4c7d22ee7e32997d532109bcc",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/1.bin",
+      "sha256": "sha256:37803440c884cd8385be61a8d2068135da856008a5676bf3cc513abcae1bfbf5",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/2.bin",
+      "sha256": "sha256:04582ef7895085546a8107225e7887072b886be887aefa6dd7f03f3b2c9a6ab6",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-v724-preserved-20261011.md"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/3.bin",
+      "sha256": "sha256:853709123024de763e96dd688e819f0430205ae6d97d6561a2b95cca23b81c6f",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v717-local-learning-protocol.json"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/4.bin",
+      "sha256": "sha256:d4441f7619a1d349a4958038af93c36f2c4df97b31fd32278c4ea6def7c7b4eb",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v721-deployment-protocol.json"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/5.bin",
+      "sha256": "sha256:7de0337029fdf040efa16ce81ce1df4467597bea9dbba9bc86ed01a1c8eeb89d",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v724-qualified-service-protocol.json"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/6.bin",
+      "sha256": "sha256:251f5d01bb2c7909cf31b354960df3f4abbc78f296a2422f320eb5b65d6a960f",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/7.bin",
+      "sha256": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/8.bin",
+      "sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8402_v724_historical_consumer_roots.json"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/9.bin",
+      "sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8403_v724_released_question_identity.json"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/10.bin",
+      "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/frozen/11.bin",
+      "sha256": "sha256:125505046358d3debe531593528da1cfd75d4cbc7d100caef850292b3b6cd9d0",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8415_v724_capstone.json"
+    }
+  ],
+  "task_id": "exp8416-contract-methods",
+  "terminal_validation_sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/terminal_validation.json",
+  "validation_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v725_contract_methods_8416.py",
+        "--basetemp=/var/tmp/exp8416-owned-33w7vfq3/owned-tests"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_v725_contract_methods_8416.py --basetemp=/var/tmp/exp8416-owned-33w7vfq3/owned-tests",
+      "deadline_s": 180,
+      "duration_s": 93.370541043,
+      "ended_monotonic_ns": 66294380387340,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/owned_tests.stdout",
+      "log_sha256": "sha256:fb8c7870d222e525057b4c77c2dca24f824d6fa1ac7aa506329f9721bd778732",
+      "name": "owned_tests",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66201009846297,
+      "started_wall_ns": 1791746445789704319,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/owned_tests.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/owned_tests.stdout",
+      "stdout_sha256": "sha256:fb8c7870d222e525057b4c77c2dca24f824d6fa1ac7aa506329f9721bd778732",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/var/tmp/exp8416-owned-33w7vfq3/consumers"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q tests/python/test_experiment_7891_v685_authority_lifecycle.py tests/python/test_primary_publication_7928.py tests/python/test_current_work_receipt.py --basetemp=/var/tmp/exp8416-owned-33w7vfq3/consumers",
+      "deadline_s": 240,
+      "duration_s": 21.09982628,
+      "ended_monotonic_ns": 66315482262457,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/private_E2E018_consumers.stdout",
+      "log_sha256": "sha256:cae383c5d078d2a5cffc9302021b48b386c0a4ec6c460050f6a03f9c2625a432",
+      "name": "private_E2E018_consumers",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66294382436177,
+      "started_wall_ns": 1791746539162295231,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/private_E2E018_consumers.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/private_E2E018_consumers.stdout",
+      "stdout_sha256": "sha256:cae383c5d078d2a5cffc9302021b48b386c0a4ec6c460050f6a03f9c2625a432",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini",
+        "--keep"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini --keep",
+      "deadline_s": 30,
+      "duration_s": 0.06416325,
+      "ended_monotonic_ns": 66315547946753,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_combine.stdout",
+      "log_sha256": "sha256:9410518713be96ba1ff082330bf678dadd64345fd02d839d6dd81f3c570a2bf0",
+      "name": "coverage_combine",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66315483783503,
+      "started_wall_ns": 1791746560263641435,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_combine.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_combine.stdout",
+      "stdout_sha256": "sha256:9410518713be96ba1ff082330bf678dadd64345fd02d839d6dd81f3c570a2bf0",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini --show-missing --fail-under=100",
+      "deadline_s": 30,
+      "duration_s": 0.115226895,
+      "ended_monotonic_ns": 66315664244860,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_report.stdout",
+      "log_sha256": "sha256:7af807f5d750007f1627d1fee3f28f50f65bbcfed3f937d69ee8548579686f4c",
+      "name": "coverage_report",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66315549017965,
+      "started_wall_ns": 1791746560328876117,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_report.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_report.stdout",
+      "stdout_sha256": "sha256:7af807f5d750007f1627d1fee3f28f50f65bbcfed3f937d69ee8548579686f4c",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini",
+        "-o",
+        "/var/tmp/exp8416-owned-33w7vfq3/coverage.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --rcfile=/var/tmp/exp8416-owned-33w7vfq3/coverage.ini -o /var/tmp/exp8416-owned-33w7vfq3/coverage.json",
+      "deadline_s": 30,
+      "duration_s": 0.116516465,
+      "ended_monotonic_ns": 66315936834384,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_json.stdout",
+      "log_sha256": "sha256:671738f18418c5555e9b5c452586269a59c13259ca4403df84b181da5cc00e2e",
+      "name": "coverage_json",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66315820317919,
+      "started_wall_ns": 1791746560600176442,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_json.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/coverage_json.stdout",
+      "stdout_sha256": "sha256:671738f18418c5555e9b5c452586269a59c13259ca4403df84b181da5cc00e2e",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v725_contract_methods.py",
+        "python/carnot/reporting/v725_contract_runner.py",
+        "scripts/experiments/experiment_8416_v725_contract_methods.py",
+        "tests/python/test_v725_contract_methods_8416.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/v725_contract_methods.py python/carnot/reporting/v725_contract_runner.py scripts/experiments/experiment_8416_v725_contract_methods.py tests/python/test_v725_contract_methods_8416.py",
+      "deadline_s": 30,
+      "duration_s": 0.016200541,
+      "ended_monotonic_ns": 66315954443870,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/ruff_check.stdout",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66315938243329,
+      "started_wall_ns": 1791746560718101622,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/ruff_check.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/ruff_check.stdout",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v725_contract_methods.py",
+        "python/carnot/reporting/v725_contract_runner.py",
+        "scripts/experiments/experiment_8416_v725_contract_methods.py",
+        "tests/python/test_v725_contract_methods_8416.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/v725_contract_methods.py python/carnot/reporting/v725_contract_runner.py scripts/experiments/experiment_8416_v725_contract_methods.py tests/python/test_v725_contract_methods_8416.py",
+      "deadline_s": 30,
+      "duration_s": 0.015575156,
+      "ended_monotonic_ns": 66315970649970,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/ruff_format.stdout",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66315955074814,
+      "started_wall_ns": 1791746560734932946,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/ruff_format.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/ruff_format.stdout",
+      "stdout_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/v725_contract_methods.py",
+        "python/carnot/reporting/v725_contract_runner.py",
+        "scripts/experiments/experiment_8416_v725_contract_methods.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --config-file=/dev/null --strict --follow-imports=skip --ignore-missing-imports python/carnot/reporting/v725_contract_methods.py python/carnot/reporting/v725_contract_runner.py scripts/experiments/experiment_8416_v725_contract_methods.py",
+      "deadline_s": 60,
+      "duration_s": 0.114188594,
+      "ended_monotonic_ns": 66316085314628,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/strict_mypy.stdout",
+      "log_sha256": "sha256:8228fcc5ce46d42d01caf3cd941f4e9c5f2bcc372bb5b147a2f0572d2dd675a8",
+      "name": "strict_mypy",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66315971126034,
+      "started_wall_ns": 1791746560750983815,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/strict_mypy.stderr",
+      "stderr_sha256": "sha256:7e8d701e15061b0e9a0dda89e1f9efa18bd1b9f2645e8367af04cb7cb07bc4b9",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/strict_mypy.stdout",
+      "stdout_sha256": "sha256:8228fcc5ce46d42d01caf3cd941f4e9c5f2bcc372bb5b147a2f0572d2dd675a8",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_v725_contract_methods_8416.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py --files tests/python/test_v725_contract_methods_8416.py",
+      "deadline_s": 30,
+      "duration_s": 0.033380409,
+      "ended_monotonic_ns": 66316120210833,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/spec_coverage.stdout",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66316086830424,
+      "started_wall_ns": 1791746560866688837,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/spec_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validation/spec_coverage.stdout",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/valid.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/valid.json",
+      "deadline_s": 60,
+      "duration_s": 1.817895432,
+      "ended_monotonic_ns": 66317972731081,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_valid.stdout",
+      "log_sha256": "sha256:ed011844f30e62b230b235c530d751fdfa8eb7a95819823f89f4a27c7920dfb0",
+      "name": "cold_valid",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66316154835649,
+      "started_wall_ns": 1791746560934693740,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_valid.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_valid.stdout",
+      "stdout_sha256": "sha256:ed011844f30e62b230b235c530d751fdfa8eb7a95819823f89f4a27c7920dfb0",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/negative.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/negative.json",
+      "deadline_s": 60,
+      "duration_s": 1.817795557,
+      "ended_monotonic_ns": 66319794081253,
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_negative.stdout",
+      "log_sha256": "sha256:180b0d6a2944ba5e5e45e1d1297346db8644205373eb696ba1f6c261e869563b",
+      "name": "cold_negative",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66317976285696,
+      "started_wall_ns": 1791746562756144279,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_negative.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_negative.stdout",
+      "stdout_sha256": "sha256:180b0d6a2944ba5e5e45e1d1297346db8644205373eb696ba1f6c261e869563b",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/rehashed_tamper.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/rehashed_tamper.json",
+      "deadline_s": 60,
+      "duration_s": 1.817496858,
+      "ended_monotonic_ns": 66321614212709,
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_rehashed_tamper.stdout",
+      "log_sha256": "sha256:180b0d6a2944ba5e5e45e1d1297346db8644205373eb696ba1f6c261e869563b",
+      "name": "cold_rehashed_tamper",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66319796715851,
+      "started_wall_ns": 1791746564576574103,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_rehashed_tamper.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/cold/cold_rehashed_tamper.stdout",
+      "stdout_sha256": "sha256:180b0d6a2944ba5e5e45e1d1297346db8644205373eb696ba1f6c261e869563b",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/missing.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/missing.json",
+      "deadline_s": 60,
+      "duration_s": 1.819288955,
+      "ended_monotonic_ns": 66323435416049,
+      "exit_code": 1,
+      "expected_exit": 1,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/controls/missing.stdout",
+      "log_sha256": "sha256:180b0d6a2944ba5e5e45e1d1297346db8644205373eb696ba1f6c261e869563b",
+      "name": "missing",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66321616127094,
+      "started_wall_ns": 1791746566395985857,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/controls/missing.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/controls/missing.stdout",
+      "stdout_sha256": "sha256:180b0d6a2944ba5e5e45e1d1297346db8644205373eb696ba1f6c261e869563b",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 7,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py",
+        "--deliberate-error"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8416_v725_contract_methods.py --deliberate-error",
+      "deadline_s": 60,
+      "duration_s": 1.868577277,
+      "ended_monotonic_ns": 66325305282928,
+      "exit_code": 7,
+      "expected_exit": 7,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/controls/error.stdout",
+      "log_sha256": "sha256:b5d0a0eb77cd2959603725358b5ca093cc93c65fa65bc7a4552bd3c261a15ae9",
+      "name": "error",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66323436705651,
+      "started_wall_ns": 1791746568216563883,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/controls/error.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/controls/error.stdout",
+      "stdout_sha256": "sha256:b5d0a0eb77cd2959603725358b5ca093cc93c65fa65bc7a4552bd3c261a15ae9",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/preterminal.json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/preterminal.json",
+      "deadline_s": 60,
+      "duration_s": 0.616550731,
+      "ended_monotonic_ns": 66325953332535,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/adversarial_preterminal.stdout",
+      "log_sha256": "sha256:82e0e18f7a09b0ba78c2e52071b72b9d6f211dc04c5b291d2216595fa398cb61",
+      "name": "adversarial_preterminal",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66325336781804,
+      "started_wall_ns": 1791746570116640167,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/adversarial_preterminal.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/adversarial_preterminal.stdout",
+      "stdout_sha256": "sha256:82e0e18f7a09b0ba78c2e52071b72b9d6f211dc04c5b291d2216595fa398cb61",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib; reports=json.loads(pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/adversarial_preterminal.stdout').read_bytes())['reports']; assert not any(r.get('flags') for r in reports); print('all findings retained; none unresolved')"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib; reports=json.loads(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/adversarial_preterminal.stdout'\"'\"').read_bytes())['\"'\"'reports'\"'\"']; assert not any(r.get('\"'\"'flags'\"'\"') for r in reports); print('\"'\"'all findings retained; none unresolved'\"'\"')'",
+      "deadline_s": 30,
+      "duration_s": 0.03235295,
+      "ended_monotonic_ns": 66325987088790,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/all_findings_accounted.stdout",
+      "log_sha256": "sha256:0bd87d79050e09bebe18f46297b0e59b65c4f1d55328d9d3005f0070f60ab65e",
+      "name": "all_findings_accounted",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 66325954735840,
+      "started_wall_ns": 1791746570734594493,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/all_findings_accounted.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8416_v725_contract_methods/invocations/1791746445764936855/validators/all_findings_accounted.stdout",
+      "stdout_sha256": "sha256:0bd87d79050e09bebe18f46297b0e59b65c4f1d55328d9d3005f0070f60ab65e",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
