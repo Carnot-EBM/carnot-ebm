@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-11 — Operational retrospective for milestone 2026.10.724
+
+- Wrote `results/operational_retro_2026_10_724.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.724`. Authoritative disk-mtime fallback data records 12 experiments completed (0 compute-bound, 12 synthesis-only) across 181.5 total wall-time minutes (average 15 minutes per experiment).
+- Execution wall time was led by synthesis tasks: 'Measure complete durable Python transactions with fixed work units' (62.23 minutes), 'Bind fourteen tasks and repair historical consumer input isolation' (32.68 minutes), 'Qualify direct state after immutable consumer and barrier coverage repairs' (25.32 minutes), 'Reconcile fourteen terminal outcomes with immutable historical consumers' (21.24 minutes), and 'Measure causal small-head updates through durable direct serving' (16.49 minutes).
+- Point-in-time GPU monitor polling observed 0% utilization on both RTX 3090 GPUs with 4MB allocated outside active runs; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for Python transaction measurements, task binding and consumer isolation, direct state qualification, and fourteen-outcome reconciliation when upstream dependencies remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-11 — Fix CUDA reader admission under the conductor environment
 
 - Preserve full environment observations while excluding CUDA_HOME/CUDA_PATH

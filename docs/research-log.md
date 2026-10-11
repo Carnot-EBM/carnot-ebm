@@ -7394,3 +7394,11 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Operational efficiency across 9 completed experiments (0 compute-bound, 9 synthesis-only) in 91 minutes of milestone wall time.
 - key result: honest operational negative — 9 synthesis-only experiments completed in 91.2 wall-time minutes (averaging 10 minutes per experiment) led by direct state qualification (36.77 min), task authority binding and replay failure isolation (20.73 min), fourteen-outcome reconciliation (13.13 min), ARC supervisor behavior measurement (4.38 min), and human label custody acquisition (4.21 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization on the dual RTX 3090 GPUs reflecting expected idle behavior for non-GPU synthesis workloads.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.724
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 12 completed experiments (0 compute-bound, 12 synthesis-only) in 181 minutes of milestone wall time.
+- key result: honest operational negative — 12 synthesis-only experiments completed in 181.5 wall-time minutes (averaging 15 minutes per experiment) led by Python transaction measurement (62.23 min), task binding and consumer input isolation repair (32.68 min), direct state qualification (25.32 min), fourteen-outcome reconciliation (21.24 min), and causal small-head update measurement (16.49 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization on both RTX 3090 GPUs reflecting expected idle behavior for non-GPU synthesis workloads.
+- acceptance: no data available this milestone
+

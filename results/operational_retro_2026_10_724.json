@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.724",
+  "generated_at": "2026-10-11T16:49:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 181.5,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete durable Python transactions with fixed work units",
+      "duration_minutes": 62.23,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and repair historical consumer input isolation",
+      "duration_minutes": 32.68,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify direct state after immutable consumer and barrier coverage repairs",
+      "duration_minutes": 25.32,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen terminal outcomes with immutable historical consumers",
+      "duration_minutes": 21.24,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure causal small-head updates through durable direct serving",
+      "duration_minutes": 16.49,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.724 completed 12 experiments (0 compute-bound, 12 synthesis-only) across 181.5 total wall-time minutes (averaging 15 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by synthesis-only tasks—measuring complete durable Python transactions with fixed work units (62.23 minutes), binding fourteen tasks and repairing historical consumer input isolation (32.68 minutes), qualifying direct state after immutable consumer and barrier coverage repairs (25.32 minutes), reconciling fourteen terminal outcomes with immutable historical consumers (21.24 minutes), and measuring causal small-head updates through durable direct serving (16.49 minutes). With compute_bound_experiments_count at 0 and gpu_idle_on_compute_bound_tasks recorded as null, the point-in-time monitor reading of 0% GPU utilization (4MB allocated) on both NVIDIA GeForce RTX 3090 GPUs represents expected idle behavior for non-GPU synthesis workloads rather than an accelerator bottleneck, and no multi-model parallel workload required DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 12 completed experiments totaling 181.5 wall-time minutes), led by Python transaction measurement (62.23 minutes), task binding and input isolation repair (32.68 minutes), direct state qualification (25.32 minutes), fourteen-outcome reconciliation (21.24 minutes), and causal small-head update measurement (16.49 minutes).",
+    "Long-running synthesis tasks executed serially without incremental receipt caching or evidence memoization when upstream inputs and dependencies were unchanged.",
+    "Individual experiment receipts lack granular intra-task sub-phase telemetry (such as setup, contract validation, transaction execution, and artifact serialization) to localize specific execution latency within multi-minute synthesis runs.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for multi-minute synthesis tasks (Python transaction measurements, task binding and consumer isolation, direct state qualification, and outcome reconciliation) when upstream dependencies remain unchanged.",
+    "Instrument multi-minute synthesis tasks with granular sub-phase execution timers (setup, contract checks, transaction execution, artifact serialization) to pinpoint intra-task latency.",
+    "Persist explicit synchronous execution timestamps (start, completion, duration) directly into experiment receipts to eliminate dependence on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Sample continuous in-flight accelerator utilization and memory telemetry during compute-bound execution intervals rather than relying solely on post-run point-in-time GPU monitor polling."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for long-running synthesis workflows (Python transaction measurements, task binding, direct state qualification, and fourteen-outcome reconciliation) when upstream artifacts are unchanged.",
+    "Instrument long-running synthesis tasks with granular intra-task phase timers (setup, validation, execution, serialization).",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Across 12 completed experiments and 181.5 minutes of milestone wall time, execution was entirely dominated by synthesis-only tasks averaging 15 minutes per experiment, with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. Observed 0% GPU utilization (4MB allocated) on both NVIDIA GeForce RTX 3090 GPUs reflected expected idle state for non-GPU synthesis workloads rather than an accelerator bottleneck, correctly bypassing DualGPURunner dispatch. Operational improvements should focus on incremental receipt caching for unchanged upstream artifacts and granular intra-phase telemetry for multi-minute synthesis tasks, with estimated time savings conservatively held at 0% until empirically validated."
+}
