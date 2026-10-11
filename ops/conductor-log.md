@@ -20042,3 +20042,4 @@ code |
 | 2026-10-11 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_inference_substrate age-week 2: OPEN 14 days: S |
 | 2026-10-11 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_typed_invocation_evidence age-week 2: OPEN 14 days: SILE |
 | 2026-10-11 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verifier_scoring_only age-week 2: OPEN 14 days: REAL_ |
+| 2026-10-11 00:27 UTC | Map complete transactions to KV260 operations and  | OK | 93 passed, 1 warning in 71.29s (0:01:11) |
