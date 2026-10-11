@@ -98591,3 +98591,27 @@ Implementation for REQ-REPORT-8412: the new qualification module and thin direct
 CLI reuse the shipped collector and isolated live wrapper. The receipt is
 `results/experiment_8412_v724_arc_panel_qualification.json`; primitive evidence
 and preserved qualification attempts stay below its `results/raw/` directory.
+## REQ-REPORT-8413: Map qualified transaction costs without enlarging board scope
+
+Authenticate the complete V724 design and task, the qualified Exp8399 reader,
+and original Exp8259 terminal dispatch hashes. Preserve every frozen protocol
+and receipt. Optional Exp8407/8408 costs require their own terminal checks and
+authenticated primitive clocks; missing costs and transfers remain unavailable.
+KV260 supports quadratic Ising with k_max<=5, without a spline, calibration or
+fsync kernel. An eligible fraction requires complete measured stages and an
+actual supported-operation mapping. Preserve PolarFire board-local Linux CPU
+execution, zero current LLM calls and device commands, zero generalization and
+learning benefit. No purchase is required. Keep H1=-0.00390625 and H2=0 closed.
+
+### SCENARIO-REPORT-8413-BOUNDARY
+
+Complete unsupported costs yield zero eligible operations. Missing clocks or
+transferred-byte evidence remain null. Qualified Python primitives are reduced
+through the shipped reducer; a native pre-gate receipt is not a cost primary.
+
+### SCENARIO-REPORT-8413-REPLAY
+
+Cold replay authenticates sealed operands and independently recomputes rows.
+Missing input, source drift, deliberate error and self-consistently rehashed
+task, dispatch or summary changes are rejected. External absence is blocked;
+owned validation failure is disqualified. Conductor owns ops reconciliation.

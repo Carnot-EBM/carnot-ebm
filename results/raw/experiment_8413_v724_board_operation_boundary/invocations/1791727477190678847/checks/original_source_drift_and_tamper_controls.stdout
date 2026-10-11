@@ -1,0 +1,43 @@
+.........F..                                                             [100%]
+=================================== FAILURES ===================================
+_________________________ test_real_cli_and_consumers __________________________
+
+tmp_path = PosixPath('/home/ianblenke/.cache/carnot-exp8413-private/invocation-5g33h3dn/original/test_real_cli_and_consumers0')
+
+    def test_real_cli_and_consumers(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-8399-CONTROLS: actual children check publication and rejection."""
+        from carnot.reporting.primary_publication import reader_receipt
+    
+        cli = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        output = tmp_path / (e.NAME + ".json")
+        for args, code in [
+            (["--private-e2e", "--output", str(output)], 0),
+            (["--cold-replay", str(output)], 0),
+            (["--cold-replay", str(tmp_path / "missing")], 1),
+            (["--private-e2e"], 2),
+            (["--date", "20261009"], 2),
+        ]:
+            ran = subprocess.run([*cli, *args], capture_output=True, text=True, timeout=120)
+            assert ran.returncode == code, ran.stdout + ran.stderr
+        value = json.loads(output.read_bytes())
+        assert (
+            value["required_checks_passed"]
+            and Path(value["terminal_validation_sidecar_path"]).is_file()
+        )
+>       assert reader_receipt(e.TASK, tmp_path, field="board_reader_ready_score")["passed"]
+E       assert False
+
+tests/python/test_board_operation_boundary_8399.py:123: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_board_operation_boundary_8399.py::test_real_cli_and_consumers
+1 failed, 11 passed, 2 warnings in 56.81s

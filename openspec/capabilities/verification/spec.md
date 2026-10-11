@@ -53592,3 +53592,22 @@ Implementation for REQ-VERIFY-8412: nested-parent and unrelated-roadmap
 regressions preserve the frozen historical closure. The parent repair passes
 all nineteen unchanged wrapper tests. Qualification retains real subprocess
 coverage shards, scoped validation commands and terminal validator reports.
+## REQ-VERIFY-8413: Qualify the board reader through bounded private children
+
+Historical dependency aliases SHALL propagate into the original CLI children,
+including their nested cold-replay validators, without changing assertions.
+
+Freeze scoped tests, Ruff check/format, strict mypy, spec tracing and genuine
+100 percent newly owned statement coverage before measurement. Use private
+disk-backed scratch, serial pytest with default addopts cleared, real child
+Coverage.py shards and private E2E-018. Preserve the original source-drift and
+tamper controls and historical dates. New runner accepts 20261011, prints
+flushed progress, polls within sixty seconds and has a 4800-second task cap.
+Unchanged primary publication, adversarial verifier and strict row consistency
+validate the exact terminal bytes before atomic publication; retain findings.
+
+### SCENARIO-VERIFY-8413-CONTROLS
+
+Real private CLI children accept positive and missing-source blocked receipts,
+reject missing replay input and deliberate error, and disqualify owned failure.
+Current mutable roadmap files cannot change frozen historical evidence.
