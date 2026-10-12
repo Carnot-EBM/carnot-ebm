@@ -52472,3 +52472,99 @@ Selection: isolate source information from calibration, change the delayed
 update objective under equal feedback, and test durable service representation.
 Independent factuality still needs new disjoint adjudicated questions. Do not
 relabel the exposed 300-question panel as independent or retrain the generator.
+
+## 2026-10-12 — V728 planning scan: finish unmeasured tests with complete authority
+
+Recorded before the V728 experiment design. V727's fourteen-slot schedule had
+six blocked producer artifacts and eight skipped slots. Its design ended in
+Phase 1 without the required task table, full JSON objects or digest. That is
+an execution-contract failure, not a negative source-information or learning
+result. The sources below motivate methods; they do not supply local results.
+
+### New leads and selected methods
+
+- **New: VeriHarness**, Zhang et al., October 1, 2026,
+  [author paper](https://arxiv.org/abs/2610.00972), discovered through
+  [Hugging Face Papers](https://huggingface.co/papers/2610.00972).
+  The authors check both disagreement and consensus against workspace evidence,
+  then use failure feedback to improve verification skills. Local use: a bounded
+  source-evidence canary should include a plausible shared wrong claim and an
+  explicit contradictory source, with traceable evidence spans or abstention.
+  This is a small evidence-use test, not reproduction of their agent or scores.
+- **New: SIFT**, Mohammad et al., October 3, 2026,
+  [author paper](https://arxiv.org/abs/2610.04594), discovered through
+  [Hugging Face Papers](https://huggingface.co/papers/2610.04594).
+  The authors distinguish detector variability from distribution shift and
+  report that matched seed ensembles reduce their method's advantage. Local
+  use: retain every seed, compare repeat stability, and report selective risk
+  at matched coverage. Deterministic duplicate fits must not inflate support.
+  Carnot's source-feature audit does not implement their hidden-state detector
+  or inherit their selective-risk theorem.
+- **Rechecked: proper-score decomposition**, Charpentier and Fernandes Machado,
+  March 2026, [paper](https://arxiv.org/abs/2603.15232) and
+  [methods](https://arxiv.org/html/2603.15232v2). Distinguish information in source
+  features from flexible recalibration of an existing scalar. Compare scalar
+  and full splines, plus an equal-parameter source permutation control. This
+  finite comparison is not an estimate of the population decomposition.
+- **Rechecked: Calibeating Made Simple**, Chen et al., March 2026,
+  [methods](https://arxiv.org/html/2603.22167v1). Proper-loss online prediction
+  motivates an objective-aligned Brier update with equal delayed feedback.
+  A nonlinear spline gradient is not their algorithm; no regret bound transfers.
+- **Rechecked: Online KAN**, Hoang, Gupta and Harris, June 2026 revision,
+  [paper](https://arxiv.org/abs/2602.02056), uses local spline support for sparse
+  online updates. Qualify the derivative and durable state separately before
+  measuring later prediction loss. The authors' FPGA implementation does not
+  establish the installed KV260 bitstream's operation support.
+- **Rechecked: capacity-constrained delayed OCO**, June 2026,
+  [paper](https://arxiv.org/abs/2606.11711). Retain bounded feedback admission
+  and causal release order. Do not repeat the already null FIFO/uniform contrast.
+- **Rechecked: FPGA–ASIC Ising co-design**, Yin et al., 2026,
+  [paper](https://arxiv.org/abs/2602.15985). Complete system costs include host
+  work and transfers. V726's own measurements make persistence the next local
+  target. Compare durable storage representations with identical work and
+  acknowledgments before proposing a hardware speedup.
+
+### Coverage of the remaining requested primary topics
+
+| Topic | Primary source inspected | Decision |
+|---|---|---|
+| EBM reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2025/2026](https://arxiv.org/abs/2512.15605) | Architecture context. Learned compatibility does not establish factual truth. Keep generator weights frozen. |
+| EBM verification | [Distributional EBMs, May 2026](https://arxiv.org/abs/2605.18871) | Keep analytical constraints distinct from learned quality and model-identity shortcuts. Retired external-text rankers stay retired. |
+| Neural constraint satisfaction | [Certified BNN reasoning, 2025](https://arxiv.org/abs/2507.02916); [Certified Correctness, 2026](https://arxiv.org/abs/2608.14569) | Instance checks are useful; a learned confidence score is not a proof. Indexed dates for the latter disagree, so use year only. |
+| Ising applications in ML | [Energy-guided Recursive Model, July 2026](https://arxiv.org/abs/2607.10128) | Hopfield trajectory selection is a later lead. Do not add another unqualified search or sampler sweep. |
+| Guided and constrained generation | [Energy-Guided Decoding, July 2025](https://arxiv.org/abs/2507.07731); [Draft-Conditioned Constrained Decoding, March 2026](https://arxiv.org/abs/2603.03305) | Vision results and output grammar are separate from factual verification. Defer decoder changes until runtime and verifier utility qualify. |
+| Hallucination mitigation | [Decomposed Entailment, August 2026](https://arxiv.org/abs/2608.05823) | Evidence spans support a bounded canary; they do not certify independent factual accuracy. |
+
+### Secondary channels and retrieval limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and reasoning submissions.
+  The [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) and an indexed
+  [ICLR 2026 reasoning submission](https://openreview.net/pdf?id=bYkfHTcR1v)
+  returned browser challenges. No inaccessible review or acceptance is claimed.
+- **Semantic Scholar:** attempted citing-paper lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10),
+  plus indexed site searches. The browser could not retrieve either list.
+  Citation coverage remains incomplete; no zero-citation inference is valid.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and verified the two new October leads against arXiv abstracts.
+- **GitHub Trending:** inspected weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly), plus focused repository
+  searches. Returned trending snapshots were about a month old. No current rank
+  or new dependency is asserted. Followed Extropic's author-linked training
+  repository as an implementation lead, without installing it.
+- **Extropic:** checked [Writing](https://extropic.ai/writing), September 4's
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [recursive intelligence update](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T uses sparse operations split across probabilistic chips and companion
+  hardware. The article labels latency and energy figures as estimates. It does
+  not establish local TSU access or accelerate Carnot's host persistence.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The vendor describes a constraint reasoning layer beneath AI systems. The
+  inspected page does not supply reproducible architecture or local evidence.
+
+Selection: execute the source-information and objective-learning questions that
+V727 never reached; qualify the changed derivative first. Measure complete
+persistence costs. Use new evidence-challenge and variance lessons within those
+bounded studies. Hardware, CUDA recovery and independent factuality remain
+separate conditions. No hardware purchase or external publication is proposed.
