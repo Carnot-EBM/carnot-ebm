@@ -99484,3 +99484,23 @@ Exp8461 implementation: current full-object authority and original sealed
 V726 producer authority supply separate receipts. Missing operands retain all
 126 intended slots with missing reasons. Kernel qualification and stream
 readiness remain separate. Conductor retains subsequent ops/BMAD reconciliation.
+## REQ-REPORT-8464: Publish sealed persistence localization
+
+Authenticate the activated V728 complete task contract and independently sealed
+Exp8457 service family. Authenticate historical Exp8407 with its original
+authority, never current vNEXT or blocked Exp8449. Declare no_model_load,
+MODEL_SPECS=[] and zero current LLM calls; keep historical models as provenance.
+Readiness requires complete paired clocks, unchanged semantics, exact nesting,
+100 percent owned coverage and required validation, irrespective of bottleneck.
+Generalization scores remain0 and V717/V726/V727 conclusions stay closed.
+
+### SCENARIO-REPORT-8464-TERMINAL
+
+Accept --date20261012. Check disk scratch, memory, tools, hashes and deadlines.
+Stop measurements within1800s and reserve900s within the4800s task cap. Flush
+progress before/after benchmarks and bounded children. Run private E2E-018/021,
+Ruff, strict mypy and spec coverage. Fresh replay rejects missing operands,
+deliberate errors and rehashed tampering. Unchanged primary publication,
+adversarial and strict row consumers check private bytes before atomic publish.
+Retain all findings; unknown/warning/critical findings close readiness. The
+conductor owns ops/status/changelog/traceability reconciliation.

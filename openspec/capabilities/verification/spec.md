@@ -54281,3 +54281,28 @@ Independent dense/finite-difference checks cover90 constructed cells. Real
 private exits cover both sides of each commit at both admission capacities.
 Owned tests cover nonfinite states, rule drift, future labels and repaired hashes.
 Coverage shards are archived before unchanged report commands consume them.
+## REQ-VERIFY-8464: Localize complete durable service work
+
+Reuse the original qualified five-input Exp8407 natural workload and eight-tick
+feedback release. Measure only batch1/reuse8 and batch8/reuse8, each with one
+warmup and five paired repeats in alternating instrumented/baseline order.
+Include startup and feedback tail drain in the outer monotonic clock. Preserve
+all original semantic assertions and byte budgets. Nested disjoint spans isolate
+state copy/validation, JSON serialization/hash, write, file fsync, rename,
+directory fsync, pointer serialization/write/fsync/publication and remaining
+orchestration. Record bytes, IDs, response/state hashes and four fsyncs per
+commit. Gaps remain explicit; overhead is reported without subtraction.
+
+### SCENARIO-VERIFY-8464-PAIRS
+
+Baseline and instrumented arms replay to identical state and response hashes.
+Read real disk-backed snapshot bytes. Reject changed event order, lost tail,
+bad nesting, fsync counts and self-consistently rehashed stage changes. Freeze
+the event tape and exact expected journal work units for downstream comparison.
+
+### SCENARIO-VERIFY-8464-FAILURES
+
+Missing required operands retain all ten intended pairs with missing reasons.
+Measurement deadlines retain incomplete arms and close cost readiness. Owned
+failures disqualify. Genuine unit and child Coverage.py shards cover100 percent
+new statements, including private CLI, replay and deliberate errors.

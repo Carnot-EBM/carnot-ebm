@@ -1,0 +1,153 @@
+....................F.....F.                                             [100%]
+=================================== FAILURES ===================================
+_____________________ test_reduction_and_rehashed_operands _____________________
+
+frozen_pair = ({'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.066166365207552...1392856, 0.015915629308855234, ...], 'degree': 3, 'knots': [0, 0, 0, 0, 0.2, 0.4, ...], ...}, 'issued': {}, ...}, ...})
+tmp_path = PosixPath('/var/tmp/exp8464-validation-wctiuf3x/owned-final/test_reduction_and_rehashed_op0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f65e31bac00>
+
+    def test_reduction_and_rehashed_operands(frozen_pair, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8464-TERMINAL: cold reconstruction binds rows, hashes and coverage."""
+        deps, baseline, instrumented = frozen_pair
+        work = r.measure(tmp_path / "absent", tmp_path / "raw", tmp_path)
+        work.update(bundle=deps["bundle"], root=str(r.ROOT), refs=deps["refs"])
+        for arm, primitive in [("baseline", baseline), ("instrumented", instrumented)]:
+            path = tmp_path / (arm + ".json")
+            atomic_json(path, primitive)
+            work["primitives"].append(dict(r.reference(path), cell_index=1, repeat=1, arm=arm))
+        work["rows"], work["warmups"] = r.reduce(work)
+        assert len(work["rows"]) == 10 and work["rows"][5]["status"] == "completed"
+        receipts = [dict(name=n, passed=True) for n in r.REQUIRED]
+        candidate = tmp_path / "candidate.json"
+        atomic_json(tmp_path / "raw/measurement.json", work)
+        value = r.build(work, receipts, candidate)
+        atomic_json(candidate, value)
+>       assert r.replay(candidate)
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7f65e67a8360>(PosixPath('/var/tmp/exp8464-validation-wctiuf3x/owned-final/test_reduction_and_rehashed_op0/candidate.json'))
+E        +    where <function replay at 0x7f65e67a8360> = r.replay
+
+tests/python/test_persistence_localization_8464.py:243: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8464] phase=preconditions_before completed=0 pending=0
+[exp8464] phase=preconditions_after completed=0 pending=0
+[exp8464] phase=measurement_complete completed=0 pending=24
+[exp8464] phase=historical_service_authentication_before completed=0 pending=0
+[exp8464] phase=historical_service_authentication_after completed=0 pending=0
+____________________ test_private_measured_primitive_child _____________________
+
+frozen_pair = ({'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.066166365207552...1392856, 0.015915629308855234, ...], 'degree': 3, 'knots': [0, 0, 0, 0, 0.2, 0.4, ...], ...}, 'issued': {}, ...}, ...})
+tmp_path = PosixPath('/var/tmp/exp8464-validation-wctiuf3x/owned-final/test_private_measured_primitiv0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f66393d40e0>
+
+    def test_private_measured_primitive_child(frozen_pair, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8464-TERMINAL: fresh children reject self-consistently changed primitives."""
+        deps, baseline, instrumented = frozen_pair
+    
+        def private_measure(root, raw, private):
+            work = r.measure(tmp_path / "absent", raw, private)
+            work.update(root=str(r.ROOT), bundle=deps["bundle"], refs=deps["refs"])
+            for arm, primitive in [("baseline", baseline), ("instrumented", instrumented)]:
+                path = raw / (arm + ".json")
+                atomic_json(path, primitive)
+                work["primitives"].append(dict(r.reference(path), cell_index=1, repeat=1, arm=arm))
+            work["rows"], work["warmups"] = r.reduce(work)
+            return work
+    
+        measured = r.measure
+    
+        def saved(root, raw, private):
+            with monkeypatch.context() as local:
+                local.setattr(r, "measure", measured)
+                return private_measure(root, raw, private)
+    
+        monkeypatch.setattr(r, "measure", saved)
+        output = tmp_path / "results" / (r.NAME + ".json")
+>       assert runner.run(r.ROOT, output, tmp_path, True) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_persistence_localization_8464.py:352: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/persistence_localization_runner_8464.py:126: in run
+    publication = publish_primary(output, value, validator)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/exp8464-validation-wctiuf3x/owned-final/test_private_measured_primitiv0/results/experiment_8464_v728_persistence_localization.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authentic_operands': False, 'complete_clocks': False, 'exact_stage_nesting': False, 'no_unresolved_findings': True, ...}, 'adversarial_findings': [], 'censored_count': 9, ...}
+validator = <function run.<locals>.validator at 0x7f663b7e8040>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8464] phase=preconditions_before completed=0 pending=0
+[exp8464] phase=preconditions_after completed=0 pending=0
+[exp8464] phase=measurement_complete completed=0 pending=24
+[exp8205] phase=validation_complete completed=0 pending=0
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_error completed=0 pending=1
+[exp8205] phase=after_subprocess_error completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_primitive completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_primitive completed=1 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8464] phase=historical_service_authentication_before completed=0 pending=0
+[exp8464] phase=historical_service_authentication_after completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_persistence_localization_8464.py::test_reduction_and_rehashed_operands
+FAILED tests/python/test_persistence_localization_8464.py::test_private_measured_primitive_child
+2 failed, 26 passed, 1 warning in 151.13s (0:02:31)
