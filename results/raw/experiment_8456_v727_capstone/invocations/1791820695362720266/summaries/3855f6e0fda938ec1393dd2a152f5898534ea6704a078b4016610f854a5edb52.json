@@ -1,0 +1,59 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 390.51953125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.51953125,
+      "prior_exec_lifetime_peak_mb": 404.59765625
+    },
+    "before": {
+      "current_rss_mb": 390.51171875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.51171875,
+      "prior_exec_lifetime_peak_mb": 404.59765625
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.0078125,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 390.51171875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.51171875,
+      "prior_exec_lifetime_peak_mb": 404.59765625
+    },
+    "before": {
+      "current_rss_mb": 390.49609375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.49609375,
+      "prior_exec_lifetime_peak_mb": 404.59765625
+    },
+    "scope": "Python dependency imports before primitive replay; no model weights loaded"
+  },
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "methods_ready_score",
+      "expected": 1,
+      "field": "methods_ready_score",
+      "hash": "sha256:1caeb7a6168293843ad22462043829eaef58d48c44f9cf3958a5b88a1c2a2f56",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8443_v727_contract_methods.json",
+      "upstream": "exp8443-contract-methods"
+    }
+  ],
+  "verdict_class": "blocked"
+}

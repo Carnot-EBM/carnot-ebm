@@ -1,0 +1,59 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 390.5703125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.5703125,
+      "prior_exec_lifetime_peak_mb": 406.45703125
+    },
+    "before": {
+      "current_rss_mb": 390.5546875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.5546875,
+      "prior_exec_lifetime_peak_mb": 406.45703125
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.015625,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 390.5546875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.5546875,
+      "prior_exec_lifetime_peak_mb": 406.45703125
+    },
+    "before": {
+      "current_rss_mb": 390.54296875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.54296875,
+      "prior_exec_lifetime_peak_mb": 406.45703125
+    },
+    "scope": "Python dependency imports before primitive replay; no model weights loaded"
+  },
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "persistence_profile_ready_score",
+      "expected": 1,
+      "field": "persistence_profile_ready_score",
+      "hash": "sha256:c56b50d2cf994a78fe4921f550b5d59d7b29d8ae33ce921a6766f345d6bc109a",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8449_v727_persistence_localization.json",
+      "upstream": "exp8449-persistence-localization"
+    }
+  ],
+  "verdict_class": "blocked"
+}

@@ -99358,3 +99358,31 @@ obligation rows and exact source hashes. Original V726 work and authority bytes
 are copied into immutable custody. Five focused tests cover authentic private
 full authority, supplied physical changes, forged evidence and rehashed tampering.
 The terminal manifest runs private E2E-018/E2E-021 and unchanged consumers.
+
+## REQ-REPORT-8456: Reconcile fourteen V727 slots without promoting absence
+
+Exp8456 SHALL bind the visible, embedded and activated full task contract and
+account for Exp8443 through Exp8456 in exact order. Qualified and disqualified
+producers, pre-gates, cascade skips and missing artifacts remain separate.
+Its own slot is current reconciliation. No gate or requires blocks accounting.
+Readers use aggregation_from_upstream_artifacts, no_model_load, empty MODEL_SPECS
+and zero current model calls. Numerical replay uses cached candidates only.
+Original sealed authority authenticates historical producers; V726 scalar gain
+remains retrospective, learning null and arithmetic ceiling remain closed.
+Absent source contrasts, later objective losses, five retention windows and
+journal speedup/durability remain missing. ARC and each board obligation keep
+their original evidence scope. Independent generalization scores remain zero.
+
+### SCENARIO-REPORT-8456-ACCOUNTING
+
+Real private CLI and consumers preserve all fourteen ordered outcomes, qualified
+blocked producers and cascade receipts. External absence produces complete_blocked;
+failed owned validation disqualifies. Continue only with changed qualified evidence.
+Retirement recommendations bind predecessor hashes and preserve exclusion history.
+Unchanged publication_gate.py supplies G1-G4 independently of V727 success.
+
+Exp8456 implementation: thin CLI and narrow reporting adapters preserve original
+producer assertions and pinned historical authority. Fifteen focused tests pass.
+Private accounting and live consumers accept checked terminal bytes; missing
+science remains blocked, with separate source, objective and durable-service
+continuation conditions. Production qualification is recorded in the primary.

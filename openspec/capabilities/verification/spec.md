@@ -54170,3 +54170,32 @@ Implementation: `gatemate_obligation_runner_8455.py` freezes the3600s measuremen
 ceiling and900s validation reserve. Genuine unit and child Coverage.py shards
 cover172/172 newly owned statements. The manifest requires scoped tests, private
 E2E-018/E2E-021, Ruff, strict mypy, spec references and exact terminal validation.
+
+## REQ-VERIFY-8456: Qualify bounded terminal V727 reconciliation
+
+Use disk-backed private scratch, flushed progress, fresh process peak1500MiB and
+growth500MiB bounds, bounded operand shards and no recursive historical copies.
+Stop measurements by3600 seconds, reserve900 seconds within4800 seconds.
+Run scoped serial tests, private E2E-018/021, Ruff check/format, strict mypy,
+owned spec tracing and genuine Coverage.py unit/child shards with100 percent
+newly owned statements. Preserve commands, exits, durations and log hashes.
+Cold replay and unchanged primary, adversarial and strict-row consumers precede
+atomic terminal publication. Unknown/warning/critical findings close readiness.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+### SCENARIO-VERIFY-8456-CONTROLS
+
+Outside-checkout CLI works with PYTHONPATH unset. Real children reject missing
+inputs, deliberate errors, wrong dates, changed task authority and self-consistently
+rehashed summaries or primitives. Failed branches are retained without zero effects.
+Historical publications, validator definitions and acceptance thresholds stay fixed.
+
+Exp8456 verification: genuine serial unit and subprocess Coverage.py shards cover
+176/176 newly owned statements with zero exclusions. Fifteen focused tests,
+Ruff, strict mypy and owned spec tracing pass. The production manifest retains
+private E2E-018/E2E-021, terminal replay and unchanged validator receipts. Ops and
+BMAD reconciliation remain conductor-owned.
+
+SCENARIO-VERIFY-8456-CONTROLS also requires an independently recomputed full
+activated task digest even when the visible/embedded design is externally absent.
+Rehashed YAML, task rows and primitive work cannot replace the sealed task pin.
