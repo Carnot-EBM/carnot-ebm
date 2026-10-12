@@ -22175,3 +22175,4 @@ Experiment identifiers and acceptance criteria: no data available this milestone
 See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-12: Bind fourteen tasks and seal the changed source learning and storage hypotheses (⚠️ Blocked) — honest_verdict=complete_blocked_v727_contract_methods; results/experiment_8443_v727_contract_methods.json
 - 2026-10-12: Measure serialization synchronization and publication inside complete transactions (⚠️ Blocked) — honest_verdict=complete_blocked_persistence_localization; results/experiment_8449_v727_persistence_localization.json
+- 2026-10-12: Resolve ARC publication custody before assessing live supervisor generalization support (⚠️ Blocked) — honest_verdict=complete_blocked_v727_arc_seal_and_support; results/experiment_8453_v727_arc_seal_and_support.json
