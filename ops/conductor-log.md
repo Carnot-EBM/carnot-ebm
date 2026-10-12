@@ -20114,3 +20114,4 @@ code |
 | 2026-10-12 04:52 UTC | Reconstruct complete service clocks and isolate th | OK | 109 passed, 1 warning in 88.56s (0:01:28) |
 | 2026-10-12 05:24 UTC | Test whether arithmetic acceleration can meet the  | OK | 96 passed, 1 warning in 83.09s (0:01:23) |
 | 2026-10-12 05:31 UTC | Run a bounded Qwen source-evidence canary only aft | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8429-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-10-12 06:15 UTC | Measure cross-game supervisor support and censorin | OK | 90 passed, 1 warning in 181.59s (0:03:01) |
