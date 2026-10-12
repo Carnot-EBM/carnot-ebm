@@ -507,3 +507,9 @@ Neither described mechanism depends on game-source access or hardcoded per-game 
 
 - **Newly located July negative result: prediction checking alone failed.** Qwen ignored optional `predict()` entirely across 1,750 actions. A prescriptive prompt produced 1,346 predictions, but scored **1.19 versus 1.44 for the control**, excluding `ft09`. Both variants were single runs. **Classification: (b), general-purpose observation-based prediction checking.** [Experiment record](https://github.com/sonpham-org/arc-3/blob/f099995626b2db36f9518b27ee38f9bf37d89647/harnesses/predict-check/MANIFEST.md)
 
+## 2026-10-12 13:32 UTC -- NEW
+
+**Son & Mark & Ronen — newly discovered negative model result.** Son Pham reports that fitting DeepSeek Flash onto an RTX PRO 6000 required **quantization and expert pruning**, yet its token efficiency remained below Flash-Next. No numerical comparison or gameplay scores were disclosed; this experiment is not verified as part of the current scoring submission. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/742788)
+
+**Classification: (b)** for the described general-purpose compression and serving techniques. The complete experiment code is unpublished, so its broader game-source access or per-game hardcoding status remains unverified.
+

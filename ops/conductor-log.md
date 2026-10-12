@@ -20126,3 +20126,4 @@ code |
 | 2026-10-12 12:48 UTC | Measure source information beyond scalar recalibra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8445-source-control-fit) |
 | 2026-10-12 12:54 UTC | Compare objective-aligned sparse updates under ide | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8443-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-12 12:56 UTC | Audit later proper loss decision utility and reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8447-brier-online-learning) |
+| 2026-10-12 13:36 UTC | Measure serialization synchronization and publicat | OK | 110 passed, 1 warning in 82.78s (0:01:22) |
