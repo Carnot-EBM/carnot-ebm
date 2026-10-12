@@ -20138,3 +20138,5 @@ code |
 | 2026-10-12 18:37 UTC | Milestone 2026.10.728 activated | OK | 14 tasks queued |
 | 2026-10-12 19:26 UTC | Bind fourteen tasks and seal the changed source le | OK | 125 passed, 1 warning in 263.58s (0:04:23) |
 | 2026-10-12 20:08 UTC | Freeze scalar and source controls without changing | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 135.99s (0:02:15) |
+| 2026-10-12 20:15 UTC | Fit the scalar spline control and freeze matched s | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8458-source-control-panel.source_controls_ready_score (actual=0 == expected=1) |
+| 2026-10-12 20:17 UTC | Measure source information beyond scalar recalibra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8459-source-control-fit) |
