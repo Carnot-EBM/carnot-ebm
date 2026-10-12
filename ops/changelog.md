@@ -22177,3 +22177,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-12: Measure serialization synchronization and publication inside complete transactions (⚠️ Blocked) — honest_verdict=complete_blocked_persistence_localization; results/experiment_8449_v727_persistence_localization.json
 - 2026-10-12: Resolve ARC publication custody before assessing live supervisor generalization support (⚠️ Blocked) — honest_verdict=complete_blocked_v727_arc_seal_and_support; results/experiment_8453_v727_arc_seal_and_support.json
 - 2026-10-12: Map the journal service boundary to actual KV260 and PolarFire operations (⚠️ Blocked) — honest_verdict=complete_blocked_v727_board_operation_boundary; results/experiment_8454_v727_board_operation_boundary.json
+- 2026-10-12: Preserve the exact GateMate physical and source recovery obligation (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_obligation; results/experiment_8455_v727_gatemate_obligation.json
