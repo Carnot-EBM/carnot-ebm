@@ -1,5 +1,38 @@
 
 
+## REQ-REPORT-8441: Carry sealed GateMate obligations under activated V726
+
+Authenticate all fourteen active tasks, the visible design table and canonical
+digest. Bind qualified Exp8414 and its immutable evidence references. Preserve
+the two exact missing hashes and IDCODE0xffffffff. Inspect only explicit
+source/physical receipts for at most60 seconds; source bytes must match their
+original hashes. A dated cable/port/power change queues a separate physical
+task requiring GM1Ax IDCODE0x20000001, n16 flash and device sample/hash smoke.
+No hardware command or model load is permitted. Missing optional staged V726,
+historical V722 authority, CUDA or boards cannot block this CPU reader.
+External absence is complete_blocked; owned validation failure is disqualified.
+
+### SCENARIO-REPORT-8441-CONTINUITY
+
+No supplied receipt retains seven intended rows: the continuity record, two
+missing sources and four physical requirements, with unchanged/new status and
+source hashes. No device observation is manufactured. Current LLM calls and
+both generalization scores remain zero. Forged physical receipts, missing
+source bytes and incorrect recovered hashes are rejected by shipped consumers.
+
+### SCENARIO-REPORT-8441-REPLAY
+
+Fresh bounded children replay primitive rows and reject missing operands,
+deliberate errors, full authority drift and self-consistently rehashed tampering.
+Unchanged primary publication and validators check atomic terminal bytes.
+Conductor owns subsequent ops/BMAD reconciliation.
+
+Implementation2026-10-12: gatemate_obligation_8441 and its thin CLI reuse
+the shipped exact-source consumer, bounded historical adapter and unchanged
+publication. Three focused tests pass for continuity, full authority drift,
+receipt forgery, real CLI publication, cold replay and owned child failure.
+The primary and raw invocation receipts retain final qualification evidence.
+
 ## Planned V724 authority and evidence — 2026-10-10
 
 ## REQ-REPORT-8414: Preserve the GateMate physical obligation under V724 authority

@@ -2,6 +2,29 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8441: Qualify continuity with real private CLI children
+
+Freeze scoped commands, check tools, disk-backed scratch, memory and4800-second
+deadline before work, reserving900 seconds for validation. Reuse private
+E2E-018 authority/publication and original obligation consumer controls. Require
+100 percent newly owned statements including real child and failure paths,
+genuine Coverage.py subprocess shards, Ruff/format, strict mypy and owned spec
+tracing. Preserve command, exit, duration and stream hashes. Keep all findings;
+unknown, warning or critical findings block readiness. Do not run the global
+suite or alter historical tests, thresholds, validators or published artifacts.
+
+### SCENARIO-VERIFY-8441-CONTROLS
+
+Real private CLI outputs are selected by unchanged consumers with identical
+hashes. Missing input, incorrect dates, unsafe output, forged receipts, owned
+child failure and rehashed tampering retain their actual rejection receipts.
+Conductor owns subsequent ops/BMAD reconciliation.
+
+Implementation2026-10-12: gatemate_obligation_runner_8441 freezes the inherited
+private E2E-018 and obligation-consumer commands, genuine child coverage,
+Ruff/format, strict mypy and owned spec tracing. The invocation retains exact
+command, stream, replay and terminal validator receipts with private scratch.
+
 ## REQ-VERIFY-8431: Fit matched retrospective calibrated source energies
 
 Use only authenticated Exp8430 fit/tune targets. Freeze q-only scalar logistic,
