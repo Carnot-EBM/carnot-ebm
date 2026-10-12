@@ -98986,3 +98986,41 @@ Independent validation processes MAY run concurrently in separate private paths.
 Coverage reduction SHALL wait for their completion. Retain every child receipt.
 Validation MAY resume from an immutable completed measurement in the same owned
 raw invocation. It SHALL reuse prediction/update bytes and run fresh checks.
+
+## REQ-REPORT-8435: Independent conditional capacity benefit audit
+
+Exp8435 SHALL authenticate the complete activated V726 authority and pinned
+Exp8434 producer. Read primitive predictions, admissions, releases and writes;
+never import its summary scores. Preserve12000 answer slots,4000 question units,
+both capacities, all blocks, seeds, controls and intended missing bounds.
+Average siblings and seeds within questions. The primary capacity8 contrast is
+Brier(FIFO)-Brier(uniform) on blocks1–4. Use10000 whole-question draws, seed7258421.
+Intervals describe dependent exposed issued histories, not population inference.
+Exploratory benefit requires positive primary and uniform-versus-frozen lower95,
+no decision-loss increase and simultaneous retention upper95<=0.01. Reuse identical
+question indices for five retention windows and each draw's maximum increase.
+Control degeneracy or inadequate support disqualifies the affected claim.
+Both generalization scores stay0; oracle benefit uses circular_positive.
+An honest zero decision_loss_delta remains visible. Unresolved typed-consumer
+findings disqualify readiness separately from the measured scientific outcome.
+External absence blocks; owned failures disqualify; terminal bytes publish atomically.
+No model loads or current LLM calls. The conductor owns ops/BMAD reconciliation.
+
+### SCENARIO-REPORT-8435-METRICS
+
+Analytic paired rows verify sibling/seed averaging, primary capacity selection,
+missing bounds, frozen decision comparison and simultaneous retention resamples.
+
+### SCENARIO-REPORT-8435-CLI
+
+Private CLI checks execute cold replay, missing inputs, deliberate errors and
+self-consistently rehashed tampering. E2E-018/E2E-021, Ruff, strict mypy and spec
+coverage retain exits/durations/log hashes. Genuine child Coverage.py shards
+cover100 percent newly owned statements. Preserve every consumer finding.
+
+Implementation: `capacity_benefit_report_8435.py` and its thin bounded runner
+retain all intended slots, independent primitive reconstruction, conditional
+benefit, simultaneous retention, consumer findings and terminal custody.
+`test_capacity_benefit_audit_8435.py` exercises analytic metrics, actual children,
+external absence and rehashed corruption. Terminal validation receipts record
+scoped unit, coverage, lint, type, spec and private E2E outcomes.

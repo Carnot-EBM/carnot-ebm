@@ -53890,3 +53890,23 @@ Implementation: `capacity_online_learning_8434.py` adapts the shipped sparse
 optimizer and qualified block store. Separate evaluator processes release
 admitted labels and score retention at each boundary. Focused tests exercise
 nonzero updates, frozen identity, real process exit and exact restart.
+
+## REQ-VERIFY-8435: Reconstruct issued histories before scientific reduction
+
+Independently hash-pin the producer, frozen configuration and primitive rows.
+Fresh bounded processes reconstruct the exact shipped admission/update protocol.
+Verify a dense numerical update control separately from sparse recorded writes.
+Reject future-label access, hidden target inputs, duplicate feedback, overcapacity,
+changed prediction timing and modified admission/feedback RNG streams. Retention
+reads tune targets without passing them to updates. Compare empirical inclusion
+frequencies with C/20; five seeds remain one question dataset.
+
+### SCENARIO-VERIFY-8435-REPLAY
+
+Pinned operands reject rehashed coefficient, target, prediction, capacity and RNG
+mutations. Missing external primitives stay distinct from observed zero values.
+
+Implementation: `capacity_benefit_audit_8435.py` averages sibling and seed records
+within questions, freezes the conditional bootstrap and jointly bounds all five
+retention windows. The report adapter reconstructs the shipped state transitions
+and independently checks dense gradients against recorded sparse writes.
