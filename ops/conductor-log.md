@@ -20141,3 +20141,5 @@ code |
 | 2026-10-12 20:15 UTC | Fit the scalar spline control and freeze matched s | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8458-source-control-panel.source_controls_ready_score (actual=0 == expected=1) |
 | 2026-10-12 20:17 UTC | Measure source information beyond scalar recalibra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8459-source-control-fit) |
 | 2026-10-12 21:53 UTC | Qualify Brier gradients and durable feedback trans | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 119 passed, 1 warning in 279.33s (0:04:39) |
+| 2026-10-12 22:00 UTC | Compare objective-aligned sparse updates under ide | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8461-objective-checkpoint-qualification.objective_kernel_ready_score (actual=0 == expected=1) |
+| 2026-10-12 22:02 UTC | Audit later proper loss decision utility and reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8462-brier-online-learning) |
