@@ -1,0 +1,817 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "replayed"
+  },
+  "checks": [],
+  "disposition": "qualified_producer",
+  "eligible": true,
+  "historical_model_provenance": [
+    {
+      "historical_model_provenance": [
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8182,
+          "imported_counts": {
+            "generate": 211,
+            "model_loads_attempted": 1,
+            "model_loads_completed": 1
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8184,
+          "imported_counts": {
+            "generate": 155,
+            "model_loads_attempted": 1,
+            "model_loads_completed": 1
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8153,
+          "imported_counts": {
+            "generation_calls_attempted": 432,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 432,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          }
+        },
+        {
+          "MODEL_SPECS": [
+            "unsloth/Qwen3.8-27B-GGUF"
+          ],
+          "experiment_id": 8155,
+          "imported_counts": {
+            "generation_calls_attempted": 256,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 256,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0
+          }
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8402,
+      "producer_hash": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d"
+    },
+    {
+      "historical_model_provenance": [
+        {
+          "current_calls": 0,
+          "generator": "gemma-2-9b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "generator": "llama3-8b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "generator": "mistral-7b",
+          "kind": "cached_third_party_answers"
+        },
+        {
+          "current_calls": 0,
+          "judge": "GPT-5-mini",
+          "kind": "cached_factorial_outputs"
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8403,
+      "producer_hash": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b"
+    },
+    {
+      "historical_model_provenance": {
+        "current_calls_imported": false,
+        "failure_layer": [
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {
+              "cuInit": 101
+            },
+            "layer": "driver",
+            "native_stderr": null
+          },
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {
+              "cudaGetDeviceCount": 101
+            },
+            "layer": "runtime",
+            "native_stderr": null
+          },
+          {
+            "binding": "inherited",
+            "error": null,
+            "failed_api": {},
+            "layer": "native",
+            "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {
+              "cuInit": 101
+            },
+            "layer": "driver",
+            "native_stderr": null
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {
+              "cudaGetDeviceCount": 101
+            },
+            "layer": "runtime",
+            "native_stderr": null
+          },
+          {
+            "binding": "explicit_uuid",
+            "error": null,
+            "failed_api": {},
+            "layer": "native",
+            "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+          }
+        ],
+        "imported_from": "results/experiment_8307_v717_runtime_change_boundary.json",
+        "model_invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        }
+      },
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8410,
+      "producer_hash": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e"
+    },
+    {
+      "historical_model_provenance": [
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8402_v724_historical_consumer_roots.json",
+                "sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d.json"
+              }
+            }
+          ],
+          "task_id": "exp8402-historical-consumer-roots"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8403_v724_released_question_identity.json",
+                "sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b.json"
+              }
+            }
+          ],
+          "task_id": "exp8403-released-question-identity"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8404_v724_direct_state_qualification.json",
+                "sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67.json"
+              }
+            }
+          ],
+          "task_id": "exp8404-direct-state-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8405_v724_native_parity_qualification.json",
+                "sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270.json"
+              }
+            }
+          ],
+          "task_id": "exp8405-native-parity-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8406_v724_continuous_direct_learning.json",
+                "sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a.json"
+              }
+            }
+          ],
+          "task_id": "exp8406-continuous-direct-learning"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8407_v724_python_transaction_cost.json",
+                "sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f.json"
+              }
+            }
+          ],
+          "task_id": "exp8407-python-transaction-cost"
+        },
+        {
+          "provenance": [],
+          "task_id": "exp8408-native-transaction-cost"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8409_v724_retrospective_label_criterion.json",
+                "sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8.json"
+              }
+            }
+          ],
+          "task_id": "exp8409-retrospective-label-criterion"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+                "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e.json"
+              }
+            }
+          ],
+          "task_id": "exp8410-cuda-reader-qualification"
+        },
+        {
+          "provenance": [],
+          "task_id": "exp8411-bounded-qwen-canary"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8412_v724_arc_panel_qualification.json",
+                "sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb.json"
+              }
+            }
+          ],
+          "task_id": "exp8412-arc-panel-qualification"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8413_v724_board_operation_boundary.json",
+                "sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50.json"
+              }
+            }
+          ],
+          "task_id": "exp8413-board-operation-boundary"
+        },
+        {
+          "provenance": [
+            {
+              "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+              "json_pointer": "/historical_model_provenance",
+              "primary_reference": {
+                "exists": true,
+                "expected_sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8414_v724_gatemate_obligation.json",
+                "sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a.json"
+              }
+            }
+          ],
+          "task_id": "exp8414-gatemate-obligation"
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8415,
+      "producer_hash": "sha256:125505046358d3debe531593528da1cfd75d4cbc7d100caef850292b3b6cd9d0"
+    },
+    {
+      "historical_model_provenance": [
+        {
+          "historical_model_provenance": [
+            {
+              "MODEL_SPECS": [
+                "unsloth/Qwen3.8-27B-GGUF"
+              ],
+              "experiment_id": 8182,
+              "imported_counts": {
+                "generate": 211,
+                "model_loads_attempted": 1,
+                "model_loads_completed": 1
+              }
+            },
+            {
+              "MODEL_SPECS": [
+                "unsloth/Qwen3.8-27B-GGUF"
+              ],
+              "experiment_id": 8184,
+              "imported_counts": {
+                "generate": 155,
+                "model_loads_attempted": 1,
+                "model_loads_completed": 1
+              }
+            },
+            {
+              "MODEL_SPECS": [
+                "unsloth/Qwen3.8-27B-GGUF"
+              ],
+              "experiment_id": 8153,
+              "imported_counts": {
+                "generation_calls_attempted": 432,
+                "generation_calls_cancelled": 0,
+                "generation_calls_completed": 432,
+                "generation_calls_failed": 0,
+                "generation_calls_in_flight": 0,
+                "model_loads_attempted": 1,
+                "model_loads_cancelled": 0,
+                "model_loads_completed": 1,
+                "model_loads_failed": 0,
+                "model_loads_in_flight": 0
+              }
+            },
+            {
+              "MODEL_SPECS": [
+                "unsloth/Qwen3.8-27B-GGUF"
+              ],
+              "experiment_id": 8155,
+              "imported_counts": {
+                "generation_calls_attempted": 256,
+                "generation_calls_cancelled": 0,
+                "generation_calls_completed": 256,
+                "generation_calls_failed": 0,
+                "generation_calls_in_flight": 0,
+                "model_loads_attempted": 1,
+                "model_loads_cancelled": 0,
+                "model_loads_completed": 1,
+                "model_loads_failed": 0,
+                "model_loads_in_flight": 0
+              }
+            }
+          ],
+          "imported_fields": [
+            "honest_verdict",
+            "historical_model_provenance"
+          ],
+          "producer": 8402,
+          "producer_hash": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d"
+        },
+        {
+          "historical_model_provenance": [
+            {
+              "current_calls": 0,
+              "generator": "gemma-2-9b",
+              "kind": "cached_third_party_answers"
+            },
+            {
+              "current_calls": 0,
+              "generator": "llama3-8b",
+              "kind": "cached_third_party_answers"
+            },
+            {
+              "current_calls": 0,
+              "generator": "mistral-7b",
+              "kind": "cached_third_party_answers"
+            },
+            {
+              "current_calls": 0,
+              "judge": "GPT-5-mini",
+              "kind": "cached_factorial_outputs"
+            }
+          ],
+          "imported_fields": [
+            "honest_verdict",
+            "historical_model_provenance"
+          ],
+          "producer": 8403,
+          "producer_hash": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b"
+        },
+        {
+          "historical_model_provenance": {
+            "current_calls_imported": false,
+            "failure_layer": [
+              {
+                "binding": "inherited",
+                "error": null,
+                "failed_api": {
+                  "cuInit": 101
+                },
+                "layer": "driver",
+                "native_stderr": null
+              },
+              {
+                "binding": "inherited",
+                "error": null,
+                "failed_api": {
+                  "cudaGetDeviceCount": 101
+                },
+                "layer": "runtime",
+                "native_stderr": null
+              },
+              {
+                "binding": "inherited",
+                "error": null,
+                "failed_api": {},
+                "layer": "native",
+                "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+              },
+              {
+                "binding": "explicit_uuid",
+                "error": null,
+                "failed_api": {
+                  "cuInit": 101
+                },
+                "layer": "driver",
+                "native_stderr": null
+              },
+              {
+                "binding": "explicit_uuid",
+                "error": null,
+                "failed_api": {
+                  "cudaGetDeviceCount": 101
+                },
+                "layer": "runtime",
+                "native_stderr": null
+              },
+              {
+                "binding": "explicit_uuid",
+                "error": null,
+                "failed_api": {},
+                "layer": "native",
+                "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+              }
+            ],
+            "imported_from": "results/experiment_8307_v717_runtime_change_boundary.json",
+            "model_invocation_counts": {
+              "generation_calls_attempted": 0,
+              "generation_calls_cancelled": 0,
+              "generation_calls_completed": 0,
+              "generation_calls_failed": 0,
+              "generation_calls_in_flight": 0,
+              "model_loads_attempted": 0,
+              "model_loads_cancelled": 0,
+              "model_loads_completed": 0,
+              "model_loads_failed": 0,
+              "model_loads_in_flight": 0
+            }
+          },
+          "imported_fields": [
+            "honest_verdict",
+            "historical_model_provenance"
+          ],
+          "producer": 8410,
+          "producer_hash": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e"
+        },
+        {
+          "historical_model_provenance": [
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8402_v724_historical_consumer_roots.json",
+                    "sha256": "sha256:94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/94d4baf2872bcf2bc58a7dd7a96f431c33ccad339c272927f1fc9673306b944d.json"
+                  }
+                }
+              ],
+              "task_id": "exp8402-historical-consumer-roots"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8403_v724_released_question_identity.json",
+                    "sha256": "sha256:13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/13afe888c9f7f516d63adff8eab9eea25e011745db6530d41cd836925661235b.json"
+                  }
+                }
+              ],
+              "task_id": "exp8403-released-question-identity"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8404_v724_direct_state_qualification.json",
+                    "sha256": "sha256:186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/186b11a57be0c51b32fccb4a5b5064cd9a63220f5f4866a9c3d2740f2f102c67.json"
+                  }
+                }
+              ],
+              "task_id": "exp8404-direct-state-qualification"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8405_v724_native_parity_qualification.json",
+                    "sha256": "sha256:b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b94b031f975ec6415e466fdf4c88df73180ac6b3e3afb7016fa2f47c75515270.json"
+                  }
+                }
+              ],
+              "task_id": "exp8405-native-parity-qualification"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8406_v724_continuous_direct_learning.json",
+                    "sha256": "sha256:b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/b2aabf5bddc46f7b876a60f7d4484aa874a71331a70907775e90ee7e2fb7b83a.json"
+                  }
+                }
+              ],
+              "task_id": "exp8406-continuous-direct-learning"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8407_v724_python_transaction_cost.json",
+                    "sha256": "sha256:033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/033cdbbe98be7790889354e50646f49c24a9e270cbb5c3c83b8d708c540c293f.json"
+                  }
+                }
+              ],
+              "task_id": "exp8407-python-transaction-cost"
+            },
+            {
+              "provenance": [],
+              "task_id": "exp8408-native-transaction-cost"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8409_v724_retrospective_label_criterion.json",
+                    "sha256": "sha256:0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/0929b927f547d028f05ad466aba9575a797d25a146a671b453db9de5a6eef2e8.json"
+                  }
+                }
+              ],
+              "task_id": "exp8409-retrospective-label-criterion"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8410_v724_cuda_reader_qualification.json",
+                    "sha256": "sha256:c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/c829f16dc732890872edd0224a3909e4cb3301adfffda11de19b06da5e283d4e.json"
+                  }
+                }
+              ],
+              "task_id": "exp8410-cuda-reader-qualification"
+            },
+            {
+              "provenance": [],
+              "task_id": "exp8411-bounded-qwen-canary"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8412_v724_arc_panel_qualification.json",
+                    "sha256": "sha256:9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/9b0bd990a672736b0b798a17d4f90a7c216e779b95265f7651e55cf05a9e37eb.json"
+                  }
+                }
+              ],
+              "task_id": "exp8412-arc-panel-qualification"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8413_v724_board_operation_boundary.json",
+                    "sha256": "sha256:ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/ab4bd6cc49f95cc4c207cb35c0a721b8b2569e3c22d4e3c596dcbfadd887bf50.json"
+                  }
+                }
+              ],
+              "task_id": "exp8413-board-operation-boundary"
+            },
+            {
+              "provenance": [
+                {
+                  "exposure_scope": "cached_upstream_only; zero_current_LLM_calls",
+                  "json_pointer": "/historical_model_provenance",
+                  "primary_reference": {
+                    "exists": true,
+                    "expected_sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8414_v724_gatemate_obligation.json",
+                    "sha256": "sha256:e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a",
+                    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8415_v724_capstone/invocations/1791733564582742771/custody/e572d8a1b6c31eaaf632338a6e55228c1696f652a44927afb4a151ba569d495a.json"
+                  }
+                }
+              ],
+              "task_id": "exp8414-gatemate-obligation"
+            }
+          ],
+          "imported_fields": [
+            "honest_verdict",
+            "historical_model_provenance"
+          ],
+          "producer": 8415,
+          "producer_hash": "sha256:125505046358d3debe531593528da1cfd75d4cbc7d100caef850292b3b6cd9d0"
+        }
+      ],
+      "imported_fields": [
+        "honest_verdict",
+        "historical_model_provenance"
+      ],
+      "producer": 8416,
+      "producer_hash": "sha256:4b59073d714eb0a2dc52ad5a1d16b2451991ce72c832f6003a9f852e00e73f91"
+    }
+  ],
+  "honest_verdict": "complete_circular_positive_v726_contract_methods",
+  "memory": {
+    "after": {
+      "current_rss_mb": 399.3125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 406.7265625,
+      "prior_exec_lifetime_peak_mb": 406.7265625
+    },
+    "before": {
+      "current_rss_mb": 389.89453125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.89453125,
+      "prior_exec_lifetime_peak_mb": 399.515625
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 16.83203125,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "primitive_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8429_v726_contract_methods/invocations/1791757329212215566/measurement.json",
+    "sha256": "sha256:925fa66b83f7fc95f5230c7bab1300f249b4e1133a6353910e1774c7355a510d"
+  },
+  "producer_executed": true,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 389.89453125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.89453125,
+      "prior_exec_lifetime_peak_mb": 399.515625
+    },
+    "before": {
+      "current_rss_mb": 389.87890625,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.87890625,
+      "prior_exec_lifetime_peak_mb": 399.515625
+    },
+    "scope": "Python dependency imports before primitive replay; no model weights loaded"
+  },
+  "selected": {
+    "contract_ready_score": 1,
+    "current_contract_ready_score": 1,
+    "independent_eval_ready_score": 0,
+    "methods_ready_score": 1,
+    "runtime_repair_ready_score": 0
+  },
+  "source_gates": [
+    {
+      "artifact_field": "supplied_causal_runtime_repair",
+      "artifact_hash": null,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/cuda-runtime-repair-receipt.json",
+      "check": "supplied_causal_runtime_repair",
+      "expected": true,
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "upstream_id": "exp8429-contract-methods"
+    }
+  ],
+  "verdict_class": "circular_positive"
+}

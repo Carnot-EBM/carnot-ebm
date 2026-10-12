@@ -1,0 +1,59 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 389.72265625,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.72265625,
+      "prior_exec_lifetime_peak_mb": 406.07421875
+    },
+    "before": {
+      "current_rss_mb": 389.71484375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.71484375,
+      "prior_exec_lifetime_peak_mb": 406.07421875
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.0078125,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 389.71484375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.71484375,
+      "prior_exec_lifetime_peak_mb": 406.07421875
+    },
+    "before": {
+      "current_rss_mb": 389.70703125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 389.70703125,
+      "prior_exec_lifetime_peak_mb": 406.07421875
+    },
+    "scope": "Python dependency imports before primitive replay; no model weights loaded"
+  },
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "runtime_repair_ready_score",
+      "expected": 1,
+      "field": "runtime_repair_ready_score",
+      "hash": "sha256:dfad99775207ce8073b35c7d5efbc0cbefa70ad1ddadadafa584157add3a3095",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8429_v726_contract_methods.json",
+      "upstream": "exp8429-contract-methods"
+    }
+  ],
+  "verdict_class": "blocked"
+}

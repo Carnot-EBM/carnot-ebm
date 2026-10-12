@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-11
+**Last Updated:** 2026-10-12
 
 ## V724 CUDA reader environment repair — 2026-10-11
 
@@ -3994,3 +3994,15 @@ contract, full embedded task objects, canonical digest and staged YAML agree.
 The references scan precedes design. Validation results are recorded in the
 V726 design's Planning validation section. Execution remains pending; no
 implementation, experiment result or activation is implied by this entry.
+
+## 2026-10-12 — V726 capstone standalone import repair
+
+| Requirement / scenario | Implementation | Regression evidence |
+|---|---|---|
+| REQ-REPORT-8442 / SCENARIO-REPORT-8442-ACCOUNTING | Exp8442 CLI binds its resolved checkout before importing the capstone and repository readers | All nine original accounting/publication tests retained byte-for-byte and pass without an ambient worktree path |
+| REQ-VERIFY-8442 / SCENARIO-VERIFY-8442-STANDALONE | Direct script invocation supplies both checkout package and repository paths | Two real child regressions fail before the repair and pass from outside the checkout with PYTHONPATH unset |
+| SCENARIO-VERIFY-8442-CONTROLS | Existing consumers and validation policy remain unchanged | 41 private E2E-018/E2E-021 and consumer checks, 91 conductor core/fix-erasure checks, scoped Ruff, strict types and spec tracing pass; fresh unit/subprocess coverage is 329/329 statements across three capstone modules and direct CLI with zero exclusions |
+
+Reports: `/var/tmp/carnot-8442-fix-validation/`. Global spec tracing retains
+the previously recorded 1,142 unrelated missing references. This entry repairs
+the code's invocation boundary and grants no new scientific benefit.

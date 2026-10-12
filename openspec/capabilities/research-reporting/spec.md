@@ -99170,3 +99170,34 @@ The intended primary is `results/experiment_8440_v726_board_reader_qualification
 conditional arithmetic bounds and future installed-kernel/transport evidence.
 Historical published artifacts and protocols remain unchanged. The conductor
 owns ops and traceability reconciliation after task exit.
+
+## REQ-REPORT-8442: Reconcile all fourteen V726 slots without new model work
+
+Authenticate the visible design, complete objects and activated authority with
+its pinned digest. Preserve Exp8429–Exp8442 order, separating executed producers,
+disqualification, pre-gate receipts, cascade skips and absent artifacts. The own
+slot is current reconciliation until atomic terminal publication. Never require
+its own deliverable as an input. Seal bounded primitive evidence and replay each
+eligible producer in a separate process with 1500MiB peak and 500MiB growth limits.
+Missing historical V722 authority, optional CUDA or boards cannot prevent CPU
+reduction. Import historical model provenance separately; current model calls
+are zero and MODEL_SPECS is empty.
+
+### SCENARIO-REPORT-8442-ACCOUNTING
+
+Private missing, pre-gate-only, all-null and disqualified controls retain every
+slot. Missing remains distinct from zero. Static Brier and decision contrasts,
+later learning loss and all retention windows, service acceleration ceilings,
+ARC support and hardware obligations come from independently replayed operands.
+Public exposed labels earn no independent factuality or hidden-game credit.
+H1=-0.00390625 and H2=0 stay closed. Every continuation names changed evidence;
+exact repeat retirement recommendations bind predecessor hashes without editing
+exclusion history. Preserve publication_gate.py G1–G4 and unmet_gates.
+
+Implementation and terminal artifact are owned by the Exp8442 capstone modules,
+thin CLI, focused tests and docs/research-notes/v726-capstone.md. The conductor
+owns ops/status, changelog and BMAD traceability reconciliation after task exit.
+
+The standalone CLI binds its resolved checkout's Python package and repository
+reader paths before importing the capstone. This supports private reconciliation
+without an ambient PYTHONPATH; scheduling and scientific accounting are unchanged.

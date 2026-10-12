@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-10-12 — Repair V726 capstone script imports
+
+- Bind the standalone Exp8442 entry point to its resolved checkout before
+  importing repository readers, fixing the private fixture's missing
+  `scripts.conductor_gates` import.
+- Add two regressions running real CLI children outside the checkout with
+  PYTHONPATH unset; both fail before the code repair.
+- Preserve all nine original tests, conductor code and existing validators.
+
+Validation: 11 capstone, 41 unchanged consumer/private E2E-018/E2E-021 and
+91 conductor core/fix-erasure tests pass. Scoped lint, formatting, strict types
+and spec references pass. Fresh unit/subprocess coverage is 329/329 statements
+across the three capstone modules and direct CLI, with zero excluded lines.
+Global spec tracing retains 1,142 unrelated gaps. Reports live in
+`/var/tmp/carnot-8442-fix-validation/`.
+Documentation freshness and the mutation gate pass. Final reconciliation
+reports only the existing global spec-reference debt.
+
 ## 2026-10-11 — Stage research milestone 2026.10.726
 
 - Created matching fourteen-task design and YAML, Exp8429–Exp8442, across four

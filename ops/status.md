@@ -1,6 +1,27 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-10-11
+**Last Updated:** 2026-10-12
+
+## 2026-10-12 — V726 capstone standalone import repair
+
+The capstone CLI now prepends its resolved checkout's package and repository
+paths before importing the reporting modules. Its real private publication
+fixture previously failed with `ModuleNotFoundError: scripts.conductor_gates`
+when the environment did not provide a repository PYTHONPATH.
+
+All 11 capstone tests pass without an ambient worktree path, including two new
+outside-checkout regressions that failed before the repair. All nine original
+tests retain their exact bytes. The 41 unchanged consumer/private E2E-018 and
+E2E-021 tests and 91 conductor core/fix-erasure checks also pass. Scoped Ruff,
+formatting, strict typing and spec references pass. Fresh unit/subprocess
+coverage is 329/329 statements across the three capstone modules and direct
+CLI, with zero excluded lines.
+
+Reports are in `/var/tmp/carnot-8442-fix-validation/`. Conductor source and
+publication/adversarial/row validators remain byte-identical. Global spec tracing
+still reports the previously recorded 1,142 unrelated missing references.
+Documentation freshness and the mutation gate pass; final reconciliation flags
+only that existing global spec-reference debt.
 
 ## 2026-10-11 — V726 research plan staged
 

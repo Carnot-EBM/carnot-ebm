@@ -54019,3 +54019,35 @@ SCENARIO-VERIFY-8440-CONTROLS additionally requires the direct Exp8413 adapter
 to preserve the original interpreter and Coverage.py arguments before the
 script path. The unchanged historical coverage assertion must see a genuine
 child database. The existing Exp8399 adapter remains in use for that family.
+
+## REQ-VERIFY-8442: Qualify bounded capstone bytes through existing consumers
+
+Run private E2E-018/E2E-021, scoped serial tests, Ruff check/format, strict mypy
+and owned spec coverage. Genuine Coverage.py child shards must cover 100 percent
+newly owned statements. Freeze command vectors, logs, exits, durations and hashes.
+Use disk-backed private scratch, a 4800-second cap and 900-second validation
+reserve. Run unchanged adversarial and strict-row validators, cold replay and
+atomic primary publication. External absence is complete_blocked_v726_capstone;
+owned failed validation is complete_disqualified_owned_validation. A completed
+accounting does not establish scientific benefit.
+
+### SCENARIO-VERIFY-8442-CONTROLS
+
+Actual CLI children accept 20261012, reject invalid dates, missing operands,
+deliberate errors, changed authority, rehashed aggregates and rehashed primitive
+substitution. Primary consumers see the exact checked terminal bytes. Findings
+remain recorded; unknown, warning or critical findings close readiness. No
+validator edits, exemptions, historical artifact replacement or external push.
+
+### SCENARIO-VERIFY-8442-STANDALONE
+
+The direct script-path CLI binds imports to its own checkout before importing
+the capstone and its repository readers. From outside the checkout with
+PYTHONPATH unset, deliberate errors exit 7 and missing cold-replay operands
+exit 1 with the normal capstone progress output. Private publication and all
+existing controls must also work without an ambient repository import path.
+
+Implemented in the thin Exp8442 CLI; two outside-checkout child regressions
+were red before the repair. All eleven focused tests and unchanged private
+E2E-018/E2E-021 consumers pass. Fresh combined unit/child coverage measures
+329/329 owned statements, including the CLI, with no coverage exclusions.
