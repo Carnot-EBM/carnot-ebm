@@ -20116,3 +20116,4 @@ code |
 | 2026-10-12 05:31 UTC | Run a bounded Qwen source-evidence canary only aft | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8429-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-10-12 06:15 UTC | Measure cross-game supervisor support and censorin | OK | 90 passed, 1 warning in 181.59s (0:03:01) |
 | 2026-10-12 07:14 UTC | Qualify KV260 operation evidence and preserve Pola | OK | 90 passed, 1 warning in 187.95s (0:03:07) |
+| 2026-10-12 07:42 UTC | Carry the exact GateMate reopening obligation with | OK | 84 passed, 1 warning in 49.15s |
