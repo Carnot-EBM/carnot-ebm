@@ -20137,3 +20137,4 @@ code |
 | 2026-10-12 18:24 UTC | Plan milestone 2026.10.728 | OK | 14 tasks proposed |
 | 2026-10-12 18:37 UTC | Milestone 2026.10.728 activated | OK | 14 tasks queued |
 | 2026-10-12 19:26 UTC | Bind fourteen tasks and seal the changed source le | OK | 125 passed, 1 warning in 263.58s (0:04:23) |
+| 2026-10-12 20:08 UTC | Freeze scalar and source controls without changing | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 135.99s (0:02:15) |
