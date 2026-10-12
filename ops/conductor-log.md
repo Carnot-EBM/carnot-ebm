@@ -20130,3 +20130,4 @@ code |
 | 2026-10-12 13:43 UTC | Qualify a bounded event journal with unchanged dur | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8449-persistence-localization.persistence_profile_ready_score (actual=0 == expected=1) |
 | 2026-10-12 13:45 UTC | Compare complete snapshot and journal service cost | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8450-journal-equivalence) |
 | 2026-10-12 13:45 UTC | Test bounded Qwen source-span responses only after | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8444-source-control-panel) |
+| 2026-10-12 14:26 UTC | Resolve ARC publication custody before assessing l | OK | 87 passed, 1 warning in 222.91s (0:03:42) |
