@@ -99078,3 +99078,27 @@ receipts and publishes exact terminal bytes through unchanged consumers.
 `test_acceleration_ceiling_8437.py` covers source custody, external absence,
 owned failures and actual CLI children. The research note records the arithmetic
 ceiling and the separate composite-stage and hardware acquisition implications.
+# REQ-REPORT-8439: Qualified retrospective supervisor support
+
+Exp8439 SHALL bind the complete activated V726 authority and independently sealed
+Exp8412 terminal, primitive episodes and redirect observations. Preserve eight
+intended episodes, both policy arms, every supervisor arm and right-censoring.
+Seeds and arms do not increase the two independent exposed games. Compare primitive
+fired/helped counts with original receipts. Require three overlapping adapter-withheld
+games and five resolved firings per shared game/policy/supervisor-arm cell before
+refinement. No policy change, game execution, model call or duplicate solve credit.
+Inspect an explicitly supplied frontier for at most60 seconds; absent optional
+frontier is not a required dependency. Unqualified current upstream publication
+blocks readiness while authenticated historical engineering rows remain available.
+
+## SCENARIO-REPORT-8439-SUPPORT
+
+Tests reconstruct all intended cells, shadow/applied distinctions, unresolved
+windows and shared support. Unknown outcomes stay censored, never negative trials.
+Registry precheck precedes outcome reduction. Both generalization scores remain0.
+
+## SCENARIO-REPORT-8439-CLI
+
+Private CLI tests publish exact checked bytes and execute real consumers. Missing
+external operands block; owned validation failures disqualify. Accept --date20261012.
+Implementation and research note preserve the source publication discrepancy.

@@ -53956,3 +53956,20 @@ Implementation: `verify/acceleration_ceiling_8437.py` reduces conditional bounds
 for all rows and pooled paired intervals for the frozen primary cell.
 Focused analytical controls verify zero kernels, unit acceleration, monotonicity,
 changed operands, invalid partitions and explicit infinite bounds.
+# REQ-VERIFY-8439: Independent supervisor operand custody
+
+Authenticate Exp8412 primitive steps and terminals against its independently pinned
+validated candidate. Reuse the shipped reduce_episode assertions without alteration.
+Require exact episode IDs, seed/game/arm assignments, summary counts and registered
+solve exposure. Cold replay uses sealed authority and independent upstream operands,
+rejecting self-consistently rehashed primitive or aggregate substitution.
+
+## SCENARIO-VERIFY-8439-CONTROLS
+
+Fresh bounded children exercise valid replay, missing operands, deliberate errors,
+episode mismatch, changed arms and rehashed counts. Private E2E-018 and historical
+live-wrapper tests retain commands, exits, durations and log hashes. Ruff, strict
+mypy, spec coverage and genuine child Coverage.py shards require100 percent newly
+owned statement coverage. Unchanged adversarial and strict-row consumers retain
+all findings; unknown/warning/critical findings close readiness. Publication is
+atomic through unchanged primary_publication. The conductor reconciles ops/BMAD.
