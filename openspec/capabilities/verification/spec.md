@@ -53816,3 +53816,39 @@ reuses bounded children, private E2E checks and unchanged terminal consumers.
 Focused tests cover genuine child shards, standalone replay without PYTHONPATH,
 missing inputs, deliberate errors and self-consistently rehashed tampering.
 The terminal artifact records executed validation. Conductor owns ops and BMAD reconciliation.
+## REQ-VERIFY-8433: Qualify bounded nine-input feedback checkpoints
+
+The isolated store SHALL persist the 109-coefficient head, decay scale, fixed
+scaler/temperature seal, issued prediction seals, cursor, selected clusters,
+pending records, applied feedback identities and both random states together.
+Each block SHALL use exactly two durable transactions. Seal all 60 predictions
+and admission before releasing labels. Commit tentative updates and next cursor
+together. Learner pending storage SHALL stay within C clusters and 3*C answers.
+Audit files SHALL remain outside prediction and update inputs. Stable delivery
+identities SHALL prevent duplicate effects after commit and before acknowledgment.
+Publication SHALL order temporary write, file fsync, atomic replace, directory
+fsync and acknowledgment. Historical stores and APIs SHALL remain unchanged.
+
+### SCENARIO-VERIFY-8433-RECOVERY
+
+Five synthetic 20-question blocks, capacities 8/16 and FIFO/uniform admission
+SHALL undergo real exits at four publication boundaries in both transactions
+and after block 2. Resume SHALL match complete state and future choices exactly.
+Replay SHALL reject coefficient, cursor, release and RNG corruption even after
+outer rehashing. Early labels, duplicates, future access, overcapacity and torn
+reads SHALL fail controls. Independent SciPy basis arithmetic SHALL confirm a
+nonzero sparse update. Frozen controls SHALL preserve coefficients exactly.
+
+### SCENARIO-VERIFY-8433-VALIDATION
+
+Genuine unit and subprocess Coverage.py shards SHALL cover every added statement.
+Private E2E-018/020/021, Ruff, strict mypy and owned spec tracing SHALL run.
+Fresh bounded replay SHALL reject missing operands, deliberate errors and
+self-consistently rehashed tampering. Unchanged publication and artifact consumers
+SHALL retain all findings. Failed owned checks SHALL disqualify readiness.
+
+Implementation: `python/carnot/verify/block_feedback_state_8433.py` isolates the
+new schema. The reporting module and thin CLI retain real child exits, fixed
+capacity controls, independent updates and cold semantic replay. Tests cover
+the store, live readers, publication, disk custody, deadlines and failure paths.
+Measured qualification and coverage remain bound to the terminal artifact.

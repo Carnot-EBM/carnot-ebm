@@ -98925,3 +98925,26 @@ Implementation: `python/carnot/reporting/v726_criterion_decision_audit.py` and
 `tests/python/test_v726_criterion_decision_8432.py` checks analytic metrics,
 intended bounds, sealed custody, external absence and owned failure.
 The terminal artifact records executed validation. Conductor owns ops and BMAD reconciliation.
+## REQ-REPORT-8433: Bind checkpoint qualification to measured process recovery
+
+Exp8433 SHALL authenticate activated V726 authority and the independently pinned
+Exp8429 methods receipt. Only real CPU dependencies SHALL gate this task.
+Synthetic labels SHALL establish plumbing only. No model loads or generation
+calls run; MODEL_SPECS is empty and both generalization scores stay zero.
+All intended recovery arms SHALL remain visible with observations or missing
+reasons. Readiness requires process recovery, independent update controls,
+capacity/causality checks and scoped validation. Missing external inputs block;
+owned failures disqualify. Terminal bytes SHALL be published atomically through
+unchanged consumers. The conductor owns ops and BMAD reconciliation.
+
+### SCENARIO-REPORT-8433-CLI
+
+The dated CLI accepts 20261012. Private outputs preserve historical artifacts.
+Cold replay reconstructs primitive states and reductions with independent
+operands. Missing files, forged receipt fields and rehashed changes are rejected.
+Every child retains its command, exit, duration and exact log hashes.
+
+Implementation: the Exp8433 runner publishes one terminal primary through the
+unchanged publication and reader APIs. Raw invocations retain primitive states,
+process receipts, coverage shards, negative controls and every scanner finding.
+The conductor owns ops/status/changelog and BMAD reconciliation.
