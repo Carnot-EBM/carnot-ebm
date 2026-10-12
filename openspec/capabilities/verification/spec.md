@@ -54199,3 +54199,26 @@ BMAD reconciliation remain conductor-owned.
 SCENARIO-VERIFY-8456-CONTROLS also requires an independently recomputed full
 activated task digest even when the visible/embedded design is externally absent.
 Rehashed YAML, task rows and primitive work cannot replace the sealed task pin.
+## REQ-VERIFY-8457: Validate no-model contract publication from immutable primitives
+
+Exp8457 SHALL accept --date20261012, use private disk-backed scratch, flush actual
+phase/child status within60s, cap measurements at3600s and reserve900s within4800s.
+Scoped serial unit tests and genuine Coverage.py subprocess shards SHALL cover
+100 percent newly owned statements. Run Ruff check/format, strict mypy, owned
+spec coverage and private E2E-018/E2E-021 with original CLI dates. Fresh replay,
+unchanged primary publication, adversarial verification and strict row checks
+precede atomic publication. Retain commands, exits, durations and log hashes.
+Owned failures disqualify; external absence blocks. No full repository suite.
+
+### SCENARIO-VERIFY-8457-CONTROLS
+
+Real private CLI and consumers accept valid primitives and reject missing
+inputs, wrong dates, deliberate errors and rehashed aggregate/primitive drift.
+Unknown, warning or critical findings block readiness; preserve all findings.
+Ops/status/changelog/traceability reconciliation belongs to the conductor.
+
+Exp8457 implementation: `v728_contract_runner.py` and its thin dated CLI reuse
+serial owned coverage, bounded children, historical E2E tests and unchanged
+terminal validators. Focused tests reference both new requirements and cover
+authority mutations, protocol/basis seals, isolated families, deadlines, private
+publication, missing/error children and self-consistently rehashed primitives.

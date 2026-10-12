@@ -1,0 +1,134 @@
+.................................FF                                      [100%]
+=================================== FAILURES ===================================
+____________________________ test_real_private_cli _____________________________
+
+full_root = PosixPath('/var/tmp/carnot-exp8457-development/owned-tests/test_real_private_cli0/authority')
+tmp_path = PosixPath('/var/tmp/carnot-exp8457-development/owned-tests/test_real_private_cli0')
+
+    
+    
+    def test_real_private_cli(full_root, tmp_path):
+        """SCENARIO-VERIFY-8457-CONTROLS: real private publication qualifies historical roots."""
+        output = tmp_path / (e.NAME + ".json")
+        base = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        cases = [
+            (
+                [
+                    "--date",
+                    "20261012",
+                    "--private-control",
+                    "--root",
+                    str(full_root),
+                    "--output",
+                    str(output),
+                ],
+                0,
+            ),
+            (["--cold-replay", str(output)], 0),
+            (["--cold-replay", str(tmp_path / "missing")], 1),
+            (["--deliberate-error"], 7),
+            (["--date", "20261011"], 2),
+            (["--private-control"], 2),
+            (["--history-request", str(tmp_path / "missing")], 2),
+        ]
+>       for i, (args, expected) in enumerate(cases):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v717_contract_runner.py", line 157, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8457_v728_contract_methods.py", line 12, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v728_contract_runner.py", line 47, in main
+E             return int(legacy.main(argv))
+E                        ^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v727_contract_runner.py", line 97, in main
+E             shipped.run(args.root, output, Path(directory), control=args.private_control)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v725_contract_runner.py", line 125, in run
+E             shipped.publish(value, output, raw)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v717_contract_runner.py", line 166, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert False
+
+tests/python/test_v728_contract_methods_8457.py:214: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=after_subprocess_cli-0 completed=1 pending=0
+_______________________ test_missing_inputs_and_deadline _______________________
+
+tmp_path = PosixPath('/var/tmp/carnot-exp8457-development/owned-tests/test_missing_inputs_and_deadli0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff7f1292780>
+
+    
+    
+    def test_missing_inputs_and_deadline(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8457-CONTROLS: owned clocks and absent external operands stay distinct."""
+        monkeypatch.setattr(
+            e.legacy, "historical", lambda root, raw: dict(families=[], references=[], receipts=[])
+>       )
+          
+
+tests/python/test_v728_contract_methods_8457.py:234: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v728_contract_methods.py:138: in measure
+    """Reuse original family workers while sealing this invocation before validation."""
+                    ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v727_contract_methods.py:198: in measure
+    work = dict(_MEASURE(root, raw))
+                ^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v726_contract_methods.py:163: in measure
+    p = protocol()
+        ^^^^^^^^^^
+python/carnot/reporting/v728_contract_methods.py:78: in protocol
+    p = dict(read(dict(path=str(ROOT / PROTOCOL), sha256=PROTOCOL_PIN)))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/v728-methods-protocol.json', 'sha256': 'sha256:6e6ed1f524204af57c59d994beed7c1a73b0474c1bbe8490a3339c5ac94a7a5b'}
+
+    def read(ref: Json) -> Any:
+        """Exact named bytes prevent repaired summary hashes from replacing primitive evidence."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("source_hash")
+E           ValueError: source_hash
+
+python/carnot/reporting/v725_contract_methods.py:61: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8457] phase=preconditions_before completed=0 pending=14
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v728_contract_methods_8457.py::test_real_private_cli
+FAILED tests/python/test_v728_contract_methods_8457.py::test_missing_inputs_and_deadline
+2 failed, 33 passed, 1 warning in 447.74s (0:07:27)

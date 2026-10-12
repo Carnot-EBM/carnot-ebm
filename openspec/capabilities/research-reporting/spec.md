@@ -99231,6 +99231,14 @@ cannot be replaced by self-consistently rehashed candidate operands.
 
 Status: specified before implementation; conductor owns ops/BMAD reconciliation.
 
+Exp8457 implementation: `v728_contract_methods.py` reuses shipped V726/V727
+readers through dated adapters, with independent full-task and protocol pins.
+The sealed `v728-methods-protocol.json` records the13-coefficient scalar basis,
+separate derivative qualification and new frozen budgets. The terminal
+publication manifest qualifies readiness from primitive family replay and
+retains zero independent/generalized benefit. Explanations are in
+`docs/research-notes/v728-contract-methods.md`.
+
 Implementation status (2026-10-12): implemented in
 `python/carnot/reporting/v727_contract_methods.py` and
 `python/carnot/reporting/v727_historical_inputs.py`. All five original producer
@@ -99386,3 +99394,30 @@ producer assertions and pinned historical authority. Fifteen focused tests pass.
 Private accounting and live consumers accept checked terminal bytes; missing
 science remains blocked, with separate source, objective and durable-service
 continuation conditions. Production qualification is recorded in the primary.
+## REQ-REPORT-8457: Bind complete V728 authority and independent historical families
+
+Exp8457 SHALL bind fourteen ordered full task dictionaries, the visible Exact
+task contract table, both JSON markers, printed canonical digest and activated
+YAML using the shipped parser. Missing authority remains absent; V727 history
+cannot be reconstructed from V728. Seal the V728 protocol before any fit,
+preserving V727's unexecuted scientific operands and V726's original roles,
+thresholds and five retention windows. Derive scalar dimension from the shipped
+one-input cubic basis, with separate derivative qualification and frozen ARC
+and evidence-canary budgets. Source, learning, service and supplied CUDA inputs
+have independent readiness boundaries. No model, board or CUDA probe runs.
+
+### SCENARIO-REPORT-8457-AUTHORITY
+
+Matching full authority passes. Twelve existing mutation classes, optional-field
+drift, reordered/dropped objects, absent markers and Phase-1 truncation fail.
+Self-consistently rehashed authority cannot replace the independent task pin.
+
+### SCENARIO-REPORT-8457-PROTOCOL
+
+Reject a scalar dimension of109. All other inherited scientific operands remain
+equal. Preserve source/method/limit mappings for five dated primary sources.
+Qualify original V726 families in separate private consumer roots. Missing
+source, learning or service evidence lowers only its respective boundary.
+Methods readiness requires current full authority and the sealed protocol.
+
+Status: specified before implementation; conductor owns ops/BMAD reconciliation.
