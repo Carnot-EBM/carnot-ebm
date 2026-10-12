@@ -99290,3 +99290,39 @@ Both generalization scores and new_level_solves remain zero.
 Reconstruct two games, twelve pending redirects and zero resolved outcomes.
 Keep all sixteen game/policy/arm cells and the unchanged support thresholds.
 Optional newer receipts require explicit supply and authenticated provenance.
+
+## REQ-REPORT-8454: Map the durable journal service to authenticated board operations
+
+Authenticate complete V727 authority separately from the sealed Exp8440 reader.
+Reuse its original V726 authority and primitive replay. A qualified reader stays
+qualified when compatible spline kernels or transfer clocks are absent. Preserve
+KV260 quadratic Ising k_max<=5 and PolarFire hash-matched Linux CPU dispatch.
+Optional Exp8451 service_cost_ready_score and primitive stage clocks are required
+only for current cost import; absent fields remain null with their exact names.
+Map serialization, journal append, fsync, checkpoint, arithmetic and transport
+individually to installed support or explicit host-only/unsupported operations.
+No model, SSH, flash, synthesis or USB invocation is permitted. Retain original
+host bottlenecks and no-purchase implications, without a current speedup claim.
+
+### SCENARIO-REPORT-8454-BOUNDARY
+
+Emit separate KV260 and PolarFire terminal records, with next installed-kernel,
+parity, complete transfer/device clocks and durable transaction evidence. Hardware
+continuity accounting does not depend on optional costs. Independent factuality,
+current Qwen quality and hidden-game transfer remain open; both generalization
+scores stay zero. H1=-0.00390625 and H2=0 remain closed historical results.
+
+### SCENARIO-REPORT-8454-OPERANDS
+
+Missing current contract, original reader, optional cost readiness or primitive
+stage clocks retain exact path/hash/field/operator/expected/observed receipts.
+Self-consistently rehashed summaries and changed primitives fail cold replay.
+Historical original authority is never replaced by mutable current vNEXT.
+
+Implementation for REQ-REPORT-8454: `board_operation_boundary_8454.py` replays
+the pinned Exp8440 producer with its original authority; the bounded adapter is
+`board_operation_runner_8454.py`, and the thin CLI is
+`scripts/experiments/experiment_8454_v727_board_operation_boundary.py`.
+The primary is `results/experiment_8454_v727_board_operation_boundary.json`.
+`docs/research-notes/v727-board-operation-boundary.md` records installed scope,
+missing journal clocks, host bottlenecks and concrete future device evidence.

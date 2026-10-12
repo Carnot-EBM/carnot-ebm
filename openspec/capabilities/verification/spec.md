@@ -54129,3 +54129,22 @@ Ops/status/traceability reconciliation is conductor-owned for this invocation.
 Cold processes reject rehashed support, custody, authority and primitive mutation.
 Private CLI publishes honest blocked evidence and reads it through both consumers.
 Wrong dates and repository destinations for private control fail.
+
+## REQ-VERIFY-8454: Qualify evidence-only board boundary publication
+
+Accept --date 20261012. Print flushed progress and counts around bounded children.
+Use disk-backed private scratch, measurement cap3600s, task cap4800s and validation
+reserve900s. Run scoped serial unit tests, private E2E-018 and E2E-021, Ruff check
+and format, strict mypy and owned spec coverage. Preserve genuine Coverage.py
+unit/child shards and require100 percent newly owned statements. Do not change
+historical assertions, validators or thresholds. Atomic primary publication must
+follow fresh cold replay, unchanged adversarial and strict row verification.
+Unknown, warning and critical findings block readiness. Owned failures disqualify;
+unchanged external absence blocks. The conductor owns ops/traceability updates.
+
+### SCENARIO-VERIFY-8454-CLI
+
+Exercise real private publication and consumers, valid cold replay, missing
+operands, deliberate child errors, wrong date, private-output protection and
+rehashing attacks. Preserve commands, exits, durations and log hashes. No full
+repository test suite or historical publication writes are allowed.
