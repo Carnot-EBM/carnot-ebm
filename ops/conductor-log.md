@@ -20127,3 +20127,6 @@ code |
 | 2026-10-12 12:54 UTC | Compare objective-aligned sparse updates under ide | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8443-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-12 12:56 UTC | Audit later proper loss decision utility and reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8447-brier-online-learning) |
 | 2026-10-12 13:36 UTC | Measure serialization synchronization and publicat | OK | 110 passed, 1 warning in 82.78s (0:01:22) |
+| 2026-10-12 13:43 UTC | Qualify a bounded event journal with unchanged dur | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8449-persistence-localization.persistence_profile_ready_score (actual=0 == expected=1) |
+| 2026-10-12 13:45 UTC | Compare complete snapshot and journal service cost | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8450-journal-equivalence) |
+| 2026-10-12 13:45 UTC | Test bounded Qwen source-span responses only after | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8444-source-control-panel) |
