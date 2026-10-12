@@ -99267,3 +99267,26 @@ service authority and a narrow operation observer. Twenty measured arms and four
 warmup arms remain explicit. Current independent V727 contract absence blocks
 production measurement. Private disk pairs preserve semantic and snapshot hashes.
 The research note records the blocked handoff to Exp8450/8451.
+# REQ-REPORT-8453: Recover sealed ARC receipts before support assessment
+
+Exp8453 SHALL bind activated V727 full task objects without using earlier V727
+outputs. Recover only named Exp8412/8439/8442 custody bytes within120 seconds.
+Publish recovered original bytes privately through unchanged validators and
+the exact historical CLI. Preserve the current primary and all original flags.
+Reconstruct eight episodes and all game/policy/arm cells from sealed primitives.
+Three overlapping adapter-withheld games and five resolved firings per shared
+cell remain required. Pending redirects stay censored. Support failure is blocked.
+Record temporal context and the specific AVO refinement operands still needed.
+No model, game, hidden source, new solve credit or live policy change is allowed.
+
+## SCENARIO-REPORT-8453-CUSTODY
+
+Original sealed bytes qualify separately from the changed current publication.
+Missing custody or full authority blocks; failed owned checks disqualify.
+Both generalization scores and new_level_solves remain zero.
+
+## SCENARIO-REPORT-8453-SUPPORT
+
+Reconstruct two games, twelve pending redirects and zero resolved outcomes.
+Keep all sixteen game/policy/arm cells and the unchanged support thresholds.
+Optional newer receipts require explicit supply and authenticated provenance.

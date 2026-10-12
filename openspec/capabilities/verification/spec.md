@@ -54113,3 +54113,19 @@ private CLI publication, bounded children, missing inputs, deadlines and rehashe
 summary, snapshot and journal drift. The four newly owned implementation files
 have 400/400 statement coverage. Production reruns the scoped validation manifest
 before publication. No full repository suite or historical publication is changed.
+# REQ-VERIFY-8453: Validate restored custody and terminal primitive replay
+
+Exp8453 SHALL run focused serial tests with genuine unit/child Coverage.py shards
+and100 percent newly owned statement coverage. Run Ruff check/format, strict mypy,
+spec coverage and private E2E-017/018/021. Exact historical and current CLIs SHALL
+accept valid replay and reject missing, deliberate-error and rehashed controls.
+Unchanged primary publication, adversarial verification and strict row validation
+must check exact candidate bytes before atomic publication. Keep all findings,
+command exits, durations and stream hashes. External absence remains blocked.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
+
+## SCENARIO-VERIFY-8453-CONTROLS
+
+Cold processes reject rehashed support, custody, authority and primitive mutation.
+Private CLI publishes honest blocked evidence and reads it through both consumers.
+Wrong dates and repository destinations for private control fail.
