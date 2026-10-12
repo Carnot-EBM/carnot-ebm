@@ -54306,3 +54306,44 @@ Missing required operands retain all ten intended pairs with missing reasons.
 Measurement deadlines retain incomplete arms and close cost readiness. Owned
 failures disqualify. Genuine unit and child Coverage.py shards cover100 percent
 new statements, including private CLI, replay and deliberate errors.
+
+## REQ-VERIFY-8465: Qualify a bounded experimental event journal
+
+Reuse Exp8464's sealed five-input service tape, original transition arithmetic,
+request order, delay8, batch boundaries and exact replies. Keep production
+snapshot storage unchanged. Commit immutable sequence/previous digest/payload
+length and hash/code/config/ack ID records with actual file fsync before reply.
+Directory fsync covers journal creation and atomic checkpoint publication.
+Checkpoint every32 committed transactions and final drain, binding its exact
+journal prefix and all issued/applied IDs, pending feedback, cursor and head.
+Retain pinned versions and segments; do not reclaim before a bound checkpoint.
+Enforce256 logical events,2MiB state and16MiB journal limits by rejecting overflow.
+
+### SCENARIO-VERIFY-8465-EQUIVALENCE
+
+Cold replay starts from independent initial operands and the unchanged oracle.
+Both natural cells and stores match bit-for-bit. Duplicate transactions return
+saved replies; conflicting IDs reject. Repeated feedback never learns twice.
+Pinned readers survive concurrent writer publication and checkpoint changes.
+
+### SCENARIO-VERIFY-8465-RECOVERY
+
+Real private child exits exercise before/after payload, fsync, checkpoint and
+acknowledgment in both stores. Retain states, replies, durable acknowledgment
+ledgers and command/exit/log receipts. Only an uncommitted final tail truncates.
+Acknowledged loss, interior corruption, reorder, stale pointers and forged
+recomputed hashes reject against independently sealed transition operands.
+Process-exit checks do not certify physical power loss.
+
+### SCENARIO-VERIFY-8465-VALIDATION
+
+Scoped serial tests and genuine Coverage.py unit/child shards cover100 percent
+new owned statements, including failures. Run Ruff check/format, strict mypy,
+spec coverage, private E2E-018/021 and unchanged terminal consumers. Preserve
+unknown and warning findings with readiness0. No speed or generalization claim.
+
+Exp8465 implementation: `journal_equivalence_8465.py` retains immutable commit
+certificates, exact sealed operand types,32-transaction prefix checkpoints and
+all pinned files. The original Exp8464 transition adapter and production snapshot
+writer remain unchanged. Tests include changed sealed labels, signed-zero and
+numeric-type aliasing in addition to the declared process and corruption panel.

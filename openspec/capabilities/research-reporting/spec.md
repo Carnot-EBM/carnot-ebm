@@ -99504,3 +99504,30 @@ deliberate errors and rehashed tampering. Unchanged primary publication,
 adversarial and strict row consumers check private bytes before atomic publish.
 Retain all findings; unknown/warning/critical findings close readiness. The
 conductor owns ops/status/changelog/traceability reconciliation.
+
+## REQ-REPORT-8465: Publish journal qualification with sealed causal evidence
+
+Authenticate the activated full-object V728 contract and Exp8464's exact sealed
+tape; authenticate imported Exp8407 operands using original producer authority.
+Declare no_model_load, MODEL_SPECS=[], zero current LLM calls, aggregation readers
+and verifier ensemble over cached candidates. Historical models remain provenance.
+Emit all intended equivalence, crash and negative-control units with primitive
+operands, acknowledgment ledger, recovered hashes, limits and durability scope.
+Oracle engineering positives are circular_positive; both generalization scores0.
+Missing required operands block; failed owned checks disqualify. Journal readiness
+requires complete equivalence and all owned checks,100 percent new coverage and
+no unresolved findings. Preserve V717/V726/V727 conclusions without reopening.
+
+### SCENARIO-REPORT-8465-TERMINAL
+
+Accept --date20261012 and flush start/phase/child progress. Check memory, tools,
+private disk scratch and deadlines; cap measurement3600s with900s validation
+reserved inside4800s. Fresh bounded replay rejects missing inputs, deliberate
+errors and self-consistently rehashed tampering. Publish checked terminal bytes
+atomically through unchanged primary_publication, adversarial and strict row
+consumers. Conductor owns ops/status/changelog/BMAD reconciliation.
+
+Exp8465 implementation: the reporting module and thin dated CLI retain both
+stores, caller acknowledgment ledgers, original authority receipts and primitive
+cold-replay operands. Scoped validation owns only the four new source files.
+The conductor retains subsequent ops/status/changelog/BMAD reconciliation.
