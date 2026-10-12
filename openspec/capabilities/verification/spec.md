@@ -54083,3 +54083,33 @@ shards cover all 273 newly owned statements (100 percent). Ruff check/format,
 strict mypy and both owned test files' spec coverage pass. The failed reducer
 attempt is retained as disqualified evidence; repeated reduction now preserves
 primitive operands. Ops and BMAD reconciliation remain conductor-owned.
+
+## REQ-VERIFY-8449: Observe disjoint persistence spans without changing writes
+
+Exp8449 SHALL wrap qualified Exp8407 operations through a narrow observer.
+Nested monotonic spans record exclusive state validation/copy, serialization/hash,
+write/flush, file fsync, rename, directory fsync and each pointer operation.
+An outer clock starts before service setup and ends after feedback tail drain.
+Remaining orchestration and wall gaps stay explicit. No overhead is subtracted.
+The reducer SHALL read actual disk snapshots and independently replay causal rows.
+It SHALL freeze event tapes, response/state hashes and candidate journal units.
+Measurement stops within 1800 seconds. Task validation reserves at least 900 seconds.
+
+### SCENARIO-VERIFY-8449-SPANS
+
+Real private paired transactions have identical states, responses and snapshot bytes.
+Exclusive nested durations sum to the outer complete clock. Damaged nesting,
+changed causal rows and self-consistently rehashed snapshot corruption fail.
+
+### SCENARIO-VERIFY-8449-VALIDATION
+
+Scoped serial unit and real CLI paths have 100 percent newly owned statement
+coverage in genuine Coverage.py shards. Ruff, strict mypy, spec coverage,
+private E2E-018/021 and unchanged terminal validators are required before publication.
+Owned check failures disqualify. Unchanged external absence remains blocked.
+
+Exp8449 implementation status (2026-10-12): 29 focused tests cover real disk pairs,
+private CLI publication, bounded children, missing inputs, deadlines and rehashed
+summary, snapshot and journal drift. The four newly owned implementation files
+have 400/400 statement coverage. Production reruns the scoped validation manifest
+before publication. No full repository suite or historical publication is changed.

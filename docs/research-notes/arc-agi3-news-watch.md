@@ -462,3 +462,7 @@ Additional official ARC-AGI-3 Semi-Private results, showing each harness’s bes
 
 - **Research Summit announced:** ARC Prize will host its 2026 Research Summit in Boston on **October 23**, in collaboration with MIT. [Official event page](https://arcprize.org/events/research-summit-2026)
 
+## 2026-10-12 13:13 UTC -- NEW
+
+**September 3 — GPT-6 Astra results:** ARC Prize announced new ARC-AGI-3 Semi-Private records: **62.7%** with the Standard harness (max reasoning; $26,098) and **99.9%** with the Provider Adapter harness (high reasoning; $18,817). At max reasoning with the adapter, Astra used fewer actions than the median tested human on **96% of levels**. [Official announcement](https://arcprize.org/blog/astra)
+

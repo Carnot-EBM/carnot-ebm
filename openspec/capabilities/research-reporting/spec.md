@@ -99237,3 +99237,33 @@ Implementation status (2026-10-12): implemented in
 inputs qualify. Actual V727 methods remain blocked because the independent
 visible table, embedded complete objects and printed digest are absent. Learning
 and service readiness remain independent; no current model or device probe ran.
+
+## REQ-REPORT-8449: Localize persistence within complete service transactions
+
+Exp8449 SHALL authenticate the activated V727 full objects and independent design.
+It SHALL authenticate Exp8407 through its original sealed producer authority.
+Only natural batch1/reuse8 and batch8/reuse8 are admitted. Each cell has one
+warmup pair and five measured pairs. Baseline and instrumented order alternates.
+The original five-input arithmetic, feedback delay and durable bytes stay fixed.
+Every intended arm remains present when a required operand or deadline fails.
+Missing independent design blocks measurements; historical readiness cannot replace it.
+No current model loads. Engineering evidence grants no generalization credit.
+
+### SCENARIO-REPORT-8449-GATES
+
+Missing authority or producer bytes retain twenty measured arm rows and four
+warmup rows with explicit missing reasons. Optional device history does not gate CPU work.
+The terminal artifact records the actual invocation, hashes and failed checks.
+
+### SCENARIO-REPORT-8449-REPLAY
+
+Private publication and cold replay accept valid evidence. Missing files,
+deliberate errors and rehashed summary or primitive drift fail in bounded children.
+Readiness requires complete paired clocks and every required validation receipt.
+The conductor owns ops and BMAD reconciliation after task exit.
+
+Exp8449 implementation status (2026-10-12): the thin dated CLI uses the original
+service authority and a narrow operation observer. Twenty measured arms and four
+warmup arms remain explicit. Current independent V727 contract absence blocks
+production measurement. Private disk pairs preserve semantic and snapshot hashes.
+The research note records the blocked handoff to Exp8450/8451.
