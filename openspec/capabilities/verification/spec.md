@@ -53931,3 +53931,28 @@ measured persistence; its internal stages are unavailable.
 Implementation: `verify/transaction_attribution_8436.py` proves the disjoint
 partition before attributing stages. The report adapter preserves all 135 slots,
 27 separate warmups and independently pinned original timing hashes.
+
+## REQ-VERIFY-8437: Conditional complete-service acceleration ceiling
+
+Exp8437 SHALL recompute all135 qualified Exp8436 measured repeats from pinned
+disjoint primitive clocks. Freeze natural,batch1,predictions_per_update8 as primary.
+Use S(a)=T/(T-K+K/a) for a=1,10,100,infinity and K=scoring+coefficient_update.
+Label Kplus=K+conversion separately as optimistic sensitivity. Retain all other
+work in T. Reject nonfinite operands, T<=0 and K outside[0,T]. When K=T,
+finite bounds equal a; encode the infinite bound explicitly without JSON Infinity.
+Use10000 identical paired repeat indices for T,K,Kplus, seed7268437. Reduce pooled
+ratios in each draw. Report observed ranges and descriptive95 percent intervals.
+Repeats describe one host/workload and add no independent deployment samples.
+Arithmetic10x requires K/T>=0.9. Report max(0,0.9-K/T) as additional original
+nonkernel time removal needed with infinite arithmetic acceleration.
+
+### SCENARIO-VERIFY-8437-BOUNDS
+
+K=0 and a=1 give1. Increasing a is monotone. Changed T/K changes the bound.
+Analytic pooled controls distinguish paired resampling from average repeat ratios.
+Every primary repeat is checked against the necessary0.9 condition.
+
+Implementation: `verify/acceleration_ceiling_8437.py` reduces conditional bounds
+for all rows and pooled paired intervals for the frozen primary cell.
+Focused analytical controls verify zero kernels, unit acceleration, monotonicity,
+changed operands, invalid partitions and explicit infinite bounds.

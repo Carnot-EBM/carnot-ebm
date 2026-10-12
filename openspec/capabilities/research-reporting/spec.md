@@ -99050,3 +99050,31 @@ Implementation: `transaction_attribution_8436.py`, its bounded runner and thin
 Exp8436 CLI retain primitive repeat custody and the unchanged native rejection.
 `test_transaction_attribution_8436.py` exercises source authentication, real
 private children, rehashed corruption and complete clock reconstruction.
+
+## REQ-REPORT-8437: Source-bound acceleration feasibility report
+
+Authenticate the activated complete V726 design and qualified Exp8436 terminal
+bytes. Snapshot135 primitive operands and reject independently rehashed row
+substitution. No native execution, device timing, model load or current LLM call.
+Use aggregation_from_upstream_artifacts; both generalization scores remain0.
+Compare100x arithmetic with program aspiration and unchanged NFR-01 service10x.
+Preserve initialization, persistence, gaps, response and tail in unaccelerated work.
+Describe measured composite follow-up stages without assigning unmeasured internals.
+Actual_native_speedup stays null and native_parity_ready_score stays0.
+Missing required external inputs block; failed owned validation disqualifies.
+
+### SCENARIO-REPORT-8437-CUSTODY
+
+Private CLI and fresh bounded replay exercise valid operands, missing operands,
+deliberate errors and self-consistently rehashed tampering. Unchanged publication,
+adversarial and strict row consumers check exact terminal bytes atomically.
+Retain command, exit, duration and log hashes. Private E2E-018/E2E-021, Ruff,
+strict mypy, spec coverage and genuine child Coverage.py shards cover100 percent
+newly owned statements. The conductor owns ops/status/BMAD reconciliation.
+
+Implementation: `reporting/acceleration_ceiling_8437.py` authenticates the producer
+and all intended primitive rows. Its bounded runner retains private validation
+receipts and publishes exact terminal bytes through unchanged consumers.
+`test_acceleration_ceiling_8437.py` covers source custody, external absence,
+owned failures and actual CLI children. The research note records the arithmetic
+ceiling and the separate composite-stage and hardware acquisition implications.
