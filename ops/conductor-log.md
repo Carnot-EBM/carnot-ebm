@@ -20121,3 +20121,6 @@ code |
 | 2026-10-12 11:24 UTC | Plan milestone 2026.10.727 | OK | 14 tasks proposed |
 | 2026-10-12 11:37 UTC | Milestone 2026.10.727 activated | OK | 14 tasks queued |
 | 2026-10-12 12:39 UTC | Bind fourteen tasks and seal the changed source le | OK | 112 passed, 1 warning in 235.75s (0:03:55) |
+| 2026-10-12 12:46 UTC | Freeze scalar and source controls without changing | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8443-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-12 12:48 UTC | Fit the scalar spline control and freeze matched s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8444-source-control-panel) |
+| 2026-10-12 12:48 UTC | Measure source information beyond scalar recalibra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8445-source-control-fit) |
