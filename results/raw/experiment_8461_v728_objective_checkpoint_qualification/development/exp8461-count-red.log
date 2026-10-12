@@ -1,0 +1,84 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_failed_child_stops_recovery _______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T205001-1534318-539af156/test_failed_child_stops_recove0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7efe553c4b30>
+
+    def test_failed_child_stops_recovery(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8461-VALIDATION: a real failed worker stops the remaining panel."""
+        import time
+        from carnot.reporting import objective_checkpoint_evidence_8461 as evidence
+    
+        def failing_child(name, argv, logs, **kwargs):
+            program = "import sys;from carnot.reporting.objective_checkpoint_runner_8461 import main;main(sys.argv[1:]);sys.exit(7)"
+            return child(name, [sys.executable, "-u", "-c", program, *argv[3:]], logs, deadline=30)
+    
+        monkeypatch.setattr(evidence, "child", failing_child)
+        rows, exits, receipts = evidence.recovery(
+            tmp_path / "raw",
+            e.legacy.head(),
+            tmp_path / "private",
+            deadline_ns=time.monotonic_ns() + 60 * 10**9,
+        )
+        assert len(rows) == 1 and rows[0]["passed"] is False
+        assert not exits and receipts[0]["exit_code"] == 7
+>       atomic_json(tmp_path / "failed_rows.json", rows)
+
+tests/python/test_objective_reporting_8461.py:314: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/current_work_receipt.py:64: in atomic_json
+    json.dump(value, stream, indent=2, sort_keys=True)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:179: in dump
+    for chunk in iterable:
+                 ^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:430: in _iterencode
+    yield from _iterencode_list(o, _current_indent_level)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:326: in _iterencode_list
+    yield from chunks
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:406: in _iterencode_dict
+    yield from chunks
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:439: in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.encoder.JSONEncoder object at 0x7efe5358fe30>, o = np.int64(108)
+
+    def default(self, o):
+        """Implement this method in a subclass such that it returns
+        a serializable object for ``o``, or calls the base implementation
+        (to raise a ``TypeError``).
+    
+        For example, to support arbitrary iterators, you could
+        implement default like this::
+    
+            def default(self, o):
+                try:
+                    iterable = iter(o)
+                except TypeError:
+                    pass
+                else:
+                    return list(iterable)
+                # Let the base class default method raise the TypeError
+                return super().default(o)
+    
+        """
+>       raise TypeError(f'Object of type {o.__class__.__name__} '
+                        f'is not JSON serializable')
+E       TypeError: Object of type int64 is not JSON serializable
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:180: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8461] phase=recovery completed=0 pending=36
+[exp8205] phase=before_subprocess_c8-fifo-none-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-none-resume completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_objective_reporting_8461.py::test_failed_child_stops_recovery
+1 failed, 1 warning in 6.76s

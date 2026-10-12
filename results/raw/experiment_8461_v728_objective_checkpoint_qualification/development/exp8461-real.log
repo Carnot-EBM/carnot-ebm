@@ -1,0 +1,36 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_qualified_primitive_replay ________________________
+
+measured = ({'authority': {'activated': True, 'active_tasks_sha256': '1a6bb695f9ef6e97d0891d20ae2aad7a9f04fd3bdf3707cdf4a5e79baca...4, 'failures': [], ...}, PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T202853-1529454-29217db1/8461-measured0'))
+
+    def test_qualified_primitive_replay(measured):
+        """SCENARIO-REPORT-8461-TERMINAL: real states qualify only with every owned check."""
+        work, parent = measured
+        assert not work["failures"]
+        primitive = q.read(work["primitive_reference"])
+>       assert len(primitive["restart_rows"]) == 36
+E       assert 0 == 36
+E        +  where 0 = len([])
+
+tests/python/test_objective_reporting_8461.py:79: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8461] phase=preconditions completed=0 pending=0
+[exp8205] phase=before_subprocess_original_producer_8433 completed=0 pending=1
+[exp8205] phase=after_subprocess_original_producer_8433 completed=1 pending=0
+[exp8205] phase=before_subprocess_original_producer_8434 completed=0 pending=1
+[exp8205] phase=after_subprocess_original_producer_8434 completed=1 pending=0
+[exp8461] phase=derivatives completed=0 pending=0
+[exp8461] derivative_completed=30 derivative_pending=60
+[exp8461] derivative_completed=60 derivative_pending=30
+[exp8461] derivative_completed=90 derivative_pending=0
+[exp8461] phase=derivatives_complete completed=90 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_objective_reporting_8461.py::test_qualified_primitive_replay
+1 failed, 1 warning in 28.03s

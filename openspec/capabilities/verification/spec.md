@@ -54239,3 +54239,45 @@ Real private CLI and consumers qualify valid controls and reject wrong dates,
 private-output violations, missing inputs, child errors and rehashed tampering.
 Keep commands, exits, durations and stream hashes. Test owned failures and
 external absence separately. The conductor owns subsequent ops reconciliation.
+
+## REQ-VERIFY-8461: Qualify versioned Brier derivatives and durable feedback
+
+Before learning, preserve the shipped nine-input,109-coefficient spline head,
+fit scaler, temperature, rate0.01 and L2=0.001. Change only the data derivative
+to2*(p-y)*p*(1-p)/T, including each basis factor and the bias. Compare sparse
+updates with independent dense derivatives and centered finite differences for
+both labels, T={0.5,1,2}, logits={-20,-4,0,4,20} and boundary supports.
+Require absolute error<=1e-7 and relative error<=1e-5 when reference>1e-6.
+A small descent step reduces the full declared objective on nonstationary
+constructed cases. Report saturation. Missing-temperature, reversed-gradient
+and future-label controls fail. No released evaluation labels enter learning.
+
+### SCENARIO-VERIFY-8461-DERIVATIVES
+
+Independent individual cubic bases include bias and global logical L2.
+Temperature omission and gradient reversal fail independently of saved hashes.
+Zero-step identity and inherited log-loss updates retain original assertions.
+
+### SCENARIO-VERIFY-8461-RECOVERY
+
+Bind rule version/hash and adapter bytes in checkpoints. Transaction one seals
+all sibling predictions and admissions. Transaction two saves released updates,
+feedback/ack IDs, RNG and cursor. Real exits before and after both commits
+resume bit-for-bit to uninterrupted predictions and logical state. Reject
+wrong-rule checkpoints, conflicting duplicates, future labels and rehashed
+coefficient/cursor/RNG drift. This does not recertify physical power loss.
+
+### SCENARIO-VERIFY-8461-VALIDATION
+
+Scoped serial pytest and genuine Coverage.py child shards cover100 percent
+newly owned statements, including exits and failures. Run Ruff check/format,
+strict mypy, owned spec coverage and private E2E-018/020/021. No full suite.
+Fresh replay rejects missing inputs, deliberate errors and rehashed tampering.
+Keep command/exit/duration/log hashes. Stop measurement by3600s; reserve900s
+within4800s. Use private disk scratch and flush progress at phase boundaries.
+
+Exp8461 implementation: the versioned adapter inherits physical store writes.
+Independent dense/finite-difference checks cover90 constructed cells. Real
+private exits cover both sides of each commit at both admission capacities.
+Owned tests cover nonfinite states, rule drift, future labels and repaired hashes.
+Coverage shards are archived before unchanged report commands consume them.

@@ -1,0 +1,29 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-c",
+    "import pathlib,shutil,sys; p=pathlib.Path(sys.argv[1]); d=p/'uncombined_shards'; d.mkdir(exist_ok=True); files=list(p.glob('.coverage.*')); [shutil.copyfile(f,d/f.name) for f in files]; print('genuine_shards_archived',len(files),flush=True); sys.exit(0 if files else 1)",
+    "/var/tmp/carnot8461-wxfx4w4g"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,shutil,sys; p=pathlib.Path(sys.argv[1]); d=p/'\"'\"'uncombined_shards'\"'\"'; d.mkdir(exist_ok=True); files=list(p.glob('\"'\"'.coverage.*'\"'\"')); [shutil.copyfile(f,d/f.name) for f in files]; print('\"'\"'genuine_shards_archived'\"'\"',len(files),flush=True); sys.exit(0 if files else 1)' /var/tmp/carnot8461-wxfx4w4g",
+  "deadline_s": 30,
+  "duration_s": 0.064985804,
+  "ended_monotonic_ns": 160737369079348,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8461_v728_objective_checkpoint_qualification/invocations/1791839461674648463/validation/coverage_archive.stdout",
+  "log_sha256": "sha256:83c754339845c8dab67129f3bace667c15f994c690706e5442ebbba30ba0aadd",
+  "name": "coverage_archive",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 160737304093544,
+  "started_wall_ns": 1791840982083952708,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8461_v728_objective_checkpoint_qualification/invocations/1791839461674648463/validation/coverage_archive.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8461_v728_objective_checkpoint_qualification/invocations/1791839461674648463/validation/coverage_archive.stdout",
+  "stdout_sha256": "sha256:83c754339845c8dab67129f3bace667c15f994c690706e5442ebbba30ba0aadd",
+  "timed_out": false
+}

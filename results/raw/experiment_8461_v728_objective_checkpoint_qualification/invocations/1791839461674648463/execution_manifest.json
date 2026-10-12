@@ -1,0 +1,220 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/var/tmp/carnot8461-wxfx4w4g/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_objective_checkpoint_8461.py",
+        "--basetemp=/var/tmp/carnot8461-wxfx4w4g/owned-tests",
+        "tests/python/test_objective_reporting_8461.py"
+      ],
+      "deadline": 900,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import sys,pytest\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nfrom carnot.reporting import v727_historical_inputs as h\nfrom carnot.reporting.v721_capstone_evidence import frozen_inputs\nwith TemporaryDirectory(prefix='8461-history-tests-',dir='/var/tmp') as directory:\n    private=Path(directory)\n    refs=h.custody(h.ROOT,private/'authority')\n    with frozen_inputs(refs,private/'consumer'):\n        status=pytest.main(['-n','0','-o','addopts=','--no-cov','-q',\n            'tests/python/test_block_feedback_state_8433.py',\n            'tests/python/test_capacity_online_learning_8434.py',\n            '--basetemp='+str(private/'pytest')])\n    sys.exit(status)\n"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "historical_store_regressions",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/var/tmp/carnot8461-wxfx4w4g/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_hard_exit_learning_qualification_8206.py",
+        "--basetemp=/var/tmp/carnot8461-wxfx4w4g/e2e020"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E020",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_restricted_decision_audit_8210.py",
+        "--basetemp=/var/tmp/carnot8461-wxfx4w4g/e2e021"
+      ],
+      "deadline": 300,
+      "expected": 0,
+      "name": "private_E2E021",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import pathlib,shutil,sys; p=pathlib.Path(sys.argv[1]); d=p/'uncombined_shards'; d.mkdir(exist_ok=True); files=list(p.glob('.coverage.*')); [shutil.copyfile(f,d/f.name) for f in files]; print('genuine_shards_archived',len(files),flush=True); sys.exit(0 if files else 1)",
+        "/var/tmp/carnot8461-wxfx4w4g"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_archive",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/var/tmp/carnot8461-wxfx4w4g/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/var/tmp/carnot8461-wxfx4w4g/coverage.ini",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/var/tmp/carnot8461-wxfx4w4g/coverage.ini",
+        "-o",
+        "/var/tmp/carnot8461-wxfx4w4g/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/verify/objective_checkpoint_8461.py",
+        "python/carnot/verify/objective_derivatives_8461.py",
+        "python/carnot/reporting/objective_checkpoint_evidence_8461.py",
+        "python/carnot/reporting/objective_checkpoint_8461.py",
+        "python/carnot/reporting/objective_checkpoint_runner_8461.py",
+        "scripts/experiments/experiment_8461_v728_objective_checkpoint_qualification.py",
+        "tests/python/test_objective_checkpoint_8461.py",
+        "tests/python/test_objective_reporting_8461.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/verify/objective_checkpoint_8461.py",
+        "python/carnot/verify/objective_derivatives_8461.py",
+        "python/carnot/reporting/objective_checkpoint_evidence_8461.py",
+        "python/carnot/reporting/objective_checkpoint_8461.py",
+        "python/carnot/reporting/objective_checkpoint_runner_8461.py",
+        "scripts/experiments/experiment_8461_v728_objective_checkpoint_qualification.py",
+        "tests/python/test_objective_checkpoint_8461.py",
+        "tests/python/test_objective_reporting_8461.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/verify/objective_checkpoint_8461.py",
+        "python/carnot/verify/objective_derivatives_8461.py",
+        "python/carnot/reporting/objective_checkpoint_evidence_8461.py",
+        "python/carnot/reporting/objective_checkpoint_8461.py",
+        "python/carnot/reporting/objective_checkpoint_runner_8461.py",
+        "scripts/experiments/experiment_8461_v728_objective_checkpoint_qualification.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_objective_checkpoint_8461.py",
+        "tests/python/test_objective_reporting_8461.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ],
+  "full_repository_suite": "not_run",
+  "owned": [
+    "python/carnot/verify/objective_checkpoint_8461.py",
+    "python/carnot/verify/objective_derivatives_8461.py",
+    "python/carnot/reporting/objective_checkpoint_evidence_8461.py",
+    "python/carnot/reporting/objective_checkpoint_8461.py",
+    "python/carnot/reporting/objective_checkpoint_runner_8461.py",
+    "scripts/experiments/experiment_8461_v728_objective_checkpoint_qualification.py"
+  ]
+}

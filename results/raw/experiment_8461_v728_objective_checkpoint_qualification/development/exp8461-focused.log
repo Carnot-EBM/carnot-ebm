@@ -1,0 +1,383 @@
+............FFF                                                          [100%]
+=================================== FAILURES ===================================
+_________________ test_blocked_measure_and_rehashed_tampering __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T203016-1529999-be30c1d5/test_blocked_measure_and_rehas0')
+
+    def test_blocked_measure_and_rehashed_tampering(tmp_path):
+        """SCENARIO-REPORT-8461-TERMINAL: external absence stays distinct from numeric zero."""
+        raw = tmp_path / "raw"
+        work = q.measure(tmp_path / "absent-root", raw, tmp_path / "private")
+        receipts = [
+            child(n, [sys.executable, "-c", "print('private receipt')"], raw / "checks", deadline=10)
+            for n in sorted(q.REQUIRED_CHECKS)
+        ]
+        output = tmp_path / (q.NAME + ".json")
+        value = q.build(work, receipts, raw, output)
+        assert value["verdict_class"] == "blocked"
+        assert value["objective_kernel_ready_score"] == 0
+        assert value["objective_stream_ready_score"] == 0
+        assert value["gate_check_summary"]
+        atomic_json(output, value)
+>       assert q.replay(output)
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7fbbfa719e40>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T203016-1529999-be30c1d5/test_blocked_measure_and_rehas0/experiment_8461_v728_objective_checkpoint_qualification.json'))
+E        +    where <function replay at 0x7fbbfa719e40> = q.replay
+
+tests/python/test_objective_reporting_8461.py:55: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8461] phase=preconditions completed=0 pending=0
+[exp8461] phase=derivatives completed=0 pending=0
+[exp8461] derivative_completed=30 derivative_pending=60
+[exp8461] derivative_completed=60 derivative_pending=30
+[exp8461] derivative_completed=90 derivative_pending=0
+[exp8461] phase=derivatives_complete completed=90 pending=0
+[exp8205] phase=before_subprocess_coverage_combine completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_combine completed=1 pending=0
+[exp8205] phase=before_subprocess_coverage_json completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_json completed=1 pending=0
+[exp8205] phase=before_subprocess_coverage_report completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_report completed=1 pending=0
+[exp8205] phase=before_subprocess_owned_tests completed=0 pending=1
+[exp8205] phase=after_subprocess_owned_tests completed=1 pending=0
+[exp8205] phase=before_subprocess_private_E2E018_consumers completed=0 pending=1
+[exp8205] phase=after_subprocess_private_E2E018_consumers completed=1 pending=0
+[exp8205] phase=before_subprocess_private_E2E020 completed=0 pending=1
+[exp8205] phase=after_subprocess_private_E2E020 completed=1 pending=0
+[exp8205] phase=before_subprocess_private_E2E021 completed=0 pending=1
+[exp8205] phase=after_subprocess_private_E2E021 completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_check completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_check completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_format completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_format completed=1 pending=0
+[exp8205] phase=before_subprocess_spec_coverage completed=0 pending=1
+[exp8205] phase=after_subprocess_spec_coverage completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_mypy completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_mypy completed=1 pending=0
+_______________________ test_qualified_primitive_replay ________________________
+
+measured = ({'authority': {'activated': True, 'active_tasks_sha256': '1a6bb695f9ef6e97d0891d20ae2aad7a9f04fd3bdf3707cdf4a5e79baca...6, 'failures': [], ...}, PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T203016-1529999-be30c1d5/8461-measured0'))
+
+    
+    def test_qualified_primitive_replay(measured):
+        """SCENARIO-REPORT-8461-TERMINAL: real states qualify only with every owned check."""
+        work, parent = measured
+        assert not work["failures"]
+        primitive = q.read(work["primitive_reference"])
+        assert len(primitive["restart_rows"]) == 36
+        assert len(primitive["process_exit_rows"]) == 32
+        assert all(r["passed"] for r in primitive["restart_rows"])
+        receipts = [
+            child(n, [sys.executable, "-c", "print('private receipt')"], parent / "checks", deadline=10)
+            for n in sorted(q.REQUIRED_CHECKS)
+        ]
+        output = parent / (q.NAME + ".json")
+        value = q.build(work, receipts, parent / "raw", output)
+        assert value["objective_kernel_ready_score"] == 1
+>       atomic_json(output, value)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7fbbfa719e40>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T203016-1529999-be30c1d5/8461-measured0/experiment_8461_v728_objective_checkpoint_qualification.json'))
+E        +    where <function replay at 0x7fbbfa719e40> = q.replay
+
+tests/python/test_objective_reporting_8461.py:90: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8461] phase=preconditions completed=0 pending=0
+[exp8205] phase=before_subprocess_original_producer_8433 completed=0 pending=1
+[exp8205] phase=after_subprocess_original_producer_8433 completed=1 pending=0
+[exp8205] phase=before_subprocess_original_producer_8434 completed=0 pending=1
+[exp8205] phase=after_subprocess_original_producer_8434 completed=1 pending=0
+[exp8461] phase=derivatives completed=0 pending=0
+[exp8461] derivative_completed=30 derivative_pending=60
+[exp8461] derivative_completed=60 derivative_pending=30
+[exp8461] derivative_completed=90 derivative_pending=0
+[exp8461] phase=derivatives_complete completed=90 pending=0
+[exp8461] phase=recovery completed=0 pending=36
+[exp8205] phase=before_subprocess_c8-fifo-none-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-none-resume completed=1 pending=0
+[exp8461] phase=recovery completed=1 pending=35
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=2 pending=34
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=3 pending=33
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=4 pending=32
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-seal-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-seal-0-acknowledgment-resume completed=1 pending=0
+[exp8461] phase=recovery completed=5 pending=31
+[exp8205] phase=before_subprocess_c8-fifo-release-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-release-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=6 pending=30
+[exp8205] phase=before_subprocess_c8-fifo-release-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-release-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=7 pending=29
+[exp8205] phase=before_subprocess_c8-fifo-release-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-release-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=8 pending=28
+[exp8205] phase=before_subprocess_c8-fifo-release-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-fifo-release-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-fifo-release-0-acknowledgment-resume completed=1 pending=0
+[exp8461] phase=recovery completed=9 pending=27
+[exp8205] phase=before_subprocess_c8-uniform-none-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-none-resume completed=1 pending=0
+[exp8461] phase=recovery completed=10 pending=26
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=11 pending=25
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=12 pending=24
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=13 pending=23
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-seal-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-seal-0-acknowledgment-resume completed=1 pending=0
+[exp8461] phase=recovery completed=14 pending=22
+[exp8205] phase=before_subprocess_c8-uniform-release-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-release-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=15 pending=21
+[exp8205] phase=before_subprocess_c8-uniform-release-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-release-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=16 pending=20
+[exp8205] phase=before_subprocess_c8-uniform-release-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-release-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=17 pending=19
+[exp8205] phase=before_subprocess_c8-uniform-release-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c8-uniform-release-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c8-uniform-release-0-acknowledgment-resume completed=1 pending=0
+[exp8461] phase=recovery completed=18 pending=18
+[exp8205] phase=before_subprocess_c16-fifo-none-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-none-resume completed=1 pending=0
+[exp8461] phase=recovery completed=19 pending=17
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=20 pending=16
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=21 pending=15
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=22 pending=14
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-seal-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-seal-0-acknowledgment-resume completed=1 pending=0
+[exp8461] phase=recovery completed=23 pending=13
+[exp8205] phase=before_subprocess_c16-fifo-release-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-release-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=24 pending=12
+[exp8205] phase=before_subprocess_c16-fifo-release-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-release-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=25 pending=11
+[exp8205] phase=before_subprocess_c16-fifo-release-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-release-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=26 pending=10
+[exp8205] phase=before_subprocess_c16-fifo-release-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-fifo-release-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-fifo-release-0-acknowledgment-resume completed=1 pending=0
+[exp8461] phase=recovery completed=27 pending=9
+[exp8205] phase=before_subprocess_c16-uniform-none-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-none-resume completed=1 pending=0
+[exp8461] phase=recovery completed=28 pending=8
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=29 pending=7
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=30 pending=6
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=31 pending=5
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-seal-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-seal-0-acknowledgment-resume completed=1 pending=0
+[exp8461] phase=recovery completed=32 pending=4
+[exp8205] phase=before_subprocess_c16-uniform-release-0-temporary_write-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-temporary_write-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-release-0-temporary_write-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-temporary_write-resume completed=1 pending=0
+[exp8461] phase=recovery completed=33 pending=3
+[exp8205] phase=before_subprocess_c16-uniform-release-0-file_fsync-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-file_fsync-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-release-0-file_fsync-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-file_fsync-resume completed=1 pending=0
+[exp8461] phase=recovery completed=34 pending=2
+[exp8205] phase=before_subprocess_c16-uniform-release-0-atomic_replace-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-atomic_replace-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-release-0-atomic_replace-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-atomic_replace-resume completed=1 pending=0
+[exp8461] phase=recovery completed=35 pending=1
+[exp8205] phase=before_subprocess_c16-uniform-release-0-acknowledgment-exit completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-acknowledgment-exit completed=1 pending=0
+[exp8205] phase=before_subprocess_c16-uniform-release-0-acknowledgment-resume completed=0 pending=1
+[exp8205] phase=after_subprocess_c16-uniform-release-0-acknowledgment-resume completed=1 pending=0
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_coverage_combine completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_combine completed=1 pending=0
+[exp8205] phase=before_subprocess_coverage_json completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_json completed=1 pending=0
+[exp8205] phase=before_subprocess_coverage_report completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_report completed=1 pending=0
+[exp8205] phase=before_subprocess_owned_tests completed=0 pending=1
+[exp8205] phase=after_subprocess_owned_tests completed=1 pending=0
+[exp8205] phase=before_subprocess_private_E2E018_consumers completed=0 pending=1
+[exp8205] phase=after_subprocess_private_E2E018_consumers completed=1 pending=0
+[exp8205] phase=before_subprocess_private_E2E020 completed=0 pending=1
+[exp8205] phase=after_subprocess_private_E2E020 completed=1 pending=0
+[exp8205] phase=before_subprocess_private_E2E021 completed=0 pending=1
+[exp8205] phase=after_subprocess_private_E2E021 completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_check completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_check completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_format completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_format completed=1 pending=0
+[exp8205] phase=before_subprocess_spec_coverage completed=0 pending=1
+[exp8205] phase=after_subprocess_spec_coverage completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_mypy completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_mypy completed=1 pending=0
+____________________ test_private_cli_publication_and_date _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T203016-1529999-be30c1d5/test_private_cli_publication_a0')
+
+    
+    def test_private_cli_publication_and_date(tmp_path):
+        """SCENARIO-REPORT-8461-TERMINAL: real consumers accept honest missing-operand accounting."""
+>       output = tmp_path / "results" / (q.NAME + ".json")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_objective_reporting_8461.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/objective_checkpoint_runner_8461.py:87: in run
+    publication = publish_primary(output, value, validator)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261012T203016-1529999-be30c1d5/test_private_cli_publication_a0/results/experiment_8461_v728_objective_checkpoint_qualification.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'current_authority': False, 'derivatives': True, 'durable_recovery': False, 'owned_validation': False, ...}, 'admission_identity_checks': [], 'adversarial_findings': [], ...}
+validator = <function run.<locals>.validator at 0x7fbbfa6e5940>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8461] phase=preconditions completed=0 pending=0
+[exp8461] phase=derivatives completed=0 pending=0
+[exp8461] derivative_completed=30 derivative_pending=60
+[exp8461] derivative_completed=60 derivative_pending=30
+[exp8461] derivative_completed=90 derivative_pending=0
+[exp8461] phase=derivatives_complete completed=90 pending=0
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_error completed=0 pending=1
+[exp8205] phase=after_subprocess_error completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_objective_reporting_8461.py::test_blocked_measure_and_rehashed_tampering
+FAILED tests/python/test_objective_reporting_8461.py::test_qualified_primitive_replay
+FAILED tests/python/test_objective_reporting_8461.py::test_private_cli_publication_and_date
+3 failed, 12 passed, 1 warning in 245.47s (0:04:05)

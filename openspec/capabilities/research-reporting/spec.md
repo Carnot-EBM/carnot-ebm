@@ -99459,3 +99459,28 @@ Fresh replay rebuilds controls from independently pinned producers. Missing
 inputs, deliberate errors and self-consistently rehashed changes fail. Publish
 only atomically checked terminal bytes with primitive operands and log hashes.
 Conductor owns ops/status/changelog/traceability reconciliation.
+
+## REQ-REPORT-8461: Publish objective kernel qualification before science
+
+Exp8461 authenticates its full activated V728 contract directly. Authenticate
+historical heads/checkpoints through sealed original V726 authority. Optional
+CUDA, boards and unrelated history do not block CPU fixtures. Declare
+no_model_load, MODEL_SPECS=[], zero current LLM calls and zero generalization
+scores. Preserve imported model provenance and historical nulls. Emit primitive
+derivative/process-exit rows, adapter bytes and a fixture receipt. Kernel
+readiness requires derivative, crash, finite-state, authority and owned checks.
+Objective stream readiness stays0; this task measures no learning benefit.
+
+### SCENARIO-REPORT-8461-TERMINAL
+
+Accept --date20261012. Unchanged primary publication, adversarial verification
+and strict row consumers validate private candidates before atomic publication.
+Missing required operands produce named blocked gates; owned failures disqualify.
+Unknown/warning/critical findings block readiness. Cold replay reconstructs
+primitive semantics and rejects self-consistently rehashed aggregate tampering.
+Retain all findings and validation receipts. The conductor reconciles ops/BMAD.
+
+Exp8461 implementation: current full-object authority and original sealed
+V726 producer authority supply separate receipts. Missing operands retain all
+126 intended slots with missing reasons. Kernel qualification and stream
+readiness remain separate. Conductor retains subsequent ops/BMAD reconciliation.

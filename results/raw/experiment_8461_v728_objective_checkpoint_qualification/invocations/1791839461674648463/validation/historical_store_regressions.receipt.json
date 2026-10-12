@@ -1,0 +1,28 @@
+{
+  "actual_exit": -9,
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-c",
+    "import sys,pytest\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nfrom carnot.reporting import v727_historical_inputs as h\nfrom carnot.reporting.v721_capstone_evidence import frozen_inputs\nwith TemporaryDirectory(prefix='8461-history-tests-',dir='/var/tmp') as directory:\n    private=Path(directory)\n    refs=h.custody(h.ROOT,private/'authority')\n    with frozen_inputs(refs,private/'consumer'):\n        status=pytest.main(['-n','0','-o','addopts=','--no-cov','-q',\n            'tests/python/test_block_feedback_state_8433.py',\n            'tests/python/test_capacity_online_learning_8434.py',\n            '--basetemp='+str(private/'pytest')])\n    sys.exit(status)\n"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import sys,pytest\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\nfrom carnot.reporting import v727_historical_inputs as h\nfrom carnot.reporting.v721_capstone_evidence import frozen_inputs\nwith TemporaryDirectory(prefix='\"'\"'8461-history-tests-'\"'\"',dir='\"'\"'/var/tmp'\"'\"') as directory:\n    private=Path(directory)\n    refs=h.custody(h.ROOT,private/'\"'\"'authority'\"'\"')\n    with frozen_inputs(refs,private/'\"'\"'consumer'\"'\"'):\n        status=pytest.main(['\"'\"'-n'\"'\"','\"'\"'0'\"'\"','\"'\"'-o'\"'\"','\"'\"'addopts='\"'\"','\"'\"'--no-cov'\"'\"','\"'\"'-q'\"'\"',\n            '\"'\"'tests/python/test_block_feedback_state_8433.py'\"'\"',\n            '\"'\"'tests/python/test_capacity_online_learning_8434.py'\"'\"',\n            '\"'\"'--basetemp='\"'\"'+str(private/'\"'\"'pytest'\"'\"')])\n    sys.exit(status)\n'",
+  "deadline_s": 600,
+  "duration_s": 600.019865142,
+  "ended_monotonic_ns": 160460288549760,
+  "exit_code": -9,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8461_v728_objective_checkpoint_qualification/invocations/1791839461674648463/validation/historical_store_regressions.stdout",
+  "log_sha256": "sha256:c5a75fa1a4bb27a365319555e92dbae4683403443b01452195b8bbe007b6b5ad",
+  "name": "historical_store_regressions",
+  "normal_exit": false,
+  "passed": false,
+  "scope": "owned",
+  "started_monotonic_ns": 159860268684618,
+  "started_wall_ns": 1791840105048543671,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8461_v728_objective_checkpoint_qualification/invocations/1791839461674648463/validation/historical_store_regressions.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8461_v728_objective_checkpoint_qualification/invocations/1791839461674648463/validation/historical_store_regressions.stdout",
+  "stdout_sha256": "sha256:c5a75fa1a4bb27a365319555e92dbae4683403443b01452195b8bbe007b6b5ad",
+  "timed_out": true
+}
