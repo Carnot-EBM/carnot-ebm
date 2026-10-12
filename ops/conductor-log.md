@@ -20143,3 +20143,4 @@ code |
 | 2026-10-12 21:53 UTC | Qualify Brier gradients and durable feedback trans | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 119 passed, 1 warning in 279.33s (0:04:39) |
 | 2026-10-12 22:00 UTC | Compare objective-aligned sparse updates under ide | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8461-objective-checkpoint-qualification.objective_kernel_ready_score (actual=0 == expected=1) |
 | 2026-10-12 22:02 UTC | Audit later proper loss decision utility and reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8462-brier-online-learning) |
+| 2026-10-12 22:44 UTC | Measure serialization synchronization and publicat | OK | 110 passed, 1 warning in 127.04s (0:02:07) |
