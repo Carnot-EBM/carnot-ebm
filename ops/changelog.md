@@ -22187,3 +22187,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-12: Preserve the exact GateMate physical and source recovery obligation (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_obligation; results/experiment_8455_v727_gatemate_obligation.json
 - 2026-10-12: Reconcile fourteen outcomes and decide source learning and service continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v727_capstone; results/experiment_8456_v727_capstone.json
 - 2026-10-12: Bind fourteen tasks and seal the changed source learning and storage hypotheses (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v728_contract_methods; results/experiment_8457_v728_contract_methods.json
+- 2026-10-12: Freeze scalar and source controls without changing the exposed question split (⚠️ Research Finding) — honest_verdict=complete_disqualified_v728_source_control_panel; results/experiment_8458_v728_source_control_panel.json
