@@ -22173,3 +22173,4 @@ Recommend phase timing, hash-checked evidence reuse, and generation of logs from
 a shared timing manifest. Runtime causes and savings remain unmeasured.
 Experiment identifiers and acceptance criteria: no data available this milestone.
 See [the retrospective](../results/operational_retro_2026_10_726.json).
+- 2026-10-12: Bind fourteen tasks and seal the changed source learning and storage hypotheses (⚠️ Blocked) — honest_verdict=complete_blocked_v727_contract_methods; results/experiment_8443_v727_contract_methods.json
