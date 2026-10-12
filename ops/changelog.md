@@ -22152,3 +22152,4 @@ Recorded 9 completed experiments in 91.2 minutes (1.5 hours), including 0 comput
 - 2026-10-12: Measure cross-game supervisor support and censoring from qualified live receipts (⚠️ Blocked) — honest_verdict=complete_blocked_v726_arc_supervisor_support; results/experiment_8439_v726_arc_supervisor_support.json
 - 2026-10-12: Qualify KV260 operation evidence and preserve PolarFire deployment limits (⚠️ Blocked) — honest_verdict=complete_blocked_v726_board_reader_qualification; results/experiment_8440_v726_board_reader_qualification.json
 - 2026-10-12: Carry the exact GateMate reopening obligation without repeating the physical probe (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_obligation; results/experiment_8441_v726_gatemate_obligation.json
+- 2026-10-12: Reconcile fourteen outcomes and decide which scientific claims earned continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v726_capstone; results/experiment_8442_v726_capstone.json
