@@ -16,9 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — zero recent artifacts to audit; reachability passes, but establishes no live self-discovery advance.**
+**TL;DR: Zero demonstrated SELF_DISCOVERY_ADVANCE.** The empty seven-day artifact list provides no solve evidence; reachability alone earns no discovery credit.
 
-Per-artifact: none supplied (`[]`). No solve provenance or duplicate status can be assessed.
+Per-artifact: `[]` — nothing to classify. No evidence supports assigning any artifact verdict.
 
-**Pattern watch:** Reachable code can still contain outer-loop knowledge. Require each solve claim to show live-entrypoint execution, the agent’s own attempt/runtime-RE trace, and a registry comparison. Source-derived models, offline ground-truth BFS, and hand-built per-game adapters remain **OUTER_LOOP_RE**, even when reachable. No actual drift is established by this empty report.
+**Pattern watch:** The [lint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_orphan_solver_lint.py) checks static import reachability and permits allowlisted exceptions. It cannot establish execution or discovery provenance. Wiring a source-derived model or hand-built adapter into an entrypoint still constitutes **OUTER_LOOP_RE**.
+
+Recommended action: require a trace connecting live attempts → runtime inference → successful execution, plus a registry comparison showing new capability. No actual outer-loop drift can be established from this empty window.
 

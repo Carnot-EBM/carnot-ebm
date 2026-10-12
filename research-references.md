@@ -52386,3 +52386,89 @@ Selection: execute the previously unmeasured calibrated-decision and feedback
 questions with a complete contract. Separate checkpoint qualification from the
 learning run. Preserve independent factuality as an open gap. No generator
 training, hardware purchase, external publication or new third-party learner.
+
+## 2026-10-12 — V727 planning scan: information, proper losses and durable cost
+
+Recorded before designing V727. This scan covers all requested topics and
+secondary channels. External results are author or vendor claims; no source
+below establishes a Carnot result. V726 primary artifacts, not older roadmap
+intentions, determine which local questions remain open.
+
+### Methods selected for investigation
+
+- **New calibration lead:** Charpentier and Fernandes Machado,
+  [Decomposing Probabilistic Scores: Reliability, Information Loss and Uncertainty](https://arxiv.org/abs/2603.15232),
+  March 2026, revised March 22. The paper distinguishes recalibration from
+  information lost when features become a scalar score. Inspectable full text:
+  [v1 methods](https://arxiv.org/html/2603.15232v1). Local implication: compare
+  a scalar spline with the full source spline, using identical training and
+  question partitions. V726's spline-versus-logistic gain alone does not isolate
+  source information. Finite ablations do not estimate a population decomposition.
+- **New online-loss lead:** [Calibeating Made Simple](https://arxiv.org/abs/2603.22167),
+  March 2026, studies proper-loss improvements through online learning. This
+  motivates an explicit Brier-versus-log-loss update comparison. A delayed
+  nonlinear spline learner is not the paper's algorithm; no regret guarantee
+  transfers. Equal starting coefficients and feedback isolate the objective.
+- **Rechecked KAN method:** [Online KAN](https://arxiv.org/html/2602.02056v4),
+  June 2026 revision, uses local spline support for sparse updates. Retain the
+  shipped basis and measure actual writes and later predictions. Published
+  FPGA learning does not establish support in Carnot's installed KV260 image.
+- **Rechecked feedback constraint:** [Capacity-Constrained Online Convex Optimization](https://arxiv.org/abs/2606.11711),
+  June 2026, couples tracking capacity and delayed feedback. Keep capacity and
+  admission fixed while changing the update objective. V726 already tested
+  uniform versus FIFO admission with no benefit; do not repeat that contrast.
+- **New source-evidence lead:** [Decomposed Entailment for Factuality Checking](https://arxiv.org/html/2608.05823v1),
+  August 2026, describes atomic claims and source spans. It motivates a bounded
+  Qwen evidence-span canary after CUDA repair. The canary checks transport and
+  evidence use only; it does not reproduce HallDetect or certify factual truth.
+- **Rechecked system boundary:** [FPGA–ASIC Ising co-design](https://arxiv.org/abs/2602.15985),
+  September 2026 revision, includes orchestration and transfer costs. Carnot's
+  new V726 measurements independently show that arithmetic is a tiny part of
+  complete service time. Local next question: separate serialization, writes,
+  fsync and publication before evaluating a durable event journal.
+
+### Other requested primary topics and deferred ideas
+
+| Topic | Source checked | Decision |
+|---|---|---|
+| EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), May 2026 revision | Keep verifier learning distinct from generator training; functional equivalence is not empirical superiority. |
+| Structured EBM verification | [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 2026 | Preserve matched-information controls and model-identity strata. No revival of the retired generic text ranker. |
+| Neural constraints | [Certified Correctness](https://arxiv.org/abs/2608.14569), 2026 | Instance checks remain required. Conflicting indexed date metadata prevents a more precise dating claim. |
+| Ising applications and sampling | [Parallel inertial Ising](https://arxiv.org/abs/2604.17109), April 2026 | Optimizer quality does not certify a Gibbs distribution; no repeated PIMI sweep. |
+| Guided generation | [DescaPE](https://arxiv.org/abs/2609.15745), September 2026 | New internal-attribution decoding lead; defer because current GGUF runtime and hidden-state access are unqualified. |
+| Temporal verification | [TeV](https://arxiv.org/abs/2609.39038), September 30, 2026 | New robotic trajectory-energy lead. Consider temporal context only after ARC redirect outcomes have adequate support; no direct transfer claim. |
+
+### Secondary-source coverage and access limits
+
+- **OpenReview:** searched 2026 EBM/verification submissions. The
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) and an indexed
+  [proper-score decomposition PDF](https://openreview.net/pdf/9bc12196f1c2c872bd17bcbcd56c1de17eb8c345.pdf)
+  returned browser challenges. Search metadata is discovery only; no unseen
+  review, acceptance decision or PDF method is asserted.
+- **Semantic Scholar:** attempted the citing-paper APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Both were inaccessible in the browser. This leaves citation coverage
+  incomplete; it is not evidence of no citations.
+- **Hugging Face Papers:** inspected the [verification feed](https://huggingface.co/papers?q=verification).
+  It mixes publication years and is not a chronological 2026 inventory. Use
+  author papers for methods, not generated feed descriptions.
+- **GitHub Trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were about one month old. No current rank is claimed. Rechecked the
+  [irithyll](https://github.com/evilrat420/irithyll) streaming learner lead and
+  discovered [Kani](https://github.com/model-checking/kani) via repository search.
+  These are unaudited implementation leads, not new dependencies.
+- **Extropic:** inspected [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [First Sparks of Thermodynamic Recursive Intelligence](https://extropic.ai/writing/baby-thermo-rsi/).
+  Hardware/model co-design and recursive research are vendor reports. No local
+  TSU access, workload compatibility or measured Carnot efficiency follows.
+- **Logical Intelligence:** inspected [Kona](https://logicalintelligence.com/kona).
+  Its architecture is vendor context. No inspected reproducible implementation
+  justifies replacing the current calibrated verifier or relaxing evidence gates.
+
+Selection: isolate source information from calibration, change the delayed
+update objective under equal feedback, and test durable service representation.
+Independent factuality still needs new disjoint adjudicated questions. Do not
+relabel the exposed 300-question panel as independent or retrain the generator.
