@@ -99326,3 +99326,35 @@ the pinned Exp8440 producer with its original authority; the bounded adapter is
 The primary is `results/experiment_8454_v727_board_operation_boundary.json`.
 `docs/research-notes/v727-board-operation-boundary.md` records installed scope,
 missing journal clocks, host bottlenecks and concrete future device evidence.
+# REQ-REPORT-8455: Preserve the sealed GateMate recovery obligation
+
+Exp8455 SHALL authenticate activated V727 full objects and the independent visible
+contract separately from Exp8441's sealed original authority. Missing independent
+authority SHALL remain explicit. Earlier V727 outputs are future dependencies.
+Reuse the qualified reader and exact original missing source hashes. Carry the
+last authenticated IDCODE0xffffffff without a new device observation. Inspect
+only supplied source or dated cable/port/power receipts within60 seconds.
+Recovered source must match its original expected hash. Execute no model, USB,
+SSH, synthesis, probe or flash command. Preserve all historical bytes.
+
+### SCENARIO-REPORT-8455-CONTINUITY
+
+Emit seven intended obligation rows with unchanged/new status and bound delta
+references. Missing sources and physical observations remain censored. Preserve
+the ordered source recovery, dated physical change, GM1Ax IDCODE0x20000001,
+n16 flash and actual device sample/hash smoke conditions. Administrative recording
+does not grant hardware progress. Terminal external absence is
+complete_blocked_gatemate_obligation, class blocked; owned failures disqualify.
+Both generalization scores and current model invocation counts remain zero.
+
+### SCENARIO-REPORT-8455-REPLAY
+
+Fresh bounded readers reconstruct primitive rows and reject missing bytes,
+deliberate errors and self-consistently rehashed authority or aggregate tampering.
+Historical producers use original sealed authority, never current vNEXT.
+
+Implementation: `gatemate_obligation_8455.py` and its thin dated CLI retain seven
+obligation rows and exact source hashes. Original V726 work and authority bytes
+are copied into immutable custody. Five focused tests cover authentic private
+full authority, supplied physical changes, forged evidence and rehashed tampering.
+The terminal manifest runs private E2E-018/E2E-021 and unchanged consumers.

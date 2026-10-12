@@ -54148,3 +54148,25 @@ Exercise real private publication and consumers, valid cold replay, missing
 operands, deliberate child errors, wrong date, private-output protection and
 rehashing attacks. Preserve commands, exits, durations and log hashes. No full
 repository test suite or historical publication writes are allowed.
+# REQ-VERIFY-8455: Qualify a terminal GateMate administrative carry-forward
+
+Accept --date20261012. Flush progress at phase and child boundaries. Use private
+disk-backed scratch, cap measurements at3600s, reserve900s within4800s, and poll
+owned children within60s. Run scoped serial pytest with genuine unit/child
+Coverage.py shards and100 percent newly owned statements. Run Ruff check/format,
+strict mypy, owned spec coverage, private E2E-018 authority lifecycle and E2E-021
+frozen replay. No full repository suite or historical publication writes.
+
+### SCENARIO-VERIFY-8455-CONTROLS
+
+Exercise private CLI publication, consumers, valid cold replay, missing inputs,
+deliberate child failure, date rejection, private-output protection and rehashed
+tampering. Retain commands, exits, durations and stream hashes. Unchanged primary
+publication, adversarial and strict row validators check exact bytes before
+atomic publication. Retain every finding; unknown, warning or critical findings
+block readiness. The conductor owns ops/status/changelog/traceability updates.
+
+Implementation: `gatemate_obligation_runner_8455.py` freezes the3600s measurement
+ceiling and900s validation reserve. Genuine unit and child Coverage.py shards
+cover172/172 newly owned statements. The manifest requires scoped tests, private
+E2E-018/E2E-021, Ruff, strict mypy, spec references and exact terminal validation.
