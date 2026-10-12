@@ -53973,3 +53973,26 @@ mypy, spec coverage and genuine child Coverage.py shards require100 percent newl
 owned statement coverage. Unchanged adversarial and strict-row consumers retain
 all findings; unknown/warning/critical findings close readiness. Publication is
 atomic through unchanged primary_publication. The conductor reconciles ops/BMAD.
+
+## REQ-VERIFY-8440: Bind actual child coverage and terminal board reader bytes
+
+Accept --date 20261012. Use flushed phase counts, disk-backed private scratch,
+bounded real children, and a 4800-second cap with 900 seconds for validation.
+Preserve historical CLI and mutation assertions. Run scoped tests, private
+E2E-018, Ruff check and format, strict mypy and owned spec coverage. Collect
+real subprocess Coverage.py shards; require all newly owned statements and
+the five specifically missing Exp8413 statements to execute. Cold replay,
+unchanged adversarial verification and strict rows precede atomic publication.
+Owned failures disqualify; external absence blocks; preserve all findings.
+
+### SCENARIO-VERIFY-8440-CONTROLS
+
+Real children cover successful publication, cold replay, missing input,
+deliberate errors and invalid CLI arguments. Rehashed tampering retains its
+rejection. No validators, historical tests or thresholds change. Ops/status
+and traceability reconciliation belong to the conductor after task exit.
+
+SCENARIO-VERIFY-8440-CONTROLS additionally requires the direct Exp8413 adapter
+to preserve the original interpreter and Coverage.py arguments before the
+script path. The unchanged historical coverage assertion must see a genuine
+child database. The existing Exp8399 adapter remains in use for that family.

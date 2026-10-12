@@ -1,0 +1,76 @@
+...F..                                                                   [100%]
+=================================== FAILURES ===================================
+_______________________ test_real_cli_and_owned_failure ________________________
+
+tmp_path = PosixPath('/var/tmp/carnot-exp8440/validation2/v724/test_real_cli_and_owned_failur0')
+
+    def test_real_cli_and_owned_failure(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-8413-CONTROLS: genuine children bind private terminal bytes."""
+        from carnot.reporting import board_operation_runner_8413 as runner
+        from carnot.reporting.primary_publication import reader_receipt
+    
+        cli = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        output = tmp_path / (e.NAME + ".json")
+        for args, expected in [
+            (["--private-e2e", "--output", str(output)], 0),
+            (["--cold-replay", str(output)], 0),
+            (["--cold-replay", str(tmp_path / "missing")], 1),
+            (["--deliberate-error"], 1),
+            (["--private-e2e"], 2),
+            (["--date", "20261010"], 2),
+        ]:
+            result = subprocess.run([*cli, *args], capture_output=True, text=True, timeout=180)
+            assert result.returncode == expected, result.stdout + result.stderr
+        assert reader_receipt(e.TASK, tmp_path, field="board_reader_ready_score")["passed"]
+        historical = tmp_path / (e.prior.NAME + ".json")
+        for args, expected in [
+            (["--private-e2e", "--output", str(historical)], 0),
+            (["--cold-replay", str(historical)], 0),
+        ]:
+            result = subprocess.run(
+                [*cli, "--historical-argv", str(e.ROOT / e.prior.CLI), *args],
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+            assert result.returncode == expected, result.stdout + result.stderr
+        assert reader_receipt(e.prior.TASK, tmp_path, field="board_reader_ready_score")["passed"]
+        with pytest.raises(ValueError, match="historical_cli_identity"):
+            runner.historical_main(["wrong-script"])
+        ran = subprocess.run(
+            [
+                sys.executable,
+                "-u",
+                "-m",
+                "coverage",
+                "run",
+                "--parallel-mode",
+                "--data-file=" + str(tmp_path / ".coverage"),
+                str(e.ROOT / e.CLI),
+                "--deliberate-error",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+>       assert ran.returncode == 1 and list(tmp_path.glob(".coverage*"))
+E       AssertionError: assert (1 == 1 and [])
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...ng=0\n[exp8413] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=0\n', stderr='').returncode
+E        +  and   [] = list(<generator object Path.glob at 0x7f395e73f780>)
+E        +    where <generator object Path.glob at 0x7f395e73f780> = glob('.coverage*')
+E        +      where glob = PosixPath('/var/tmp/carnot-exp8440/validation2/v724/test_real_cli_and_owned_failur0').glob
+
+tests/python/test_board_operation_boundary_8413.py:135: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_board_operation_boundary_8413.py::test_real_cli_and_owned_failure
+1 failed, 5 passed, 2 warnings in 182.77s (0:03:02)

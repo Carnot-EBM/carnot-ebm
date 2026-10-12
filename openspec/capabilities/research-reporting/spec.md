@@ -99102,3 +99102,38 @@ Registry precheck precedes outcome reduction. Both generalization scores remain0
 Private CLI tests publish exact checked bytes and execute real consumers. Missing
 external operands block; owned validation failures disqualify. Accept --date20261012.
 Implementation and research note preserve the source publication discrepancy.
+
+## REQ-REPORT-8440: Qualify independent board readers without new device claims
+
+Bind the complete activated V726 task contract and independently sealed V723
+and V724 family roots. Reproduce Exp8413's five missing statements and original
+Exp8399 reader receipt failure from authenticated logs. Qualify the existing
+historical child adapter first; preserve original assertions and source bytes.
+Reduce qualified Exp8407 primitive costs through its shipped reducer; optional
+Exp8437 evidence and missing transport clocks remain separate branches.
+KV260 supports only the authenticated quadratic Ising operations with k_max<=5.
+PolarFire graduation remains hash-matched board-local Linux CPU dispatch.
+No model load, device command, fabric speedup, acquisition or generalization
+credit follows. Retain H1=-0.00390625 and H2=0 as closed historical findings.
+
+### SCENARIO-REPORT-8440-ROOTS
+
+Separate family roots must accept unchanged historical CLI assertions and
+reject missing operands, source substitutions and rehashed summary mutations.
+Absent V722 authority never blocks independent CPU reader qualification.
+
+### SCENARIO-REPORT-8440-COSTS
+
+Map gathering, scoring, updates, copies, serialization, file and directory
+fsync, acknowledgment and transport individually. Missing clocks stay null.
+The ideal 100x arithmetic bound is conditional, separate from measured total
+service cost; persistence domination cannot support buying arithmetic hardware.
+
+Implementation for REQ-REPORT-8440: the qualification module is
+`python/carnot/reporting/board_reader_qualification_8440.py`, with bounded
+children in `board_reader_runner_8440.py` and the thin Exp8440 experiment CLI.
+The intended primary is `results/experiment_8440_v726_board_reader_qualification.json`.
+`docs/research-notes/v726-board-operations.md` separates composite host costs,
+conditional arithmetic bounds and future installed-kernel/transport evidence.
+Historical published artifacts and protocols remain unchanged. The conductor
+owns ops and traceability reconciliation after task exit.

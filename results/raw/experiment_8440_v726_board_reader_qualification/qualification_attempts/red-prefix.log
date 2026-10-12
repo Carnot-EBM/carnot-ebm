@@ -1,0 +1,29 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_historical_adapter_preserves_coverage_prefix _______________
+
+    def test_historical_adapter_preserves_coverage_prefix() -> None:
+        """REQ-VERIFY-8440: rooting preserves the genuine child's original coverage command."""
+        from carnot.reporting import board_reader_runner_8440 as r
+    
+        observed = []
+        original = lambda argv, **kwargs: observed.append(argv)
+        prefix = [sys.executable, "-u", "-m", "coverage", "run", "--parallel-mode", "--data-file=/tmp/exp8440-private-coverage"]
+        r.bound_popen(original)([*prefix, str(e.ROOT / e.old.CLI), "--deliberate-error"])
+>       assert observed[-1][:len(prefix)] == prefix
+E       AssertionError: assert ['/home/ianbl...berate-error'] == ['/home/ianbl...el-mode', ...]
+E         
+E         At index 2 diff: '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8440_v726_board_reader_qualification.py' != '-m'
+E         Right contains one more item: '--data-file=/tmp/exp8440-private-coverage'
+E         Use -v to get more diff
+
+tests/python/test_board_reader_qualification_8440.py:209: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_board_reader_qualification_8440.py::test_historical_adapter_preserves_coverage_prefix
+1 failed, 1 warning in 4.22s

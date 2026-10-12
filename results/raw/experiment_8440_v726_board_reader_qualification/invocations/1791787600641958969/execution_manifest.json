@@ -1,0 +1,184 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_board_reader_qualification_8440.py",
+        "--basetemp=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/owned-tests"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "owned_tests",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "--basetemp=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/consumers"
+      ],
+      "deadline": 240,
+      "expected": 0,
+      "name": "private_E2E018_consumers",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/coverage.ini",
+        "-m",
+        "carnot.reporting.board_reader_runner_8440",
+        "--historical-tests",
+        "724",
+        "--basetemp=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/v724"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "historical_V724_original_assertions",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/coverage.ini",
+        "-m",
+        "carnot.reporting.board_reader_runner_8440",
+        "--historical-tests",
+        "723",
+        "--basetemp=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/v723"
+      ],
+      "deadline": 600,
+      "expected": 0,
+      "name": "original_source_drift_and_tamper_controls",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/coverage.ini",
+        "--keep"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_combine",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/coverage.ini",
+        "--show-missing",
+        "--fail-under=100",
+        "python/carnot/reporting/board_reader_qualification_8440.py",
+        "python/carnot/reporting/board_reader_runner_8440.py",
+        "scripts/experiments/experiment_8440_v726_board_reader_qualification.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_report",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/coverage.ini",
+        "-o",
+        "/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t/coverage.json"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "coverage_json",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/board_reader_qualification_8440.py",
+        "python/carnot/reporting/board_reader_runner_8440.py",
+        "scripts/experiments/experiment_8440_v726_board_reader_qualification.py",
+        "tests/python/test_board_reader_qualification_8440.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_check",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/board_reader_qualification_8440.py",
+        "python/carnot/reporting/board_reader_runner_8440.py",
+        "scripts/experiments/experiment_8440_v726_board_reader_qualification.py",
+        "tests/python/test_board_reader_qualification_8440.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "ruff_format",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/reporting/board_reader_qualification_8440.py",
+        "python/carnot/reporting/board_reader_runner_8440.py",
+        "scripts/experiments/experiment_8440_v726_board_reader_qualification.py"
+      ],
+      "deadline": 60,
+      "expected": 0,
+      "name": "strict_mypy",
+      "scope": "owned"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "--files",
+        "tests/python/test_board_reader_qualification_8440.py"
+      ],
+      "deadline": 30,
+      "expected": 0,
+      "name": "spec_coverage",
+      "scope": "owned"
+    }
+  ],
+  "heartbeat_s": 30,
+  "no_model_load": true,
+  "private_scratch": "/var/tmp/carnot-exp8440-private/invocation-7z9_jf0t",
+  "task_cap_s": 4800
+}

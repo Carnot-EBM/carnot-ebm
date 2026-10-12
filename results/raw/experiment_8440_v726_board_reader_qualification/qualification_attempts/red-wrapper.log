@@ -1,0 +1,25 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________ test_historical_cli_identity_and_nonexit ___________________
+
+tmp_path = PosixPath('/var/tmp/carnot-exp8440/red-wrapper/test_historical_cli_identity_a0')
+
+    def test_historical_cli_identity_and_nonexit(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-8440-CONTROLS: a wrapper cannot authorize an unrelated script."""
+        from carnot.reporting import board_reader_runner_8440 as r
+    
+        with pytest.raises(ValueError, match="historical_cli_identity"):
+>           r.historical_main(["wrong-script"])
+            ^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'carnot.reporting.board_reader_runner_8440' has no attribute 'historical_main'. Did you mean: 'historical_tests'?
+
+tests/python/test_board_reader_qualification_8440.py:194: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_board_reader_qualification_8440.py::test_historical_cli_identity_and_nonexit
+1 failed, 1 warning in 4.38s
