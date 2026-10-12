@@ -20132,3 +20132,4 @@ code |
 | 2026-10-12 13:45 UTC | Test bounded Qwen source-span responses only after | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8444-source-control-panel) |
 | 2026-10-12 14:26 UTC | Resolve ARC publication custody before assessing l | OK | 87 passed, 1 warning in 222.91s (0:03:42) |
 | 2026-10-12 15:02 UTC | Map the journal service boundary to actual KV260 a | OK | 87 passed, 1 warning in 88.41s (0:01:28) |
+| 2026-10-12 15:36 UTC | Preserve the exact GateMate physical and source re | OK | 86 passed, 1 warning in 57.95s |
