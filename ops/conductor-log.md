@@ -20124,3 +20124,5 @@ code |
 | 2026-10-12 12:46 UTC | Freeze scalar and source controls without changing | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8443-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-12 12:48 UTC | Fit the scalar spline control and freeze matched s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8444-source-control-panel) |
 | 2026-10-12 12:48 UTC | Measure source information beyond scalar recalibra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8445-source-control-fit) |
+| 2026-10-12 12:54 UTC | Compare objective-aligned sparse updates under ide | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8443-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-12 12:56 UTC | Audit later proper loss decision utility and reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8447-brier-online-learning) |
