@@ -95146,6 +95146,14 @@ Run full Python health once and retain unrelated failures separately. Validate
 the private candidate with unchanged terminal validators before publication.
 Conductor owns ops/status/changelog/traceability reconciliation.
 
+Implementation2026-10-12: `v728_source_control_panel.py` freezes4500 control
+slots through original producer qualification and the sealed V728 protocol.
+The thin dated runner reuses existing validators and atomic publication.
+Focused tests retain exact vectors, q-only independence, source permutations,
+evaluator denial, readiness failures and independent replay rejection paths.
+Final verification receipts and genuine coverage shards reside under the raw
+Exp8458 invocation. The conductor owns subsequent ops/BMAD reconciliation.
+
 Implementation: `restricted_decision_audit_8210.py` reuses the qualified bounded
 runner and unchanged terminal publication validator. Its direct experiment CLI
 retains no-model declarations, original evidence custody and separate health
@@ -99421,3 +99429,33 @@ source, learning or service evidence lowers only its respective boundary.
 Methods readiness requires current full authority and the sealed protocol.
 
 Status: specified before implementation; conductor owns ops/BMAD reconciliation.
+## REQ-REPORT-8458: Freeze scalar and source controls under V728 authority
+
+Authenticate the complete activated V728 task contract and sealed protocol.
+Qualify Exp8430 and Exp8431 through their original V726 authority. Freeze all
+900 answers and 300 question roles, with usable support128/32/80 and eight
+tune/test question clusters per class. Preserve every original identity/hash.
+Prepare raw p2, scalar logistic, one-input cubic spline, full nine-input spline
+and source-permuted spline. Keep generators as reporting strata. Scalar spline
+uses the original fit-only scaler, knots and degree, with13 coefficients;
+full/permuted each use109. Freeze operators before any later fitting.
+Permute whole source bundles within dataset and role, matching generator slots,
+with seeds725/7252/7251. Keep q and targets fixed and evaluator labels closed.
+Declare no_model_load, MODEL_SPECS=[], zero current LLM calls and zero
+generalization scores. Readiness qualifies complete controls, never benefit.
+Missing required operands block; owned validation failures disqualify.
+
+### SCENARIO-REPORT-8458-CONTROLS
+
+All4500 answer/arm rows bind inherited features and question/source/sibling
+identities. Source changes cannot change scalar vectors or scalar basis.
+Full features remain byte-equivalent to Exp8430; donor permutations preserve
+q, role, generator slots, dataset and target custody. Deny evaluator reads
+before opening files. Question identity recovery cannot undo historical exposure.
+
+### SCENARIO-REPORT-8458-REPLAY
+
+Fresh replay rebuilds controls from independently pinned producers. Missing
+inputs, deliberate errors and self-consistently rehashed changes fail. Publish
+only atomically checked terminal bytes with primitive operands and log hashes.
+Conductor owns ops/status/changelog/traceability reconciliation.

@@ -54222,3 +54222,20 @@ serial owned coverage, bounded children, historical E2E tests and unchanged
 terminal validators. Focused tests reference both new requirements and cover
 authority mutations, protocol/basis seals, isolated families, deadlines, private
 publication, missing/error children and self-consistently rehashed primitives.
+## REQ-VERIFY-8458: Qualify the bounded source control publication
+
+Accept --date20261012. Print flushed phase boundaries and completed/pending
+counts. Use private disk-backed scratch, poll owned children within60s,
+stop measurements by3600s and reserve900s within4800s. Scoped serial pytest
+and genuine Coverage.py unit/child shards cover100 percent newly owned
+statements. Run Ruff check/format, strict mypy, owned spec coverage and private
+E2E-018/E2E-021. No full repository suite or historical publication writes.
+Unchanged primary publication, adversarial and strict row consumers precede
+atomic publication. Unknown/warning/critical findings close readiness.
+
+### SCENARIO-VERIFY-8458-CLI
+
+Real private CLI and consumers qualify valid controls and reject wrong dates,
+private-output violations, missing inputs, child errors and rehashed tampering.
+Keep commands, exits, durations and stream hashes. Test owned failures and
+external absence separately. The conductor owns subsequent ops reconciliation.
