@@ -53786,3 +53786,33 @@ Focused tests exercise genuine CLI/child coverage, cold authority and methods
 reduction, missing operands, deliberate errors, scanner findings and rehashed
 feature/target-custody tampering. Executed commands and qualification outcomes
 are retained under the task's raw invocation. Conductor owns ops reconciliation.
+## REQ-VERIFY-8432: Qualify retrospective decision evidence
+
+Exp8432 SHALL authenticate activated V726 authority, pinned frozen heads and
+feature/evaluator operands. Only actual CPU dependencies are required. It SHALL
+record private disk scratch, memory, tools and bounded deadlines. Cold replay
+SHALL reconstruct predictions and metrics from independent pinned operands.
+Real CLI children SHALL reject missing operands, deliberate errors and metric
+or primitive tampering even after local rehashing. Run private E2E-018/E2E-021,
+scoped serial tests, Ruff check/format, strict mypy and spec coverage. Combine
+genuine Coverage.py child shards for 100 percent newly owned statement coverage.
+Unchanged publication, adversarial and strict-row consumers qualify terminal
+bytes. Preserve every finding. Unsupported informational findings disqualify
+readiness while retaining measured science. Unknown, warning or critical
+findings also prevent readiness. Publish terminal bytes atomically.
+
+### SCENARIO-VERIFY-8432-REPLAY
+
+Private real CLI accepts bound evidence. Fresh replay rejects rehashed summary,
+prediction, label and readiness mutations; absent files and deliberate errors
+retain their real exits. A terminal disqualified result retains failed receipts.
+Replay SHALL compare receipt metadata with independently saved child records.
+It SHALL derive pass status from actual exit, expected exit, timeout and scanner
+findings. Forged passed, exit or expected-exit fields SHALL be rejected even
+when log bytes and candidate checksums remain valid.
+
+Implementation: `python/carnot/reporting/v726_criterion_decision_runner.py`
+reuses bounded children, private E2E checks and unchanged terminal consumers.
+Focused tests cover genuine child shards, standalone replay without PYTHONPATH,
+missing inputs, deliberate errors and self-consistently rehashed tampering.
+The terminal artifact records executed validation. Conductor owns ops and BMAD reconciliation.

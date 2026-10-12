@@ -98890,3 +98890,38 @@ thin Exp8430 runner. `tests/python/test_v726_feature_panel_8430.py` covers
 original joins, immutable roles, missing inputs, leakage and terminal custody.
 The artifact records executed qualification receipts and retrospective limits.
 Conductor owns ops and BMAD reconciliation for this task.
+## REQ-REPORT-8432: Measure exposed retrospective typed decisions
+
+Exp8432 SHALL use frozen Exp8431 heads on all 300 intended test answers from
+100 questions, retaining five arms and five seeds. It SHALL seal prediction
+bytes before this evaluator opens targets. Prior public exposure stays explicit.
+Accept at p<=0.2, reject at p>=0.8, otherwise escalate. Wrong decisions cost 1;
+correct decisions cost 0; escalation costs 0.2. No threshold search is allowed.
+A1 is primary. A2 sensitivity uses only observed labels. Report Brier, log loss,
+decision loss, coverage, false accepts, selective risk, calibration and every
+fixed dataset/generator stratum. Missing predictions remain in intended counts
+with worst-case Brier and decision bounds. Undefined ratios name their reason.
+Average seed and sibling losses within question. The primary contrast is
+Brier(logistic9)-Brier(spline9), with 10000 paired whole-question bootstrap draws
+and seed 7258419. Exploratory benefit requires lower CI>0 and decision-loss
+delta<=0. Inert source-permutation controls cannot establish benefit.
+Readiness requires publication qualification, independently of scientific nulls.
+Public labels cannot establish current-Qwen skill or hidden-game generalization.
+
+### SCENARIO-REPORT-8432-METRICS
+
+Exact boundary probabilities yield the registered actions and losses. Analytic
+fixtures verify paired question bootstrap, missing bounds, A2 subset, fixed
+strata, controls and zero-denominator reasons without multiplying independence.
+
+### SCENARIO-REPORT-8432-CUSTODY
+
+Predictor inputs contain no evaluator labels. Prediction seals precede evaluator
+access. Required upstream absence blocks; owned errors disqualify. Scientific
+nulls survive administrative disqualification and do not gate independent learning.
+
+Implementation: `python/carnot/reporting/v726_criterion_decision_audit.py` and
+`python/carnot/verify/v726_decision_metrics.py` preserve the registered estimand.
+`tests/python/test_v726_criterion_decision_8432.py` checks analytic metrics,
+intended bounds, sealed custody, external absence and owned failure.
+The terminal artifact records executed validation. Conductor owns ops and BMAD reconciliation.
