@@ -53852,3 +53852,41 @@ new schema. The reporting module and thin CLI retain real child exits, fixed
 capacity controls, independent updates and cold semantic replay. Tests cover
 the store, live readers, publication, disk custody, deadlines and failure paths.
 Measured qualification and coverage remain bound to the terminal artifact.
+
+## REQ-VERIFY-8434: Continuous sparse updates after sealed predictions
+
+Use the original five ordered 20-question blocks, seeds 17/29/43/71/101,
+and capacities 8 primary and 16 secondary. Compare frozen, FIFO_updates,
+uniform_updates and shuffled_released_feedback. Admission reads no targets.
+FIFO chooses the first C questions. Uniform chooses C without replacement,
+using saved per-seed RNG state and inclusion probability C/20. The shuffled
+arm shares uniform IDs. Its separate saved RNG permutes only released labels.
+Seal all 60 predictions before any label release. Store at most C pending
+clusters or 3*C feature records. Unused targets remain evaluator-only.
+Visit selected questions in original block order and siblings in release order.
+Apply one shipped sparse log-loss step per valid answer, rate 0.01 and L2 0.001.
+Keep the fitted scaler and temperature fixed. Do not importance-weight this
+block-admission ablation. It differs from the cited delayed-OCO scheduler.
+Use the qualified store's two transactions per block. Intermediate answer
+updates remain tentative until block commit. Record prediction time/version,
+feedback, inclusion probabilities, losses, gradients, coefficient deltas and
+checkpoint hashes. Frozen records admission and makes no parameter changes.
+
+### SCENARIO-VERIFY-8434-STREAM
+
+Analytic controls verify nonzero sparse steps and frozen identity. All sibling
+predictions precede releases. Label permutation preserves only the admitted
+block multiset. Capacity bounds, fixed geometry and target-blind admission hold.
+
+### SCENARIO-VERIFY-8434-RESTART
+
+For seed 17 and capacity 8, every arm undergoes a real process exit after
+zero-based block 2. Restart matches uninterrupted full state and subsequent
+predictions, admissions and updates exactly. Recovery equality is separate
+from learning benefit. Bound each seed/capacity run to 240 seconds and total
+measurement to 2400 seconds. Preserve every incomplete intended cell.
+
+Implementation: `capacity_online_learning_8434.py` adapts the shipped sparse
+optimizer and qualified block store. Separate evaluator processes release
+admitted labels and score retention at each boundary. Focused tests exercise
+nonzero updates, frozen identity, real process exit and exact restart.

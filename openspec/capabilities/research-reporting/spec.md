@@ -98948,3 +98948,41 @@ Implementation: the Exp8433 runner publishes one terminal primary through the
 unchanged publication and reader APIs. Raw invocations retain primitive states,
 process receipts, coverage shards, negative controls and every scanner finding.
 The conductor owns ops/status/changelog and BMAD reconciliation.
+
+## REQ-REPORT-8434: Measure bounded retrospective continuous learning
+
+Exp8434 SHALL authenticate the complete activated V726 task authority. It SHALL
+consume hash-qualified Exp8431 heads and Exp8433 checkpoint qualification.
+Only actual CPU dependencies gate this task. Cached candidates are historical
+provenance. MODEL_SPECS is empty. Current LLM invocation counts stay zero.
+All 12000 answer slots and 4000 question units remain visible, including missing
+or censored work. Seeds and siblings do not multiply independent questions.
+Only blocks 1 through 4 enter later-loss summaries. A separate read-only process
+scores 50 tune questions at each boundary. Retention labels never enter updates.
+Readiness requires qualified causal measurements, regardless of measured gain.
+Both generalization scores stay zero. Missing external operands block. Owned
+validation failures disqualify. Unchanged publication and typed consumers bind
+terminal bytes to primitive evidence. The conductor owns ops/BMAD reconciliation.
+
+### SCENARIO-REPORT-8434-CUSTODY
+
+Reject missing, unqualified or hash-altered upstream operands. Preserve intended
+slots on deadlines. Distinguish missing values from measured zero. Reconstruct
+primitive rows in a fresh process. Reject rehashed prediction, coefficient,
+release, RNG, aggregate and receipt tampering using independently pinned inputs.
+
+### SCENARIO-REPORT-8434-VALIDATION
+
+Run private E2E-018, E2E-020 and E2E-021. Retain command, exit, duration and log
+hash receipts. Genuine unit and CLI Coverage.py shards cover 100 percent of
+new statements, including child exits and failures. Run Ruff, strict mypy and
+owned spec coverage. Preserve all adversarial findings without exemptions.
+
+Implementation: `capacity_learning_report_8434.py` and the thin Exp8434 CLI
+retain full intended rows, primitive pointers, bounded receipts and terminal
+custody. `test_capacity_online_learning_8434.py` exercises scoped validation.
+The conductor owns ops and BMAD reconciliation.
+Independent validation processes MAY run concurrently in separate private paths.
+Coverage reduction SHALL wait for their completion. Retain every child receipt.
+Validation MAY resume from an immutable completed measurement in the same owned
+raw invocation. It SHALL reuse prediction/update bytes and run fresh checks.
