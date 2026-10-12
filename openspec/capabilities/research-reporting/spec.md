@@ -99201,3 +99201,39 @@ owns ops/status, changelog and BMAD traceability reconciliation after task exit.
 The standalone CLI binds its resolved checkout's Python package and repository
 reader paths before importing the capstone. This supports private reconciliation
 without an ambient PYTHONPATH; scheduling and scientific accounting are unchanged.
+
+## REQ-REPORT-8443: Seal V727 methods and separate prerequisite families
+
+Exp8443 SHALL compare exactly fourteen V727 task objects, the independent visible
+contract table, embedded JSON, printed digest and actual activated YAML. Absent
+independent design operands SHALL block methods readiness without reconstruction
+from activated YAML. It SHALL preserve original V726 design and activation bytes
+before historical reads. Qualified panel/head/store and five-input complete-cost
+workload SHALL have separate learning and service readiness. Missing optional
+CUDA, board or unrelated history SHALL NOT lower CPU prerequisite readiness.
+The sealed protocol SHALL retain V725 question roles, A1/A2, fixed decisions and
+five retention windows, and preregister scalar/source controls, matched Brier
+updates and event-journal durability/cost. No current model executes; retrospective
+public labels grant no independent or generalized learning claim.
+
+### SCENARIO-REPORT-8443-AUTHORITY
+
+Twelve inherited authority controls plus full-object prompt, prior and gate edits
+reject drift. Missing visible table/JSON/digest remains explicit, even with all
+fourteen activated tasks. Independent matching private authority passes.
+
+### SCENARIO-REPORT-8443-FAMILIES
+
+Historical producers replay under original sealed authority. Missing one learning
+input leaves service readiness unchanged and vice versa. Supplied CUDA receipts
+use the qualified reader only; no device probe occurs. Method and producer seals
+cannot be replaced by self-consistently rehashed candidate operands.
+
+Status: specified before implementation; conductor owns ops/BMAD reconciliation.
+
+Implementation status (2026-10-12): implemented in
+`python/carnot/reporting/v727_contract_methods.py` and
+`python/carnot/reporting/v727_historical_inputs.py`. All five original producer
+inputs qualify. Actual V727 methods remain blocked because the independent
+visible table, embedded complete objects and printed digest are absent. Learning
+and service readiness remain independent; no current model or device probe ran.

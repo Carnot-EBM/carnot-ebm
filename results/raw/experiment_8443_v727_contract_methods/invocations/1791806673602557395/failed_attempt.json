@@ -1,0 +1,25 @@
+{
+  "experiment_id": 8443,
+  "task_id": "exp8443-contract-methods",
+  "milestone": "2026.10.727",
+  "run_date": "20261012",
+  "honest_verdict": "complete_disqualified_owned_reducer_mutation",
+  "verdict_class": "disqualified",
+  "failed_check": "terminal cold replay",
+  "receipts": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8443_v727_contract_methods/invocations/1791806673602557395/failed_owned_cli/invocations/1791806744287721796/terminal/0/terminal_cold.receipt.json",
+      "sha256": "sha256:7a9875c4a55f38937c0c345aec6a074f14677842a30cd8025649ca100cfb6ae1",
+      "observed_exit": 1,
+      "expected_exit": 0
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8443_v727_contract_methods/invocations/1791806673602557395/failed_owned_cli/invocations/1791806744287721796/terminal/1/terminal_cold.receipt.json",
+      "sha256": "sha256:625d863be1e2bd56cd22402004bc948b778f6ea7cb39cd3a3bd68fe2ddc4d764",
+      "observed_exit": 1,
+      "expected_exit": 0
+    }
+  ],
+  "reason": "Result construction extended the sealed primitive source list; repeated-build regression fails before list-copy fix.",
+  "remediation": "SCENARIO-VERIFY-8443-PURE-REDUCTION; no acceptance threshold changed."
+}

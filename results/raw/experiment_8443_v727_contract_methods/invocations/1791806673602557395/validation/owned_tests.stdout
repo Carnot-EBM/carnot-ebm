@@ -1,0 +1,83 @@
+.................F............                                           [100%]
+=================================== FAILURES ===================================
+____________________________ test_real_private_cli _____________________________
+
+full_root = PosixPath('/var/tmp/exp8443-owned-ycey5k8z/owned-tests/test_real_private_cli0/authority')
+tmp_path = PosixPath('/var/tmp/exp8443-owned-ycey5k8z/owned-tests/test_real_private_cli0')
+
+    def test_real_private_cli(full_root, tmp_path):
+        """SCENARIO-VERIFY-8443-REPLAY: real children publish and reject rehashed bytes."""
+        output = tmp_path / (e.NAME + ".json")
+        base = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        cases = [
+            (
+                [
+                    "--date",
+                    "20261012",
+                    "--private-control",
+                    "--root",
+                    str(full_root),
+                    "--output",
+                    str(output),
+                ],
+                0,
+            ),
+            (["--cold-replay", str(output)], 0),
+            (["--cold-replay", str(tmp_path / "missing")], 1),
+            (["--deliberate-error"], 7),
+            (["--date", "20261010"], 2),
+            (["--private-control"], 2),
+        ]
+        for i, (args, expected) in enumerate(cases):
+            receipt = child(f"cli-{i}", base + args, tmp_path / "logs", expected=expected, deadline=600)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v717_contract_runner.py", line 157, in publish
+E                 publication = publish_primary(output, value, validate)
+E                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E                 raise ValueError("candidate_rejected")
+E             ValueError: candidate_rejected
+E             
+E             During handling of the above exception, another exception occurred:
+E             
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8443_v727_contract_methods.py", line 12, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v727_contract_runner.py", line 97, in main
+E                 shipped.run(args.root, output, Path(directory), control=args.private_control)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v725_contract_runner.py", line 125, in run
+E                 shipped.publish(value, output, raw)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v717_contract_runner.py", line 166, in publish
+E                 publication = publish_primary(output, value, validate)
+E                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E                 raise ValueError("candidate_rejected")
+E             ValueError: candidate_rejected
+E             
+E           assert False
+
+tests/python/test_v727_contract_methods_8443.py:174: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=after_subprocess_cli-0 completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v727_contract_methods_8443.py::test_real_private_cli
+1 failed, 29 passed, 1 warning in 340.04s (0:05:40)

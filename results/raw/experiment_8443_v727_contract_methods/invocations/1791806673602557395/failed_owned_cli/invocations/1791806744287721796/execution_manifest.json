@@ -1,0 +1,26 @@
+{
+  "child_poll_s": 30,
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "print('actual private child',flush=True)"
+      ],
+      "deadline": 10,
+      "expected": 0,
+      "name": "private_child",
+      "scope": "owned"
+    }
+  ],
+  "global_health": "not_run",
+  "owned": [
+    "python/carnot/reporting/v727_contract_methods.py",
+    "python/carnot/reporting/v727_historical_inputs.py",
+    "python/carnot/reporting/v727_contract_runner.py",
+    "scripts/experiments/experiment_8443_v727_contract_methods.py"
+  ],
+  "task_cap_s": 4800,
+  "validation_reserve_s": 1200
+}

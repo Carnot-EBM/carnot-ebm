@@ -54051,3 +54051,35 @@ Implemented in the thin Exp8442 CLI; two outside-checkout child regressions
 were red before the repair. All eleven focused tests and unchanged private
 E2E-018/E2E-021 consumers pass. Fresh combined unit/child coverage measures
 329/329 owned statements, including the CLI, with no coverage exclusions.
+
+## REQ-VERIFY-8443: Qualify bounded no-model publication
+
+Exp8443 SHALL run scoped serial tests with genuine unit/child Coverage.py shards,
+100 percent newly owned statement coverage, Ruff check/format, strict mypy and
+spec coverage. Private E2E-018 and E2E-021 SHALL preserve historical publications.
+Fresh bounded replay SHALL reconstruct authority, sealed methods and historical
+family qualification; missing inputs, deliberate failures and rehashed tampering
+SHALL fail. Unchanged publication, adversarial and strict row validators SHALL
+check terminal bytes before atomic publication. Owned failures disqualify;
+external absence blocks. Every finding and child command/log hash is retained.
+
+### SCENARIO-VERIFY-8443-REPLAY
+
+Private CLI accepts 20261012, publishes checked terminal bytes, cold-replays from
+outside the checkout, and rejects wrong dates, missing files, deliberate error,
+changed metrics and rehashed primitive family/authority/protocol mutations.
+
+Status: specified before tests; no global health run authorized.
+
+### SCENARIO-VERIFY-8443-PURE-REDUCTION
+
+Repeated result construction SHALL leave every primitive operand unchanged.
+Imported source references are copied into the result instead of extending the
+sealed protocol's source list. Terminal replay must accept repeated reduction.
+
+Implementation status (2026-10-12): the dated thin CLI and bounded adapters pass
+31 owned tests and 41 private E2E/consumer tests. Genuine unit/child Coverage.py
+shards cover all 273 newly owned statements (100 percent). Ruff check/format,
+strict mypy and both owned test files' spec coverage pass. The failed reducer
+attempt is retained as disqualified evidence; repeated reduction now preserves
+primitive operands. Ops and BMAD reconciliation remain conductor-owned.
