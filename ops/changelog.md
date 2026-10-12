@@ -22131,3 +22131,4 @@ Recorded 9 completed experiments in 91.2 minutes (1.5 hours), including 0 comput
 - 2026-10-12: Audit later decision loss retention and feedback-selection benefit (⚠️ Research Finding) — honest_verdict=complete_null_v726_capacity_benefit_audit; results/experiment_8435_v726_capacity_benefit_audit.json
 - 2026-10-12: Reconstruct complete service clocks and isolate the native proof mismatch (⚠️ Research Finding) — honest_verdict=complete_null_transaction_attribution; results/experiment_8436_v726_transaction_attribution.json
 - 2026-10-12: Test whether arithmetic acceleration can meet the complete-service target (⚠️ Research Finding) — honest_verdict=complete_null_acceleration_ceiling; results/experiment_8437_v726_acceleration_ceiling.json
+- 2026-10-12: Measure cross-game supervisor support and censoring from qualified live receipts (⚠️ Blocked) — honest_verdict=complete_blocked_v726_arc_supervisor_support; results/experiment_8439_v726_arc_supervisor_support.json
