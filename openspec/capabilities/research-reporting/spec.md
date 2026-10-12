@@ -99024,3 +99024,29 @@ benefit, simultaneous retention, consumer findings and terminal custody.
 `test_capacity_benefit_audit_8435.py` exercises analytic metrics, actual children,
 external absence and rehashed corruption. Terminal validation receipts record
 scoped unit, coverage, lint, type, spec and private E2E outcomes.
+
+## REQ-REPORT-8436: Source-bound complete transaction attribution
+
+Exp8436 SHALL authenticate activated V726 full task authority and pinned Exp8407
+primary, terminal receipt, historical authority and primitive repeat operands.
+Retain 135 measured repeat slots across 27 cells, keeping 27 warmups separate.
+No timing run, model load or native retry is permitted. Missing external operands
+block; owned validation failures disqualify. Qualification makes no speed or
+generalization claim. Preserve scheduled feedback, applied updates and all work
+counts. Reproduce Exp8405's max_coefficient_error rejection by the unchanged
+dense_sparse_error_max-only typed consumer on private bytes; native readiness
+remains zero. This changed diagnosis drops the previous proposed native retry.
+
+### SCENARIO-REPORT-8436-CUSTODY
+
+Fresh bounded CLI replay rejects missing operands, deliberate errors and rehashed
+timing or aggregate tampering against independently pinned producer bytes.
+Private E2E-018/E2E-021, strict consumers, Ruff, strict mypy and spec coverage
+retain command, exit, duration and log hashes. Genuine Coverage.py unit and child
+shards cover 100 percent newly owned statements. Publish exact validated bytes
+atomically through unchanged primary_publication. The conductor reconciles ops/BMAD.
+
+Implementation: `transaction_attribution_8436.py`, its bounded runner and thin
+Exp8436 CLI retain primitive repeat custody and the unchanged native rejection.
+`test_transaction_attribution_8436.py` exercises source authentication, real
+private children, rehashed corruption and complete clock reconstruction.

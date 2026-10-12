@@ -53910,3 +53910,24 @@ Implementation: `capacity_benefit_audit_8435.py` averages sibling and seed recor
 within questions, freezes the conditional bootstrap and jointly bounds all five
 retention windows. The report adapter reconstructs the shipped state transitions
 and independently checks dense gradients against recorded sparse writes.
+
+## REQ-VERIFY-8436: Disjoint primitive service clocks
+
+Reconstruct T=end-start from monotonic boundaries, including initialization,
+transactions, intervening gaps, responses and delayed tail drain. Prove containment
+and nonoverlap before summing stages. K=direct_scoring+coefficient_update.
+Report conversion, named persistence stages and unallocated remainder. Keep
+pointer_publication's composite meaning; never infer bare rename or disk-only
+cost. Invalid missing, negative, overlapping or inconsistent rows keep their slots.
+
+### SCENARIO-VERIFY-8436-CLOCKS
+
+Analytic intervals prove the full denominator and retain gaps. Doubled spans,
+deleted tail and swapped repeat IDs fail. Rehashed valid-looking timings fail
+independent producer authentication. Tail overlaps the wall partition and SHALL
+be reported separately without adding it twice. Initialization is separately
+measured persistence; its internal stages are unavailable.
+
+Implementation: `verify/transaction_attribution_8436.py` proves the disjoint
+partition before attributing stages. The report adapter preserves all 135 slots,
+27 separate warmups and independently pinned original timing hashes.
