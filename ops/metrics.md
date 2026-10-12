@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-10-12 Milestone 2026.10.726 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-12T09:09:25Z | 2026-10-12T09:12:02Z | Wrote operational retro for milestone 2026.10.726; adversarial reviewer verified zero defects | ~25k |
+
+---
+
 ## Session: 2026-10-11 Milestone 2026.10.725 Operational Retrospective
 
 ### Turn Log
@@ -4119,3 +4129,16 @@ One adversarial reviewer checked the retrospective and verified compliance again
 
 One adversarial reviewer checked the retrospective and verified compliance against locked fields, authoritative numbers, and repo rules.
 
+
+
+## Session: Milestone 2026.10.726 operational retrospective follow-up
+
+### Turn Log
+
+| Start | End | Description | Tokens |
+|---|---|---|---|
+| 2026-10-12T09:22:45Z | 2026-10-12T09:28:43Z | User-requested operational retrospective; preserved locked timing fields and appended changelog, research log, and handoff notes. | unavailable |
+
+Artifact validation and adversarial review passed. Global spec coverage
+reports existing missing references. Authoritative session token counts are
+unavailable: the documented session-metrics script is absent.

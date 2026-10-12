@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-12 — Operational retrospective for milestone 2026.10.726
+
+- Wrote `results/operational_retro_2026_10_726.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.726`. Authoritative disk-mtime fallback data records 13 experiments completed (0 compute-bound, 13 synthesis-only) across 118.8 total wall-time minutes (average 9 minutes per experiment).
+- Execution wall time was led by synthesis tasks: 'Measure continuous sparse learning under bounded delayed feedback' (39.53 minutes), 'Qualify bounded feedback checkpoints before continuous learning' (19.07 minutes), 'Qualify KV260 operation evidence and preserve PolarFire deployment limits' (11.25 minutes), 'Reconcile fourteen outcomes and decide which scientific claims earned continuati' (7.77 minutes), and 'Measure cross-game supervisor support and censoring from qualified live receipts' (6.99 minutes).
+- Point-in-time GPU monitor polling observed GPU 0 at 0% utilization (4MB allocated) and GPU 1 running separate long-lived processes; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for continuous sparse learning and checkpoint qualification tasks when upstream dependencies remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-12 — Repair V726 capstone script imports
 
 - Bind the standalone Exp8442 entry point to its resolved checkout before
@@ -22153,3 +22160,16 @@ Recorded 9 completed experiments in 91.2 minutes (1.5 hours), including 0 comput
 - 2026-10-12: Qualify KV260 operation evidence and preserve PolarFire deployment limits (⚠️ Blocked) — honest_verdict=complete_blocked_v726_board_reader_qualification; results/experiment_8440_v726_board_reader_qualification.json
 - 2026-10-12: Carry the exact GateMate reopening obligation without repeating the physical probe (⚠️ Blocked) — honest_verdict=complete_blocked_gatemate_obligation; results/experiment_8441_v726_gatemate_obligation.json
 - 2026-10-12: Reconcile fourteen outcomes and decide which scientific claims earned continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v726_capstone; results/experiment_8442_v726_capstone.json
+
+
+### Milestone 2026.10.726 — operational retrospective
+
+User-requested execution review: 13 synthesis-only experiments completed in
+118.8 minutes; no compute-bound work occurred. The longest synthesis entries
+were sparse learning (39.53 minutes) and feedback checkpoint qualification
+(19.07 minutes). Together they account for about 49.3% of the elapsed milestone.
+GPU efficiency and parallel-model harness compliance are not applicable.
+Recommend phase timing, hash-checked evidence reuse, and generation of logs from
+a shared timing manifest. Runtime causes and savings remain unmeasured.
+Experiment identifiers and acceptance criteria: no data available this milestone.
+See [the retrospective](../results/operational_retro_2026_10_726.json).

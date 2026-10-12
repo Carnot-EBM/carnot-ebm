@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.726",
+  "generated_at": "2026-10-12T09:22:45.782354+00:00",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 118.8,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure continuous sparse learning under bounded delayed feedback",
+      "duration_minutes": 39.53,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify bounded feedback checkpoints before continuous learning",
+      "duration_minutes": 19.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify KV260 operation evidence and preserve PolarFire deployment limits",
+      "duration_minutes": 11.25,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide which scientific claims earned continuati",
+      "duration_minutes": 7.77,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure cross-game supervisor support and censoring from qualified live receipts",
+      "duration_minutes": 6.99,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 synthesis-only experiments in 118.8 minutes, with 0 compute-bound experiments. The longest entries were continuous sparse learning (39.53 minutes) and feedback checkpoint qualification (19.07 minutes). Compute-bound GPU utilization and parallel-model harness compliance are not applicable.",
+  "bottlenecks_identified": [
+    "Observed elapsed-time concentration: continuous sparse learning (39.53 minutes) and bounded feedback checkpoint qualification (19.07 minutes) account for about 49.3% of milestone wall time. Their internal timing and causes are unavailable.",
+    "Timing observability gap: disk-mtime reconstruction provides elapsed estimates without separating synthesis, validation, evidence reading, artifact writing, or waiting. It cannot establish a runtime root cause."
+  ],
+  "improvements_suggested": [
+    "Add a standalone synthesis timing wrapper that records monotonic phase durations and milestone-linked start/end receipts. Preserve the current conductor while separating synthesis, validation, evidence reading, artifact writing, and waiting.",
+    "Provide a shared evidence manifest and checkpoint interface for feedback qualification and continuous sparse learning. Reuse unchanged inputs only after checking content and code hashes; retain all required validation.",
+    "Generate the retrospective JSON and append-only log text from the same locked timing manifest. Include experiment identifiers and acceptance evidence when recorded; otherwise report no data available this milestone.",
+    "Treat GPU monitor suggestions as host observations until experiment-linked receipts establish compute work. Require DualGPURunner only for eligible tasks that load multiple models in parallel; single-model work uses one GPU correctly.",
+    "Keep the existing doomed-rerun pre-launch guard. Its fast blocks save time and do not establish a slow-experiment bottleneck."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the longest synthesis workflows with phase timings before choosing a runtime optimization.",
+    "Reuse hash-checked evidence and checkpoints between feedback qualification and sparse learning, then measure any elapsed-time change.",
+    "Produce the retrospective and append-only logs from one milestone timing manifest with explicit missing-data fields."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing ranks synthesis work but cannot explain its elapsed time. No compute-bound task supports an inference-duration, GPU-efficiency, or DualGPURunner-failure claim; the host GPU snapshot has no experiment attribution. The zero savings estimate records an unmeasured benefit, not a forecast."
+}

@@ -2,6 +2,16 @@
 
 **Last Updated:** 2026-10-12
 
+## 2026-10-12 — Milestone 2026.10.726 operational retrospective
+
+Milestone 2026.10.726 operational retrospective recorded in
+`results/operational_retro_2026_10_726.json` (schema `carnot.operational_retro.v64`).
+Authoritative disk-mtime fallback timing records 13 completed experiments (0 compute-bound,
+13 synthesis-only) across 118.8 total wall-time minutes (averaging 9 minutes per experiment).
+Execution was led by continuous sparse learning measurement (39.53 min) and bounded feedback
+checkpoint qualification (19.07 min). GPU utilization was 0% on RTX 3090 with
+`gpu_idle_on_compute_bound_tasks: null` (expected idle state for synthesis tasks).
+
 ## 2026-10-12 — V726 capstone standalone import repair
 
 The capstone CLI now prepends its resolved checkout's package and repository
@@ -18235,3 +18245,23 @@ conductor source remain unchanged. Existing unrelated workspace changes remain.
 | Exp8153 | Bounded Qwen evidence capture on fixed fit/tune sources | ⚠️ Research Finding | honest_verdict=complete_null_fit_evidence_capture; 172/192 completed, 20 failed; capture readiness/trainability=1; learning benefit and independent generalization=0; [artifact](../results/experiment_8153_v705_fit_evidence_capture.json) |
 | Exp8304 | V717 fourteen-task authority binding and immutable local-learning protocol | ⚠️ Research Finding | honest_verdict=complete_circular_positive_contract_methods; 14/14 task comparisons completed; contract/protocol readiness=1; learning benefit=0; independent generalization=0; [artifact](../results/experiment_8304_v717_contract_methods.json) |
 | Exp8373 | Frozen V721 fourteen-slot reconciliation and bounded replay custody | ⚠️ Blocked | honest_verdict=complete_blocked_v721_capstone; 5/14 completed, 8 executed; H2 mean_gain=0; generalized learning benefit and independent generalization=0; missing deployment operations unmeasured; [artifact](../results/experiment_8373_v721_capstone.json) |
+
+
+### Milestone 2026.10.726 — operational retrospective handoff
+
+The requested [retrospective](../results/operational_retro_2026_10_726.json)
+preserves the locked timing fields. All 13 completed experiments were
+synthesis-only; compute-bound GPU efficiency and parallel-model harness
+compliance are not applicable. The host GPU snapshot cannot establish
+experiment-level utilization.
+
+Next: record phase timing for sparse learning and feedback qualification,
+then evaluate hash-checked evidence reuse. Generate logs from one timing
+manifest. Savings, experiment identifiers, and acceptance counts remain
+unmeasured or unavailable.
+
+Validation: JSON parsing, locked-field preservation, append-only log checks,
+protected-file checks, and adversarial review passed. Whole-repository spec
+coverage reports existing missing requirement references. This task changed
+no implementation or tests. No runtime E2E case applies to this documentation
+change; final artifact and log readback passed.
