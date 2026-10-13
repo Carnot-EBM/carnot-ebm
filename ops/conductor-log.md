@@ -20200,3 +20200,4 @@ code |
 | 2026-10-13 15:10 UTC | Fit scalar energy controls and freeze typed source | OK | 103 passed, 1 warning in 131.69s (0:02:11) |
 | 2026-10-13 15:53 UTC | Measure source information beyond scalar calibrati | OK | 96 passed, 1 warning in 147.00s (0:02:26) |
 | 2026-10-13 17:17 UTC | Qualify objective updates with complete rejection  | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: json").read_by |
+| 2026-10-13 18:43 UTC | Qualify objective updates with complete rejection  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 102 passed, 1 warning in 358.20s (0:05:58) |
