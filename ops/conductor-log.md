@@ -20205,3 +20205,4 @@ code |
 | 2026-10-13 19:40 UTC | Audit later decision benefit and simultaneous rete | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8490-brier-online-learning.objective_stream_ready_score (actual=0 == expected=1) |
 | 2026-10-13 20:38 UTC | Test whether stable journal names remove the measu | OK | 106 passed, 1 warning in 161.79s (0:02:41) |
 | 2026-10-13 21:42 UTC | Qualify durable append recovery without a pointer  | OK | 115 passed, 1 warning in 374.32s (0:06:14) |
+| 2026-10-13 22:21 UTC | Compare complete stable-append and snapshot servic | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 113 passed, 1 warning in 31.77s |
