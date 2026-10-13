@@ -20202,3 +20202,4 @@ code |
 | 2026-10-13 17:17 UTC | Qualify objective updates with complete rejection  | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: json").read_by |
 | 2026-10-13 18:43 UTC | Qualify objective updates with complete rejection  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 102 passed, 1 warning in 358.20s (0:05:58) |
 | 2026-10-13 19:33 UTC | Measure continuous sparse learning with objective- | OK | 100 passed, 1 warning in 172.44s (0:02:52) |
+| 2026-10-13 19:40 UTC | Audit later decision benefit and simultaneous rete | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8490-brier-online-learning.objective_stream_ready_score (actual=0 == expected=1) |
