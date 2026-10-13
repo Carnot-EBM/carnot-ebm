@@ -22215,3 +22215,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-13: Reconcile fourteen outcomes and decide information learning and append continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v729_capstone; results/experiment_8484_v729_capstone.json
 - 2026-10-13: Bind fourteen tasks and freeze qualified science and append-store methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v730_contract_methods; results/experiment_8485_v730_contract_methods.json
 - 2026-10-13: Qualify source controls after the missing producer-pin rejection test (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v730_source_control_qualification; results/experiment_8486_v730_source_control_qualification.json
+- 2026-10-13: Fit scalar energy controls and freeze typed source decisions (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v730_source_control_fit; results/experiment_8487_v730_source_control_fit.json
