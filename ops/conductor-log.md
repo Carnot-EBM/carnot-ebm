@@ -20180,3 +20180,6 @@ code |
 | 2026-10-13 04:58 UTC | Plan milestone 2026.10.729 | OK | 14 tasks proposed |
 | 2026-10-13 05:11 UTC | Milestone 2026.10.729 activated | OK | 14 tasks queued |
 | 2026-10-13 06:26 UTC | Bind fourteen tasks and freeze qualified science a | OK | 133 passed, 1 warning in 339.88s (0:05:39) |
+| 2026-10-13 06:34 UTC | Qualify source controls after the missing producer | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8471-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-13 06:36 UTC | Fit scalar energy controls and freeze typed source | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8472-source-control-qualification) |
+| 2026-10-13 06:36 UTC | Measure source information beyond scalar calibrati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8473-source-control-fit) |
