@@ -99588,3 +99588,40 @@ operands, errors and self-consistently rehashed tampering. Authenticate sealed
 historical authority independently of mutable vNEXT. Publish terminal bytes
 atomically through unchanged primary_publication and validator consumers.
 Conductor owns ops/status/changelog/BMAD reconciliation.
+
+## REQ-REPORT-8469: Record all three boards under independent V728 authority
+
+Authenticate the activated fourteen full task objects and canonical V728 digest.
+Replay pinned Exp8440 and Exp8455 with their sealed original authority operands.
+Retain KV260 quadratic Ising k_max<=5 and original PolarFire Linux CPU graduation.
+Carry exact GateMate missing source hashes and last IDCODE0xffffffff. Reopening
+requires original source bytes, dated cable/port/power change, GM1Ax IDCODE0x20000001,
+n16 flash and sample/hash parity. Inspect only supplied evidence within60 seconds;
+execute zero device commands. Administrative readiness is separate from deployment.
+Optional Exp8466 service_cost_ready_score=1 permits authenticated complete-service
+clock import. Unmeasured operation clocks remain null with exact producer fields.
+Retain the dated qualified five-input cost boundary when optional costs are absent.
+A host journal grants no FPGA online learning, purchase or board speed headline.
+NPU/TSU remain unsupported; vendor figures remain estimates. Generalization scores
+and current model calls stay zero. Retain H1=-0.00390625 and H2=0.
+
+### SCENARIO-REPORT-8469-OPERANDS
+
+Missing authority, producer bytes and optional costs retain path/hash/field/operator
+and expected/observed checks. Missing is distinct from zero. Historical producer
+qualification remains independent of current authority and missing V727 science.
+Map complete host service, compaction, fsync, sparse arithmetic and transport for
+KV260, PolarFire and GateMate. Counts describe accounting units, not independent science.
+
+### SCENARIO-REPORT-8469-REPLAY
+
+Cold replay accepts sealed primitives and rejects missing inputs, changed summaries
+and self-consistently rehashed work tampering. Ordered GateMate obligations and
+original PolarFire fields cannot change merely because candidate hashes are repaired.
+
+Implementation for REQ-REPORT-8469: `board_operation_boundary_8469.py` binds V728
+separately from pinned original Exp8440/8455 replay. Its adapter preserves ordered
+GateMate obligations and PolarFire fields. Optional Exp8466 complete clocks retain
+primitive references; unavailable stage clocks remain null. The primary is
+`results/experiment_8469_v728_board_operation_boundary.json`. The research note is
+`docs/research-notes/v728-board-operation-boundary.md`.

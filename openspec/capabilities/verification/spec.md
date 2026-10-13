@@ -54393,3 +54393,29 @@ Accept --date20261013. Flush start, phase and child status at least every60 seco
 Check input bytes, tools, memory and private disk scratch before observations.
 Stop measurements by3600 seconds; reserve900 seconds within4800 seconds.
 Never pad durations or replace frozen games. Keep scratch outside the repo root.
+
+## REQ-VERIFY-8469: Validate terminal board accounting with real private children
+
+Accept --date20261013. Declare no_model_load, MODEL_SPECS=[] and zero LLM calls.
+Use aggregation_from_upstream_artifacts for readers and preserve imported numerical
+head provenance as verifier_ensemble_against_cached_candidates. Flush progress
+around phases and children; poll within60 seconds. Use private disk-backed scratch,
+3600s measurement cap,900s validation reserve and4800s total cap without padding.
+Require scoped serial pytest,100 percent newly owned statement Coverage.py shards,
+Ruff check/format, strict mypy and owned spec coverage. Run private E2E-018/021.
+Run unchanged primary publication, adversarial and strict row validators before
+atomic publication. Retain findings; owned failures disqualify and external absence
+blocks. No full repository suite or historical publications are changed. The conductor
+owns ops/changelog/status/traceability reconciliation after task exit.
+
+### SCENARIO-VERIFY-8469-CLI
+
+Real private publication and consumers cover valid replay, absent input, deliberate
+error, wrong date, private output protection and rehashed tampering. Retain child
+commands, exits, durations and log hashes. Failures cannot grant readiness.
+
+Implementation for REQ-VERIFY-8469: `board_operation_runner_8469.py` reuses the
+bounded private validation plan and unchanged publication validators. The dated
+thin CLI is `scripts/experiments/experiment_8469_v728_board_operation_boundary.py`.
+`tests/python/test_board_operation_boundary_8469.py` exercises missing, natural,
+optional-cost, failure, private-consumer and rehashed cold replay paths.
