@@ -100083,3 +100083,31 @@ the original Exp8492/8493 hashes and bound sidecars before every measurement.
 All24 intended arms completed. Primary complete speedup2.3386343639 has paired
 CI95[2.1622196343,2.5293404491] and p95 ratio0.5170403149. Qualification remains
 bound to the terminal validation receipts. Exp8466 remains a separate null.
+
+## REQ-REPORT-8496: Qualify original rejection before fixed V730 live panel
+
+Authenticate the complete activated V730 task independently of historical V728
+fixture authority. First reconstruct a successful private historical replay with
+all original pins and source snapshots. Mutate only panel registry metadata,
+recompute outer seals, and prove original arc_generalization_panel_8468.py line350
+rejects with genuine Coverage.py evidence. Freeze tn36-ef4dde99, lf52-271a04aa,
+ft09-0d8bbf25, ar25-0c556536 with seeds11/22 and supervisor off/on before live
+observations. Reuse the existing model-free SDK policy and recorder with game
+adapters, stored routes and calibration withheld. Keep unavailable games missing,
+zero current LLM calls, zero new credited solves and both generalization scores0.
+
+### SCENARIO-REPORT-8496-REJECTION
+
+Successful unchanged private historical replay and independent activated authority
+precede panel-only mutation. Outer replay remains valid; original comparison fails.
+Missing snapshots or altered historical pins cannot qualify the fixture.
+
+### SCENARIO-REPORT-8496-CUSTODY
+
+Fresh current replay rejects missing operands and self-rehashed summaries or panels.
+Every intended episode remains visible; games are the independent units. Execution
+readiness differs from resolved redirect support. Unresolved events stay censored;
+refinement needs3 overlapping games and5 resolved outcomes per shared cell.
+
+Implementation and terminal disposition are recorded in
+`docs/research-notes/v730-arc-panel-qualification.md`. Conductor owns ops/BMAD reconciliation.

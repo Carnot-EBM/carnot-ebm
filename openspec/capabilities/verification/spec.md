@@ -54763,3 +54763,21 @@ clock to the qualified stable append store. Both cells retain one warmup and
 five measured pairs. Traced tests cover actual children, complete accounting,
 registered bootstrap seed, negative admission, repaired tampering and disk replay.
 Only the four newly owned modules enter the invocation's Coverage.py scope.
+
+## REQ-VERIFY-8496: Preserve exact baseline tests and qualify all new statements
+
+Collect the Exp8482 exact original node union before execution and retain every
+assertion in bounded disjoint shards. Require392/392 baseline statements and100
+percent added statements before episodes. Use genuine Coverage.py unit and child
+shards, serial pytest, Ruff check/format, strict mypy and owned spec coverage.
+Run private E2E-011/017 wrapper parity and E2E-018/021 custody. Use no_model_load,
+MODEL_SPECS=[] and zero current LLM calls. Keep120s/512 actions per episode,
+1920s episode budget plus480s overhead,3600s measurement and900s validation
+reserve within4800s. Never run the full repository suite.
+
+### SCENARIO-VERIFY-8496-VALIDATION
+
+Real dated CLI covers private publication, successful cold replay, missing inputs,
+wrong date and rehashed tampering. Frozen command receipts retain exits,durations
+and log hashes. Unchanged primary publication/adversarial/strict-row consumers
+validate terminal bytes; owned failures disqualify and external absence blocks.
