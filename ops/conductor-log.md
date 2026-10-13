@@ -20172,3 +20172,4 @@ code |
 | 2026-10-13 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_check_terminal_prefix_vs_partial_class age-week 2: OPEN  |
 | 2026-10-13 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_arc_live_search_win age-week 2: OPEN 14 days: SIL |
 | 2026-10-13 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 2: OPEN 14 days: S |
+| 2026-10-13 00:41 UTC | Compare complete snapshot and journal service cost | OK | 109 passed, 1 warning in 58.15s |
