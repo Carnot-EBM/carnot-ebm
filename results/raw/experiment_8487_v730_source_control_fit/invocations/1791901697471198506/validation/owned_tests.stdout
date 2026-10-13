@@ -1,0 +1,87 @@
+..F..................F                                                   [100%]
+=================================== FAILURES ===================================
+_______________________ test_missing_and_owned_failures ________________________
+
+measured = ({'authority': {'activated': True, 'active_tasks_sha256': '37ffae6a91ff0b935c365948c7d3f9cc51f56b25ece016f05677d0dd10c.....], 'ended_monotonic_ns': 221608455650617, ...}, PosixPath('/var/tmp/exp8487-owned-7xmbdag9/owned-tests/source-fit0'))
+tmp_path = PosixPath('/var/tmp/exp8487-owned-7xmbdag9/owned-tests/test_missing_and_owned_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff9df753140>
+
+    def test_missing_and_owned_failures(measured, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8487-CUSTODY: missing inputs differ from failed owned work."""
+        work, raw = measured
+        value = e.build(work, [dict(passed=False)], raw, raw / (e.NAME + ".json"))
+        assert value["verdict_class"] == "disqualified" and value["head_controls_ready_score"] == 0
+>       missing = e.measure(tmp_path / "absent", tmp_path / "missing")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v730_source_control_fit_8487.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/var/tmp/exp8487-owned-7xmbdag9/owned-tests/test_missing_and_owned_failure0/absent')
+raw = PosixPath('/var/tmp/exp8487-owned-7xmbdag9/owned-tests/test_missing_and_owned_failure0/missing')
+
+    def measure(root: Path, raw: Path) -> Json:
+        """Authenticate CPU prerequisites before fitting and seal heads before test prediction."""
+        with binding():
+            work = dict(old.measure(root, raw))
+        for failure in work["failures"]:
+>           if failure["artifact_field"] == "feature_panel_ready_score_and_sealed_fit_tune":
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'artifact_field'
+
+python/carnot/verify/v730_source_control_fit.py:344: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8487] phase=preconditions completed=0 pending=25
+___________________________ test_private_blocked_cli ___________________________
+
+tmp_path = PosixPath('/var/tmp/exp8487-owned-7xmbdag9/owned-tests/test_private_blocked_cli0')
+
+    def test_private_blocked_cli(tmp_path):
+        """SCENARIO-VERIFY-8487-CLI: external absence produces validated blocked terminal bytes."""
+        output = tmp_path / "results" / (e.NAME + ".json")
+        receipt = child(
+            "blocked",
+            [
+                sys.executable,
+                "-u",
+                str(e.ROOT / e.CLI),
+                "--private-control",
+                "--root",
+                str(tmp_path / "absent"),
+                "--output",
+                str(output),
+            ],
+            tmp_path / "logs",
+            deadline=120,
+        )
+>       assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8487_v730_source_control_fit.py", line 14, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v730_source_fit_runner.py", line 50, in main
+E             shipped.run(args.root, output, Path(directory), control=args.private_control)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v726_criterion_energy_runner.py", line 38, in run
+E             work = e.measure(root, raw)
+E                    ^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/v730_source_control_fit.py", line 344, in measure
+E             if failure["artifact_field"] == "feature_panel_ready_score_and_sealed_fit_tune":
+E                ~~~~~~~^^^^^^^^^^^^^^^^^^
+E         KeyError: 'artifact_field'
+E         
+E       assert False
+
+tests/python/test_v730_source_control_fit_8487.py:270: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_blocked completed=0 pending=1
+[exp8205] phase=after_subprocess_blocked completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v730_source_control_fit_8487.py::test_missing_and_owned_failures
+FAILED tests/python/test_v730_source_control_fit_8487.py::test_private_blocked_cli
+2 failed, 20 passed, 1 warning in 196.66s (0:03:16)

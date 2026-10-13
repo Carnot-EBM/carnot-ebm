@@ -99898,3 +99898,29 @@ tampering fail. Missing external inputs block; failed owned checks disqualify.
 Source changes leave q-only inputs and scalar basis unchanged. Full and permuted
 controls have identical capacity. Every intended arm retains a row or missing
 reason. Qualification measures no independent generalization or learning benefit.
+## REQ-REPORT-8487: Freeze authenticated scalar-capacity controls
+
+Authenticate activated V730 authority and qualified Exp8486 control vectors.
+Reuse independently sealed V726 raw, scalar logistic, full and source-permuted
+heads only when their method bytes match. Missing required heads block comparison.
+Fit only the q-only cubic spline: inherited fit scaler and degree3 knots,
+zero initialization,200 full-batch log-loss steps,rate0.01,L2=0.001.
+Derive13 coefficients from twelve one-input bases plus bias. Select temperature
+in{0.5,1,2} by tune log loss; ties prefer1 then smaller. Keep seeds17/29/43/71/101.
+Duplicate deterministic fits provide one computation, not five replications.
+
+### SCENARIO-REPORT-8487-FREEZE
+
+Seal all five arm heads before label-free test prediction. Use E0=0,E1=-eta/T
+and p=sigmoid(eta/T). Accept p<=0.2,reject p>=0.8,otherwise escalate; retain
+confidence. Never optimize thresholds or read test targets. Preserve original
+head bytes, losses, coefficients and parameter counts. Record actual new fit
+timing; unavailable original per-head timing remains missing with its reason.
+Readiness qualifies controls only; both generalization scores stay zero.
+
+### SCENARIO-REPORT-8487-CUSTODY
+
+Cold replay authenticates independent producer seals and original historical
+authority. Rehashed primitive, coefficient and aggregate drift reject.
+Missing external inputs block; failed owned validation disqualifies.
+No model loads, generator updates, optional device gates or external publication.

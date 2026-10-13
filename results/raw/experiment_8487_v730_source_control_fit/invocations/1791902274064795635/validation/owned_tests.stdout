@@ -1,0 +1,140 @@
+.F.F..................                                                   [100%]
+=================================== FAILURES ===================================
+________________ test_thresholds_ties_and_information_boundary _________________
+
+    def test_thresholds_ties_and_information_boundary():
+        """REQ-VERIFY-8487: exact fixed thresholds and source blindness prevent adaptive tuning."""
+        assert [e.decision(p)["decision"] for p in [0, 0.2, 0.21, 0.79, 0.8, 1]] == [
+            "accept",
+            "accept",
+            "escalate",
+            "escalate",
+            "reject",
+            "reject",
+        ]
+        assert e.old.choose_temperature({"0.5": 1, "1.0": 1, "2.0": 1}) == 1
+        assert e.old.choose_temperature({"0.5": 1, "1.0": 2, "2.0": 1}) == 0.5
+        _, view = e.operands(e.ROOT)
+        changed = deepcopy(view)
+        for row in changed["rows"]:
+            row["x"][1:] = [999] * 8
+        a, b = e.train(view, []), e.train(changed, [])
+>       assert e.semantic(a) == e.semantic(b)
+E       AssertionError: assert {'clip_counts...}, ...]}, ...} == {'clip_counts...}, ...]}, ...}
+E         
+E         Omitting 18 identical items, use -vv to show
+E         Differing items:
+E         {'fit_tune_losses': {'full_spline9': [{'chosen_tune_log_loss': 0.2546386514870927, 'current_optimization_duration_s': ...mization_duration_s': 0.0, 'final_fit_objective': 0.3772583393981974, 'fit_log_loss': 0.36898218319488607, ...}], ...}} != {'fit_tune_losses': {'full_spline9': [{'chosen_tune_log_loss': 0.2546386514870927, 'current_optimization_duration_s': ...mization_duration_s': 0.0, 'final_fit_objective': 0.3772583393981974, 'fit_log_loss': 0.36898218319488607, ...}], ...}}
+E         Use -v to get more diff
+
+tests/python/test_v730_source_control_fit_8487.py:74: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8487] phase=scalar_fit_begin completed=0 pending=5
+[exp8487] phase=scalar_seed17_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed17_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed17_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed17_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=1 pending=4
+[exp8487] phase=scalar_fit_begin completed=1 pending=4
+[exp8487] phase=scalar_seed29_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed29_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed29_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed29_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=2 pending=3
+[exp8487] phase=scalar_fit_begin completed=2 pending=3
+[exp8487] phase=scalar_seed43_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed43_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed43_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed43_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=3 pending=2
+[exp8487] phase=scalar_fit_begin completed=3 pending=2
+[exp8487] phase=scalar_seed71_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed71_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed71_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed71_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=4 pending=1
+[exp8487] phase=scalar_fit_begin completed=4 pending=1
+[exp8487] phase=scalar_seed101_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed101_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed101_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed101_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=5 pending=0
+[exp8487] phase=scalar_fit_begin completed=0 pending=5
+[exp8487] phase=scalar_seed17_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed17_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed17_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed17_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=1 pending=4
+[exp8487] phase=scalar_fit_begin completed=1 pending=4
+[exp8487] phase=scalar_seed29_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed29_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed29_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed29_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=2 pending=3
+[exp8487] phase=scalar_fit_begin completed=2 pending=3
+[exp8487] phase=scalar_seed43_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed43_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed43_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed43_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=3 pending=2
+[exp8487] phase=scalar_fit_begin completed=3 pending=2
+[exp8487] phase=scalar_seed71_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed71_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed71_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed71_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=4 pending=1
+[exp8487] phase=scalar_fit_begin completed=4 pending=1
+[exp8487] phase=scalar_seed101_steps1/200 completed=1 pending=199
+[exp8487] phase=scalar_seed101_steps51/200 completed=51 pending=149
+[exp8487] phase=scalar_seed101_steps101/200 completed=101 pending=99
+[exp8487] phase=scalar_seed101_steps151/200 completed=151 pending=49
+[exp8487] phase=scalar_fit_end completed=5 pending=0
+________________ test_private_cli_replay_and_rehashed_controls _________________
+
+tmp_path = PosixPath('/var/tmp/exp8487-owned-uf2kez5f/owned-tests/test_private_cli_replay_and_re0')
+
+    def test_private_cli_replay_and_rehashed_controls(tmp_path):
+        """SCENARIO-VERIFY-8487-CLI: real children prove bitwise replay and refusal paths."""
+        output = tmp_path / "results" / (e.NAME + ".json")
+        argv = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        cases = [
+            (["--date", "20261013", "--private-control", "--output", str(output)], 0),
+            (["--cold-replay", str(output)], 0),
+            (["--cold-replay", str(tmp_path / "absent")], 1),
+            (["--deliberate-error"], 7),
+            (["--date", "20261012"], 2),
+            (["--private-control"], 2),
+        ]
+        for i, (args, expected) in enumerate(cases):
+            receipt = child(f"cli-{i}", argv + args, tmp_path / "logs", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8487_v730_source_control_fit.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v730_source_fit_runner.py", line 50, in main
+E                 shipped.run(args.root, output, Path(directory), control=args.private_control)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v726_criterion_energy_runner.py", line 115, in run
+E                 publication = publish_primary(output, value, validator)
+E                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E                 raise ValueError("candidate_rejected")
+E             ValueError: candidate_rejected
+E             
+E           assert False
+
+tests/python/test_v730_source_control_fit_8487.py:111: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=after_subprocess_cli-0 completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v730_source_control_fit_8487.py::test_thresholds_ties_and_information_boundary
+FAILED tests/python/test_v730_source_control_fit_8487.py::test_private_cli_replay_and_rehashed_controls
+2 failed, 20 passed, 1 warning in 197.94s (0:03:17)

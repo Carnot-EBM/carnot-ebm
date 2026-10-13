@@ -54574,3 +54574,22 @@ Real private CLI publication and fresh cold replay pass valid cached evidence.
 Wrong dates, unsafe private destinations, missing inputs, deliberate failures,
 rehashed aggregates and forged producer pins reject with retained receipts.
 Historical test children retain their sealed original authority and assertions.
+## REQ-VERIFY-8487: Independently qualify scalar energy arithmetic
+
+Write traced failing tests first. Validate dense individual cubic bases and
+finite differences for binary log loss, sigmoid temperature and full L2.
+Repeat deterministic fits in a fresh bounded process; require bitwise prediction
+agreement. Use genuine Coverage.py unit and subprocess shards with100 percent
+new owned statements. Collect required test IDs before execution; retain exact
+disjoint historical shard unions and unchanged E2E-018/021 assertions.
+Run serial scoped pytest,Ruff check/format,strict mypy and owned spec coverage.
+
+### SCENARIO-VERIFY-8487-CLI
+
+Real private CLI accepts20261013 and rejects wrong dates,unsafe destinations,
+missing inputs,deliberate failures and rehashed tampering. Authenticate tools,
+memory and disk scratch. Flush start and phase counts; poll children within60s.
+Stop measurements by3600s; reserve900s inside4800s. Capture command,exit,
+duration and log hashes. Run unchanged publication,adversarial and strict row
+consumers before atomic terminal publication. Retain unresolved findings with
+readiness0. Conductor owns later ops/status/changelog/traceability reconciliation.
