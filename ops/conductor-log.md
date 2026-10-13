@@ -20204,3 +20204,4 @@ code |
 | 2026-10-13 19:33 UTC | Measure continuous sparse learning with objective- | OK | 100 passed, 1 warning in 172.44s (0:02:52) |
 | 2026-10-13 19:40 UTC | Audit later decision benefit and simultaneous rete | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8490-brier-online-learning.objective_stream_ready_score (actual=0 == expected=1) |
 | 2026-10-13 20:38 UTC | Test whether stable journal names remove the measu | OK | 106 passed, 1 warning in 161.79s (0:02:41) |
+| 2026-10-13 21:42 UTC | Qualify durable append recovery without a pointer  | OK | 115 passed, 1 warning in 374.32s (0:06:14) |
