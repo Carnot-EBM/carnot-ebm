@@ -99924,3 +99924,37 @@ Cold replay authenticates independent producer seals and original historical
 authority. Rehashed primitive, coefficient and aggregate drift reject.
 Missing external inputs block; failed owned validation disqualifies.
 No model loads, generator updates, optional device gates or external publication.
+
+## REQ-REPORT-8488: Audit information beyond flexible scalar calibration
+
+Authenticate activated V730 authority and independently pinned qualified Exp8487
+heads. Seal 7500 predictions for 300 answers, 100 questions, five arms and five
+seeds before this evaluator opens A1/A2. Preserve original missing denominators.
+Average siblings and seeds within each question. Compare q-only spline minus
+full spline and source-permuted spline minus full spline Brier loss. Use 10000
+paired whole-question draws, seed7278446, and two-sided97.5 percent intervals.
+Require both lower bounds above zero and typed-loss nonincrease versus q-only.
+Raw p2 and scalar logistic are descriptive. A2 remains sensitivity only.
+
+### SCENARIO-REPORT-8488-PAIR
+
+Hand-computed question means match both contrasts and fixed wrong/correct/review
+costs1/0/0.2. Missing paired predictions or labels omit the question explicitly.
+Report all fixed dataset/generator cells, including small and missing cells.
+Seeds and sibling answers never multiply independent questions.
+
+### SCENARIO-REPORT-8488-INVARIANCE
+
+Repeat frozen fits retain per-seed metrics, duplicate rate, decision-flip rate
+and risk at matched coverage. Reordering rows or renaming metadata identifiers
+preserves exact probabilities after inverse joining. No test-label calibration
+fit or population grouping-loss estimate is permitted. SIFT and score decomposition
+motivate checks only; no implementation or theorem transfer is claimed.
+
+### SCENARIO-REPORT-8488-VERDICT
+
+Exposed-label positives are at most circular_positive with both generalization
+scores zero. A failed contrast retires the unchanged information claim. Reopening
+requires externally collected new question labels, not another split of this panel.
+Preserve the original V726 gain and V728 service null as separate historical evidence.
+Missing external inputs block; failed owned validation disqualifies.

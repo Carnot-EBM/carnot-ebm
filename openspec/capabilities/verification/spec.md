@@ -54593,3 +54593,18 @@ Stop measurements by3600s; reserve900s inside4800s. Capture command,exit,
 duration and log hashes. Run unchanged publication,adversarial and strict row
 consumers before atomic terminal publication. Retain unresolved findings with
 readiness0. Conductor owns later ops/status/changelog/traceability reconciliation.
+
+## REQ-VERIFY-8488: Qualify frozen information primitives and terminal bytes
+
+Collect required test nodes before bounded nonoverlapping historical shards.
+Run genuine Coverage.py unit and child shards, serial pytest without pytest-cov,
+Ruff, strict mypy, spec coverage, E2E-018 and E2E-021. Require100 percent newly
+owned statements. Preserve exact commands, exits, durations and log hashes.
+Use unchanged primary publication, adversarial and strict row consumers.
+
+### SCENARIO-VERIFY-8488-CLI
+
+A real private CLI accepts the actual date and cold-replays sealed primitives.
+Missing inputs produce blocked bytes. Deliberate failures and rehashed summary,
+prediction, target and authority tampering reject. All output paths stay private.
+Atomic publication binds terminal validator receipts to exact primary bytes.
