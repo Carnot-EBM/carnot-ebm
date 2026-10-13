@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.728",
+  "generated_at": "2026-10-13T03:07:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 102.0,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify Brier gradients and durable feedback transitions before learning",
+      "duration_minutes": 25.57,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Compare complete snapshot and journal service costs at equal durable work",
+      "duration_minutes": 16.08,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify a bounded event journal with unchanged durable acknowledgments",
+      "duration_minutes": 15.52,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and seal the changed source learning and storage hypotheses",
+      "duration_minutes": 11.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide source learning and service continuation",
+      "duration_minutes": 9.67,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.728 completed 9 experiments (0 compute-bound, 9 synthesis-only) across 102.0 total wall-time minutes (averaging 11 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by synthesis-only tasks: qualifying Brier gradients and durable feedback transitions before learning (25.57 minutes), comparing complete snapshot and journal service costs at equal durable work (16.08 minutes), qualifying a bounded event journal with unchanged durable acknowledgments (15.52 minutes), binding fourteen tasks and sealing changed source learning and storage hypotheses (11.10 minutes), and reconciling fourteen outcomes and deciding source learning and service continuation (9.67 minutes). With zero compute-bound experiments and gpu_idle_on_compute_bound_tasks recorded as null, the point-in-time GPU monitor observation of 0% utilization on GPU 0 (4MB allocated) reflects expected idle behavior for non-GPU synthesis workloads, while GPU 1 was occupied by long-running background processes unrelated to this milestone.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 9 completed experiments totaling 102.0 wall-time minutes), with the top three tasks—qualifying Brier gradients and durable feedback transitions (25.57 minutes), comparing complete snapshot and journal service costs (16.08 minutes), and qualifying a bounded event journal (15.52 minutes)—consuming 57.17 minutes (~56.0% of total milestone wall time).",
+    "Synthesis tasks executed serially without incremental receipt caching or evidence memoization when validating unchanged contract hypotheses, boundary mappings, and reconciliation artifacts.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Individual experiment receipts lack granular intra-task phase telemetry (such as setup, contract validation, synthesis generation, and artifact serialization) to localize specific latency drivers within multi-minute synthesis runs."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for task binding, journal service cost comparison, bounded event journal qualification, and outcome reconciliation when upstream contracts and dependencies remain unchanged.",
+    "Instrument synthesis tasks with granular sub-phase execution timers (setup, schema verification, contract binding, artifact serialization) to pinpoint intra-task latency drivers.",
+    "Persist explicit synchronous execution timestamps (start, completion, duration) directly into experiment receipts to eliminate dependence on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for task binding, journal service mapping, and reconciliation workflows when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, validation, execution, serialization).",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.728 completed in 102.0 total wall-time minutes across 9 synthesis-only experiments with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% GPU utilization on GPU 0 represented expected idle behavior for non-GPU synthesis workloads, while long-running background processes on GPU 1 were unrelated to milestone execution and no parallel multi-model task required DualGPURunner dispatch. Operational improvements should focus on synchronous lifecycle timestamp persistence in receipts and granular intra-phase timing instrumentation for synthesis workflows, with estimated time savings held at 0% until empirically demonstrated."
+}
