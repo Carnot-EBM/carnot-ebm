@@ -466,3 +466,18 @@ Additional official ARC-AGI-3 Semi-Private results, showing each harness’s bes
 
 **September 3 — GPT-6 Astra results:** ARC Prize announced new ARC-AGI-3 Semi-Private records: **62.7%** with the Standard harness (max reasoning; $26,098) and **99.9%** with the Provider Adapter harness (high reasoning; $18,817). At max reasoning with the adapter, Astra used fewer actions than the median tested human on **96% of levels**. [Official announcement](https://arcprize.org/blog/astra)
 
+## 2026-10-13 13:13 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen **27.9% ($25,000)**; Lord Han Solo **23.8% ($7,500)**; Lohit Siriki **22.5% ($5,000)**. All three open-sourced their solutions. [Official announcement](https://x.com/arcprize/status/2105737436450201734)
+
+- **October 9 — Kaggle lead changed:** Yi-Chia Chen reached **59.17%**, overtaking Tufa Labs. [Official announcement](https://x.com/arcprize/status/2108577347192676612)
+
+Additional official ARC-AGI-3 Semi-Private results, showing each model’s best score per harness:
+
+| Model | Standard | Provider Adapter |
+|---|---:|---:|
+| [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+
