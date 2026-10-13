@@ -20173,3 +20173,4 @@ code |
 | 2026-10-13 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_arc_live_search_win age-week 2: OPEN 14 days: SIL |
 | 2026-10-13 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 2: OPEN 14 days: S |
 | 2026-10-13 00:41 UTC | Compare complete snapshot and journal service cost | OK | 109 passed, 1 warning in 58.15s |
+| 2026-10-13 00:48 UTC | Test bounded Qwen source-span responses only after | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8457-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
