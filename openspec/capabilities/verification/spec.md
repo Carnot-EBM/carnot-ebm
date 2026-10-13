@@ -54419,3 +54419,26 @@ bounded private validation plan and unchanged publication validators. The dated
 thin CLI is `scripts/experiments/experiment_8469_v728_board_operation_boundary.py`.
 `tests/python/test_board_operation_boundary_8469.py` exercises missing, natural,
 optional-cost, failure, private-consumer and rehashed cold replay paths.
+
+## REQ-VERIFY-8470: Qualify complete capstone accounting in private bounded processes
+
+Accept --date20261013; print flushed start, phases and child status within60 seconds.
+Check required bytes, tools, memory and disk-backed scratch. Stop measurements
+by3600 seconds, reserve900 seconds inside4800 seconds, and never pad duration.
+Require scoped serial pytest, genuine Coverage.py subprocess shards and100 percent
+new owned statements, Ruff check/format, strict mypy and owned spec coverage.
+Run private E2E-018/021 and standalone outside-checkout CLI without PYTHONPATH.
+Use unchanged primary_publication, adversarial verification and strict row lint
+before atomic terminal publication; retain findings and fail readiness closed.
+
+### SCENARIO-VERIFY-8470-CONTROLS
+
+Cold replay reconstructs primitive rows and rejects missing bytes, deliberate errors,
+wrong dates, changed task objects and self-consistently rehashed summary/work tampering.
+Private controls publish outside the checkout. Child commands, exits, durations and
+log hashes remain bound. Historical bytes, validators and exclusion history are unchanged.
+
+Implementation for REQ-VERIFY-8470: `v728_capstone.py` retains the shipped bounded
+validation and atomic publication pipeline. `test_v728_capstone_8470.py` exercises
+real private CLI consumers, outside-checkout replay and rehashed controls. New
+statement coverage includes genuine child shards and unchanged private E2E checks.

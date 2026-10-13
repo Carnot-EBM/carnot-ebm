@@ -99625,3 +99625,36 @@ GateMate obligations and PolarFire fields. Optional Exp8466 complete clocks reta
 primitive references; unavailable stage clocks remain null. The primary is
 `results/experiment_8469_v728_board_operation_boundary.json`. The research note is
 `docs/research-notes/v728-board-operation-boundary.md`.
+
+## REQ-REPORT-8470: Reconcile the complete V728 contract without inventing science
+
+Authenticate the visible table, full JSON and activated fourteen task objects.
+Account for Exp8457 through Exp8470 in order, including actual pre-gate filenames,
+latest milestone-scoped cascade receipts and the current reconciliation slot.
+Replay pinned eligible producers in fresh bounded workers (1500 MiB peak,
+500 MiB growth). Keep original V726 authority sealed and copy bounded operands.
+Keep source contrasts, later objective loss and all five retention windows missing
+when producers are absent or disqualified. Independently replay journal cost and
+process-exit durability, derivative qualification, ARC support and all three boards.
+Host snapshot/journal clocks cannot close FR-05/08 parity or NFR-01 Rust/Python.
+Retain V717 H1=-0.00390625/H2=0, V726 retrospective positives, learning null and
+arithmetic ceiling. Generalization scores and current LLM calls remain zero.
+
+### SCENARIO-REPORT-8470-ACCOUNTING
+
+Always run without requires or gates. Separate qualified producer, disqualified
+producer, pre-gate receipt, cascade skip and absent artifact. Own publication is
+current reconciliation. External absence is blocked; owned failure disqualifies.
+Run unchanged G1-G4 and preserve paper_ready/unmet_gates separately from V728.
+Bind per-hypothesis continuation and exact-repeat retirement to predecessor hashes.
+
+## Implementation plan for REQ-REPORT-8470
+
+The V728 capstone uses narrow adapters around shipped reduction/publication modules.
+The conductor owns ops/status/changelog/BMAD reconciliation after this task exits.
+
+Implementation for REQ-REPORT-8470: `v728_capstone_evidence.py` binds full V728
+objects and pinned primitive workers; `v728_capstone_report.py` retains missing
+science, measured engineering nulls and original V726/V717 evidence. The primary
+is `results/experiment_8470_v728_capstone.json`. The note is
+`docs/research-notes/v728-capstone.md`. Ops/BMAD reconciliation is conductor-owned.

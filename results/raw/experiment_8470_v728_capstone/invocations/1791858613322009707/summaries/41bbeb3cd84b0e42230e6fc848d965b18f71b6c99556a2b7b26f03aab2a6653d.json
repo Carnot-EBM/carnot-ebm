@@ -1,0 +1,95 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "disqualified_upstream_evidence"
+  },
+  "checks": [
+    {
+      "check": "producer_terminal_replay",
+      "expected": true,
+      "field": "producer_terminal_replay",
+      "hash": "sha256:96602b67ce48980cfddaba1f94aa5a3c40d8aa554874885ce451859e114dbbc9",
+      "observed": {
+        "replayed": true,
+        "required_checks_passed": false,
+        "sealed": true
+      },
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8458_v728_source_control_panel.json",
+      "upstream": "exp8458-source-control-panel"
+    }
+  ],
+  "disposition": "disqualified_producer",
+  "eligible": false,
+  "historical_model_provenance": [
+    {
+      "models": [
+        "GPT-5-mini",
+        "gemma-2-9b",
+        "llama3-8b",
+        "mistral-7b"
+      ],
+      "producer": "exp8403-released-question-identity",
+      "scope": "released cached judgments and generator answers"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_v728_source_control_panel",
+  "memory": {
+    "after": {
+      "current_rss_mb": 444.08984375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 525.1953125,
+      "prior_exec_lifetime_peak_mb": 525.1953125
+    },
+    "before": {
+      "current_rss_mb": 390.90234375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.90234375,
+      "prior_exec_lifetime_peak_mb": 401.30078125
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 134.29296875,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "primitive_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8458_v728_source_control_panel/invocations/1791834343754742255/measurement.json",
+    "sha256": "sha256:266ffa2c8436d0ca5aac7cb3e035b68e05f5916fdabb3666c72e9261a4a547f1"
+  },
+  "producer_executed": true,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 390.89453125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.89453125,
+      "prior_exec_lifetime_peak_mb": 401.30078125
+    },
+    "before": {
+      "current_rss_mb": 390.71484375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.71484375,
+      "prior_exec_lifetime_peak_mb": 401.30078125
+    },
+    "scope": "Python dependency imports; no model weights loaded"
+  },
+  "selected": {
+    "feature_panel_ready_score": 0,
+    "source_controls_ready_score": 0
+  },
+  "source_gates": [
+    {
+      "check": "required_owned_check",
+      "expected_value": true,
+      "field": "required_owned_check",
+      "observed_value": false,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8458_v728_source_control_panel/invocations/1791834343754742255/validation/coverage_report.stdout",
+      "sha256": null,
+      "upstream": "exp8430-criterion-feature-panel"
+    }
+  ],
+  "upstream_adversarial_findings": [],
+  "verdict_class": "disqualified"
+}

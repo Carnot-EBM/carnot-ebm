@@ -1,0 +1,70 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 390.61328125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.61328125,
+      "prior_exec_lifetime_peak_mb": 411.59765625
+    },
+    "before": {
+      "current_rss_mb": 390.578125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.578125,
+      "prior_exec_lifetime_peak_mb": 411.59765625
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.03515625,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 390.578125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.578125,
+      "prior_exec_lifetime_peak_mb": 411.59765625
+    },
+    "before": {
+      "current_rss_mb": 390.5625,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.5625,
+      "prior_exec_lifetime_peak_mb": 411.59765625
+    },
+    "scope": "Python dependency imports; no model weights loaded"
+  },
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "runtime_repair_ready_score",
+      "expected": 1,
+      "field": "runtime_repair_ready_score",
+      "hash": "sha256:7a4d4935da70d990d1821bc23f7b539a9bd854a649fe4c439642ea6680fb5459",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8457_v728_contract_methods.json",
+      "upstream": "exp8457-contract-methods"
+    },
+    {
+      "check": "source_controls_ready_score",
+      "expected": 1,
+      "field": "source_controls_ready_score",
+      "hash": "sha256:96602b67ce48980cfddaba1f94aa5a3c40d8aa554874885ce451859e114dbbc9",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8458_v728_source_control_panel.json",
+      "upstream": "exp8458-source-control-panel"
+    }
+  ],
+  "verdict_class": "blocked"
+}
