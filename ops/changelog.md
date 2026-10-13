@@ -22204,3 +22204,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-13: Reconcile fourteen outcomes and decide source learning and service continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v728_capstone; results/experiment_8470_v728_capstone.json
 - 2026-10-13: Bind fourteen tasks and freeze qualified science and append-store methods (⚠️ Blocked) — honest_verdict=complete_blocked_v729_contract_methods; results/experiment_8471_v729_contract_methods.json
 - 2026-10-13: Qualify the missing ARC panel rejection path and measure live supervisor generalization (⚠️ Research Finding) — honest_verdict=complete_disqualified_v729_arc_panel_qualification; results/experiment_8482_v729_arc_panel_qualification.json
+- 2026-10-13: Map append operations to KV260 and preserve PolarFire and GateMate evidence (⚠️ Blocked) — honest_verdict=complete_blocked_v729_board_operation_boundary; results/experiment_8483_v729_board_operation_boundary.json
