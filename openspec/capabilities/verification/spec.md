@@ -54661,3 +54661,36 @@ Accept date20261013. Bound all subprocesses and emit actual status at least ever
 60 seconds. Retain command, exit, duration and stream hashes. Real private CLI
 publication must cold-replay and reject missing inputs, deliberate errors and
 rehashed tampering. Stop measurement by3600 seconds with900 seconds reserved.
+## REQ-VERIFY-8492: Freeze append recovery before implementation
+
+Each record binds version, sequence, length, checksum, previous digest, unchanged
+transition inputs, code/config hashes and stable acknowledgment ID. Precreate
+and sync file and parent; append a complete frame and sync before acknowledgment.
+Checkpoint every32 commits and final drain; all namespace changes require sync.
+Replay complete unacknowledged records idempotently; discard only incomplete final
+frames. Interior corruption and conflicting IDs fail closed. Durable checkpoint
+prefix precedes reclamation; retain pinned readers. Keep MAX_EVENTS256, MAX_BYTES
+2MiB and16MiB journal ceiling. Overflow blocks. This task freezes a protocol and
+qualifies reference fixtures; Exp8493 owns the actual durable store.
+
+### SCENARIO-VERIFY-8492-FIXTURES
+
+Independent transition fixtures compare unchanged arithmetic against the original
+tape. Ordering fixtures reject acknowledgment before sync, namespace change
+without sync and reclamation before durable checkpoint. Reject corrupt complete
+frames, interior partial frames, ID conflicts and reordered sealed inputs.
+
+### SCENARIO-VERIFY-8492-CLI
+
+Collect test nodes before bounded nonoverlapping shards. Require100 percent owned
+statement coverage from genuine unit/child Coverage.py shards; scoped serial
+pytest, E2E-018/021, Ruff, strict mypy and spec tracing. Real private CLI accepts
+20261013 and rejects missing inputs, deliberate errors and rehashed tampering.
+Capture command, exit, duration and log hashes; poll children within60 seconds.
+Stop measurement by3600 seconds; reserve900 within4800. Publish checked terminal
+bytes with unchanged consumers. Conductor owns ops/traceability reconciliation.
+
+Implementation2026-10-13: all25 focused test_publication_cost_model_8492 tests
+pass with422/422 newly owned statements covered by genuine unit/child shards.
+The frozen runner retains exact historical collections, disjoint shard proofs,
+bounded exits/log hashes and final unchanged-consumer validation receipts.

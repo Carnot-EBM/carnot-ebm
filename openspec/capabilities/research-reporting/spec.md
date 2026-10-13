@@ -100010,3 +100010,27 @@ Reconstruct the censored roster and summaries from independently pinned inputs.
 Reject changed rows and self-consistently rehashed readiness or gate tampering.
 Validate terminal bytes with unchanged publication, adversarial and strict row
 consumers. Failed owned checks disqualify; external qualification failures block.
+## REQ-REPORT-8492: Bind stable append cost bounds to original V728 clocks
+
+Authenticate the complete activated V730 contract and Exp8485 methods/service
+gates. Read Exp8464/8465/8466 through sealed original V728 authority and producer
+pins. Reconstruct every primitive repeat, including warmups, without a benchmark.
+Partition complete clocks into disjoint serialization, file sync, directory sync,
+pointer publication and residual cost. Match actual namespace operations to sync
+counts. A transferred marginal cost ceiling is conditional, never measured speedup.
+Freeze the unchanged five-input tape and stable single-writer framed append
+protocol before any store implementation. Require independent transition and
+ordering fixtures before append_protocol_ready_score=1. Preserve V728 null and
+V717 closed findings. Current model calls and generalization scores stay zero.
+
+### SCENARIO-REPORT-8492-SEALED
+
+Missing external operands block; owned rejection or unresolved findings disqualify.
+Original producer hashes and original authority reject self-consistently rehashed
+cost, frame and summary tampering. Cold replay reconstructs all complete clocks.
+Conductor owns subsequent ops and traceability reconciliation.
+
+Implementation2026-10-13: publication_cost_model_8492 and its thin Exp8492 CLI
+reconstruct the sealed original clocks and freeze reference append semantics.
+The terminal artifact and bound sidecar record final qualification separately
+from conditional ceilings and the preserved V728 measured null.

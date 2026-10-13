@@ -1,0 +1,33 @@
+{
+  "MAX_BYTES": 2097152,
+  "MAX_EVENTS": 256,
+  "checkpoint_binds_durable_prefix_before_reclamation": true,
+  "checkpoint_every_transactions": 32,
+  "complete_unacknowledged_frames": "replay idempotently; retries return identical responses exactly once",
+  "conflicting_ids": "fail closed",
+  "directory_fsync": "every create/rename/unlink/rotate/checkpoint namespace change",
+  "event_fields": [
+    "framing_version",
+    "sequence",
+    "length",
+    "checksum",
+    "previous_digest",
+    "transition_inputs",
+    "code_config_hashes",
+    "stable_acknowledgment_id"
+  ],
+  "experimental_only": true,
+  "final_drain_checkpoint": true,
+  "fsync_before_ack": true,
+  "interior_corruption": "fail closed",
+  "journal_ceiling_bytes": 16777216,
+  "overflow": "block, never drop",
+  "pinned_readers_retained": true,
+  "power_loss_certified": false,
+  "precreate_sync_file_and_parent": true,
+  "short_write_handling": true,
+  "single_writer_lock": true,
+  "stable_filename_between_checkpoints": true,
+  "tail": "discard only incomplete final frame",
+  "workload": "unchanged qualified five-input Exp8407 tape; V728 Exp8464/8465/8466 original authority"
+}
