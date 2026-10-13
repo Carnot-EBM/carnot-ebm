@@ -99736,3 +99736,33 @@ invocation bindings around the unchanged Exp8468 collector. Its replay checks
 independent authority and registry metadata even when collection is blocked.
 The private rejection fixture preserves original producer bytes and outer seals.
 `docs/research-notes/v729-arc-panel-qualification.md` records the claim limits.
+## REQ-REPORT-8483: Map append operations under separate board authority
+
+Authenticate complete V729 task authority before granting current readiness.
+Replay pinned Exp8469 and Exp8440 under their sealed original authority.
+Preserve KV260 quadratic Ising k_max<=5 and PolarFire board-local Linux CPU hashes.
+Keep reader readiness separate from deployment readiness. Installed images do
+not provide spline learning or a durable append service. Optional Exp8480 costs
+cannot gate continuity. If absent or unqualified, use qualified Exp8466 clocks
+with their original date and exact missing current field. Missing differs from zero.
+Keep GateMate source hashes, IDCODE0xffffffff and all reopening obligations.
+Issue no device commands. Anechoic and author code supply an operation lead only.
+Retain vendor-only Extropic estimates and unqualified NPU/TSU status.
+
+### SCENARIO-REPORT-8483-OPERANDS
+
+Check original seals, optional qualification, measured zero and absent stage
+clocks. Every operation retains its host clock or a specific missing reason.
+No installed board receives append, checkpoint, sync, sparse or transfer credit.
+
+### SCENARIO-REPORT-8483-REPLAY
+
+Cold replay reconstructs authority, original board obligations and primitive
+operation rows. Reject missing inputs and repaired summary or operand hashes.
+External absence is blocked; failed owned checks are disqualified. Preserve
+V726 exposure limits and V717 H1=-0.00390625/H2=0. Conductor owns ops/BMAD updates.
+
+Implementation: `board_operation_boundary_8483.py` adapts the sealed readers and
+records the optional append boundary. The research note preserves each board's
+original hashes and the Anechoic prerequisites. Missing independent V729 design
+remains explicit; installed append deployment remains unsupported.

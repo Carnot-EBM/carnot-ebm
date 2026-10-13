@@ -54494,3 +54494,24 @@ collected node IDs and bounded disjoint shards under original V728 snapshots.
 The thin dated CLI reuses existing bounded SDK and publication paths.
 `test_arc_panel_qualification_8482.py` covers original rejection, current blocked
 custody, real CLI consumers, collection failures and independent pin failures.
+## REQ-VERIFY-8483: Qualify bounded evidence-only board publication
+
+Accept --date20261013; flush start, phases and actual child status within60s.
+Use private disk scratch, no_model_load, MODEL_SPECS=[] and zero model calls.
+Stop measurement by3600s; reserve900s within4800s. Collect scoped test node IDs
+before execution. Preserve all historical assertions in nonoverlapping shards.
+Require100 percent new statements with genuine Coverage.py subprocess shards.
+Run serial pytest, Ruff check/format, strict mypy, spec coverage and private
+E2E-018/021. Never run the full repository suite. Run unchanged publication,
+adversarial verification, strict row lint and fresh replay before atomic publish.
+
+### SCENARIO-VERIFY-8483-CLI
+
+Real private CLI checks cover valid and blocked publication, wrong dates,
+private output rejection, missing replay inputs, deliberate failure and
+self-consistently rehashed tampering. Retain actual exits, durations and hashes.
+
+Implementation: `board_operation_runner_8483.py` freezes collected nodes and
+executes bounded disjoint historical shards. Nine focused tests and real CLI
+children cover246/246 new statements. Private E2E-018/021, Ruff, strict mypy
+and owned spec coverage pass. The thin CLI preserves the dated task deadline.
