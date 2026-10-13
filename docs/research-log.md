@@ -7443,4 +7443,12 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 9 synthesis-only experiments completed in 102.0 wall-time minutes (averaging 11 minutes per experiment) led by qualifying Brier gradients and durable feedback transitions before learning (25.57 min), comparing complete snapshot and journal service costs at equal durable work (16.08 min), qualifying a bounded event journal with unchanged durable acknowledgments (15.52 min), binding fourteen tasks and sealing changed source learning and storage hypotheses (11.10 min), and reconciling fourteen outcomes and deciding source learning and service continuation (9.67 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization on GPU 0 reflecting expected idle behavior for non-GPU synthesis workloads.
 - acceptance: no data available this milestone
 
+### Milestone 2026.10.729
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 4 completed experiments (0 compute-bound, 4 synthesis-only) in 83 minutes of milestone wall time.
+- key result: honest operational negative — 4 synthesis-only experiments completed in 82.7 wall-time minutes (averaging 21 minutes per experiment) led by qualifying the missing ARC panel rejection path and measuring live supervisor generalization (23.02 min), mapping append operations to KV260 and preserving PolarFire and GateMate evidence (22.68 min), reconciling fourteen outcomes and deciding information learning and append continuation (21.47 min), and binding fourteen tasks and freezing qualified science and append-store methods (15.50 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization on GPU 0 reflecting expected idle behavior for non-GPU synthesis workloads.
+- acceptance: no data available this milestone
+
+
 

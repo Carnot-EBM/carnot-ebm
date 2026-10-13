@@ -1,0 +1,55 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.729",
+  "generated_at": "2026-10-13T10:10:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 82.7,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify the missing ARC panel rejection path and measure live supervisor general",
+      "duration_minutes": 23.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map append operations to KV260 and preserve PolarFire and GateMate evidence",
+      "duration_minutes": 22.68,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide information learning and append continuat",
+      "duration_minutes": 21.47,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and freeze qualified science and append-store methods",
+      "duration_minutes": 15.5,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.729 completed 4 experiments (0 compute-bound, 4 synthesis-only) across 82.7 total wall-time minutes (averaging 21 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was driven entirely by synthesis-only tasks: qualifying the missing ARC panel rejection path and measuring live supervisor generalization (23.02 minutes), mapping append operations to KV260 and preserving PolarFire and GateMate evidence (22.68 minutes), reconciling fourteen outcomes and deciding information learning and append continuation (21.47 minutes), and binding fourteen tasks and freezing qualified science and append-store methods (15.50 minutes). With zero compute-bound experiments executed and gpu_idle_on_compute_bound_tasks recorded as null, observed 0% GPU utilization on GPU 0 represents expected idle behavior for non-GPU synthesis workloads, while GPU 1 was occupied by separate long-running background processes.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 4 completed experiments totaling 82.7 wall-time minutes), with the three slowest tasks—qualifying the missing ARC panel rejection path (23.02 minutes), mapping append operations to KV260 (22.68 minutes), and reconciling fourteen outcomes (21.47 minutes)—consuming 67.17 minutes (~81.2% of total milestone wall time).",
+    "Synthesis tasks executed serially without incremental receipt caching or evidence memoization when validating unchanged contract hypotheses, boundary mappings, and reconciliation artifacts.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Individual experiment receipts lack granular intra-task phase telemetry (such as setup, contract validation, synthesis generation, and artifact serialization) to localize specific latency drivers within multi-minute synthesis runs."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for task binding, KV260 append mapping, ARC panel qualification, and outcome reconciliation when upstream contracts and dependencies remain unchanged.",
+    "Instrument synthesis tasks with granular sub-phase execution timers (setup, schema verification, contract binding, artifact serialization) to pinpoint intra-task latency drivers.",
+    "Persist explicit synchronous execution timestamps (start, completion, duration) directly into experiment receipts to eliminate dependence on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for task binding, KV260 append mapping, and outcome reconciliation workflows when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, validation, execution, serialization).",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.729 completed in 82.7 total wall-time minutes across 4 synthesis-only experiments with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% GPU utilization on GPU 0 represented expected idle behavior for non-GPU synthesis workloads, while long-running background processes on GPU 1 were unrelated to milestone execution and no parallel multi-model task required DualGPURunner dispatch. Operational improvements should focus on synchronous lifecycle timestamp persistence in receipts and granular intra-phase timing instrumentation for synthesis workflows, with estimated time savings held at 0% until empirically demonstrated."
+}

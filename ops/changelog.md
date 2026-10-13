@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-13 — Operational retrospective for milestone 2026.10.729
+
+- Wrote `results/operational_retro_2026_10_729.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.729`. Authoritative disk-mtime fallback data records 4 experiments completed (0 compute-bound, 4 synthesis-only) across 82.7 total wall-time minutes (average 21 minutes per experiment).
+- Execution wall time was led by synthesis tasks: 'Qualify the missing ARC panel rejection path and measure live supervisor general' (23.02 minutes), 'Map append operations to KV260 and preserve PolarFire and GateMate evidence' (22.68 minutes), 'Reconcile fourteen outcomes and decide information learning and append continuat' (21.47 minutes), and 'Bind fourteen tasks and freeze qualified science and append-store methods' (15.50 minutes).
+- Point-in-time GPU monitor polling observed GPU 0 at 0% utilization (4MB allocated) and GPU 1 running separate long-lived processes; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for task binding, KV260 append mapping, ARC panel qualification, and outcome reconciliation tasks when upstream dependencies remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-13 — Operational retrospective for milestone 2026.10.728
 
 - Wrote `results/operational_retro_2026_10_728.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.728`. Authoritative disk-mtime fallback data records 9 experiments completed (0 compute-bound, 9 synthesis-only) across 102.0 total wall-time minutes (average 11 minutes per experiment).
