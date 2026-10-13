@@ -54442,3 +54442,28 @@ Implementation for REQ-VERIFY-8470: `v728_capstone.py` retains the shipped bound
 validation and atomic publication pipeline. `test_v728_capstone_8470.py` exercises
 real private CLI consumers, outside-checkout replay and rehashed controls. New
 statement coverage includes genuine child shards and unchanged private E2E checks.
+## REQ-VERIFY-8471: Qualify bounded V729 readers and exact terminal bytes
+
+Write focused failing tests before implementation. Collect required test IDs
+before execution and split historical suites into bounded disjoint shards whose
+union equals collection. Preserve original dates and every assertion. Run
+private E2E-018/021, real CLI controls, Ruff check/format, strict mypy and scoped
+spec tracing. Require100 percent newly owned statements with genuine Coverage.py
+unit/subprocess shards. Retain commands, exits, durations and log hashes.
+Stop measurement by3600 seconds with900 seconds reserved within4800 seconds.
+Use unchanged publication/adversarial/strict-row consumers; unresolved findings
+or owned validation failures disqualify. External absence is blocked, not partial.
+
+### SCENARIO-VERIFY-8471-CONTROLS
+
+Private real CLI accepts20261013, rejects wrong dates/unsafe outputs/missing
+worker arguments and records deliberate exit7. Fresh replay reconstructs sealed
+authority and historical primitives and rejects rehashed summaries, missing
+inputs and changed logs. Shard manifests prove exact collection coverage.
+Conductor owns subsequent ops/status/changelog/BMAD reconciliation.
+
+Implementation: `v729_contract_runner.py` collects exact node IDs, preserves
+original-date consumers and freezes bounded disjoint historical shards.
+Coverage includes only the three new modules and thin CLI, including real
+children and rejection paths. Required receipts retain actual exits and hashes;
+interrupted attempts are unsuccessful and cannot qualify the terminal artifact.

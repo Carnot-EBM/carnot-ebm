@@ -1,0 +1,65 @@
+...............................................F...                      [100%]
+=================================== FAILURES ===================================
+____________________________ test_real_private_cli _____________________________
+
+tmp_path = PosixPath('/var/tmp/exp8471-owned-5_4kkd0a/owned-tests/test_real_private_cli0')
+
+    def test_real_private_cli(tmp_path):
+        """SCENARIO-VERIFY-8471-CONTROLS: real blocked publication still qualifies independent inputs."""
+        output = tmp_path / (e.NAME + ".json")
+        base = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        cases = [
+            (["--date", "20261013", "--private-control", "--output", str(output)], 0),
+            (["--cold-replay", str(output)], 0),
+            (["--cold-replay", str(tmp_path / "missing")], 1),
+            (["--deliberate-error"], 7),
+            (["--date", "20261012"], 2),
+            (["--private-control"], 2),
+            (["--history-request", str(tmp_path / "missing")], 2),
+        ]
+        for i, (args, expected) in enumerate(cases):
+            receipt = child(f"cli-{i}", base + args, tmp_path / "logs", expected=expected, deadline=600)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8471_v729_contract_methods.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v729_contract_runner.py", line 136, in main
+E                 shipped.run(args.root, output, Path(directory), control=args.private_control)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v725_contract_runner.py", line 99, in run
+E                 reports = json.loads(Path(scan["stdout_path"]).read_bytes())["reports"]
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+E                 return _default_decoder.decode(s)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+E                 obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+E                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 356, in raw_decode
+E                 raise JSONDecodeError("Expecting value", s, err.value) from None
+E             json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+E             
+E           assert False
+
+tests/python/test_v729_contract_methods_8471.py:281: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=waiting_cli-0 completed=0 pending=1
+[exp8205] phase=after_subprocess_cli-0 completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v729_contract_methods_8471.py::test_real_private_cli
+1 failed, 50 passed, 1 warning in 471.27s (0:07:51)

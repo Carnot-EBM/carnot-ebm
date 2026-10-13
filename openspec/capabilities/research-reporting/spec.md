@@ -99658,3 +99658,41 @@ objects and pinned primitive workers; `v728_capstone_report.py` retains missing
 science, measured engineering nulls and original V726/V717 evidence. The primary
 is `results/experiment_8470_v728_capstone.json`. The note is
 `docs/research-notes/v728-capstone.md`. Ops/BMAD reconciliation is conductor-owned.
+## REQ-REPORT-8471: Bind V729 without manufacturing independent authority
+
+Compare fourteen full Exp8471–Exp8484 dictionaries against the independent
+visible table, complete embedded JSON, printed canonical digest and activated
+YAML. Missing markers, truncation after Phase1 and twelve field mutations fail
+closed. A truncated current design leaves canonical digest null and methods
+readiness zero; observed activated tasks cannot replace independent authority.
+Seal inherited V728 source_controls, scalar_fit, source_audit, objective_updates
+and objective_audit unchanged. Freeze validation repairs and the new stable
+append protocol separately, including durability, recovery, limits and cost
+acceptance. Preserve V728 design and all old primaries. V726 source/learning
+and V728 service families use separate immutable original-authority roots and
+independent readiness. Missing optional CUDA evidence gives zero without probes.
+No model calls, generator changes, board calls or scientific benefit occur.
+
+### SCENARIO-REPORT-8471-AUTHORITY
+
+Independent complete fixtures accept full equality and reject twelve field
+mutations, order/count drift, table/digest drift, missing markers, truncation and
+self-consistently rehashed authority. Actual truncated design reports observed
+fourteen slots and exact missing independent operands without fabricating them.
+
+### SCENARIO-REPORT-8471-METHODS
+
+Fixed seals reject changed inherited science, basis, repairs and append fields.
+Nine-input science has109 coefficients; scalar has13; service has five inputs.
+Each historical family is authenticated under original sealed authority, and
+its absence cannot suppress unrelated methods/source/learning/service gates.
+Same-roadmap outputs remain future dependencies. Both generalization scores
+and every current model invocation count remain zero.
+
+Implementation: `v729_contract_methods.py` and `v729_historical_inputs.py`
+reuse shipped authority, original family consumers and atomic publication.
+The sealed protocol and V729 note preserve scientific operands and register
+append methods separately. Missing independent design remains explicit.
+Historical model metadata references complete immutable originals instead of
+embedding repeated receipt trees. The thin Exp8471 CLI retains invocation
+evidence under its raw directory; ops/BMAD reconciliation is conductor-owned.
