@@ -20192,3 +20192,4 @@ code |
 | 2026-10-13 06:50 UTC | Test bounded Qwen evidence responses only after au | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8472-source-control-qualification) |
 | 2026-10-13 07:48 UTC | Qualify the missing ARC panel rejection path and m | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 88 passed, 1 warning in 185.17s (0:03:05) |
 | 2026-10-13 08:51 UTC | Map append operations to KV260 and preserve PolarF | OK | 90 passed, 1 warning in 208.20s (0:03:28) |
+| 2026-10-13 10:01 UTC | Reconcile fourteen outcomes and decide information | OK | 89 passed, 2 warnings in 403.53s (0:06:43) |
