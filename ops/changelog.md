@@ -22202,3 +22202,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-13: Measure fresh adapter-withheld ARC supervisor generalization on four public games (⚠️ Research Finding) — honest_verdict=complete_disqualified_v728_arc_generalization_panel; results/experiment_8468_v728_arc_generalization_panel.json
 - 2026-10-13: Map complete service work to KV260 and carry PolarFire and GateMate obligations (⚠️ Blocked) — honest_verdict=complete_blocked_v728_board_operation_boundary; results/experiment_8469_v728_board_operation_boundary.json
 - 2026-10-13: Reconcile fourteen outcomes and decide source learning and service continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v728_capstone; results/experiment_8470_v728_capstone.json
+- 2026-10-13: Bind fourteen tasks and freeze qualified science and append-store methods (⚠️ Blocked) — honest_verdict=complete_blocked_v729_contract_methods; results/experiment_8471_v729_contract_methods.json
