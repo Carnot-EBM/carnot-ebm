@@ -1,0 +1,98 @@
+[exp8489] start inference_substrate_class=no_model_load current_llm_calls=0
+[exp8489] phase=start_no_model_load_current_LLM_calls_0 completed=0 pending=0
+..................................F...                                   [100%]
+=================================== FAILURES ===================================
+_______________ test_real_cli_validation_copies_genuine_coverage _______________
+
+tmp_path = PosixPath('/var/tmp/exp8489-owned-5sw6nwc_/original-tests/test_real_cli_validation_copie0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff03b6bb290>
+
+    def test_real_cli_validation_copies_genuine_coverage(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8461-VALIDATION: real command failure stays disqualified with genuine shards."""
+        original = q.manifest
+    
+        def private_plan(private):
+            original(private)
+            rc = "--rcfile=" + str(private / "coverage.ini")
+            archive = next(row for row in original(private) if row["name"] == "coverage_archive")
+            rows = [
+                dict(
+                    name=n,
+                    argv=[sys.executable, "-m", "coverage", *args],
+                    expected=exit_code,
+                    deadline=30,
+                    scope="owned",
+                )
+                for n, args, exit_code in [
+                    ("coverage_probe", ["run", rc, str(q.ROOT / q.CLI), "--deliberate-error"], 7),
+                    ("coverage_combine", ["combine", rc, "--keep"], 0),
+                    ("coverage_json", ["json", rc, "-o", str(private / "coverage.json")], 0),
+                ]
+            ]
+            rows.insert(1, archive)
+            return rows
+    
+        monkeypatch.setattr(q, "manifest", private_plan)
+        output = tmp_path / "results" / (q.NAME + ".json")
+        assert runner.main(["--root", str(tmp_path / "absent"), "--output", str(output)]) == 0
+        value = json.loads(output.read_bytes())
+        assert value["verdict_class"] == "disqualified"
+>       assert any(".coverage" in r["path"] for r in value["raw_shard_hashes"])
+E       assert False
+E        +  where False = any(<generator object test_real_cli_validation_copies_genuine_coverage.<locals>.<genexpr> at 0x7ff04d32b1d0>)
+
+tests/python/test_objective_reporting_8461.py:274: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8461] phase=start completed=0 pending=0
+[exp8461] phase=preconditions completed=0 pending=0
+[exp8461] phase=derivatives completed=0 pending=0
+[exp8461] phase=derivatives_complete completed=0 pending=0
+[exp8205] phase=validation completed=0 pending=4
+[exp8205] phase=before_subprocess_coverage_probe completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_probe completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=3
+[exp8205] phase=before_subprocess_coverage_archive completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_archive completed=1 pending=0
+[exp8205] phase=validation completed=2 pending=2
+[exp8205] phase=before_subprocess_coverage_combine completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_combine completed=1 pending=0
+[exp8205] phase=validation completed=3 pending=1
+[exp8205] phase=before_subprocess_coverage_json completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_json completed=1 pending=0
+[exp8205] phase=validation_complete completed=4 pending=0
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_error completed=0 pending=1
+[exp8205] phase=after_subprocess_error completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8461] phase=finished completed=0 pending=126
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_objective_reporting_8461.py::test_real_cli_validation_copies_genuine_coverage
+1 failed, 37 passed, 2 warnings in 467.51s (0:07:47)

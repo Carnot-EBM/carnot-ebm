@@ -99958,3 +99958,27 @@ scores zero. A failed contrast retires the unchanged information claim. Reopenin
 requires externally collected new question labels, not another split of this panel.
 Preserve the original V726 gain and V728 service null as separate historical evidence.
 Missing external inputs block; failed owned validation disqualifies.
+## REQ-REPORT-8489: Qualify objective mechanics under complete V730 authority
+
+Authenticate the activated Exp8489 task, sealed V730 protocol and independently
+pinned Exp8485 methods_ready_score and learning_inputs_ready_score. Reuse Exp8461
+derivatives and checkpoint adapter; original producers retain sealed authority.
+Keep generator weights frozen, MODEL_SPECS empty and current LLM calls zero.
+Readiness qualifies update mechanics only, with both generalization scores zero.
+Missing external inputs block; owned failures disqualify. Preserve V717 closures,
+V726 exposed-history limits and V728 journal equivalence and service null.
+
+### SCENARIO-REPORT-8489-REFERENCE
+
+Begin with successful original Exp8461 replay and complete historical authority.
+Add an independent private source reference, change its bytes, and recompute the
+measurement and candidate hashes while retaining the stored reference digest.
+Original reporting line388 rejects it. Valid bytes pass; original terminal bytes
+stay unchanged. Missing inputs and self-consistently rehashed summaries reject.
+
+### SCENARIO-REPORT-8489-TERMINAL
+
+Cold replay reconstructs primitive rows in a fresh bounded process. Unchanged
+primary publication, adversarial and strict row consumers validate terminal
+bytes before atomic publication. Unresolved findings forbid readiness. Future
+Exp8490 and Exp8491 outputs are dependencies, not existing observations.

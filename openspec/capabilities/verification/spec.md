@@ -54608,3 +54608,27 @@ A real private CLI accepts the actual date and cold-replays sealed primitives.
 Missing inputs produce blocked bytes. Deliberate failures and rehashed summary,
 prediction, target and authority tampering reject. All output paths stay private.
 Atomic publication binds terminal validator receipts to exact primary bytes.
+## REQ-VERIFY-8489: Preserve complete rejection coverage and bounded suites
+
+Write traced tests before implementation. Require564/564 original Exp8461 owned
+statements and100 percent newly owned statements using genuine Coverage.py unit
+and child shards, including _exit and rejection paths. Preserve all derivative
+tolerances, basis/bias/L2 factors and temperatures0.5/1/2, labels0/1 and logits
+-20/-4/0/4/20. Actual process exits, duplicate delivery, wrong-rule recovery and
+future-label denial remain required. No evaluation labels enter updates.
+
+### SCENARIO-VERIFY-8489-SHARDS
+
+Collect every original historical_store_regressions node before execution.
+Partition unchanged assertions into disjoint shards, each bounded by600 seconds
+with heartbeats at most60 seconds, total historical budget1800 seconds. Prove
+the exact union equals collection. Timed-out, missing or failed nodes forbid
+readiness. Run scoped serial pytest, E2E-018/020/021, Ruff check/format, strict
+mypy and owned spec coverage. Do not run the full repository suite.
+
+### SCENARIO-VERIFY-8489-CLI
+
+Accept --date20261013 and retain real private CLI, missing-input, deliberate-error,
+wrong-date and rehashed-tamper receipts. Use disk scratch, bounded children and
+unbuffered phase counts. Stop measurements by3600 seconds and reserve900 seconds
+inside4800 seconds. The conductor handles ops and traceability reconciliation.
