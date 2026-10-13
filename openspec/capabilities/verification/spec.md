@@ -54646,3 +54646,18 @@ regression and all21 current tests pass. The unchanged38 original tests and52
 historical nodes pass; disjoint shards total1360.974 seconds with no timeout.
 Coverage is564/564 original and362/362 added statements. E2E-018/020/021,
 Ruff, strict mypy and scoped spec tracing pass.
+
+## REQ-VERIFY-8490: Verify the objective stream admission boundary
+
+Write traced failing tests before code. Cover all newly owned statements with
+genuine Coverage.py unit and subprocess shards. Run serial scoped pytest,
+E2E-018 authority and E2E-021 historical replay, Ruff, strict mypy and spec checks.
+Keep historical producers and their original assertions unchanged. The conductor
+owns ops and traceability reconciliation for this task.
+
+### SCENARIO-VERIFY-8490-CLI
+
+Accept date20261013. Bound all subprocesses and emit actual status at least every
+60 seconds. Retain command, exit, duration and stream hashes. Real private CLI
+publication must cold-replay and reject missing inputs, deliberate errors and
+rehashed tampering. Stop measurement by3600 seconds with900 seconds reserved.

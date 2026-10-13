@@ -99988,3 +99988,25 @@ remains raw evidence. The repaired primary is complete_circular_positive with
 objective_kernel_ready_score=1 after all required checks and terminal validators
 pass. All216 fixture rows complete; current LLM calls and both generalization
 scores remain zero. The historical Coverage.py launcher now retains its prefix.
+
+## REQ-REPORT-8490: Admit only qualified objective streams
+
+Authenticate the activated V730 task and the exact Exp8489 producer bytes.
+Require kernel readiness, bound publication, clean flags and shipped cold replay.
+An unavailable or unqualified upstream blocks all four learning arms before labels.
+Keep 6000 intended answer rows and five retention windows with missing reasons.
+Use the original V726 roster, five seeds and capacity8. No generator changes or
+current model calls are permitted. V726 exposure and V728 service limits remain.
+
+### SCENARIO-REPORT-8490-BLOCKED
+
+Missing inputs differ from observed zero or failed replay. Each failed gate names
+the producer, path, hash, field, operator, expected and observed operands. Cached
+producer readiness cannot override its adversarial flag or failed primitive replay.
+
+### SCENARIO-REPORT-8490-REPLAY
+
+Reconstruct the censored roster and summaries from independently pinned inputs.
+Reject changed rows and self-consistently rehashed readiness or gate tampering.
+Validate terminal bytes with unchanged publication, adversarial and strict row
+consumers. Failed owned checks disqualify; external qualification failures block.
