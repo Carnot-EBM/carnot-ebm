@@ -20183,3 +20183,6 @@ code |
 | 2026-10-13 06:34 UTC | Qualify source controls after the missing producer | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8471-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-13 06:36 UTC | Fit scalar energy controls and freeze typed source | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8472-source-control-qualification) |
 | 2026-10-13 06:36 UTC | Measure source information beyond scalar calibrati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8473-source-control-fit) |
+| 2026-10-13 06:41 UTC | Qualify objective updates with complete rejection  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8471-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-13 06:43 UTC | Measure continuous sparse learning with objective- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8475-objective-checkpoint-qualification) |
+| 2026-10-13 06:43 UTC | Audit later decision benefit and simultaneous rete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8476-brier-online-learning) |
