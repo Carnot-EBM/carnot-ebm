@@ -99696,3 +99696,43 @@ append methods separately. Missing independent design remains explicit.
 Historical model metadata references complete immutable originals instead of
 embedding repeated receipt trees. The thin Exp8471 CLI retains invocation
 evidence under its raw directory; ops/BMAD reconciliation is conductor-owned.
+
+## REQ-REPORT-8482: Qualify the fixed public panel under complete V729 authority
+
+Authenticate complete independent V729 authority and required input hashes before
+collection. Missing authority blocks live collection. Preserve all historical
+primaries and the exact Exp8468 roster: tn36-ef4dde99, lf52-271a04aa,
+ft09-0d8bbf25, ar25-0c556536, seeds11/22, off/on arms. Unstarted rows are
+missing observations. Reuse the model-free actual production wrapper and SDK
+recorder with game adapters, routes and calibration withheld. Keep512 actions,
+120 seconds per episode,2400 seconds aggregate, and zero current LLM calls.
+Games are independent units. New credited solves and generalization scores stay0.
+
+### SCENARIO-REPORT-8482-REJECTION
+
+Rebuild an internally rehashed private Exp8468 candidate whose panel differs
+from independent registry metadata. Its original line350 must reject the
+candidate. Preserve original tests, thresholds and frozen bytes. Run every
+collected historical node in bounded disjoint shards under sealed V728 inputs.
+
+### SCENARIO-REPORT-8482-PANEL
+
+Record all16 intended episodes and every paired arm comparison. Execution
+readiness is separate from support readiness. Later actual level-ups alone
+resolve redirect outcomes. Horizon-limited events remain right-censored.
+Require3 shared games and5 resolved outcomes per shared arm cell before
+refinement. Missing games are never replaced and live defaults never change.
+
+### SCENARIO-REPORT-8482-CUSTODY
+
+Fresh replay authenticates current publication and reconstructs primitive SDK
+rows and independent frozen panel metadata even when collection is blocked.
+Reject missing inputs, deliberate errors and self-consistently rehashed panel
+tampering. Exp8453 is historical evidence only. Publish through unchanged
+primary publication and validators. Conductor owns ops/BMAD reconciliation.
+
+Implementation for REQ-REPORT-8482: `arc_panel_qualification_8482.py` uses
+invocation bindings around the unchanged Exp8468 collector. Its replay checks
+independent authority and registry metadata even when collection is blocked.
+The private rejection fixture preserves original producer bytes and outer seals.
+`docs/research-notes/v729-arc-panel-qualification.md` records the claim limits.

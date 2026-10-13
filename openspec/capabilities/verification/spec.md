@@ -54467,3 +54467,30 @@ original-date consumers and freezes bounded disjoint historical shards.
 Coverage includes only the three new modules and thin CLI, including real
 children and rejection paths. Required receipts retain actual exits and hashes;
 interrupted attempts are unsuccessful and cannot qualify the terminal artifact.
+
+## REQ-VERIFY-8482: Bound and qualify the new invocation before episodes
+
+Accept --date20261013. Flush start, phase boundaries and actual child status
+within60 seconds. Check tools, memory, input hashes and private disk scratch.
+Measurement ends by3600 seconds; reserve900 seconds inside4800 seconds.
+Declare no_model_load, MODEL_SPECS=[] and zero current LLM calls. Preserve
+cached numeric-head provenance separately. Required owned failures disqualify;
+unchanged external absence blocks. Never run the full repository suite.
+
+### SCENARIO-VERIFY-8482-VALIDATION
+
+Collect original node IDs before execution. Shard slow historical suites without
+omitting assertions; prove exact union. Require scoped serial pytest, genuine
+Coverage.py child shards,100 percent new statements and original232/232
+owned statements before collection. Run Ruff check/format, strict mypy,
+owned spec coverage, private E2E-011/017 wrapper parity and E2E-018/021
+custody. Preserve commands, exits, durations, hashes and validator findings.
+Unchanged publication/adversarial/strict-row consumers validate terminal bytes
+before atomic publication. Real CLI controls cover wrong dates, private paths,
+missing operands, deliberate failure and rehashed tampering.
+
+Implementation for REQ-VERIFY-8482: `arc_panel_validation_8482.py` records exact
+collected node IDs and bounded disjoint shards under original V728 snapshots.
+The thin dated CLI reuses existing bounded SDK and publication paths.
+`test_arc_panel_qualification_8482.py` covers original rejection, current blocked
+custody, real CLI consumers, collection failures and independent pin failures.
