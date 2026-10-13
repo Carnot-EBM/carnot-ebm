@@ -54515,3 +54515,25 @@ Implementation: `board_operation_runner_8483.py` freezes collected nodes and
 executes bounded disjoint historical shards. Nine focused tests and real CLI
 children cover246/246 new statements. Private E2E-018/021, Ruff, strict mypy
 and owned spec coverage pass. The thin CLI preserves the dated task deadline.
+## REQ-VERIFY-8484: Qualify bounded model-free capstone publication
+
+Accept --date20261013, flush start and phase counts, poll children within60s,
+stop measurement by3600s and reserve900s inside4800s. Use private disk scratch
+and shipped1500MiB peak/500MiB growth bounds. Collect required test nodes before
+execution; preserve exact nonoverlapping shard unions. Require100 percent new
+statements including subprocess and rejection paths, scoped serial pytest,
+Ruff check/format, strict mypy, owned spec coverage and private E2E-018/021.
+Do not run the full repository suite. Run unchanged primary publication,
+adversarial verification and strict row lint before atomic publication. Retain
+findings; failed owned validation disqualifies and external absence blocks.
+
+### SCENARIO-VERIFY-8484-CONTROLS
+
+Real private CLI accepts valid blocked evidence from outside the checkout,
+rejects wrong dates, unsafe private outputs and missing worker operands, records
+deliberate failure, and rejects rehashed aggregate and primitive tampering.
+
+Implementation: `v729_capstone.py` collects exact node IDs and freezes bounded
+nonoverlapping private E2E shards. It reuses genuine Coverage.py subprocess
+shards and unchanged validators. Whole replay receives a finite600-second
+budget while original per-worker memory and timing bounds remain intact.

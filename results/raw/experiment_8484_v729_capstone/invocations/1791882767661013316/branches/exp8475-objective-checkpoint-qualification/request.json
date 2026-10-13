@@ -1,0 +1,63 @@
+{
+  "closure": null,
+  "primary": {
+    "exists": true,
+    "expected_sha256": null,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8475_objective_checkpoint_qualification.json",
+    "sha256": "sha256:615293924a90e6e4416b5828adda13ac7dc7936ea9d2e697f433906986dc5d71",
+    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8484_v729_capstone/invocations/1791882767661013316/primaries/8475/615293924a90e6e4416b5828adda13ac7dc7936ea9d2e697f433906986dc5d71.json"
+  },
+  "task": {
+    "MODEL_SPECS": [],
+    "agent_type": "codex",
+    "deliverable": "results/experiment_8475_v729_objective_checkpoint_qualification.json",
+    "estimated_wall_time_min": 60,
+    "gated_on": [
+      {
+        "artifact_field": "methods_ready_score",
+        "op": "==",
+        "upstream": "exp8471-contract-methods",
+        "value": 1
+      },
+      {
+        "artifact_field": "learning_inputs_ready_score",
+        "op": "==",
+        "upstream": "exp8471-contract-methods",
+        "value": 1
+      }
+    ],
+    "id": "exp8475-objective-checkpoint-qualification",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 50,
+    "milestone": "2026.10.729",
+    "model": "gpt-6.1-sol",
+    "per_unit_rows": true,
+    "phase": 2,
+    "prior_failures": [
+      {
+        "addressed_by": "Exp8461 failed one changed-reference rejection coverage line and a600-second combined historical-suite timeout. Add the missing fixture and execute the exact original node set in bounded shards with recorded union.",
+        "experiment_id": "exp8435-capacity-benefit-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_v726_capacity_benefit_audit"
+      },
+      {
+        "addressed_by": "Exp8461 failed one changed-reference rejection coverage line and a600-second combined historical-suite timeout. Add the missing fixture and execute the exact original node set in bounded shards with recorded union.",
+        "experiment_id": "exp8447-brier-online-learning",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      },
+      {
+        "addressed_by": "Exp8461 failed one changed-reference rejection coverage line and a600-second combined historical-suite timeout. Add the missing fixture and execute the exact original node set in bounded shards with recorded union.",
+        "experiment_id": "exp8461-objective-checkpoint-qualification",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_disqualified_v728_objective_checkpoint_qualification"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V728 completed scheduling, not every scientific hypothesis. Nine primary artifacts exist. Exp8458 and Exp8461 were disqualified by precise validation failures, so source-information and Brier-learning comparisons never ran. Exp8465 qualified journal equivalence. Exp8466 found no complete-service speed benefit: speedup 1.0447833367, CI95 [0.9942346768, 1.1095895448]. Exp8464 localized substantial pointer-directory synchronization cost. Exp8468 failed qualification before its public ARC panel. Preserve V726 retrospective findings, V717 H1=-0.00390625/H2=0, the exposed question roles, and every historical primary. Generator weights stay frozen. CPU science is independent of optional CUDA recovery and boards.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/reporting/objective_checkpoint_8461.py; python/carnot/reporting/objective_checkpoint_runner_8461.py; python/carnot/reporting/objective_checkpoint_evidence_8461.py; python/carnot/verify/objective_checkpoint_8461.py; python/carnot/verify/objective_derivatives_8461.py; results/experiment_8461_v728_objective_checkpoint_qualification.json\nTASK:\nQualify objective updates with complete rejection coverage and bounded test shards. Deliver results/experiment_8475_v729_objective_checkpoint_qualification.json. Create thin runner scripts/experiments/experiment_8475_v729_objective_checkpoint_qualification.py. Put primitive evidence under results/raw/experiment_8475_v729_objective_checkpoint_qualification/. Write docs/research-notes/v729-objective-checkpoint-qualification.md. Same-roadmap upstream outputs are future dependencies, not existing files.\nCONCRETE STEPS:\n1. PRECONDITIONS: Print a flushed start line. Authenticate the activated V729 task and required input hashes. Check tools, memory, disk-backed private scratch and deadlines. Read historical producers under their sealed original authority, not current vNEXT. Record unavailable required inputs in gate_check_summary. Missing optional hardware cannot block unrelated CPU work.\n2. Print a flushed progress line at each phase boundary. Print before and after every model load, generation, benchmark and subprocess that can take minutes. Print completed/pending counts inside long loops. Poll owned children and emit actual status at least every 60 seconds. Keep every output gap below 600 seconds, including synthesis. Use unbuffered output. Write any file over about 200 lines in several tool calls of at most about 150 lines. Send a progress message between calls. Keep every tool call bounded. Stop measurement by 3600 seconds and reserve at least 900 seconds within the 4800-second cap for validation. Never pad duration.\n3. Spec first: add relevant REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Preserve existing assertions and acceptance thresholds. Reuse shipped modules through narrow adapters. Put runners in scripts/experiments/, tests in tests/python/, scratch outside the repository root. Accept --date {date}. Do not modify research-roadmap.yaml. Do not change generator weights or publish externally.\n4. Declare inference_substrate_class=no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts for readers or verifier_ensemble_against_cached_candidates for numerical heads. Imported outputs belong in historical_model_provenance.\n5. Reuse Exp8461 derivatives and checkpoint adapter. Reproduce original reporting/objective_checkpoint_8461.py line388: reject changed bytes of a source, code or coverage reference. Add an independent changed-file fixture; recomputing outer hashes must not bypass the stored reference. Preserve existing assertions and require564/564 original owned statements plus full coverage of any added code.\n6. The historical_store_regressions child was killed at its600-second deadline after35 progress dots. Collect its exact node IDs first. Split the unchanged suite into disjoint shards, each with a600-second deadline and60-second heartbeat. Bound their total validation budget to1800 seconds; compare shard union with original collection. No node may be skipped or weakened. A still-unfinished suite leaves readiness0.\n7. Keep dense/sparse/finite-difference derivative checks for temperatures0.5/1/2, labels0/1 and logits -20,-4,0,4,20. Brier derivative is2*(p-y)*p*(1-p)/T, log-loss derivative (p-y)/T. Preserve basis factors, bias treatment and L2 convention. Require absolute error<=1e-7 and relative error<=1e-5 when magnitude>1e-6. Reject missing-temperature and wrong-sign controls.\n8. Run actual process exits around prediction/update commits, duplicate acknowledgments, wrong-rule recovery and future-label denial. Use no evaluation labels. Publish objective_kernel_ready_score only after every original required check plus new coverage passes. This qualifies update mechanics, not learning benefit.\n9. Run scoped unit tests and real private CLI checks. Run applicable ops/e2e-test-plan.md checks, including E2E-018 authority and E2E-021 historical replay. Run Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Require 100 percent newly owned statement coverage, including children and rejection paths. Use genuine Coverage.py shards with pytest -n 0 -o addopts= --no-cov. Collect required test node IDs before execution. Split slow historical suites into bounded nonoverlapping shards; prove their union equals the original collection. Capture commands, exits, duration and log hashes. Never omit a slow assertion or treat a killed child as passed. Do not run the full repository suite.\n10. Cold-replay primitive rows in a fresh bounded process. Test missing inputs, deliberate failures and self-consistently rehashed tampering. Run unchanged primary_publication, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Retain findings. Resolve informational findings only through shipped typed consumers with independent operands and negative controls. Unresolved findings block readiness. Do not modify validators or add exemptions. Atomically publish terminal bytes after validation. Owned validation failure is disqualified. Unchanged external absence is blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind evidence to this task and actual invocation.\nhonest_verdict, verdict_class: principle: Terminal honest_verdict starts complete_; verdict_class is exactly positive | circular_positive | null | blocked | disqualified | partial. Only unfinished retryable owned work is partial.\ngate_check_summary: principle: Each blocked_* or complete_blocked_* verdict names the failed check, upstream, path/hash, field, operator, expected and observed; missing is distinct from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Declare actual work; imported model output is cached evidence, never current generation.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Every intended unit and arm has a metric or missing reason; seeds, siblings and repeats do not multiply independent questions.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle positives use circular_positive; exposed experiments and engineering fixtures keep both generalization scores zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Qualification is distinct from scientific benefit; failed required checks forbid positive classes.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Preserve actual work and immutable primitive operands.\ncited_upstream_artifacts, field_principles: principle: Explain each extra metric/gate and list imported fields with original producer hashes.\nobjective_stream_ready_score, stream_rows_reference, retention_rows, coefficient_change_count, admission_identity_checks, gradient_checks, restart_checks, update_rule_hash: principle: Genuine causal parameter updates must be separable from later benefit and persistence correctness.\nobjective_kernel_ready_score, derivative_rows, process_exit_rows, update_adapter_reference: principle: Formula correctness and recoverable state are prerequisites, not beneficial learning.\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8475_v729_objective_checkpoint_qualification.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+    "requires_gpu": false,
+    "title": "Qualify objective updates with complete rejection coverage and bounded test shards",
+    "track": "research"
+  },
+  "task_sha256": "sha256:941c43f2e4bb42bd7b8f7ff356851a562666106ed7d8041935e342bf3506c7ee"
+}

@@ -99766,3 +99766,35 @@ Implementation: `board_operation_boundary_8483.py` adapts the sealed readers and
 records the optional append boundary. The research note preserves each board's
 original hashes and the Anechoic prerequisites. Missing independent V729 design
 remains explicit; installed append deployment remains unsupported.
+## REQ-REPORT-8484: Reconcile fourteen V729 slots without inventing science
+
+Bind Exp8471–8484 in execution order to complete current authority and pinned
+original producers. The current capstone is reconciliation, never an upstream
+prerequisite. Distinguish qualified and disqualified producers, pre-gate receipts,
+cascade skips and absent artifacts. Missing measurements remain null with a
+reason. Preserve V726 retrospective findings, V717 H1=-0.00390625/H2=0,
+exposed question roles and the historical journal null. Replay eligible primitive
+operands in isolated bounded workers under their sealed original authority.
+Source information, later Brier/typed losses, five retention windows and PRIMARY
+append speed require their qualified producers. Preserve optional Qwen, ARC and
+three board obligations without model loads or device commands. Recommend
+retirement only for exact unchanged attempts, with source hashes and reopening
+conditions. Host storage cannot establish oracle-distinct generalization or
+matched Rust/Python NFR-01. Conductor owns ops/BMAD reconciliation.
+
+### SCENARIO-REPORT-8484-ACCOUNTING
+
+Private missing upstream inputs yield complete_blocked with exactly fourteen
+ordered rows, explicit missing operands, zero current model calls and zero
+generalization scores. Retain each historical primary and its original verdict.
+
+### SCENARIO-REPORT-8484-CUSTODY
+
+Cold replay independently reconstructs original branch primitives and complete
+authority. Reject missing inputs, changed producer pins and self-consistently
+rehashed summaries. Report the unchanged G1–G4 publication gate separately.
+
+Implementation: `v729_capstone_evidence.py` adapts shipped isolated readers;
+`v729_capstone_report.py` preserves missing comparisons and exact source hashes.
+The dated thin CLI publishes through the existing terminal consumers. The
+research note records current prerequisites, historical nulls and claim limits.
