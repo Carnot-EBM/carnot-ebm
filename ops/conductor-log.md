@@ -20196,3 +20196,4 @@ code |
 | 2026-10-13 12:11 UTC | Plan milestone 2026.10.730 | OK | 14 tasks proposed |
 | 2026-10-13 12:24 UTC | Milestone 2026.10.730 activated | OK | 14 tasks queued |
 | 2026-10-13 13:17 UTC | Bind fourteen tasks and freeze qualified science a | OK | 118 passed, 1 warning in 407.53s (0:06:47) |
+| 2026-10-13 14:09 UTC | Qualify source controls after the missing producer | OK | 89 passed, 1 warning in 241.23s (0:04:01) |
