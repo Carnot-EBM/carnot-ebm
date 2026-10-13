@@ -99559,3 +99559,32 @@ Run scoped serial tests, private E2E-018/021, Ruff, strict mypy and spec coverag
 Cold replay and unchanged publication/adversarial/strict row consumers check
 private bytes before atomic publication. Preserve every finding and historical
 V717/V726/V727 conclusion. The conductor owns ops and BMAD reconciliation.
+
+## REQ-REPORT-8468: Fresh adapter-withheld public ARC panel
+
+Authenticate this invocation against the activated full-object V728 contract.
+Use the sealed original Exp8412 producer for the shipped metadata-only roster,
+never Exp8453 as positive current authority. Freeze its first four games before
+observations, seeds11/22 and supervisor off/on:16 fresh episodes,512 actions and
+120 seconds each,2400 seconds aggregate. Missing selected games remain missing.
+Reuse actual make_carnot_agent/E3AgentPolicy and Exp8384 SDK recording with
+adapters, stored routes, hand-authored GameAdapter objects, calibration and
+cached game memory withheld. Registry levels are diagnostic; new_level_solves=0.
+MODEL_SPECS=[] means zero current LLM loads/calls. Generalization scores stay0.
+
+### SCENARIO-REPORT-8468-PANEL
+
+Report all game/seed arm progress and actual action/compute costs whether or not
+a redirect fires. Resolve events only from later observed level-ups; horizons
+remain right-censored. Require3 overlapping games and5 resolved outcomes per
+shared arm cell before arm refinement; otherwise report blocked refinement.
+Separate panel_execution_ready_score from arc_support_ready_score. Games are
+independent units. No default change, generator update or external publication.
+
+### SCENARIO-REPORT-8468-CUSTODY
+
+Cold-reconstruct primitive SDK rows in a bounded fresh process. Reject missing
+operands, errors and self-consistently rehashed tampering. Authenticate sealed
+historical authority independently of mutable vNEXT. Publish terminal bytes
+atomically through unchanged primary_publication and validator consumers.
+Conductor owns ops/status/changelog/BMAD reconciliation.

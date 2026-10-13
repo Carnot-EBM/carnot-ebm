@@ -54376,3 +54376,20 @@ the tape or reporting a partial speed ratio. Cold reconstruction is separate and
 amortized over actual decisions. Fresh replay rejects missing inputs, altered
 logical work and self-consistently rehashed aggregates. All new statements,
 including real child and failure paths, require genuine100 percent coverage.
+
+## REQ-VERIFY-8468: Qualify fresh panel separately from transfer support
+
+Write traced failing tests before implementation. Require100 percent new owned
+statement coverage, including real CLI child and failure paths, with genuine
+Coverage.py shards and serial pytest -n0 -o addopts= --no-cov. Run scoped Ruff
+check/format, strict mypy, spec coverage and private E2E-011/017 wrapper parity,
+E2E-018 authority lifecycle and E2E-021 frozen replay. Preserve validator findings;
+unknown, warning and critical findings close readiness. Owned failures disqualify;
+external required absence blocks. Optional CUDA, boards and science do not gate.
+
+### SCENARIO-VERIFY-8468-BOUNDS
+
+Accept --date20261013. Flush start, phase and child status at least every60 seconds.
+Check input bytes, tools, memory and private disk scratch before observations.
+Stop measurements by3600 seconds; reserve900 seconds within4800 seconds.
+Never pad durations or replace frozen games. Keep scratch outside the repo root.
