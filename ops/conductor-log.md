@@ -20186,3 +20186,7 @@ code |
 | 2026-10-13 06:41 UTC | Qualify objective updates with complete rejection  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8471-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-13 06:43 UTC | Measure continuous sparse learning with objective- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8475-objective-checkpoint-qualification) |
 | 2026-10-13 06:43 UTC | Audit later decision benefit and simultaneous rete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8476-brier-online-learning) |
+| 2026-10-13 06:48 UTC | Test whether stable journal names remove the measu | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8471-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-13 06:50 UTC | Qualify durable append recovery without a pointer | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8478-publication-cost-model) |
+| 2026-10-13 06:50 UTC | Compare complete stable-append and snapshot servic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8479-append-store-qualification, exp8478-publication-cost-model) |
+| 2026-10-13 06:50 UTC | Test bounded Qwen evidence responses only after au | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8472-source-control-qualification) |
