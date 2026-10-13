@@ -20190,3 +20190,4 @@ code |
 | 2026-10-13 06:50 UTC | Qualify durable append recovery without a pointer | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8478-publication-cost-model) |
 | 2026-10-13 06:50 UTC | Compare complete stable-append and snapshot servic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8479-append-store-qualification, exp8478-publication-cost-model) |
 | 2026-10-13 06:50 UTC | Test bounded Qwen evidence responses only after au | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8472-source-control-qualification) |
+| 2026-10-13 07:48 UTC | Qualify the missing ARC panel rejection path and m | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 88 passed, 1 warning in 185.17s (0:03:05) |
