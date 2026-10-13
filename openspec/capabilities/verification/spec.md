@@ -54729,3 +54729,37 @@ Implementation2026-10-13: append_store_8493 implements the separate framed store
 checkpoint publication and immutable reader copies. Traced tests exercise real
 exits, short writes, sync failures, limits and repaired tampering. The Exp8493
 terminal artifact retains exact owned coverage and validation receipts.
+
+## REQ-VERIFY-8494: Compare matched complete append service
+
+Use Exp8492 sealed natural workloads only after Exp8493 durability qualification.
+Restore identical state on one disk-backed filesystem. Each batch1/reuse8 and
+batch8/reuse8 cell has64 decisions, one separate warmup and five paired repeats.
+Alternate snapshot/append then append/snapshot. Charge cold reconstruction,
+startup, features, predictions, feedback, checkpoints, responses and final drain.
+Measure restart separately. Retain actual file/directory syncs, namespace calls,
+bytes, memory, disk, latency and scheduled/applied/lost/missing/pending feedback.
+
+### SCENARIO-VERIFY-8494-PAIRS
+
+Require bit-identical predictions, state, acknowledgment IDs and accounting.
+Resample five whole paired indices10000 times, seed7298480. Primary speedup is
+sum(snapshot wall)/sum(append wall). Its lower95 must exceed1 and p95 ratio must
+not exceed1.05. Secondary is descriptive. Lower95>=10 is a separate host target.
+Incomplete pairs block all speed claims. Preserve all failures and warmups.
+
+### SCENARIO-VERIFY-8494-REJECTION
+
+Reject unregistered cells, altered logical work, invalid nested clocks, missing
+syncs, changed sealed operands and self-consistently rehashed tampering. Collect
+nodes before exact disjoint bounded historical E2E-018/021 shards. Require100
+percent newly owned statements from genuine Coverage.py unit and child shards,
+scoped serial pytest, Ruff, strict mypy and spec coverage. Measurement cap1800
+seconds, task cap4800, validation reserve900; keep flushed progress and bounded
+children. Real CLI accepts20261013 and tests missing inputs and deliberate exits.
+
+Implementation2026-10-13: append_service_cost_8494 adapts the unchanged complete
+clock to the qualified stable append store. Both cells retain one warmup and
+five measured pairs. Traced tests cover actual children, complete accounting,
+registered bootstrap seed, negative admission, repaired tampering and disk replay.
+Only the four newly owned modules enter the invocation's Coverage.py scope.

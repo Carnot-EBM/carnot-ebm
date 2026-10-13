@@ -100059,3 +100059,27 @@ Implementation2026-10-13: append_store_qualification_8493 and its thin CLI retai
 typed gate operands, independently sealed tapes, primitive synchronization traces,
 actual acknowledgment ledgers and fresh disk replay. The terminal Exp8493 result
 reports qualification separately from scientific benefit and the preserved null.
+
+## REQ-REPORT-8494: Publish sealed complete append costs
+
+Bind activated V730 authority and exact qualified Exp8492/8493 producer hashes.
+Retain each intended arm, independent primitive operands and original historical
+authority. External absence blocks; owned validation failures disqualify.
+Readiness is separate from benefit. Oracle engineering positives are at most
+circular_positive. No model load, no current LLM calls, no generalization claim.
+Preserve Exp8466 snapshot/journal null1.0447833367 and its original CI95;
+V726 exposed findings and V717 H1=-0.00390625/H2=0 remain unchanged.
+
+### SCENARIO-REPORT-8494-TERMINAL
+
+Cold replay reconstructs primitive rows and retained disk states in a fresh
+bounded process. Missing operands and rehashed tampering reject. Publish only
+checked terminal bytes through unchanged primary_publication, adversarial and
+strict row consumers. Retain typed gate operands and validation command/exit/log
+hash receipts. Rust/Python NFR-01 stays open. Conductor owns ops reconciliation.
+
+Implementation2026-10-13: append_service_cost_8494 and the thin dated CLI bind
+the original Exp8492/8493 hashes and bound sidecars before every measurement.
+All24 intended arms completed. Primary complete speedup2.3386343639 has paired
+CI95[2.1622196343,2.5293404491] and p95 ratio0.5170403149. Qualification remains
+bound to the terminal validation receipts. Exp8466 remains a separate null.
