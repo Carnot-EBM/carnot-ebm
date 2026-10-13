@@ -16,8 +16,10 @@ from unittest.mock import patch
 from carnot.reporting import objective_checkpoint_8489 as e
 from carnot.reporting import objective_checkpoint_runner_8461 as shipped
 from carnot.reporting import v729_contract_runner as collection
+from carnot.reporting import v727_historical_inputs as history
 from carnot.reporting.current_work_receipt import atomic_json
 from carnot.reporting.historical_consumer_roots_8402 import assertion_sources, parse_outcomes
+from carnot.reporting.v709_execution import child
 
 Json = dict[str, Any]
 _MANIFEST = e.legacy.manifest
@@ -170,7 +172,7 @@ def execute(plan: list[Json], logs: Path) -> list[Json]:
     rows = []
     for i, spec in enumerate(plan):
         e.progress("validation", i, len(plan) - i)
-        receipt = shipped.child(
+        receipt = child(
             spec["name"],
             spec["argv"],
             logs,
@@ -195,15 +197,13 @@ def original_worker(argv: list[str], *, store: bool = False, tests: bool = True)
         original_cli = str(e.ROOT / e.ORIGINAL_OWNED[-1])
         if isinstance(args, (list, tuple)) and original_cli in args:
             index = args.index(original_cli)
-            args = [sys.executable, "-u", str(e.ROOT / e.CLI), "--original-exec", *args[index:]]
+            args = [*args[:index], str(e.ROOT / e.CLI), "--original-exec", *args[index:]]
         return popen(args, *pos, **kw)
 
     with TemporaryDirectory(prefix="exp8489-original-", dir="/var/tmp") as directory:
         scratch = Path(directory)
         context = (
-            frozen_inputs(
-                e.legacy.historical.custody(e.ROOT, scratch / "authority"), scratch / "consumer"
-            )
+            frozen_inputs(history.custody(e.ROOT, scratch / "authority"), scratch / "consumer")
             if store
             else e.original_binding(scratch)
         )

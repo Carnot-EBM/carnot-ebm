@@ -54632,3 +54632,17 @@ Accept --date20261013 and retain real private CLI, missing-input, deliberate-err
 wrong-date and rehashed-tamper receipts. Use disk scratch, bounded children and
 unbuffered phase counts. Stop measurements by3600 seconds and reserve900 seconds
 inside4800 seconds. The conductor handles ops and traceability reconciliation.
+
+### SCENARIO-VERIFY-8489-COVERAGE-PREFIX
+
+When an original private CLI child runs through an explicit Coverage.py command,
+the historical authority wrapper shall preserve that command and its coverage
+configuration. Only the script target changes to the historical wrapper. A real
+child must retain exit7 and write genuine private coverage shards. The unchanged
+original coverage-copy test must pass, with all564 original statements covered.
+
+Implementation verified 2026-10-13: the new explicit Coverage.py prefix
+regression and all21 current tests pass. The unchanged38 original tests and52
+historical nodes pass; disjoint shards total1360.974 seconds with no timeout.
+Coverage is564/564 original and362/362 added statements. E2E-018/020/021,
+Ruff, strict mypy and scoped spec tracing pass.

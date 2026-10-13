@@ -14,11 +14,14 @@ import numpy as np
 from scipy.special import expit
 
 from carnot.reporting import objective_checkpoint_8461 as _legacy
+from carnot.reporting import objective_checkpoint_evidence_8461 as evidence
 from carnot.reporting import v730_contract_methods as methods
-from carnot.reporting.current_work_receipt import atomic_json
+from carnot.reporting.current_work_receipt import atomic_json, sha256_file
 from carnot.reporting.historical_consumer_roots_8402 import inject
 from carnot.reporting.human_label_custody_8389 import gate
 from carnot.reporting.primary_publication import read_bound_sidecar, reader_receipt
+from carnot.verify import objective_checkpoint_8461 as adapter
+from carnot.verify import objective_derivatives_8461 as derivatives
 
 Json = dict[str, Any]
 legacy = _legacy
@@ -38,7 +41,7 @@ ORIGINAL_TESTS = [legacy.TEST, legacy.EXTRA_TEST]
 OWNED = ORIGINAL_OWNED + NEW_OWNED
 REQUIRED_CHECKS = legacy.REQUIRED_CHECKS | {"original_objective_tests"}
 _ORIGINAL_REQUIRED = set(legacy.REQUIRED_CHECKS)
-_ORIGINAL_METHODS = legacy.evidence.methods
+_ORIGINAL_METHODS = evidence.methods
 _ORIGINAL_PROGRESS = legacy.progress
 ORIGINAL = ROOT / "results" / (legacy.NAME + ".json")
 ORIGINAL_PIN = "sha256:e4adbdbbb533054cb6a5496fcd0761bed7dac0d0fd4f99e4a60741c40f48cf16"
@@ -54,19 +57,14 @@ HISTORICAL_LIMIT_REFS = [
     ),
 ]
 MODEL_SPECS: list[Json] = []
-read, reference, checksum, sha256_file = (
-    legacy.read,
-    legacy.reference,
-    legacy.checksum,
-    legacy.sha256_file,
-)
+read, reference, checksum = legacy.read, legacy.reference, legacy.checksum
 _MEASURE, _BUILD, _REPLAY, _AUTHENTICATE = (
     legacy.measure,
     legacy.build,
     legacy.replay,
-    legacy.evidence.authenticate,
+    evidence.authenticate,
 )
-_METHODS = SimpleNamespace(**dict(vars(methods), CLI=legacy.evidence.methods.CLI))
+_METHODS = SimpleNamespace(**dict(vars(methods), CLI=evidence.methods.CLI))
 
 
 def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
@@ -88,14 +86,14 @@ def log_loss_checks(original: Json) -> list[Json]:
             for z in (-20.0, -4.0, 0.0, 4.0, 20.0):
                 head = deepcopy(original)
                 head["temperature"] = temperature
-                matrix, theta, offset = legacy.derivatives.operands(head, x)
+                matrix, theta, offset = derivatives.operands(head, x)
                 theta[-1] += z - offset - matrix @ theta
                 head.update(parameters=theta.tolist(), decay_scale=1.0)
                 for y in (0, 1):
                     p = float(expit(z / temperature))
                     data = matrix * (p - y) / temperature
                     dense = data + 0.002 * theta
-                    ids, gradient = legacy.adapter.sparse.sparse_gradient(head, x, y)
+                    ids, gradient = adapter.sparse.sparse_gradient(head, x, y)
                     sparse = 0.002 * theta
                     sparse[ids] += gradient
                     # Extended precision preserves tiny L2 differences beside extreme log loss.
@@ -158,7 +156,7 @@ def binding() -> Iterator[None]:
             progress=progress,
         ),
         patch.multiple(
-            legacy.evidence,
+            evidence,
             NAME=NAME,
             TASK=TASK,
             CLI=CLI,
@@ -452,7 +450,7 @@ def original_binding(scratch: Path) -> Iterator[None]:
             progress=_ORIGINAL_PROGRESS,
         ),
         patch.multiple(
-            legacy.evidence,
+            evidence,
             NAME=ORIGINAL.stem,
             TASK="exp8461-objective-checkpoint-qualification",
             CLI=ORIGINAL_OWNED[-1],

@@ -345,3 +345,30 @@ def test_independent_shard_summary_requires_exact_passed_nodes(tmp_path):
     )
     with pytest.raises(SystemExit):
         runner.main(["--shard-summary", str(ledger)])
+
+
+def test_original_child_preserves_explicit_coverage_prefix(tmp_path):
+    """SCENARIO-VERIFY-8489-COVERAGE-PREFIX: historical routing retains real tracing.
+
+    A private script starts the original CLI through Coverage.py. The wrapper
+    must retain both its failure exit and independently configured data shards.
+    """
+    config = tmp_path / "coverage.ini"
+    config.write_text(f"[run]\nparallel=true\ndata_file={tmp_path / '.coverage'}\n")
+    script = tmp_path / "coverage_child.py"
+    arguments = [
+        sys.executable,
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=" + str(config),
+        str(e.ROOT / e.ORIGINAL_OWNED[-1]),
+        "--deliberate-error",
+    ]
+    script.write_text(
+        "import subprocess\n"
+        f"assert subprocess.run({arguments!r}, check=False).returncode == 7\n"
+        "from pathlib import Path\n"
+        f"assert list(Path({str(tmp_path)!r}).glob('.coverage.*'))\n"
+    )
+    assert runner.original_worker([str(script)], tests=False) == 0

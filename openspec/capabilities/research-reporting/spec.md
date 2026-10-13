@@ -99982,3 +99982,9 @@ Cold replay reconstructs primitive rows in a fresh bounded process. Unchanged
 primary publication, adversarial and strict row consumers validate terminal
 bytes before atomic publication. Unresolved findings forbid readiness. Future
 Exp8490 and Exp8491 outputs are dependencies, not existing observations.
+
+Exp8489 implementation verified 2026-10-13: the preserved failed invocation
+remains raw evidence. The repaired primary is complete_circular_positive with
+objective_kernel_ready_score=1 after all required checks and terminal validators
+pass. All216 fixture rows complete; current LLM calls and both generalization
+scores remain zero. The historical Coverage.py launcher now retains its prefix.

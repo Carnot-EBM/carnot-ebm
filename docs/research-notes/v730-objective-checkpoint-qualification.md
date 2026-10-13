@@ -69,3 +69,23 @@ reported37 passed and1 failed; the20 new tests passed. This failure forbids
 objective readiness and requires a disqualified terminal verdict. All remaining
 scheduled shards and validation checks retain their actual outcomes. This is an
 engineering validation failure, not evidence against unmeasured learning benefit.
+
+
+Correction recorded 2026-10-13 after the bounded repair run: the historical
+wrapper now preserves the explicit Coverage.py command prefix and configuration.
+A new traced regression first reproduced the missing shard, then passed with
+the repair. Direct imports also resolve the strict-mypy failures. The prior
+disqualified primary and terminal sidecar remain under
+`results/raw/experiment_8489_v730_objective_checkpoint_qualification/superseded_prefix_failure/`.
+
+The repaired invocation `1791912760786324548` passed all21 current tests, all38
+unchanged original objective tests and all52 historical nodes. The three
+disjoint historical shards took513.075,505.112 and342.787 seconds, totaling
+1360.974 seconds within1800 seconds; none timed out or skipped a node. Genuine
+unit and child coverage measured564/564 original and362/362 new statements.
+E2E-018/020/021, Ruff check/format, strict mypy and spec tracing passed. Fresh
+cold replay, missing/error/rehashed-tamper controls and unchanged adversarial
+and strict row consumers passed without unresolved findings. Atomic publication
+records `complete_circular_positive_v730_objective_checkpoint_qualification` and objective_kernel_ready_score=1.
+All216 intended fixture rows completed. This qualifies update mechanics only;
+both generalization scores remain zero and no current LLM call was made.
