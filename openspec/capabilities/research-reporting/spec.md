@@ -99848,3 +99848,28 @@ A small token budget declares model_bounded_generation, never full generation.
 A level claim must be live_agent_self_discovery; censored supervisor outcomes
 remain censored. The unconditional Exp8498 accounts for all fourteen slots and
 unchanged G1–G4 without turning missing experiments into successes.
+
+## REQ-REPORT-8485: Seal complete V730 methods under activated authority
+
+Bind fourteen Exp8485–Exp8498 objects by full dictionary equality across
+visible table, embedded JSON, canonical digest and activated YAML. Preserve
+planner-created failed V729 bytes and original V728 authority. Consumed
+staging remains absent. Freeze V729 source, scalar, objective and append
+operands unchanged. Register precise original-branch fixtures and a fourth
+instruction-paraphrase view separately in protocol_delta. Methods readiness
+requires current authority and owned qualification, independently of original
+source/learning/service gates. No current model, CUDA or board calls.
+
+### SCENARIO-REPORT-8485-AUTHORITY
+
+Reject count, order, ID, title, phase, deliverable, model, substrate, gate,
+prompt, prior retirement and missing end-marker mutations, missing authority
+and self-consistently rehashed tampering. Preserve all fourteen intended rows.
+
+### SCENARIO-REPORT-8485-METHODS
+
+Authenticate separate original V726/V728 roots. Missing optional runtime
+evidence yields zero independently of CPU readiness. Keep science/scalar/
+service dimensions 9/109, 1/13 and 5 distinct. Preserve V728's null service
+speedup and V717 closures; future outputs remain dependencies. Explain extra
+fields and bind imported provenance to producer hashes.

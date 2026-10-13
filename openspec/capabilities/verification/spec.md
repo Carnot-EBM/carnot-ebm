@@ -54537,3 +54537,22 @@ Implementation: `v729_capstone.py` collects exact node IDs and freezes bounded
 nonoverlapping private E2E shards. It reuses genuine Coverage.py subprocess
 shards and unchanged validators. Whole replay receives a finite600-second
 budget while original per-worker memory and timing bounds remain intact.
+
+## REQ-VERIFY-8485: Qualify terminal methods with real bounded children
+
+Collect required node IDs before execution. Run scoped serial tests under
+Coverage.py with subprocess shards; require 100 percent newly owned
+statements, rejection paths included. Partition slow historical E2E suites
+into bounded nonoverlapping shards with exact original union. Run unchanged
+E2E-018/021 at original dates, Ruff, strict mypy and spec coverage. Retain
+commands, exits, durations and stream hashes. Poll owned children every
+60 seconds or less. Stop measurement by 3600 seconds, reserving at least900
+seconds within4800 for validation. Publish atomically through unchanged
+primary_publication, adversarial_verify and strict row consumers.
+
+### SCENARIO-VERIFY-8485-CONTROLS
+
+Real private CLI publication and fresh cold replay accept valid evidence;
+missing inputs, deliberate errors and rehashed tampering reject. Owned
+validation failures disqualify; external absence blocks its own gate.
+Unresolved adversarial findings forbid readiness. No validators change.
