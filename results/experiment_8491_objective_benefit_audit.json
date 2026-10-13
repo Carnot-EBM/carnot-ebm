@@ -1,0 +1,51 @@
+{
+  "experiment": 8491,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-13",
+  "started_at": "2026-10-13T19:35:36.419546+00:00",
+  "finished_at": "2026-10-13T19:35:36.419546+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Audit later decision benefit and simultaneous retention from causal rows",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8490-brier-online-learning",
+  "failed_field": "objective_stream_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8490_v730_brier_online_learning.json",
+  "failed_evidence_sha256": "sha256:723b8e819301e0c28fabc5768673e503ad38e9dc13aa0c60e36e006e6446bfb3",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8490-brier-online-learning",
+    "failed_field": "objective_stream_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8490_v730_brier_online_learning.json",
+    "failed_evidence_sha256": "sha256:723b8e819301e0c28fabc5768673e503ad38e9dc13aa0c60e36e006e6446bfb3"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8490-brier-online-learning.objective_stream_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8490-brier-online-learning",
+      "artifact_field": "objective_stream_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8490_v730_brier_online_learning.json",
+      "artifact_sha256": "sha256:723b8e819301e0c28fabc5768673e503ad38e9dc13aa0c60e36e006e6446bfb3"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
