@@ -100034,3 +100034,28 @@ Implementation2026-10-13: publication_cost_model_8492 and its thin Exp8492 CLI
 reconstruct the sealed original clocks and freeze reference append semantics.
 The terminal artifact and bound sidecar record final qualification separately
 from conditional ceilings and the preserved V728 measured null.
+
+## REQ-REPORT-8493: Publish bound append recovery qualification
+
+Authenticate activated V730 task and exact qualified Exp8492 bytes and sidecar.
+Retain independently sealed original historical operands and provenance. Every
+intended fixture receives a metric or missing reason. External absence blocks;
+owned failures disqualify. Readiness requires complete original invariants,
+100 percent owned statement coverage and all unchanged validation consumers.
+Oracle engineering positives are circular_positive; current LLM invocations and
+both generalization scores are zero. Preserve V728 qualified equivalence and null
+service speedup1.0447833367,CI95[0.9942346768,1.1095895448],V726 exposed history
+and closed V717 H1=-0.00390625/H2=0. No production replacement or speed claim.
+
+### SCENARIO-REPORT-8493-TERMINAL
+
+Cold replay reconstructs primitive disk prefixes and independent logical states
+in a bounded fresh process. Repaired aggregate and primitive hashes cannot pass.
+Publish only atomically checked bytes through unchanged primary_publication,
+adversarial and strict-row consumers; retain findings. Gate summaries distinguish
+missing from zero and name upstream,path/hash,field,operator,expected and observed.
+
+Implementation2026-10-13: append_store_qualification_8493 and its thin CLI retain
+typed gate operands, independently sealed tapes, primitive synchronization traces,
+actual acknowledgment ledgers and fresh disk replay. The terminal Exp8493 result
+reports qualification separately from scientific benefit and the preserved null.

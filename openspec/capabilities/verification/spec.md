@@ -54694,3 +54694,38 @@ Implementation2026-10-13: all25 focused test_publication_cost_model_8492 tests
 pass with422/422 newly owned statements covered by genuine unit/child shards.
 The frozen runner retains exact historical collections, disjoint shard proofs,
 bounded exits/log hashes and final unchanged-consumer validation receipts.
+
+## REQ-VERIFY-8493: Qualify a separate stable append store
+
+Implement only after authenticated Exp8492 protocol readiness. Reuse its framed
+records, sealed five-input tape and unchanged transition arithmetic. One writer
+locks a stable journal; readers receive verified immutable committed prefixes.
+Sync creation and parent directory before work; handle short writes and sync
+every append before acknowledgment. Complete unacknowledged frames replay once;
+only an incomplete final frame may be discarded. Conflicts, interior corruption,
+reordered events and repaired transition hashes reject. Keep MAX_EVENTS256,
+MAX_BYTES2MiB and journal16MiB. Checkpoint every32 and at final drain; sync the
+new checkpoint and prefix before reclaiming old checkpoints. Pinned reader copies
+retain their complete operands. Production stores and generator weights stay fixed.
+
+### SCENARIO-VERIFY-8493-RECOVERY
+
+Real exits before/after append, file sync, acknowledgment, checkpoint file sync,
+replacement, directory sync and reclamation preserve every returned ID and reply.
+Independent snapshot parity covers bitwise state, responses, cursor and feedback.
+Failed writes or sync cannot acknowledge. Test tails, corruption, duplicates,
+short writes, stale readers, limits and self-consistently rehashed transitions.
+
+### SCENARIO-VERIFY-8493-VALIDATION
+
+Collect nodes before exact disjoint bounded historical shards. Require100 percent
+new owned statements, genuine Coverage.py unit/child shards, scoped serial pytest,
+E2E-018/021, Ruff, strict mypy and spec coverage. Private CLI accepts20261013,
+cold replay rejects missing inputs, deliberate failures and rehashed tampering.
+Keep bounded children and flushed progress. Process exits do not certify power
+loss; this qualification makes no speed claim. Conductor owns ops reconciliation.
+
+Implementation2026-10-13: append_store_8493 implements the separate framed store,
+checkpoint publication and immutable reader copies. Traced tests exercise real
+exits, short writes, sync failures, limits and repaired tampering. The Exp8493
+terminal artifact retains exact owned coverage and validation receipts.
