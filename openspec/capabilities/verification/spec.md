@@ -54347,3 +54347,32 @@ certificates, exact sealed operand types,32-transaction prefix checkpoints and
 all pinned files. The original Exp8464 transition adapter and production snapshot
 writer remain unchanged. Tests include changed sealed labels, signed-zero and
 numeric-type aliasing in addition to the declared process and corruption panel.
+## REQ-VERIFY-8466: Compare equal complete durable service work
+
+Implemented by the narrow journal_service_cost_8466 adapter and independently
+sealed private primitive replay. The qualified snapshot and journal code stays
+unchanged. New tests cover exact work, actual child measurements, both complete
+clock partitions, deadline accounting and rehashed negative controls.
+
+Use the independently sealed Exp8464 tape and unchanged qualified Exp8465
+snapshot and journal stores. Run natural batch1/reuse8 and batch8/reuse8 on
+one disk filesystem. Restore initial state per arm, one warmup and five measured
+pairs per cell, alternating AB/BA. Include cold reconstruction, initialization,
+checkpoint and feedback tail in complete clocks. Record request latency, actual
+write bytes and fsyncs, decisions, updates, startup, restart, RSS and retained disk.
+
+### SCENARIO-VERIFY-8466-PAIRS
+
+Require exact serialized predictions, acknowledgment ledger, feedback and final
+logical state against independent initial operands. Bootstrap five paired blocks
+10000 times with seed7278451. Pool complete walls by sum(snapshot)/sum(journal).
+Primary lower95>1 and journal/snapshot p95<=1.05 establish conditional engineering
+benefit only. Lower95>=10 is separate; matched Rust/Python NFR-01 stays open.
+
+### SCENARIO-VERIFY-8466-FAILURES
+
+Keep both cells and all24 arm slots visible. Stop at1800 seconds without shrinking
+the tape or reporting a partial speed ratio. Cold reconstruction is separate and
+amortized over actual decisions. Fresh replay rejects missing inputs, altered
+logical work and self-consistently rehashed aggregates. All new statements,
+including real child and failure paths, require genuine100 percent coverage.

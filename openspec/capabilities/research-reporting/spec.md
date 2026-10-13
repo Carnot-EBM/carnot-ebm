@@ -99531,3 +99531,31 @@ Exp8465 implementation: the reporting module and thin dated CLI retain both
 stores, caller acknowledgment ledgers, original authority receipts and primitive
 cold-replay operands. Scoped validation owns only the four new source files.
 The conductor retains subsequent ops/status/changelog/BMAD reconciliation.
+## REQ-REPORT-8466: Publish authenticated journal service costs
+
+Implemented by journal_service_cost_8466, its private workflow adapter and the
+thin dated experiment CLI. The complete artifact separates readiness, primary
+engineering benefit and the descriptive tenfold target. Historical files and
+validators remain unchanged. Ops and BMAD reconciliation remain conductor-owned.
+
+Validation retry preserves the complete original measured roster and source
+versions. Invalid private primitive candidates clear readiness before cold replay
+rejects them. The retry records its prior attempt and rechecks owned code without
+discarding or rerunning a timed arm. Both original and current source hashes bind
+the terminal evidence.
+
+Authenticate the activated V728 full task object, sealed Exp8464 tape and
+Exp8465 stores through their original producer authority. Accept --date20261013.
+Declare no_model_load, MODEL_SPECS=[], zero current LLM calls and historical
+model provenance. Missing external inputs block; owned failures disqualify.
+Service readiness requires complete evidence, exact accounting, required private
+checks and100 percent new statement coverage. Generalization scores stay0.
+
+### SCENARIO-REPORT-8466-TERMINAL
+
+Flush start, phase and bounded child status at most60 seconds apart. Check
+memory, tools and private disk scratch. Reserve900 seconds inside4800 seconds.
+Run scoped serial tests, private E2E-018/021, Ruff, strict mypy and spec coverage.
+Cold replay and unchanged publication/adversarial/strict row consumers check
+private bytes before atomic publication. Preserve every finding and historical
+V717/V726/V727 conclusion. The conductor owns ops and BMAD reconciliation.
