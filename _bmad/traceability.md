@@ -4006,3 +4006,17 @@ implementation, experiment result or activation is implied by this entry.
 Reports: `/var/tmp/carnot-8442-fix-validation/`. Global spec tracing retains
 the previously recorded 1,142 unrelated missing references. This entry repairs
 the code's invocation boundary and grants no new scientific benefit.
+
+## V730 planning — 2026-10-13 (execution pending)
+
+| Requirement | Planned experiments | Authority / validation |
+|---|---|---|
+| REQ-REPORT-V730-PLAN | Exp8485, Exp8498 | `research-roadmap-next.yaml` and full `research-roadmap-vNEXT.md` contract; private shipped authority reader and negative contract mutations |
+| REQ-REPORT-V730-STUDIES; PRD FR11/FR12 | Exp8486–Exp8494 | Scalar/source controls, proper-loss continuous learning, stable append equivalence and complete clocks; future implementation tests must reference their task REQ/SCENARIO |
+| REQ-REPORT-V730-LIVE; PRD FR05/FR08 | Exp8495–Exp8497 | Mandated bounded Qwen, actual reachable ARC panel, installed board operation boundaries |
+
+This is a fourteen-task, four-phase plan, not implementation or scientific evidence.
+V729's truncated design is preserved byte-for-byte in
+`openspec/change-proposals/research-roadmap-v729-preserved-20261013.md`.
+The old journal null, exposed-data limits and unmet matched Rust/Python NFR01
+remain intact. Active roadmap and conductor are unchanged.

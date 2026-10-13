@@ -514,3 +514,22 @@ attribution and conditional acceleration ceilings. No ceiling certifies a native
 or FPGA speedup. Current Qwen generation remains a separately gated bounded canary.
 Live ARC evidence and board readers preserve their actual support and operations.
 These are planned experiments; no new serving capability is deployed here.
+
+## V730 proposed research boundary — 2026-10-13
+
+Planned only: fourteen tasks Exp8485–Exp8498, four phases, defined by the complete
+`openspec/change-proposals/research-roadmap-vNEXT.md` / `research-roadmap-next.yaml`
+contract. A qualified nine-input/109-coefficient science head and13-coefficient
+scalar control feed source-information and delayed proper-loss comparisons.
+A separate five-input service experiment tests stable-file append publication
+against the snapshot transition oracle with fsync-before-ack and full clocks.
+Neither changes the production store merely by being planned.
+
+Optional bounded Qwen3.8-27B evidence/paraphrase calls require changed CUDA
+repair evidence. A model-free reachable ARC panel requires actual original-branch
+coverage qualification. Board operation mapping remains an evidence reader;
+KV260/PolarFire/GateMate deployment limits do not change. Independent source,
+learning and service readiness gates prevent optional hardware absence from
+blocking CPU science. The unconditional capstone preserves all external blocks
+and unchanged G1–G4. See REQ-REPORT-V730-PLAN/STUDIES/LIVE; no new architecture
+component is claimed implemented by this planning update.

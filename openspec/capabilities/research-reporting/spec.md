@@ -99798,3 +99798,53 @@ Implementation: `v729_capstone_evidence.py` adapts shipped isolated readers;
 `v729_capstone_report.py` preserves missing comparisons and exact source hashes.
 The dated thin CLI publishes through the existing terminal consumers. The
 research note records current prerequisites, historical nulls and claim limits.
+
+## REQ-REPORT-V730-PLAN: Complete next-milestone authority before execution
+
+Status: planned research; this entry does not certify future implementation.
+The V730 design and staged queue shall contain exactly fourteen full task objects,
+Exp8485–Exp8498 in order, a matching visible task table, START/END JSON markers
+and the canonical full-task SHA256 understood by the shipped authority reader.
+Historical V729 design bytes and all primaries remain unchanged; the active
+roadmap and conductor are not edited during planning. Every current gate names
+an earlier producer's exact required artifact field. Every matching failed scope
+records its actual prior verdict, changed condition and retirement flag.
+
+### SCENARIO-REPORT-V730-PLAN-CONTRACT
+
+Given the staged V730 queue, a private copy simulating activation agrees with
+all complete design objects and the table; count/order/ID/title/phase/path/model/
+substrate/gate/prompt/prior-flag/truncation mutations are rejected. Planning
+validation does not activate V730 or rewrite historical result evidence.
+
+## REQ-REPORT-V730-STUDIES: Distinguish qualified mechanisms from measured benefit
+
+Status: planned; no V730 study has run. Exp8486–8488 shall retain registered
+source controls, exposed question roles and paired question inference.
+Exp8489–8491 shall compare causal Brier/log-loss updates under identical admission,
+capacity and state, with later-loss and simultaneous retention gates.
+Exp8492–8494 shall test a separately qualified stable append mechanism with
+fsync-before-ack, real process exits, complete service clocks and an unchanged
+snapshot oracle. Missing qualification is blocked, never a scientific null.
+
+### SCENARIO-REPORT-V730-STUDIES-BOUNDARY
+
+A valid store or derivative receipt cannot pass a benefit gate. An exposed-label
+positive cannot become independent generalization. Every compared intended unit
+has a row, and unchanged external absence uses blocked rather than partial.
+
+## REQ-REPORT-V730-LIVE: Bounded model and reachable ARC evidence
+
+Status: planned. Exp8495 uses only unsloth/Qwen3.8-27B-GGUF for sixteen fixed
+bounded evidence/paraphrase calls after a changed authenticated CUDA repair.
+Exp8496 repairs the actual original panel-replay rejection branch before its
+sixteen model-free live SDK episodes. No offline game solver or duplicate
+registry solve receives credit. Exp8497 carries installed hardware operation
+limits and exact GateMate reopening evidence without device commands.
+
+### SCENARIO-REPORT-V730-LIVE-PROVENANCE
+
+A small token budget declares model_bounded_generation, never full generation.
+A level claim must be live_agent_self_discovery; censored supervisor outcomes
+remain censored. The unconditional Exp8498 accounts for all fourteen slots and
+unchanged G1–G4 without turning missing experiments into successes.

@@ -52659,3 +52659,101 @@ Process-exit tests alone cannot establish physical power-loss behavior.
 Selection boundary: finish the unmeasured information and objective studies after
 specific qualification repairs. Change the measured persistence mechanism before
 another cost comparison. Preserve exposed-data, hardware and runtime limits.
+
+## 2026-10-13 — V730 planning scan: executable studies and evidence sensitivity
+
+This scan precedes the V730 experiment design. V729 scheduled fourteen tasks.
+Its design omitted the task table, JSON contract and digest. Ten producers never
+ran. The four primary artifacts do not establish new scientific benefit.
+The source-information, objective-learning and stable-append hypotheses remain
+unmeasured. Preserve their registered methods while repairing authority.
+
+### Methods to carry into the next executable studies
+
+- [Decomposing Probabilistic Scores](https://arxiv.org/abs/2603.15232),
+  March 2026, separates reliability from information lost by a scalar score.
+  Retain the scalar spline and source-permutation controls. A finite paired
+  ablation does not estimate the paper's population decomposition.
+- [Calibeating Made Simple](https://arxiv.org/abs/2603.22167), March 2026,
+  relates online forecast correction to proper-loss regret. Keep matched
+  Brier and log-loss objectives in the delayed-feedback study. Carnot's
+  nonlinear updates do not inherit this paper's theorem.
+- [Ultrafast On-Chip Online Learning via Spline Locality in KANs](https://arxiv.org/abs/2602.02056),
+  February 2026, revised June 19, motivates sparse coefficient updates.
+  Measure touched coefficients and complete update cost. The authors' FPGA
+  implementation does not establish support in Carnot's installed bitstream.
+- [Capacity-Constrained Online Convex Optimization with Delayed Feedback](https://arxiv.org/abs/2606.11711),
+  June 2026, motivates explicit feedback capacity and release order.
+  Hold both fixed across objective arms. The prior admission-selection null
+  remains closed; changing the learning objective is a different hypothesis.
+- [VeriHarness](https://arxiv.org/abs/2610.00972), October 2026, motivates
+  testing evidence against plausible shared wrong claims. Keep a bounded
+  local-Qwen evidence canary. It is not a reproduction of the full system.
+- **Newly surfaced for this planning pass:**
+  [Constrained Paraphrase Consistency](https://arxiv.org/abs/2606.08158),
+  June 2026, constrains document-claim detectors across equivalent views.
+  Add a fixed instruction-paraphrase view to the canary. Keep claim and source
+  bytes unchanged. Score disagreement and source sensitivity separately.
+  This diagnostic does not reproduce the paper's training method.
+- **Newly surfaced for this planning pass:**
+  [GLEAN](https://arxiv.org/abs/2603.02798), March 2026, calibrates accumulated
+  guideline evidence with Bayesian logistic regression. It reinforces the need
+  to separate evidence quality from calibration. Its clinical setting does not
+  transfer a correctness guarantee to Carnot. Defer a new sequential head until
+  the existing source-information comparison yields a qualified result.
+- **New frontier lead:**
+  [MERITED](https://arxiv.org/abs/2610.00399), submitted September 30, 2026,
+  uses instance-based memory to allocate EBM reasoning effort. File this for
+  later action-cost experiments. Do not add another memory policy before the
+  current objective and retention study runs.
+
+### Other requested research topics
+
+| Topic | Primary source checked | Decision |
+|---|---|---|
+| EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025, revised May 2026 | Compatibility and architectural equivalence do not certify factual correctness. Keep generator weights frozen. |
+| EBM verification | [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 2026 | Preserve the distinction between analytical constraints and learned quality. Retired external-text ranking stays retired. |
+| Neural constraint satisfaction | [PAL](https://arxiv.org/abs/2503.19466), March 2025; [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025 | Guarantees concern encoded algebraic constraints. They cannot certify a wrong natural-language extraction. No new solver branch is justified here. |
+| Ising and FPGA | [Anechoic](https://arxiv.org/abs/2610.13368), October 9, 2026; [author code](https://github.com/skethz/anechoic) | Retain as an optimization lead. Dense Alveo V80 annealing does not establish Gibbs sampling or installed KV260 support. Paper and README differ on one G-set count; do not import either count as local evidence. |
+| Energy-guided generation | [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 2026; [primal-dual discrete diffusion decoding](https://arxiv.org/abs/2605.09749), May 2026 | Frozen-model steering is relevant after runtime and verifier utility qualify. Diffusion constraint bounds do not transfer to autoregressive GGUF inference. |
+| Constrained decoding cost | [CFGzip](https://arxiv.org/abs/2605.29986), May 2026 | Grammar acceleration is distinct from semantic truth. Defer decoder implementation. |
+| Hallucination evaluation | [HalluScoring 2026](https://arxiv.org/abs/2609.38355), September 2026 | Separate unseen-question from unseen-generator transfer. The exposed local panel proves neither. |
+
+The [Linux fsync documentation](https://man7.org/linux/man-pages/man2/fsync.2.html)
+remains the durability reference. A stable journal name can avoid repeated
+namespace publication. It cannot avoid file synchronization before durable
+acknowledgment or directory synchronization after namespace changes.
+Process-exit recovery does not certify physical power-loss behavior.
+
+### Secondary channels, checked during this pass
+
+- **OpenReview:** searched 2026 EBM/reasoning submissions. Indexed ICLR PDFs
+  expose EBT and VFScale work. The [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  still returns a browser challenge. The indexed [GLEAN workshop paper](https://openreview.net/pdf?id=y2lpncShTf)
+  corroborates its evidence/calibration method. No unseen reviews are claimed.
+- **Semantic Scholar:** attempted citing-paper APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Both were inaccessible through the browser. Exact-ID site searches returned
+  no results. Citation coverage is incomplete, not evidence of zero citations.
+- **Hugging Face:** searched [verification papers](https://huggingface.co/papers?q=active+verification)
+  and inspected VeriHarness and SIFT listings. Feed dates are not paper dates;
+  GLEAN appeared in an October feed but its paper dates to March.
+- **GitHub Trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were month-old. No current trending rank is asserted. Anechoic's author
+  repository contains RTL, GPU kernels and frozen protocols; nothing was installed.
+- **Extropic:** checked [Writing](https://extropic.ai/writing), September 4's
+  [Z1T](https://extropic.ai/writing/z1t/) and October 1's
+  [thermodynamic recursive intelligence](https://extropic.ai/writing/baby-thermo-rsi/).
+  These describe sparse heterogeneous inference and automated algorithm research.
+  They do not supply local TSU access or measured Carnot service acceleration.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The vendor describes a constraint layer beneath AI systems. This page supplies
+  no reproducible implementation that changes Carnot's evidence requirements.
+
+Selection: preserve the unexecuted source and proper-loss comparisons. Qualify
+their exact failure paths. Test stable append storage with unchanged durability.
+Use paraphrase invariance as a bounded diagnostic, not a new headline claim.
+No model training beyond the small decision head, device purchase, or external
+publication is proposed.
