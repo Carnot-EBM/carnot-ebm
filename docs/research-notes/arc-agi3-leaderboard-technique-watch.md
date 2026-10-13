@@ -513,3 +513,13 @@ Neither described mechanism depends on game-source access or hardcoded per-game 
 
 **Classification: (b)** for the described general-purpose compression and serving techniques. The complete experiment code is unpublished, so its broader game-source access or per-game hardcoding status remains unverified.
 
+## 2026-10-13 13:39 UTC -- NEW
+
+**ARC Slayers — new training disclosure, October 12–13.** Member `dzjiann` reports trying **SFT and RL on Qwen3.8-Flash-Next**, encountering training instability; **Qwen3.8-27B trained successfully but scores improved slowly**. No numerical comparison or connection to the current scoring submission was disclosed. [Discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/748593)
+
+Their concrete memory-saving stack is **4-bit QLoRA + FSDP2 + PLE CPU offload**, reportedly enabling Flash-Next fine-tuning on **two 96GB GPUs**. [Implementation disclosure](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/748593#3537857)
+
+**Classification: (b)** for the general-purpose training stack. Training-data provenance and the complete submission’s source-reading/per-game hardcoding status remain unverified.
+
+**POSSIBLE CARNOT LEVER:** This stack offers a concrete route to offline supervised adaptation of Carnot’s local MoE generator; a gameplay benefit remains unproven.
+

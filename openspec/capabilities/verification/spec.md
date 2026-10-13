@@ -54556,3 +54556,21 @@ Real private CLI publication and fresh cold replay accept valid evidence;
 missing inputs, deliberate errors and rehashed tampering reject. Owned
 validation failures disqualify; external absence blocks its own gate.
 Unresolved adversarial findings forbid readiness. No validators change.
+## REQ-VERIFY-8486: Validate new source qualification with bounded children
+
+Accept --date 20261013. Use unbuffered phase counts, private disk scratch and
+bounded owned children polled within 60 seconds. Stop measurement by 3600 seconds
+and reserve 900 seconds inside 4800 seconds. Collect exact test node IDs before
+execution; split historical suites without overlapping or omitted assertions.
+Require 100 percent new statements, real subprocess coverage shards and the
+original missing-pin rejection statement. Run scoped serial pytest, unchanged
+E2E-018/021, Ruff check/format, strict mypy and owned spec coverage. Run unchanged
+primary publication, adversarial and strict-row consumers before atomic publish.
+No validator exemptions, generator changes, device calls or external publication.
+
+### SCENARIO-VERIFY-8486-CLI
+
+Real private CLI publication and fresh cold replay pass valid cached evidence.
+Wrong dates, unsafe private destinations, missing inputs, deliberate failures,
+rehashed aggregates and forged producer pins reject with retained receipts.
+Historical test children retain their sealed original authority and assertions.

@@ -99873,3 +99873,28 @@ evidence yields zero independently of CPU readiness. Keep science/scalar/
 service dimensions 9/109, 1/13 and 5 distinct. Preserve V728's null service
 speedup and V717 closures; future outputs remain dependencies. Explain extra
 fields and bind imported provenance to producer hashes.
+## REQ-REPORT-8486: Qualify frozen source controls under V730 authority
+
+Authenticate activated full-task V730 authority and independently pinned Exp8485
+methods/source gates before freezing controls. Reuse the shipped Exp8458 builder
+and sealed original V726 producer replays. Preserve 900 answers, 300 questions,
+150/50/100 roles, 128/32/80 usable support and eight tune/test clusters per class.
+Freeze raw p2, scalar logistic, q-only cubic spline, full nine-input spline and
+source-permuted spline with capacities 0/2/13/109/109 and seeds 725/7252/7251.
+Prediction readers cannot open evaluator labels. Generator identity is a
+reporting stratum. Public exposure and unknown earlier overlap remain explicit.
+Readiness requires fresh owned coverage, consumer checks and cold reconstruction.
+Preserve Exp8458 terminal bytes and its failed coverage receipt; issue a new receipt.
+
+### SCENARIO-REPORT-8486-PIN
+
+A private forged producer has matching local file, reference and summary hashes.
+Original Exp8458 replay must still reject its independent original-producer pin
+at original line554. Valid original bytes pass. Rehashed primitive and readiness
+tampering fail. Missing external inputs block; failed owned checks disqualify.
+
+### SCENARIO-REPORT-8486-CONTROLS
+
+Source changes leave q-only inputs and scalar basis unchanged. Full and permuted
+controls have identical capacity. Every intended arm retains a row or missing
+reason. Qualification measures no independent generalization or learning benefit.
