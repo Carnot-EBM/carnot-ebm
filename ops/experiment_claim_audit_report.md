@@ -11,31 +11,12 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 8 |
+| CLAIM_SUPPORTED | 2 |
+| NO_CLAIM | 4 |
+| CANNOT_DETERMINE | 1 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8444_source_control_panel.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no experimental claim to falsify. A passing readiness gate would contradict only the blocking receipt.
-
-## WAS THAT CHECKED
-Yes, the readiness gate was checked: its observed value was 0 against a required 1, and it failed. This records a blocked prerequisite, not an experimental outcome.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `failed_field`: `methods_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8447_brier_online_learning.json
+## experiment_8462_brier_online_learning.json
 
 **NO_CLAIM**
 
@@ -46,103 +27,108 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact records a blocked attempt to run a comparison, without asserting a comparative outcome.
+Not applicable: the artifact is a blocked-gate receipt, with no comparative result to falsify.
 
 ## WAS THAT CHECKED
-No comparison was executed. The prerequisite checks detected a failed methods-readiness gate and blocked execution.
-
-## EVIDENCE
-`"schema": "blocked_gate_check_v1"`, `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_field": "methods_ready_score"`, `"blocked_reason": "actual=0 == expected=1"`, `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8449_v727_persistence_localization.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked measurement receipt. It asserts neither comparative benefit nor an observed zero effect.
-
-## WAS THAT CHECKED
-No empirical comparison completed. All 20 intended observations are censored; the displayed baseline and instrumented timings and paired overheads are null. Authority checks failed. Passing software validation does not establish a performance result, and missing measurements do not establish a tie.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_blocked_persistence_localization`
-- `verdict_class`: `blocked`
-- `completed_count`: `0`
-- `censored_count`: `20`
-- `complete_pairs`: `false`
-- `complete_wall_s`: `null`
-- `missing_reason`: `required_authority_or_operand_absent`
-- `methodology_note`: `Complete disk-backed service clocks preserve original delayed feedback. Nested exclusive spans isolate serialization and storage. Instrumentation overhead stays visible. No arithmetic acceleration or learning benefit is inferred.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8450_journal_equivalence.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: the title describes a qualification objective, while the artifact reports a blocked prerequisite gate. It does not assert journal equivalence or unchanged durable acknowledgments.
-
-## WAS THAT CHECKED
-No journal-equivalence test is reported. The prerequisite gate was checked and failed: expected 1, observed 0. The blocked status accurately reflects that failure.
+No comparative refutation was tested. The prerequisite gate was checked and failed: objective readiness was 0 against a required 1, blocking the experiment.
 
 ## EVIDENCE
 
 - `schema`: `blocked_gate_check_v1`
 - `status`: `blocked`
 - `honest_verdict`: `blocked_gate_check_failed`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `passed`: `false`
+- `failed_field`: `objective_kernel_ready_score`
+- `blocked_reason`: `actual=0 == expected=1`
 - `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8453_v727_arc_seal_and_support.json
+## experiment_8464_v728_persistence_localization.json
 
-**NO_CLAIM**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-NO_CLAIM
+CANNOT_DETERMINE
 
 ## THE HEADLINE CLAIM
-no claim
+The persistence-localization experiment completed with a null result, as reported by the mechanical pre-pass.
 
 ## WHAT WOULD REFUTE IT
-There is no comparative benefit claim to falsify. The limited receipt qualification would fail if intact original/restored receipts were rejected, or missing, forged, or rehashed receipts were accepted.
+Valid paired timing rows meeting the experiment’s criterion for a positive persistence-localization result would contradict the null. The supplied excerpt does not specify that criterion, so a numerical falsifier cannot be identified.
 
 ## WAS THAT CHECKED
-Yes. Custody recovery receipts show original and restored replay exiting 0, and all three corruption controls exiting 1. Support gates record insufficient game overlap and zero resolved outcomes. The artifact reports blocked refinement and makes no generalization claim.
+No—not demonstrably in the supplied excerpt. It ends inside historical model metadata, before the measured paired timing rows, stage summaries, and null-versus-positive decision rule. Passing qualification gates does not establish that the localization null survived a possible refutation. This does not demonstrate a design flaw; it limits what can be reviewed.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_v727_arc_seal_and_support`
-- `arc_receipt_ready_score`: `1`; `arc_support_ready_score`: `0`; `arm_refinement_authorized`: `false`
-- Within `receipts`, `original` and `restored_cold` have `actual_exit`: `0`; `missing`, `forged`, and `rehashed` have `actual_exit`: `1`.
-- `scientific_generalization`: `Exposed engineering evidence supplies no hidden-game or causal learning claim.`
-- `censoring_counts`: `resolved_redirects`: `0`; `pending_redirects`: `12`
+- `complete_clocks`: `true`; `exact_stage_nesting`: `true`.
+- `persistence_profile_ready_score`: `Authentic complete paired clocks and unchanged causal semantics with exact stage nesting and all required checks; favorable bottleneck is unnecessary.`
+- `generalized_learning_benefit_score`: `0`.
+- `exposure_scope`: `retrospective_cached_five_input_engineering_service`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8454_v727_board_operation_boundary.json
+## experiment_8465_v728_journal_equivalence.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The journal preserves reference behavior and durable acknowledgments on the cached engineering fixture under the tested process exits.
+
+## WHAT WOULD REFUTE IT
+A journal response or state differing from the reference for the same transaction, or recovery losing or altering an acknowledged transaction after a tested exit.
+
+## WAS THAT CHECKED
+Yes: equivalence_rows report passing checks at batch sizes 1 and 8; crash_rows report passing recovery checks after actual process exits at named write barriers. These storage operations could have lost acknowledgments or produced divergent states.
+
+The reference behavior is the relevant baseline; matching it supports equivalence. The verifier’s oracle status does not establish added value, but the artifact reports zero learning benefit and explicitly limits its durability scope. The visible rows show no invalid-row inclusion or missing metric key.
+
+## EVIDENCE
+- `equivalence_rows`: `barrier` values `1` and `8`; `passed`: `true`.
+- `crash_rows`: `before_payload`, `after_payload`, `before_fsync`; `actual_exit`: `73`; `passed`: `true`.
+- `completed_count`: `18`; `failed_count`: `0`.
+- `generalized_learning_benefit_score`: `0`.
+- `actual file/directory fsync and private process-exit recovery; physical power-loss behavior is not certified`
+- `Bind immutable invocation operands; engineering equivalence grants no scientific benefit.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8466_v728_journal_service_cost.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The cached same-host journal-service comparison did not establish a primary complete-service speed benefit.
+
+## WHAT WOULD REFUTE IT
+A qualifying paired comparison against the ordinary non-journal service performing identical durable work, with a complete-service speedup whose 95% confidence interval lies entirely above 1.
+
+## WAS THAT CHECKED
+Yes, at the reported cell level: both cells completed all five intended pairs, and both speedup intervals include 1. The timing comparison could have demonstrated a benefit; the reported intervals did not.
+
+The verifier’s oracle role does not make this timing null circular. No positive generalization claim is made. The cited speedup fields exist in both cell rows. Comparator implementation details and repeat-level validity flags are not visible in the supplied excerpt, limiting further audit; they do not contradict the reported null.
+
+## EVIDENCE
+
+- `primary_speed_benefit`: `false`; `tenfold_host_service`: `false`.
+- First cell: `pooled_speedup`: `1.0447833367347368`; `speedup_ci95` endpoints: `0.9942346767648512`, `1.1095895447657544`.
+- Second cell: `pooled_speedup`: `0.9111690109390167`; `speedup_ci95` endpoints: `0.8024861484958734`, `1.0188553601484447`.
+- Both cells: `completed_pairs`: `5`; `intended_pairs`: `5`.
+- `excluded_count`: `0`; `failed_count`: `0`.
+- `exposure_scope`: `retrospective_cached_same_host_engineering_fixture`; `generalized_learning_benefit_score`: `0`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8467_bounded_qwen_evidence.json
 
 **NO_CLAIM**
 
@@ -153,52 +139,54 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this artifact records engineering continuity and blocked readiness, without asserting comparative acceleration or generalization.
+Not applicable: this is a blocked gate receipt, with no claim about Qwen performance or added value to falsify.
 
 ## WAS THAT CHECKED
-No comparative refutation test is shown. The acceptance gates and board operation rows document unsupported operations and incomplete clocks; these are readiness records, not evidence of added value.
+The prerequisite checks were recorded in gates_evaluated: both observed 0 against required 1 and failed. No Qwen evaluation is reported.
 
 ## EVIDENCE
-- `exposure_scope`: `historical_public_labels_retrospective_overlap_unknown; engineering_continuity_only`
-- `current_contract_ready_score`: `0`
-- `compatible_operations`: `false`; `complete_transfer_device_clocks`: `false`
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `runtime_repair_ready_score` and `source_controls_ready_score`: each has `expected` = `1`, `actual` = `0`, and `passed` = `false`.
+- `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8468_v728_arc_generalization_panel.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_8469_v728_board_operation_boundary.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this artifact records an operational boundary and evidence receipts without asserting comparative benefit.
+
+## WAS THAT CHECKED
+Not applicable to a comparative claim. The visible operation rows record host-only execution, and the acceptance gates explicitly withhold operation compatibility and complete device/transfer timing.
+
+## EVIDENCE
+- `Bind original hashes and actual invocation; recording grants no deployment, learning or purchase claim.`
+- `board_boundary_recorded_score`: `1`
+- `compatible_operations`: `false`
+- `complete_transfer_device_clocks`: `false`
+- `compatibility`: `host_only_no_installed_compatible_operation`
 - `full_service_acceleration`: `false`
-- `Bind exact invocation and immutable producer evidence; missing clocks remain null and continuity grants no scientific or acceleration benefit.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8455_v727_gatemate_obligation.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. An obligation row documenting authenticated completion would contradict the receipt’s reported zero completions.
-
-## WAS THAT CHECKED
-Yes, at the receipt level: all seven obligation rows are censored and incomplete, and no evidence delta was supplied. This documents a blocked state. It does not assert verifier value, scientific benefit, or generalization, so oracle circularity does not invalidate a value claim here.
-
-## EVIDENCE
-- `honest_verdict`: `complete_blocked_gatemate_obligation`
-- `verdict_class`: `blocked`
-- `arm`: `read_only_obligation`
-- `completed_count`: `0`; `censored_count`: `7`
-- `censored`: `true`; `completed`: `false`
-- `supplied_evidence_delta`: `[]`
-- `scientific_benefit`: `false`
 - `generalized_learning_benefit_score`: `0`
-- `independent_generalization_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8456_v727_capstone.json
+## experiment_8470_v728_capstone.json
 
 **NO_CLAIM**
 
@@ -209,18 +197,17 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the supplied artifact reports aggregation and readiness checks without asserting comparative scientific benefit.
+Not applicable: the supplied excerpt is an evidence-aggregation and qualification receipt that withholds independent scientific benefit. It asserts no comparative effect to falsify.
 
 ## WAS THAT CHECKED
-Not applicable to a comparative claim. The visible acceptance gates record failures, and independent generalization remains explicitly open. Oracle-defined verification does not create a circular value claim when no added value is asserted.
+No comparative hypothesis is tested here. The gate_check_summary records producer qualification failures. Those failures and the oracle status do not contradict a positive scientific headline, because none is asserted in the supplied text.
 
 ## EVIDENCE
 
 - `scientific_claims_independently_generalize`: `false`
-- `full_current_authority`: `false`
 - `generalized_learning_benefit_score`: `0`
-- `exposure_scope`: `public-label retrospective and historical engineering evidence; independent factuality and hidden-game generalization remain open`
 - `Authority, complete slot accounting and owned validation qualify the reconciliation; none establishes independent scientific benefit.`
+- `public-label retrospective and historical engineering evidence; independent factuality and hidden-game generalization remain open`
 
 ## RECOMMENDATION
 KEEP

@@ -52568,3 +52568,94 @@ V727 never reached; qualify the changed derivative first. Measure complete
 persistence costs. Use new evidence-challenge and variance lessons within those
 bounded studies. Hardware, CUDA recovery and independent factuality remain
 separate conditions. No hardware purchase or external publication is proposed.
+
+## 2026-10-13 — V729 planning scan: qualification, proper loss and durable publication
+
+Recorded before designing the next milestone. Local evidence comes from V728's
+nine primary artifacts and five missing producer slots. Archive completion is
+not scientific success. This scan searched all requested topic areas.
+
+### Selected and new research leads
+
+- [Decomposing Probabilistic Scores](https://arxiv.org/abs/2603.15232),
+  March 2026: distinguish recalibration from source information. Retain scalar
+  spline and source-permutation controls. Their experiment is still unmeasured
+  locally because Exp8458 missed its original-producer-pin rejection branch.
+  Finite ablations do not estimate the paper's population decomposition.
+- [Calibeating Made Simple](https://arxiv.org/html/2603.22167v1), March 2026:
+  proper-loss online prediction motivates matching the update objective to
+  Brier evaluation. Qualify the existing derivative before delayed learning.
+  Carnot's nonlinear delayed learner does not inherit the paper's regret bound.
+- [Online KAN](https://arxiv.org/abs/2602.02056), 2026: local spline support
+  motivates sparse updates and explicit touched-coefficient counts. Retain the
+  qualified basis. No installed FPGA support follows from the authors' hardware.
+- [Capacity-Constrained Online Convex Optimization with Delayed Feedback](https://arxiv.org/abs/2606.11711),
+  June 2026: finite pending feedback changes the learning problem. Fix admission
+  and release across objective arms. Do not repeat the null FIFO/uniform contrast.
+- [VeriHarness](https://arxiv.org/abs/2610.00972), October 2026, and
+  [Decomposed Entailment](https://arxiv.org/abs/2608.05823), August 2026:
+  test evidence spans against plausible shared wrong claims in a bounded local
+  Qwen canary. This is evidence use, not independent factuality certification.
+- [SIFT](https://arxiv.org/abs/2610.04594), October 2026: retain detector
+  variability and seed effects. Duplicate deterministic fits are one observation.
+  The source-feature head is not a reproduction of its hidden-state detector.
+- **New hardware lead:** [Anechoic](https://arxiv.org/abs/2610.13368),
+  October 9, 2026, with [author code](https://github.com/skethz/anechoic).
+  The authors subtract an Onsager reaction term from synchronous Ising updates
+  to reduce immediate flip reversals. Inspectable code makes this a future
+  software diagnostic lead. Their dense Alveo V80 Max-Cut optimizer does not
+  certify Gibbs sampling or fit the installed KV260 image. Defer implementation
+  until a local optimization workload and operation mapping justify it.
+- **New continual-learning lead:** [SAMBAR](https://arxiv.org/abs/2609.32108),
+  September 2026: selective parameter anchoring with multiplier updates targets
+  retention in vision-language-action models. Keep as future context. Carnot's
+  current binding question is later benefit, not a demonstrated retention failure.
+
+### Complete-service engineering source
+
+The [Linux fsync/fdatasync documentation](https://man7.org/linux/man-pages/man2/fsync.2.html)
+separates file durability from directory-entry durability. The latter needs its
+own synchronization. Exp8464's primitive clocks put most measured time in pointer
+directory synchronization. Exp8466's unchanged per-transaction publication
+produced speedup 1.0448, CI95 [0.9942, 1.1096]. A stable append file with explicitly
+qualified creation, acknowledgment, tail recovery and rotation is a different
+mechanism worth testing. Never obtain speed by removing required durability.
+Process-exit tests alone cannot establish physical power-loss behavior.
+
+### Other requested primary topics
+
+| Topic | Primary source checked | Local decision |
+|---|---|---|
+| EBM reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2025/2026](https://arxiv.org/abs/2512.15605) | Keep generator weights frozen. Architectural equivalence is not verification benefit. |
+| Neural constraints | [Certified BNN reasoning, July 2025](https://arxiv.org/abs/2507.02916); [certified constraint reasoning, 2026](https://arxiv.org/abs/2608.14569) | Preserve independent instance checks. The latter's indexed dates conflict; no precise submission date is asserted. |
+| Ising in ML and FPGA sampling | [Parallel inertial Ising, April 2026](https://arxiv.org/abs/2604.17109); [hybrid FPGA decomposition, February 2026](https://arxiv.org/abs/2602.15985) | Distinguish optimization from sampling. Include host and transfer costs. |
+| Energy-guided generation | [Energy-Guided Decoding, July 2025](https://arxiv.org/abs/2507.07731); [draft-conditioned constrained decoding, March 2026](https://arxiv.org/abs/2603.03305) | Vision results and grammatical validity do not certify text factuality. Runtime recovery precedes decoder changes. |
+
+### Secondary channels and limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM reasoning submissions and opened
+  the [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg). Search returned
+  relevant PDFs and unrelated indexed search pages. Browser challenges prevent
+  a complete review inventory. No unseen acceptance or review is claimed.
+- **Semantic Scholar:** attempted citing-paper APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Retrieval remains incomplete. No citation count or absence is inferred.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  It mixes publication years. Verified selected October leads against arXiv.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) Trending. Snapshots
+  were month-old. No current ranking is asserted. Anechoic's author repository
+  is a new implementation lead, not an installed dependency.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [recursive intelligence](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T divides sparse operations across Z1 and companion hardware. Its efficiency
+  figures are estimates. No local TSU access or host-storage benefit follows.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes a constraint reasoning layer. The inspected page supplies no
+  reproducible implementation that changes Carnot's local evidence gates.
+
+Selection boundary: finish the unmeasured information and objective studies after
+specific qualification repairs. Change the measured persistence mechanism before
+another cost comparison. Preserve exposed-data, hardware and runtime limits.

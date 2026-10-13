@@ -9,26 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 4 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_8444_source_control_panel.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because upstream `methods_ready_score` was 0, failing the requirement that it equal 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8447_brier_online_learning.json
+## experiment_8462_brier_online_learning.json
 
 **CHECKABLE**
 
@@ -36,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `methods_ready_score` was 0, failing the gate requiring it to equal 1.
+The experiment was blocked because upstream "objective_kernel_ready_score" was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -44,87 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8449_v727_persistence_localization.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Persistence localization was blocked, with “gate_check_summary” recording failed authority checks and their observed values, and “rows” recording all 20 intended runs as censored.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8450_journal_equivalence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because upstream `persistence_profile_ready_score` was 0, while the gate required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8453_v727_arc_seal_and_support.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible fields claim receipt readiness passes, while support readiness fails and arm refinement is unauthorized.
-
-## WHAT IS MISSING
-The artifact cuts off inside "future_dependencies"; "honest_verdict", "rows", and "per_game_results" are named in "field_principles", but their actual contents are not supplied.
-
-## THE CHECK A READER CANNOT DO
-Does the complete verdict make a comparative claim supported by per-unit results?
-
-## experiment_8454_v727_board_operation_boundary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Board-operation readiness is gated by unmet contract, operation-compatibility, and transfer/device-clock requirements, with failed checks and observed values recorded in "gate_check_summary".
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8455_v727_gatemate_obligation.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The GateMate obligation remains blocked, with failed checks and observed values recorded in "gate_check_summary" and individual missing reasons in "obligation_rows".
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8456_v727_capstone.json
+## experiment_8464_v728_persistence_localization.json
 
 **CANNOT_DETERMINE**
 
@@ -134,12 +38,112 @@ CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
 
-“g2” claims historical FoVer results, including a positive learning contribution, reproduce; the capstone’s headline verdict is not visible.
+All seven "acceptance_gates" are reported as passed.
 
 ## WHAT IS MISSING
 
-The supplied JSON cuts off inside “historical_model_provenance”. Actual “honest_verdict”, “scientific_claims”, and “rows” values are not visible; “field_principles” merely names them. “gate_check_summary” does provide failed checks and observed values, so blocker diagnostics are present.
+The artifact cuts off inside "historical_model_provenance". Actual "honest_verdict", "verdict_class", "paired_repeat_rows", "rows", and "stage_rows" are not visible; those names appear only in "field_principles". "gate_check_summary" is empty, but no blocked verdict is visible.
 
 ## THE CHECK A READER CANNOT DO
 
-Does the complete artifact contain per-unit paired metrics supporting the positive learning contribution reported in “g2”?
+Do per-unit measurements support the reported acceptance gates, or are those gates supported only by aggregates?
+
+## experiment_8465_v728_journal_equivalence.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+“acceptance_gates” marks five checks true, but the final headline claim is not visible.
+
+## WHAT IS MISSING
+The artifact ends mid-row in “acknowledgment_ledger”; the remaining evidence and final verdict are unavailable.
+
+## THE CHECK A READER CANNOT DO
+Does the final verdict make a comparative claim or report a blocker supported by the remaining evidence?
+
+## experiment_8466_v728_journal_service_cost.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible results report pooled speedups of 1.0448× and 0.9112× for batches 1 and 8, with both speed acceptance gates false.
+
+## WHAT IS MISSING
+The artifact cuts off inside "historical_model_provenance". "cell_results" provides aggregate metrics for five pairs per cell; actual "paired_repeat_rows", "rows", and "honest_verdict" values are not visible—their names appear only in "field_principles".
+
+## THE CHECK A READER CANNOT DO
+Did most paired runs support each reported "pooled_speedup", or did one outlier drive it?
+
+## experiment_8467_bounded_qwen_evidence.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because both readiness gates observed 0 when they required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8468_v728_arc_generalization_panel.json
+
+**CHECKABLE**
+
+## VERDICT
+
+CHECKABLE
+
+## WHAT THE CLAIM IS
+
+The panel was disqualified with all 16 episodes unstarted and no scientific benefit established.
+
+## WHAT IS MISSING
+
+nothing
+
+## THE CHECK A READER CANNOT DO
+
+none
+
+## experiment_8469_v728_board_operation_boundary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Neither NPU nor TSU is qualified, with "compatible_operations" and "complete_transfer_device_clocks" recorded as false in "acceptance_gates".
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8470_v728_capstone.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The headline claim cannot be established from this truncated artifact.
+
+## WHAT IS MISSING
+Actual values for `"honest_verdict"`, `"scientific_claims"`, and `"rows"`: they are named in `"field_principles"`, but the supplied JSON ends mid-`"historical_model_provenance"` before providing them; `"gate_check_summary"` does provide blocker diagnostics.
+
+## THE CHECK A READER CANNOT DO
+Does the final headline assert a comparative result supported by per-unit metrics, or only aggregate summaries?
