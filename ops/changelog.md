@@ -22264,3 +22264,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-14: Qualify direct supervisor action-effect receipts on the reachable live policy (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v732_arc_effect_receipt_qualification; results/experiment_8522_v732_arc_effect_receipt_qualification.json
 - 2026-10-14: Measure fresh adapter-withheld supervisor effects with direct application receipts (⚠️ Research Finding) — honest_verdict=complete_null_v732_arc_effect_panel; results/experiment_8523_v732_arc_effect_panel.json
 - 2026-10-14: Map qualified append cost to KV260 operations and preserve physical obligations (⚠️ Blocked) — honest_verdict=complete_blocked_v732_board_cost_boundary; results/experiment_8524_v732_board_cost_boundary.json
+- 2026-10-14: Reconcile fourteen terminal outcomes and decide scientific continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v732_capstone; results/experiment_8525_v732_capstone.json
