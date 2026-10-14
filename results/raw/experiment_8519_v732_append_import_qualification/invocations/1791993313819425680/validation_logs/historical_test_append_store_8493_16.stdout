@@ -1,0 +1,219 @@
+F...FFEE                                                                 [100%]
+==================================== ERRORS ====================================
+______ ERROR at setup of test_full_primitive_replay_and_negative_controls ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v73...invocations/1791993313819425680/validation/test_append_store_8493-16'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """SCENARIO-REPORT-8493-TERMINAL: authenticate and execute the complete original tape panel."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+        raw = tmp_path_factory.mktemp("qualified8493")
+        result = r.measure(r.ROOT, raw)
+>       assert not result["gate_check_summary"], result["gate_check_summary"]
+E       AssertionError: [{'check': 'activated_full_v730_authority', 'expected': True, 'expected_sha256': None, 'field': 'activated_full_v730_authority', ...}]
+E       assert not [{'check': 'activated_full_v730_authority', 'expected': True, 'expected_sha256': None, 'field': 'activated_full_v730_authority', ...}]
+
+tests/python/test_append_store_8493.py:311: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8493] phase=preconditions completed=0 pending=0
+___________ ERROR at setup of test_admission_fail_closed[authority] ____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v73...invocations/1791993313819425680/validation/test_append_store_8493-16'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+        """SCENARIO-REPORT-8493-TERMINAL: authenticate and execute the complete original tape panel."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+        raw = tmp_path_factory.mktemp("qualified8493")
+        result = r.measure(r.ROOT, raw)
+>       assert not result["gate_check_summary"], result["gate_check_summary"]
+E       AssertionError: [{'check': 'activated_full_v730_authority', 'expected': True, 'expected_sha256': None, 'field': 'activated_full_v730_authority', ...}]
+E       assert not [{'check': 'activated_full_v730_authority', 'expected': True, 'expected_sha256': None, 'field': 'activated_full_v730_authority', ...}]
+
+tests/python/test_append_store_8493.py:311: AssertionError
+=================================== FAILURES ===================================
+___________________ test_actual_process_exits[after_reclaim] ___________________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-16/test_actual_process_exits_afte0')
+barrier = 'after_reclaim'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...1993313819425680/validation/test_append_store_8493-16/test_actual_process_exits_afte0/after_reclaim/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-16/test_actual_process_exits_afte0/after_reclaim/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_after_reclaim completed=0 pending=1
+[exp8205] phase=after_subprocess_after_reclaim completed=1 pending=0
+___________________ test_small_worker_and_concurrent_clients ___________________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-16/test_small_worker_and_concurre0')
+
+    def test_small_worker_and_concurrent_clients(tape, tmp_path):
+        """SCENARIO-VERIFY-8493-RECOVERY: real writers serialize duplicate requests."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+        small = deepcopy(tape)
+        small["transactions"] = small["transactions"][:2]
+        frozen = tmp_path / "frozen.json"
+        atomic_json(frozen, small)
+        command = [
+            sys.executable,
+            "-u",
+            str(r.ROOT / r.CLI),
+            "--worker",
+            str(frozen),
+            "--store",
+            str(tmp_path / "worker"),
+            "--barrier",
+            "none",
+        ]
+        child = subprocess.run(command, capture_output=True, timeout=60)
+>       assert child.returncode == 0, child.stderr.decode()
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8493_v730_append_store_qualification.py", line 14, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_store_runner_8493.py", line 150, in main
+E             return r.worker(args.worker, args.store, args.barrier)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_store_qualification_8493.py", line 153, in worker
+E             store.initialize()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_store_8493.py", line 120, in initialize
+E             self._publish(
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_store_8493.py", line 104, in _publish
+E             os.replace(temporary, target)
+E           File "/tmp/carnot-child-results-guard-2e0xt64e/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-16/test_small_worker_and_concurre0/worker/store/.initial-seal.json.pending' -> '/tmp/carnot-pytest-artifacts-l_szmkey/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-16/test_small_worker_and_concurre0/worker/store/initial-seal.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...3313819425680/validation/test_append_store_8493-16/test_small_worker_and_concurre0/worker/store/initial-seal.json\'\n').returncode
+
+tests/python/test_append_store_8493.py:240: AssertionError
+___________________ test_private_blocked_runner_and_manifest ___________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-16/test_private_blocked_runner_an0')
+
+    def test_private_blocked_runner_and_manifest(tmp_path):
+        """SCENARIO-VERIFY-8493-VALIDATION: exact collections and actual private publication."""
+        from carnot.reporting import append_store_qualification_8493 as r
+        from carnot.reporting import append_store_runner_8493 as runner
+    
+        private = tmp_path / "plan"
+        private.mkdir()
+        plan = runner.manifest(private)
+        for spec in plan:
+            if (
+                spec["name"].startswith("collect_")
+                and spec["collected_node_ids"][0].split("::")[0] != r.TEST
+            ):
+                nodes = [
+                    n
+                    for shard in plan
+                    if shard["name"].startswith("historical_")
+                    for n in shard["collected_node_ids"]
+                    if n.split("::")[0] == spec["collected_node_ids"][0].split("::")[0]
+                ]
+                assert nodes == spec["collected_node_ids"]
+        assert "patch=subprocess,_exit" in (private / "coverage.ini").read_text()
+        output = tmp_path / (r.NAME + ".json")
+        child = subprocess.run(
+            [
+                sys.executable,
+                "-u",
+                str(r.ROOT / r.CLI),
+                "--private-control",
+                "--root",
+                str(tmp_path / "missing"),
+                "--output",
+                str(output),
+            ],
+            capture_output=True,
+            timeout=120,
+        )
+>       assert child.returncode == 0, child.stdout.decode() + child.stderr.decode()
+E       AssertionError: [exp8493] phase=start_no_model_load_MODEL_SPECS_empty_current_llm_calls_zero completed=0 pending=0
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...ut=b'[exp8493] phase=start_no_model_load_MODEL_SPECS_empty_current_llm_calls_zero completed=0 pending=0\n', stderr=b'').returncode
+
+tests/python/test_append_store_8493.py:299: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_collect_test_append_store_8493 completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_test_append_store_8493 completed=1 pending=0
+[exp8205] phase=before_subprocess_collect_test_experiment_7891_v685_authority_lifecycle completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_test_experiment_7891_v685_authority_lifecycle completed=1 pending=0
+[exp8205] phase=before_subprocess_collect_test_primary_publication_7928 completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_test_primary_publication_7928 completed=1 pending=0
+[exp8205] phase=before_subprocess_collect_test_current_work_receipt completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_test_current_work_receipt completed=1 pending=0
+[exp8205] phase=before_subprocess_collect_test_restricted_decision_audit_8210 completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_test_restricted_decision_audit_8210 completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[after_reclaim]
+FAILED tests/python/test_append_store_8493.py::test_small_worker_and_concurrent_clients
+FAILED tests/python/test_append_store_8493.py::test_private_blocked_runner_and_manifest
+ERROR tests/python/test_append_store_8493.py::test_full_primitive_replay_and_negative_controls
+ERROR tests/python/test_append_store_8493.py::test_admission_fail_closed[authority]
+3 failed, 3 passed, 1 warning, 2 errors in 75.15s (0:01:15)

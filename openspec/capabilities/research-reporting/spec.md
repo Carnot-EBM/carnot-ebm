@@ -100438,3 +100438,27 @@ registered derivative through shipped store/evaluator adapters. The thin direct
 CLI uses `brier_online_runner_8517`; its raw invocation records the final
 measurement, rejection controls, historical collection, validation and bound
 publication. The research note defines readiness, costs and exposure limits.
+
+## REQ-REPORT-8519: Qualify the explicit append reader import
+
+Authenticate activated V732 task and original V730 source bytes before replay.
+Replace only the implicit numeric-module append export with the explicit Store
+import. Preserve Exp8494 disqualification, all primitive clocks and thresholds.
+Readiness requires current strict typing, genuine unit/child coverage and private
+standalone replay; it is no speed observation. No benchmark or model is run.
+Missing external inputs block; owned check failure disqualifies. Publish checked
+terminal bytes and bind the unchanged downstream consumers to those bytes.
+
+### SCENARIO-REPORT-8519-TERMINAL
+
+The dated private CLI accepts 20261014, retains missing gate operands, and rejects
+intentional failure and self-consistently rehashed tampering in fresh processes.
+The historical store remains qualified under original dates and authority.
+Engineering fixture readiness is circular_positive with zero generalization.
+Conductor owns ops/status/changelog/traceability reconciliation.
+
+Implementation2026-10-14: `append_import_qualification_8519` and its thin dated
+CLI bind current task authority to independently pinned historical operands.
+The preserved old reader and exact strict-mypy failure live in the historical
+raw directory. The current reader uses a direct Store import. The result keeps
+readiness separate from the unchanged Exp8494 disqualified timing scope.

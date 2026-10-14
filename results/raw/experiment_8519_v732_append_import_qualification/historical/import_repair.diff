@@ -1,0 +1,19 @@
+--- historical/append_service_cost_8494.py
++++ python/carnot/reporting/append_service_cost_8494.py
+@@ -22,6 +22,7 @@
+ from carnot.reporting.primary_publication import read_bound_sidecar, reader_receipt
+ from carnot.reporting.v709_execution import child
+ from carnot.verify import append_service_cost_8494 as k
++from carnot.verify.append_store_8493 import Store
+ 
+ Json = dict[str, Any]
+ ROOT = upstream.ROOT
+@@ -306,7 +307,7 @@
+                         return False
+                 target = Path(folder) / str(index)
+                 shutil.copytree(Path(primitive["directory"]) / "store", target)
+-                store = (k.base.Snapshot if row["arm"] == "snapshot" else k.append.Store)(
++                store = (k.base.Snapshot if row["arm"] == "snapshot" else Store)(
+                     target, frozen
+                 )
+                 if k.base.encode(store.read()) != k.base.encode(primitive["final"]):

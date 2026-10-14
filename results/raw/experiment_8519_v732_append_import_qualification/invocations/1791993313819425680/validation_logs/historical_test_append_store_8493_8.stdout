@@ -1,0 +1,514 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+_______________ test_actual_process_exits[after_acknowledgment] ________________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte0')
+barrier = 'after_acknowledgment'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...3819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte0/after_acknowledgment/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte0/after_acknowledgment/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_after_acknowledgment completed=0 pending=1
+[exp8205] phase=after_subprocess_after_acknowledgment completed=1 pending=0
+______________ test_actual_process_exits[before_checkpoint_fsync] ______________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo0')
+barrier = 'before_checkpoint_fsync'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...9425680/validation/test_append_store_8493-8/test_actual_process_exits_befo0/before_checkpoint_fsync/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo0/before_checkpoint_fsync/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_before_checkpoint_fsync completed=0 pending=1
+[exp8205] phase=after_subprocess_before_checkpoint_fsync completed=1 pending=0
+______________ test_actual_process_exits[after_checkpoint_fsync] _______________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte1')
+barrier = 'after_checkpoint_fsync'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...19425680/validation/test_append_store_8493-8/test_actual_process_exits_afte1/after_checkpoint_fsync/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte1/after_checkpoint_fsync/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_after_checkpoint_fsync completed=0 pending=1
+[exp8205] phase=after_subprocess_after_checkpoint_fsync completed=1 pending=0
+_____________ test_actual_process_exits[before_checkpoint_replace] _____________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo1')
+barrier = 'before_checkpoint_replace'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...25680/validation/test_append_store_8493-8/test_actual_process_exits_befo1/before_checkpoint_replace/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo1/before_checkpoint_replace/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_before_checkpoint_replace completed=0 pending=1
+[exp8205] phase=after_subprocess_before_checkpoint_replace completed=1 pending=0
+_____________ test_actual_process_exits[after_checkpoint_replace] ______________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte2')
+barrier = 'after_checkpoint_replace'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...425680/validation/test_append_store_8493-8/test_actual_process_exits_afte2/after_checkpoint_replace/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte2/after_checkpoint_replace/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_after_checkpoint_replace completed=0 pending=1
+[exp8205] phase=after_subprocess_after_checkpoint_replace completed=1 pending=0
+_______________ test_actual_process_exits[before_directory_sync] _______________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo2')
+barrier = 'before_directory_sync'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo2/before_directory_sync/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo2/before_directory_sync/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_before_directory_sync completed=0 pending=1
+[exp8205] phase=after_subprocess_before_directory_sync completed=1 pending=0
+_______________ test_actual_process_exits[after_directory_sync] ________________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte3')
+barrier = 'after_directory_sync'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...3819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte3/after_directory_sync/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_afte3/after_directory_sync/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_after_directory_sync completed=0 pending=1
+[exp8205] phase=after_subprocess_after_directory_sync completed=1 pending=0
+__________________ test_actual_process_exits[before_reclaim] ___________________
+
+tape = {'bundle': {'head': {'arm': 'spline34', 'coefficients': [0.14173259972910465, 0.35117037914234955, -0.0661663652075527...be850ce751dd34f6c0a234', 'config_hash': 'sha256:02fe3e48881c73904cc491345447783e8c658e821cfea5c990283d986f9bb6b2', ...}
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo3')
+barrier = 'before_reclaim'
+
+    @pytest.mark.parametrize("barrier", k.BARRIERS)
+    def test_actual_process_exits(tape, tmp_path, barrier):
+        """SCENARIO-VERIFY-8493-RECOVERY: every actual exit retains returned acknowledgments."""
+        from carnot.reporting import append_store_qualification_8493 as r
+    
+>       primitive = r.crash(tape, tmp_path / barrier, barrier)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_append_store_8493.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/append_store_qualification_8493.py:195: in crash
+    acknowledgments = json.loads((directory / "acknowledged.json").read_bytes())["rows"]
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/in...1993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo3/before_reclaim/acknowledged.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-8/test_actual_process_exits_befo3/before_reclaim/acknowledged.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_before_reclaim completed=0 pending=1
+[exp8205] phase=after_subprocess_before_reclaim completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[after_acknowledgment]
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[before_checkpoint_fsync]
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[after_checkpoint_fsync]
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[before_checkpoint_replace]
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[after_checkpoint_replace]
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[before_directory_sync]
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[after_directory_sync]
+FAILED tests/python/test_append_store_8493.py::test_actual_process_exits[before_reclaim]
+8 failed, 1 warning in 16.83s

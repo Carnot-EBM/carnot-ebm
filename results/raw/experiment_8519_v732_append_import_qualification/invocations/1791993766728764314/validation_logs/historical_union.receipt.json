@@ -1,0 +1,27 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-c",
+    "import json; from pathlib import Path; c=json.loads(Path('/var/tmp/exp8519-validation-tgnbnpye/collections.json').read_text()); p=json.loads(Path('/var/tmp/exp8519-validation-tgnbnpye/plan.json').read_text())['commands']; a=[n for x in c['collections'] for n in x['nodes']]; b=[n for x in p if x['name'].startswith('historical_') for n in x.get('nodes',[])]; assert a==b and len(a)==len(set(a)); print(len(a), 'original nodes preserved')"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import json; from pathlib import Path; c=json.loads(Path('\"'\"'/var/tmp/exp8519-validation-tgnbnpye/collections.json'\"'\"').read_text()); p=json.loads(Path('\"'\"'/var/tmp/exp8519-validation-tgnbnpye/plan.json'\"'\"').read_text())['\"'\"'commands'\"'\"']; a=[n for x in c['\"'\"'collections'\"'\"'] for n in x['\"'\"'nodes'\"'\"']]; b=[n for x in p if x['\"'\"'name'\"'\"'].startswith('\"'\"'historical_'\"'\"') for n in x.get('\"'\"'nodes'\"'\"',[])]; assert a==b and len(a)==len(set(a)); print(len(a), '\"'\"'original nodes preserved'\"'\"')'",
+  "deadline_s": 30,
+  "duration_s": 0.032139597,
+  "ended_monotonic_ns": 314162671149982,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993766728764314/validation_logs/historical_union.stdout",
+  "log_sha256": "sha256:81df1b981a538e972c19e200eedab6d5ab43cd0d39207c8007f196eb34ab5e55",
+  "name": "historical_union",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 314162639010385,
+  "started_wall_ns": 1791994407418888184,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993766728764314/validation_logs/historical_union.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993766728764314/validation_logs/historical_union.stdout",
+  "stdout_sha256": "sha256:81df1b981a538e972c19e200eedab6d5ab43cd0d39207c8007f196eb34ab5e55",
+  "timed_out": false
+}

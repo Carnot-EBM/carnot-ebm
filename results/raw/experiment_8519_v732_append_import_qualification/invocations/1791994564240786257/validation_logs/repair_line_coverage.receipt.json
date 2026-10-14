@@ -1,0 +1,27 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-c",
+    "import ast,json; from pathlib import Path; from coverage import CoverageData; p=Path('python/carnot/reporting/append_service_cost_8494.py').absolute(); t=ast.parse(p.read_text()); lines={n.lineno for n in ast.walk(t) if (isinstance(n,ast.ImportFrom) and n.module=='carnot.verify.append_store_8493') or (isinstance(n,ast.Name) and n.id=='Store')}; d=CoverageData('/var/tmp/exp8519-validation-srelb54l/.coverage'); d.read(); covered=set(d.lines(str(p)) or []); proof=dict(owned_lines=sorted(lines),covered_lines=sorted(lines & covered)); Path('/var/tmp/exp8519-validation-srelb54l/repair_coverage.json').write_text(json.dumps(proof)); assert len(lines)==2 and lines<=covered; print(proof)"
+  ],
+  "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import ast,json; from pathlib import Path; from coverage import CoverageData; p=Path('\"'\"'python/carnot/reporting/append_service_cost_8494.py'\"'\"').absolute(); t=ast.parse(p.read_text()); lines={n.lineno for n in ast.walk(t) if (isinstance(n,ast.ImportFrom) and n.module=='\"'\"'carnot.verify.append_store_8493'\"'\"') or (isinstance(n,ast.Name) and n.id=='\"'\"'Store'\"'\"')}; d=CoverageData('\"'\"'/var/tmp/exp8519-validation-srelb54l/.coverage'\"'\"'); d.read(); covered=set(d.lines(str(p)) or []); proof=dict(owned_lines=sorted(lines),covered_lines=sorted(lines & covered)); Path('\"'\"'/var/tmp/exp8519-validation-srelb54l/repair_coverage.json'\"'\"').write_text(json.dumps(proof)); assert len(lines)==2 and lines<=covered; print(proof)'",
+  "deadline_s": 30,
+  "duration_s": 0.065387807,
+  "ended_monotonic_ns": 315457884495015,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791994564240786257/validation_logs/repair_line_coverage.stdout",
+  "log_sha256": "sha256:ead7be2e370279a5ceba2a7909d70855be37f4cf3567fec9eeae6803e1544c9f",
+  "name": "repair_line_coverage",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 315457819107208,
+  "started_wall_ns": 1791995702598965831,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791994564240786257/validation_logs/repair_line_coverage.stderr",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791994564240786257/validation_logs/repair_line_coverage.stdout",
+  "stdout_sha256": "sha256:ead7be2e370279a5ceba2a7909d70855be37f4cf3567fec9eeae6803e1544c9f",
+  "timed_out": false
+}

@@ -54978,3 +54978,37 @@ The runner collects unchanged historical node IDs, uses isolated serial pytest
 shards and preserves their aggregate1800s gate. Final receipts record scoped
 coverage, lint/types/spec checks and exact publication consumers. No historical
 primary, active roadmap, conductor or generator weight changes.
+
+## REQ-VERIFY-8519: Preserve append semantics after import repair
+
+Reproduce the recorded strict-mypy attr-defined error in private scratch before
+the explicit consumer import repair. Do not change arithmetic, durable barriers,
+benchmark thresholds or historical assertions. Authenticate and cold-replay the
+original crash/equivalence operands and complete clocks with unchanged reducers.
+Hash measurement kernel, report reader and qualification code separately.
+
+### SCENARIO-VERIFY-8519-IMPORT
+
+A regression requires the direct Store import, strict mypy success and real
+private replay. All original transition, framing, short-write, fsync-before-ack,
+namespace, checkpoint32, tail, duplicate and interior-corruption tests stay intact.
+
+### SCENARIO-VERIFY-8519-VALIDATION
+
+Collect historical test nodes first, then run their exact union in bounded,
+disjoint serial shards. E2E-018/021 retain private roots and historical dates.
+Require 100 percent newly owned statements from genuine unit and child coverage.
+Missing, malformed and rehashed evidence rejects. Killed children fail validation.
+Measurement ends before 3600 seconds; reserve at least 900 within the 4800 cap.
+
+Implementation2026-10-14: the qualification runner freezes original node unions,
+uses bounded serial shards and retains unit/child coverage data before report
+cleanup. A separate check requires coverage of both repaired reader statements.
+Cold replay uses the shipped reducers and retained disk states. Terminal checks
+use unchanged publication, adversarial, strict-row and downstream consumers.
+
+The private historical pytest adapter reuses `frozen_inputs` with original sealed
+V730 design/active hashes. This preserves the original fixture's authority checks
+without editing either roadmap or any historical assertion. Its own regression
+checks real original admission, rejection of changed authority and restoration
+of current bytes.

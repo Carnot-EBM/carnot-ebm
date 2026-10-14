@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8493_v730_append_store_qualification.py", line 14, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_store_runner_8493.py", line 150, in main
+    return r.worker(args.worker, args.store, args.barrier)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_store_qualification_8493.py", line 153, in worker
+    store.initialize()
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_store_8493.py", line 120, in initialize
+    self._publish(
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_store_8493.py", line 104, in _publish
+    os.replace(temporary, target)
+  File "/tmp/carnot-child-results-guard-lr__hzvm/sitecustomize.py", line 76, in moved
+    return real(src, dest if dest is not None else dst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-0/test_actual_process_exits_befo1/before_fsync/store/.initial-seal.json.pending' -> '/tmp/carnot-pytest-artifacts-h0pe6d66/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_store_8493-0/test_actual_process_exits_befo1/before_fsync/store/initial-seal.json'

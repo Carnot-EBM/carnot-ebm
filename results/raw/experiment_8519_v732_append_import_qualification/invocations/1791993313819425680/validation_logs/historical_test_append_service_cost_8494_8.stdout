@@ -1,0 +1,167 @@
+.EFE....                                                                 [100%]
+==================================== ERRORS ====================================
+_____________________ ERROR at setup of test_invalid_work ______________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v73...tions/1791993313819425680/validation/test_append_service_cost_8494-8'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """SCENARIO-VERIFY-8494-PAIRS: real fresh children retain original sealed work."""
+        private = tmp_path_factory.mktemp("append8494")
+        value = r.read(r.reference(r.ROOT / r.upstream.UPSTREAM))
+        tape = r.read(value["transition_fixture"]["tape_references"][1])
+        atomic_json(private / "frozen.json", tape)
+        rows = []
+        for arm in ("snapshot", "append"):
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    "-u",
+                    str(r.ROOT / r.CLI),
+                    "--worker",
+                    str(private / "frozen.json"),
+                    "--store",
+                    str(private / arm),
+                    "--arm",
+                    arm,
+                ],
+                capture_output=True,
+                timeout=120,
+            )
+>           assert proc.returncode == 0, proc.stderr.decode()
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8494_v730_append_service_cost.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_service_cost_runner_8494.py", line 34, in main
+E                 return r.worker(args.worker, args.store, args.arm)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_service_cost_8494.py", line 120, in worker
+E                 row = k.run_repeat(frozen, directory, arm)
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_service_cost_8494.py", line 112, in run_repeat
+E                 row = legacy.run_repeat(frozen, directory, "journal" if arm == "append" else arm)
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/journal_service_cost_8466.py", line 65, in run_repeat
+E                 store.initialize()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/journal_equivalence_8465.py", line 298, in initialize
+E                 self.store.commit(oracle(self.frozen, 0)["state"])
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/direct_state_qualification_8404.py", line 66, in commit
+E                 self._commit(state, hook)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/direct_atomic_state_8376.py", line 207, in commit
+E                 temporary.replace(target)
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E                 os.replace(self, target)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_service_cost_8494.py", line 75, in counted_replace
+E                 replaced(src, dst, *args, **kwargs)
+E               File "/tmp/carnot-child-results-guard-3ne4z_ka/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_service_cost_8494-8/append84940/snapshot/store/.state.tmp' -> '/tmp/carnot-pytest-artifacts-umshr59l/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_service_cost_8494-8/append84940/snapshot/store/version-6a9a120c0647010c847df1a848c52cadd4af08dc795e1d3dfaeb9f135d9ed66a.json'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...t_8494-8/append84940/snapshot/store/version-6a9a120c0647010c847df1a848c52cadd4af08dc795e1d3dfaeb9f135d9ed66a.json\'\n').returncode
+
+tests/python/test_append_service_cost_8494.py:41: AssertionError
+______________ ERROR at setup of test_operations_and_pair_rejects ______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v73...tions/1791993313819425680/validation/test_append_service_cost_8494-8'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """SCENARIO-VERIFY-8494-PAIRS: real fresh children retain original sealed work."""
+        private = tmp_path_factory.mktemp("append8494")
+        value = r.read(r.reference(r.ROOT / r.upstream.UPSTREAM))
+        tape = r.read(value["transition_fixture"]["tape_references"][1])
+        atomic_json(private / "frozen.json", tape)
+        rows = []
+        for arm in ("snapshot", "append"):
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    "-u",
+                    str(r.ROOT / r.CLI),
+                    "--worker",
+                    str(private / "frozen.json"),
+                    "--store",
+                    str(private / arm),
+                    "--arm",
+                    arm,
+                ],
+                capture_output=True,
+                timeout=120,
+            )
+>           assert proc.returncode == 0, proc.stderr.decode()
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8494_v730_append_service_cost.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_service_cost_runner_8494.py", line 34, in main
+E                 return r.worker(args.worker, args.store, args.arm)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/append_service_cost_8494.py", line 120, in worker
+E                 row = k.run_repeat(frozen, directory, arm)
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_service_cost_8494.py", line 112, in run_repeat
+E                 row = legacy.run_repeat(frozen, directory, "journal" if arm == "append" else arm)
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/journal_service_cost_8466.py", line 65, in run_repeat
+E                 store.initialize()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/journal_equivalence_8465.py", line 298, in initialize
+E                 self.store.commit(oracle(self.frozen, 0)["state"])
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/direct_state_qualification_8404.py", line 66, in commit
+E                 self._commit(state, hook)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/direct_atomic_state_8376.py", line 207, in commit
+E                 temporary.replace(target)
+E               File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E                 os.replace(self, target)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/append_service_cost_8494.py", line 75, in counted_replace
+E                 replaced(src, dst, *args, **kwargs)
+E               File "/tmp/carnot-child-results-guard-3ne4z_ka/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_service_cost_8494-8/append84940/snapshot/store/.state.tmp' -> '/tmp/carnot-pytest-artifacts-umshr59l/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_service_cost_8494-8/append84940/snapshot/store/version-6a9a120c0647010c847df1a848c52cadd4af08dc795e1d3dfaeb9f135d9ed66a.json'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...t_8494-8/append84940/snapshot/store/version-6a9a120c0647010c847df1a848c52cadd4af08dc795e1d3dfaeb9f135d9ed66a.json\'\n').returncode
+
+tests/python/test_append_service_cost_8494.py:41: AssertionError
+=================================== FAILURES ===================================
+_______________________________ test_missing_cli _______________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8519_v732_append_import_qualification/invocations/1791993313819425680/validation/test_append_service_cost_8494-8/test_missing_cli0')
+
+    def test_missing_cli(tmp_path):
+        """SCENARIO-REPORT-8494-TERMINAL: private absence is blocked, never an inferred null."""
+        output = tmp_path / (r.NAME + ".json")
+        proc = subprocess.run(
+            [
+                sys.executable,
+                "-u",
+                str(r.ROOT / r.CLI),
+                "--private-control",
+                "--root",
+                str(tmp_path / "missing"),
+                "--output",
+                str(output),
+            ],
+            capture_output=True,
+            timeout=180,
+        )
+>       assert proc.returncode == 0, proc.stderr.decode()
+E       AssertionError: 
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...ut=b'[exp8494] phase=start_no_model_load_MODEL_SPECS_empty_current_llm_calls_zero completed=0 pending=0\n', stderr=b'').returncode
+
+tests/python/test_append_service_cost_8494.py:125: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_append_service_cost_8494.py::test_missing_cli - Asse...
+ERROR tests/python/test_append_service_cost_8494.py::test_invalid_work - Asse...
+ERROR tests/python/test_append_service_cost_8494.py::test_operations_and_pair_rejects
+1 failed, 5 passed, 1 warning, 2 errors in 7.03s
