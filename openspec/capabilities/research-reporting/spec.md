@@ -100211,3 +100211,29 @@ Given zero resolved outcomes and unrecorded application hashes, the audit emits
 a terminal null, an explicit missing-data map and no refinement authorization.
 The true induction latch at selection disproves an already-false live diagnosis.
 Model-disabled fixtures distinguish entering the induction tier from generation.
+## REQ-REPORT-8510: Preserve the V731 board cost and physical boundary
+
+Bind the activated thirteen-task V731 authority and invocation date 20261014.
+Use the shipped original board reader and sealed historical dates and hashes.
+Import Exp8507 only with readiness one, required checks true, bound bytes and
+successful fresh primitive replay. Otherwise retain dated Exp8466 clocks.
+Keep missing current fields distinct from measured zero and Exp8494 disqualification.
+KV260 supports quadratic Ising k_max<=5. PolarFire graduation is Linux CPU dispatch
+with matching hashes. Neither establishes spline/Brier updates or durable storage.
+Compute counterfactual ceilings only from measured eligible shares. Keep the
+five-input historical cost separate from unmeasured nine-input learning cost.
+Preserve GateMate source hashes and IDCODE0xffffffff. Reopening requires source
+recovery, dated physical change, IDCODE0x20000001, n16 flash and sample/hash smoke.
+Record Online KAN, Anechoic and Z1T as future leads with host/transfer limits.
+Keep NPU and TSU unqualified, deployment false, model calls zero and weights frozen.
+
+### SCENARIO-REPORT-8510-OPERANDS
+
+Complete accounting can score one while current cost and physical deployment
+remain blocked. Missing clocks remain null. Qualified zero clocks stay zero.
+No unchanged physical retry or purchase follows from this evidence inventory.
+
+### SCENARIO-REPORT-8510-REPLAY
+
+Fresh replay rejects missing inputs and self-consistently rehashed summaries
+or primitive operands. Missing external evidence blocks; owned failures disqualify.

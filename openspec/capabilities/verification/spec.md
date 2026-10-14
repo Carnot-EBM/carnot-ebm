@@ -54841,3 +54841,16 @@ Owned validation failure disqualifies; unchanged external absence blocks.
 #### SCENARIO-VERIFY-8509
 Private CLI publication and cold replay pass. A changed aggregate, changed
 primitive seal, missing input or intentional child failure cannot claim readiness.
+## REQ-VERIFY-8510: Validate bounded V731 board evidence before publication
+
+### SCENARIO-VERIFY-8510-CLI
+
+Accept only date 20261014. Run private CLI controls, missing input, intentional
+failure and rehashed tampering. Require scoped unit tests, Ruff check/format,
+strict mypy, spec coverage and genuine 100 percent owned statement coverage,
+including subprocess shards and rejection paths. Collect historical nodes first;
+execute bounded disjoint serial shards and prove their union equals collection.
+E2E-018 and E2E-021 retain private roots and original dates. Preserve unchanged
+publication, adversarial and strict-row consumers. Bind sidecars to terminal
+bytes and verify the actual reader. Stop measurement by 3600 seconds and reserve
+900 seconds within 4800. No full repository suite or historical primary writes.
