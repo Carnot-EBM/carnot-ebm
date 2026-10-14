@@ -205,3 +205,34 @@ Not measured: whether any current conductor task does this.
 
 **Time.** About 1,730 s per median induction at 36 tok/s. Twenty attempts one after another
 take roughly 10 hours. The conductor keeps running throughout, because it does not use card 1.
+
+## Result of the single-cell rerun (appended 2026-10-13)
+
+The rerun ran one cell at a time on card 1, with the shipped Qwen3.8-27B proposer
+(`--k 1`). Commit `6e50c652f6`, directory `results/arc_induction_plans_20261011_k1/`.
+
+| Measure | Value |
+|---|---|
+| Cells | 25, no cell errors |
+| Induce attempts | 31 |
+| Attempts that installed a plan | 10 (ar25, lp85, ls20, r11l, sc25, sk48, sp80, su15, tn36, vc33) |
+| First wins | 5 (ar25, sp80, su15, vc33 reached level 1; lp85 reached level 2) |
+| Main skip reason | heldout_transition_verification_failed, 13 |
+| proposer_failed | 6, all generator timeouts |
+| Wall time | 45.8 hours |
+
+**Cause of proposer_failed.** The generator call timed out (`TimeoutError('timed out')`).
+The server log has no error lines. The earlier context-overflow fault is not the cause here.
+
+**What the 10 of 31 is not.** It is a count from one sample per game with no interval.
+It is not a rate. Seven cells had a mostly or fully unavailable generator (bp35, cd82,
+cn04, r11l, re86, tr87, wa30). The liveness lint flagged them, and they were added to
+`ops/arc_llm_on_liveness_baseline.json` as timeout evidence. A plan rate on the other 18
+cells is not computed yet.
+
+**Comparison.** The July corpus recorded 0 of 136 installed plans with the retired 9B
+generator. The two runs differ in generator, driver and cell layout, so the gap is a
+direction, not a measured effect.
+
+**Open.** Rerun the 7 timeout cells with a longer generator timeout (about 15 hours) to
+fill the gap. Not started.
