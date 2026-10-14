@@ -20261,3 +20261,4 @@ code |
 | 2026-10-14 12:09 UTC | Measure source value over raw and equally trained | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8514-identity-brier-fit) |
 | 2026-10-14 13:30 UTC | Qualify objective mechanics with a new immutable p | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: IXTURE_PIN", " |
 | 2026-10-14 13:54 UTC | Qualify objective mechanics with a new immutable p | OK | cache hit: 109 passed, 2 warnings in 427.75s (0:07:07) |
+| 2026-10-14 15:28 UTC | Measure delayed continuous learning through the qu | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 518.91s (0:08:38) |
