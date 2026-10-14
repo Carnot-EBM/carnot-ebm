@@ -100516,3 +100516,30 @@ induction outcome. Replaying the same fixture observations produces equal rows.
 
 The same observations and RNG with collection off/on produce identical actions,
 policy state, provenance and random state. Fixtures never become live episodes.
+
+
+## REQ-REPORT-8523: Fresh direct supervisor effects on a frozen public panel
+
+Consume the exact qualified Exp8522 publication, bound sidecar and live consumer.
+Authenticate the activated V732 task before measurement. Freeze the original four
+games, seeds11/22, alternating applied/shadow order,512 actions,120 seconds and
+2400-second aggregate cap. Use the real make_carnot_agent wrapper with fresh SDK
+starts, deterministic episode RNG and adapter/route/source withholding. Disable
+LLM generation, declare MODEL_SPECS=[] and record actual zero model calls.
+Keep all16 intended episodes, errors and right-censored observations. Direct
+application receipts establish state mutation and action-policy change; mode
+alone never establishes application. Disabled reinduction is no completed model
+induction. Pair only by game/seed and verify matching initial observations.
+Require3 overlapping independent games and5 resolved outcomes per shared arm
+cell before refinement. Report local action divergence separately from progress.
+No new solve credit, strategy changes or generalization benefit follows from
+instrumentation; readiness qualifies data collection only.
+
+### SCENARIO-REPORT-8523-EFFECTS
+
+Live receipt reduction retains selected shadow recommendations, mutations,
+no-ops, eligibility predicates, state hashes, action-policy changes and disabled
+induction outcomes. Four games remain four independent units despite repeats.
+Missing inputs block; an owned validation failure disqualifies. All intended
+slots carry a measured metric or exact missing reason. Conductor owns ops and
+traceability reconciliation.

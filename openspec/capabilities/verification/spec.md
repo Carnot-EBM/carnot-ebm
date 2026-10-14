@@ -55062,3 +55062,26 @@ unchanged external absence blocks. Reconciliation is owned by the conductor.
 Private publication and fresh-process replay pass. Changed primitive state,
 invented effects, failed checks, altered hashes, and missing evidence cannot
 claim readiness. No historical primary is overwritten.
+
+
+## REQ-VERIFY-8523: Primitive replay and exact-byte effect-panel publication
+
+Before publication require focused unit tests,100 percent newly owned statement
+coverage including children and rejection paths, Ruff, strict mypy and scoped
+spec coverage. Collect historical nodes first, then execute their exact union in
+bounded disjoint serial shards. E2E-011/013/018/021 use private fixtures, isolated
+roots and original dates. Never overwrite historical primaries. Bound each child
+and preserve commands, exit codes, timings and log hashes; killed children fail.
+Cold-reduce immutable step/terminal primitives in a fresh process. Check every
+receipt state/observation hash and independently reconstruct disposition rather
+than trust rehashed summaries. Run unchanged primary_publication, adversarial
+verification and strict row consistency on terminal bytes before publication;
+bind the sidecar and verify the actual downstream consumer. Stop measurement by
+2400 seconds and reserve at least900 seconds inside the4800-second task cap.
+
+### SCENARIO-VERIFY-8523-REPLAY
+
+Private CLI accepts20261014, rejects other dates, missing operands, intentional
+failure and self-consistently rehashed primitive or aggregate tampering. Bound
+publication rejects changed terminal bytes. Collection qualification remains
+independent of transferable benefit and arm support.
