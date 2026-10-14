@@ -100161,3 +100161,37 @@ old readiness does not transfer. Cold replay rejects missing operands, changed
 summaries and self-consistently rehashed substitutions using independent pins.
 Atomically publish only terminal bytes accepted by unchanged publication consumers.
 Conductor owns ops/status/changelog/BMAD reconciliation for this invocation.
+## REQ-REPORT-8499: Bind thirteen V731 tasks and freeze strongest controls
+
+Bind Exp8499–8511 by full dictionary equality across the visible table, complete
+embedded JSON, independently pinned canonical digest and actual staged/activated
+YAML. Missing staging remains absent. Reject changes to prompts, prior retirement
+flags, order and every task operand, including a missing end marker. Preserve
+the V730 design bytes and original historical producer dates and authority.
+
+### SCENARIO-REPORT-8499-AUTHORITY
+
+Private authority mutations and self-consistently rehashed substitutions fail
+admission. Exactly thirteen primitive task rows retain missing reasons and zero
+independent scientific groups. Same-roadmap outputs remain future dependencies.
+
+### SCENARIO-REPORT-8499-METHODS
+
+Seal identity-admissible Brier fitting before any fit: original 900 answers and
+300 questions with 150/50/100 roles, nine-input/109-coefficient full and original
+13-coefficient scalar bases, permutations 725/7252/7251, seeds 17/29/43/71/101,
+200 full-batch steps, rate .01, L2 .001, T=1 and tune-only alpha 0/.25/.5/.75/1
+with smaller-alpha ties. Register three primary paired question contrasts,
+98.3333333333 percent intervals and 10000 resamples with seed 7318502. Test labels
+are read-only evaluation; prior exposure stays explicit. Preserve V730 objective
+and append operands unchanged; publication qualification and strict import repair
+are separate registrations. Source/learning and five-input service readers remain
+independent. Optional supplied causal CUDA receipts never gate CPU readiness.
+
+### SCENARIO-REPORT-8499-EXPOSURE
+
+Keep closed V717 H1/H2, flagged V730 bytes, sidecar mismatch, disqualified timing
+and zero ARC resolved outcomes in a hash-bound exposure and retirement ledger.
+Methods readiness requires current authority and sealed methods, not scientific
+success. Both generalization scores and current model invocation counts stay zero.
+The conductor owns ops/status/changelog/BMAD reconciliation for this invocation.

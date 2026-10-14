@@ -54812,3 +54812,18 @@ missing inputs, deliberate failure and self-rehashed tampering. Required owned
 failures disqualify. Save commands, exits, durations and log hashes. Run unchanged
 primary_publication, adversarial verification and strict-row consumers before
 atomic publication. Unresolved findings block readiness; no validator exemptions.
+## REQ-VERIFY-8499: Qualify V731 with complete bounded original test shards
+
+### SCENARIO-VERIFY-8499-CONTROLS
+
+Run newly owned unit and private CLI checks, Ruff check/format, strict mypy and
+spec coverage. Genuine Coverage.py subprocess shards cover 100 percent of newly
+owned statements, including rejection paths. Collect historical node IDs first;
+bounded disjoint serial shards preserve their exact union and all assertions.
+E2E-018 and E2E-021 use isolated roots and original historical CLI dates. Never
+run the full repository suite or write historical primaries. Fresh bounded cold
+replay accepts original primitives and rejects missing inputs, intentional failure
+and rehashed tampering. Unchanged primary publication, adversarial verification
+and strict row lint qualify exact terminal bytes and their live consumer. Failed
+owned checks disqualify; unchanged external absence blocks. Measurement stops by
+3600 seconds with at least 900 seconds reserved inside the 4800-second cap.
