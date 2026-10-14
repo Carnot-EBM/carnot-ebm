@@ -100411,3 +100411,30 @@ checkpoint implementation. Its thin direct CLI uses
 Decimal fixture cover original quarantine, fresh mechanics, immutable publication
 and actual consumer rejection. Raw invocation evidence retains terminal outcomes
 and durable collection logs. The conductor owns ops and BMAD reconciliation.
+
+## REQ-REPORT-8517: Measure the registered delayed objective stream
+
+Authenticate activated V732 authority, original V726 nine-input109-coefficient
+heads and Exp8516 through its exact bound sidecar and fresh replay. Inherit V730
+objective_updates without retuning. Run frozen, log_loss, brier and
+brier_shuffled_released with uniform target-blind capacity8 admission, five
+blocks of20 questions and seeds17/29/43/71/101. Preserve6000 answer rows and15000
+read-only retention rows. Missing qualification blocks with exact gates; owned
+failure disqualifies. Cached model outputs remain historical provenance only.
+
+### SCENARIO-REPORT-8517-CUSTODY
+
+Reject missing, flagged, stale and self-rehashed substituted evidence. Rebuild
+predictions, released labels, coefficient effects and summaries from original
+pinned primitives. Readiness measures completeness even with a null effect.
+Report per-update CPU compute, coefficient touches, serialization/sync/
+acknowledgment time, memory and pending high-water. Both generalization scores
+remain zero. GPU/NPU batching and FPGA arithmetic remain future paths. Exp8518
+is a future dependency. The conductor owns ops and BMAD reconciliation.
+
+Implementation: `brier_online_learning_8517` reads only the qualified Exp8516
+publication and original V726 primitives. `objective_stream_8517` selects the
+registered derivative through shipped store/evaluator adapters. The thin direct
+CLI uses `brier_online_runner_8517`; its raw invocation records the final
+measurement, rejection controls, historical collection, validation and bound
+publication. The research note defines readiness, costs and exposure limits.

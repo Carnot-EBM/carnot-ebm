@@ -54944,3 +54944,37 @@ active roadmap, generator weight or validation gate changes.
 The final Exp8516 invocation's owned suite passed28 tests. Genuine unit and child
 traces covered420/420 newly owned statements. Historical node outcomes and final
 publication consumers remain separate required gates in the terminal artifact.
+
+## REQ-VERIFY-8517: Durable objective updates and independent delayed evaluation
+
+### SCENARIO-VERIFY-8517-STREAM
+
+Persist issued predictions and uniform admission IDs before releasing only
+admitted labels. Commit effects, IDs, RNG and cursor exactly once. Shuffling
+uses only currently released labels. Keep unadmitted, pending, lost and duplicate
+counts. Evaluate five windows on original50 tune questions in separate read-only
+children without feeding retention labels to the learner.
+
+### SCENARIO-VERIFY-8517-RESTART
+
+For seed17 in each arm, genuinely exit73 after block2 and resume. Final states
+and issued predictions equal uninterrupted execution bit for bit. Reject wrong
+objective rules, future labels, duplicate conflicts and rehashed effects.
+
+### SCENARIO-VERIFY-8517-CLI
+
+Accept date20261014. Flush progress; supervise bounded children every30s.
+Require scoped tests,100 percent newly owned unit/child statements, Ruff check/
+format, strict mypy, spec tracing and collected disjoint historical shards.
+Private E2E-018/021 retain original dates and isolated roots. Fresh replay,
+missing-input, deliberate-failure and rehashed-tamper controls precede unchanged
+publication/adversarial/strict-row consumers. Measurement cap3600s, validation
+reserve900s, hard cap4800s. Optional hardware never gates CPU. No full suite.
+
+Implementation: traced Exp8517 tests cover target-blind matched admission,
+released-only objectives, real exit73, exact restart, idempotent feedback,
+wrong-rule rejection, private publication and self-rehashed primitive drift.
+The runner collects unchanged historical node IDs, uses isolated serial pytest
+shards and preserves their aggregate1800s gate. Final receipts record scoped
+coverage, lint/types/spec checks and exact publication consumers. No historical
+primary, active roadmap, conductor or generator weight changes.

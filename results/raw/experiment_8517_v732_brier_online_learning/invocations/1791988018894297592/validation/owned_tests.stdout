@@ -1,0 +1,61 @@
+........F....                                                            [100%]
+=================================== FAILURES ===================================
+_______________________ test_source_and_gate_rejections ________________________
+
+tmp_path = PosixPath('/var/tmp/exp8517-private-p1243059/owned-tests/test_source_and_gate_rejection0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe234e47530>
+
+    def test_source_and_gate_rejections(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8517-CUSTODY: changed registered or original operands cannot authorize science."""
+        original = r.source()
+        assert len(original["heads"]) == 5 and len(original["blocks"]) == 5
+        original_protocol = r.methods.protocol
+        monkeypatch.setattr(
+            r.methods,
+            "protocol",
+            lambda: dict(
+                original_protocol(),
+                objective_updates=dict(original_protocol()["objective_updates"], capacity=16),
+            ),
+        )
+        with pytest.raises(ValueError, match="registered"):
+            r.source()
+        monkeypatch.setattr(r.methods, "protocol", original_protocol)
+        monkeypatch.setattr(r, "sha256_file", lambda path: "wrong")
+        with pytest.raises(ValueError, match="source_hash"):
+            r.source()
+        with pytest.raises(ValueError, match="original_primitives_unavailable"):
+            r.measure(tmp_path / "absent", tmp_path / "raw", tmp_path / "private")
+        monkeypatch.undo()
+        path = tmp_path / "inputs/results" / (r.upstream.NAME + ".json")
+        atomic_json(path, dict(learning_qualification_ready_score=0))
+        result = r.inspect(tmp_path / "inputs", tmp_path / "raw2", tmp_path)
+>       assert any(
+            f["field"] == "learning_qualification_ready_score" and f["observed"] == 0
+            for f in result["failures"]
+        )
+
+tests/python/test_brier_online_learning_8517.py:301: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7fe1ec939d20>
+
+    assert any(
+>       f["field"] == "learning_qualification_ready_score" and f["observed"] == 0
+        ^^^^^^^^^^
+        for f in result["failures"]
+    )
+E   KeyError: 'field'
+
+tests/python/test_brier_online_learning_8517.py:302: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8517] phase=preconditions completed=0 pending=20
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_brier_online_learning_8517.py::test_source_and_gate_rejections
+1 failed, 12 passed, 1 warning in 892.10s (0:14:52)
