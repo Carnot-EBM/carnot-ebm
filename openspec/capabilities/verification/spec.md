@@ -55012,3 +55012,36 @@ V730 design/active hashes. This preserves the original fixture's authority check
 without editing either roadmap or any historical assertion. Its own regression
 checks real original admission, rejection of changed authority and restoration
 of current bytes.
+
+## REQ-VERIFY-8520: Measure equal durable complete service under V732
+
+Reuse the shipped append kernel without arithmetic or threshold changes. Each
+natural batch1/reuse8 and batch8/reuse8 cell has 64 decisions, one warmup and five
+measured pairs in alternating AB/BA order. Both arms restore identical state on
+one real disk filesystem. Include cold reconstruction, startup, all transaction
+work and final drain. Restart replay is separate. Keep primitive clocks, p50/p95,
+bytes, syncs, namespace operations, memory, disk and feedback accounting.
+
+### SCENARIO-VERIFY-8520-PAIRS
+
+Require bit-identical outcomes, acknowledged-prefix recovery and idempotent
+feedback. Bootstrap five whole repeat indices 10000 times with seed7298480.
+Benefit requires primary lower95>1 and p95 ratio<=1.05. Secondary cannot rescue
+primary. Lower95>=10 is a separate local target. Incomplete pairs censor speed.
+Report measured complete-cost shares without projecting hardware acceleration.
+Physical power loss is untested; Rust/Python NFR-01 remains open.
+
+### SCENARIO-VERIFY-8520-VALIDATION
+
+Focused tests precede implementation. Collect and preserve historical node IDs;
+run exact disjoint bounded serial shards and private E2E-018/021 with original
+dates. Require 100 percent new statements including real children and rejection
+paths, Ruff, strict mypy and spec coverage. Retain command, exit, duration and log
+hash receipts. Killed children fail. Measurement cap is1800 seconds; reserve900
+seconds of the4800-second hard cap for validation. Flush every phase and request.
+
+Implementation2026-10-14: narrow adapters reuse the unchanged append worker,
+primitive reducer and bootstrap. Tests cover real workers, missing authority,
+qualification failures, altered clocks/operands and rehashed summary changes.
+The validation manifest preserves exact original node unions and scoped
+unit/child coverage; publication uses the shipped validators and consumers.

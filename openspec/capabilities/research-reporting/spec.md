@@ -100462,3 +100462,31 @@ CLI bind current task authority to independently pinned historical operands.
 The preserved old reader and exact strict-mypy failure live in the historical
 raw directory. The current reader uses a direct Store import. The result keeps
 readiness separate from the unchanged Exp8494 disqualified timing scope.
+
+## REQ-REPORT-8520: Publish fresh qualified complete append service
+
+Require the exact qualified Exp8519 bytes and activated V732 task before timing.
+Keep original V730 protocol, five-input tapes, dates and authority unchanged.
+Historical Exp8494 clocks are disqualified and never become new observations.
+Publish all 24 fresh arms, including warmups and censored work. Readiness is
+independent of speed. Oracle benefits are circular_positive with zero
+generalization. No model loads or current LLM calls occur. Missing inputs block;
+owned failures disqualify. Conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8520-TERMINAL
+
+The private dated CLI accepts 20261014. Fresh cold replay rejects missing inputs,
+intentional failure and self-consistently rehashed aggregate or primitive changes.
+Unchanged validators check terminal bytes before atomic publication. A bound
+sidecar and actual downstream reader authenticate the published bytes.
+
+### SCENARIO-REPORT-8520-GATES
+
+Exact hash, producer identity, readiness, checks, flags, protocol and original
+date checks retain expected and observed operands. Optional CUDA and boards do
+not block CPU work. No V731 pre-gate substitutes for a missing science producer.
+
+Implementation2026-10-14: `append_service_cost_8520` binds exact Exp8519 and V732
+authority to unchanged five-input tapes. Its thin runner preserves original
+historical replay while directing reconstruction writes into private scratch.
+The result separates readiness, primary benefit and complete-cost shares.
