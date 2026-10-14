@@ -39,7 +39,8 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "python"))
 sys.path.insert(0, str(REPO))
 
-OUT = REPO / "results" / "arc_induction_plans_20261010"
+# A rerun sets CARNOT_INDUCTION_OUT so it never overwrites the first run's cells.
+OUT = REPO / "results" / os.environ.get("CARNOT_INDUCTION_OUT", "arc_induction_plans_20261010")
 CELLS = OUT / "cells"
 _LOCAL = threading.local()
 
