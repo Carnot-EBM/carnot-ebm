@@ -20257,3 +20257,5 @@ code |
 | 2026-10-14 10:15 UTC | Milestone 2026.10.732 activated | OK | 14 tasks queued |
 | 2026-10-14 11:15 UTC | Bind fourteen complete tasks and preserve independ | OK | 135 passed, 1 warning in 406.73s (0:06:46) |
 | 2026-10-14 12:00 UTC | Audit raw-score headroom and ingest strongest-comp | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 97 passed, 1 warning in 82.93s (0:01:22) |
+| 2026-10-14 12:07 UTC | Train calibrated energy heads with a raw-score fal | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8513-strongest-baseline-audit.comparator_inputs_ready_score (actual=0 == expected=1) |
+| 2026-10-14 12:09 UTC | Measure source value over raw and equally trained | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8514-identity-brier-fit) |
