@@ -100543,3 +100543,33 @@ induction outcomes. Four games remain four independent units despite repeats.
 Missing inputs block; an owned validation failure disqualifies. All intended
 slots carry a measured metric or exact missing reason. Conductor owns ops and
 traceability reconciliation.
+
+
+## REQ-REPORT-8524: Bind V732 complete append clocks to installed board operations
+
+Authenticate the complete activated V732 task before evidence reduction. Keep
+original board seals and dates. Import Exp8520 only with readiness one, required
+checks true, bound terminal bytes and successful fresh exact primitive replay.
+Otherwise use qualified Exp8466 dated 20261013 and record the exact failed field.
+Keep complete cold reconstruction, startup, transaction/response and tail spans
+disjoint. Uninstrumented serialization, sync, spline and transfer times stay null.
+KV260 supports quadratic Ising k_max<=5; PolarFire retains Linux CPU dispatch
+and hash-match graduation. Neither supplies spline/Brier updates or host storage.
+Counterfactual ceilings use eligible measured shares only. Five-input cost does
+not establish nine-input learning cost. Preserve GateMate missing source hashes,
+IDCODE0xffffffff, dated physical change, GM1Ax0x20000001, n16 flash and sample/hash
+obligations. Keep flash false, NPU/TSU unqualified and deployment false. No probes,
+unchanged physical retries, model calls, weight changes or purchases are needed.
+Retain Online KAN, Anechoic and Extropic Z1T as bounded future operation leads.
+
+### SCENARIO-REPORT-8524-COST
+
+Qualified complete clock spans retain original primitive references and exclude
+warmups. A missing score differs from zero. Failed checks, stale sidecars, failed
+cold replay and invalid clocks reject current cost and retain historical fallback.
+
+### SCENARIO-REPORT-8524-BOUNDARY
+
+Evidence accounting can score one with deployment blocked. Missing physical
+or operation evidence blocks; owned validation failure disqualifies. Rehashed
+summary or primitive tampering cannot grant readiness. Generalization stays zero.

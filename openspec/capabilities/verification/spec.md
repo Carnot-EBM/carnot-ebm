@@ -55085,3 +55085,19 @@ Private CLI accepts20261014, rejects other dates, missing operands, intentional
 failure and self-consistently rehashed primitive or aggregate tampering. Bound
 publication rejects changed terminal bytes. Collection qualification remains
 independent of transferable benefit and arm support.
+
+
+## REQ-VERIFY-8524: Check private V732 board publication with bounded original consumers
+
+### SCENARIO-VERIFY-8524-CLI
+
+Accept date20261014. Use flushed progress, checked CPU tools and disk scratch,
+3600-second measurement and 4800-second task caps with 900 seconds for validation.
+Collect exact historical test nodes before bounded disjoint serial shards. Keep
+all assertions and original dates in private E2E-018 and E2E-021 fixtures. Require
+scoped tests, Ruff check/format, strict mypy, spec tracing and100 percent newly
+owned statements including real children and rejection paths. Fresh replay must
+accept valid evidence and reject missing, intentional failure and rehashed tamper
+controls. Unchanged primary publication and adversarial/strict-row consumers bind
+sidecars to terminal bytes and check the actual downstream consumer. Preserve
+findings. No full repository suite or historical primary overwrite is allowed.
