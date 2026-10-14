@@ -1,0 +1,110 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "replayed"
+  },
+  "checks": [],
+  "disposition": "qualified_producer",
+  "eligible": true,
+  "historical_model_provenance": [
+    {
+      "models": [
+        "GPT-5-mini",
+        "gemma-2-9b",
+        "llama3-8b",
+        "mistral-7b"
+      ],
+      "scope": "cached released judgments and answers"
+    }
+  ],
+  "honest_verdict": "complete_null_v726_capacity_benefit_audit",
+  "memory": {
+    "after": {
+      "current_rss_mb": 492.7890625,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 760.50390625,
+      "prior_exec_lifetime_peak_mb": 760.50390625
+    },
+    "before": {
+      "current_rss_mb": 391.10546875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 391.10546875,
+      "prior_exec_lifetime_peak_mb": 401.5703125
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 369.3984375,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "primitive_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8435_v726_capacity_benefit_audit/invocations/1791776901428177374/measurement.json",
+    "sha256": "sha256:8138b8d1c6c8c0fcdfeb8e2d9cf9f18e8b712ca241b80bed835b7a4a61789df1"
+  },
+  "producer_executed": true,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 391.07421875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 391.07421875,
+      "prior_exec_lifetime_peak_mb": 401.5703125
+    },
+    "before": {
+      "current_rss_mb": 390.77734375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.77734375,
+      "prior_exec_lifetime_peak_mb": 401.5703125
+    },
+    "scope": "Python dependency imports; no model weights loaded"
+  },
+  "selected": {
+    "coefficient_change_count": 5400,
+    "conditional_ci95": [
+      -0.0032621722408660804,
+      0.0013780320158046908
+    ],
+    "decision_loss_delta": -0.0029999999999999983,
+    "exploratory_learning_benefit_score": 0,
+    "fifo_minus_uniform_brier": -0.000839919183498522,
+    "gain_vs_frozen": {
+      "conditional_ci95": [
+        -0.0010567593336667806,
+        0.0007039343563264691
+      ],
+      "estimate": -0.00018457138267420078
+    },
+    "later_question_count": 80,
+    "learning_audit_ready_score": 1,
+    "per_window_retention": [
+      {
+        "estimate": -4.384142070239796e-05,
+        "upper95": 0.00014016384814807096,
+        "window": 0
+      },
+      {
+        "estimate": -0.0003532639723701329,
+        "upper95": -0.00012840547516043726,
+        "window": 1
+      },
+      {
+        "estimate": -0.00021080411112691204,
+        "upper95": 0.0004014832998336671,
+        "window": 2
+      },
+      {
+        "estimate": -0.0002922988165504933,
+        "upper95": 0.0007110233834077217,
+        "window": 3
+      },
+      {
+        "estimate": -0.0006043688541138429,
+        "upper95": -2.8144005503562897e-05,
+        "window": 4
+      }
+    ],
+    "retention_simultaneous_upper95": 0.0007110233834077217,
+    "scientific_outcome": "null",
+    "support_adequate": true
+  },
+  "source_gates": [],
+  "verdict_class": "null"
+}

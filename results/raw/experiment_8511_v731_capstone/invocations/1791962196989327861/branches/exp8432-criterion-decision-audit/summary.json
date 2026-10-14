@@ -1,0 +1,1467 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "replayed"
+  },
+  "checks": [],
+  "disposition": "qualified_producer",
+  "eligible": true,
+  "historical_model_provenance": [
+    {
+      "models": [
+        "GPT-5-mini",
+        "gemma-2-9b",
+        "llama3-8b",
+        "mistral-7b"
+      ],
+      "producer": "exp8430-criterion-feature-panel",
+      "scope": "released cached judgments and answers; no current Qwen inference"
+    }
+  ],
+  "honest_verdict": "complete_circular_positive_v726_criterion_decision_audit",
+  "memory": {
+    "after": {
+      "current_rss_mb": 415.8359375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 450.9296875,
+      "prior_exec_lifetime_peak_mb": 450.9296875
+    },
+    "before": {
+      "current_rss_mb": 387.80078125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 387.80078125,
+      "prior_exec_lifetime_peak_mb": 401.5703125
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 63.12890625,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "primitive_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8432_v726_criterion_decision_audit/invocations/1791763368339969019/measurement.json",
+    "sha256": "sha256:6c3806bc31279887db43aa04f4642f8a746e97c1d5ed38527d9d5c578831a823"
+  },
+  "producer_executed": true,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 387.79296875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 387.79296875,
+      "prior_exec_lifetime_peak_mb": 401.5703125
+    },
+    "before": {
+      "current_rss_mb": 387.6484375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 387.6484375,
+      "prior_exec_lifetime_peak_mb": 401.5703125
+    },
+    "scope": "Python dependency imports; no model weights loaded"
+  },
+  "selected": {
+    "A1_metrics": {
+      "logistic9": {
+        "accepted_count": 825,
+        "bounds": {
+          "brier": [
+            0.15312704455387366,
+            0.15312704455387366
+          ],
+          "decision_loss": [
+            0.16266666666666665,
+            0.16266666666666665
+          ],
+          "denominator": 1500,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.15312704455387366,
+        "calibration": [
+          {
+            "count": 790,
+            "lower": 0.0,
+            "mean_probability": 0.021187910859069382,
+            "observed_frequency": 0.13291139240506328,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 35,
+            "lower": 0.1,
+            "mean_probability": 0.13259188289360324,
+            "observed_frequency": 0.42857142857142855,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 20,
+            "lower": 0.2,
+            "mean_probability": 0.26874628285838337,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 0,
+            "lower": 0.3,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 0,
+            "lower": 0.7,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.8
+          },
+          {
+            "count": 15,
+            "lower": 0.8,
+            "mean_probability": 0.880044705829416,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 640,
+            "lower": 0.9,
+            "mean_probability": 0.9737813105171449,
+            "observed_frequency": 0.8125,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.9866666666666667,
+        "decision_loss": 0.16266666666666665,
+        "definitive_count": 1480,
+        "false_accept_rate": 0.14545454545454545,
+        "false_accepts": 120,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.6013664570975537,
+        "missing_prediction_count": 0,
+        "missing_target_count": 0,
+        "observed_answer_count": 300,
+        "observed_target_count": 1500,
+        "raw_operands": {
+          "brier": {
+            "denominator": 1500,
+            "numerator": 229.6905668308105
+          },
+          "coverage": {
+            "denominator": 1500,
+            "numerator": 1480
+          },
+          "decision_loss": {
+            "denominator": 1500,
+            "numerator": 244.0
+          },
+          "false_accept_rate": {
+            "denominator": 825,
+            "numerator": 120
+          },
+          "log_loss": {
+            "denominator": 1500,
+            "numerator": 902.0496856463305
+          },
+          "selective_risk": {
+            "denominator": 1480,
+            "numerator": 240.0
+          }
+        },
+        "selective_risk": 0.16216216216216217,
+        "undefined_reasons": {},
+        "valid_prediction_count": 1500
+      },
+      "raw_p2": {
+        "accepted_count": 760,
+        "bounds": {
+          "brier": [
+            0.133672,
+            0.133672
+          ],
+          "decision_loss": [
+            0.156,
+            0.156
+          ],
+          "denominator": 1500,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.133672,
+        "calibration": [
+          {
+            "count": 290,
+            "lower": 0.0,
+            "mean_probability": 0.08327586206896549,
+            "observed_frequency": 0.05172413793103448,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 470,
+            "lower": 0.1,
+            "mean_probability": 0.14382978723404258,
+            "observed_frequency": 0.18085106382978725,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 50,
+            "lower": 0.2,
+            "mean_probability": 0.242,
+            "observed_frequency": 0.1,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 25,
+            "lower": 0.3,
+            "mean_probability": 0.332,
+            "observed_frequency": 0.6,
+            "undefined_reason": null,
+            "upper": 0.4
+          },
+          {
+            "count": 10,
+            "lower": 0.4,
+            "mean_probability": 0.4,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 35,
+            "lower": 0.7,
+            "mean_probability": 0.7628571428571428,
+            "observed_frequency": 0.7142857142857143,
+            "undefined_reason": null,
+            "upper": 0.8
+          },
+          {
+            "count": 370,
+            "lower": 0.8,
+            "mean_probability": 0.8505405405405405,
+            "observed_frequency": 0.7972972972972973,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 250,
+            "lower": 0.9,
+            "mean_probability": 0.9066000000000001,
+            "observed_frequency": 0.86,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.92,
+        "decision_loss": 0.156,
+        "definitive_count": 1380,
+        "false_accept_rate": 0.13157894736842105,
+        "false_accepts": 100,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.43199209109363157,
+        "missing_prediction_count": 0,
+        "missing_target_count": 0,
+        "observed_answer_count": 300,
+        "observed_target_count": 1500,
+        "raw_operands": {
+          "brier": {
+            "denominator": 1500,
+            "numerator": 200.508
+          },
+          "coverage": {
+            "denominator": 1500,
+            "numerator": 1380
+          },
+          "decision_loss": {
+            "denominator": 1500,
+            "numerator": 234.0
+          },
+          "false_accept_rate": {
+            "denominator": 760,
+            "numerator": 100
+          },
+          "log_loss": {
+            "denominator": 1500,
+            "numerator": 647.9881366404474
+          },
+          "selective_risk": {
+            "denominator": 1380,
+            "numerator": 210.0
+          }
+        },
+        "selective_risk": 0.15217391304347827,
+        "undefined_reasons": {},
+        "valid_prediction_count": 1500
+      },
+      "scalar_calibrated": {
+        "accepted_count": 810,
+        "bounds": {
+          "brier": [
+            0.14289619348971933,
+            0.14289619348971933
+          ],
+          "decision_loss": [
+            0.15533333333333332,
+            0.15533333333333332
+          ],
+          "denominator": 1500,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.14289619348971933,
+        "calibration": [
+          {
+            "count": 730,
+            "lower": 0.0,
+            "mean_probability": 0.04850681336278454,
+            "observed_frequency": 0.11643835616438356,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 80,
+            "lower": 0.1,
+            "mean_probability": 0.13382897741953995,
+            "observed_frequency": 0.25,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 15,
+            "lower": 0.2,
+            "mean_probability": 0.20939430937774853,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 20,
+            "lower": 0.3,
+            "mean_probability": 0.32054162963062127,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 5,
+            "lower": 0.7,
+            "mean_probability": 0.7782941892903833,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.8
+          },
+          {
+            "count": 115,
+            "lower": 0.8,
+            "mean_probability": 0.8688521282679774,
+            "observed_frequency": 0.7391304347826086,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 535,
+            "lower": 0.9,
+            "mean_probability": 0.9419787914416481,
+            "observed_frequency": 0.8317757009345794,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.9733333333333334,
+        "decision_loss": 0.15533333333333332,
+        "definitive_count": 1460,
+        "false_accept_rate": 0.12962962962962962,
+        "false_accepts": 105,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.4832234903446486,
+        "missing_prediction_count": 0,
+        "missing_target_count": 0,
+        "observed_answer_count": 300,
+        "observed_target_count": 1500,
+        "raw_operands": {
+          "brier": {
+            "denominator": 1500,
+            "numerator": 214.344290234579
+          },
+          "coverage": {
+            "denominator": 1500,
+            "numerator": 1460
+          },
+          "decision_loss": {
+            "denominator": 1500,
+            "numerator": 233.0
+          },
+          "false_accept_rate": {
+            "denominator": 810,
+            "numerator": 105
+          },
+          "log_loss": {
+            "denominator": 1500,
+            "numerator": 724.835235516973
+          },
+          "selective_risk": {
+            "denominator": 1460,
+            "numerator": 225.0
+          }
+        },
+        "selective_risk": 0.1541095890410959,
+        "undefined_reasons": {},
+        "valid_prediction_count": 1500
+      },
+      "source_permuted_spline9": {
+        "accepted_count": 825,
+        "bounds": {
+          "brier": [
+            0.15360248626043985,
+            0.15360248626043985
+          ],
+          "decision_loss": [
+            0.16266666666666665,
+            0.16266666666666665
+          ],
+          "denominator": 1500,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.15360248626043985,
+        "calibration": [
+          {
+            "count": 795,
+            "lower": 0.0,
+            "mean_probability": 0.020611945312666892,
+            "observed_frequency": 0.1320754716981132,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 30,
+            "lower": 0.1,
+            "mean_probability": 0.12818585947953137,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 20,
+            "lower": 0.2,
+            "mean_probability": 0.275768565332553,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 0,
+            "lower": 0.3,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 0,
+            "lower": 0.7,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.8
+          },
+          {
+            "count": 15,
+            "lower": 0.8,
+            "mean_probability": 0.874403397209936,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 640,
+            "lower": 0.9,
+            "mean_probability": 0.973465530319445,
+            "observed_frequency": 0.8125,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.9866666666666667,
+        "decision_loss": 0.16266666666666665,
+        "definitive_count": 1480,
+        "false_accept_rate": 0.14545454545454545,
+        "false_accepts": 120,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.6073336848969395,
+        "missing_prediction_count": 0,
+        "missing_target_count": 0,
+        "observed_answer_count": 300,
+        "observed_target_count": 1500,
+        "raw_operands": {
+          "brier": {
+            "denominator": 1500,
+            "numerator": 230.40372939065978
+          },
+          "coverage": {
+            "denominator": 1500,
+            "numerator": 1480
+          },
+          "decision_loss": {
+            "denominator": 1500,
+            "numerator": 244.0
+          },
+          "false_accept_rate": {
+            "denominator": 825,
+            "numerator": 120
+          },
+          "log_loss": {
+            "denominator": 1500,
+            "numerator": 911.0005273454093
+          },
+          "selective_risk": {
+            "denominator": 1480,
+            "numerator": 240.0
+          }
+        },
+        "selective_risk": 0.16216216216216217,
+        "undefined_reasons": {},
+        "valid_prediction_count": 1500
+      },
+      "spline9": {
+        "accepted_count": 775,
+        "bounds": {
+          "brier": [
+            0.13342838109062669,
+            0.13342838109062669
+          ],
+          "decision_loss": [
+            0.15533333333333332,
+            0.15533333333333332
+          ],
+          "denominator": 1500,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.13342838109062669,
+        "calibration": [
+          {
+            "count": 305,
+            "lower": 0.0,
+            "mean_probability": 0.0776053361392421,
+            "observed_frequency": 0.04918032786885246,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 470,
+            "lower": 0.1,
+            "mean_probability": 0.13694039304000885,
+            "observed_frequency": 0.19148936170212766,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 50,
+            "lower": 0.2,
+            "mean_probability": 0.2584212163249046,
+            "observed_frequency": 0.3,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 20,
+            "lower": 0.3,
+            "mean_probability": 0.37559693140587025,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 70,
+            "lower": 0.7,
+            "mean_probability": 0.7710520617981284,
+            "observed_frequency": 0.7142857142857143,
+            "undefined_reason": null,
+            "upper": 0.8
+          },
+          {
+            "count": 425,
+            "lower": 0.8,
+            "mean_probability": 0.8613400231836437,
+            "observed_frequency": 0.8117647058823529,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 160,
+            "lower": 0.9,
+            "mean_probability": 0.9131714742010744,
+            "observed_frequency": 0.875,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.9066666666666666,
+        "decision_loss": 0.15533333333333332,
+        "definitive_count": 1360,
+        "false_accept_rate": 0.13548387096774195,
+        "false_accepts": 105,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.43098396002865424,
+        "missing_prediction_count": 0,
+        "missing_target_count": 0,
+        "observed_answer_count": 300,
+        "observed_target_count": 1500,
+        "raw_operands": {
+          "brier": {
+            "denominator": 1500,
+            "numerator": 200.14257163594004
+          },
+          "coverage": {
+            "denominator": 1500,
+            "numerator": 1360
+          },
+          "decision_loss": {
+            "denominator": 1500,
+            "numerator": 233.0
+          },
+          "false_accept_rate": {
+            "denominator": 775,
+            "numerator": 105
+          },
+          "log_loss": {
+            "denominator": 1500,
+            "numerator": 646.4759400429814
+          },
+          "selective_risk": {
+            "denominator": 1360,
+            "numerator": 205.0
+          }
+        },
+        "selective_risk": 0.15073529411764705,
+        "undefined_reasons": {},
+        "valid_prediction_count": 1500
+      }
+    },
+    "A2_sensitivity": {
+      "logistic9": {
+        "accepted_count": 260,
+        "bounds": {
+          "brier": [
+            0.21271145609796052,
+            0.21271145609796052
+          ],
+          "decision_loss": [
+            0.221505376344086,
+            0.221505376344086
+          ],
+          "denominator": 465,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.21271145609796052,
+        "calibration": [
+          {
+            "count": 245,
+            "lower": 0.0,
+            "mean_probability": 0.025373836138002835,
+            "observed_frequency": 0.2653061224489796,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 15,
+            "lower": 0.1,
+            "mean_probability": 0.13539803719127208,
+            "observed_frequency": 0.6666666666666666,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 15,
+            "lower": 0.2,
+            "mean_probability": 0.26041749370296474,
+            "observed_frequency": 0.6666666666666666,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 0,
+            "lower": 0.3,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 0,
+            "lower": 0.7,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.8
+          },
+          {
+            "count": 0,
+            "lower": 0.8,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.9
+          },
+          {
+            "count": 190,
+            "lower": 0.9,
+            "mean_probability": 0.9767321129421452,
+            "observed_frequency": 0.868421052631579,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.967741935483871,
+        "decision_loss": 0.221505376344086,
+        "definitive_count": 450,
+        "false_accept_rate": 0.28846153846153844,
+        "false_accepts": 75,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.8436106864284635,
+        "missing_prediction_count": 0,
+        "missing_target_count": 1035,
+        "observed_answer_count": 93,
+        "observed_target_count": 465,
+        "raw_operands": {
+          "brier": {
+            "denominator": 465,
+            "numerator": 98.91082708555165
+          },
+          "coverage": {
+            "denominator": 465,
+            "numerator": 450
+          },
+          "decision_loss": {
+            "denominator": 465,
+            "numerator": 103.0
+          },
+          "false_accept_rate": {
+            "denominator": 260,
+            "numerator": 75
+          },
+          "log_loss": {
+            "denominator": 465,
+            "numerator": 392.2789691892355
+          },
+          "selective_risk": {
+            "denominator": 450,
+            "numerator": 100.0
+          }
+        },
+        "selective_risk": 0.2222222222222222,
+        "undefined_reasons": {},
+        "valid_prediction_count": 465
+      },
+      "raw_p2": {
+        "accepted_count": 225,
+        "bounds": {
+          "brier": [
+            0.17953763440860215,
+            0.17953763440860215
+          ],
+          "decision_loss": [
+            0.20430107526881722,
+            0.20430107526881722
+          ],
+          "denominator": 465,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.17953763440860215,
+        "calibration": [
+          {
+            "count": 60,
+            "lower": 0.0,
+            "mean_probability": 0.0833333333333333,
+            "observed_frequency": 0.25,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 165,
+            "lower": 0.1,
+            "mean_probability": 0.14424242424242426,
+            "observed_frequency": 0.2727272727272727,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 25,
+            "lower": 0.2,
+            "mean_probability": 0.23199999999999998,
+            "observed_frequency": 0.4,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 20,
+            "lower": 0.3,
+            "mean_probability": 0.34,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.4
+          },
+          {
+            "count": 5,
+            "lower": 0.4,
+            "mean_probability": 0.4,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 0,
+            "lower": 0.7,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.8
+          },
+          {
+            "count": 115,
+            "lower": 0.8,
+            "mean_probability": 0.8565217391304348,
+            "observed_frequency": 0.9130434782608695,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 75,
+            "lower": 0.9,
+            "mean_probability": 0.9053333333333334,
+            "observed_frequency": 0.8,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.8924731182795699,
+        "decision_loss": 0.20430107526881722,
+        "definitive_count": 415,
+        "false_accept_rate": 0.26666666666666666,
+        "false_accepts": 60,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.5539156741946539,
+        "missing_prediction_count": 0,
+        "missing_target_count": 1035,
+        "observed_answer_count": 93,
+        "observed_target_count": 465,
+        "raw_operands": {
+          "brier": {
+            "denominator": 465,
+            "numerator": 83.485
+          },
+          "coverage": {
+            "denominator": 465,
+            "numerator": 415
+          },
+          "decision_loss": {
+            "denominator": 465,
+            "numerator": 95.0
+          },
+          "false_accept_rate": {
+            "denominator": 225,
+            "numerator": 60
+          },
+          "log_loss": {
+            "denominator": 465,
+            "numerator": 257.5707885005141
+          },
+          "selective_risk": {
+            "denominator": 415,
+            "numerator": 85.0
+          }
+        },
+        "selective_risk": 0.20481927710843373,
+        "undefined_reasons": {},
+        "valid_prediction_count": 465
+      },
+      "scalar_calibrated": {
+        "accepted_count": 250,
+        "bounds": {
+          "brier": [
+            0.1982458353389665,
+            0.1982458353389665
+          ],
+          "decision_loss": [
+            0.21505376344086022,
+            0.21505376344086022
+          ],
+          "denominator": 465,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.1982458353389665,
+        "calibration": [
+          {
+            "count": 205,
+            "lower": 0.0,
+            "mean_probability": 0.05027123492770609,
+            "observed_frequency": 0.21951219512195122,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 45,
+            "lower": 0.1,
+            "mean_probability": 0.1254631177357941,
+            "observed_frequency": 0.5555555555555556,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 10,
+            "lower": 0.2,
+            "mean_probability": 0.20939430937774853,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 15,
+            "lower": 0.3,
+            "mean_probability": 0.31614125946351507,
+            "observed_frequency": 0.6666666666666666,
+            "undefined_reason": null,
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 0,
+            "lower": 0.7,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.8
+          },
+          {
+            "count": 20,
+            "lower": 0.8,
+            "mean_probability": 0.8814232101997506,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 170,
+            "lower": 0.9,
+            "mean_probability": 0.942412480973565,
+            "observed_frequency": 0.8529411764705882,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.946236559139785,
+        "decision_loss": 0.21505376344086022,
+        "definitive_count": 440,
+        "false_accept_rate": 0.28,
+        "false_accepts": 70,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.6639663250323169,
+        "missing_prediction_count": 0,
+        "missing_target_count": 1035,
+        "observed_answer_count": 93,
+        "observed_target_count": 465,
+        "raw_operands": {
+          "brier": {
+            "denominator": 465,
+            "numerator": 92.18431343261942
+          },
+          "coverage": {
+            "denominator": 465,
+            "numerator": 440
+          },
+          "decision_loss": {
+            "denominator": 465,
+            "numerator": 100.0
+          },
+          "false_accept_rate": {
+            "denominator": 250,
+            "numerator": 70
+          },
+          "log_loss": {
+            "denominator": 465,
+            "numerator": 308.74434114002736
+          },
+          "selective_risk": {
+            "denominator": 440,
+            "numerator": 95.0
+          }
+        },
+        "selective_risk": 0.2159090909090909,
+        "undefined_reasons": {},
+        "valid_prediction_count": 465
+      },
+      "source_permuted_spline9": {
+        "accepted_count": 260,
+        "bounds": {
+          "brier": [
+            0.21230050987313306,
+            0.21230050987313306
+          ],
+          "decision_loss": [
+            0.221505376344086,
+            0.221505376344086
+          ],
+          "denominator": 465,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.21230050987313306,
+        "calibration": [
+          {
+            "count": 245,
+            "lower": 0.0,
+            "mean_probability": 0.024690105569306658,
+            "observed_frequency": 0.2653061224489796,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 15,
+            "lower": 0.1,
+            "mean_probability": 0.1331812929654924,
+            "observed_frequency": 0.6666666666666666,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 15,
+            "lower": 0.2,
+            "mean_probability": 0.2799187764959596,
+            "observed_frequency": 0.6666666666666666,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 0,
+            "lower": 0.3,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 0,
+            "lower": 0.7,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.8
+          },
+          {
+            "count": 0,
+            "lower": 0.8,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.9
+          },
+          {
+            "count": 190,
+            "lower": 0.9,
+            "mean_probability": 0.9767191143251321,
+            "observed_frequency": 0.868421052631579,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.967741935483871,
+        "decision_loss": 0.221505376344086,
+        "definitive_count": 450,
+        "false_accept_rate": 0.28846153846153844,
+        "false_accepts": 75,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.847242095677877,
+        "missing_prediction_count": 0,
+        "missing_target_count": 1035,
+        "observed_answer_count": 93,
+        "observed_target_count": 465,
+        "raw_operands": {
+          "brier": {
+            "denominator": 465,
+            "numerator": 98.71973709100688
+          },
+          "coverage": {
+            "denominator": 465,
+            "numerator": 450
+          },
+          "decision_loss": {
+            "denominator": 465,
+            "numerator": 103.0
+          },
+          "false_accept_rate": {
+            "denominator": 260,
+            "numerator": 75
+          },
+          "log_loss": {
+            "denominator": 465,
+            "numerator": 393.9675744902128
+          },
+          "selective_risk": {
+            "denominator": 450,
+            "numerator": 100.0
+          }
+        },
+        "selective_risk": 0.2222222222222222,
+        "undefined_reasons": {},
+        "valid_prediction_count": 465
+      },
+      "spline9": {
+        "accepted_count": 240,
+        "bounds": {
+          "brier": [
+            0.18251467121672335,
+            0.18251467121672335
+          ],
+          "decision_loss": [
+            0.210752688172043,
+            0.210752688172043
+          ],
+          "denominator": 465,
+          "missing_prediction_count": 0,
+          "reason": null
+        },
+        "brier": 0.18251467121672335,
+        "calibration": [
+          {
+            "count": 70,
+            "lower": 0.0,
+            "mean_probability": 0.08054398624877179,
+            "observed_frequency": 0.21428571428571427,
+            "undefined_reason": null,
+            "upper": 0.1
+          },
+          {
+            "count": 170,
+            "lower": 0.1,
+            "mean_probability": 0.14108045387488632,
+            "observed_frequency": 0.29411764705882354,
+            "undefined_reason": null,
+            "upper": 0.2
+          },
+          {
+            "count": 20,
+            "lower": 0.2,
+            "mean_probability": 0.2669965991783553,
+            "observed_frequency": 0.5,
+            "undefined_reason": null,
+            "upper": 0.3
+          },
+          {
+            "count": 15,
+            "lower": 0.3,
+            "mean_probability": 0.37121945353547736,
+            "observed_frequency": 0.6666666666666666,
+            "undefined_reason": null,
+            "upper": 0.4
+          },
+          {
+            "count": 0,
+            "lower": 0.4,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.5
+          },
+          {
+            "count": 0,
+            "lower": 0.5,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.6
+          },
+          {
+            "count": 0,
+            "lower": 0.6,
+            "mean_probability": null,
+            "observed_frequency": null,
+            "undefined_reason": "empty_fixed_bin",
+            "upper": 0.7
+          },
+          {
+            "count": 5,
+            "lower": 0.7,
+            "mean_probability": 0.7767405790167577,
+            "observed_frequency": 1.0,
+            "undefined_reason": null,
+            "upper": 0.8
+          },
+          {
+            "count": 135,
+            "lower": 0.8,
+            "mean_probability": 0.8634321388422757,
+            "observed_frequency": 0.8888888888888888,
+            "undefined_reason": null,
+            "upper": 0.9
+          },
+          {
+            "count": 50,
+            "lower": 0.9,
+            "mean_probability": 0.9114176012378943,
+            "observed_frequency": 0.8,
+            "undefined_reason": null,
+            "upper": 1.0
+          }
+        ],
+        "coverage": 0.9139784946236559,
+        "decision_loss": 0.210752688172043,
+        "definitive_count": 425,
+        "false_accept_rate": 0.2708333333333333,
+        "false_accepts": 65,
+        "intended_prediction_count": 1500,
+        "log_loss": 0.5656328237464733,
+        "missing_prediction_count": 0,
+        "missing_target_count": 1035,
+        "observed_answer_count": 93,
+        "observed_target_count": 465,
+        "raw_operands": {
+          "brier": {
+            "denominator": 465,
+            "numerator": 84.86932211577636
+          },
+          "coverage": {
+            "denominator": 465,
+            "numerator": 425
+          },
+          "decision_loss": {
+            "denominator": 465,
+            "numerator": 98.0
+          },
+          "false_accept_rate": {
+            "denominator": 240,
+            "numerator": 65
+          },
+          "log_loss": {
+            "denominator": 465,
+            "numerator": 263.0192630421101
+          },
+          "selective_risk": {
+            "denominator": 425,
+            "numerator": 90.0
+          }
+        },
+        "selective_risk": 0.21176470588235294,
+        "undefined_reasons": {},
+        "valid_prediction_count": 465
+      }
+    },
+    "brier_gain_ci95": [
+      0.009633442406249476,
+      0.030576330671862523
+    ],
+    "brier_gain_vs_logistic": 0.01969866346324697,
+    "decision_audit_ready_score": 1,
+    "decision_loss_delta": -0.0073333333333333315,
+    "exploratory_benefit_score": 1,
+    "scientific_verdict_class": "circular_positive"
+  },
+  "source_gates": [],
+  "verdict_class": "circular_positive"
+}

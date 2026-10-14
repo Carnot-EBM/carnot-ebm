@@ -1,0 +1,55 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.731",
+  "generated_at": "2026-10-14T08:11:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 74.2,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile thirteen outcomes and decide source learning and service continuation",
+      "duration_minutes": 27.87,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map qualified append cost to KV260 operations and preserve physical obligations",
+      "duration_minutes": 23.89,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind thirteen tasks and freeze strongest-baseline and qualification protocols",
+      "duration_minutes": 15.08,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Explain adapter-withheld ARC redirects through applied effects and censoring",
+      "duration_minutes": 7.4,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.731 completed 4 experiments (0 compute-bound, 4 synthesis-only) across 74.2 total wall-time minutes (averaging 19 minutes per experiment) reconstructed from disk-mtime fallback data. Execution was driven entirely by synthesis tasks, led by reconciling thirteen outcomes and deciding source learning and service continuation (27.87 minutes), mapping qualified append cost to KV260 operations and preserving physical obligations (23.89 minutes), binding thirteen tasks and freezing strongest-baseline and qualification protocols (15.08 minutes), and explaining adapter-withheld ARC redirects through applied effects and censoring (7.40 minutes), with the two slowest tasks accounting for 51.76 minutes (~69.8% of total wall time). With zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null, observed 0% utilization across both RTX 3090 GPUs reflects correct idle behavior for non-GPU synthesis workloads.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 4 completed experiments totaling 74.2 wall-time minutes), with the top two synthesis tasks—reconciling thirteen outcomes (27.87 minutes) and mapping qualified append cost to KV260 operations (23.89 minutes)—consuming 51.76 minutes (~69.8% of total milestone wall time).",
+    "Synthesis qualification, contract verification, and reconciliation tasks executed serially without incremental receipt caching or evidence memoization when validating unchanged baseline contracts, hardware mapping boundaries, or qualification protocols.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Experiment receipts lack granular intra-task phase telemetry (separating fixture setup, baseline qualification, assertion sweeps, and artifact serialization), obscuring which sub-phase drove the 27.87-minute latency in outcome reconciliation."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for outcome reconciliation, KV260 append cost mapping, task binding, and ARC redirect analysis when upstream contracts and dependencies remain unchanged.",
+    "Instrument long-running synthesis tasks with granular intra-task phase timers (fixture setup, contract validation, assertion sweeps, artifact serialization) to isolate latency drivers.",
+    "Persist synchronous start, completion, and duration lifecycle timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for outcome reconciliation, KV260 append cost mapping, and task binding workflows when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, contract qualification, assertion sweeps, serialization) to isolate sub-phase latency drivers.",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.731 completed 4 synthesis-only experiments in 74.2 wall-time minutes with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% utilization across both RTX 3090 GPUs represented expected idle behavior for non-GPU synthesis workloads, and no multi-model task required DualGPURunner dispatch. Operational improvements should focus on deploying incremental receipt caching for outcome reconciliation and hardware mapping sweeps and persisting synchronous lifecycle timestamps directly in receipts, with estimated time savings held at 0% until measured."
+}

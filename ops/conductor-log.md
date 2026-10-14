@@ -20251,3 +20251,5 @@ code |
 | 2026-10-14 04:50 UTC | Test bounded Qwen evidence views only after a chan | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8500-strongest-baseline-audit) |
 | 2026-10-14 05:35 UTC | Explain adapter-withheld ARC redirects through app | OK | 98 passed, 1 warning in 207.39s (0:03:27) |
 | 2026-10-14 06:29 UTC | Map qualified append cost to KV260 operations and  | OK | 93 passed, 1 warning in 275.47s (0:04:35) |
+| 2026-10-14 07:52 UTC | Reconcile thirteen outcomes and decide source lear | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: Path |
+| 2026-10-14 07:54 UTC | Reconcile thirteen outcomes and decide source lear | OK | Deliverable already exists in repo |

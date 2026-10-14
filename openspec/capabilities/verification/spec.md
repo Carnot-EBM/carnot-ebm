@@ -54854,3 +54854,17 @@ E2E-018 and E2E-021 retain private roots and original dates. Preserve unchanged
 publication, adversarial and strict-row consumers. Bind sidecars to terminal
 bytes and verify the actual reader. Stop measurement by 3600 seconds and reserve
 900 seconds within 4800. No full repository suite or historical primary writes.
+## REQ-VERIFY-8511: Qualify exact V731 terminal bytes with bounded checks
+
+### SCENARIO-VERIFY-8511-CONTROLS
+
+Accept date 20261014. Private CLI, fresh bounded replay, missing inputs, real
+intentional failure and self-consistently rehashed tampering retain rejection
+receipts. Require 100 percent newly owned statements using genuine Coverage.py
+unit and child shards, scoped tests, Ruff, strict mypy and spec coverage. Collect
+historical node IDs before disjoint serial shards; retain their exact union and
+all assertions. E2E-018 and E2E-021 keep original dates and isolated roots.
+Unchanged publication, adversarial and strict-row consumers validate terminal
+bytes, bound sidecars and actual readers. Owned failures disqualify; unchanged
+upstream absence blocks. Workers stay within 1500 MiB peak and 500 MiB growth;
+measurement ends by 3600 seconds with 900 seconds reserved within 4800 seconds.

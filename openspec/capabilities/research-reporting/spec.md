@@ -100237,3 +100237,22 @@ No unchanged physical retry or purchase follows from this evidence inventory.
 
 Fresh replay rejects missing inputs and self-consistently rehashed summaries
 or primitive operands. Missing external evidence blocks; owned failures disqualify.
+## REQ-REPORT-8511: Reconcile thirteen V731 slots without inventing benefits
+
+### SCENARIO-REPORT-8511-ACCOUNTING
+
+Authenticate the activated complete task contract and sealed historical authority.
+Read exact declared deliverables. Distinguish qualified and disqualified producers,
+original conductor pre-gate receipts, cascade skips and absent artifacts. Include
+Exp8511 until publication. Preserve original dates, hashes, nulls and failed bytes.
+No model loads or current calls; generator weights and active YAML stay untouched.
+
+### SCENARIO-REPORT-8511-DECISIONS
+
+Cold-replay primitive source, later-learning, retention and PRIMARY service rows
+through shipped readers when eligible. Missing new studies remain missing, not
+zero. Require positive raw/scalar/permutation contrasts, later benefit with
+retention, paired complete service clocks, resolved applied ARC support, changed
+Qwen runtime and physical board receipts separately. Publication gates grant no
+milestone benefit or submission permission. Retire unchanged attempts while
+preserving hypotheses never measured and authenticated predecessor verdicts.

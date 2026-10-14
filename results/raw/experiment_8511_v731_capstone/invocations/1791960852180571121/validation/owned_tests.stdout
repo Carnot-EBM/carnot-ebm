@@ -1,0 +1,151 @@
+...FE...                                                                 [100%]
+==================================== ERRORS ====================================
+_____________________ ERROR at teardown of test_producers ______________________
+Memory leak: +655MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +655MB
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8499] phase=historical_family_before completed=0 pending=8
+[exp8205] phase=before_subprocess_historical_8430 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8430 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=1 pending=7
+[exp8499] phase=historical_family_before completed=1 pending=7
+[exp8205] phase=before_subprocess_historical_8431 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8431 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=2 pending=6
+[exp8499] phase=historical_family_before completed=2 pending=6
+[exp8205] phase=before_subprocess_historical_8433 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8433 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=3 pending=5
+[exp8499] phase=historical_family_before completed=3 pending=5
+[exp8205] phase=before_subprocess_historical_8434 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8434 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=4 pending=4
+[exp8499] phase=historical_family_before completed=4 pending=4
+[exp8205] phase=before_subprocess_historical_8407 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8407 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=5 pending=3
+[exp8499] phase=historical_family_before completed=5 pending=3
+[exp8205] phase=before_subprocess_historical_8464 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8464 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=6 pending=2
+[exp8499] phase=historical_family_before completed=6 pending=2
+[exp8205] phase=before_subprocess_historical_8465 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8465 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=7 pending=1
+[exp8499] phase=historical_family_before completed=7 pending=1
+[exp8205] phase=before_subprocess_historical_8466 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8466 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=8 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8509] phase=private_fixture_before completed=0 pending=4
+[exp8509] phase=private_fixture_after completed=1 pending=3
+[exp8509] phase=private_fixture_before completed=1 pending=3
+[exp8509] phase=private_fixture_after completed=2 pending=2
+[exp8509] phase=private_fixture_before completed=2 pending=2
+[exp8509] phase=private_fixture_after completed=3 pending=1
+[exp8509] phase=private_fixture_before completed=3 pending=1
+[exp8509] phase=private_fixture_after completed=4 pending=0
+[exp8509] phase=private_fixture_before completed=0 pending=4
+[exp8509] phase=private_fixture_after completed=1 pending=3
+[exp8509] phase=private_fixture_before completed=1 pending=3
+[exp8509] phase=private_fixture_after completed=2 pending=2
+[exp8509] phase=private_fixture_before completed=2 pending=2
+[exp8509] phase=private_fixture_after completed=3 pending=1
+[exp8509] phase=private_fixture_before completed=3 pending=1
+[exp8509] phase=private_fixture_after completed=4 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+=================================== FAILURES ===================================
+________________________________ test_producers ________________________________
+
+tmp_path = PosixPath('/var/tmp/exp8498-owned-uo7xsmxp/owned-tests/test_producers0')
+
+    def test_producers(tmp_path):
+        """SCENARIO-REPORT-8511-DECISIONS: blocked engineering and ARC nulls replay independently."""
+        tasks = yaml.safe_load((e.ROOT / e.methods.ACTIVE).read_bytes())["tasks"]
+        for number in e.PINS:
+            task = next(t for t in tasks if t["id"].startswith(f"exp{number}-"))
+            ref = e.freeze(e.ROOT / task["deliverable"], tmp_path)
+            row, receipt = e.invoke(task, ref, tmp_path / str(number))
+>           assert receipt["passed"] and row["memory"]["passed"] and row["eligible"]
+E           assert (True and True and False)
+
+tests/python/test_v731_capstone_8511.py:126: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8499] phase=historical_family_before completed=0 pending=8
+[exp8205] phase=before_subprocess_historical_8430 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8430 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=1 pending=7
+[exp8499] phase=historical_family_before completed=1 pending=7
+[exp8205] phase=before_subprocess_historical_8431 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8431 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=2 pending=6
+[exp8499] phase=historical_family_before completed=2 pending=6
+[exp8205] phase=before_subprocess_historical_8433 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8433 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=3 pending=5
+[exp8499] phase=historical_family_before completed=3 pending=5
+[exp8205] phase=before_subprocess_historical_8434 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8434 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=4 pending=4
+[exp8499] phase=historical_family_before completed=4 pending=4
+[exp8205] phase=before_subprocess_historical_8407 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8407 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=5 pending=3
+[exp8499] phase=historical_family_before completed=5 pending=3
+[exp8205] phase=before_subprocess_historical_8464 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8464 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=6 pending=2
+[exp8499] phase=historical_family_before completed=6 pending=2
+[exp8205] phase=before_subprocess_historical_8465 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8465 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=7 pending=1
+[exp8499] phase=historical_family_before completed=7 pending=1
+[exp8205] phase=before_subprocess_historical_8466 completed=0 pending=1
+[exp8205] phase=after_subprocess_historical_8466 completed=1 pending=0
+[exp8499] phase=historical_family_after completed=8 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+[exp8509] phase=private_fixture_before completed=0 pending=4
+[exp8509] phase=private_fixture_after completed=1 pending=3
+[exp8509] phase=private_fixture_before completed=1 pending=3
+[exp8509] phase=private_fixture_after completed=2 pending=2
+[exp8509] phase=private_fixture_before completed=2 pending=2
+[exp8509] phase=private_fixture_after completed=3 pending=1
+[exp8509] phase=private_fixture_before completed=3 pending=1
+[exp8509] phase=private_fixture_after completed=4 pending=0
+[exp8509] phase=private_fixture_before completed=0 pending=4
+[exp8509] phase=private_fixture_after completed=1 pending=3
+[exp8509] phase=private_fixture_before completed=1 pending=3
+[exp8509] phase=private_fixture_after completed=2 pending=2
+[exp8509] phase=private_fixture_before completed=2 pending=2
+[exp8509] phase=private_fixture_after completed=3 pending=1
+[exp8509] phase=private_fixture_before completed=3 pending=1
+[exp8509] phase=private_fixture_after completed=4 pending=0
+[exp8205] phase=before_subprocess_branch completed=0 pending=1
+[exp8205] phase=waiting_branch completed=0 pending=1
+[exp8205] phase=after_subprocess_branch completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v731_capstone_8511.py::test_producers - assert (True...
+ERROR tests/python/test_v731_capstone_8511.py::test_producers - Failed: Memor...
+1 failed, 6 passed, 1 warning, 1 error in 576.13s (0:09:36)

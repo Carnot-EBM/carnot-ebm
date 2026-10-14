@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8511_v731_capstone.py", line 12, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v731_capstone.py", line 82, in main
+    return int(old.main(argv))
+               ^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v730_capstone.py", line 119, in main
+    return e.worker_process(args.worker_request, args.worker_output)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v731_capstone_evidence.py", line 150, in worker_process
+    return int(old.worker_process(request, output))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v730_capstone_evidence.py", line 223, in worker_process
+    return int(workers.worker_process(request, output))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v721_capstone_evidence.py", line 419, in worker_process
+    result = outcome(args["task"], args["primary"], output.parent, args.get("closure"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v731_capstone_evidence.py", line 85, in outcome
+    result = dict(old.outcome(task, primary, raw, closure))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v731_capstone_evidence.py", line 85, in outcome
+    result = dict(old.outcome(task, primary, raw, closure))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v731_capstone_evidence.py", line 85, in outcome
+    result = dict(old.outcome(task, primary, raw, closure))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [Previous line repeated 991 more times]
+RecursionError: maximum recursion depth exceeded
