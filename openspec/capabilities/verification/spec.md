@@ -54781,3 +54781,16 @@ Real dated CLI covers private publication, successful cold replay, missing input
 wrong date and rehashed tampering. Frozen command receipts retain exits,durations
 and log hashes. Unchanged primary publication/adversarial/strict-row consumers
 validate terminal bytes; owned failures disqualify and external absence blocks.
+## REQ-VERIFY-8497: Validate private board inventory before publication
+
+Collect required test node IDs before execution and prove nonoverlapping historical shard union equality.
+Run genuine unit and child coverage for newly owned statements, Ruff, strict mypy and spec coverage.
+Run private E2E-018 authority and E2E-021 replay checks without changing old primaries.
+Retain command exits, durations and log hashes. Run unchanged primary publication and both terminal scanners.
+Atomically publish only bytes accepted by fresh-process reduction and required validators.
+
+### SCENARIO-VERIFY-8497-CLI
+
+The private CLI accepts date20261013, passes valid replay and rejects missing inputs, wrong dates and rehashed tampering.
+Collection failure or ambiguous node IDs cannot omit assertions or qualify the inventory.
+No SSH, USB, synthesis or flashing runs. Owned child failure cannot be reported as passed.

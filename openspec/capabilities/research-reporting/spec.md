@@ -100111,3 +100111,24 @@ refinement needs3 overlapping games and5 resolved outcomes per shared cell.
 
 Implementation and terminal disposition are recorded in
 `docs/research-notes/v730-arc-panel-qualification.md`. Conductor owns ops/BMAD reconciliation.
+## REQ-REPORT-8497: Bind the V730 board inventory to original evidence
+
+Authenticate the complete activated fourteen-task V730 contract before reducing evidence.
+Replay Exp8469 and Exp8440 under their sealed original authority and producer hashes.
+Keep KV260 quadratic Ising k_max<=5 and PolarFire board-local Linux CPU qualification separate from deployment.
+Import qualified Exp8494 append clocks only; otherwise retain dated Exp8466 clocks and the exact missing current field.
+Record Anechoic as a dense Alveo V80 optimization lead without Gibbs or Carnot speed claims.
+Preserve GateMate missing-source hashes and IDCODE0xffffffff. Execute zero device commands.
+Keep generator weights frozen, current model calls zero, and generalization scores zero.
+
+### SCENARIO-REPORT-8497-OPERANDS
+
+The original board seals and complete V730 task digest qualify administrative recording.
+Missing optional append costs retain the original fallback date and do not block that recording.
+Missing clocks remain null; measured zero remains zero. Installed images supply no durable append or spline operation.
+
+### SCENARIO-REPORT-8497-REPLAY
+
+Missing required authority blocks; failed owned validation disqualifies.
+Cold replay rejects changed summaries and self-consistently rehashed operands.
+GateMate stays unflashed until source recovery, dated physical change, IDCODE0x20000001, n16 flash and sample hashes are proved.
