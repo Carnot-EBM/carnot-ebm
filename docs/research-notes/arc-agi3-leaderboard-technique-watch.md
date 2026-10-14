@@ -523,3 +523,9 @@ Their concrete memory-saving stack is **4-bit QLoRA + FSDP2 + PLE CPU offload**,
 
 **POSSIBLE CARNOT LEVER:** This stack offers a concrete route to offline supervised adaptation of Carnot’s local MoE generator; a gameplay benefit remains unproven.
 
+## 2026-10-14 13:38 UTC -- NEW
+
+**ARC Slayers — newly discovered inference configuration.** Member `keithtyser`’s public fork uses **three-token MTP speculative decoding**, **32K context**, and a **5-GiB BF16 KV cache**, with prefix caching disabled. It queues **28 game clients** while admitting only **eight vLLM sequences**. These settings are visible in the [published execution log](https://www.kaggle.com/code/keithtyser/duck-qwen3-8-flash-next-nvfp4-mtp/log?scriptVersionId=346399440).
+
+**Classification: (b)** for these general-purpose serving techniques; they require no game-source access or per-game rules. The [notebook](https://www.kaggle.com/code/keithtyser/duck-qwen3-8-flash-next-nvfp4-mtp) describes serving-only changes with Duck’s policy unchanged. Linkage to ARC Slayers’ current scoring submission and a measured gameplay benefit remain unverified.
+
