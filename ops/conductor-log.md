@@ -20250,3 +20250,4 @@ code |
 | 2026-10-14 04:50 UTC | Measure complete append service with qualified typ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8506-append-import-qualification) |
 | 2026-10-14 04:50 UTC | Test bounded Qwen evidence views only after a chan | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8500-strongest-baseline-audit) |
 | 2026-10-14 05:35 UTC | Explain adapter-withheld ARC redirects through app | OK | 98 passed, 1 warning in 207.39s (0:03:27) |
+| 2026-10-14 06:29 UTC | Map qualified append cost to KV260 operations and  | OK | 93 passed, 1 warning in 275.47s (0:04:35) |
