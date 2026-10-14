@@ -9,10 +9,107 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| CANNOT_DETERMINE | 3 |
+| CHECKABLE | 6 |
+| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_8498_v730_capstone.json
+## experiment_8518_objective_benefit_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Experiment 8518 was blocked because the upstream `objective_stream_ready_score` was 0, while the gate required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8519_v732_append_import_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The append-import runner passed historical-replay qualification, with no new benchmark measurements, model calls, or claimed performance benefit.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8520_v732_append_service_cost.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Append beats snapshot on complete-service time by 2.16× at batch 1 and 1.59× at batch 8, conditional on this same-host fixture.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8521_bounded_qwen_evidence.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Experiment 8521 was blocked because `runtime_repair_ready_score` and `comparator_inputs_ready_score` both observed 0 when each required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8522_v732_arc_effect_receipt_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Private effect-receipt qualification completed with action parity across nine cases, documented in "action_parity_rows", and no scientific benefit claimed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8523_v732_arc_effect_panel.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The panel completed as a null result, claiming no scientific benefit and granting no arm-refinement authorization.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8524_v732_board_cost_boundary.json
 
 **CANNOT_DETERMINE**
 
@@ -20,122 +117,26 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion claims historical FoVer publication gates passed, but the capstone’s headline verdict is not visible.
+The visible excerpt records failed NPU and TSU qualification, but truncation prevents identifying the artifact’s full headline claim.
 
 ## WHAT IS MISSING
-The artifact ends mid-"historical_model_provenance"; values for "honest_verdict", "scientific_claims", and "rows" are not supplied, although those names appear in "field_principles". "gate_check_summary" does record failed checks and observed values, so missing blocker diagnostics is not supported.
+The remainder of the artifact: it ends mid-string in "board_operation_rows" → "primitive_reference" → "path"; visible "acceptance_gates" already records failed compatibility and clock checks.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact supply per-unit metrics supporting its comparative headline claim?
+Does the omitted remainder make a comparative claim whose metric lacks corresponding per-unit rows?
 
-## experiment_8499_v731_contract_methods.json
+## experiment_8525_v732_capstone.json
 
-**CANNOT_DETERMINE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CANNOT_DETERMINE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The visible portion reports current-contract readiness of 0, but the artifact is truncated before its headline verdict.
+The preserved V726 audit reports a “circular_positive” Brier gain of 0.01969866346324697 for spline9 over logistic9.
 
 ## WHAT IS MISSING
-The actual "honest_verdict" or "verdict_class" value; both appear only as names in "field_principles" before truncation mid-"future_dependencies". "contract_rows" does record diagnostics: "independent_authority": false and "missing_reason": "authority_absent_or_mismatched".
+Paired evaluation rows containing unit identifiers and each arm’s Brier loss underlying "brier_gain_vs_logistic" and "brier_gain_ci95"; "A1_metrics", "raw_operands", and "calibration" contain pooled metrics, totals, and bin summaries.
 
 ## THE CHECK A READER CANNOT DO
-Does the missing headline verdict assert a comparative result requiring additional per-unit evidence?
-
-## experiment_8500_strongest_baseline_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because upstream `methods_ready_score` was 0, failing the gate requiring 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8503_objective_publication_qualification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because the upstream `methods_ready_score` was 0, failing the required equality to 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8506_append_import_qualification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Qualification was blocked because upstream `methods_ready_score` was 0, failing the required value of 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8509_v731_arc_redirect_effect_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit completed with all 32 events right-censored, so scientific benefit is not estimable and arm refinement lacks sufficient support.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8510_v731_board_cost_boundary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-“NPU_qualified” and “TSU_qualified” are false, with failed “acceptance_gates” supported by recorded missing-clock, compatibility, and missing-field diagnostics.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8511_v731_capstone.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible portion reports administrative completion while current authority and independent scientific generalization remain unmet.
-
-## WHAT IS MISSING
-The artifact cuts off inside "historical_model_provenance"; actual "honest_verdict", "scientific_claims", and "rows" values are not shown, although "field_principles" names them. "gate_check_summary" does record failed checks and observed values, so blocker diagnostics are present.
-
-## THE CHECK A READER CANNOT DO
-Does the omitted portion contain per-unit metrics supporting any comparative headline claim?
+Does the reported Brier gain occur across most evaluation units, or come from a few unusually large improvements?

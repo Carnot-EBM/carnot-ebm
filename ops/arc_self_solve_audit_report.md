@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (97 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (98 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,9 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — this batch demonstrates no live self-discovery advance. Zero artifacts is an empty review, not a clean bill of health.**
+**TL;DR: UNCLEAR — zero recent artifacts; no demonstrated SELF_DISCOVERY_ADVANCE.** The 98-module reachability pass establishes connectivity, not autonomous discovery.
 
-Per-artifact: none (`[]`); no verdicts to assign. Require live attempt → runtime inference → executed solve traces, plus registry comparison, before crediting the next claimed advance.
+**Per-artifact:** None supplied (`[]`). No artifact verdicts to assign. Recommended action: award no new solve credit without live attempt traces, runtime model provenance, successful execution, and a registry comparison establishing novelty.
 
-**Pattern watch:** Reachability proves static import wiring, not execution or discovery provenance. [arc_loop_solve.py:547](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:547) routes registered games through per-game adapters; those results explicitly declare [`development_proxy`](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:248). Hand-built adapter solves remain **OUTER_LOOP_RE** even through a designated entrypoint. Preserve that distinction in capability claims.
+**Pattern watch:** An accepted entrypoint still supports [hand verifiers]( /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:96) and [predefined level tails](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:183). Reachability can therefore conceal outer-loop assistance. Future artifacts must establish where those inputs came from; wiring a handcrafted solution into the live path does not make it self-discovery.
 

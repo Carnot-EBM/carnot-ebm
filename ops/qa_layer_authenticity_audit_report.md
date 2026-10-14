@@ -3,40 +3,45 @@
 
 # qa_layer_authenticity_audit_report — 2026-10-14
 
-Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 1 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
-| `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 5 |
+| `REAL_BUG` | 1 |
+| `SILENT_NON_FIRING` | 7 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_is_rate_metric_field` — rate_with_wiring — the real ARC field winner_generated_moved.rate_with_wiring in results/experiment_4602_capstone_v424.json, value 0.08, returns False.
-- `adversarial_verify.py::_add_variant_denominators_from_value` — json { "honest_verdict": "success: winner_generated_and_generic_transfer_improved", "variant_attempts_count": 7, "winner_generated_rate": 0.4, "generic_transfer_rate": 0.4, "invariants": ["schema_version", "predicates", "facts", "rules", "query"] } ``` Observed: denominators `{5, 7}`; no TAUTOLOGY flag. Removing the unrelated invariants list produces a critical flag. Five is not the variant denomi
-- `adversarial_verify.py::_is_small_shared_denominator_rate_pair` — json { "transfer_solve_rate": 0.04, "winner_generated_rate": 0.04, "variants_attempted": 25 } ``` The function misses this legitimate shared-denominator pair and the caller emits critical TAUTOLOGY.
-- `adversarial_verify.py::_finite_float` — json {"winner_generated_count":{"principle":"Count live generated winning trajectories.","value":1}}
-- `adversarial_verify.py::_has_positive_control_null_metric` — "forward_transfer_delta": 0.0` This literal metric occurs in results/experiment_5583_causal_memory_metric_corrigendum.json. That historical artifact records passed controls; the counterexample above changes those controls to demonstrate the missed enforcement.
+- `adversarial_verify.py::_is_positive_control_null_claim` — Actual corpus artifact: `results/experiment_4524_reach_deeper_levels.json`. ```json { "honest_verdict": "complete: l1_l2_barrier_diagnosed_depth_cap_honest_null", "core_efficiency_baseline": 2.0074, "core_efficiency_best": 2.0074, "efficiency_delta": 0.0 } ``` Both control-status fields are absent. The function returns False; the caller emits no false-negative-risk warning.
+- `adversarial_verify.py::check_false_negative_risk` — The docstring’s own kind of null claim is missed: ```json { "honest_verdict": "complete: process-energy reranker does not beat self-consistency", "flip_count_optimal_vs_sc": 0 } ``` A standard nested acceptance gate is also missed: ```json { "honest_verdict": "complete: no_improvement_over_self_consistency", "acceptance_gates": { "G2_non_degenerate": false } } ``` Other omitted members, each indep
+- `adversarial_verify.py::_is_comparative_claim` — step_supervision_improves_over_outcome` This is the actual verdict in `results/experiment_1209_grpo_vps_step_level_supervision.json`, alongside `outcome_baseline_accuracy: 0.7` and `grpo_vps_accuracy: 0.94`. The function returns false after normal preprocessing.
+- `adversarial_verify.py::check_ceiling_saturation` — This comparative artifact has a saturated trivial baseline and saturated method, but produces **zero flags**, including after the caller’s normalization: ```json { "honest_verdict": "complete: energy_beats_ar", "solve_rate_by_optimizer_variant": { "vanilla_descent": { "principle": "Held-out success fraction for this optimizer", "value": 1.0 }, "parallel_tempering": { "principle": "Held-out success
+- `adversarial_verify.py::_metric_from_top_or_pass_rates` — json "set_encoder_at_1": { "principle": "Held-out selector success rate must be compared with the oracle ceiling.", "value": 1.0 } ``` When stored inside `pass_rates`, this permitted annotation is silently missed.
+- `adversarial_verify.py::_metric_items_from_top_or_pass_rates` — pass_rates.matched_control_at_1 = {"principle": "A matched control near zero cannot establish selector transfer.", "value": 0.0}` in the artifact above.
+- `adversarial_verify.py::check_degenerate_separation` — json { "experiment": 9001, "schema": "selection_transfer_v1", "honest_verdict": "complete: held_out_family_transfer_survives", "cross_family_delta": 1.0, "vote_at_1": 0.0, "oracle_at_k": 1.0, "set_encoder_at_1": 1.0 } ``` Observed: zero DEGENERATE_SEPARATION flags, directly and through the full verifier.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_is_rate_metric_field` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_add_variant_denominators_from_value` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_small_shared_denominator_rate_pair` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_finite_float` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_positive_control_null_metric` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_positive_control_null_claim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_positive_control_failed_or_unchecked` — **REAL_BUG**
+- `adversarial_verify.py::check_false_negative_risk` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_comparative_claim` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_ceiling_saturation` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_metric_from_top_or_pass_rates` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_metric_items_from_top_or_pass_rates` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_degenerate_separation` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_is_rate_metric_field
+## adversarial_verify.py::_is_positive_control_null_claim
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -46,38 +51,61 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-`True for small-sample k/N ARC rate fields, not arbitrary floats.`
+`True for efficiency/proposer/transfer nulls that require a positive control.`
 
 ## FINDINGS
 
-1. **A — Fabrication gate silently bypassed.** `any(marker in kl for marker in _RATE_METRIC_MARKERS[2:])` accepts transfer AUROCs as count-based ARC rates. The repository contains both transfer_auroc and unaggregated_transfer_auroc. With copied values of 0.84 and an unrelated variant denominator of 25, the downstream tautology check emits no flag. Reproduced.
+1. **A/F — Missing controls disable their own check.** The entrance conditions `"positive_control_passed" in d`, `"false_negative_risk_checked" in d`, and `"positive_control" in verdict` require control-related metadata before recognizing a null. If all are absent, `return False` skips even an explicit efficiency null. Confirmed against real experiment 4524: zero efficiency delta, equal baseline/best, missing control fields, and **no false-negative-risk warning**.
 
-2. **B — Naming patterns omit genuine rates.** `kl.endswith(("_rate", "_fraction"))`, `"_rate_" in kl`, and `"_fraction_" in kl` require a preceding underscore. They reject bare rate/fraction names and names beginning with those tokens. The real ARC field winner_generated_moved.rate_with_wiring in results/experiment_4602_capstone_v424.json contains 0.08 but its leaf name returns False. An honest rate/solve_rate collision at 2/25 consequently produces a critical tautology flag.
+2. **2/3 — Substring matching confuses words and ignores negation.** `"positive_control" in verdict`, `marker in text`, and `marker in verdict` perform unrestricted substring searches. The backing null vocabulary includes null, which matches nullability and an explicitly negated null. Both reproduced false warnings through the actual caller; successful prefixes do not prevent them because `verdict_declares_null` becomes true.
 
-3. **Substring boundaries and semantic overreach.** `marker in kl` has no token boundaries: the repository’s first_win marker also matches first_window_latency_s. Its transfer and winner_generated markers accept transfer_latency_s, transfer_energy_j, and winner_generated_loss without establishing that these are rates. The marker list represents ARC success frequencies but admits unrelated quantities; the suffix/infix list represents rate/proportion names but omits the real names identified above.
+3. **5/F — A success prefix overrides measured null evidence.** The `verdict.startswith(("success:", "success_", "shipped:", "shipped_", "passed:", "passed_"))` branch returns False before `_has_positive_control_null_metric(d)` runs whenever the verdict lacks a recognized null phrase. A zero transfer delta with a failed control is therefore skipped under a success prefix, while the same measurements under a complete prefix are recognized. The implementation is narrower than its claim and lets verdict wording suppress evidence.
 
-4. **C — Relevant regressions do not independently protect most rules.** Eleven directly invoked repository regressions passed after independently deleting the fraction suffix, `"_rate_" in kl`, `"_fraction_" in kl`, the entire tail-marker branch, or each individual tail marker. Deleting the rate suffix failed one regression. Full-suite mutation survival was not established.
+4. **B — Recognition lists substitute spellings for concepts.** `_POSITIVE_CONTROL_NULL_DOMAIN_MARKERS` represents efficiency/proposer/transfer workloads but omits efficiency expressed as latency or throughput. `_POSITIVE_CONTROL_NULL_VERDICT_MARKERS` represents null outcomes but omits no-improvement language. The backing metric lists represent unchanged treatment-versus-baseline measurements but omit the predictor transfer comparison already present in the corpus. The entrance gate also ignores a nested positive-control record unless another condition happens to match.
 
-5. **Field extraction and context.** There are no dictionary-value reads. `kl = k.lower()` requires the declared string key; principle-wrapped values do not reach this helper. It does not scan verdicts or forbidden phrases, so negation handling is inapplicable.
+5. **C — Existing regression tests do not independently exercise these rules.** All **31 isolated deletions** survived the seven existing FNR guard tests: each verdict marker, domain marker, delta key, and metric pair; the entrance gate, domain gate, success exclusion, and metric fallback. Several markers are additionally redundant by substring containment. These results establish ineffective coverage in that focused suite; the full repository suite was not mutation-tested.
 
-6. **Remaining classes.** No numeric thresholds, absolute paths, writes, or measurements occur here. Unrecognized names return False; downstream this denies the rate exemption, rather than granting an unchecked pass. The silent approval demonstrated above comes from incorrectly recognized names.
+6. **1/4/D/E/G — No corresponding defect established within this function.** It reads dictionary keys, not field values, so wrapped control values do not affect membership. `" ".join([verdict, " ".join(str(key).lower() for key in d)])` requires a string verdict; the production verification path normalizes wrapped fields before calling it. There are no numeric thresholds, absolute paths, writes, or duration/counter measurements here.
 
 ## COUNTEREXAMPLE
 
+False positive, reproduced through the caller:
+
 ```json
 {
-  "honest_verdict": "success: transfer_metrics_replicated",
-  "transfer_auroc": 0.84,
-  "unaggregated_transfer_auroc": 0.84,
-  "variant_attempts_count": 25
+  "honest_verdict": "shipped: proposer_nullability_validation_added",
+  "positive_control_passed": false
 }
 ```
 
-Both AUROC fields return True. The downstream tautology check emits no flag despite the copied non-rate metrics.
+The function returns True and causes a false-negative-risk warning. This reports shipping validation code, not a research null.
+
+False negative caused by the success exemption:
+
+```json
+{
+  "honest_verdict": "success: transfer_evaluation_completed",
+  "positive_control_passed": false,
+  "transfer_delta": 0.0
+}
+```
+
+The function returns False and the caller emits no false-negative-risk warning.
 
 ## MISSED INPUT
 
-rate_with_wiring — the real ARC field winner_generated_moved.rate_with_wiring in results/experiment_4602_capstone_v424.json, value 0.08, returns False.
+Actual corpus artifact: `results/experiment_4524_reach_deeper_levels.json`.
+
+```json
+{
+  "honest_verdict": "complete: l1_l2_barrier_diagnosed_depth_cap_honest_null",
+  "core_efficiency_baseline": 2.0074,
+  "core_efficiency_best": 2.0074,
+  "efficiency_delta": 0.0
+}
+```
+
+Both control-status fields are absent. The function returns False; the caller emits no false-negative-risk warning.
 
 ## RECOMMENDATION
 
@@ -85,258 +113,588 @@ NEEDS_REDESIGN
 
 ## RATIONALE
 
-The recognizer both rejects genuine rate names and grants exemptions to unrelated measurements. Recognize the metric’s meaning and associate it with its denominator; add isolated regressions that fail when each recognition rule is removed.
+The recognizer silently excludes the artifacts most in need of scrutiny: nulls that omit control evidence. Its unrestricted text matching also flags unrelated or negated language, while successful wording can bypass measured equality; recognition must incorporate outcome evidence independently of control-field presence and expose unrecognized cases.
 
 
-## adversarial_verify.py::_add_variant_denominators_from_value
+## adversarial_verify.py::_positive_control_failed_or_unchecked
 
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-
-SILENT_NON_FIRING
-
-## CLAIM
-
-`Collect explicit small variant denominators from counts or list lengths.`
-
-## FINDINGS
-
-1. **A / substring collision / silent bypass:** `"variant" in kl` matches inside invariants. An unrelated list of software invariants becomes denominator evidence. In the missed input below, adding that list changes a critical TAUTOLOGY flag into **no TAUTOLOGY flag**. This was reproduced through the existing caller.
-
-2. **Recursive scope contamination:** `_add_variant_denominators_from_value(key, item, out)` preserves the parent’s variant marker. Subsequent dictionary traversal appends descendant names, so nested grids, coordinate lists, and other row data become variant collections. A probe containing seven variants with two-by-three grids collected three denominators instead of just seven. Restrict length collection to the actual variant collection.
-
-3. **Numeric metadata contamination:** `nested_path = f"{key}.{nested_key}" if key else str(nested_key)` retains denominator markers throughout a dictionary subtree. Consequently, `any(marker in kl for marker in _DENOMINATOR_KEY_MARKERS)` accepts unrelated integer metadata beneath a marked count. A wrapped count with additional seed metadata contributed both the count and the seed as denominators. Read the wrapper payload explicitly.
-
-4. **B / incomplete count vocabulary:** The concept represented by `_DENOMINATOR_KEY_MARKERS` is an explicit count of evaluated variants. Its actual list omits variants_attempted and n_metamorphic_variants, spellings present in corpus experiments 4486 and 3002 respectively. Both were reproduced as contributing no denominator. The honest counterexample below consequently receives a critical TAUTOLOGY flag.
-
-5. **C / independently untested rules:** All 99 tests across the relevant hardening, baseline-identity, and guard test files remained green after separately deleting the list-length collection rule and recursion into list items. Individually removing denominator, variant_attempts_count, variant_count, n_variants, or total_variants from the marker list also left those tests green. Removing the numeric branch, dictionary recursion, or winner_generated_attempted_count caused failures. These are targeted mutation results; the full repository suite was not mutation-tested.
-
-6. **Field shapes and thresholds:** There are no bare dictionary-field reads here. `key.lower()` assumes the declared string key; ordinary principle/value wrappers, lists, and None were handled without crashes in the probes. `1 < n <= _SMALL_SHARED_DENOMINATOR_MAX` accepted two and the configured maximum of 100, while excluding one and 101. No proven off-by-one defect was found.
-
-7. **Remaining classes:** No forbidden-phrase scan, negation check, absolute filesystem target, tracked-file write, or measurement exists in this helper. Its None return is an accumulator contract, not a caller permission to skip verification; class F is not established merely by that return.
-
-## COUNTEREXAMPLE
-
-Honest rates representing two successes among 25 attempted variants:
-
-```json
-{
-  "honest_verdict": "success: winner_generated_and_generic_transfer_improved",
-  "variants_attempted": 25,
-  "winner_generated_rate": 0.08,
-  "generic_transfer_rate": 0.08
-}
-```
-
-Observed: no denominator collected; critical TAUTOLOGY emitted. Changing only the count key to variant_attempts_count removes that flag.
-
-## MISSED INPUT
-
-```json
-{
-  "honest_verdict": "success: winner_generated_and_generic_transfer_improved",
-  "variant_attempts_count": 7,
-  "winner_generated_rate": 0.4,
-  "generic_transfer_rate": 0.4,
-  "invariants": ["schema_version", "predicates", "facts", "rules", "query"]
-}
-```
-
-Observed: denominators `{5, 7}`; no TAUTOLOGY flag. Removing the unrelated invariants list produces a critical flag. Five is not the variant denominator, and 0.4 cannot represent an integer success count over seven variants.
-
-## RECOMMENDATION
-
-NEEDS_REDESIGN
-
-## RATIONALE
-
-The helper manufactures denominator evidence from unrelated metadata, allowing its caller to silently suppress a fabrication signal. It also overlooks count spellings already used by real artifacts, causing false quarantine. Select semantic count and collection fields, inspect wrapper payloads explicitly, and test each recognition rule independently.
-
-
-## adversarial_verify.py::_variant_denominators
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-`Return small variant denominators explicitly evidenced in the artifact.`
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The supplied wrapper visits every field through `d.items()` and forwards each key and value unchanged to `_add_variant_denominators_from_value(key, value, denominators)`. It contains no field coercion, text matching, thresholds, default skip branch, filesystem writes, or timing measurements; evidence-recognition defects would belong to the delegated helper and cannot be attributed to this wrapper without additional evidence.
-
-
-## adversarial_verify.py::_is_small_shared_denominator_rate_pair
-
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `REAL_BUG`
 
 ## VERDICT
 
-SILENT_NON_FIRING
+REAL_BUG
 
 ## CLAIM
 
-`True for equal small k/N ARC rate metrics over the same denominator.`
+`A null is informative only when the positive control and FNR check passed.`
 
 ## FINDINGS
 
-1. **A / 5 — Unrelated denominator evidence silently suppresses TAUTOLOGY.** `for denominator in _variant_denominators(d):` accepts any recognized denominator anywhere in the artifact. Neither metric is bound to that denominator or to the same variant population. The counterexample below returns True and produces no TAUTOLOGY flag despite explicitly declaring different denominators of 1,000 and 5,000. This is broader than the docstring’s claim.
+1. **A — Silent non-firing:** none demonstrated. Explicitly false, absent, or null flags cause this predicate to return true.
 
-2. **B — The denominator vocabulary omits a real project field.** The delegated recognizer represents explicit evidence of attempted variant counts, but omits variants_attempted, used in actual Exp4472 and Exp4481 artifacts. The fragment under MISSED INPUT returns False and receives critical TAUTOLOGY even though both honest rates are 1/25. Those historical artifacts may supply other denominator evidence; this finding concerns the omitted field.
+2. **Field extraction:** `d.get("positive_control_passed") is not True` assumes a bare Boolean. A permitted principle-annotated field containing true is classified as failed.
 
-3. **2 — The delegated name classifier has a substring-boundary bug.** `_is_rate_metric_field(k1) and _is_rate_metric_field(k2)` relies on a helper that recognizes first-win names through substring matching. First-window energy and gradient-norm fields therefore qualify as rates. The additional counterexample below returns True and suppresses TAUTOLOGY for two unrelated measurements.
+3. **Field extraction:** `or d.get("false_negative_risk_checked") is not True` has the same defect independently. Either wrapped field triggers failure. Lists and None also trigger failure; no evidence establishes that lists should count as passing.
 
-4. **C — Essential arithmetic checks lack effective regression coverage.** All 99 focused tests passed unchanged. Independently deleting both fraction-membership checks preserved all 99 passes, while allowing arbitrary copied rates to qualify; independently deleting `if not _significant_digits_match(v1, v2, TAUTOLOGY_DIGITS):` also preserved all 99 passes. The full suite was not run. The significance gate is additionally redundant for the caller’s eventual TAUTOLOGY decision, which checks agreement again.
+4. **Claim versus implementation:** the docstring says both checks passed; the implementation requires a passed-control flag and a risk-check-completed flag. It does not independently establish whether the completed FNR check passed. The snippet supplies no contract resolving that distinction.
 
-5. **1 / 3 / 4 / D / E / F / G — No additional demonstrated defects.** This function contains no direct dictionary-field extraction, forbidden-phrase scan, numeric comparison, absolute path, file write, or timing measurement. Its terminal `return False` declines the exemption and leaves the caller’s check active; that default is safe. No wrapper-handling or off-by-one defect was established.
+5. **C — Mutation coverage:** deleting either individual clause left all eight existing direct-caller regression tests checked passing. Those tests do not independently protect either clause. This was verified with mutations in memory; the full suite was not run.
+
+6. **B — Pattern scope:** the two literal field names represent explicit control/check attestations. No evidence establishes an omitted equivalent field name; inventing an alias would manufacture a finding.
+
+7. **Questions 2–4:** no free-text matching, negation scanning, numeric thresholds, or off-by-one comparisons occur.
+
+8. **D–G:** this function computes no paths, writes nothing, measures nothing, and has no default branch that silently skips verification.
 
 ## COUNTEREXAMPLE
 
 ```json
 {
-  "winner_generated_rate": 0.9130434782608695,
-  "generic_transfer_rate": 0.9130434782608695,
-  "winner_generated_attempted_count": 1000,
-  "generic_transfer_denominator": 5000,
-  "calibration_variant_count": 23
-}
-```
-
-False negative: the unrelated calibration count supplies 23, both copied values fit 21/23, and the function exempts them despite their declared denominators differing.
-
-The boundary failure also reproduces with:
-
-```json
-{
-  "first_window_energy": 0.08,
-  "first_window_gradient_norm": 0.08,
-  "variant_count": 25
-}
-```
-
-## MISSED INPUT
-
-```json
-{
-  "transfer_solve_rate": 0.04,
-  "winner_generated_rate": 0.04,
-  "variants_attempted": 25
-}
-```
-
-The function misses this legitimate shared-denominator pair and the caller emits critical TAUTOLOGY.
-
-## RECOMMENDATION
-
-NEEDS_REDESIGN
-
-## RATIONALE
-
-Numerical compatibility with an artifact-wide denominator does not establish a shared measurement population, yet it grants an unconditional exemption. Bind denominator evidence to each metric and its variant set, recognize the existing attempted-count vocabulary, enforce name boundaries, and add tests that fail when the arithmetic safeguards are removed.
-
-
-## adversarial_verify.py::_finite_float
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-By its name, `_finite_float` extracts a finite numeric field as a float; it has no docstring specifying an input-normalization requirement.
-
-## FINDINGS
-
-1. **A / 1 / 5 / F — Wrapped measurements silently disappear.** `value = d.get(key)` retrieves the annotation dictionary without unwrapping it. `return float(value) if _is_finite_number(value) else None` then returns `None` for a legitimate wrapped number. Reproduced through the direct QD check: bare winner count produces a critical missing-ablation flag; the identical wrapped count produces no flags. The main file-verification path normalizes first, so this finding applies to direct helper/check calls.
-2. **C — Wrapper coverage misses this entry point.** Seventeen existing pure test functions passed despite the reproduced failure. Disabling numeric extraction failed an existing helper test, so that behavior is tested; no rule was established as deletable with the entire suite green.
-
-## COUNTEREXAMPLE
-
-```json
-{
-  "experiment": "energy_fitness_qd_generation_live",
-  "game": "tn36",
-  "headline": "energy-fitness QD live generation",
-  "honest_verdict": "success: energy_fitness_qd_winner_generated_1",
-  "solve_provenance": "live_agent_self_discovery",
-  "winner_generated_count": {
-    "principle": "Count live generated winning trajectories.",
-    "value": 1
+  "positive_control_passed": {
+    "principle": "A positive control demonstrates that the assay can detect improvement.",
+    "value": true
   },
-  "random_mutation_ablation_passed": false
+  "false_negative_risk_checked": {
+    "principle": "An informative null requires checking false-negative risk.",
+    "value": true
+  }
 }
 ```
 
-Direct QD check: **no flags**. Replacing the wrapped count with bare `1` produces **qd-without-random-mutation-ablation**, severity **critical**.
+Expected return: false. Actual return: true. Both attestations are true, but their permitted wrappers produce a false positive.
+
+## MISSED INPUT
+
+none found
+
+## RECOMMENDATION
+
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+
+Both identity comparisons reject permitted annotation wrappers regardless of their contained Boolean values. Unwrap those fields before applying strict Boolean checks, and add independent tests for each wrapped field and each independently failing flag.
+
+
+## adversarial_verify.py::check_false_negative_risk
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Detect null or negative experimental claims unsupported by valid positive controls, exercised methods, selectable oracle headroom, or passed non-degeneracy gates.
+
+## FINDINGS
+
+1. **A/F — unrecognized null claims silently bypass all three signals.** `is_null_claim = any(m in verdict for m in null_markers)` recognizes selected spellings, followed by `if not is_null_claim:` and `return`. The natural-language claim described in the docstring does not match those spellings. The first artifact in MISSED INPUT produces zero warnings from this function, including through the real file-verification CLI. Unrecognized claims receive no indication that verification was skipped.
+
+2. **Field extraction silently discards supported wrappers.** `verdict_raw = d.get("honest_verdict") or ""` followed by `verdict = (verdict_raw if isinstance(verdict_raw, str) else "").lower()` converts a wrapped verdict into an empty string. Both occurrences of `if not _is_finite_number(v):` skip wrapped numeric counts and oracle/baseline metrics; `isinstance(v, bool)` skips wrapped gates. Lists and None also disappear without an invalid-evidence warning. The repository’s file-verification entry point normalizes top-level principle wrappers, but its claim-audit prepass calls this function directly: a wrapped verdict with a zero change count was reported as having no false-negative-risk flags.
+
+3. **Nested acceptance gates remain invisible even through file verification.** `for k, v in d.items():` inspects top-level values, and `isinstance(v, bool)` excludes a dictionary containing acceptance gates. The nested-gate artifact in MISSED INPUT produces no warning through either direct invocation or file verification. This is an actual artifact layout used in the repository.
+
+4. **B — every naming vocabulary is narrower than its underlying concept.**
+   - `null_markers` represents negative experimental conclusions, but omits ordinary prose and other established null spellings.
+   - `("flip" in kl and "count" in kl)`, `kl.startswith("n_changed")`, and `("n_flips" in kl)` represent method-output change counts, but omit equivalent names. The prefix restriction also contradicts the docstring’s `*n_changed*` claim.
+   - `("oracle", "optimal", "upper_bound", "best_possible")` represents attainable performance bounds, but omits ceiling terminology.
+   - Both `("acc", "rate", "solve", "score")` tuples represent performance measurements, but omit F1.
+   - `("self_consistency", "baseline", "majority")` represents baseline methods, but omits the self-consistency abbreviation actually used by project artifacts.
+   - `("non_degenerate" in kl or "g2" in kl or "headroom" in kl)` represents non-degeneracy acceptance gates, but omits the repository’s existing alternative spelling.
+
+   Concrete omitted members appear in MISSED INPUT.
+
+5. **Substring matching and negation corrupt claim classification.** `any(m in verdict for m in null_markers)` matches `refuted` inside a longer word asserting the opposite. It also treats a verdict denying or rejecting a no-improvement claim as itself claiming no improvement. Nothing distinguishes the experiment’s conclusion from commentary about a previous run, an avoided failure, or a rejected hypothesis.
+
+6. **Change counts are not scoped to the method under test.** `("flip" in kl and "count" in kl)` accepts control, ablation, and historical counts. `("n_flips" in kl)` also accepts counts of correct flips rather than total exercised flips. A zero control count can trigger the assertion that the method never changed any selection despite a nonzero method count. This is broader than the docstring’s non-exercise claim.
+
+7. **Gate matching confuses unrelated names and reverses negative-polarity booleans.** `"g2" in kl` matches inside an unrelated logarithm field and also accepts external-reproduction gates unrelated to experimental degeneracy. `"headroom" in kl` assumes every matching False means absent headroom; a False field asserting *no* headroom means the opposite. The primary COUNTEREXAMPLE is an informative, exercised null with passed controls, yet receives a degeneracy warning.
+
+8. **Oracle/baseline selection compares arbitrary numbers and arbitrary pairs.** `any(s in kl for s in ("acc", "rate", "solve", "score"))` recognizes a performance marker inside an unrelated token-generation field. `oracle is None` and `baseline is None` select the first matching values independently, without matching metric, units, or evaluation corpus. Confirmed probes compared accuracy with token count, compared training oracle accuracy with test baseline accuracy, and missed a degenerate test pair because a healthy training pair appeared first. Dictionary order therefore changes the scientific determination.
+
+9. **The unconditional positive-control guarantee is false.** The docstring promises `we never auto-pass a` `null claim that lacks a demonstrated positive control`. The additional warning is conditional on `_is_positive_control_null_claim(d, verdict)`, whose repository implementation covers selected domains. Outside that scope, a recognized null with both control-status fields False and no other matching evidence returns without warning. The displayed `d.get('positive_control_passed')` and `d.get('false_negative_risk_checked')` reads merely format diagnostic values; they do not enforce the general guarantee.
+
+10. **C — the named gate regression is double-covered.** Independently disabling `"g2" in kl` or `"non_degenerate" in kl` left all **90 focused tests green**. Their positive gate fixture contains both markers, so neither recognizer is independently tested. Replaying eight directly relevant regressions also survived individual deletion of:
+    - Every null marker except `no_improvement`, `does_not`, and `refuted`.
+    - Oracle tokens other than `optimal`; baseline tokens other than `self_consistency`.
+    - `rate`, `solve`, and `score` from either metric tuple.
+    - The `n_changed`, `n_flips`, and `headroom` recognizers.
+    - The null-claim early return.
+
+    Those latter results concern the eight regressions, not the entire repository suite.
+
+11. **Checks without a detected defect:** `float(v) == 0.0` correctly includes exactly zero, and `oracle <= baseline` correctly includes equality under the stated higher-is-better interpretation. The supplied function contains no absolute filesystem target, artifact write, duration measurement, or measurement evaluated before work. Its only mutation is appending flags; the inspected focused tests use temporary artifact paths.
+
+## COUNTEREXAMPLE
+
+This honest, exercised null is falsely flagged solely because `g2` occurs inside `log2`:
+
+```json
+{
+  "honest_verdict": "complete: reranker_no_gain_despite_headroom",
+  "flip_count_vs_baseline": 12,
+  "oracle_accuracy": 0.8,
+  "baseline_accuracy": 0.65,
+  "positive_control_passed": true,
+  "false_negative_risk_checked": true,
+  "log2_transform_enabled": false
+}
+```
+
+The emitted warning says that `log2_transform_enabled=False` self-reports a degenerate test.
+
+Additional concrete misclassifications:
+
+| Input fragment | Wrong interpretation |
+|---|---|
+| `"honest_verdict": "complete: hypothesis_unrefuted_positive_lift", "flip_count_control_vs_baseline": 0` | A positive, unrefuted hypothesis becomes a null claim. |
+| A recognized null with `"no_headroom": false` | Having headroom becomes self-reported degeneracy. |
+| A recognized null with method flip count 12 and control flip count 0 | The control’s inactivity becomes method inactivity. |
+| A recognized null with `"oracle_accuracy": 0.8, "baseline_generated_tokens": 1200, "baseline_accuracy": 0.65` | Accuracy is compared with token count; a valid headroom-bearing corpus is flagged. |
+| A recognized null with `"oracle_train_accuracy": 0.8, "baseline_test_accuracy": 0.85, "oracle_test_accuracy": 0.95, "baseline_train_accuracy": 0.7`, in that order | Both matched pairs have headroom, but the crossed pair is flagged. |
+
+## MISSED INPUT
+
+The docstring’s own kind of null claim is missed:
+
+```json
+{
+  "honest_verdict": "complete: process-energy reranker does not beat self-consistency",
+  "flip_count_optimal_vs_sc": 0
+}
+```
+
+A standard nested acceptance gate is also missed:
+
+```json
+{
+  "honest_verdict": "complete: no_improvement_over_self_consistency",
+  "acceptance_gates": {
+    "G2_non_degenerate": false
+  }
+}
+```
+
+Other omitted members, each independently sufficient to expose a recognition gap:
+
+| Concept | Concrete missed input |
+|---|---|
+| Null conclusions | `"honest_verdict": "complete: process_energy_honest_null", "flip_count": 0` |
+| Method-change counts | A recognized null with `"reranker_n_changed": 0` or `"changed_selection_count": 0` |
+| Attainable performance bounds | A recognized null with `"ceiling_accuracy": 0.65, "baseline_accuracy": 0.65` |
+| Performance metrics | A recognized null with `"oracle_f1": 0.65, "baseline_f1": 0.65` |
+| Self-consistency baselines | A recognized null with `"oracle_accuracy": 0.65, "sc_accuracy": 0.65` |
+| Non-degeneracy gates | A recognized null with `"G0_nondegeneracy": false` |
+
+Two further confirmed silent misses:
+
+```json
+{
+  "honest_verdict": "complete: reranker_no_improvement_over_self_consistency",
+  "positive_control_passed": false,
+  "false_negative_risk_checked": false
+}
+```
+
+```json
+{
+  "honest_verdict": "complete: reranker_no_improvement_on_test",
+  "oracle_train_accuracy": 0.9,
+  "baseline_train_accuracy": 0.8,
+  "oracle_test_accuracy": 0.65,
+  "baseline_test_accuracy": 0.65
+}
+```
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The guard silently misses degenerate null claims and falsely attributes unrelated fields to experimental degeneracy. Word boundaries and additional tokens cannot fix missing evidence enforcement, gate polarity, method scope, or metric pairing. The 90 focused tests, lint, and scoped spec-coverage checks passed while direct and CLI probes reproduced these failures.
+
+
+## adversarial_verify.py::_is_comparative_claim
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Return true when an artifact “asserts one method beats another,” enabling the ceiling-saturation check for comparative claims.
+
+## FINDINGS
+
+1. **A — Confirmed silent miss.** The real corpus verdict in MISSED INPUT asserts improvement over another method, but this function returns `False`, even after normal preprocessing. `_COMPARISON_VERDICT_MARKERS` omits improvement-over language; the numeric fallback also misses method-prefixed accuracy fields.
+
+2. **F — Unrecognized means unchecked.** Terminal `return False` conflates an unrecognized superiority claim with a genuinely noncomparative artifact. Its caller consequently skips ceiling-saturation checking without reporting that recognition failed.
+
+3. **Field extraction — verdict.** `v = str(d.get("honest_verdict", "")).lower()` searches dictionary/list representations, including annotation principles, rather than extracting the verdict value. None becomes ordinary text. A principle describing forbidden superiority claims can therefore activate the gate despite a noncomparative value. **Scope:** the repository’s normal file-verification path already unwraps top-level annotations; this defect affects direct calls with unnormalized fields.
+
+4. **Field extraction — metrics and fallback.** `headline = d.get("solve_rate") or d.get("accuracy") or d.get("pass_rate")` selects by truthiness before validating type. A truthy list, dictionary, or invalid string masks a valid later metric; a legitimate zero is skipped. `_is_finite_number(headline)` and `_is_finite_number(vv)` reject wrapped numeric values, lists, and None without explaining the missing comparison; normal preprocessing mitigates top-level wrappers.
+
+5. **Substring boundaries.** `any(m in v for m in _COMPARISON_VERDICT_MARKERS)` matches inside unrelated words; the heartbeat example below returns true. `"baseline" in kl` likewise accepts a key explicitly identifying a nonbaseline, while `"exact" not in kl` and `"oracle" not in kl` incorrectly exclude approximate or explicitly non-oracle baselines containing those substrings.
+
+6. **Negation/context blindness.** The marker branch recognizes a denial of outperformance as outperformance. It also accepts discussion of generalization or a versus comparison without requiring any assertion that one method won. The negated counterexample below produces an actual ceiling-saturation flag.
+
+7. **Numeric inference exceeds the claim.** `float(vv) < float(headline)` compares every eligible numeric baseline field with the selected headline, regardless of metric identity, units, or direction. Baseline runtime can be compared with solve rate. A small numerical difference also activates the gate despite a verdict explicitly declining a superiority claim.
+
+8. **B — Vocabulary samples masquerade as definitions.** `_COMPARISON_VERDICT_MARKERS` represents superiority assertions but omits improvement-over and higher-accuracy claims found in real artifacts. The three headline reads represent performance measurements but omit AUROC and method-prefixed accuracy. The baseline/exact/oracle filters represent weak comparator measurements but mishandle approximate and explicitly non-oracle comparators.
+
+9. **C — Relevant tests do not isolate either recognizer.** Executing the four existing focused ceiling-saturation tests against in-memory mutations left all four passing when **all verdict markers were removed**, and separately when **all numeric-baseline logic was removed**. Removing either exclusion or changing `<` to `<=` also survived. The positive fixtures satisfy both recognizers; this establishes defective focused coverage, not a green mutation run of the entire repository suite.
+
+10. **Boundary and remaining classes.** `float(vv) < float(headline)` correctly implements “strictly below the headline rate”; equality itself is not an off-by-one bug. This function contains no absolute paths, writes, duration measurements, or counters. The four focused tests operate on in-memory fragments, so D/E/G have no finding here.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "complete: method_does_not_outperform_baseline",
+  "solve_rate_by_difficulty": {
+    "easy": 1.0,
+    "hard": 1.0
+  }
+}
+```
+
+Expected: no superiority claim. Actual: the function returns true, and its caller emits `CEILING_SATURATION`.
+
+Replacing the verdict with `"complete: watchdog_heartbeats_verified"` produces the same false positive: `"beats"` matches inside `"heartbeats"`.
+
+Other reproduced boundary failures:
+
+```json
+{"solve_rate": 1.0, "inexact_baseline_solve_rate": 0.5}
+```
+
+Returns false despite a weaker approximate baseline.
+
+```json
+{"accuracy": 0.9, "nonbaseline_accuracy": 0.8}
+```
+
+Returns true by treating an explicitly nonbaseline measurement as a baseline.
+
+## MISSED INPUT
+
+`step_supervision_improves_over_outcome`
+
+This is the actual verdict in `results/experiment_1209_grpo_vps_step_level_supervision.json`, alongside `outcome_baseline_accuracy: 0.7` and `grpo_vps_accuracy: 0.94`. The function returns false after normal preprocessing.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The function treats a sample of substrings and metric names as a complete definition of comparative claims. It silently misses real superiority assertions and flags explicit denials or incidental text. Use normalized fields, explicit claim semantics, compatible metric comparisons, and independently tested recognizers; distinguish unrecognized input from a verified noncomparative result.
+
+
+## adversarial_verify.py::check_ceiling_saturation
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+Detect comparative superiority claims whose corpus cannot distinguish methods because every variant, including a trivial baseline, and/or every difficulty tier reaches the same maximum.
+
+## FINDINGS
+
+1. **A/F — Saturated, principle-annotated measurements silently disappear.** The first artifact in MISSED INPUT produces zero flags. Both instances of `nums = {kk: float(vv) for kk, vv in v.items() if _is_finite_number(vv)}` discard wrapped numbers and nested measurement records. The repository caller unwraps top-level annotations only, so this failure survives normal preprocessing. Unsupported input and a genuine pass produce the same empty flag list.
+
+2. **B — The naming lists are samples of their concepts.** The seven method selectors represent method-comparison tables; the four difficulty selectors represent difficulty-stratified measurements. Alternative table names in MISSED INPUT match neither list. `_TRIVIAL_BASELINE_MARKERS` represents simple baseline algorithms but omits the local-search baseline shown there. The inspected comparative helper likewise represents superiority claims with a vocabulary that misses the affirmative wording shown there.
+
+3. **2 — Both substring recognizers accept unrelated longer names.** `s in kl` accepts a sampler name containing the difficulty-selector prefix. `any(m in kk.lower() for m in _TRIVIAL_BASELINE_MARKERS)` classifies an explicitly nontrivial method as trivial: the repository marker list contains the corresponding substring. Both concrete examples appear in COUNTEREXAMPLE.
+
+4. **1/5 — Counts, durations, and error rates are treated as successful normalized scores.** `CEIL = 0.99` and `min(nums.values()) >= CEIL` never establish the measurement’s units, attainable maximum, or optimization direction. Positive solved counts can therefore produce a warning claiming every tier saturates despite sharply different success rates.
+
+5. **1/5 — Filtering can manufacture universal saturation.** A difficult tier stored as a wrapped measurement is removed before `min(nums.values()) >= CEIL` runs. Two remaining easy tiers then justify the false assertion “every difficulty tier saturates.” Lists and None are also discarded; `if not isinstance(v, dict):` skips entire list-shaped tables without reporting incomplete coverage.
+
+6. **3 — The comparative gate accepts explicit negation.** The promise “Only fires on comparative claims (gated)” fails with the denial in COUNTEREXAMPLE. Tested against the repository’s actual helper, `if not _is_comparative_claim(d):` permits that artifact through because its verdict contains comparative vocabulary despite explicitly disclaiming the claim. The supplied function contains no subsequent context check.
+
+7. **4/5 — The implementation does not require the claimed universal tie.** `len(at_ceiling) >= 2 and trivial` requires only two qualifying entries, without checking that the claimed method is among them or that other variants saturate. Values 0.99 and 1.0 also produce the statement `tie at {max(nums.values())}` despite differing. Exact equality at 0.99 is included consistently; there is no demonstrated off-by-one error at that cutoff.
+
+8. **C — Existing tests leave substantial rules unprotected.** All four existing ceiling tests passed. In isolated mutation runs, removing `and trivial` left all four green; individually deleting every trivial-baseline marker also left them green because the positive fixture’s baseline matches two markers. Nine of the eleven table-selector deletions survived; only deleting the optimizer selector or the difficulty selector failed a ceiling test. Removing `max(nums.values()) < CEIL` also survived, but that condition is redundant with downstream qualification. These results concern the four ceiling tests, not the entire project suite.
+
+9. **D/E/G — No corresponding defect found here.** The supplied function has no filesystem paths, filesystem writes, or duration/counter measurements. Its four existing direct tests operate on local dictionaries and flag lists without overwriting historical artifacts.
+
+## COUNTEREXAMPLE
+
+This consistent artifact produces **two false saturation warnings**: one from solved counts, and one after silently dropping the genuinely difficult tier.
+
+```json
+{
+  "honest_verdict": "complete: energy_beats_ar",
+  "trials_per_tier": 100,
+  "solved_count_by_difficulty": {
+    "easy": 100,
+    "medium": 100,
+    "hard": 12
+  },
+  "solve_rate_by_difficulty": {
+    "easy": 1.0,
+    "medium": 1.0,
+    "hard": {
+      "principle": "Held-out success fraction for this difficulty tier",
+      "value": 0.12
+    }
+  }
+}
+```
+
+Additional independently reproduced false positives:
+
+```json
+{
+  "honest_verdict": "complete: energy_beats_ar",
+  "solve_rate_by_method": {
+    "nontrivial_energy_search": 1.0,
+    "parallel_tempering": 1.0
+  }
+}
+```
+
+This labels `nontrivial_energy_search` a trivial baseline.
+
+```json
+{
+  "honest_verdict": "complete: energy_beats_ar",
+  "solve_rate_by_tiered_sampler": {
+    "one_stage": 1.0,
+    "two_stage": 1.0
+  }
+}
+```
+
+This reports difficulty-tier saturation from sampler configurations.
+
+```json
+{
+  "honest_verdict": "complete: sanity only; no claim that energy beats AR",
+  "solve_rate_by_difficulty": {
+    "easy": 1.0,
+    "hard": 1.0
+  }
+}
+```
+
+This flags a verdict that explicitly disclaims superiority.
+
+## MISSED INPUT
+
+This comparative artifact has a saturated trivial baseline and saturated method, but produces **zero flags**, including after the caller’s normalization:
+
+```json
+{
+  "honest_verdict": "complete: energy_beats_ar",
+  "solve_rate_by_optimizer_variant": {
+    "vanilla_descent": {
+      "principle": "Held-out success fraction for this optimizer",
+      "value": 1.0
+    },
+    "parallel_tempering": {
+      "principle": "Held-out success fraction for this optimizer",
+      "value": 1.0
+    }
+  }
+}
+```
+
+Other independently reproduced omissions, using bare numeric leaves:
+
+- `"optimizer_results": {"vanilla_descent": 1.0, "parallel_tempering": 1.0}` is ignored. The corpus also uses the unrecognized table names `method_results` and `difficulty_buckets`.
+- `"solve_rate_by_method": {"hill_climbing": 1.0, "parallel_tempering": 1.0}` misses the simple local-search baseline.
+- `"honest_verdict": "complete: energy improves on AR"` prevents checking an otherwise recognized, saturated method table.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+The check silently discards qualifying evidence and falsely interprets counts or incomplete tables as universal saturation. It needs structured measurement extraction, explicit metric semantics and baseline roles, and visible reporting of unsupported inputs; the existing tests do not establish those properties.
+
+
+## adversarial_verify.py::_metric_from_top_or_pass_rates
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+The name `_metric_from_top_or_pass_rates` promises numeric metric extraction from the artifact’s top level or its pass-rate mapping; it has no docstring.
+
+## FINDINGS
+
+1. **A/F — Confirmed silent bypass.** A principle-wrapped selector metric inside the pass-rate mapping returns missing instead of its numeric value. Reproduction using the repository’s numeric predicate, normalizer, and consuming guard produced one degenerate-separation flag for the bare metric and zero for the wrapped equivalent. Top-level normalization does not repair nested metric wrappers.
+
+2. **Field extraction assumptions.** `value = d.get(key)` assumes the requested metric is already a bare number. `pass_rates = d.get("pass_rates")` assumes an unwrapped metric mapping; a wrapped mapping passes the dictionary test but lookup searches its annotation envelope. `pass_rates.get(key)` assumes the nested metric is bare, and `return float(pass_rates[key])` converts that same unwrapped-only value. None of these reads unwraps annotations. Lists and None are rejected; their rejection alone does not establish a bug.
+
+3. **Default conflates unsupported representations with absence.** `return None` represents both an absent metric and a present, valid annotated metric. The consuming saturated-selector check treats the latter as missing and does not fire. The implementation therefore supports fewer field representations than the project permits.
+
+4. **C — Coverage limitation.** The existing saturated-selector regression exercises both numeric extraction branches; removing either breaks its expected detection. The inspected tests contain no nested-wrapper regression. Deleting `return None` alone preserves behavior through Python’s implicit None return.
+
+5. **Remaining classes.** This function contains no free-text matching, negation checks, numeric thresholds, name-pattern lists, absolute paths, writes, or timing measurements. No additional boundary, taxonomy, write-target, or premature-measurement defect is established.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "complete: cross_family_generalizes",
+  "oracle_at_k": 1.0,
+  "pass_rates": {
+    "set_encoder_at_1": {
+      "principle": "Held-out selector success rate must be compared with the oracle ceiling.",
+      "value": 1.0
+    },
+    "vote_at_1": 0.25
+  }
+}
+```
+
+False negative: extraction returns None for the selector metric, suppressing the saturated-oracle selector determination. Replacing the annotation with bare `1.0` triggers it.
 
 ## MISSED INPUT
 
 ```json
-{"winner_generated_count":{"principle":"Count live generated winning trajectories.","value":1}}
+"set_encoder_at_1": {
+  "principle": "Held-out selector success rate must be compared with the oracle ceiling.",
+  "value": 1.0
+}
 ```
+
+When stored inside `pass_rates`, this permitted annotation is silently missed.
+
+## RECOMMENDATION
+
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+
+A permitted annotation changes whether identical numerical evidence triggers the guard. Unwrap the container and individual metric values before numeric validation, and add a regression proving that the wrapped counterexample receives the same determination as its bare equivalent.
+
+
+## adversarial_verify.py::_metric_items_from_top_or_pass_rates
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Without a docstring, `_metric_items_from_top_or_pass_rates` names a helper that extracts requested metrics from the top level or `pass_rates`.
+
+## FINDINGS
+
+1. **A / field extraction / silent omission:** `if isinstance(pass_rates, dict) and _is_finite_number(pass_rates.get(key)):` rejects a principle-wrapped nested number. The counterexample’s zero control disappears, and `return items` gives no indication that extraction failed. Reproduced through both the direct check and the normal file verifier: the bare control triggers the degeneracy flag; the annotated control does not.
+
+2. **All field reads have restricted shapes:** `pass_rates = d.get("pass_rates")` expects a plain dictionary; `value = d.get(key)` expects a bare finite number; `pass_rates.get(key)` and `float(pass_rates[key])` expect a bare nested number. None unwrap annotations. The normal verifier handles top-level wrappers before calling this helper, but nested wrappers remain exposed. Lists and null values are skipped; accepting arbitrary lists as scalar metrics is not established as a requirement.
+
+3. **C / untested precedence:** Deleting `continue` left all five focused existing tests passing. Those tests do not protect top-level precedence when both locations contain the requested metric. Deleting either extraction branch failed two tests each. This mutation evidence covers the focused tests, not the full repository suite.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "complete: arcgen_cross_generator_generalizes",
+  "cross_generator_delta": 0.96,
+  "oracle_at_k": 0.82,
+  "pass_rates": {
+    "matched_control_at_1": {
+      "principle": "A matched control near zero cannot establish selector transfer.",
+      "value": 0.0
+    },
+    "set_encoder_at_1": 0.96
+  }
+}
+```
+
+For requested keys `("matched_control_at_1",)`, extraction returns `[]` instead of `[("matched_control_at_1", 0.0)]`. The normal verifier misses the degeneracy flag; replacing the wrapper with bare `0.0` makes it fire.
+
+## MISSED INPUT
+
+`pass_rates.matched_control_at_1 = {"principle": "A matched control near zero cannot establish selector transfer.", "value": 0.0}` in the artifact above.
 
 ## RECOMMENDATION
 ADD_FIELD_UNWRAP
 
 ## RATIONALE
-An allowed annotation changes a measured count into an apparently absent value, disabling a downstream check. Upstream normalization protects the standard file-verification path but does not make direct callers safe. This helper contains no string matching, thresholds, marker lists, paths, writes, or timing operations; those classes yield no additional findings.
+An allowed annotation makes a numeric control indistinguishable from absent data, silently disabling detection that depends on that control. Unwrap containers and metric values, then add a nested-wrapper regression through the normal verifier. This function contains no free-text matching, numeric thresholds, hardcoded metric-name lists, absolute paths, filesystem writes, or work-timing measurements.
 
 
-## adversarial_verify.py::_has_positive_control_null_metric
+## adversarial_verify.py::check_degenerate_separation
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
+
 SILENT_NON_FIRING
 
 ## CLAIM
-By name, `_has_positive_control_null_metric` detects whether an artifact contains a null positive-control metric; it has no docstring specifying narrower coverage.
+
+`Detect synthetic selection wins where vote cannot win and oracle saturates.`
 
 ## FINDINGS
-1. **A/B/F — Silent omission of real metric vocabulary.** `_POSITIVE_CONTROL_NULL_DELTA_KEYS` represents zero efficiency/transfer improvements, but omits forward_transfer_delta, which is actually zero in experiment 5583. I reproduced an artifact with that metric and failed controls receiving no false-negative-risk warning through the full verifier. Adding the recognized transfer_delta field makes it warn. Unrecognized evidence and absence of null evidence produce the same silent False result.
 
-2. **B — The pair list also underspecifies its concept.** The tuples beginning with `("core_efficiency_baseline", "core_efficiency_best")` represent unchanged baseline/treatment outcomes. They omit generic_transfer_rate_baseline paired with generic_transfer_rate_with_wiring, an actual treatment field in experiment 4592. Equal values under that naming receive no recognition unless another supported field supplies the evidence.
+1. **A/F — Unrecognized wording disables detection.** The artifact in MISSED INPUT has both degenerate numeric signatures but produces zero flags, including through the full verifier. `marker in verdict for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")` followed by `return` makes unfamiliar wording indistinguishable from a genuine pass. Metric names themselves cannot activate the check.
 
-3. **1 — Extraction depends on normalization outside this function.** The relevant lines are `value = _finite_float(d, key)` and `_metric_pair_equal(d, left, right)`; there are no direct dictionary reads here. Repository inspection and execution confirm that direct invocation skips principle-wrapped numeric values. The main verifier normalizes wrappers before calling this code, so that route is covered. Lists and None are rejected; no evidence establishes that they should represent scalar measurements.
+2. **Field extraction — Text is stringified without interpreting its shape.** `str(d.get(key, "")).lower() for key in ("honest_verdict", "experiment", "schema")` searches dictionary representations and list contents, including explanatory metadata. A principle annotation mentioning generalization can activate the direct function even when its actual verdict describes unrelated calibration. The full verifier normalizes top-level annotations first, mitigating that particular production path; this function itself does not.
 
-4. **C — Existing focused tests tolerate complete removal.** Replacing the entire helper with a function that always returns False left **94 focused tests passing**. Thus both recognition paths, every delta-name alternative, and all four pair alternatives survived combined deletion in that test selection. The positive-control regressions already identify nulls through verdict text, bypassing this helper; full-suite mutation survival was not established.
+3. **Field extraction — Nested annotated measurements silently disappear.** The helpers called by `baselines = _metric_items_from_top_or_pass_rates(d, DEGENERATE_BASELINE_KEYS)` and the two single-metric reads accept bare finite numbers, without unwrapping nested principle/value dictionaries. Wrapping vote, oracle, and selector measurements inside pass_rates suppresses both signatures. This bypass survives the full verifier’s top-level normalization. Lists and None also become unavailable measurements without an explicit unverified result.
 
-5. **2/3/4/D/E/G — No additional findings.** The supplied function contains no free-text matching, negation scanning, filesystem paths, writes, or measurements of work. `abs_tol=1e-12` includes the exact tolerance boundary; execution confirmed that the next representable value above it is excluded. No off-by-one defect was found.
+4. **B — The lists underdefine their concepts.** The text-field tuple stands in for claim and experiment identity but omits title and status. The marker tuple stands in for transfer/generalization experiments but omits ordinary held-out-family and hyphenated cross-family wording. `DEGENERATE_DELTA_KEYS` stands in for selector-over-vote transfer lifts but omits real corpus fields online_adapt_cross_family_delta and static_cross_family_delta, used by Exp4271 and Exp4295. No additional baseline alias was verified; an omitted member of `DEGENERATE_BASELINE_KEYS` is not established.
+
+5. **Substring/context blindness — Negative and diagnostic mentions activate the guard.** `marker in verdict` has neither token boundaries nor any distinction between asserting transfer and explicitly denying it. Both verdict variants in COUNTEREXAMPLE produce a critical flag. The matching loop cannot distinguish an experiment claim from an explanation of what was avoided.
+
+6. **Docstring mismatch — The numerical predicate is broader than the opening claim.** `((near_perfect_delta and trivial_baseline) or saturated_oracle_selector)` requires neither oracle saturation in its first alternative nor a losing vote baseline in its second. It also never examines pool filtering or candidate counts before asserting `This matches a ` and `wrong-majority/trivial-separation pool signature.` Conversely, its vocabulary and metric-name restrictions make coverage narrower than the claimed detection concept.
+
+7. **Thresholds — Inclusive comparisons are correct; “exactly” is approximate.** `value >= DEGENERATE_DELTA_THRESHOLD` and `value <= DEGENERATE_BASELINE_THRESHOLD` correctly include the configured 0.95 and 0.05 boundaries. However, `math.isclose(oracle_at_k, 1.0, rel_tol=0.0, abs_tol=1e-12)` and its selector counterpart accept near-one values despite the docstring’s claim of reaching oracle@K exactly. No off-by-one defect was found.
+
+8. **C — Individual text rules lack independent protection.** All five targeted regressions pass. Independently deleting any one of the four text markers, or either experiment/schema extraction, leaves all five passing. Exclusive threshold mutations and removing the near-one tolerance also survive. Deleting either numerical alternative does fail a targeted regression, so those alternatives are independently exercised. These results concern the five targeted tests, not the entire repository suite.
+
+9. **D/E/G — None found in this function.** It contains no absolute filesystem target, artifact write, duration measurement, or counter measured before work. `flags.append(` mutates the supplied list. The inspected targeted tests read historical artifacts; reproduction artifacts were written under temporary directories.
 
 ## COUNTEREXAMPLE
+
 ```json
 {
-  "honest_verdict": "complete: exp5569_policy_lane_retired_metric_corrigendum_from_cached_rows",
-  "positive_control_passed": false,
-  "false_negative_risk_checked": false,
-  "forward_transfer_delta": 0.0
+  "honest_verdict": "complete: calibration_sanity_check; cross_family_generalization_not_attempted; fixture only, no transfer claim",
+  "oracle_at_k": 1.0,
+  "set_encoder_at_1": 1.0,
+  "vote_at_1": 1.0
 }
 ```
 
-The helper returns False, and the full verifier emits no FALSE_NEGATIVE_RISK warning. Adding `"transfer_delta": 0.0` produces that warning.
+Observed: one critical DEGENERATE_SEPARATION flag despite an explicit calibration-only verdict and a winning vote baseline.
+
+Replacing the verdict with `"complete: calibration_sanity_check; nongeneralizable_fixture_only"` also produces that flag through the full verifier.
 
 ## MISSED INPUT
-`"forward_transfer_delta": 0.0`
 
-This literal metric occurs in results/experiment_5583_causal_memory_metric_corrigendum.json. That historical artifact records passed controls; the counterexample above changes those controls to demonstrate the missed enforcement.
+```json
+{
+  "experiment": 9001,
+  "schema": "selection_transfer_v1",
+  "honest_verdict": "complete: held_out_family_transfer_survives",
+  "cross_family_delta": 1.0,
+  "vote_at_1": 0.0,
+  "oracle_at_k": 1.0,
+  "set_encoder_at_1": 1.0
+}
+```
+
+Observed: zero DEGENERATE_SEPARATION flags, directly and through the full verifier.
 
 ## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
+
+NEEDS_REDESIGN
 
 ## RATIONALE
-The recognizers cover particular experiment spellings rather than the efficiency/transfer null concept, allowing real vocabulary to bypass positive-control enforcement silently. Define explicit metric roles and comparison semantics, then require independent tests that fail when each recognition path is removed.
+
+Detection depends on incidental wording while ignoring explicit negation and silently dropping valid annotated measurements. Use explicit claim/scope information, unwrap annotated metric fields, and distinguish unrecognized inputs from verified passes. Add independent regressions for each recognizer, both demonstrated bypasses, and the calibration false positive.
 

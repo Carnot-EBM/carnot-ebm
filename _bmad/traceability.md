@@ -4032,3 +4032,16 @@ remain intact. Active roadmap and conductor are unchanged.
   direct live-policy receipts, adapter-withheld episodes, qualified durable cost.
 - Status: planned, not implemented or activated. Preserve the V731 design at
   `openspec/change-proposals/research-roadmap-v731-preserved-20261014.md`.
+
+## 2026-10-14 — Planned V733 research contract
+
+| Requirement | Planned tasks / evidence | Status |
+|---|---|---|
+| REQ-REPORT-V733-PLAN; FR-09/FR-10 | Complete design/YAML contract, Exp8526–Exp8539; twelve negative authority mutations; existing schema/gate/private lifecycle tests | Planning validated; execution pending |
+| REQ-REPORT-V733-STUDIES; FR-12 | Exp8527–Exp8529 source consumer repair, identity-Brier fitting and strongest-baseline audit | Planned; exposed development scope |
+| REQ-REPORT-V733-STUDIES; FR-06/FR-11 | Exp8530–Exp8532 independent coordinate accounting, causal delayed updates and simultaneous retention | Planned; no learning benefit claimed |
+| REQ-REPORT-V733-STUDIES; FR-05/FR-08/NFR-01 | Exp8533–Exp8534 nine-input native residual parity and complete inference clocks | Planned; five-input append evidence stays separate |
+| REQ-REPORT-V733-LIVE | Exp8535 bounded mandated-Qwen canary; Exp8536/8537 reachable ARC capability eligibility; Exp8538 board obligations; Exp8539 terminal reconciliation | Planned; runtime and physical conditions retained |
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Queue: `research-roadmap-next.yaml`. Active V732 queue is unchanged.

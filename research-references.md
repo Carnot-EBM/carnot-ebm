@@ -52944,3 +52944,83 @@ Retain proper-loss and complete update accounting; defer regret guarantees and
 physical acceleration claims. Bounded retrieval receipts and exact adoption/defer
 mapping are in Exp8513 raw literature evidence. See
 [the audit note](docs/research-notes/v732-strongest-baseline-audit.md).
+
+## 2026-10-14 — V733 planning scan: useful updates and complete inference work
+
+Recorded before V733 experiment design. All eight requested arXiv topics and
+six secondary channels were checked. Rechecked work is distinguished from a
+new implementation lead. External results do not establish Carnot performance.
+
+### Methods selected or retained
+
+- **Strongest comparator, rechecked:** [RAIM, 2609.39229](https://arxiv.org/abs/2609.39229)
+  motivates testing added information against the strongest available score.
+  Keep raw p2 and equally trained scalar controls. The local identity mixture
+  remains an adaptation, not a replication or a borrowed statistical guarantee.
+- **Online objectives, rechecked:** [Calibeating Made Simple, 2603.22167](https://arxiv.org/html/2603.22167v1)
+  connects online prediction with proper losses. Preserve prediction before
+  feedback and compare Brier updates with frozen and log-loss heads. Carnot's
+  nonlinear delayed learner does not inherit the paper's regret guarantees.
+- **Finite feedback, rechecked:** [Capacity-Constrained Online Convex Optimization
+  with Delayed Feedback, 2606.11711](https://arxiv.org/html/2606.11711v1)
+  motivates explicit admission, pending and lost-feedback accounting. Count
+  changed coefficient coordinates separately from update events. Neither count
+  is evidence that later predictions improve.
+- **Sparse arithmetic, rechecked:** [Ultrafast On-Chip Online Learning via Spline
+  Locality in KANs, 2602.02056](https://arxiv.org/abs/2602.02056)
+  supports evaluating local spline arithmetic separately from surrounding work.
+  The next deployment question is the actual nine-input science head. The
+  five-input append benchmark cannot certify that head or Rust/Python parity.
+- **Training budget, rechecked:** [Sample-Efficiency of KANs, 2610.10627](https://arxiv.org/abs/2610.10627)
+  motivates fixed fit/tune prefix diagnostics. Keep step 200 as the registered
+  final fit. Prefix curves do not establish sample efficiency or authorize
+  test-dependent checkpoint selection.
+- **New repository lead:** [irithyll](https://github.com/evilrat420/irithyll)
+  documents streaming learners in Rust and cites spline-local online learning.
+  It is an implementation reference for bounded state and API design only.
+  It was found by targeted search, not verified as currently trending. No
+  dependency installation, numerical equivalence or performance claim follows.
+
+### Other primary topics and explicit deferrals
+
+| Topic | Inspected primary source | Decision |
+|---|---|---|
+| Energy verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605), revised May 2026 | Keep energy as a verifier. Compatibility and a probabilistic bijection do not certify factual truth. No generator training. |
+| Neural constraints | [Certified Correctness, 2608.14569](https://arxiv.org/abs/2608.14569) | Separate symbolic constraint checks from learned confidence. Search metadata has conflicting dates; no new October result is asserted. |
+| Hallucination detection | [SURE-RAG, 2605.03534](https://arxiv.org/abs/2605.03534); [RT4CHART, 2603.27752](https://arxiv.org/abs/2603.27752) | Evidence sufficiency and context faithfulness differ from open-domain truth. Preserve that distinction in the bounded source-span canary; do not add a new RAG benchmark. |
+| Energy-guided decoding | [2605.28020](https://arxiv.org/abs/2605.28020) | The current title is *The Missing Piece in Pre-trained Model Evaluation: Reward-Guided Decoding Unlocks Task-Oriented Behavior Without Parameter Updates*. Earlier shorthand “Energy-Based Decoding” is not the current title. Defer intervention until runtime and verifier utility qualify. |
+| KAN continual learning | [KAN-CL, 2605.12306v1](https://arxiv.org/html/2605.12306v1) | Per-knot anchoring remains retired locally. Fixed-input support assumptions do not establish general retention; the paper itself qualifies transfer to evolving features. Keep retention measurement without reopening unchanged anchoring. |
+| Ising/FPGA sampling | [Pipelined p-computer, 2607.21077](https://arxiv.org/abs/2607.21077) | Pipeline and memory organization are useful design leads. Optimization timings do not certify Gibbs quality or an installed KV260 spline kernel. |
+
+### Secondary channels and limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM submissions and inspected the
+  [ICLR 2026 EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg).
+  Architectural motivation does not override Carnot's closed generator results.
+- **Semantic Scholar:** attempted the citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Both returned retrieval errors. Exact-ID searches did not recover a reliable
+  citing-paper inventory. Coverage is incomplete, not zero citations.
+- **Hugging Face papers:** inspected [SURE-RAG](https://huggingface.co/papers/2605.03534)
+  and [RT4CHART](https://huggingface.co/papers/2603.27752). Method claims were
+  checked at arXiv; feed dates are not original submission dates.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were a month old, so no current ranking or new-trending claim is made.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [recursive intelligence](https://extropic.ai/writing/baby-thermo-rsi/).
+  The index returned little article text; direct articles were accessible.
+  Vendor hardware plans and heterogeneous processing do not supply local TSU
+  access or accelerate host persistence by themselves.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The page positions a constraint layer beneath AI systems. No inspected
+  reproducible architecture update closes Carnot's empirical gaps.
+
+Selection: finish the registered strongest-baseline and delayed proper-loss
+studies after their exact validation defects are addressed. Investigate the
+nine-input inference boundary separately from the qualified five-input storage
+win. Use direct ARC application receipts to test capability-aware selection;
+unsupported or inert actions must not count as useful interventions. Keep
+conditional Qwen and physical-board work behind actual changed evidence.

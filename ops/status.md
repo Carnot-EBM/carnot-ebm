@@ -18284,3 +18284,25 @@ from fresh adapter-withheld episodes. Append timing follows strict import/replay
 qualification. The mandated bounded Qwen canary still requires changed CUDA evidence.
 Hardware work preserves each board's actual operation and physical limits.
 No experiment, activation, deployment or external publication occurred in planning.
+
+## 2026-10-14 — V733 research plan staged; execution pending
+
+Milestone2026.10.733 contains exactly fourteen tasks, Exp8526–Exp8539, in four
+phases. The design and staged queue agree on complete task objects, including
+prompts, routing, gates and failure lineage. V732's full design is preserved.
+Its measured five-input append speedup is2.16268 (CI95[2.03877,2.29157]); source
+fitting and useful delayed learning remain unqualified. ARC direct receipts
+show effective diversity changes and model-disabled reinduction, without progress.
+
+The next plan addresses the exact missing upstream/field diagnostics and actual
+coordinate accounting, then runs the unchanged source/learning protocols.
+It adds separately qualified nine-input Python/native inference costs and an
+opt-in capability-aware live ARC comparison. Qwen generation stays behind changed
+CUDA evidence. No experiment, activation, deployment or publication occurred.
+The active roadmap, conductor and exclusion manifest are unchanged.
+
+Planning verification:100 focused unit/private E2E tests pass; schema, complete
+contract, fourteen gate conditions,217 read-first paths and twelve authority
+mutations pass. Scoped Ruff lint and spec tracing pass. Ruff format identifies
+existing formatting debt in unchanged scripts/audit_roadmap_gates.py. Remaining
+activation and repository reconciliation results are recorded in the design.

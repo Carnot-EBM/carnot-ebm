@@ -100603,3 +100603,50 @@ Retire unchanged attempts without retiring unmeasured hypotheses. External
 absence is terminal blocked; failed owned validation is disqualified. No model
 load, active YAML, conductor, historical primary or external service changes.
 The conductor owns ops/status, changelog and BMAD reconciliation.
+
+## REQ-REPORT-V733-PLAN: Complete staged research authority
+
+Milestone2026.10.733 shall stage exactly fourteen tasks, Exp8526–Exp8539, in
+four phases. The visible task table, complete embedded JSON, canonical task
+digest and research-roadmap-next.yaml shall agree on every task field. Planning
+shall preserve the active roadmap, conductor and exclusion manifest. It shall
+preserve V732's full design before replacing vNEXT and record the literature
+scan before experiment design. This is planned work, not implemented science.
+
+### SCENARIO-REPORT-V733-CONTRACT: Private activation and mutation checks
+
+A private activation copy of the staged YAML shall pass existing schema and
+contract readers. Count, order, ID, title, phase, deliverable, model, substrate,
+gate, prompt, retirement flag and end-marker mutations shall fail the combined
+planning checks. Every gate producer shall precede its consumer and declare
+its exact field in REQUIRED ARTIFACT FIELDS. Existing read-first paths shall
+resolve. All four prior-failure fields shall be present with retirement true.
+
+## REQ-REPORT-V733-STUDIES: Preserve scientific and numerical boundaries
+
+The plan shall retain the unexecuted identity-Brier and delayed proper-loss
+protocols after explicit source diagnostic and update-accounting qualification.
+It shall distinguish applied updates, physical writes and actual coordinate
+changes. The nine-input109-coefficient native inference study shall have its
+own finite parity qualification and complete inference clocks. The qualified
+five-input append result shall not certify that different workload.
+
+### SCENARIO-REPORT-V733-CAUSAL: Readiness is distinct from useful learning
+
+Every comparison shall preserve primitive per-unit rows. Benefit shall require
+registered strongest-baseline contrasts or later loss and simultaneous retention
+checks. Exposed historical labels and oracle fixtures shall not establish
+independent generalization. Missing external evidence shall be terminal blocked;
+only retryable unfinished owned work may be partial.
+
+## REQ-REPORT-V733-LIVE: Reachable capability checks and substrate truth
+
+ARC tasks shall test opt-in capability eligibility through the live wrapper
+with adapters withheld and no game-specific hints. The model-disabled panel
+shall confer no hidden-score or duplicate solve credit. Any actual LLM call
+shall use unsloth/Qwen3.8-27B-GGUF with the bounded-generation substrate for the
+fixed16-call canary. Board readers shall preserve actual operations and physical
+reopening requirements. Every task shall require flushed phase/long-call progress,
+loop heartbeats and bounded file writes. Final reconciliation shall retain G1–G4.
+
+Implementation status: planning contract only; experiments await activation.

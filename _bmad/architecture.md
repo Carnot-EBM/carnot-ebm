@@ -550,3 +550,21 @@ collects fresh model-free adapter-withheld episodes. Selection and actual effect
 remain distinct. Optional bounded Qwen3.8 generation still needs changed CUDA
 repair evidence. Board operation limits remain unchanged. These are planned
 experiments; no serving behavior or hardware support is deployed by this update.
+
+## V733 proposed decision, learning and inference boundary — 2026-10-14
+
+V733 stages fourteen experiments, Exp8526–Exp8539, in four phases. It retains
+original V732 identity-Brier and delayed proper-loss protocols after explicit
+source diagnostic and independent update-accounting qualification. Original V726
+heads remain the initial state for online learning and the native cost branch.
+A new nine-input109-coefficient Rust residual evaluator keeps normalization and
+typed policy in Python, with finite parity and counted threshold fallbacks.
+Complete cached-request inference includes features, binding, policy, response
+serialization and startup. It does not reuse the five-input append speed claim.
+
+The live ARC proposal adds opt-in runtime capability eligibility without changing
+curated arm order or game-specific knowledge. A matched adapter-withheld panel
+measures actual disabled calls separately from progress. The bounded mandated
+Qwen canary remains conditional on changed CUDA evidence. Board operation and
+physical recovery limits remain explicit. These are planned studies; no new
+runtime component, deployment or scientific benefit is implemented by this plan.
