@@ -7450,5 +7450,9 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 4 synthesis-only experiments completed in 82.7 wall-time minutes (averaging 21 minutes per experiment) led by qualifying the missing ARC panel rejection path and measuring live supervisor generalization (23.02 min), mapping append operations to KV260 and preserving PolarFire and GateMate evidence (22.68 min), reconciling fourteen outcomes and deciding information learning and append continuation (21.47 min), and binding fourteen tasks and freezing qualified science and append-store methods (15.50 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization on GPU 0 reflecting expected idle behavior for non-GPU synthesis workloads.
 - acceptance: no data available this milestone
 
+### Milestone 2026.10.730
 
-
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 12 completed experiments (0 compute-bound, 12 synthesis-only) in 233 minutes of milestone wall time.
+- key result: honest operational negative — 12 synthesis-only experiments completed in 233.4 wall-time minutes (averaging 19 minutes per experiment) led by qualifying objective updates with complete rejection coverage and bounded test sharing (51.56 min), qualifying the missing ARC panel rejection path and measuring live supervisor generalization (32.31 min), qualifying source controls after the missing producer-pin rejection test (22.85 min), reconciling fourteen outcomes and deciding information learning and append continuation (21.62 min), and mapping append operations to KV260 and preserving PolarFire and GateMate evidence (20.61 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization across both RTX 3090 GPUs reflecting expected idle behavior for non-GPU synthesis workloads.
+- acceptance: no data available this milestone

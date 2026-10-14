@@ -1,6 +1,10 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-10-12
+**Last Updated:** 2026-10-14
+
+## 2026-10-14 — Milestone 2026.10.730 operational retrospective
+
+Milestone 2026.10.730 operational retrospective recorded in `results/operational_retro_2026_10_730.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime fallback timing records 12 completed experiments (0 compute-bound, 12 synthesis-only) across 233.4 total wall-time minutes (averaging 19 minutes per experiment). Execution was led by objective update qualification (51.56 min) and missing ARC panel rejection path qualification (32.31 min). GPU utilization was 0% across both RTX 3090 GPUs with `gpu_idle_on_compute_bound_tasks: null` (expected idle state for non-GPU synthesis tasks).
 
 ## 2026-10-12 — Milestone 2026.10.726 operational retrospective
 

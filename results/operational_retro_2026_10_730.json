@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.730",
+  "generated_at": "2026-10-14T01:23:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 233.4,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify objective updates with complete rejection coverage and bounded test shar",
+      "duration_minutes": 51.56,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify the missing ARC panel rejection path and measure live supervisor general",
+      "duration_minutes": 32.31,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify source controls after the missing producer-pin rejection test",
+      "duration_minutes": 22.85,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide information learning and append continuat",
+      "duration_minutes": 21.62,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map append operations to KV260 and preserve PolarFire and GateMate evidence",
+      "duration_minutes": 20.61,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.730 completed 12 experiments (0 compute-bound, 12 synthesis-only) across 233.4 total wall-time minutes (averaging 19 minutes per experiment) reconstructed from disk-mtime fallback data. Execution was driven entirely by synthesis tasks, led by qualifying objective updates with complete rejection coverage and bounded test sharing (51.56 minutes), qualifying the missing ARC panel rejection path and measuring live supervisor generalization (32.31 minutes), and qualifying source controls after the missing producer-pin rejection test (22.85 minutes), with the top five slowest tasks accounting for 148.95 minutes (~63.8% of total wall time). With zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null, observed 0% utilization across both RTX 3090 GPUs reflects correct idle behavior for non-GPU synthesis workloads.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 12 completed experiments totaling 233.4 wall-time minutes), with the top two qualification tasks—qualifying objective updates with complete rejection coverage (51.56 minutes) and qualifying the missing ARC panel rejection path (32.31 minutes)—consuming 83.87 minutes (~35.9% of total milestone wall time).",
+    "Synthesis qualification, contract verification, and reconciliation tasks executed serially without incremental receipt caching or evidence memoization when validating unchanged contract hypotheses, boundary mappings, and rejection paths.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Experiment receipts lack granular intra-task phase telemetry (separating fixture setup, contract qualification, test assertion sweeps, and artifact serialization), obscuring which sub-phase drove the 51.56-minute latency in objective update qualification."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for objective update qualification, ARC panel rejection verification, source control checks, and outcome reconciliation when upstream contracts and dependencies remain unchanged.",
+    "Instrument long-running synthesis tasks with granular intra-task phase timers (fixture setup, rejection path qualification, test execution, artifact serialization) to isolate latency drivers.",
+    "Persist synchronous start, completion, and duration lifecycle timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for objective update qualification, ARC panel rejection checks, and fourteen-outcome reconciliation workflows when upstream artifacts are unchanged.",
+    "Instrument synthesis qualification tasks with granular intra-task phase timers (setup, contract qualification, assertion sweeps, serialization).",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.730 completed 12 synthesis-only experiments in 233.4 wall-time minutes with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% utilization across both RTX 3090 GPUs represented expected idle behavior for non-GPU synthesis workloads, and no multi-model task required DualGPURunner dispatch. Operational improvements should focus on deploying incremental receipt caching for qualification sweeps and persisting synchronous lifecycle timestamps directly in receipts, with estimated time savings held at 0% until measured."
+}
