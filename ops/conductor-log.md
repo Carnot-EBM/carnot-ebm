@@ -20240,3 +20240,6 @@ code |
 | 2026-10-14 03:17 UTC | Plan milestone 2026.10.731 | OK | 13 tasks proposed |
 | 2026-10-14 03:30 UTC | Milestone 2026.10.731 activated | OK | 13 tasks queued |
 | 2026-10-14 04:28 UTC | Bind thirteen tasks and freeze strongest-baseline  | OK | 123 passed, 1 warning in 353.06s (0:05:53) |
+| 2026-10-14 04:35 UTC | Audit raw-score headroom and ingest strongest-comp | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8499-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-14 04:37 UTC | Train calibrated energy heads with a raw-score fal | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8500-strongest-baseline-audit) |
+| 2026-10-14 04:37 UTC | Measure source value over raw and equally trained | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8501-identity-brier-fit) |
