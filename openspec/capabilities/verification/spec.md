@@ -54888,3 +54888,20 @@ Implementation: `v732_contract_runner` reuses unchanged publication and validati
 consumers. The initial owned suite passed54 tests with219/219 new statements
 covered, including real subprocesses and rejection paths. Terminal invocation
 receipts retain exact historical node unions, commands, exits and log hashes.
+
+## REQ-VERIFY-8513: Authenticate descriptive audit and comparator custody
+
+### SCENARIO-VERIFY-8513-COLD
+
+Cold replay independently regenerates old probabilities and A1/A2 losses from
+pinned V730 heads, labels and basis, and reconstructs the frozen V732 comparator
+manifest. Rehashed primitive or summary substitutions fail. Preserve original
+historical authority, dates, thresholds and flags. Owned validation includes
+100 percent new statements and real bounded child rejection paths. Private
+E2E-018/021 retain original CLI dates and isolated roots; no full repository suite.
+Readiness is numerical qualification, with zero independent generalization.
+
+Implementation: Exp8513 owns scoped serial validation and fresh primitive replay
+through narrow shipped adapters. Original E2E node rosters, disjoint shards,
+exits, durations and log hashes remain in raw invocation evidence. Publication
+binds exact terminal bytes and checks the actual comparator readiness consumer.

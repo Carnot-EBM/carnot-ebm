@@ -100328,3 +100328,54 @@ Implementation: reusable `v732_contract_methods` and `v732_historical_inputs`,
 a thin Exp8512 CLI, the sealed V732 protocol and its research note. The initial
 owned validation passed54 tests and covered219/219 new statements. The terminal
 artifact and raw invocation receipts retain the publication qualification.
+
+## REQ-REPORT-8513: Freeze strongest comparators from original exposed custody
+
+Authenticate current V732 authority and Exp8512 methods/source gates before
+measurement. Read original V730 seals without changing their dates or authority.
+Recompute all five old A1/A2 arm losses and fixed typed decisions from primitive
+predictions and labels; report full-minus-raw question differences descriptively.
+Freeze raw_p2, legacy_full, identity_brier_scalar, identity_brier_full and
+identity_brier_permuted with original 900 answers, 300 questions, 150/50/100
+roles, class support, basis, raw-logit offset and source donor identities.
+Readiness requires exact custody and basis bindings. No new fitting or LLM call.
+
+### SCENARIO-REPORT-8513-CUSTODY
+
+Reject altered producer, prediction, target, role, donor, raw-score and basis
+bindings even after local rehashing. Missing gates report null rather than zero.
+Each historical prediction retains its slot; future comparator slots stay in the
+manifest with their future producer and missing reason. Generalization scores
+remain zero on exposed labels; readiness measures qualification only.
+
+### SCENARIO-REPORT-8513-METHODS
+
+Inspect bounded primary literature and author code for RAIM2609.39229,
+KAN2610.10627, Calibeating2603.22167 and Online KAN2602.02056. Bind inspected
+bytes, URLs, scope, adoption and defer decisions. Adopt strongest-score controls
+and fixed fit/tune prefixes0/25/50/100/200 without checkpoint selection or test
+access. Existing scalar offset is inherited; changed fitting is Brier at T=1
+with tune-only shrinkage including alpha0. No paper replication, sample-efficiency
+claim, corpus generation, RAIM-truth import or exposed-panel resplit.
+
+## REQ-VERIFY-8513: Validate strongest-baseline terminal bytes
+
+### SCENARIO-VERIFY-8513-CLI
+
+Accept date20261014; print flushed phase counts. Require scoped serial tests,
+100 percent newly owned statements including children and rejection paths,
+Ruff check/format, strict mypy and spec tracing. Collect exact historical node
+unions before bounded disjoint shards; private E2E-018/021 use original dates.
+Fresh replay recomputes primitives and rejects missing and rehashed evidence;
+intentional failures retain their nonzero exit. Unchanged publication,
+adversarial and strict-row consumers bind final bytes and actual downstream
+readiness. Owned failure disqualifies; external absence blocks. Measurement cap
+3600s, validation reserve900s, hard cap4800s; optional hardware never gates CPU.
+The conductor owns ops/status/changelog and BMAD reconciliation.
+
+Implementation: `v732_strongest_baseline_audit` and its runner reuse the shipped
+V730 predictor/evaluator and unchanged primary-publication consumers. The thin
+Exp8513 CLI accepts date20261014. Traced tests cover original custody, fixed
+question differences, missing inputs, owned failures, private children and
+self-rehashed substitutions. Production validation receipts and coverage are
+stored with the terminal artifact; the conductor reconciles ops and BMAD.

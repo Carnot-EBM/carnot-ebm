@@ -6573,3 +6573,14 @@ and the V723 methods manifest. Freeze label criteria before human target access.
 Keep question clusters, numerical fidelity and semantic utility separate.
 No paper FPGA speed or convex regret guarantee transfers to this service.
 Preserve closed exposed H1/H2 and the separate undeployed dyadic-logit policy.
+
+## 2026-10-14 — Exp8513 strongest controls
+
+The [V732 audit](docs/research-notes/v732-strongest-baseline-audit.md) binds the
+inspected RAIM comparator discipline, KAN fit/tune optimization prefixes,
+Calibeating proper-loss controls and Online KAN update cost scope to hashed
+primary sources and author files. These methods are adopted within the sealed
+V732 protocol. Paper replication, sample-efficiency claims, theorem transfer and
+physical FPGA results are deferred. Public labels remain exposed. Independent
+factual evidence requires disjoint adjudicated questions and frozen predictors
+before access, with exposure resolved. Exp8514/8515/8521 are future dependencies.

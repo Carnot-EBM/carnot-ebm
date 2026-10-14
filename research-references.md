@@ -52923,3 +52923,24 @@ The selected changes are small: make the existing comparison runnable, add
 fixed fit/tune learning curves, and collect direct ARC action-effect evidence.
 Fresh independent factual labels and physical/runtime repairs remain external
 evidence conditions. A planning scan cannot close them.
+
+## 2026-10-14 — Exp8513 a3-5 strongest-comparator ingestion
+
+Inspected [RAIM](https://arxiv.org/html/2609.39229v1) and its
+[analysis code](https://github.com/eOnofri04/raim-analysis), including weighting
+and cluster interval helpers. Adopt strongest-component controls and paired
+question comparisons. Defer the cross-fitted stacker, admissibility thresholds
+and judge runs. Imported judge outputs cannot become ground truth.
+
+Inspected [Sample-Efficiency of KANs](https://arxiv.org/html/2610.10627v1),
+[author README and Feynman protocol](https://github.com/DerKevinRiehl/neurips26_kan_training).
+Adopt fixed fit/tune prefixes0/25/50/100/200 with final step200. Defer sample-
+efficiency claims and RL replication. The default protocol enables matched MLP
+only; optimization steps do not measure label/sample efficiency.
+
+Inspected [Calibeating](https://arxiv.org/html/2603.22167v1) proper-loss reductions
+and [Online KAN](https://arxiv.org/html/2602.02056v3) sparse updates and FPGA scope.
+Retain proper-loss and complete update accounting; defer regret guarantees and
+physical acceleration claims. Bounded retrieval receipts and exact adoption/defer
+mapping are in Exp8513 raw literature evidence. See
+[the audit note](docs/research-notes/v732-strongest-baseline-audit.md).
