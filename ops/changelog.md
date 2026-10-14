@@ -22256,3 +22256,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - Align planning requirements, traceability and architecture. Preserve the active
   roadmap, conductor source, exclusion manifest and existing experiment evidence.
 - 2026-10-14: Bind fourteen complete tasks and preserve independently sealed scientific methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v732_contract_methods; results/experiment_8512_v732_contract_methods.json
+- 2026-10-14: Audit raw-score headroom and ingest strongest-comparator methods (⚠️ Research Finding) — honest_verdict=complete_disqualified_v732_strongest_baseline_audit; results/experiment_8513_v732_strongest_baseline_audit.json
