@@ -6098,6 +6098,10 @@ class E3AgentPolicy:
         action_id = int(getattr(supervisor, "_actions_total", 0)) + 1
         level: int | None = None
         selection_recorded = False
+        from carnot.agentic import arc_effect_receipts
+
+        effect_token = arc_effect_receipts.begin(self, latest)
+        snapshot, predicates, redirect, effect_error = None, [], None, None
         try:
             from carnot.agentic.arc_arm_eligibility import diversity_in_effect
             from carnot.agentic.arc_trajectory_supervisor import TrajectorySnapshot
@@ -6182,6 +6186,7 @@ class E3AgentPolicy:
                 prospective_move=None,
             )
         except Exception as exc:
+            effect_error = f"{type(exc).__name__}:{exc}"
             self._trajectory_supervisor_errors += 1
             if not selection_recorded:
                 recorder.record_observation_failure(
@@ -6190,6 +6195,9 @@ class E3AgentPolicy:
                     action_id=action_id,
                     level_id=level,
                 )
+        arc_effect_receipts.finish(
+            self, effect_token, snapshot, predicates, redirect, mode, action_id, effect_error
+        )
 
     def _apply_trajectory_redirect(self, redirect: Any) -> None:
         """REQ-ARC-WMTE-6600 rule 5: apply an arm ONLY through existing seams.
@@ -6223,6 +6231,10 @@ class E3AgentPolicy:
         if supervisor is None:
             return {"enabled": False}
         receipt = supervisor.receipt()
+        from carnot.agentic import arc_effect_receipts
+
+        if os.environ.get(arc_effect_receipts.FLAG) == "1":
+            receipt["direct_effect_receipts"] = arc_effect_receipts.read(self)
         receipt["observe_errors"] = int(getattr(self, "_trajectory_supervisor_errors", 0))
         if getattr(self, "_trajectory_supervisor_applies", False):
             receipt["mode"] = "applied"
@@ -10437,6 +10449,9 @@ def make_carnot_agent(
             from arcengine import GameAction
 
             kind, data = self._policy.next_move(frames, latest_frame)
+            from carnot.agentic.arc_effect_receipts import bind_action
+
+            bind_action(self._policy, kind, data)
             if kind == "RESET" or kind is None:
                 act = GameAction.RESET
             else:

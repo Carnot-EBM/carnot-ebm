@@ -100490,3 +100490,29 @@ Implementation2026-10-14: `append_service_cost_8520` binds exact Exp8519 and V73
 authority to unchanged five-input tapes. Its thin runner preserves original
 historical replay while directing reconstruction writes into private scratch.
 The result separates readiness, primary benefit and complete-cost shares.
+## REQ-REPORT-8522: Direct supervisor application receipts
+
+The default-off observer records the reachable E3 supervisor application seam.
+Each receipt binds visible observation bytes, action index, fixed eligibility
+predicates, selected arm, mode, disposition, and relevant before/after state.
+State hashes exclude secrets and unrelated policy fields. Missing or malformed
+state refuses qualification without changing the policy action. A changed latch
+is distinct from model induction. Already-active diversity is a no-op.
+Private wrapper fixtures qualify instrumentation only and use development_proxy.
+Collection on/off must preserve actions, relevant policy state, and RNG state.
+Authenticate Exp8509 through its original seals and retain its historical dates.
+Freeze four public games, seeds11/22, applied/shadow,512 actions,120 seconds,
+the original stop rules and thresholds, and policy/runner hashes for Exp8523.
+No model loads, current LLM calls, new solves, or generalization credit are allowed.
+
+### SCENARIO-REPORT-8522-APPLICATION
+
+The real make_carnot_agent wrapper exercises selected shadow, ineligible,
+already-active, successful mutations, model-disabled induction and invalid state.
+Direct receipts distinguish state change, effective action-policy change, and
+induction outcome. Replaying the same fixture observations produces equal rows.
+
+### SCENARIO-REPORT-8522-PARITY
+
+The same observations and RNG with collection off/on produce identical actions,
+policy state, provenance and random state. Fixtures never become live episodes.

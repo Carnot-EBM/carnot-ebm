@@ -1,0 +1,58 @@
+{
+  "MODEL_SPECS": [],
+  "aggregate_cap_s": 2400,
+  "alternating_mode_order": true,
+  "arm_table_sha256": "sha256:f8d2cee02ed6d782ef28710b2e773ac82e473305095dcd54ee0f37d2e35bbd3c",
+  "episode_cap_s": 120,
+  "games": [
+    "ar25-0c556536",
+    "ft09-0d8bbf25",
+    "lf52-271a04aa",
+    "tn36-ef4dde99"
+  ],
+  "generator_pin": {
+    "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+    "invoked": false,
+    "model_id": "unsloth/Qwen3.8-27B-GGUF"
+  },
+  "headline_solve_credit": 0,
+  "live_episodes_measured_here": 0,
+  "llm_disabled": true,
+  "max_actions": 512,
+  "measurement_task": "exp8523-arc-effect-panel",
+  "model_calls": 0,
+  "modes": [
+    "applied",
+    "shadow"
+  ],
+  "policy_sha256": "sha256:3f7e0dfde8c3db3fdf8f1e2442798af86f06f7e0fca3afb38e457350e24e5db6",
+  "qualification_task": "exp8522-arc-effect-receipt-qualification",
+  "receipt_env": {
+    "CARNOT_ARC_DISABLE_INDUCTION": "1",
+    "CARNOT_ARC_EFFECT_RECEIPTS": "1"
+  },
+  "refinement_min_overlap_games": 3,
+  "refinement_min_resolved_per_shared_cell": 5,
+  "reinduction_attempt_cap": 3,
+  "reinduction_evidence_floor": 200,
+  "runtime": "python/carnot/agentic/arc_live_panel_runtime_8384.py",
+  "runtime_sha256": "sha256:31ebfde52a17d2f6d460b1aff9c9682aafac9052699571b7f82fcb6c7a161faa",
+  "schema": "carnot.arc.v732.effect_panel.v1",
+  "seeds": [
+    11,
+    22
+  ],
+  "stop_rules": [
+    "agent.is_done",
+    "512_actions",
+    "120_seconds",
+    "exception"
+  ],
+  "supervisor_window": 120,
+  "withhold": [
+    "adapters",
+    "stored_routes",
+    "solver_artifacts",
+    "game_source_introspection"
+  ]
+}

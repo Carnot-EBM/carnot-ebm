@@ -55045,3 +55045,20 @@ primitive reducer and bootstrap. Tests cover real workers, missing authority,
 qualification failures, altered clocks/operands and rehashed summary changes.
 The validation manifest preserves exact original node unions and scoped
 unit/child coverage; publication uses the shipped validators and consumers.
+## REQ-VERIFY-8522: Exact receipt qualification and consumer replay
+
+Require 100 percent newly owned statement coverage, including child entrypoints
+and rejection paths. Preserve historical assertions and run their exact collected
+node union in disjoint bounded shards. Use private E2E-011/013/018/021 fixtures.
+Cold replay authenticates primitive operands and rejects missing inputs,
+intentional failure and self-consistently rehashed tampering. Validate exact
+terminal bytes with unchanged publication, adversarial and strict-row consumers.
+Only complete owned validation, action parity and exact downstream consumer
+qualification permit arc_effect_receipts_ready_score=1. Owned failures disqualify;
+unchanged external absence blocks. Reconciliation is owned by the conductor.
+
+### SCENARIO-VERIFY-8522-REPLAY
+
+Private publication and fresh-process replay pass. Changed primitive state,
+invented effects, failed checks, altered hashes, and missing evidence cannot
+claim readiness. No historical primary is overwritten.

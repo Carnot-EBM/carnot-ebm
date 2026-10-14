@@ -1,0 +1,5382 @@
+{
+  "action_parity_rows": [
+    {
+      "case": "shadow",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:d08f2ef705193b1b3a7914a89602e0963c96c90578dc778363eafff95615a1d8",
+      "observed_sha256": "sha256:d08f2ef705193b1b3a7914a89602e0963c96c90578dc778363eafff95615a1d8",
+      "passed": true
+    },
+    {
+      "case": "ineligible",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:ee64cd59fdb06fd258b8c945e3104a97b8a89b00970047dd336b6486bcfff323",
+      "observed_sha256": "sha256:ee64cd59fdb06fd258b8c945e3104a97b8a89b00970047dd336b6486bcfff323",
+      "passed": true
+    },
+    {
+      "case": "already_active",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:c0c831bc5af502e0846a6ad6fa725a8729e55829ec9ce48ff8a26c13f7e7f4a7",
+      "observed_sha256": "sha256:c0c831bc5af502e0846a6ad6fa725a8729e55829ec9ce48ff8a26c13f7e7f4a7",
+      "passed": true
+    },
+    {
+      "case": "drop_bias",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:9e3b40274dd22498b05a72d42a43f9d50e0496f4c248e5ada77157368315e631",
+      "observed_sha256": "sha256:9e3b40274dd22498b05a72d42a43f9d50e0496f4c248e5ada77157368315e631",
+      "passed": true
+    },
+    {
+      "case": "reinduction",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:22ce0b2d0f38787d9f8323021c57509080878bfd86e70ac967320531c46dae23",
+      "observed_sha256": "sha256:22ce0b2d0f38787d9f8323021c57509080878bfd86e70ac967320531c46dae23",
+      "passed": true
+    },
+    {
+      "case": "diversity",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:39acb3af4d00d93837986109225bdd28b7fd4e225b333712462aa52479e727f0",
+      "observed_sha256": "sha256:39acb3af4d00d93837986109225bdd28b7fd4e225b333712462aa52479e727f0",
+      "passed": true
+    },
+    {
+      "case": "malformed",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:e09d42296a42f27f6b90edcff889c5004517fadacaaa747b347bb847cd9e9c26",
+      "observed_sha256": "sha256:e09d42296a42f27f6b90edcff889c5004517fadacaaa747b347bb847cd9e9c26",
+      "passed": true
+    },
+    {
+      "case": "missing",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:e09d42296a42f27f6b90edcff889c5004517fadacaaa747b347bb847cd9e9c26",
+      "observed_sha256": "sha256:e09d42296a42f27f6b90edcff889c5004517fadacaaa747b347bb847cd9e9c26",
+      "passed": true
+    },
+    {
+      "case": "application_error",
+      "compared_fields": [
+        "actions",
+        "policy_state",
+        "rng_sha256",
+        "llm_calls"
+      ],
+      "control_sha256": "sha256:68aab8e4d1cc0a073c5411719d8f18bcda033828e76a4de1df9953a7f98b135e",
+      "observed_sha256": "sha256:68aab8e4d1cc0a073c5411719d8f18bcda033828e76a4de1df9953a7f98b135e",
+      "passed": true
+    }
+  ],
+  "mutation_fixture_rows": [
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "shadow",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": false,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 0,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "enabled": false,
+          "mode": "shadow",
+          "observe_errors": 0,
+          "stagnations_unredirected": 1,
+          "unredirected_windows": [
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": false,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 203,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1,
+          "would_have_arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "would_have_arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 1,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 1,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "would_have_redirects": [
+            {
+              "action_index": 1,
+              "actions_to_levelup_without_redirect": null,
+              "arm": "allow_reinduction",
+              "co_credited_count": null,
+              "diagnosis": "induction latch set with 201 new transitions the model has never seen",
+              "level": 0,
+              "levelup_followed_without_redirect": false,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 2,
+              "actions_to_levelup_without_redirect": null,
+              "arm": "force_exploration_diversity",
+              "co_credited_count": null,
+              "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+              "level": 0,
+              "levelup_followed_without_redirect": false,
+              "stretch_level": 0
+            }
+          ]
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": false,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 0
+          },
+          "after_state_sha256": "sha256:8c27d4c18ef8262ad48ce8fb210754889d4300a569a85f498061619386f175ba",
+          "application_disposition": "selected_shadow",
+          "applied": false,
+          "arm": "allow_reinduction",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": false,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 0
+          },
+          "before_state_sha256": "sha256:8c27d4c18ef8262ad48ce8fb210754889d4300a569a85f498061619386f175ba",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "induction latch set with 201 new transitions the model has never seen",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+              "eligible": true,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "shadow",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": false,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 0
+          },
+          "after_state_sha256": "sha256:8c27d4c18ef8262ad48ce8fb210754889d4300a569a85f498061619386f175ba",
+          "application_disposition": "selected_shadow",
+          "applied": false,
+          "arm": "force_exploration_diversity",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": false,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 0
+          },
+          "before_state_sha256": "sha256:8c27d4c18ef8262ad48ce8fb210754889d4300a569a85f498061619386f175ba",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+              "eligible": true,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "shadow",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": false,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 0
+          },
+          "after_state_sha256": "sha256:8c27d4c18ef8262ad48ce8fb210754889d4300a569a85f498061619386f175ba",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": false,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 0
+          },
+          "before_state_sha256": "sha256:8c27d4c18ef8262ad48ce8fb210754889d4300a569a85f498061619386f175ba",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "shadow",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "ineligible",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": true,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 154,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "drop_goal_bias",
+            "force_exploration_diversity",
+            "tool_loop_reinduction"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 0,
+          "redirects": [],
+          "stagnations_unredirected": 3,
+          "unredirected_windows": [
+            {
+              "action_index": 1,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 201,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 2,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 202,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 203,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "after_state_sha256": "sha256:67dea00d756dd9ccbe343f44d9bb61b41756bd7c5340b29a3d1c9d90faa5eb78",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "before_state_sha256": "sha256:67dea00d756dd9ccbe343f44d9bb61b41756bd7c5340b29a3d1c9d90faa5eb78",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "after_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "before_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "after_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "before_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "already_active",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": true,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 154,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 3,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "drop_goal_bias",
+            "force_exploration_diversity",
+            "tool_loop_reinduction"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 0,
+          "redirects": [
+            {
+              "action_index": 1,
+              "actions_to_levelup": null,
+              "arm": "force_exploration_diversity",
+              "co_credited_count": null,
+              "diagnosis": "private no-op control",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 2,
+              "actions_to_levelup": null,
+              "arm": "force_exploration_diversity",
+              "co_credited_count": null,
+              "diagnosis": "private no-op control",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 3,
+              "actions_to_levelup": null,
+              "arm": "force_exploration_diversity",
+              "co_credited_count": null,
+              "diagnosis": "private no-op control",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            }
+          ],
+          "stagnations_unredirected": 0,
+          "unredirected_windows": [],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "after_state_sha256": "sha256:67dea00d756dd9ccbe343f44d9bb61b41756bd7c5340b29a3d1c9d90faa5eb78",
+          "application_disposition": "already_active_no_op",
+          "applied": false,
+          "arm": "force_exploration_diversity",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "before_state_sha256": "sha256:67dea00d756dd9ccbe343f44d9bb61b41756bd7c5340b29a3d1c9d90faa5eb78",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "after_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "application_disposition": "already_active_no_op",
+          "applied": false,
+          "arm": "force_exploration_diversity",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "before_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "after_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "application_disposition": "already_active_no_op",
+          "applied": false,
+          "arm": "force_exploration_diversity",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "before_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": true,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "drop_bias",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": true,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 154,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 1,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 1,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "drop_goal_bias"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 0,
+          "redirects": [
+            {
+              "action_index": 1,
+              "actions_to_levelup": null,
+              "arm": "drop_goal_bias",
+              "co_credited_count": null,
+              "diagnosis": "goal bias installed through 1 stagnant actions; it is steering and not working",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 2,
+              "actions_to_levelup": null,
+              "arm": "allow_reinduction",
+              "co_credited_count": null,
+              "diagnosis": "induction latch set with 202 new transitions the model has never seen",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            }
+          ],
+          "stagnations_unredirected": 1,
+          "unredirected_windows": [
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": false,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 203,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "after_state_sha256": "sha256:67dea00d756dd9ccbe343f44d9bb61b41756bd7c5340b29a3d1c9d90faa5eb78",
+          "application_disposition": "state_changed",
+          "applied": true,
+          "arm": "drop_goal_bias",
+          "before_state": {
+            "goal_bias_present": true,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "before_state_sha256": "sha256:22c490f7e8fd569cc303526166c572b1776294a331ad4f5718765ebf6216e3e3",
+          "effective_action_policy_change": true,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "goal bias installed through 1 stagnant actions; it is steering and not working",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "induction latch set with 201 new transitions the model has never seen",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": true,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": false,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "after_state_sha256": "sha256:84edfb660bfc9acdf3a0baa7a15abeb3e5074086a7891c0161b9d7bbadbfb5ca",
+          "application_disposition": "state_changed",
+          "applied": true,
+          "arm": "allow_reinduction",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "before_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "induction latch set with 202 new transitions the model has never seen",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": {
+            "goal_level": 1,
+            "planned": false,
+            "reason": "stall",
+            "skipped": "disabled_by_env",
+            "transition_count": 203
+          },
+          "induction_attempt_start_index": 0,
+          "induction_attempt_wrapper_action_index": 4,
+          "induction_outcome": "model_disabled",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": false,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "after_state_sha256": "sha256:60db55e0f086a97ecae3c25990ef3118a5218bf6a44f6f4f56a37bbc32d7c6c2",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": false,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "before_state_sha256": "sha256:60db55e0f086a97ecae3c25990ef3118a5218bf6a44f6f4f56a37bbc32d7c6c2",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": false,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "reinduction",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": true,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 154,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 1,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 0,
+          "redirects": [
+            {
+              "action_index": 1,
+              "actions_to_levelup": null,
+              "arm": "allow_reinduction",
+              "co_credited_count": null,
+              "diagnosis": "induction latch set with 201 new transitions the model has never seen",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            }
+          ],
+          "stagnations_unredirected": 2,
+          "unredirected_windows": [
+            {
+              "action_index": 2,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": false,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 2,
+              "level": 0,
+              "new_transitions_since_induction": 0,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": false,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 2,
+              "level": 0,
+              "new_transitions_since_induction": 1,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 202
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": false,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "after_state_sha256": "sha256:b3e6a0354c7889c99fe1e18430f600e6015a265b1f69b1035f7756b7773f2d21",
+          "application_disposition": "state_changed",
+          "applied": true,
+          "arm": "allow_reinduction",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "before_state_sha256": "sha256:67dea00d756dd9ccbe343f44d9bb61b41756bd7c5340b29a3d1c9d90faa5eb78",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "induction latch set with 201 new transitions the model has never seen",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": {
+            "goal_level": 1,
+            "planned": false,
+            "reason": "stall",
+            "skipped": "disabled_by_env",
+            "transition_count": 201
+          },
+          "induction_attempt_start_index": 0,
+          "induction_attempt_wrapper_action_index": 2,
+          "induction_outcome": "model_disabled",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "after_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "before_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 1,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 2,
+            "level": 0,
+            "new_transitions_since_induction": 0
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "after_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "before_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 1,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 2,
+            "level": 0,
+            "new_transitions_since_induction": 1
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "diversity",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": true,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 154,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 1,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 0,
+          "redirects": [
+            {
+              "action_index": 1,
+              "actions_to_levelup": null,
+              "arm": "force_exploration_diversity",
+              "co_credited_count": null,
+              "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            }
+          ],
+          "stagnations_unredirected": 2,
+          "unredirected_windows": [
+            {
+              "action_index": 2,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 202,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 203,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "after_state_sha256": "sha256:67dea00d756dd9ccbe343f44d9bb61b41756bd7c5340b29a3d1c9d90faa5eb78",
+          "application_disposition": "state_changed",
+          "applied": true,
+          "arm": "force_exploration_diversity",
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": false,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 0
+          },
+          "before_state_sha256": "sha256:8c27d4c18ef8262ad48ce8fb210754889d4300a569a85f498061619386f175ba",
+          "effective_action_policy_change": true,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "deterministic frontier draw exhausted its ideas; switch to the randomized top-k draw",
+              "eligible": true,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "after_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "before_state_sha256": "sha256:b888fed06b850462fa36707a8d8d1a3f3fc1ee7197072fd3f29dcc39969ea670",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "after_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": false,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "before_state_sha256": "sha256:33e5ad5c6cfd1455b044e722e192bb91d0914df07d7230f12199c73e1ab5a4f3",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "malformed",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": false,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 0,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "drop_goal_bias",
+            "force_exploration_diversity",
+            "tool_loop_reinduction"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 0,
+          "redirects": [],
+          "stagnations_unredirected": 3,
+          "unredirected_windows": [
+            {
+              "action_index": 1,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": false,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 201,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 2,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": false,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 202,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": false,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 203,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": null,
+          "after_state_sha256": null,
+          "application_disposition": "state_refused",
+          "applied": false,
+          "arm": null,
+          "before_state": null,
+          "before_state_sha256": null,
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": null,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": null,
+          "observation_error": "state_counter",
+          "observation_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": null,
+          "after_state_sha256": null,
+          "application_disposition": "state_refused",
+          "applied": false,
+          "arm": null,
+          "before_state": null,
+          "before_state_sha256": null,
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": null,
+          "induction_attempt_start_index": null,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": null,
+          "observation_error": "state_counter",
+          "observation_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": null,
+          "after_state_sha256": null,
+          "application_disposition": "state_refused",
+          "applied": false,
+          "arm": null,
+          "before_state": null,
+          "before_state_sha256": null,
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": null,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": null,
+          "observation_error": "state_counter",
+          "observation_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "missing",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": false,
+        "hybrid_diversity": false,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 0,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 0,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 0,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "drop_goal_bias",
+            "force_exploration_diversity",
+            "tool_loop_reinduction"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 0,
+          "redirects": [],
+          "stagnations_unredirected": 3,
+          "unredirected_windows": [
+            {
+              "action_index": 1,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": false,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 201,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 2,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": false,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 202,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias",
+                "force_exploration_diversity",
+                "tool_loop_reinduction"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": false,
+              "evidence_floor_met": true,
+              "goal_bias_installed": false,
+              "induced": true,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 203,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": null,
+          "after_state_sha256": null,
+          "application_disposition": "state_refused",
+          "applied": false,
+          "arm": null,
+          "before_state": null,
+          "before_state_sha256": null,
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": null,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": null,
+          "observation_error": "state_missing",
+          "observation_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": null,
+          "after_state_sha256": null,
+          "application_disposition": "state_refused",
+          "applied": false,
+          "arm": null,
+          "before_state": null,
+          "before_state_sha256": null,
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": null,
+          "induction_attempt_start_index": null,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": null,
+          "observation_error": "state_missing",
+          "observation_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": null,
+          "after_state_sha256": null,
+          "application_disposition": "state_refused",
+          "applied": false,
+          "arm": null,
+          "before_state": null,
+          "before_state_sha256": null,
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": null,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": null,
+          "observation_error": "state_missing",
+          "observation_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": false,
+            "goal_bias_installed": false,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    },
+    {
+      "actions": [
+        {
+          "name": "RESET"
+        },
+        {
+          "data": null,
+          "name": "ACTION4"
+        },
+        {
+          "data": {
+            "x": 4,
+            "y": 4
+          },
+          "name": "ACTION6"
+        },
+        {
+          "data": null,
+          "name": "ACTION1"
+        }
+      ],
+      "case": "application_error",
+      "fixture_is_live_evidence": false,
+      "llm_calls": 0,
+      "policy_state": {
+        "goal_bias_present": true,
+        "hybrid_diversity": true,
+        "induced": true,
+        "phase": "explore",
+        "provenance": null,
+        "steps": 154,
+        "supervisor_state": {
+          "actions_observed": 3,
+          "arm_credit": {
+            "allow_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "drop_goal_bias": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "force_exploration_diversity": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            },
+            "tool_loop_reinduction": {
+              "helped_share": 0.0,
+              "helped_sole": 0
+            }
+          },
+          "arm_outcomes": {
+            "allow_reinduction": {
+              "fired": 1,
+              "helped": 0
+            },
+            "drop_goal_bias": {
+              "fired": 1,
+              "helped": 0
+            },
+            "force_exploration_diversity": {
+              "fired": 0,
+              "helped": 0
+            },
+            "tool_loop_reinduction": {
+              "fired": 0,
+              "helped": 0
+            }
+          },
+          "arms_enabled": [
+            "drop_goal_bias",
+            "allow_reinduction",
+            "force_exploration_diversity"
+          ],
+          "arms_used": [
+            "allow_reinduction",
+            "drop_goal_bias"
+          ],
+          "enabled": true,
+          "mode": "applied",
+          "observe_errors": 1,
+          "redirects": [
+            {
+              "action_index": 1,
+              "actions_to_levelup": null,
+              "arm": "drop_goal_bias",
+              "co_credited_count": null,
+              "diagnosis": "goal bias installed through 1 stagnant actions; it is steering and not working",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            },
+            {
+              "action_index": 2,
+              "actions_to_levelup": null,
+              "arm": "allow_reinduction",
+              "co_credited_count": null,
+              "diagnosis": "induction latch set with 202 new transitions the model has never seen",
+              "level": 0,
+              "resolved_by_levelup": false,
+              "stretch_level": 0
+            }
+          ],
+          "stagnations_unredirected": 1,
+          "unredirected_windows": [
+            {
+              "action_index": 3,
+              "arms_enabled": [
+                "drop_goal_bias",
+                "allow_reinduction",
+                "force_exploration_diversity"
+              ],
+              "arms_used": [
+                "allow_reinduction",
+                "drop_goal_bias"
+              ],
+              "attempt_cap_reached": false,
+              "diversity_active": true,
+              "evidence_floor_met": true,
+              "goal_bias_installed": true,
+              "induced": false,
+              "induction_attempts": 1,
+              "level": 0,
+              "new_transitions_since_induction": 203,
+              "stretch_level": 0
+            }
+          ],
+          "unredirected_windows_dropped": 0,
+          "window": 1
+        },
+        "transitions": 203
+      },
+      "receipts": [
+        {
+          "action": {
+            "data": null,
+            "kind": 4
+          },
+          "action_index": 1,
+          "after_state": {
+            "goal_bias_present": true,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "after_state_sha256": "sha256:22c490f7e8fd569cc303526166c572b1776294a331ad4f5718765ebf6216e3e3",
+          "application_disposition": "state_refused",
+          "applied": false,
+          "arm": "drop_goal_bias",
+          "before_state": {
+            "goal_bias_present": true,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 151
+          },
+          "before_state_sha256": "sha256:22c490f7e8fd569cc303526166c572b1776294a331ad4f5718765ebf6216e3e3",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "goal bias installed through 1 stagnant actions; it is steering and not working",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "induction latch set with 201 new transitions the model has never seen",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:1",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": "ValueError:private failure",
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": true,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 201
+          },
+          "wrapper_action_index": 2
+        },
+        {
+          "action": {
+            "data": {
+              "x": 4,
+              "y": 4
+            },
+            "kind": 6
+          },
+          "action_index": 2,
+          "after_state": {
+            "goal_bias_present": true,
+            "hybrid_diversity": true,
+            "induced": false,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "after_state_sha256": "sha256:77a8f6ca822a30b0d1fa771e00d0bb84514a54aa413cdbe8b8d28015474a02ce",
+          "application_disposition": "state_changed",
+          "applied": true,
+          "arm": "allow_reinduction",
+          "before_state": {
+            "goal_bias_present": true,
+            "hybrid_diversity": true,
+            "induced": true,
+            "stall_threshold": 150,
+            "steps_since_progress": 152
+          },
+          "before_state_sha256": "sha256:f912f9aea6247dd5b70064dbf5632f4efc2d9fa3b59ca2827c14471f6d3b13ff",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "induction latch set with 202 new transitions the model has never seen",
+              "eligible": true,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:2",
+          "induction_attempt": {
+            "goal_level": 1,
+            "planned": false,
+            "reason": "stall",
+            "skipped": "disabled_by_env",
+            "transition_count": 203
+          },
+          "induction_attempt_start_index": 0,
+          "induction_attempt_wrapper_action_index": 4,
+          "induction_outcome": "model_disabled",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": true,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": true,
+            "induced": true,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 202
+          },
+          "wrapper_action_index": 3
+        },
+        {
+          "action": {
+            "data": null,
+            "kind": 1
+          },
+          "action_index": 3,
+          "after_state": {
+            "goal_bias_present": true,
+            "hybrid_diversity": true,
+            "induced": false,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "after_state_sha256": "sha256:a13dfef95cc1266d46fc3bffa734259f8091238ead4badbb2b4ab886ef7ce3d4",
+          "application_disposition": "not_selected",
+          "applied": false,
+          "arm": null,
+          "before_state": {
+            "goal_bias_present": true,
+            "hybrid_diversity": true,
+            "induced": false,
+            "stall_threshold": 150,
+            "steps_since_progress": 153
+          },
+          "before_state_sha256": "sha256:a13dfef95cc1266d46fc3bffa734259f8091238ead4badbb2b4ab886ef7ce3d4",
+          "effective_action_policy_change": false,
+          "eligibility_predicates": [
+            {
+              "arm": "drop_goal_bias",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "allow_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            },
+            {
+              "arm": "tool_loop_reinduction",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": false
+            },
+            {
+              "arm": "force_exploration_diversity",
+              "diagnosis": "",
+              "eligible": false,
+              "enabled": true
+            }
+          ],
+          "event_id": "private:3",
+          "induction_attempt": null,
+          "induction_attempt_start_index": 0,
+          "induction_outcome": "not_observed",
+          "mode": "applied",
+          "model_action_executed": false,
+          "observation": {
+            "available_actions": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "level": 0,
+            "pixels": [
+              [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            ]
+          },
+          "observation_error": null,
+          "observation_sha256": "sha256:e756711559b6dba7a7592bb3b178674a10cc292bb26fd85e92f5b2a62c33cba8",
+          "schema": "carnot.arc.direct_supervisor_effect.v1",
+          "selected": false,
+          "snapshot": {
+            "diversity_active": true,
+            "goal_bias_installed": true,
+            "induced": false,
+            "induction_attempts": 1,
+            "level": 0,
+            "new_transitions_since_induction": 203
+          },
+          "wrapper_action_index": 4
+        }
+      ],
+      "rng_sha256": "sha256:642624b17e0e34756e7693cded82161d6d98d38e3d3593b6a3bace1bf25391d9",
+      "selector_injected": false,
+      "solve_provenance": "development_proxy",
+      "wrapper": "make_carnot_agent/E3AgentPolicy/choose_action"
+    }
+  ]
+}
