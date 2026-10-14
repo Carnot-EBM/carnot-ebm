@@ -20249,3 +20249,4 @@ code |
 | 2026-10-14 04:48 UTC | Qualify complete append replay after the explicit  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8499-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-14 04:50 UTC | Measure complete append service with qualified typ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8506-append-import-qualification) |
 | 2026-10-14 04:50 UTC | Test bounded Qwen evidence views only after a chan | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8500-strongest-baseline-audit) |
+| 2026-10-14 05:35 UTC | Explain adapter-withheld ARC redirects through app | OK | 98 passed, 1 warning in 207.39s (0:03:27) |
