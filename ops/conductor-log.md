@@ -20264,3 +20264,4 @@ code |
 | 2026-10-14 15:28 UTC | Measure delayed continuous learning through the qu | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 518.91s (0:08:38) |
 | 2026-10-14 15:34 UTC | Audit later proper loss and simultaneous retention | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8517-brier-online-learning.objective_stream_ready_score (actual=0 == expected=1) |
 | 2026-10-14 16:46 UTC | Qualify complete append replay after the explicit  | OK | 96 passed, 1 warning in 42.42s |
+| 2026-10-14 17:51 UTC | Measure complete append service with qualified typ | OK | 111 passed, 1 warning in 92.82s (0:01:32) |
