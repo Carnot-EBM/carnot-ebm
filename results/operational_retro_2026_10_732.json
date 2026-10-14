@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.732",
+  "generated_at": "2026-10-14T22:10:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 223.6,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify objective mechanics with a new immutable publication",
+      "duration_minutes": 41.85,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure delayed continuous learning through the qualified objective adapter",
+      "duration_minutes": 38.99,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen terminal outcomes and decide scientific continuation",
+      "duration_minutes": 27.89,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map qualified append cost to KV260 operations and preserve physical obligations",
+      "duration_minutes": 24.84,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure complete append service with qualified typed replay and equal durable wo",
+      "duration_minutes": 23.05,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.732 completed 10 experiments (0 compute-bound, 10 synthesis-only) across 223.6 total wall-time minutes (averaging 22 minutes per experiment) reconstructed from disk-mtime fallback data. Execution was driven entirely by synthesis tasks, led by qualifying objective mechanics with a new immutable publication (41.85 minutes), measuring delayed continuous learning through the qualified objective adapter (38.99 minutes), reconciling fourteen terminal outcomes and deciding scientific continuation (27.89 minutes), mapping qualified append cost to KV260 operations and preserving physical obligations (24.84 minutes), and measuring complete append service with qualified typed replay and equal durable work (23.05 minutes), with the top 5 slowest tasks accounting for 156.62 minutes (~70.0% of total wall time). With zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null, observed 0% utilization across both RTX 3090 GPUs reflects correct idle behavior for non-GPU synthesis workloads.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 10 completed experiments totaling 223.6 wall-time minutes), with the top two synthesis tasks—qualifying objective mechanics (41.85 minutes) and measuring delayed continuous learning through the qualified objective adapter (38.99 minutes)—consuming 80.84 minutes (~36.2% of total milestone wall time).",
+    "Synthesis qualification, contract validation, and reconciliation tasks executed serially without incremental receipt caching or evidence memoization when validating unchanged baseline contracts, hardware mapping boundaries, or qualification protocols.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Experiment receipts lack granular intra-task phase telemetry (separating fixture setup, baseline qualification, assertion sweeps, and artifact serialization), obscuring which sub-phase drove the 41.85-minute and 38.99-minute latencies in objective mechanics and continuous learning adapter evaluation."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for objective mechanics qualification, delayed continuous learning adapter evaluation, outcome reconciliation, KV260 append cost mapping, and append service measurement when upstream contracts and dependencies remain unchanged.",
+    "Instrument long-running synthesis tasks with granular intra-task phase timers (fixture setup, contract validation, assertion sweeps, artifact serialization) to isolate latency drivers.",
+    "Persist synchronous start, completion, and duration lifecycle timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for objective mechanics qualification, continuous learning adapter measurement, and KV260 append cost mapping workflows when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, contract qualification, assertion sweeps, serialization) to isolate sub-phase latency drivers.",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.732 completed 10 synthesis-only experiments in 223.6 wall-time minutes with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% utilization across both RTX 3090 GPUs represented expected idle behavior for non-GPU synthesis workloads, and no multi-model task required DualGPURunner dispatch. Operational improvements should focus on deploying incremental receipt caching for objective qualification and continuous learning sweeps and persisting synchronous lifecycle timestamps directly in receipts, with estimated time savings held at 0% until measured."
+}
