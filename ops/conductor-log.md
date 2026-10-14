@@ -20268,3 +20268,4 @@ code |
 | 2026-10-14 17:57 UTC | Test bounded Qwen evidence views only after a chan | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8512-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-10-14 18:44 UTC | Qualify direct supervisor action-effect receipts o | OK | 118 passed, 1 warning in 144.36s (0:02:24) |
 | 2026-10-14 19:33 UTC | Measure fresh adapter-withheld supervisor effects  | OK | 110 passed, 1 warning in 53.81s |
+| 2026-10-14 20:26 UTC | Map qualified append cost to KV260 operations and  | OK | 90 passed, 1 warning in 273.68s (0:04:33) |
