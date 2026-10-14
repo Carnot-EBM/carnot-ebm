@@ -54868,3 +54868,23 @@ Unchanged publication, adversarial and strict-row consumers validate terminal
 bytes, bound sidecars and actual readers. Owned failures disqualify; unchanged
 upstream absence blocks. Workers stay within 1500 MiB peak and 500 MiB growth;
 measurement ends by 3600 seconds with 900 seconds reserved within 4800 seconds.
+
+## REQ-VERIFY-8512: Qualify V732 terminal bytes in bounded private processes
+
+### SCENARIO-VERIFY-8512-CONTROLS
+
+Accept date20261014. Write traced tests first. Require scoped serial tests, real
+private CLI controls, 100 percent newly owned statement coverage including child
+and rejection paths, Ruff check/format, strict mypy and scoped spec tracing.
+Collect historical test nodes before bounded disjoint shards; preserve the exact
+union and assertions. Private E2E-018/021 retain original historical dates.
+Cold replay rejects missing inputs, intentional failure and self-rehashed
+substitutions. Unchanged primary publication, adversarial and strict-row readers
+validate exact terminal bytes; bound sidecars and actual consumers follow.
+Owned failure disqualifies; unchanged external absence blocks. Measurement ends
+by3600s, validation reserves900s, and the task cap is4800s. No full repository suite.
+
+Implementation: `v732_contract_runner` reuses unchanged publication and validation
+consumers. The initial owned suite passed54 tests with219/219 new statements
+covered, including real subprocesses and rejection paths. Terminal invocation
+receipts retain exact historical node unions, commands, exits and log hashes.

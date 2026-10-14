@@ -100291,3 +100291,40 @@ full task objects and canonical digest. Changes to task order, metadata, prompt,
 retirement flags or the end marker shall fail the corresponding check.
 
 Status: planned only. This documentation update implements no runtime behavior.
+
+## REQ-REPORT-8512: Bind complete V732 authority and independently sealed methods
+
+Compare fourteen full objects, Exp8512–8525, across the visible table, embedded
+JSON, pinned canonical digest and activated queue. Consumed staging stays absent;
+retain immutable observed activation bytes. Preserve failed V731 design hash
+0958abd881d34263ccb8d967d8cfbdfb8c7ede315e5f97812ed4b7c5f6c517e6.
+Authenticate V731 numerical methods through its shipped reader independently of
+its failed overall task authority. Preserve identity Brier, primary contrasts,
+objective updates/audit, append protocol/cost and evidence canary exactly.
+
+### SCENARIO-REPORT-8512-AUTHORITY
+
+Reject independent count, order, ID, title, phase, deliverable, model, substrate,
+gate, prompt, retirement and missing-end mutations. Keep fourteen primitive rows
+and zero scientific independent groups. Never reconstruct historical authority.
+
+### SCENARIO-REPORT-8512-METHODS
+
+Only add fit/tune diagnostics at steps 0/25/50/100/200 and fresh ARC mutation
+receipts. Final source fitting stays step200; prefix diagnostics cannot read test
+targets. Original-family consumers separately gate source, learning and five-input
+service eligibility. Preserve nine inputs/109 coefficients and scalar dimension13.
+No model loads or generations occur. Optional supplied causal CUDA receipts never
+gate CPU readiness. Seal task map, input hashes, budget, fields and numerical delta.
+
+### SCENARIO-REPORT-8512-EXPOSURE
+
+Record V731 ledger lag, three exact pre-gate paths and six conductor cascade lines.
+Released 900-answer/300-question evidence stays exposed; V717 H1/H2 stay closed.
+Flagged V730 bytes and disqualified timing stay flagged. Both generalization
+scores remain zero. The conductor owns ops/status/changelog/BMAD reconciliation.
+
+Implementation: reusable `v732_contract_methods` and `v732_historical_inputs`,
+a thin Exp8512 CLI, the sealed V732 protocol and its research note. The initial
+owned validation passed54 tests and covered219/219 new statements. The terminal
+artifact and raw invocation receipts retain the publication qualification.
