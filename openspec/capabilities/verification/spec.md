@@ -54827,3 +54827,17 @@ and rehashed tampering. Unchanged primary publication, adversarial verification
 and strict row lint qualify exact terminal bytes and their live consumer. Failed
 owned checks disqualify; unchanged external absence blocks. Measurement stops by
 3600 seconds with at least 900 seconds reserved inside the 4800-second cap.
+## V731 redirect audit qualification (2026-10-14)
+
+### REQ-VERIFY-8509
+Bind the activated task, primitive hashes, owned code and invocation date.
+Replay in a fresh bounded process. Reject missing inputs, intentional failure
+and self-consistently rehashed tampering through independent upstream seals.
+Validate exact published bytes with unchanged primary publication, adversarial
+and strict row consumers. Require genuine 100 percent owned statement coverage.
+Use isolated historical E2E-018 and E2E-021 fixtures and retain their node union.
+Owned validation failure disqualifies; unchanged external absence blocks.
+
+#### SCENARIO-VERIFY-8509
+Private CLI publication and cold replay pass. A changed aggregate, changed
+primitive seal, missing input or intentional child failure cannot claim readiness.

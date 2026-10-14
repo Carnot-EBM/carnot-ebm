@@ -100195,3 +100195,19 @@ and zero ARC resolved outcomes in a hash-bound exposure and retirement ledger.
 Methods readiness requires current authority and sealed methods, not scientific
 success. Both generalization scores and current model invocation counts stay zero.
 The conductor owns ops/status/changelog/BMAD reconciliation for this invocation.
+## V731 redirect effect audit (2026-10-14)
+
+### REQ-REPORT-8509
+Authenticate Exp8496 primitive receipts under original V730 seals and dates.
+Retain all sixteen episodes and thirty-two selected events. Separate shadow
+recommendations from applied-mode selections. Missing application dispositions,
+state hashes and predicates remain missing. Join only recorded action traces.
+Private fixtures use real policy methods and never become live-game evidence.
+Keep generalization and solve credit zero. Refinement requires at least three
+overlapping games and five resolved outcomes per shared arm cell, by mode.
+
+#### SCENARIO-REPORT-8509
+Given zero resolved outcomes and unrecorded application hashes, the audit emits
+a terminal null, an explicit missing-data map and no refinement authorization.
+The true induction latch at selection disproves an already-false live diagnosis.
+Model-disabled fixtures distinguish entering the induction tier from generation.
