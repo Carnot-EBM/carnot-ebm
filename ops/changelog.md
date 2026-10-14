@@ -22234,3 +22234,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-14: Reconcile fourteen outcomes and decide information learning and append continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v730_capstone; results/experiment_8498_v730_capstone.json
 - 2026-10-14: Bind thirteen tasks and freeze strongest-baseline and qualification protocols (⚠️ Blocked) — honest_verdict=complete_blocked_v731_contract_methods; results/experiment_8499_v731_contract_methods.json
 - 2026-10-14: Explain adapter-withheld ARC redirects through applied effects and censoring (⚠️ Research Finding) — honest_verdict=complete_null_v731_arc_redirect_effect_audit; results/experiment_8509_v731_arc_redirect_effect_audit.json
+- 2026-10-14: Map qualified append cost to KV260 operations and preserve physical obligations (⚠️ Blocked) — honest_verdict=complete_blocked_v731_board_cost_boundary; results/experiment_8510_v731_board_cost_boundary.json
