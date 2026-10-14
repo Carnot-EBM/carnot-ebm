@@ -275,3 +275,4 @@ of truth, not this line.)
 | 2026-10-09 | qa_layer_authenticity_audit | adversarial_verify.py::_real_field_all_true | SILENT_NON_FIRING | OPEN | |
 | 2026-10-09 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_generation_coverage_up | SILENT_NON_FIRING | OPEN | |
 | 2026-10-11 | experiment_claim_audit | experiment_8409_v724_retrospective_label_criterion.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-10-14 | experiment_claim_audit | experiment_8492_v730_publication_cost_model.json | CLAIM_OVERSTATED | OPEN | |

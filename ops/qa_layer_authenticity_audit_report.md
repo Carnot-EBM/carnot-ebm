@@ -3,73 +3,42 @@
 
 # qa_layer_authenticity_audit_report — 2026-10-13
 
-Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 3 |
-| `MINOR_RISK` | 1 |
+| `CLEAN` | 0 |
+| `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 3 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 1 |
+| `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_terminal_artifact_readiness` — results/experiment_4217_non_capstone_ablation.json` with `status="complete_partial"` and `honest_verdict="complete_partial_not_attempted"`.
-- `adversarial_verify.py::_is_finite_number` — Decimal("1.0")` stored as an in-memory `auroc` measurement.
-- `adversarial_verify.py::_is_count_field` — json {"train_loss": 0.0, "n_samples": 400}
+- `adversarial_verify.py::_is_timestamp_field` — dot_t125_wall_time_ms`: an actual elapsed-duration field in `results/experiment_1171_diffusion_of_thought_inference_v1.json`, incorrectly exempted as a timestamp.
+- `adversarial_verify.py::_is_chance_floor_score` — json {"probe_ece": 0.5, "heldout_loss": 0.5} ``` An equality between distinct non-chance measurements silently bypasses the tautology check.
+- `adversarial_verify.py::_is_identifier_field` — Separate in-distribution and out-of-distribution accuracy measurements: ```json { "accuracy_id": 0.8472913, "accuracy_ood": 0.8472913 } ``` Independent elapsed timings: ```json { "decode_time_ms": 29.184199, "solver_latency_ms": 29.184199 } ``` Both fragments emit no tautology flag: one measurement is incorrectly exempted in each.
+- `adversarial_verify.py::_is_reference_field` — baseline_auroc: 0.5319444444444444` — actual top-level field in `results/experiment_90_results.json`; returns false. `reference_auroc: 0.475326` — actual comparison-reference field in `results/experiment_3441_verifier_ensemble_vs_adaptive_injection_corpus_v3.json`; returns false. Additional plausible reference names also rejected: `ref_auroc`, `self_consistency_ref_auroc`, `previous_best_auroc`.
+- `adversarial_verify.py::_delta_stem` — delta_alpha`: `0.15036610650026802`, present in `results/experiment_1678_phase4_v3.json`. The helper returns None. This field name occurs in four inspected artifacts.
+- `adversarial_verify.py::_is_verified_arithmetic_delta` — Actual artifact: `results/experiment_fover_stepverifier_vs_cheap_baseline.json` ```json { "verifier_auroc": 0.9663, "cheap_baseline_auroc": 0.9635, "delta_auroc": 0.0028 } ``` The predicate returns false for `delta_auroc`, although the reported operands differ by approximately `0.0028`.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::check_terminal_artifact_readiness` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_finite_number` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_count_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_timestamp_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_chance_floor_score` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_identifier_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_reference_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_delta_stem` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_verified_arithmetic_delta` — **SILENT_NON_FIRING**
 
 ---
 
-## in_process_doc_reconcile.py
-
-(audit call failed: Command '['/home/ianblenke/.local/bin/codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-6.1-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed out after 600 seconds)
-
-## adversarial_verify.py::_declares_terminal_artifact_readiness
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-
-CLEAN
-
-## CLAIM
-
-Recognize dictionary payloads carrying the top-level `"status"` marker that enrolls them in terminal-readiness validation.
-
-## FINDINGS
-
-none found
-
-## COUNTEREXAMPLE
-
-none constructed
-
-## MISSED INPUT
-
-none found
-
-## RECOMMENDATION
-
-KEEP
-
-## RATIONALE
-
-`"status" in payload` tests exact dictionary-key presence, so wrapped, list-valued, and null status fields still trigger validation without substring or value-type assumptions. Caller inspection confirms that terminal-state classification happens downstream and that marker-based enrollment is intentional; this predicate does not approve readiness. There are no numeric thresholds, writes, hardcoded paths, or measurements in the supplied function.
-
-
-## adversarial_verify.py::check_terminal_artifact_readiness
+## adversarial_verify.py::_is_timestamp_field
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -77,95 +46,49 @@ KEEP
 SILENT_NON_FIRING
 
 ## CLAIM
-`Flag declared artifacts whose exact path has no terminal state.`, subject to the documented capstone exemption.
+`True if the field is a wall-clock TIMESTAMP (not a measured metric).`
 
 ## FINDINGS
 
-1. **A / negation blindness:** `"capstone" in _name_tokens(path_name)` checks token presence, not whether the filename identifies a capstone affirmatively. Separating a negating prefix with an underscore defeats the documented protection: a non-capstone partial artifact silently inherits the exemption.
+1. **A — Confirmed silent exclusion of measured work.** The real artifact results/experiment_1171_diffusion_of_thought_inference_v1.json contains dot_t125_wall_time_ms: 1373.291. This function returns True for that elapsed duration because `t in kl` finds `"time"`. The interval veto does not rescue it, so downstream tautology checking silently excludes the measurement.
 
-2. **Substring boundary failure:** `status.startswith("complete_partial")` and `verdict.startswith("complete_partial")` also accept a longer word beginning with that text. The interrupted-write example below receives no flag despite lacking the intended completed-partial marker.
+2. **Substring and context blindness.** `if "mtime" in kl or "timestamp" in kl:` accepts those substrings anywhere; `t in kl` likewise lacks token boundaries. A measured uptime_ms returns True because “time” occurs inside “uptime”. Even adding boundaries leaves wall_time_ms incorrectly exempted: a time-related word does not establish that a number represents an instant.
 
-3. **B / inconsistent marker vocabulary:** Both prefix checks inspect raw spellings. The upstream classifier normalizes hyphens to underscores, but this function does not. Consequently, a genuine capstone with accepted hyphenated partial markers receives a critical flag while its underscore equivalent is exempt.
+3. **B — All three tuples underspecify their concepts.**
+   - `("_ts", "_epoch", "_unixtime")` represents timestamp suffixes but omits unit-qualified forms such as captured_at_epoch_s.
+   - `("_ns", "_us", "_ms")` represents timestamp units but omits seconds. Existing artifacts contain numeric captured_at_epoch_s and frozen_at_epoch_s; both return False.
+   - `("time", "clock", "epoch", "stamp")` represents time-related markers but omits ts, despite the comment explicitly listing it. Consequently, run_start_ts_ns returns False.
+   
+   The separate `"mtime"` / `"timestamp"` markers also fail to recognize the existing epoch-seconds names. Reproducing two such timestamps separated by two seconds produced a critical tautology flag.
 
-4. **C / undetected mutations:** Removing `status.startswith("complete_partial")`, or separately removing `classification.classification == "partial"`, introduced no additional failures in the two focused test files: each retained the baseline’s 38 passes and one existing historical-artifact failure. Removing `verdict.startswith("complete_partial")` did introduce a failure. The status-only exemption and the partial-class restriction lack independent protection in those tests; this establishes no whole-suite claim.
+4. **C — Mutation-confirmed test gaps and double coverage.** All 15 selected existing timestamp regression tests remained green when individually disabling `"mtime"`, `"_unixtime"`, `"_us"`, `"_ms"`, `"time"`, `"epoch"`, or `"stamp"`. The mtime tests still pass through the time substring fallback; disabling time still passes through the mtime branch. These tests do not independently protect those recognizers. This was a targeted mutation run, not a full-suite claim.
+
+5. **Remaining requested classes:** There are no dictionary-value reads or wrapper assumptions. `kl = k.lower()` requires a string field name, consistent with JSON object keys. There are no forbidden-phrase scans, numeric thresholds, absolute write targets, filesystem writes, or measurements evaluated before work. The suffix checks are anchored. The terminal `return False` keeps unrecognized fields eligible for tautology checking, so it does not exhibit class F’s unchecked default.
 
 ## COUNTEREXAMPLE
 
-Reproduced through the repository’s classifier and this function.
+False negative for two independently measured timings containing a copied value:
 
-False negative—an ablation explicitly named non-capstone:
 ```json
 {
-  "path": "results/experiment_4217_non_capstone_ablation.json",
-  "payload": {
-    "status": "complete_partial",
-    "honest_verdict": "complete_partial_not_attempted"
-  }
+  "dot_t125_wall_time_ms": 1373.291234,
+  "independent_solver_latency_ms": 1373.291234
 }
 ```
-Classification: partial, terminal false. Flags: empty.
 
-False negative—prefix collision on an interrupted artifact:
-```json
-{
-  "path": "results/experiment_4217_capstone_v420.json",
-  "payload": {
-    "status": "partial",
-    "honest_verdict": "complete_partially_written: aggregation interrupted before all upstream artifacts were read"
-  }
-}
-```
-Classification: partial, terminal false. Flags: empty.
-
-False positive—accepted hyphenated spelling:
-```json
-{
-  "path": "results/experiment_4217_capstone_v420.json",
-  "payload": {
-    "status": "complete-partial",
-    "honest_verdict": "complete-partial: upstream comparisons remain blocked"
-  }
-}
-```
-Classification: partial. Receives a critical readiness flag.
+The actual tautology check emits no flag. Renaming the first field to dot_t125_latency_ms, with both values unchanged, produces a critical TAUTOLOGY flag.
 
 ## MISSED INPUT
-`results/experiment_4217_non_capstone_ablation.json` with `status="complete_partial"` and `honest_verdict="complete_partial_not_attempted"`.
+`dot_t125_wall_time_ms`: an actual elapsed-duration field in `results/experiment_1171_diffusion_of_thought_inference_v1.json`, incorrectly exempted as a timestamp.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A filename token plus an unrestricted raw prefix cannot reliably establish the exemption; use an explicit capstone declaration and shared, boundary-aware marker normalization. The supplied function consumes classifier-produced string/None fields and contains no numeric thresholds, absolute write targets, filesystem writes, measurements, or permissive default for unrecognized nonterminal states.
+The classifier exempts real measured durations while failing to exempt genuine epoch-seconds timestamps. Word boundaries alone cannot repair the wall-time ambiguity; timestamp recognition needs explicit instant-versus-interval semantics and independent tests for each recognizer.
 
 
-## adversarial_verify.py::_flag_summary
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-`_flag_summary` summarizes supplied flags into their count, maximum severity rank, and serialized representations.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-This helper summarizes existing flags; it does not claim to detect fabrication itself. It reads no artifact fields, matches no text, and performs no writes or measurements; `default=-1` handles an empty list explicitly. Checks passed for empty input, every defined severity, mixed severities, and duplicates; unknown severity raises an error rather than silently passing.
-
-
-## adversarial_verify.py::_is_finite_number
+## adversarial_verify.py::_is_chance_floor_score
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -173,102 +96,131 @@ This helper summarizes existing flags; it does not claim to detect fabrication i
 SILENT_NON_FIRING
 
 ## CLAIM
-The predicate claims to accept any real, finite numeric value, except booleans and integers too large for float conversion.
+`_is_chance_floor_score` claims to recognize score fields whose legitimate chance level is 0.5, allowing coincident chance-level scores to escape tautology flags.
 
 ## FINDINGS
 
-1. **A/B/F — finite decimal metrics silently disappear.** `if isinstance(v, numbers.Real):` excludes Python Decimal values, including ordinary finite measurements. They reach the final `return False`. I reproduced a downstream false negative: the decimal AUROC in the counterexample produces no implausible-perfect flag; its float equivalent produces one.
+1. **A / 5 — Silent exemption of unrelated measurements.** The line `t in kl` checks naming fragments, without establishing that the field is a `SCORE` or has a 0.5 chance level. The calibration-error counterexample below returns True; the inspected caller consequently emits no tautology flag for its equality with an unrelated loss. Calibration error has no 0.5 chance floor.
 
-2. **5 — the implementation contradicts its contract.** `Accepts any real number, not only Python's built-in int and float.` overstates the implementation. Membership in the numeric ABC is narrower than the concept of a real, finite numeric measurement. Decimal arithmetic already occurs in this repository.
+2. **2 / 3 — Unbounded and context-blind matching.** `control` matches inside controller names; `shuffled` matches inside a negated shuffle designation. Neither establishes a shuffled-label control. Furthermore, `auc` includes precision-recall AUC, whose chance level depends on class prevalence; `baseline`, `probe`, and `permut` also recognize losses, calibration errors, and permutation p-values. Adding word boundaries alone cannot repair these semantic errors.
 
-3. **C — two exception cases lack dedicated regression coverage.** Removing either `ValueError` or `TypeError` from `except (OverflowError, ValueError, TypeError):` leaves all six numeric-type regression tests passing. Mutations bypassing boolean rejection, the numeric-type gate, finiteness checking, overflow handling, or the final rejection each fail tests. Whole-suite mutation survival was not tested.
+3. **B — The tuple is narrower than its stated concept.** Its concept is `a control` `whose expected value is chance`. Fair-coin and random-guess controls are omitted unless their names incidentally contain another listed token. Both controls in the second counterexample return False, and the inspected caller flags their legitimate equality as critical.
 
-4. **1–3/B — no field or text matching defects here.** This function reads no dictionary fields and contains no substring checks, regexes, or marker lists. Rejecting dictionaries, lists, and None is appropriate for a scalar predicate; field unwrapping belongs before this call.
+4. **C — Seven tokens lack independent mutation coverage.** In a focused 151-test suite, deleting any one of `auc`, `probe`, `control`, `chance`, `baseline`, `majority`, or `shuffled` leaves every test passing. Tests naming probe, control, majority, and shuffled behavior also contain other matching markers. Deleting `auroc` or `permut` does fail a test. This establishes a coverage gap in that suite, not a claim about the entire repository suite.
 
-5. **4 — no comparison off-by-one defect.** There are no explicit thresholds. Zero is accepted; infinity and NaN are rejected. Oversized-integer rejection is explicitly documented.
-
-6. **D/E/G — absent.** The supplied function computes no paths, writes nothing, and records no measurement. Its tests can exercise values entirely in memory.
+5. **1 / 4 / D–G — No additional defects established.** `k: str` is a field name; the helper reads no dictionary values, so principle-wrapper extraction is inapplicable. It contains no numeric comparison, absolute path, write target, or timing measurement. An unmatched name returns False, which retains downstream scrutiny; there is no fail-open default here.
 
 ## COUNTEREXAMPLE
 
-An experiment checks this in-memory artifact before serialization:
+False negative, reproduced through the caller:
 
-```python
-from decimal import Decimal
-
-artifact = {
-    "auroc": Decimal("1.0"),
-    "n_samples": 100,
+```json
+{
+  "honest_verdict": "complete_probe_calibration_measured",
+  "probe_ece": 0.5,
+  "heldout_loss": 0.5
 }
 ```
 
-The predicate returns False for the AUROC. The downstream implausible-perfect check skips it and emits no flag; replacing the value with float `1.0` emits a flag.
+The helper recognizes `probe_ece` and the caller produces no tautology flag. That field name exists in the project's calibration artifacts; the values above are a constructed fragment.
+
+Additional misrecognized names: `controller_latency_s`, `unshuffled_label_accuracy`, and `pr_auc`.
+
+False positive for two balanced binary null controls, also reproduced:
+
+```json
+{
+  "binary_random_guess_accuracy": 0.5,
+  "coin_flip_score": 0.5
+}
+```
+
+Both names return False; the caller emits a critical tautology flag.
 
 ## MISSED INPUT
 
-`Decimal("1.0")` stored as an in-memory `auroc` measurement.
+```json
+{"probe_ece": 0.5, "heldout_loss": 0.5}
+```
+
+An equality between distinct non-chance measurements silently bypasses the tautology check.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The type gate repeats the documented NumPy failure for another ordinary numeric type: a finite measurement is classified as nonnumeric, silently disabling downstream scrutiny. Define the supported numeric contract explicitly, handle finite decimal measurements, and add a regression that verifies the downstream flag—not merely the predicate.
+Substring membership is being treated as proof of a metric's chance distribution, producing both silent exemptions and false quarantines. Require evidence of metric semantics and chance level for both compared fields, and test every recognizer independently against positive, negative, and negated names.
 
 
-## adversarial_verify.py::_numeric_pairs
+## adversarial_verify.py::_is_identifier_field
 
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-“Return all distinct pairs of finite-numeric top-level keys.”
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-Wrapped numbers are excluded when this helper is called directly, but the live verifier unwraps them first; nine relevant regression tests passed, including wrapped-metric detection. `items[i + 1 :]` correctly enumerates every distinct key pair once, including pairs with equal values. This function contains no text patterns, numeric thresholds, filesystem writes, disabling recognizer fallback, or timing measurements.
-
-
-## adversarial_verify.py::_name_tokens
-
-**Verdict:** `MINOR_RISK`
+**Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
-MINOR_RISK
+
+SILENT_NON_FIRING
 
 ## CLAIM
-Extract whole words from field names so count and timestamp classifiers share the same word boundaries.
+
+Exclude identifier, seed, timestamp, and metadata fields from tautology comparisons because they are `not a measured metric`.
 
 ## FINDINGS
 
-1. **C — Untested normalization:** Removing `name.lower()` changes uppercase-input behavior, yet all 15 relevant count, timestamp, and capstone regression tests still pass. Current production call paths lowercase upstream, masking this mutation; no direct tokenizer test was found.
+1. **A / semantic misclassification:** `kl.endswith("_id")` exempts measured scores whose suffix means in-distribution; `kl.endswith("_seed")` exempts scores qualified by a single seed. Both silently suppress metric comparisons. The underscore boundary already exists; adding another boundary will not resolve these meanings.
+
+2. **B / incomplete metadata vocabulary:** `if kl in _IDENTIFIER_FIELDS:` and the suffix rules miss seed_base and seed_a, both present in project artifacts, and experiment_number, used by a project script. The concepts are seeds and experiment identifiers; the implementation recognizes selected spellings. The honest COUNTEREXAMPLE produces a critical tautology flag.
+
+3. **Delegated false negative:** `if _is_timestamp_field(kl):` inherits the repository helper’s confusion between elapsed timings and timestamps. The measured decode timing in MISSED INPUT is classified as metadata, silently removing it from comparison.
+
+4. **C / unisolated rules:** Independently deleting `kl.endswith("_seed")`, `kl.endswith("_id")`, or `kl.endswith("_seed_used")` leaves all 19 relevant existing cases passing. Positive examples such as `random_seed` and `experiment_id` already match `_IDENTIFIER_FIELDS`, masking suffix deletion. Full-suite mutation survival was not measured.
+
+5. **Other requested classes:** No dict-value reads occur here; `kl = k.lower()` receives a field-name string, so principle-wrapped values are irrelevant to this helper. Set membership is exact, and suffix matching does not match inside longer words. There are no forbidden-text scans, numeric thresholds, absolute paths, writes, or measurements. Unrecognized names return false and remain eligible for comparison; the default does not disable detection.
 
 ## COUNTEREXAMPLE
-none constructed
+
+Honest reproducibility metadata recording the same seed twice:
+
+```json
+{
+  "seed_base": 20260724,
+  "seed_a": 20260724
+}
+```
+
+Both fields are classified as measurements. The caller emits a critical TAUTOLOGY flag.
 
 ## MISSED INPUT
-none found
+
+Separate in-distribution and out-of-distribution accuracy measurements:
+
+```json
+{
+  "accuracy_id": 0.8472913,
+  "accuracy_ood": 0.8472913
+}
+```
+
+Independent elapsed timings:
+
+```json
+{
+  "decode_time_ms": 29.184199,
+  "solver_latency_ms": 29.184199
+}
+```
+
+Both fragments emit no tautology flag: one measurement is incorrectly exempted in each.
 
 ## RECOMMENDATION
-ADD_TEST_CASE
+
+NEEDS_REDESIGN
 
 ## RATIONALE
-The implementation handles its documented examples correctly; no concrete misclassification was established. The demonstrated weakness is test coverage: the relevant regression tests cannot detect broken normalization in this helper. Artifact-value extraction, numeric thresholds, writes, approval defaults, and measurement calculations are absent from this function.
+
+Ambiguous naming conventions silently exempt measurements while incomplete metadata vocabulary falsely quarantines honest seed records. Classify field roles explicitly where possible, preserve ambiguous measurements for checking, and test each recognizer independently against both metadata and measured metrics.
 
 
-## adversarial_verify.py::_is_count_field
+## adversarial_verify.py::_is_reference_field
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -276,51 +228,202 @@ The implementation handles its documented examples correctly; no concrete miscla
 SILENT_NON_FIRING
 
 ## CLAIM
-Identify a `Field whose name implies a combinatorial count`, whose small-integer coincidences are plausible rather than suspicious.
+Return true for fields naming a `KNOWN PRIOR baseline/reference`, using anchored names to avoid confusing measured outcomes with references.
 
 ## FINDINGS
 
-1. **A — Silent non-firing:** The zero training-loss fragment below receives no implausible-perfect warning. This helper incorrectly classifies the loss as a count, causing its caller to skip the check. Reproduced against the repository implementation.
+1. **A — Actual reference silently missed.** The baseline key identified in MISSED INPUT returns false. Neither `kl in ("baseline", "reference", "ref")` nor `kl.endswith(("_baseline", "_reference", "_ref"))` recognizes a baseline marker placed before the metric name. This is an existing artifact convention, not a hypothetical shape. An honest pair of baseline aliases consequently receives a CRITICAL tautology flag.
 
-2. **2, 5 — Unbounded substring matching:** `return any(m in nl for m in count_markers)` matches markers anywhere. `"n_"` is not restricted to a prefix; `"_n"` is not restricted to a suffix; `"count"` matches inside unrelated words. Continuous measurements therefore receive count exemptions, contradicting the docstring.
+2. **Measured deltas falsely exempted.** `kl.endswith(("_baseline", "_reference", "_ref"))` accepts measured improvements whose names end with the comparison target. Likewise, `"_baseline_" in kl` and `"_reference_" in kl` accept delta fields containing those tokens. In the caller, these classifications bypass arithmetic verification: two copied deltas without supporting operands are downgraded to WARN. The docstring’s `Suffix-anchored` collision-prevention claim is false.
 
-3. **3, 5 — Semantic context blindness:** Even proper word boundaries would leave `"total"`, `"size"`, `"step"`, and `"epoch"` ambiguous: aggregate losses, integration parameters, and epoch-associated measurements are not combinatorial counts. Likewise, `tokens & _COUNT_WORDS` accepts a count noun anywhere in a compound name, including names describing averages rather than counts.
+3. **B — Vocabulary and placement gaps.** The exact-name tuple represents bare reference aliases; no additional bare alias is established here. The suffix tuple represents metric-specific references but misses the same reference markers preceding metric names. The interior rules represent embedded reference markers but omit the abbreviated ref form. The prior-prefix tuple represents carried historical metrics but omits equivalent previous-best wording; examples appear below.
 
-4. **B — Vocabulary narrower than its concept:** Both `_COUNT_WORDS` and `count_markers` represent names implying combinatorial counts. The repository implementation omits ordinary class-population nouns and repetition nouns. The balanced population counts below both return false and produce a spurious tautology flag.
+4. **String boundaries and context.** The suffix and interior markers contain underscore boundaries, so they avoid ordinary within-word collisions. They still confuse “measurement relative to a baseline” with “the baseline itself.” `kl.startswith(("prior_best", "prior_submitted"))` also lacks the trailing separator shown in `prior_best_*` and `prior_submitted_*`; no realistic unrelated-word collision was established for that branch.
 
-5. **C — Decorative rule:** `"_num"` is completely redundant because every occurrence already contains `"_n"`. Removing it cannot change classification; an in-memory deletion left 11 focused tests green. That green result supplies no independent evidence for this marker.
+5. **C — Deletion survives the focused tests.** All nine baseline-identity tests pass unchanged. In-memory mutation runs also pass all nine after independently deleting the exact-name branch, either interior branch, or either prior-prefix alternative. Removing either reference/ref suffix alternative also passes. The positive reference-suffix assertion is masked by its simultaneous interior baseline match. Removing the baseline suffix does fail three tests. These results establish gaps in the focused suite; the entire repository suite was not mutation-tested.
 
-6. **1, 4, D–G — No applicable defect:** The supplied helper reads no artifact values, applies no numeric thresholds, computes no paths or measurements, and performs no writes. `name.lower()` expects a string field name; principle wrappers concern field values. An unmatched name receives no count exemption, so the default itself does not disable checking.
+6. **Other requested classes.** There are no dictionary-value reads: `kl = k.lower()` consumes a field name, and JSON object keys are strings, so principle-wrapped values do not introduce an extraction bug here. There are no forbidden-phrase scans, numeric thresholds, absolute paths, writes, or measured durations. Unrecognized names return false, which leaves the caller’s critical check enabled; this is not the default-disables-check defect. The inspected focused tests read historical artifacts without overwriting them.
 
 ## COUNTEREXAMPLE
 
-False negative:
+False positive: two aliases explicitly carrying the same historical baseline.
 
 ```json
-{"train_loss": 0.0, "n_samples": 400}
+{
+  "honest_verdict": "complete: carried previous AUROC baseline under two aliases",
+  "baseline_auroc": 0.5319444444444444,
+  "auroc_baseline": 0.5319444444444444
+}
 ```
 
-`_is_count_field("train_loss")` returns true because `"n_"` occurs inside the name. The zero-loss warning is skipped.
+Observed: the first key returns false, the second true; the caller emits CRITICAL.
 
-False positive:
+False negative: copied improvement values with no operands establishing either subtraction.
 
 ```json
-{"positives": 200, "negatives": 200}
+{
+  "honest_verdict": "success: accuracy and AUROC improved over baseline",
+  "accuracy_delta_vs_baseline": 0.137,
+  "auroc_delta_vs_baseline": 0.137
+}
 ```
 
-Both names return false. The caller flags TAUTOLOGY despite these being plausible balanced class counts.
-
-Additional incorrect count classifications, reproduced: `"discounted_error"`, `"error_norm"`, `"total_loss"`, `"step_size"`, and `"losses_mean"` all return true.
+Observed: both keys return true; the caller emits WARN instead of CRITICAL. Replacing those keys with `accuracy_baseline_delta` and `auroc_reference_delta` produces the same erroneous downgrade through the interior rules.
 
 ## MISSED INPUT
 
-```json
-{"train_loss": 0.0, "n_samples": 400}
-```
+`baseline_auroc: 0.5319444444444444` — actual top-level field in `results/experiment_90_results.json`; returns false.
+
+`reference_auroc: 0.475326` — actual comparison-reference field in `results/experiment_3441_verifier_ensemble_vs_adaptive_injection_corpus_v3.json`; returns false.
+
+Additional plausible reference names also rejected: `ref_auroc`, `self_consistency_ref_auroc`, `previous_best_auroc`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-This classifier grants exemptions, so its overly broad matches silently suppress fabrication checks while its missing vocabulary falsely implicates honest counts. Enforce token and positional boundaries, distinguish counts from measurements associated with counted objects, and test each exemption independently.
+The predicate rejects existing reference names while exempting unverified measurements solely because their names mention a baseline. Both failure directions were reproduced through the caller, and the focused tests miss multiple deleted rules. Reference exemptions need evidence of field role, with arithmetic validation preserved for deltas; merely expanding the vocabulary leaves the fabrication escape intact.
+
+
+## adversarial_verify.py::_delta_stem
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+`If k names a delta/diff/change`, return its metric stem, an empty stem for a bare delta, or None otherwise.
+
+## FINDINGS
+
+1. **A/B/5 — Real delta fields silently go unrecognized.** `if kl in ("delta", "diff", "change"):` handles bare names; `kl.endswith(suf)` and `if marker in kl:` handle suffixes and infixes. Metric differences—the concept represented by `_DELTA_SUFFIXES`—also have prefix names used in actual artifacts. Those reach `return None`. The implementation is narrower than its docstring, and callers can consequently quarantine verified arithmetic as independent measurements.
+
+2. **C — Recognizer coverage is incomplete.** Direct execution of 17 existing baseline-identity/control-null regression test functions still passed after individually removing bare delta, diff, or change recognition; either diff/change suffix family; or lowercase normalization. Removing suffix or infix delta handling failed tests. These results establish gaps in those focused tests; full-suite mutation survival was not established.
+
+Field extraction: no dictionary reads occur; `k.lower()` receives a field name, so principle-wrapped values are irrelevant here. Matching uses underscore boundaries; no unrelated-word collision was demonstrated. There are no forbidden-text checks, numeric thresholds, absolute paths, writes, or measurements. For F, `return None` denies the arithmetic exemption downstream; it does not grant permission to skip fabrication checks.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "success: verifier_increased_alpha_on_heldout_seeds",
+  "alpha_baseline": 0.137,
+  "alpha_treatment": 0.274,
+  "delta_alpha": 0.137
+}
+```
+
+The delta correctly equals treatment minus baseline. Executing the caller produces a critical TAUTOLOGY flag. Renaming only `delta_alpha` to `alpha_delta` produces the intended structural-arithmetic warning instead.
+
+## MISSED INPUT
+
+`delta_alpha`: `0.15036610650026802`, present in `results/experiment_1678_phase4_v3.json`. The helper returns None. This field name occurs in four inspected artifacts.
+
+## RECOMMENDATION
+
+WIDEN_PATTERN_TO_CONCEPT
+
+## RATIONALE
+
+This is a corpus-confirmed naming omission with a reproduced false quarantine. Recognize established prefix forms while preserving metric binding, and add independent tests for each recognizer family so deleting one cannot remain undetected.
+
+
+## adversarial_verify.py::_is_verified_arithmetic_delta
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+Recognize genuinely derived delta/diff/change values by verifying their difference against two present numeric fields sharing the metric stem.
+
+## FINDINGS
+
+1. **A/B — Real naming gap.** `_delta_stem(k)` rejects the prefix-named AUROC delta in the actual artifact reproduced under MISSED INPUT, despite correct backing arithmetic. The inspected helper’s suffix/infix vocabulary represents metric differences but omits prefix naming already used by the project. The function’s claimed coverage is broader than its recognizer.
+
+2. **Arithmetic verification accepts non-arithmetic evidence.** `max(1e-9, 1e-6 * max(abs(a), abs(b), 1.0))` scales tolerance using operand magnitude. Million-scale sample counts can therefore “verify” a fabricated fractional score delta. Furthermore, normalized-score operands have tolerance at least one millionth, allowing equal operands to certify a nonzero delta. This contradicts `value EQUALS the difference of`.
+
+3. **Circular evidence is accepted.** `for kk, x in d.items()` excludes only the current field through `kk.lower() != k.lower()`. Other deltas remain eligible operands, allowing two copied deltas to certify each other using a third delta, without any reported treatment or baseline measurement.
+
+4. **Substring binding is not metric binding.** `stem in kk.lower()` accepts an unrelated longer word containing the stem. The concrete collision below makes copied ROC and accuracy outcomes receive a warning instead of a critical tautology flag. For bare deltas, `stem == ""` removes metric binding entirely.
+
+5. **Field-shape assumptions exist at this helper boundary.** `_is_finite_number(v)` and `_is_finite_number(x)` reject principle-wrapped dictionaries, lists, and None; neither read unwraps fields. Lists and None are reasonably rejected as non-scalars. The inspected main verification caller normalizes principle wrappers before dispatch, so a wrapper failure in that pipeline is **not demonstrated**.
+
+6. **Threshold differs from the documented exclusion.** `Null deltas (==0)` describes exact zero, but `target <= 1e-12` also rejects genuine nonzero deltas, including exactly the threshold. The inclusive arithmetic comparison also accepts an error exactly equal to tolerance, including a nonzero claimed delta against zero difference.
+
+7. **C — The core arithmetic rule is inadequately tested.** Independently replacing `abs(abs(a - b) - target) <= tol` with unconditional acceptance left all nine existing baseline-identity tests passing. Removing `if i == j:` or the tiny-value cutoff also left those nine tests green; removing stem binding failed one. These results concern that focused suite. Separately, the `1e-9` tolerance floor is mathematically unreachable because the competing term is always at least one millionth.
+
+8. **3/D/E/F/G — No additional finding in this function.** It performs no prose scan, filesystem operation, absolute-path computation, or timing measurement. The inspected nine tests read historical artifacts without writing them. Its terminal `return False` withholds the derivation exemption; it does not disable the fabrication check.
+
+## COUNTEREXAMPLE
+
+Fabricated copied deltas backed only by sample counts:
+
+```json
+{
+  "accuracy_delta": 0.137,
+  "auroc_delta": 0.137,
+  "accuracy_train_count": 1000000,
+  "accuracy_test_count": 1000001,
+  "auroc_train_count": 2000000,
+  "auroc_test_count": 2000001
+}
+```
+
+Both deltas return true. The inspected tautology caller emits only a warning, despite neither delta having score operands.
+
+Substring collision:
+
+```json
+{
+  "roc_delta": 0.137,
+  "accuracy_delta": 0.137,
+  "processor_utilization_before": 0.2,
+  "processor_utilization_after": 0.337,
+  "accuracy_before": 0.663,
+  "accuracy_after": 0.8
+}
+```
+
+The ROC stem matches inside “processor.” Both copied deltas receive the derivation exemption; the caller emits only a warning.
+
+Circular certification:
+
+```json
+{
+  "accuracy_delta_vs_self_consistency": 0.137,
+  "accuracy_delta_vs_majority": 0.137,
+  "accuracy_delta_vs_random": 0.274
+}
+```
+
+The first two fields each return true using the other and the third. The caller emits only a warning.
+
+## MISSED INPUT
+
+Actual artifact: `results/experiment_fover_stepverifier_vs_cheap_baseline.json`
+
+```json
+{
+  "verifier_auroc": 0.9663,
+  "cheap_baseline_auroc": 0.9635,
+  "delta_auroc": 0.0028
+}
+```
+
+The predicate returns false for `delta_auroc`, although the reported operands differ by approximately `0.0028`.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+Finding a nearby difference among loosely named numbers does not establish a genuine derivation, and the demonstrated bypasses suppress critical fabrication findings. Require explicit operand identities, compatible metric roles, acyclic dependencies, and arithmetic tolerances backed by independent regression and mutation tests.
 

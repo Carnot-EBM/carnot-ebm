@@ -52757,3 +52757,82 @@ their exact failure paths. Test stable append storage with unchanged durability.
 Use paraphrase invariance as a bounded diagnostic, not a new headline claim.
 No model training beyond the small decision head, device purchase, or external
 publication is proposed.
+
+## 2026-10-14 UTC — V731 planning scan: improve on the strongest available score
+
+Read and filed before drafting V731 (October 13 in the operator's timezone).
+V730 qualified a source-head contrast against fitted scalar and permuted-source
+controls. Its A1 Brier scores were 0.1334283811 for the full head and 0.133672
+for raw p2. The latter is a much stronger comparator than the fitted scalar
+spline at 0.1529864194. This is an exposed-panel observation, not evidence that
+the small difference against raw p2 is significant. The online-objective study
+did not execute; stale qualification bytes blocked it. Append timings were
+disqualified by a strict-mypy failure despite an observed 2.3386 ratio.
+
+### New method lead and local use
+
+- **RAIM: Robust Aggregation of Inexpensive Models for Hallucination Detection**,
+  Onofri and Di Pietro, September 30, 2026,
+  [arXiv:2609.39229](https://arxiv.org/abs/2609.39229).
+  The authors combine cross-fitted logistic aggregation with a calibration-set
+  admissibility test. Their results distinguish gains over the strongest member
+  from gains over weaker baselines. The author repositories separate
+  [analysis](https://github.com/eOnofri04/raim-analysis) from
+  [released verdicts](https://github.com/eOnofri04/raim-verdicts).
+  Carnot should test incremental value over raw p2 and preserve an identity
+  fallback in a small residual energy head. This is our experimental inference,
+  not a reproduction of RAIM or its admissibility theorem. Do not load its ten
+  judge models, substitute their verdicts for human truth, or assume its public
+  datasets supply previously unexposed Carnot questions.
+
+### Rechecked methods and boundaries
+
+| Topic | Primary source | Planning implication |
+|---|---|---|
+| EBM reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, December 2025, revised May 2026](https://arxiv.org/abs/2512.15605) | Energy compatibility and ARM–EBM equivalence do not make learned scores ground truth. Retain frozen generator weights and independent label evaluation. |
+| Structured verification | [Distributional EBMs, May 2026](https://arxiv.org/abs/2605.18871) | Separate deterministic constraints from learned quality. Model-identity shortcuts strengthen the case for question grouping and source controls. No retired external-text ranker is reopened. |
+| Neural constraints | [AS2, March 2026](https://arxiv.org/abs/2603.18436); [HardNet++, April 2026](https://arxiv.org/abs/2604.19669) | Differentiable constraint layers remain useful leads; encoded constraints still need independent correctness checks. HardNet repair scope stays retired. |
+| KAN online learning | [Online KAN, February 2026, revised June 19](https://arxiv.org/abs/2602.02056) | Sparse local spline updates offer a hardware path. Measure touched coefficients and complete durable cost; installed KV260 support is a separate claim. |
+| KAN retention | [Catastrophic Forgetting in KANs, November 2025](https://arxiv.org/abs/2511.12828); [KAC, March 2025](https://arxiv.org/abs/2503.21076) | Local support alone does not establish retention. Keep independent retention windows; no new RBF architecture is justified before the current objective test runs. |
+| Proper-loss learning | [Calibeating Made Simple, March 2026](https://arxiv.org/abs/2603.22167); [capacity-constrained delayed OCO, June 2026](https://arxiv.org/abs/2606.11711) | Preserve prediction-before-feedback and matched admission. Test Brier updates against frozen, log-loss and shuffled-label controls. Nonlinear sparse updates with selective delayed feedback do not inherit these regret bounds. |
+| Energy-guided decoding | [Energy-Based Decoding, May 2026](https://arxiv.org/abs/2605.28020) | Frozen-model steering is a future method after runtime and scorer utility qualify. No decoder change or full-generation experiment follows from this review. |
+| Hallucination evaluation | [HalluScoring, September 2026](https://arxiv.org/abs/2609.38355) | Question transfer and generator transfer are different tests. Neither follows from the exposed local panel. |
+| Ising and FPGA optimization | [Anechoic, October 9, 2026](https://arxiv.org/abs/2610.13368); [author implementation](https://github.com/skethz/anechoic) | Parallel annealing addresses dense Max-Cut optimization. Do not equate it with calibrated Gibbs sampling or the installed KV260 image. Retain operation and host-transfer accounting. |
+
+### Secondary-source coverage and access limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. Indexed ICLR PDFs
+  include [energy-scaled conformal prediction](https://openreview.net/pdf?id=zCwTMRtASZ).
+  The [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) and corresponding
+  conformal forum returned browser challenges. No review or acceptance claim
+  is inferred from an inaccessible forum. Conformal coverage is not evidence
+  of incremental factuality signal on a repeatedly exposed panel.
+- **Semantic Scholar:** attempted citing-paper endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Both returned retrieval errors. Citation coverage is incomplete; no zero-count
+  claim or claim to have reviewed all citing papers is made.
+- **Hugging Face:** checked the [verification papers feed](https://huggingface.co/papers?q=verification).
+  It mixes publication dates. Selected method claims above were checked at arXiv.
+- **GitHub:** checked weekly [Python Trending](https://github.com/trending/python?since=weekly)
+  and [Rust Trending](https://github.com/trending/rust?since=weekly). Returned
+  snapshots were month-old. No current ranking is asserted. RAIM's author-linked
+  repositories are a new inspectable implementation lead; nothing was installed.
+- **Extropic:** checked [Writing](https://extropic.ai/writing), September 4's
+  [Z1T](https://extropic.ai/writing/z1t/) and October 1's
+  [recursive intelligence report](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T divides sparse operations between probabilistic hardware and companion
+  processors. Its cost estimates are vendor evidence, not local measurements.
+  It cannot establish acceleration of Carnot's durable host writes.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and the [company site](https://logicalintelligence.com/). These describe a
+  constraint reasoning layer but supply no inspected reproducible implementation
+  that closes Carnot's extraction, learning or hardware gaps.
+
+Selection for the next design: raw-score-preserving calibrated energies and a
+strong-baseline audit; the still-unmeasured delayed Brier study after a new sealed
+qualification; complete append timing after the exact import repair; a diagnostic
+of applied versus shadow ARC redirects. Keep optional Qwen work behind a changed
+CUDA receipt and preserve board-specific reopening conditions. The
+[Linux fsync contract](https://man7.org/linux/man-pages/man2/fsync.2.html) remains
+the durability reference. Physical power-loss behavior is still unmeasured.
