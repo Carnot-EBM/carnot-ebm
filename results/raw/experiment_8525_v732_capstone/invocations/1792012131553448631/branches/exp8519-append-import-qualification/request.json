@@ -1,0 +1,57 @@
+{
+  "closure": null,
+  "primary": {
+    "exists": true,
+    "expected_sha256": null,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8519_v732_append_import_qualification.json",
+    "sha256": "sha256:6e4233edc4865de8ada5a6775429ed04ac379306e5a25f7b4dcfad002f46a904",
+    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8525_v732_capstone/invocations/1792012131553448631/primaries/8519/6e4233edc4865de8ada5a6775429ed04ac379306e5a25f7b4dcfad002f46a904.json"
+  },
+  "task": {
+    "MODEL_SPECS": [],
+    "agent_type": "codex",
+    "deliverable": "results/experiment_8519_v732_append_import_qualification.json",
+    "estimated_wall_time_min": 35,
+    "gated_on": [
+      {
+        "artifact_field": "methods_ready_score",
+        "op": "==",
+        "upstream": "exp8512-contract-methods",
+        "value": 1
+      },
+      {
+        "artifact_field": "service_inputs_ready_score",
+        "op": "==",
+        "upstream": "exp8512-contract-methods",
+        "value": 1
+      }
+    ],
+    "id": "exp8519-append-import-qualification",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 30,
+    "milestone": "2026.10.732",
+    "model": "gpt-6.1-sol",
+    "per_unit_rows": true,
+    "phase": 3,
+    "prior_failures": [
+      {
+        "addressed_by": "Replace the implicit k.append re-export with the explicit append_store_8493 import and independently qualify the actual strict-typed replay consumer before new measurements.",
+        "experiment_id": "exp8494-append-service-cost",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_disqualified_append_service_cost"
+      },
+      {
+        "addressed_by": "V731 never executed this repair because its document lacked the complete authority contract. V732 supplies and prevalidates that contract; the original numerical and validation thresholds are preserved.",
+        "experiment_id": "exp8506-append-import-qualification",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V731 completed thirteen scheduling slots: three producers, three pre-gate receipts, six cascade skips and a capstone. Its design stopped before the exact task contract. Exp8499 therefore reported methods_ready_score=0. Source fitting, objective learning and append timing did not run. Exp8509 qualified an ARC diagnostic: all 32 redirects were censored; the 16 applied-mode events lacked direct mutation receipts. V732 supplies a complete checked contract, preserves the unmeasured V731 science protocol, and measures fresh ARC effects. V730 source gains remain exposed-history; its objective publication and append timing remain unqualified. Historical inputs retain original dates and authority. No generator weights change.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/reporting/append_service_cost_8494.py; python/carnot/verify/append_service_cost_8494.py; python/carnot/verify/append_store_8493.py; python/carnot/reporting/append_store_qualification_8493.py; tests/python/test_append_service_cost_8494.py; tests/python/test_append_store_8493.py; results/experiment_8493_v730_append_store_qualification.json; results/experiment_8494_v730_append_service_cost.json\nTASK:\nQualify complete append replay after the explicit import repair. Deliver results/experiment_8519_v732_append_import_qualification.json. Create thin runner scripts/experiments/experiment_8519_v732_append_import_qualification.py, raw evidence under results/raw/experiment_8519_v732_append_import_qualification/, and docs/research-notes/v732-append-import-qualification.md. Same-roadmap outputs are future dependencies.\nCONCRETE STEPS:\n1. PRECONDITIONS: Print a flushed start line. Authenticate the activated V732 task, input hashes, required tools, free memory, disk-backed scratch and deadlines before measurement. Use original sealed authority for historical inputs. Record missing inputs and exact observed gate fields in gate_check_summary. Optional CUDA and board absence must not block unrelated CPU branches.\n2. Print a flushed progress line at every phase boundary and before and after each model load, generation, benchmark or subprocess that can take minutes. Use unbuffered output. Print completed/pending counts inside long loops. Supervise children with status at least every 60 seconds; keep every output gap under 600 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines, with a progress message between calls. Bound every tool call. Stop measurement by 3600 seconds and reserve at least 900 seconds for validation within the 4800-second hard cap. Never pad duration.\n3. Spec first: add applicable REQ-* and SCENARIO-* before implementation. Write focused failing tests first. Preserve existing assertions and thresholds. Reuse shipped modules through narrow adapters. Keep runners in scripts/experiments/, tests in tests/python/, and scratch outside the repository root. Accept --date {date}. Do not modify the active roadmap, conductor, validation gates, generator weights or external services.\n4. Declare inference_substrate_class=no_model_load, MODEL_SPECS=[] and zero current LLM calls. Use aggregation_from_upstream_artifacts for evidence readers or verifier_ensemble_against_cached_candidates for numeric heads. Record imported model outputs only in historical_model_provenance.\n5. Reproduce the recorded strict-mypy error in private scratch: reporting/append_service_cost_8494.py line309 accesses k.append.Store although the numeric module does not explicitly export append. Repair the consumer with an explicit import from carnot.verify.append_store_8493 and use that Store directly. Do not suppress attr-defined,relax mypy,alter arithmetic,change durable barriers or adjust benchmark thresholds.\n6. Write a failing import/type/replay regression before the narrow change. Authenticate original Exp8493 crash and equivalence operands; run original tests and exact complete-clock/accounting tests. Confirm unchanged transition,framing,short-write,fsync-before-ack,namespace-barrier,checkpoint32,tail-recovery,duplicate-ID and interior-corruption semantics. Preserve all original assertions and source snapshots needed by historical consumers.\n7. Build a new Exp8519 qualification under current authority with genuine unit/child coverage and required strict-mypy success. Cold-replay old primitive clocks only as historical evidence and preserve Exp8494 disqualified bytes. Hash separately the measurement kernel,report reader and validation repair. A pure import fix is not a speed observation. Emit append_runner_ready_score=1 only when the real private standalone CLI and current typed reader pass; no benchmark execution here.\n8. Run scoped unit tests, private CLI checks, Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Run applicable ops/e2e-test-plan.md checks. E2E-018 and E2E-021 must use private fixtures, original historical dates and isolated roots. Never overwrite historical primaries. Require 100 percent newly owned statement coverage, including children and rejection paths. Collect historical test node IDs first. Run their exact union in bounded disjoint shards with pytest -n 0 -o addopts= --no-cov. Keep all assertions. Save commands, exit codes, durations and log hashes. A killed child fails validation. Do not run the full repository suite.\n9. Cold-replay primitive rows in a fresh bounded process. Include missing inputs, intentional failure and self-consistently rehashed tampering. Run unchanged primary_publication, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Preserve findings and flags. Validate terminal bytes before publication, bind the sidecar to those bytes, and verify the actual downstream consumer. Owned validation failure is disqualified. Unchanged external absence is blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind evidence to this task and actual invocation.\nhonest_verdict, verdict_class: principle: Terminal honest_verdict starts complete_; verdict_class is exactly positive | circular_positive | null | blocked | disqualified | partial. Only retryable unfinished owned work is partial.\ngate_check_summary: principle: Each blocked_* or complete_blocked_* outcome names the failed check, upstream, path/hash, field, operator, expected and observed; missing differs from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Cached model evidence is not current generation; record actual calls and substrate.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Each intended question, arm, seed, episode or repeat retains a metric or missing reason; siblings and repeated deterministic fits do not multiply independence.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle fixtures and exposed-history positives are circular_positive and keep both generalization scores zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Qualification is distinct from scientific benefit; failed required checks forbid positive classes.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Preserve real work and immutable primitive operands.\ncited_upstream_artifacts, field_principles: principle: Explain each added metric and acceptance gate and identify original producer hashes.\nappend_runner_ready_score, typing_failure_reference, import_repair_diff_reference, historical_store_receipt, measurement_kernel_hash, replay_reader_hash, historical_clock_eligibility, durability_scope: principle: Fix the exact qualification defect without silently converting disqualified measurements into a new performance claim.\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8519_v732_append_import_qualification.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+    "requires_gpu": false,
+    "title": "Qualify complete append replay after the explicit import repair",
+    "track": "research"
+  },
+  "task_sha256": "sha256:cfcecbfd4be6a71c3424e4f391e9af34b6ee9bb94d4bfaac524098eedac7d898"
+}

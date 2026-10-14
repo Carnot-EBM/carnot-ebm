@@ -100573,3 +100573,33 @@ cold replay and invalid clocks reject current cost and retain historical fallbac
 Evidence accounting can score one with deployment blocked. Missing physical
 or operation evidence blocks; owned validation failure disqualifies. Rehashed
 summary or primitive tampering cannot grant readiness. Generalization stays zero.
+## REQ-REPORT-8525: Reconcile fourteen terminal V732 slots under original authority
+
+### SCENARIO-REPORT-8525-ACCOUNTING
+
+Authenticate the complete activated Exp8512–8525 contract before measurement.
+Read exact declared producer paths and exact conductor pre-gate paths. Preserve
+qualified producers, disqualified producers, pre-gates, cascade skips and absent
+artifacts separately. Include this reconciliation until publication. Keep original
+dates and hashes. Current authority cannot repair the byte-identical incomplete
+V731 design or its three producers, three pre-gates and six cascade skips.
+
+### SCENARIO-REPORT-8525-SCIENCE
+
+Cold-replay eligible source contrasts, typed costs, later Brier and retention,
+PRIMARY complete service clocks and fresh ARC direct effects through shipped
+primitive consumers in isolated bounded CPU processes. Preserve failed results.
+Missing new source or benefit audits remain unmeasured. Keep selected, applied,
+shadow, no-op, model-disabled and censored events distinct. Exposed labels and
+five-input storage clocks grant no independent generalization, nine-input speed
+or Rust/Python NFR-01. Keep the original V726 online initial head.
+
+### SCENARIO-REPORT-8525-CONTINUATION
+
+Report unchanged publication G1–G4, paper_ready and unmet_gates exactly, separate
+from milestone science and publication authorization. Compare prior_failures
+against authenticated predecessor bytes. Require changed evidence per branch.
+Retire unchanged attempts without retiring unmeasured hypotheses. External
+absence is terminal blocked; failed owned validation is disqualified. No model
+load, active YAML, conductor, historical primary or external service changes.
+The conductor owns ops/status, changelog and BMAD reconciliation.

@@ -55101,3 +55101,20 @@ accept valid evidence and reject missing, intentional failure and rehashed tampe
 controls. Unchanged primary publication and adversarial/strict-row consumers bind
 sidecars to terminal bytes and check the actual downstream consumer. Preserve
 findings. No full repository suite or historical primary overwrite is allowed.
+## REQ-VERIFY-8525: Qualify bounded capstone bytes and primitive rejection paths
+
+### SCENARIO-VERIFY-8525-CONTROLS
+
+Accept date20261014. Check tools, memory, disk scratch, original hashes and task
+authority before measurement. Flush phase and subprocess progress with at most
+60 seconds between status lines. Bound workers to1500MiB peak and500MiB growth.
+Stop measurement by3600 seconds and reserve900 seconds within4800 seconds.
+Run scoped units, private CLI, Ruff check/format, strict mypy and spec coverage.
+Require100 percent newly owned statements including children and rejection paths.
+Collect historical node IDs first and run their exact union in disjoint bounded
+serial shards. E2E-018/021 use private fixtures and original historical dates.
+No full repository suite or dropped assertions. Preserve command, exit, duration
+and log hashes; a killed child fails validation. Fresh replay rejects missing
+inputs, intentional errors and self-consistently rehashed task/claim/row drift.
+Unchanged publication, adversarial and strict-row consumers validate terminal
+bytes before publication. Bind the sidecar and check the actual downstream reader.

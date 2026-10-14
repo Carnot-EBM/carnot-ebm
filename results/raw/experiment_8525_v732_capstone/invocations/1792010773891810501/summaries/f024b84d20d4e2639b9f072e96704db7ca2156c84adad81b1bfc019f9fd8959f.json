@@ -1,0 +1,47 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 393.359375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 393.359375,
+      "prior_exec_lifetime_peak_mb": 416.5390625
+    },
+    "before": {
+      "current_rss_mb": 393.3359375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 393.3359375,
+      "prior_exec_lifetime_peak_mb": 416.5390625
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.0234375,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "original_required_checks_passed": null,
+  "original_run_date": "2026-10-14",
+  "producer_executed": false,
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "objective_stream_ready_score",
+      "expected": 1,
+      "field": "objective_stream_ready_score",
+      "hash": "sha256:cf39595a1d7ee1b5dff2212a0b51014eb46b079499cbe5c194d43d9de6def1fd",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8517_v732_brier_online_learning.json",
+      "upstream": "exp8517-brier-online-learning"
+    }
+  ],
+  "upstream_flagged_adversarial": null,
+  "verdict_class": "blocked"
+}

@@ -1,0 +1,47 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 393.15234375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 393.15234375,
+      "prior_exec_lifetime_peak_mb": 414.375
+    },
+    "before": {
+      "current_rss_mb": 393.13671875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 393.13671875,
+      "prior_exec_lifetime_peak_mb": 414.375
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.015625,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "original_required_checks_passed": null,
+  "original_run_date": "2026-10-14",
+  "producer_executed": false,
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "comparator_inputs_ready_score",
+      "expected": 1,
+      "field": "comparator_inputs_ready_score",
+      "hash": "sha256:2a843e589453122f245c3eec366dc6407381d134a34787c1c176e832c1ed98e4",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8513_v732_strongest_baseline_audit.json",
+      "upstream": "exp8513-strongest-baseline-audit"
+    }
+  ],
+  "upstream_flagged_adversarial": null,
+  "verdict_class": "blocked"
+}

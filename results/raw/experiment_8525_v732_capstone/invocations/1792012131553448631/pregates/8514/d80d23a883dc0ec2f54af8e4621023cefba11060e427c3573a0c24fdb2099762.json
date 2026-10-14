@@ -1,0 +1,51 @@
+{
+  "experiment": 8514,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-14",
+  "started_at": "2026-10-14T12:02:50.130480+00:00",
+  "finished_at": "2026-10-14T12:02:50.130480+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Train calibrated energy heads with a raw-score fallback",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8513-strongest-baseline-audit",
+  "failed_field": "comparator_inputs_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8513_v732_strongest_baseline_audit.json",
+  "failed_evidence_sha256": "sha256:2a843e589453122f245c3eec366dc6407381d134a34787c1c176e832c1ed98e4",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8513-strongest-baseline-audit",
+    "failed_field": "comparator_inputs_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8513_v732_strongest_baseline_audit.json",
+    "failed_evidence_sha256": "sha256:2a843e589453122f245c3eec366dc6407381d134a34787c1c176e832c1ed98e4"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8513-strongest-baseline-audit.comparator_inputs_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8513-strongest-baseline-audit",
+      "artifact_field": "comparator_inputs_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8513_v732_strongest_baseline_audit.json",
+      "artifact_sha256": "sha256:2a843e589453122f245c3eec366dc6407381d134a34787c1c176e832c1ed98e4"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
