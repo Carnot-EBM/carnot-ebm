@@ -52836,3 +52836,90 @@ of applied versus shadow ARC redirects. Keep optional Qwen work behind a changed
 CUDA receipt and preserve board-specific reopening conditions. The
 [Linux fsync contract](https://man7.org/linux/man-pages/man2/fsync.2.html) remains
 the durability reference. Physical power-loss behavior is still unmeasured.
+## 2026-10-14 — V732 planning scan: executable comparisons and observed action effects
+
+Recorded before designing V732. V731's design ended before its exact task
+contract. Its source, learning and service studies therefore did not execute.
+Exp8509 did qualify a diagnostic: all 32 redirects remained censored, and the
+16 applied-mode records lacked direct before/after state evidence. These facts
+favor completing the registered comparisons and measuring actual action effects.
+
+### Promising findings and adoption decisions
+
+- **New lead: Sample-Efficiency of Kolmogorov-Arnold Networks**, Riehl et al.,
+  October 7, 2026, [arXiv:2610.10627](https://arxiv.org/abs/2610.10627),
+  [author repository](https://github.com/DerKevinRiehl/neurips26_kan_training).
+  The paper studies physics regression and low-dimensional control. The authors
+  report benefits during early training that can disappear at longer budgets.
+  Adopt fixed training-prefix diagnostics for Carnot's existing spline head.
+  Freeze prefixes before fitting and use fit/tune data only. This is a local
+  diagnostic, not a replication, sample-efficiency claim, or reason to select
+  another model using test labels. The README also warns that its Feynman sweep
+  defaults to the matched MLP group; running its default is not a KAN comparison.
+- **RAIM**, September 30, 2026,
+  [arXiv:2609.39229](https://arxiv.org/abs/2609.39229),
+  [author analysis](https://github.com/eOnofri04/raim-analysis).
+  Rechecked the paper record and repository. Retain the strongest-component
+  comparator and question-cluster resampling. Carnot's raw-score mixture is our
+  adaptation of this comparison discipline, not the RAIM method or its guarantee.
+- **Calibeating Made Simple**, March 23, 2026,
+  [arXiv:2603.22167](https://arxiv.org/abs/2603.22167).
+  Rechecked the proper-loss and online-regret connection. Preserve the registered
+  Brier-versus-log-loss experiment with delayed feedback. Sparse nonlinear
+  updates do not inherit its regret bounds.
+- **Ultrafast On-Chip Online Learning via Spline Locality in KANs**,
+  February 2, revised June 19, 2026,
+  [arXiv:2602.02056](https://arxiv.org/abs/2602.02056).
+  Sparse local updates motivate touched-coefficient and full-update clocks.
+  An FPGA result in the paper does not establish support in Carnot's bitstream.
+- **New lead: Only Project Once: Projection-Adaptive Loss for Exact Constraint
+  Satisfaction**, October 3, 2026,
+  [arXiv:2610.04572](https://arxiv.org/abs/2610.04572).
+  One detached projection guides training penalties. Defer implementation:
+  Carnot's current obstruction is evidence quality and qualification, not the
+  cost of unrolled projection. Do not confuse this paper with earlier PAL papers
+  or reopen the retired HardNet repair stack by changing its name.
+
+### Requested primary topics
+
+| Topic | Primary source checked | Scope for the next plan |
+|---|---|---|
+| EBM reasoning and verification | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, December 2025, revised May 2026](https://arxiv.org/abs/2512.15605) | Compatibility and distributional equivalence do not make an extracted factual claim true. Keep generators frozen. |
+| Neural constraint satisfaction | [T-SKM-Net, December 2025](https://arxiv.org/abs/2512.10461); [Projection-Adaptive Loss, October 2026](https://arxiv.org/abs/2610.04572) | Feasibility concerns encoded constraints. No new solver branch before the existing verifier-utility test. |
+| Ising and accelerated sampling | [Anechoic, October 9, 2026](https://arxiv.org/abs/2610.13368) | Dense FPGA Max-Cut optimization is distinct from Gibbs sampling and durable host service. Defer porting. |
+| Hallucination detection | [RAIM](https://arxiv.org/abs/2609.39229); [HalluScoring 2026](https://arxiv.org/abs/2609.38355) | Strongest-score controls and unseen-question versus unseen-generator separation remain essential. |
+| Energy-guided generation | [Energy-Based Decoding, May 2026](https://arxiv.org/abs/2605.28020); [energy-guided object hallucination mitigation, July 2025](https://arxiv.org/abs/2507.07731) | Frozen-model steering is relevant after verifier utility and runtime recovery. The visual result is outside this milestone's text scope. |
+| Continual constraint learning | [Calibeating](https://arxiv.org/abs/2603.22167); [Online KAN](https://arxiv.org/abs/2602.02056) | Prediction-before-feedback, loss-specific controls, retention and complete update cost. |
+
+### Requested secondary channels and retrieval limits
+
+- **OpenReview:** searched 2026 energy-based reasoning submissions. The indexed
+  [ICLR 2026 EBT paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  was surfaced. The [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  returned a browser challenge. No unseen review or acceptance claim is inferred.
+- **Extropic:** inspected [Writing](https://extropic.ai/writing),
+  [Z1T, September 4](https://extropic.ai/writing/z1t/), and
+  [thermodynamic recursive intelligence, October 1](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T discusses heterogeneous sparse inference. Its latency and energy estimates
+  do not establish local TSU access or measured Carnot acceleration.
+- **Semantic Scholar:** attempted the citing-paper APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Both returned retrieval errors. Exact-ID site searches found no results.
+  Citation coverage is incomplete; this is not evidence of zero citing papers.
+- **Hugging Face:** searched the [verification](https://huggingface.co/papers?q=verification)
+  and [verifier](https://huggingface.co/papers?q=verifier) feeds. They surfaced
+  verification-horizon and verifier-engineering work. Feed summaries are leads;
+  no uninspected method enters the experiment contract.
+- **GitHub Trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were month-old. No current ranking is asserted. The new KAN author repository
+  and RAIM analysis repository were inspected directly; nothing was installed.
+- **Logical Intelligence:** inspected [Kona](https://logicalintelligence.com/kona).
+  Its vendor description does not supply a reproducible implementation that
+  changes Carnot's experiment design or verification requirements.
+
+The selected changes are small: make the existing comparison runnable, add
+fixed fit/tune learning curves, and collect direct ARC action-effect evidence.
+Fresh independent factual labels and physical/runtime repairs remain external
+evidence conditions. A planning scan cannot close them.

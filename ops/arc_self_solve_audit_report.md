@@ -16,11 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (97 modul
 
 ## Hostile LLM review
 
-**TL;DR: No SELF_DISCOVERY_ADVANCE demonstrated.** Zero recent artifacts means nothing to classify; the reachability pass proves wiring, not autonomous discovery.
+**TL;DR: UNCLEAR — this batch demonstrates no live self-discovery advance. Zero artifacts is an empty review, not a clean bill of health.**
 
-**Per-artifact:** None supplied (`last 7d: 0`). No basis to assign solve verdicts or check duplicates.
+Per-artifact: none (`[]`); no verdicts to assign. Require live attempt → runtime inference → executed solve traces, plus registry comparison, before crediting the next claimed advance.
 
-**Recommended action:** Require each claimed solve to include a reproducible live-entrypoint run, the agent’s attempt/action history, runtime observations supporting its inferred mechanics, and comparison against the registry. Missing provenance → **UNCLEAR**, not credited progress.
-
-**Pattern watch:** A source-derived adapter or offline BFS solver wired into the live closure would pass this lint and still violate the principle. No such drift is demonstrated here—but neither is live self-discovery.
+**Pattern watch:** Reachability proves static import wiring, not execution or discovery provenance. [arc_loop_solve.py:547](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:547) routes registered games through per-game adapters; those results explicitly declare [`development_proxy`](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:248). Hand-built adapter solves remain **OUTER_LOOP_RE** even through a designated entrypoint. Preserve that distinction in capability claims.
 

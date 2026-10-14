@@ -9,124 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| CANNOT_DETERMINE | 4 |
-
-## experiment_8491_objective_benefit_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because upstream `objective_stream_ready_score` was 0 while the gate required 1.
-
-## WHAT IS MISSING
-nothing — `gate_check_summary`, `failed_field`, `failed_expected`, `failed_observed`, and `gates_evaluated` identify the failed check and its values.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8492_v730_publication_cost_model.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The publication cost model passes engineering readiness gates and reports conditional speed ceilings, without claiming measured append speedup.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8493_v730_append_store_qualification.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-“acceptance_gates” marks all five checks true, but the excerpt ends before an overall headline result is visible.
-
-## WHAT IS MISSING
-The artifact’s remaining contents, including its headline result or verdict: the supplied JSON cuts off inside “acknowledgment_ledger.rows[].response[]” after “changed”.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact support its headline outcome with per-unit comparison evidence or identify a blocking check?
-
-## experiment_8494_v730_append_service_cost.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-Append reports pooled speedups over snapshot of 2.3386× at batch 1 and 1.4663× at batch 8, while receiving a disqualified verdict.
-
-## WHAT IS MISSING
-Complete batch-8 entries in "paired_repeat_rows", including each repeat’s "append_wall_s" and "snapshot_wall_s": the supplied artifact truncates during repeat 1, while "cell_results" reports five completed pairs.
-
-## THE CHECK A READER CANNOT DO
-Does the reported batch-8 speedup reflect consistent improvement across all five pairs, or one unusually favorable repeat?
-
-## experiment_8495_bounded_qwen_evidence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because upstream `runtime_repair_ready_score` was 0, failing the required equality to 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8496_v730_arc_panel_qualification.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-
-The visible "acceptance_gates" report that redirect support and scientific benefit failed.
-
-## WHAT IS MISSING
-
-The artifact ends mid-row in "descriptive_old_subset"; complete per-unit results for "completed_count": 16 and any final verdict or "gate_check_summary" are not visible.
-
-## THE CHECK A READER CANNOT DO
-
-Do the results across all 16 episodes support the failed "scientific_benefit" gate?
-
-## experiment_8497_v730_board_operation_boundary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-NPU/TSU qualification is not met, with "compatible_operations" and "complete_transfer_device_clocks" both false under "acceptance_gates".
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
 ## experiment_8498_v730_capstone.json
 
@@ -136,10 +20,122 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion reports administrative acceptance while withholding independent scientific generalization, but the artifact is truncated before its headline verdict.
+The visible portion claims historical FoVer publication gates passed, but the capstone’s headline verdict is not visible.
 
 ## WHAT IS MISSING
-The remainder of the artifact: actual values for "honest_verdict", "scientific_claims", and "rows" are unavailable; their names appear in "field_principles". The visible "gate_check_summary" supplies failed checks and observed values, so blocker diagnostics are present.
+The artifact ends mid-"historical_model_provenance"; values for "honest_verdict", "scientific_claims", and "rows" are not supplied, although those names appear in "field_principles". "gate_check_summary" does record failed checks and observed values, so missing blocker diagnostics is not supported.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact include per-unit metrics supporting the historical FoVer learning-contribution claim?
+Does the complete artifact supply per-unit metrics supporting its comparative headline claim?
+
+## experiment_8499_v731_contract_methods.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible portion reports current-contract readiness of 0, but the artifact is truncated before its headline verdict.
+
+## WHAT IS MISSING
+The actual "honest_verdict" or "verdict_class" value; both appear only as names in "field_principles" before truncation mid-"future_dependencies". "contract_rows" does record diagnostics: "independent_authority": false and "missing_reason": "authority_absent_or_mismatched".
+
+## THE CHECK A READER CANNOT DO
+Does the missing headline verdict assert a comparative result requiring additional per-unit evidence?
+
+## experiment_8500_strongest_baseline_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked because upstream `methods_ready_score` was 0, failing the gate requiring 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8503_objective_publication_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked because the upstream `methods_ready_score` was 0, failing the required equality to 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8506_append_import_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Qualification was blocked because upstream `methods_ready_score` was 0, failing the required value of 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8509_v731_arc_redirect_effect_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The audit completed with all 32 events right-censored, so scientific benefit is not estimable and arm refinement lacks sufficient support.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8510_v731_board_cost_boundary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+“NPU_qualified” and “TSU_qualified” are false, with failed “acceptance_gates” supported by recorded missing-clock, compatibility, and missing-field diagnostics.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8511_v731_capstone.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible portion reports administrative completion while current authority and independent scientific generalization remain unmet.
+
+## WHAT IS MISSING
+The artifact cuts off inside "historical_model_provenance"; actual "honest_verdict", "scientific_claims", and "rows" values are not shown, although "field_principles" names them. "gate_check_summary" does record failed checks and observed values, so blocker diagnostics are present.
+
+## THE CHECK A READER CANNOT DO
+Does the omitted portion contain per-unit metrics supporting any comparative headline claim?

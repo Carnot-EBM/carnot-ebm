@@ -11,190 +11,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 4 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
-
-## experiment_8491_objective_benefit_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative claim is asserted. The readiness prerequisite would fail if objective_stream_ready_score differed from 1.
-
-## WAS THAT CHECKED
-Yes—the sole gate observed 0 against required 1 and failed. This is a blocked receipt; it reports no benefit or retention evaluation.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `artifact_field`: `objective_stream_ready_score`
-- `expected`: `1`
-- `actual`: `0`
-- `passed`: `false`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8492_v730_publication_cost_model.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-The positive verdict treats publication-cost accounting and append-protocol qualification as evidence of engineering value.
-
-## WHAT WOULD REFUTE IT
-Direct accounting of the same upstream clocks, using the original validators, produces identical qualification and cost bounds: the cheapest serious baseline adds no less value than this method.
-
-## WAS THAT CHECKED
-No. The artifact reports reconstruction and fixture qualification, without an added-value comparison against that baseline. The verifier defines correctness, so passing its gates cannot independently establish verifier value.
-
-The speed ceiling subtracts assumed removable costs from existing clocks under zero-new-overhead assumptions; it does not expose the proposed append implementation to a measured loss. The artifact correctly disclaims measured speedup and generalization, but its positive verdict exceeds those accounting and qualification results.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_circular_positive_publication_cost_model`
-- `verdict_class`: `circular_positive`
-- `verifier_is_oracle`: `true`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `append_protocol_ready_score`: `1`
-- `conditional engineering cost bound; requires Exp8494 measurement`
-- `retained work unchanged`
-- `new append overhead zero`
-- `snapshot pointer marginal cost equals journal certificate marginal cost`
-- `measured_append_speedup`: `null`
-- `scientific_speed_benefit_score`: `0`
-- `independent_generalization_score`: `0`
-
-## RECOMMENDATION
-NARROW_CLAIM
-
-## experiment_8493_v730_append_store_qualification.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The append store preserves snapshot transition behavior and recovers correctly after process exits in the tested engineering fixtures.
-
-## WHAT WOULD REFUTE IT
-A recovered append state differing from the snapshot reference, a returned stable ID lost during recovery, or an unacknowledged frame applied twice at any tested crash boundary.
-
-## WAS THAT CHECKED
-Yes: the equivalence rows, crash rows, and acknowledgment ledger address these failures across two equivalence cells and fourteen process exits, with sixteen completions and zero reported failures. Recovery could have failed; passing is not guaranteed by the oracle defining correctness. Snapshot equality supports the stated equivalence claim. No verifier advantage, generalization, or speed benefit is asserted.
-
-## EVIDENCE
-- `append_store_ready_score`: `1`
-- `completed_count`: `16`; `failed_count`: `0`
-- `equivalence_rows`; `crash_rows`; `acknowledgment_ledger`
-- `actual_exit`: `73`; `passed`: `true`
-- `methodology_note`: `Stable-file framed append using independently sealed original five-input service tapes and unchanged snapshot transitions. Fourteen actual process exits and bitwise recovery qualify engineering fixtures only. No model calls, scientific benefit, speed measurement or physical power-loss certification.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8494_v730_append_service_cost.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_8495_bounded_qwen_evidence.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no experimental claim to falsify. The reported gate failure would be contradicted if both evaluated gates passed.
-
-## WAS THAT CHECKED
-Yes, for gate status: `gates_evaluated` records runtime readiness failing and source-control qualification passing. The artifact is a blocked-run receipt, not an experimental result.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `artifact_field`: `runtime_repair_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8496_v730_arc_panel_qualification.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The bounded public-game panel completed execution qualification but observed no redirect-resolved level-ups and established no scientific benefit.
-
-## WHAT WOULD REFUTE IT
-A valid applied-redirect row recording an actual SDK level-up would contradict the zero-resolution result; progress exceeding the matched same-game, same-seed off arm would provide evidence against the benefit null.
-
-## WAS THAT CHECKED
-Yes, within the 512-action horizon. Applied redirects have outcome rows, and the unchanged policy with redirects off supplies the cheapest serious comparator. The visible paired comparisons tie at zero level progress; the aggregate reports zero resolved redirects.
-
-The intervention actually changed policy state, including exploration diversity and induction attempts, so the observed tie was not imposed by identical treatment. Runtime level progress supplies the outcome rather than receipt emission. No held-out generalization or verifier-value claim is asserted.
-
-Censored outcomes remain pending, so this supports a bounded observational null, not a conclusion that redirects can never help. The supplied excerpt shows detailed comparisons for two games, rather than every panel pair.
-
-## EVIDENCE
-- `honest_verdict` = `complete_null_v730_arc_panel_qualification`
-- `completed_count` = `16`; `intended_count` = `16`; `excluded_count` = `0`
-- `applied_redirects` = `16`; `resolved_redirects` = `0`; `pending_redirects` = `32`
-- Visible pairs: `peak_level_delta_on_minus_off` = `0`; `progress_count` = `0`
-- `outcome_window_status` = `pending_censored`; `censoring` = `action_limit`; `max_actions` = `512`
-- `scientific_benefit` = `false`; `independent_generalization_score` = `0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8497_v730_board_operation_boundary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative claim is made. A qualified current device-operation row with complete transfer/device clocks and deployment readiness would contradict the recorded blocked boundary.
-
-## WAS THAT CHECKED
-No current device trial is reported. This artifact records historical evidence and unresolved qualification gates; it does not claim performance gains, verifier value, or generalization.
-
-## EVIDENCE
-- `Bind complete V730 authority and original producer hashes; no device or model work.`
-- `exposure_scope`: `historical_public_labels_retrospective_overlap_unknown; engineering_continuity_only`
-- `deployment_ready`: `false`
-- `device_commands_executed`: `[]`
-- `compatible_operations`: `false`
-- `complete_transfer_device_clocks`: `false`
-- `generalized_learning_benefit_score`: `0`
-- `fallback_is_current_append_measurement`: `false`
-- `missing_field`: `service_cost_ready_score`
-
-## RECOMMENDATION
-KEEP
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 7 |
 
 ## experiment_8498_v730_capstone.json
 
@@ -207,17 +25,210 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this capstone reports blocked evidence aggregation, without asserting comparative scientific benefit. Its zero generalization scores should not be interpreted as measured evidence that generalization is impossible.
+No comparative headline is asserted. Qualified independent evidence of benefit could change the blocked assessment; the artifact does not claim that benefit is absent.
 
 ## WAS THAT CHECKED
-No comparative scientific claim was tested here. Administrative checks could fail and did fail in gate_check_summary; the capstone retains a blocked verdict.
+No comparative falsification test is established in the supplied excerpt. The displayed gate checks record qualification failures, and the capstone withholds independent generalization. Upstream readiness receipts and historical publication gates are not presented as current scientific success.
 
 ## EVIDENCE
+
 - `honest_verdict`: `complete_blocked_v730_capstone`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
 - `scientific_claims_independently_generalize`: `false`
-- `Authority, complete slot accounting and owned validation qualify the reconciliation; none establishes independent scientific benefit.`
 - `exposure_scope`: `public-label retrospective and historical engineering evidence; independent factuality and hidden-game generalization remain open`
+- `Authority, complete slot accounting and owned validation qualify the reconciliation; none establishes independent scientific benefit.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8499_v731_contract_methods.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative claim is asserted. An assertion that the current contract was ready would be refuted by failed independent-authority or task-completeness checks.
+
+## WAS THAT CHECKED
+Yes, for administrative readiness: gate_check_summary records those failures, and current_contract_ready_score is zero. This is a blocked administrative receipt. Oracle verification establishes no claimed added value; exposed historical observations receive no generalization or benefit credit. A serious comparative baseline is therefore unnecessary for its stated scope.
+
+## EVIDENCE
+
+- `exposure_scope`: `administrative contract; released human labels exposed; older overlap unknown`
+- `current_contract_ready_score`: `0`
+- `scientific_benefit`: `false`
+- `required_authority`: `observed` is `list index out of range`; `passed` is `false`.
+- `independent_visible_task_table`: `expected` is `13`; `observed` is `null`; `passed` is `false`.
+- `scope`: `historical observation only; no new qualification or benefit`
+- `raw_score_gains`: `exploratory exposed-panel only`
+- `independent_generalization_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8500_strongest_baseline_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this artifact reports a blocked prerequisite check, without claiming comparative performance or added value.
+
+## WAS THAT CHECKED
+No comparative experiment was evaluated. The prerequisite was checked in gates_evaluated and failed: methods_ready_score was 0 against an expected 1.
+
+## EVIDENCE
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `methods_ready_score`
+- `blocked_reason`: `actual=0 == expected=1`
+- `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8503_objective_publication_qualification.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this is a blocked prerequisite-check receipt, with no claim of successful qualification or comparative value.
+
+## WAS THAT CHECKED
+No experimental claim was tested. The prerequisite was checked in `gates_evaluated`: methods readiness was 0 against required 1, and the gate failed.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `methods_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8506_append_import_qualification.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no experimental success claim to falsify. Both required gates passing would contradict the receipt’s reported blocking condition.
+
+## WAS THAT CHECKED
+Yes, in the gate evaluation: methods readiness failed (0 versus required 1), while service-input readiness passed. Append-replay qualification did not run, so this artifact provides no evidence of its success.
+
+## EVIDENCE
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `methods_ready_score`
+- `failed_expected`: `1`
+- `failed_observed`: `0`
+- `gate_check_summary`: `gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8499-contract-methods.methods_ready_score (actual=0 == expected=1)`
+- `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8509_v731_arc_redirect_effect_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+All 32 live redirect selections remain right-censored, so treatment benefit cannot be estimated and arm refinement lacks outcome support.
+
+## WHAT WOULD REFUTE IT
+A valid, uncensored live outcome would contradict the all-censored finding. Resolved outcomes meeting the stated threshold—three overlapping games and five outcomes per shared arm cell, with modes separate—would contradict the reason for withholding refinement.
+
+## WAS THAT CHECKED
+Yes. `effect_support_by_arm` counts selected, resolved, and censored events separately; `per_game_results` reports resolution by game; `leave_one_game_out` checks support gates. Every reported cell has zero resolved outcomes, and the gates fail. Private fixtures remain separate from live evidence. This supports the evidence-insufficiency conclusion; causal benefit itself was not tested.
+
+## EVIDENCE
+
+- `honest_verdict`: `complete_null_v731_arc_redirect_effect_audit`
+- `censored_count`: `32`
+- `resolved_count`: `0`
+- `support_gate_passed`: `false`
+- `arm_refinement_authorized`: `false`
+- `fixture_is_live_evidence`: `false`
+- `All32 events remain right-censored. No failure rate or scientific benefit is estimable.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8510_v731_board_cost_boundary.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+A qualified current board-service measurement with complete device and transport clocks would contradict the recorded blocked boundary. No comparative acceleration or generalization benefit is asserted.
+
+## WAS THAT CHECKED
+No current device comparison is shown. The displayed operation rows record host CPU execution with incomplete clocks. Historical acceleration ceilings are explicitly counterfactual, and missing current append evidence remains unqualified. This artifact records evidence boundaries without claiming comparative success.
+
+## EVIDENCE
+
+- `Bind V731 invocation and original producer hashes; recording gives no deployment or benefit.`
+- `assigned_substrate`: `host_CPU`
+- `deployment_ready`: `false`
+- `device_clock_ns`: `null`; `transport_clock_ns`: `null`
+- `counterfactual`: `true`; `deployed_speed`: `false`
+- `fallback_is_current_append_measurement`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8511_v731_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: the supplied excerpt reports administrative reconciliation and leaves independent scientific benefit unestablished. It asserts no comparative improvement to falsify.
+
+## WAS THAT CHECKED
+Not applicable to a comparative headline. The acceptance gates explicitly record failed authority and scientific generalization. The oracle flag therefore does not undermine an asserted verifier-value claim here. Comparative performance and row-level validity cannot be assessed from the displayed excerpt.
+
+## EVIDENCE
+
+- `administrative_complete`: `true`
+- `full_current_authority`: `false`
+- `scientific_claims_independently_generalize`: `false`
+- `generalized_learning_benefit_score`: `0`
+- `Bind exact producer bytes and this invocation; administrative completion grants no scientific benefit.`
+- `public-label retrospective and historical engineering evidence; independent factuality and hidden-game generalization remain open`
 
 ## RECOMMENDATION
 KEEP

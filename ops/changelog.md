@@ -22242,3 +22242,16 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-14: Bind thirteen tasks and freeze strongest-baseline and qualification protocols (⚠️ Blocked) — honest_verdict=complete_blocked_v731_contract_methods; results/experiment_8499_v731_contract_methods.json
 - 2026-10-14: Explain adapter-withheld ARC redirects through applied effects and censoring (⚠️ Research Finding) — honest_verdict=complete_null_v731_arc_redirect_effect_audit; results/experiment_8509_v731_arc_redirect_effect_audit.json
 - 2026-10-14: Map qualified append cost to KV260 operations and preserve physical obligations (⚠️ Blocked) — honest_verdict=complete_blocked_v731_board_cost_boundary; results/experiment_8510_v731_board_cost_boundary.json
+
+## 2026-10-14 — Stage V732 executable decisions and observed action effects
+
+- Add the complete fourteen-task V732 design and matching staged queue,
+  Exp8512–Exp8525, in four phases. Preserve V731's incomplete design exactly.
+- Record the primary and secondary literature scan before experiment design.
+  Ingest strongest-score controls and fixed KAN fit/tune optimization diagnostics.
+- Carry unmeasured numerical protocols forward without changing scientific gates.
+  Require new objective publication and strict append import qualification.
+- Split ARC direct-effect receipt validation from fresh model-free episodes.
+  Keep censoring, model-disabled induction and existing public solve limits explicit.
+- Align planning requirements, traceability and architecture. Preserve the active
+  roadmap, conductor source, exclusion manifest and existing experiment evidence.

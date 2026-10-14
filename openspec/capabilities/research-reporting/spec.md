@@ -100256,3 +100256,38 @@ retention, paired complete service clocks, resolved applied ARC support, changed
 Qwen runtime and physical board receipts separately. Publication gates grant no
 milestone benefit or submission permission. Retire unchanged attempts while
 preserving hypotheses never measured and authenticated predecessor verdicts.
+
+## V732 planned executable research boundary (2026-10-14)
+
+### REQ-REPORT-V732-PLAN
+
+The staged V732 design and queue shall contain exactly fourteen complete tasks,
+Exp8512 through Exp8525, in the same order. The visible table, full JSON and
+canonical task digest shall match the YAML. Preserve V731's incomplete design.
+Its failed authority shall remain failed. New authority shall not rewrite history.
+
+### REQ-REPORT-V732-SCIENCE
+
+Planned source and learning studies shall preserve the independently sealed V731
+numerical protocol and original V726/V730 data custody. Fixed fit/tune prefix
+curves shall not select test models. Source benefit shall compare raw, scalar and
+permuted controls. Continuous learning shall preserve causal labels, restart
+parity, later-loss comparisons and simultaneous retention. Exposed-data results
+shall not establish independent generalization.
+
+### REQ-REPORT-V732-EFFECTS
+
+Planned ARC work shall qualify direct reachable-policy application receipts
+before new adapter-withheld episodes. Selection, application, no-op, shadow,
+model-disabled induction and right-censoring shall remain distinct. Receipt
+collection shall preserve action/state parity. Existing public solves shall
+receive no new credit. Hardware claims shall use supported operations and
+qualified complete clocks only.
+
+### SCENARIO-REPORT-V732-PLAN-CHECK
+
+Given the staged V732 queue, parsing its design shall recover the same fourteen
+full task objects and canonical digest. Changes to task order, metadata, prompt,
+retirement flags or the end marker shall fail the corresponding check.
+
+Status: planned only. This documentation update implements no runtime behavior.

@@ -533,3 +533,20 @@ learning and service readiness gates prevent optional hardware absence from
 blocking CPU science. The unconditional capstone preserves all external blocks
 and unchanged G1–G4. See REQ-REPORT-V730-PLAN/STUDIES/LIVE; no new architecture
 component is claimed implemented by this planning update.
+
+## V732 proposed execution and action-effect boundary — 2026-10-14
+
+V732 stages fourteen matching tasks, Exp8512–Exp8525. Its complete design and
+queue replace V731's incomplete planning document without repairing old authority.
+Original V726/V730 family readers remain the source of historical data eligibility.
+The separately sealed V731 numerical methods remain unchanged. Fixed fit/tune
+optimization curves are diagnostic only; test comparisons and final fits stay fixed.
+
+The learning branch qualifies a new immutable publication before causal Brier
+updates and retention measurement. Service work qualifies the explicit store
+import before fresh complete append clocks. The ARC branch adds direct receipts
+at the reachable supervisor application site, verifies observation parity, then
+collects fresh model-free adapter-withheld episodes. Selection and actual effects
+remain distinct. Optional bounded Qwen3.8 generation still needs changed CUDA
+repair evidence. Board operation limits remain unchanged. These are planned
+experiments; no serving behavior or hardware support is deployed by this update.

@@ -18269,3 +18269,18 @@ protected-file checks, and adversarial review passed. Whole-repository spec
 coverage reports existing missing requirement references. This task changed
 no implementation or tests. No runtime E2E case applies to this documentation
 change; final artifact and log readback passed.
+
+## 2026-10-14 — V732 research plan staged; execution pending
+
+Milestone 2026.10.732 stages fourteen tasks, Exp8512–Exp8525, across four phases.
+The complete design is `openspec/change-proposals/research-roadmap-vNEXT.md`.
+The queue is `research-roadmap-next.yaml`. The incomplete V731 design is preserved.
+V731 finished scheduling, but missing authority blocked its source, learning and
+service branches. Its ARC diagnostic identified missing direct application evidence.
+
+V732 retains unmeasured strongest-baseline and proper-loss learning protocols.
+It adds fixed fit/tune diagnostics and separates direct ARC receipt qualification
+from fresh adapter-withheld episodes. Append timing follows strict import/replay
+qualification. The mandated bounded Qwen canary still requires changed CUDA evidence.
+Hardware work preserves each board's actual operation and physical limits.
+No experiment, activation, deployment or external publication occurred in planning.

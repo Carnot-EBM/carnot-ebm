@@ -4020,3 +4020,15 @@ V729's truncated design is preserved byte-for-byte in
 `openspec/change-proposals/research-roadmap-v729-preserved-20261013.md`.
 The old journal null, exposed-data limits and unmet matched Rust/Python NFR01
 remain intact. Active roadmap and conductor are unchanged.
+
+## V732 planning traceability — 2026-10-14
+
+- REQ-REPORT-V732-PLAN / SCENARIO-REPORT-V732-PLAN-CHECK:
+  `openspec/change-proposals/research-roadmap-vNEXT.md` and
+  `research-roadmap-next.yaml`; fourteen complete tasks Exp8512–Exp8525.
+- REQ-REPORT-V732-SCIENCE -> FR-11/FR-12: strongest-score calibrated decisions,
+  fixed fit/tune diagnostics and causal continuous proper-loss learning.
+- REQ-REPORT-V732-EFFECTS -> FR-05/FR-08/FR-12 and NFR-01 evidence boundaries:
+  direct live-policy receipts, adapter-withheld episodes, qualified durable cost.
+- Status: planned, not implemented or activated. Preserve the V731 design at
+  `openspec/change-proposals/research-roadmap-v731-preserved-20261014.md`.
