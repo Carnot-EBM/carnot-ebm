@@ -1,0 +1,44 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 390.953125,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.953125,
+      "prior_exec_lifetime_peak_mb": 417.65625
+    },
+    "before": {
+      "current_rss_mb": 390.93359375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.93359375,
+      "prior_exec_lifetime_peak_mb": 417.65625
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.01953125,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "producer_executed": false,
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "runtime_repair_ready_score",
+      "expected": 1,
+      "field": "runtime_repair_ready_score",
+      "hash": "sha256:552831473fa8df1fd272ae690082cbf23513e559fa9648e9ab0f588f603bb667",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8485_v730_contract_methods.json",
+      "upstream": "exp8485-contract-methods"
+    }
+  ],
+  "verdict_class": "blocked"
+}

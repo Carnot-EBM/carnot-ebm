@@ -100132,3 +100132,32 @@ Missing clocks remain null; measured zero remains zero. Installed images supply 
 Missing required authority blocks; failed owned validation disqualifies.
 Cold replay rejects changed summaries and self-consistently rehashed operands.
 GateMate stays unflashed until source recovery, dated physical change, IDCODE0x20000001, n16 flash and sample hashes are proved.
+
+## REQ-REPORT-8498: Reconcile fourteen V730 outcomes under complete authority
+
+Authenticate visible table, full JSON and activated YAML against the independent
+V730 task digest. Account for Exp8485–8498 in execution order without requiring
+its own output. Independently replay eligible producers under original seals and
+dates in isolated workers. Distinguish qualified/disqualified producers, pre-gate
+receipts, cascade skips and absent artifacts. Missing inputs remain distinct from
+zero. Preserve V728 journal equivalence and its complete-service null, V726 exposed
+history and closed V717 H1/H2. No model loads, generator changes or device calls.
+
+### SCENARIO-REPORT-8498-ACCOUNTING
+
+Report source contrasts, later Brier/typed losses and all five retention windows,
+and PRIMARY append clocks with qualification separate from benefit. Missing
+learning comparisons stay unmeasured; disqualified append clocks grant no speed
+benefit. Retain exact qualification repairs, optional Qwen gates, ARC censoring
+and all three board obligations. Recommend exact-verdict retirements with hashes;
+absent prerequisites retire attempts, never unmeasured hypotheses. G1–G4 remain
+unchanged. Source exposure and host speed do not close independent generalization
+or matched Rust/Python NFR-01. External absence yields complete_blocked.
+
+### SCENARIO-REPORT-8498-CUSTODY
+
+Current hash-bound sidecars and shipped primitive reducers qualify each producer;
+old readiness does not transfer. Cold replay rejects missing operands, changed
+summaries and self-consistently rehashed substitutions using independent pins.
+Atomically publish only terminal bytes accepted by unchanged publication consumers.
+Conductor owns ops/status/changelog/BMAD reconciliation for this invocation.

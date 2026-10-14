@@ -54794,3 +54794,21 @@ Atomically publish only bytes accepted by fresh-process reduction and required v
 The private CLI accepts date20261013, passes valid replay and rejects missing inputs, wrong dates and rehashed tampering.
 Collection failure or ambiguous node IDs cannot omit assertions or qualify the inventory.
 No SSH, USB, synthesis or flashing runs. Owned child failure cannot be reported as passed.
+
+## REQ-VERIFY-8498: Validate bounded V730 reconciliation and rejection paths
+
+Collect scoped owned and historical nodes before execution. Prove bounded,
+nonoverlapping E2E-018/021 shard unions equal original collections. Run real private
+CLI, outside-checkout import regression, Ruff check/format, strict mypy and spec
+coverage. Require100 percent newly owned statements using genuine Coverage.py
+unit and subprocess shards with serial pytest and no pytest-cov injection.
+Keep1500MiB worker peak/500MiB growth limits,3600s measurement cutoff and900s
+validation reserve within4800s. Flush phase counts and poll child status.
+
+### SCENARIO-VERIFY-8498-CONTROLS
+
+Accept --date20261014. Real private CLI and cold children cover valid evidence,
+missing inputs, deliberate failure and self-rehashed tampering. Required owned
+failures disqualify. Save commands, exits, durations and log hashes. Run unchanged
+primary_publication, adversarial verification and strict-row consumers before
+atomic publication. Unresolved findings block readiness; no validator exemptions.
