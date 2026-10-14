@@ -20265,3 +20265,4 @@ code |
 | 2026-10-14 15:34 UTC | Audit later proper loss and simultaneous retention | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8517-brier-online-learning.objective_stream_ready_score (actual=0 == expected=1) |
 | 2026-10-14 16:46 UTC | Qualify complete append replay after the explicit  | OK | 96 passed, 1 warning in 42.42s |
 | 2026-10-14 17:51 UTC | Measure complete append service with qualified typ | OK | 111 passed, 1 warning in 92.82s (0:01:32) |
+| 2026-10-14 17:57 UTC | Test bounded Qwen evidence views only after a chan | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8512-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
