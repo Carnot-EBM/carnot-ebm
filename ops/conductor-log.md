@@ -20262,3 +20262,4 @@ code |
 | 2026-10-14 13:30 UTC | Qualify objective mechanics with a new immutable p | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: IXTURE_PIN", " |
 | 2026-10-14 13:54 UTC | Qualify objective mechanics with a new immutable p | OK | cache hit: 109 passed, 2 warnings in 427.75s (0:07:07) |
 | 2026-10-14 15:28 UTC | Measure delayed continuous learning through the qu | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 518.91s (0:08:38) |
+| 2026-10-14 15:34 UTC | Audit later proper loss and simultaneous retention | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8517-brier-online-learning.objective_stream_ready_score (actual=0 == expected=1) |
