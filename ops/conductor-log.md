@@ -20246,3 +20246,6 @@ code |
 | 2026-10-14 04:41 UTC | Qualify objective mechanics with a new immutable p | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8499-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-14 04:43 UTC | Measure delayed continuous learning through the qu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8503-objective-publication-qualification) |
 | 2026-10-14 04:43 UTC | Audit later proper loss and simultaneous retention | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8504-brier-online-learning) |
+| 2026-10-14 04:48 UTC | Qualify complete append replay after the explicit  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8499-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-14 04:50 UTC | Measure complete append service with qualified typ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8506-append-import-qualification) |
+| 2026-10-14 04:50 UTC | Test bounded Qwen evidence views only after a chan | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8500-strongest-baseline-audit) |
