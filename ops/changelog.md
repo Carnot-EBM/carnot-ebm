@@ -22233,3 +22233,4 @@ See [the retrospective](../results/operational_retro_2026_10_726.json).
 - 2026-10-14: Map append operations to KV260 and preserve PolarFire and GateMate evidence (⚠️ Blocked) — honest_verdict=complete_blocked_v730_board_operation_boundary; results/experiment_8497_v730_board_operation_boundary.json
 - 2026-10-14: Reconcile fourteen outcomes and decide information learning and append continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v730_capstone; results/experiment_8498_v730_capstone.json
 - 2026-10-14: Bind thirteen tasks and freeze strongest-baseline and qualification protocols (⚠️ Blocked) — honest_verdict=complete_blocked_v731_contract_methods; results/experiment_8499_v731_contract_methods.json
+- 2026-10-14: Explain adapter-withheld ARC redirects through applied effects and censoring (⚠️ Research Finding) — honest_verdict=complete_null_v731_arc_redirect_effect_audit; results/experiment_8509_v731_arc_redirect_effect_audit.json
