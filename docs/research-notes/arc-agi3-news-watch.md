@@ -481,3 +481,11 @@ Additional official ARC-AGI-3 Semi-Private results, showing each model’s best 
 | [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
 | [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
 
+## 2026-10-14 13:14 UTC -- NEW
+
+- **October 13 — Tufa Labs retook first place** on the ARC-AGI-3 Kaggle leaderboard with **68.91%**, overtaking Yi-Chia Chen. [Official announcement](https://x.com/arcprize/status/2110031207601979715)
+
+- **October 13 — DeepSeek V4.1 Flash results announced:** best Semi-Private scores were **0.85% Standard** and **3.26% Provider Adapter**. ARC Prize called it the first model to exceed 3% for under $1,000 total evaluation cost (**$878**). [Results](https://arcprize.org/results/deepseek-v4-1-flash), [announcement](https://x.com/arcprize/status/2110060578530001231)
+
+- **September 3 — GPT-6 Astra announcement:** **62.7% Standard** and **99.9% Provider Adapter** on ARC-AGI-3 Semi-Private—an official result absent from your previous findings. [Official blog](https://arcprize.org/blog/astra)
+

@@ -54905,3 +54905,42 @@ Implementation: Exp8513 owns scoped serial validation and fresh primitive replay
 through narrow shipped adapters. Original E2E node rosters, disjoint shards,
 exits, durations and log hashes remain in raw invocation evidence. Publication
 binds exact terminal bytes and checks the actual comparator readiness consumer.
+
+## REQ-VERIFY-8516: Preserve original objective assertions and bounded validation
+
+### SCENARIO-VERIFY-8516-PRIMITIVES
+
+Test Brier 2(p-y)p(1-p)/T and log-loss (p-y)/T at temperatures .5/1/2,
+labels 0/1 and logits -20/-4/0/4/20. Absolute error is at most 1e-7;
+relative error is at most 1e-5 above 1e-6. Keep original future-label,
+duplicate-ID, wrong-rule, real process-exit and bit-identical restart assertions.
+No model loads or current LLM calls occur. Independently pin primitive fixtures.
+
+### SCENARIO-VERIFY-8516-VALIDATION
+
+Collect every historical qualification node before running their exact union in
+disjoint serial shards of at most 600 seconds, with 1800 seconds total and
+heartbeats at most 60 seconds. Preserve child exits, durations and log hashes.
+Require scoped tests, private E2E-018/020/021 with original dates, Ruff check and
+format, strict mypy, spec tracing and 100 percent newly owned statement coverage,
+including subprocesses and rejection paths. No full repository suite runs.
+
+### SCENARIO-VERIFY-8516-CLI
+
+Accept date20261014. Print flushed start and phase counts. Authenticate tools,
+memory and disk scratch. Fresh bounded replay rejects missing inputs,
+intentional failure and self-consistently rehashed tampering. Run unchanged
+adversarial and strict-row validators on private terminal candidates.
+Measurement ends by3600s with900s validation reserve within4800s. No duration
+padding occurs. Optional CUDA and board absence do not block CPU mechanics.
+
+Implementation: Exp8516 owns scoped serial tests, genuine unit/child statement
+coverage and disjoint historical shards. Both publication probes and final
+consumers check exact candidate hashes. A failed actual consumer preserves failed
+owned bytes and produces a disqualification. Research-note field definitions and
+raw invocation receipts describe every terminal outcome. No historical primary,
+active roadmap, generator weight or validation gate changes.
+
+The final Exp8516 invocation's owned suite passed28 tests. Genuine unit and child
+traces covered420/420 newly owned statements. Historical node outcomes and final
+publication consumers remain separate required gates in the terminal artifact.

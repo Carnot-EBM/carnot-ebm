@@ -20259,3 +20259,4 @@ code |
 | 2026-10-14 12:00 UTC | Audit raw-score headroom and ingest strongest-comp | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 97 passed, 1 warning in 82.93s (0:01:22) |
 | 2026-10-14 12:07 UTC | Train calibrated energy heads with a raw-score fal | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8513-strongest-baseline-audit.comparator_inputs_ready_score (actual=0 == expected=1) |
 | 2026-10-14 12:09 UTC | Measure source value over raw and equally trained | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8514-identity-brier-fit) |
+| 2026-10-14 13:30 UTC | Qualify objective mechanics with a new immutable p | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: IXTURE_PIN", " |

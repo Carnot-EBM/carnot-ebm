@@ -100379,3 +100379,35 @@ Exp8513 CLI accepts date20261014. Traced tests cover original custody, fixed
 question differences, missing inputs, owned failures, private children and
 self-rehashed substitutions. Production validation receipts and coverage are
 stored with the terminal artifact; the conductor reconciles ops and BMAD.
+
+## REQ-REPORT-8516: Qualify a new immutable objective publication
+
+Authenticate the complete V732 task and independently sealed historical heads
+before measurement. Preserve Exp8489 hash f306c910 and its e9145dae sidecar,
+original flags, original dates and the failed Exp8490 consumer. Reproduce this
+mismatch in private scratch. A new producer cannot bless changed historical bytes.
+Reuse shipped objective/checkpoint code and independently pinned primitives.
+Qualify the new candidate through unchanged atomic primary publication, a bound
+sidecar, a fresh consumer and cold replay. Readiness requires the exact successful
+consumer bytes. Keep scientific benefit and both generalization scores zero.
+
+### SCENARIO-REPORT-8516-HISTORY
+
+Reproduce stale sidecar rejection and copied flagged-envelope rejection privately.
+Retain the original changed-reference rejection even after outer hashes change.
+Missing upstream operands block readiness and preserve exact observed gate fields.
+
+### SCENARIO-REPORT-8516-PUBLICATION
+
+Candidate validation precedes atomic publication. A byte mutation after sealing
+fails the unchanged sidecar consumer. Retain all authenticity findings; unresolved
+findings block readiness. Actual Exp8490 qualification checks and primitive replay
+must pass on the new publication. Owned failure disqualifies. Future Exp8517/8518
+outputs remain dependencies. The conductor owns ops and BMAD reconciliation.
+
+Implementation: `objective_publication_8516` reuses the shipped objective and
+checkpoint implementation. Its thin direct CLI uses
+`objective_publication_runner_8516`. Traced tests and the separately pinned
+Decimal fixture cover original quarantine, fresh mechanics, immutable publication
+and actual consumer rejection. Raw invocation evidence retains terminal outcomes
+and durable collection logs. The conductor owns ops and BMAD reconciliation.
