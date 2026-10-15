@@ -20349,3 +20349,4 @@ code |
 | 2026-10-15 11:34 UTC | Plan milestone 2026.10.734 | OK | 12 tasks proposed |
 | 2026-10-15 11:54 UTC | Milestone 2026.10.734 activated | OK | 12 tasks queued |
 | 2026-10-15 12:42 UTC | Bind twelve tasks and preserve the source null and | OK | 130 passed, 1 warning in 192.86s (0:03:12) |
+| 2026-10-15 13:58 UTC | Qualify original learning test families with isola | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 95 passed, 1 warning in 60.12s (0:01:00) |
