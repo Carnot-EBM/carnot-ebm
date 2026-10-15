@@ -100992,3 +100992,27 @@ Copy objective_updates, objective_audit, nine_input_native_inference,
 evidence_canary and arc_capability_mask exactly. Preserve question roles, heads,
 thresholds, seeds and budgets. Bind the V734 reference section to named tasks.
 Optional runtime absence must not block independent CPU qualification.
+
+## REQ-REPORT-8541: Qualify the sealed original learning union
+
+Exp8541 SHALL preserve Exp8530's exact 158 original test nodes and failed logs.
+Each suite SHALL use its own sealed producer authority, dates and real fixtures.
+Current model loads and generations SHALL be zero. Existing quarantines persist.
+Qualification SHALL grant no scientific learning or generalization benefit.
+
+### SCENARIO-REPORT-8541-AUTHORITY
+
+Bind immutable producer, fixture, source and assertion hashes. Create private
+scratch parents before children start. Reject missing or changed source bytes.
+Run a representative real fixture before disjoint family children.
+
+### SCENARIO-REPORT-8541-TERMINAL
+
+Publish atomic checked bytes with the unchanged publication and downstream
+consumers. Cold replay SHALL reconstruct node outcomes from saved child logs.
+Self-consistently rehashed summaries SHALL fail. Preserve every scanner finding.
+
+Implementation20261015: Exp8541 adds a suite adapter, primitive reducer and thin
+CLI. Original reporting authority is selected explicitly. The terminal artifact
+records actual family outcomes and preserves earlier quarantine evidence.
+Readiness grants exposed mechanics qualification only, with zero science credit.

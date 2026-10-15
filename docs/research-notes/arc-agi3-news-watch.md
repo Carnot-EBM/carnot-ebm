@@ -489,3 +489,19 @@ Additional official ARC-AGI-3 Semi-Private results, showing each model’s best 
 
 - **September 3 — GPT-6 Astra announcement:** **62.7% Standard** and **99.9% Provider Adapter** on ARC-AGI-3 Semi-Private—an official result absent from your previous findings. [Official blog](https://arcprize.org/blog/astra)
 
+## 2026-10-15 13:10 UTC -- NEW
+
+- **October 14 — Haiku 5.5 results announced:** ARC-AGI-3 Semi-Private scores of **0.5% Standard** ($388) and **2.8% Provider Adapter** ($437), both at max reasoning. [Official announcement](https://x.com/arcprize/status/2110417867288039864), [results](https://arcprize.org/results/anthropic-claude-haiku-5-5).
+
+- **October 1 — Milestone #2 winners announced:** Daniel Franzen **27.9% / $25,000**; Lord Han Solo **23.8% / $7,500**; Lohit Siriki **22.5% / $5,000**. All three open-sourced their solutions. [Official announcement](https://x.com/arcprize/status/2105737436450201734).
+
+Additional official ARC-AGI-3 Semi-Private results absent from the supplied history, showing each harness’s best score:
+
+| Model / official results | Standard | Provider Adapter |
+|---|---:|---:|
+| [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+| [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | 30.2% | — |
+

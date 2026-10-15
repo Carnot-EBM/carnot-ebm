@@ -529,3 +529,5 @@ Their concrete memory-saving stack is **4-bit QLoRA + FSDP2 + PLE CPU offload**,
 
 **Classification: (b)** for these general-purpose serving techniques; they require no game-source access or per-game rules. The [notebook](https://www.kaggle.com/code/keithtyser/duck-qwen3-8-flash-next-nvfp4-mtp) describes serving-only changes with Duck’s policy unchanged. Linkage to ARC Slayers’ current scoring submission and a measured gameplay benefit remain unverified.
 
+## 2026-10-15 13:32 UTC -- checked, nothing new
+

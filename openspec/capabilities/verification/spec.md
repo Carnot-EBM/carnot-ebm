@@ -55333,3 +55333,24 @@ missing inputs, owned failures and self-consistently rehashed tampering. Killed
 children disqualify. Unchanged external absence blocks, never implies partial.
 Validate unchanged publication, adversarial and strict-row consumers, atomically
 publish exact final bytes and bind the terminal sidecar and downstream consumer.
+
+## REQ-VERIFY-8541: Preserve bounded original terminal outcomes
+
+Collect exact original node IDs before sharding. Execute each node once in the
+qualification union with -n 0 -o addopts= --no-cov. Each child deadline SHALL be
+at most 480 seconds with status output at least every 60 seconds. A killed,
+failed, skipped or missing terminal node disqualifies readiness. Stop measurement
+by 3600 seconds and reserve at least 900 seconds inside the 4800-second cap.
+
+### SCENARIO-VERIFY-8541-UNION
+
+Reject duplicate, omitted, forged and timed-out nodes even after a zero exit.
+Retain the actual pending node for timed-out families and all original failures.
+Require full new statement coverage, real private CLI rejection controls, scoped
+unit tests, Ruff, strict mypy, spec tracing and private E2E-018 and E2E-021.
+
+Implementation20261015: Exp8541 binds exact required commands, zero family exits,
+original authority and invocation clocks. Coverage must name all four new files
+and match independently analysed statements. Negative controls reject print-only
+children, relabelled receipts, omitted checks and rehashed partial coverage.
+Terminal outcomes and measured coverage remain obligations of the result artifact.
