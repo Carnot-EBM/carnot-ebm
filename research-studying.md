@@ -6584,3 +6584,16 @@ V732 protocol. Paper replication, sample-efficiency claims, theorem transfer and
 physical FPGA results are deferred. Public labels remain exposed. Independent
 factual evidence requires disjoint adjudicated questions and frozen predictors
 before access, with exposure resolved. Exp8514/8515/8521 are future dependencies.
+
+## 2026-10-15 — Exp8527 comparator custody boundary
+
+The five V733 source methods have bounded primary abstract-page receipts in
+`results/raw/experiment_8527_v733_source_consumer_qualification/literature/mapping.json`.
+RAIM motivates strongest-component controls; Calibeating preserves proper loss;
+delayed-capacity work motivates distinct feedback/event/coordinate accounting;
+spline locality preserves basis custody; KAN budgets preserve fixed prefixes.
+Exact adopted operations and deferred guarantees accompany each primary URL.
+Exp8527 reads original exposed history without fitting or LLM calls. Its
+qualification can enable Exp8528; it cannot establish source value. Original
+fit/tune/test roles and permutations stay fixed. Importance anchoring and
+external-text reranking are not reopened.

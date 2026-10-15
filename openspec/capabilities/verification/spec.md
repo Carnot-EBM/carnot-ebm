@@ -55118,6 +55118,23 @@ and log hashes; a killed child fails validation. Fresh replay rejects missing
 inputs, intentional errors and self-consistently rehashed task/claim/row drift.
 Unchanged publication, adversarial and strict-row consumers validate terminal
 bytes before publication. Bind the sidecar and check the actual downstream reader.
+## REQ-VERIFY-8527: Bound original source consumers and new rejection coverage
+
+Collect original source-consumer test IDs before disjoint bounded serial shards;
+preserve their exact union and assertions under original sealed authority. Reproduce
+the original missing-upstream diagnostic privately. Require100 percent newly owned
+statement coverage including real children, scoped units, strict mypy, Ruff and
+spec coverage, private E2E-018/021, fresh primitive replay and unchanged publication,
+adversarial and strict-row validators. Preserve every finding and exact-byte
+downstream receipts. Owned failures disqualify; external absence blocks.
+
+### SCENARIO-VERIFY-8527-CONTROLS
+
+Accept20261015. Reject absence, owned failure and self-consistently rehashed
+primitive or manifest tampering. Print flushed progress and child heartbeats
+within60 seconds. Stop measurement by3600 seconds and reserve900 seconds inside
+4800 seconds. Original Exp8513 primary and sidecars remain immutable.
+
 # REQ-VERIFY-8526: Validate exact V733 terminal bytes
 
 Exp8526 shall collect original test node IDs and preserve their exact union in

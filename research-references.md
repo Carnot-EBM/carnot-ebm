@@ -53024,3 +53024,26 @@ nine-input inference boundary separately from the qualified five-input storage
 win. Use direct ARC application receipts to test capability-aware selection;
 unsupported or inert actions must not count as useful interventions. Keep
 conditional Qwen and physical-board work behind actual changed evidence.
+
+## 2026-10-15 — Exp8527 source consumer method ingestion
+
+Bounded serial reads revisited the five V733 primary abstract pages. Original
+HTML bytes and their hashes are retained under
+`results/raw/experiment_8527_v733_source_consumer_qualification/literature/`.
+This scope inspects abstracts; it does not replicate papers or transfer theorems.
+
+- [RAIM](https://arxiv.org/abs/2609.39229): retain strongest raw/scalar controls
+  and the registered identity fallback. No judge becomes ground truth.
+- [Calibeating](https://arxiv.org/abs/2603.22167): retain proper Brier loss and
+  prediction before feedback as future constraints. No delayed nonlinear regret
+  guarantee is adopted; this qualification performs no updates.
+- [Delayed capacity](https://arxiv.org/abs/2606.11711): keep admission, pending
+  and lost feedback distinct from events and changed coefficient coordinates.
+  Counts do not establish learning benefit or a convex regret bound.
+- [Spline locality](https://arxiv.org/abs/2602.02056): authenticate the original
+  basis and separate local arithmetic from future complete nine-input inference.
+  No published FPGA clock certifies local board execution or Rust/Python parity.
+- [KAN training budgets](https://arxiv.org/abs/2610.10627): preserve fixed
+  fit/tune prefixes0/25/50/100/200 with final step200. Exposed test losses cannot
+  select checkpoints or establish sample efficiency. Importance anchoring and
+  external-text reranking remain closed.

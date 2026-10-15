@@ -23,6 +23,7 @@ from carnot.reporting import v730_source_information_audit as history
 from carnot.reporting import v732_contract_methods as methods
 from carnot.reporting.current_work_receipt import atomic_json
 from carnot.reporting.primary_publication import read_bound_sidecar, reader_receipt
+from carnot.reporting.v733_source_diagnostics import diagnostic_rows
 from carnot.verify import v730_information_metrics as n
 from carnot.verify import v730_source_control_fit as fit
 
@@ -99,6 +100,7 @@ def authority(root: Path, raw: Path, *, gate_root: Path | None = None) -> Json:
                 consumer_passed=consumer["passed"],
             )
         )
+    result["gate_check_summary"] = diagnostic_rows(result["gate_check_summary"])
     result["required_gate_observations"] = deepcopy(result["gate_check_summary"])
     result["gate_check_summary"] = [
         r

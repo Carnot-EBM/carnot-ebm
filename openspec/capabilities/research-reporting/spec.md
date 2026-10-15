@@ -100651,6 +100651,24 @@ loop heartbeats and bounded file writes. Final reconciliation shall retain G1–
 
 Implementation status: planning contract only; experiments await activation.
 
+## REQ-REPORT-8527: Qualify source comparator custody with complete diagnostics
+
+Exp8527 shall reuse the strongest-baseline reader under current V733 authority,
+without certifying Exp8513 retroactively. Every gate row shall name check,
+upstream, path, hash, field, operator, expected and observed, including absence.
+Retain original source/basis hashes, permutations and150/50/100 question roles.
+Freeze raw_p2, legacy_full_source, brier_scalar, brier_full and
+brier_source_permuted; fitting remains a future dependency. Imported test losses
+remain descriptive exposed history. No model calls or fitting shall occur.
+
+### SCENARIO-REPORT-8527-CUSTODY
+
+Reject missing sources, zero readiness, wrong producer, changed hashes and copied
+flagged envelopes. A fresh consumer replay and qualified exact-byte publication
+are required before comparator_inputs_ready_score=1. Record three to five dated
+primary-source method adaptations with explicit deferred guarantees. Qualification
+does not establish source value or independent generalization.
+
 ## REQ-REPORT-8526: Seal V733 authority and independent readiness
 
 Exp8526 shall bind fourteen complete tasks8526–8539 through the shipped parser,
