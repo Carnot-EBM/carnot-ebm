@@ -101082,3 +101082,26 @@ independently of optional hardware. No purchases, flashes or physical probes.
 
 Implementation20261015: scoped adapters, private CLI and primitive replay own
 the operation map. Conductor owns status, changelog and traceability updates.
+## REQ-REPORT-8551: Reconcile twelve terminal V734 scheduling outcomes
+
+The capstone SHALL bind all twelve complete sealed task objects, exact producer
+bytes, pre-gates, cascade skips, current flags and terminal sidecars. Scheduling
+completion grants no scientific qualification. Preserve Exp8529's qualified
+source null and every historical quarantine. Missing prerequisites are blocked;
+owned validation failure is disqualified. No model loads or generations occur.
+
+### SCENARIO-REPORT-8551-ACCOUNTING
+
+Emit twelve rows including a final own row sealed by the terminal sidecar without
+a self-referential hash. Independent CPU boundary evidence survives hardware
+absence. Keep learning benefit, complete native cost and capability benefit
+unqualified until their actual downstream interfaces accept qualified evidence.
+
+### SCENARIO-REPORT-8551-SAMPLES
+
+Recompute a deterministic original learning event and stored ARC episode through
+shipped reducers. Consume complete-cost and native qualification interfaces;
+missing costs remain missing. Preserve G1-G4's exact publication-gate result.
+Retire unchanged source fitting and repeated failed inventories; require fresh
+independent labels, changed runtime or compatible physical execution to reopen.
+Conductor owns status, changelog and traceability reconciliation for this run.

@@ -55419,3 +55419,19 @@ Fresh replay SHALL accept original primitive operands and reject absent inputs,
 owned failed checks and self-consistently rehashed tampering. Unchanged scanners,
 atomic publication, bound terminal sidecar and actual downstream consumers SHALL
 agree. Owned failure disqualifies; external missing execution remains blocked.
+## REQ-VERIFY-8551: Validate only owned capstone code with real children
+
+Requirement-linked tests precede implementation. Require100 percent newly owned
+statement coverage, real private CLI controls, Ruff, strict mypy, spec tracing
+and private E2E-018/021. Collect original node IDs before bounded disjoint serial
+children; retain commands, terminal outcomes, exits, durations and log hashes.
+Do not run the full repository suite or nested historical validation runners.
+
+### SCENARIO-VERIFY-8551-CONTROLS
+
+Fresh processes SHALL accept cold primitive replay and reject absent operands,
+owned failures and self-consistently rehashed tampering. Compare full authority
+objects again. Unchanged primary publication, adversarial and strict-row checks
+validate final bytes, atomically publish and bind the terminal sidecar. A new
+artifact cannot clear an old quarantine. Preserve the4800-second task cap,
+3600-second measurement cap and900-second validation reserve with flushed counts.
