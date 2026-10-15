@@ -55474,3 +55474,19 @@ Exp8553 validation receipt (2026-10-15): 24 owned tests passed. All 279 newly
 owned statements were covered, including real CLI children. Scoped Ruff,
 strict mypy, spec tracing and private E2E-018/021 consumers passed. Terminal
 publication additionally binds cold replay, adversarial and strict-row checks.
+## REQ-VERIFY-8554: Measure bounded disjoint original nodes
+
+Collect the exact original union before execution. Reproduce the interrupted
+retention node alone. Capacity shards contain at most four nodes. Each process
+exit and retention fixture runs alone. Every child has a 480-second maximum,
+60-second maximum heartbeat and private disk scratch with existing parents.
+The original union has a 2400-second total budget. A single-node timeout stops
+qualification with its measured diagnosis. Stop measurement by 3600 seconds.
+Reserve at least 900 seconds for validation inside the 4800-second cap.
+
+### SCENARIO-VERIFY-8554-PARTITION
+
+Reject duplicate, omitted, killed and foreign-authority outcomes. Record each
+terminal node once and its elapsed time. A timed-out node is never a pass.
+Require full new statement coverage, real CLI controls, Ruff, strict mypy,
+spec coverage and private E2E-018 and E2E-021 before readiness can equal one.

@@ -101202,3 +101202,15 @@ preserves all V734 quarantines. Same-roadmap results remain future dependencies.
 Exp8553 implementation receipt (2026-10-15): the runner and authenticated
 reducer retain 3,813 public split rows and reject independent Carnot-label use.
 The research note and raw release inventory preserve the reason for rejection.
+## REQ-REPORT-8554: Bind measured original learning qualification
+
+Exp8554 SHALL authenticate Exp8541 and preserve its exact 158 nodes and original
+suite authority. It SHALL retain all quarantines and zero scientific benefit.
+Current inference uses no_model_load with MODEL_SPECS=[] and zero model calls.
+
+### SCENARIO-REPORT-8554-REPLAY
+
+Cold replay reconstructs primitive terminal outcomes, node times and gates.
+Absent sources, failed owned checks and self-consistently rehashed tampering
+cannot grant readiness. Publish checked bytes atomically and bind the unchanged
+accounting consumers. Historical results and validators remain unchanged.
