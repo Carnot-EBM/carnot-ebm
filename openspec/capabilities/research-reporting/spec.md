@@ -100695,3 +100695,18 @@ method seals and original authority. Missing service evidence cannot block
 nine-input inference; absent CUDA cannot block CPU methods. All300 questions
 and900 answers remain exposed with original150/50/100 roles and closed V717
 hypotheses. Readiness grants no scientific benefit or factual generalization.
+## REQ-REPORT-8528: Fit identity-admissible Brier heads
+
+Use qualified Exp8527 comparator custody and unchanged identity_brier registration.
+Keep raw and legacy heads frozen. Fit scalar/full/permuted residuals from zero,
+T=1,200 full batches,rate0.01,L2=0.001 including bias. Preserve original roles,
+knots, scaler, offset and donors. Tune-only alpha selection includes exact identity.
+Retain7500 test answer/seed/arm predictions sealed before evaluator access.
+Readiness qualifies complete predictions even when every alpha is zero; no
+sample-efficiency, independent generalization or learning benefit is inferred.
+
+### SCENARIO-REPORT-8528-FIT
+
+Verify13/109/109 coefficients, fixed seeds17/29/43/71/101, deterministic duplicates,
+fit/tune per-question losses and norms at0/25/50/100/200, endpoint limiting energies,
+alpha ties toward zero and exact raw endpoint probabilities. No test labels enter fitting.

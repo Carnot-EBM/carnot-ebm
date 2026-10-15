@@ -55149,3 +55149,17 @@ owned errors and self-consistently rehashed tampering. Unchanged publication,
 adversarial and strict-row consumers shall validate final bytes before atomic
 publication. A bound terminal sidecar and actual downstream receipt shall name
 those bytes. Failed owned validation disqualifies; external absence is blocked.
+## REQ-VERIFY-8528: Qualify identity head primitives and exact terminal bytes
+
+Require endpoint/interior finite differences with absolute error<=1e-7 and
+relative error<=1e-5 above magnitude1e-6. Collect original node IDs and execute
+their exact disjoint union in bounded serial shards, including private E2E018/021.
+Require100 percent new statement coverage including actual CLI children and
+rejections, strict types, Ruff, spec tracing, cold replay and unchanged validators.
+
+### SCENARIO-VERIFY-8528-CONTROLS
+
+Accept20261015; distinguish absent upstream from zero readiness and owned failure.
+Reject self-consistently rehashed heads, predictions, operands or aggregate metrics.
+Bind atomic publication and terminal sidecar to actual downstream consumer bytes.
+No current LLM calls. Failed owned checks disqualify; external absence blocks.
