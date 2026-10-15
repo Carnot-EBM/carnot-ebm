@@ -20342,3 +20342,4 @@ code |
 | 2026-10-15 04:59 UTC | Measure complete nine-input Python and native infe | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8533-nine-input-native-qualification.nine_input_native_ready_score (actual=0 == expected=1) |
 | 2026-10-15 05:05 UTC | Test bounded mandated-Qwen evidence views after au | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8526-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-10-15 05:44 UTC | Qualify capability-aware supervisor eligibility on | OK | 126 passed, 1 warning in 56.64s |
+| 2026-10-15 06:31 UTC | Measure capability-aware ARC supervision across ad | OK | 101 passed, 1 warning in 45.45s |
