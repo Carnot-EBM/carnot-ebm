@@ -1,0 +1,51 @@
+{
+  "experiment": 8534,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-15",
+  "started_at": "2026-10-15T04:54:27.421323+00:00",
+  "finished_at": "2026-10-15T04:54:27.421323+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure complete nine-input Python and native inference at matched decisions",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8533-nine-input-native-qualification",
+  "failed_field": "nine_input_native_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8533_v733_nine_input_native_qualification.json",
+  "failed_evidence_sha256": "sha256:669dd406e8c381949d6a6fdb0fa25d6253559b5c55d4e7f3f4f35cef58d6d998",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8533-nine-input-native-qualification",
+    "failed_field": "nine_input_native_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8533_v733_nine_input_native_qualification.json",
+    "failed_evidence_sha256": "sha256:669dd406e8c381949d6a6fdb0fa25d6253559b5c55d4e7f3f4f35cef58d6d998"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8533-nine-input-native-qualification.nine_input_native_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8533-nine-input-native-qualification",
+      "artifact_field": "nine_input_native_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8533_v733_nine_input_native_qualification.json",
+      "artifact_sha256": "sha256:669dd406e8c381949d6a6fdb0fa25d6253559b5c55d4e7f3f4f35cef58d6d998"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

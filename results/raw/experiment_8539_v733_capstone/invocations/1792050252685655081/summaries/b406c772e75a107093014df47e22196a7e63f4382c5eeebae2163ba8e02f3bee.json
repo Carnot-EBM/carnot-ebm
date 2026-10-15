@@ -1,0 +1,62 @@
+{
+  "branch_replay": {
+    "passed": true,
+    "status": "pre_gate_receipt"
+  },
+  "checks": [],
+  "disposition": "pre_gate_receipt",
+  "eligible": false,
+  "honest_verdict": "blocked_gate_check_failed",
+  "memory": {
+    "after": {
+      "current_rss_mb": 391.33984375,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 391.33984375,
+      "prior_exec_lifetime_peak_mb": 405.90234375
+    },
+    "before": {
+      "current_rss_mb": 390.8046875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.8046875,
+      "prior_exec_lifetime_peak_mb": 405.90234375
+    },
+    "growth_bound_mb": 500,
+    "growth_mb": 0.53515625,
+    "passed": true,
+    "peak_bound_mb": 1500
+  },
+  "original_required_checks_passed": null,
+  "original_run_date": "2026-10-15",
+  "producer_executed": false,
+  "reader_initialization": {
+    "after": {
+      "current_rss_mb": 390.8046875,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.8046875,
+      "prior_exec_lifetime_peak_mb": 405.90234375
+    },
+    "before": {
+      "current_rss_mb": 390.78515625,
+      "measurement_source": "/proc/self/status",
+      "peak_rss_mb": 390.78515625,
+      "prior_exec_lifetime_peak_mb": 405.90234375
+    },
+    "scope": "Python dependency imports before primitive replay; no model weights loaded"
+  },
+  "selected": {},
+  "source_gates": [
+    {
+      "check": "nine_input_native_ready_score",
+      "expected": 1,
+      "field": "nine_input_native_ready_score",
+      "hash": "sha256:669dd406e8c381949d6a6fdb0fa25d6253559b5c55d4e7f3f4f35cef58d6d998",
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8533_v733_nine_input_native_qualification.json",
+      "upstream": "exp8533-nine-input-native-qualification"
+    }
+  ],
+  "upstream_flagged_adversarial": null,
+  "verdict_class": "blocked"
+}

@@ -55293,3 +55293,20 @@ SHALL block deployment, never imply unfinished owned work or positive science.
 Implementation20261015: seven owned tests cover221/221 new statements, including
 actual private child paths. The runner collects original consumer node IDs before
 bounded serial shards and preserves unchanged publication and replay controls.
+
+## REQ-VERIFY-8539: Validate exact capstone bytes in bounded children
+
+Tests SHALL precede implementation and reference the owned requirements.
+Require 100 percent newly owned statement coverage, actual private CLI checks,
+Ruff check/format, strict mypy, spec tracing and private E2E-018/021. Collect
+original consumer node IDs first; retain their exact union in disjoint serial
+bounded shards with unbuffered heartbeats. Preserve command, exit, duration and
+log hashes. No nested historical validation runner or full repository suite.
+
+### SCENARIO-VERIFY-8539-CONTROLS
+
+Accept --date20261015. Fresh bounded processes SHALL accept cold primitive
+replay and reject absent input, deliberate owned failure and self-consistently
+rehashed tampering. Failed owned validation SHALL disqualify. Unchanged primary
+publication, adversarial and strict-row validators SHALL bind atomic final
+bytes, terminal sidecar and the actual downstream consumer. Retain all findings.

@@ -100885,3 +100885,32 @@ loads or device commands. Original Exp8524 and Exp8440 hashes retain installed
 support and GateMate obligations. Optional nine-input costs remain distinct from
 historical five-input storage evidence. Ops and traceability reconciliation is
 conductor-owned for this task.
+
+## REQ-REPORT-8539: Reconcile fourteen V733 terminal outcomes
+
+The unconditional capstone SHALL bind the full sealed V733 task map, current
+invocation and exact producer paths. It SHALL distinguish producer primaries,
+disqualified producers, authenticated conductor pre-gates, cascade skips and
+absent files. Original V732 authority, dates, failed diagnostics, five-input
+service scope, exposure and quarantines SHALL remain unchanged. Qualified
+source contrasts, causal learning and retention, complete nine-input inference
+and ARC episode operands SHALL cold-replay through explicit shipped adapters.
+Missing scientific operands SHALL remain missing, with exact gate diagnostics.
+Publication G1 through G4 SHALL be reported verbatim and grant no permission.
+Both generalization scores remain zero. Recommendations SHALL compare exact
+prior verdicts and require changed evidence before another attempt.
+
+### SCENARIO-REPORT-8539-ACCOUNTING
+
+Account for fourteen slots including this reader. An absent planned producer
+SHALL never be replaced by a similarly named JSON file. Only the authenticated
+conductor path may stand as a pre-gate receipt. Externally blocked science
+SHALL produce complete_blocked even when reconciliation validation passes.
+
+### SCENARIO-REPORT-8539-SCIENCE
+
+Reconstruct source raw/scalar/permuted contrasts, numerical and decision parity,
+and available ARC episode reductions. Preserve failed, censored and oracle
+branches. Unmeasured real/shuffled learning and retention remain null operands;
+only a valid learning null permits an objective-change recommendation. Native
+speed requires complete native costs; another five-input benchmark is excluded.
