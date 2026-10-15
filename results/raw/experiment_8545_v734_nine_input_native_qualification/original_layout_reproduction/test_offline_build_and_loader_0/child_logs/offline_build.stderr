@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/native_nine_input_8533.py", line 109, in extension
+    receipts.append(child("rust_" + name, prefix + argv, logs, deadline=240))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v709_execution.py", line 84, in child
+    stdout_sha256=sha256_file(stdout),
+                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 52, in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/carnot-child-results-guard-2d7qxoao/sitecustomize.py", line 62, in opened
+    return real(file, mode, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8545_v734_nine_input_native_qualification/original_layout_reproduction/test_offline_build_and_loader_0/logs/rust_compiler_version.stdout'

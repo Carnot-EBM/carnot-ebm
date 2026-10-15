@@ -1,0 +1,29 @@
+[exp8533] phase=start_8545_no_model_load_LLM_calls_0 completed=0 pending=0
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 7 items
+
+tests/python/test_v726_criterion_energy_fit_8431.py::test_numeric_fit_and_permutation PASSED [ 14%]
+tests/python/test_v726_criterion_energy_fit_8431.py::test_leakage_and_numeric_failure PASSED [ 28%]
+tests/python/test_v726_criterion_energy_fit_8431.py::test_measure_build_replay_and_failure PASSED [ 42%]
+tests/python/test_v726_criterion_energy_fit_8431.py::test_private_cli_and_manifest PASSED [ 57%]
+tests/python/test_v726_criterion_energy_fit_8431.py::test_required_preflight_and_after_fit_failure PASSED [ 71%]
+tests/python/test_v726_criterion_energy_fit_8431.py::test_rehashed_primitive_negative_controls PASSED [ 85%]
+tests/python/test_v726_criterion_energy_fit_8431.py::test_real_coverage_copy_and_production_route PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 7 passed, 2 warnings in 120.91s (0:02:00) ===================

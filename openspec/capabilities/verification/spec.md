@@ -55354,3 +55354,23 @@ original authority and invocation clocks. Coverage must name all four new files
 and match independently analysed statements. Negative controls reject print-only
 children, relabelled receipts, omitted checks and rehashed partial coverage.
 Terminal outcomes and measured coverage remain obligations of the result artifact.
+
+## REQ-VERIFY-8545: Repair isolated native and private command contracts
+
+Exp8545 SHALL retain the Exp8533 rejection assertions and reproduce their real
+build-log relocation and private-output argparse failures. Empty and absent
+CARNOT_8533_EXTENSION SHALL both build offline. Native and historical test
+scratch SHALL live on disk below /var/tmp with parents created before children.
+Original node IDs SHALL run once in disjoint bounded serial shards with each
+suite's sealed authority. Newly owned Python statements and loaded Rust source
+lines SHALL reach 100 percent measured coverage, including actual children.
+
+### SCENARIO-VERIFY-8545-PARITY
+
+The real 109-coefficient PyO3 evaluator SHALL match independent dense SciPy for
+all 900 original answers, knots, adjacent floats, endpoints, decay and malformed
+inputs at 1e-12*(1+abs(reference)). Python SHALL retain scaling, raw-logit offset,
+temperature, normalization, decisions and serialization. Actual text-to-decision
+private CLI calls SHALL match; threshold distances <=1e-10 SHALL use and count
+real Python fallbacks. Compiler and extension bytes SHALL be retained. No speed
+claim or five-input benchmark is allowed.

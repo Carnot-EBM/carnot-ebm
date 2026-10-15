@@ -101016,3 +101016,21 @@ Implementation20261015: Exp8541 adds a suite adapter, primitive reducer and thin
 CLI. Original reporting authority is selected explicitly. The terminal artifact
 records actual family outcomes and preserves earlier quarantine evidence.
 Readiness grants exposed mechanics qualification only, with zero science credit.
+
+## REQ-REPORT-8545: Publish invocation-bound native qualification
+
+Exp8545 SHALL use no_model_load, MODEL_SPECS=[] and zero current model calls with
+aggregation_from_upstream_artifacts. Original producer seals and historical dates
+SHALL remain authoritative; Exp8533 and all other quarantines remain unchanged.
+Readiness SHALL be one only when parity, public request CLI, exact original test
+union, Python/Rust coverage and unchanged publication checks all pass. Owned
+required-check failures disqualify; unavailable external prerequisites block.
+
+### SCENARIO-REPORT-8545-TERMINAL
+
+Fresh bounded replay SHALL recompute primitive operands and reject absence,
+owned failures and self-consistently rehashed tampering. Atomic primary bytes,
+terminal sidecar and actual downstream consumers SHALL agree. Preserve command
+receipts, terminal node outcomes, logs and hashes. Same-roadmap future outputs
+SHALL NOT be required inputs. Ops/status/traceability reconciliation is owned by
+the conductor for this invocation.
