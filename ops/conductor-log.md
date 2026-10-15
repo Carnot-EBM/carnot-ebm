@@ -20353,3 +20353,4 @@ code |
 | 2026-10-15 14:05 UTC | Qualify event accounting from actual state transit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8541-historical-learning-qualification.historical_learning_validation_ready_score (actual=0 == expected=1) |
 | 2026-10-15 14:07 UTC | Train the continuous energy head with delayed feed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8542-canonical-update-accounting) |
 | 2026-10-15 14:07 UTC | Independently test later-block Brier benefit, rete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8543-causal-brier-stream) |
+| 2026-10-15 14:47 UTC | Repair the native build and private CLI contract,  | OK | 91 passed, 1 warning in 95.97s (0:01:35) |
