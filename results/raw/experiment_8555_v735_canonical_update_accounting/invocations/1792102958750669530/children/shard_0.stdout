@@ -1,0 +1,37 @@
+[exp8541] phase=start_no_model_load_current_LLM_calls_0 completed=0 pending=0
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 14 items
+
+tests/python/test_objective_checkpoint_8461.py::test_derivatives_and_negative_controls PASSED [  7%]
+tests/python/test_objective_checkpoint_8461.py::test_update_and_contract PASSED [ 14%]
+tests/python/test_objective_checkpoint_8461.py::test_store_rules_labels_duplicates_and_semantics PASSED [ 21%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[temporary_write-seal] PASSED [ 28%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[temporary_write-release] PASSED [ 35%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[file_fsync-seal] PASSED [ 42%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[file_fsync-release] PASSED [ 50%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[atomic_replace-seal] PASSED [ 57%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[atomic_replace-release] PASSED [ 64%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[acknowledgment-seal] PASSED [ 71%]
+tests/python/test_objective_checkpoint_8461.py::test_actual_exits_and_exact_resume[acknowledgment-release] PASSED [ 78%]
+tests/python/test_objective_checkpoint_8461.py::test_transition_controls_and_invalid_configuration PASSED [ 85%]
+tests/python/test_objective_checkpoint_8461.py::test_negative_control_failure_and_rule_isolation PASSED [ 92%]
+tests/python/test_objective_checkpoint_8461.py::test_nonfinite_update_and_checkpoint_rejected PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8555_v735_canonical_update_accounting/invocations/1792102958750669530/children/shard_0.xml -
+======================= 14 passed, 2 warnings in 52.78s ========================

@@ -55490,3 +55490,25 @@ Reject duplicate, omitted, killed and foreign-authority outcomes. Record each
 terminal node once and its elapsed time. A timed-out node is never a pass.
 Require full new statement coverage, real CLI controls, Ruff, strict mypy,
 spec coverage and private E2E-018 and E2E-021 before readiness can equal one.
+
+## REQ-VERIFY-8555: Preserve numerical and terminal accounting evidence
+
+Exp8555 SHALL use original objective mechanics, independent finite differences
+and genuine interruption/resume children. Original node collection SHALL precede
+disjoint bounded pytest shards under each suite's sealed authority. Preserve all
+terminal outcomes, exits, durations and log hashes. No nested historical runner
+or repository-wide suite is authorized. Newly owned statements require100 percent
+coverage, including actual private children and rejection paths.
+
+### SCENARIO-VERIFY-8555-CONTROLS
+
+Numerical checks retain original tolerances and objective. Pending and rejected
+feedback cannot change coefficients. Frozen arms release labels without updates.
+Real exit73 and resume SHALL reproduce uninterrupted state and accounting rows.
+
+### SCENARIO-VERIFY-8555-VALIDATION
+
+Run owned tests, private E2E-018/E2E-021, Ruff, strict mypy and spec tracing.
+Source hashes, complete projection, negative validator control, cold replay,
+owned failure and rehashed tamper rejection SHALL be required gates. Missing
+upstream qualification blocks; an owned check failure disqualifies.

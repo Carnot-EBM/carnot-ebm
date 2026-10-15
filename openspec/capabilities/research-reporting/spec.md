@@ -101214,3 +101214,29 @@ Cold replay reconstructs primitive terminal outcomes, node times and gates.
 Absent sources, failed owned checks and self-consistently rehashed tampering
 cannot grant readiness. Publish checked bytes atomically and bind the unchanged
 accounting consumers. Historical results and validators remain unchanged.
+
+## REQ-REPORT-8555: Qualify canonical counters from original transitions
+
+Exp8555 SHALL authenticate Exp8554 and its exact source/test bytes. It SHALL
+recompute original sealed transitions through the shipped objective consumer.
+Each distinct counter SHALL retain its numeric value, unit, definition and
+source event IDs. Compatibility aliases SHALL reference canonical names.
+Projection SHALL expose every counter with its original name to unchanged
+validators. Equal counts SHALL remain equal. No old quarantine is cleared.
+
+### SCENARIO-REPORT-8555-COUNTERS
+
+Independent reductions SHALL distinguish assignments, changed stored coordinates,
+effective changes, decay changes, unique coordinates, admissions and releases.
+Duplicate assignments, zero gradient, decay only, clipping, frozen, rejected and
+pending feedback controls SHALL retain before/after operands and derivations.
+Proved one-to-one identities SHALL retain their actual equal counts.
+
+### SCENARIO-REPORT-8555-PUBLICATION
+
+A coincident-counter negative control on the final numeric representation SHALL
+trigger unchanged TAUTOLOGY detection. Every actual finding remains visible;
+critical findings or failed owned checks disqualify and force readiness zero.
+Cold replay SHALL reject absent evidence and self-consistently rehashed tampering.
+Atomic publication SHALL bind terminal bytes and exercise actual stream readers.
+Conductor owns status, changelog and traceability reconciliation for this run.
