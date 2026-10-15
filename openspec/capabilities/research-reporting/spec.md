@@ -100857,3 +100857,31 @@ owned failure is retained and the final attempt is disqualified, readiness0.
 Publication resumes from the same primitives with a tested240-second validation
 bound, without episode reruns. Original runner bytes and all failed receipts
 remain sealed in raw evidence. Ops/traceability reconciliation is conductor-owned.
+
+## REQ-REPORT-8538: Preserve boards at the nine-input inference boundary
+
+The unconditional reader SHALL authenticate original Exp8524 and Exp8440 bytes,
+sealed dates, source hashes and supported-operation rows independently. It SHALL
+map text features, scaling, raw-logit offset, cubic residual, normalization,
+threshold fallback and response serialization. Optional Exp8534 absence SHALL
+leave costs and conditional ceilings null without losing board obligations.
+Qualified cost spans SHALL be disjoint and retain startup and transport costs.
+The installed KV260 quadratic Ising evaluator retains k_max<=5. PolarFire retains
+hash-verified Linux CPU dispatch only. GateMate retains exact missing-source
+hashes, last IDCODE0xffffffff and its original ordered reopening conditions.
+No model load, device command, purchase or five-input speed transfer is allowed.
+Deployment remains blocked while compatible installed operations are absent.
+
+### SCENARIO-REPORT-8538-BOUNDARY
+
+Read supplied evidence within60 seconds, without waiting for future producers.
+Expose exact missing fields, operators, expected and observed values. Rebuild
+operation rows from authenticated primitives. Rehashed summary or source changes
+SHALL fail replay. Missing is distinct from zero; accounting readiness grants no
+scientific benefit, native parity or physical qualification.
+
+Implementation20261015: Exp8538 maps all21 board/operation pairs without model
+loads or device commands. Original Exp8524 and Exp8440 hashes retain installed
+support and GateMate obligations. Optional nine-input costs remain distinct from
+historical five-input storage evidence. Ops and traceability reconciliation is
+conductor-owned for this task.

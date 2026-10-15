@@ -55273,3 +55273,23 @@ failed validation. A tests-first regression raises only full replay to240 second
 inside the900-second reserve. Exact final disqualification bytes must replay,
 pass unchanged validators and bind downstream consumers; this cannot promote
 the failed panel to readiness or scientific benefit.
+
+## REQ-VERIFY-8538: Bound and replay the board boundary publication
+
+Owned tests SHALL precede implementation and retain spec references. Preserve
+original collected test IDs through disjoint serial bounded shards. Require100
+percent owned statement coverage, real private CLI controls, Ruff, strict mypy,
+spec tracing and private E2E-018/021. Fresh processes SHALL accept primitive
+replay and reject missing evidence, owned error and rehashed tampering. Unchanged
+publication, adversarial and strict-row consumers SHALL validate exact bytes.
+Bind atomic publication to a terminal sidecar and actual downstream consumer.
+
+### SCENARIO-VERIFY-8538-CLI
+
+Accept --date20261015, reject other dates and in-repository private output.
+A killed or failed owned child SHALL disqualify. Unchanged physical absence
+SHALL block deployment, never imply unfinished owned work or positive science.
+
+Implementation20261015: seven owned tests cover221/221 new statements, including
+actual private child paths. The runner collects original consumer node IDs before
+bounded serial shards and preserves unchanged publication and replay controls.
