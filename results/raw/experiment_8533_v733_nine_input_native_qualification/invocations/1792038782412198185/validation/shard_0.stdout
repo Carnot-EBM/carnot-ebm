@@ -1,0 +1,122 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 20 items
+
+tests/python/test_nine_input_8533.py::test_finite_controls_and_negative_inputs PASSED [  5%]
+tests/python/test_nine_input_8533.py::test_boundary_fallback_and_shared_policy PASSED [ 10%]
+tests/python/test_nine_input_8533.py::test_authenticated_tape_and_request_boundary PASSED [ 15%]
+tests/python/test_nine_input_8533.py::test_cold_replay_rejects_rehashed_tamper PASSED [ 20%]
+tests/python/test_nine_input_8533.py::test_offline_build_and_loader_rejections FAILED [ 25%]
+tests/python/test_nine_input_8533.py::test_owned_numeric_failure_and_blocked_inputs PASSED [ 30%]
+tests/python/test_nine_input_8533.py::test_private_cli_publish_replay_and_absence FAILED [ 35%]
+tests/python/test_nine_input_8533.py::test_input_rejections[readiness] PASSED [ 40%]
+tests/python/test_nine_input_8533.py::test_input_rejections[publication] PASSED [ 45%]
+tests/python/test_nine_input_8533.py::test_input_rejections[authority] PASSED [ 50%]
+tests/python/test_nine_input_8533.py::test_input_rejections[task] PASSED [ 55%]
+tests/python/test_nine_input_8533.py::test_input_rejections[family] PASSED [ 60%]
+tests/python/test_nine_input_8533.py::test_input_rejections[head] PASSED [ 65%]
+tests/python/test_nine_input_8533.py::test_input_rejections[text] PASSED [ 70%]
+tests/python/test_nine_input_8533.py::test_input_rejections[tape] PASSED [ 75%]
+tests/python/test_nine_input_8533.py::test_input_rejections[source_hash] PASSED [ 80%]
+tests/python/test_nine_input_8533.py::test_validation_collection_and_coverage_rejections PASSED [ 85%]
+tests/python/test_nine_input_8533.py::test_independent_primitive_tampering PASSED [ 90%]
+tests/python/test_nine_input_8533.py::test_complete_consumer_mismatch_and_malformed_acceptance PASSED [ 95%]
+tests/python/test_nine_input_8533.py::test_historical_adapter_and_production_route PASSED [100%]
+
+=================================== FAILURES ===================================
+___________________ test_offline_build_and_loader_rejections ___________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa172476750>
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-0/test_offline_build_and_loader_0')
+
+    def test_offline_build_and_loader_rejections(monkeypatch, tmp_path):
+        """SCENARIO-VERIFY-8533-PARITY: real pinned build plus owned build/import failures."""
+        monkeypatch.delenv("CARNOT_8533_EXTENSION", raising=False)
+        receipt = child(
+            "offline_build",
+            [
+                "env",
+                "CARNOT_8533_EXTENSION=",
+                sys.executable,
+                "-u",
+                "-c",
+                "from pathlib import Path; import sys; from carnot.verify.native_nine_input_8533 import extension; "
+                "m,r=extension(Path(sys.argv[1]),Path(sys.argv[2])); "
+                "assert m.nine_input_residual_8533([0.]*109,[[.5]*9]) == [0.]",
+                str(tmp_path / "compile"),
+                str(tmp_path / "logs"),
+            ],
+            tmp_path / "child_logs",
+            deadline=120,
+        )
+>       assert receipt["passed"]
+E       assert False
+
+tests/python/test_nine_input_8533.py:119: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_offline_build completed=0 pending=1
+[exp8205] phase=after_subprocess_offline_build completed=1 pending=0
+_________________ test_private_cli_publish_replay_and_absence __________________
+
+native = (<module '_nine_input_8533' from '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_in... 'compiler_flags': '-C target-feature=-fma -C instrument-coverage', 'fast_math': False, 'fma_contraction': False, ...})
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-0/test_private_cli_publish_repla0')
+
+    def test_private_cli_publish_replay_and_absence(native, tmp_path):
+        """SCENARIO-REPORT-8533-REPLAY: actual private CLI, invalid dates and explicit owned error."""
+        output = tmp_path / (evidence.NAME + ".json")
+        argv = [sys.executable, "-u", str(evidence.ROOT / evidence.CLI)]
+        env = ["env", "CARNOT_8533_EXTENSION=" + native[1]["path"]]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("replay", ["--cold-replay", str(output)], 0),
+            ("consume", ["--consume", str(output)], 0),
+            ("date", ["--date", "19000101"], 2),
+            ("guard", ["--private-control"], 2),
+            ("owned", ["--deliberate-error"], 7),
+            (
+                "absent",
+                [
+                    "--private-control",
+                    "--root",
+                    str(tmp_path / "missing"),
+                    "--output",
+                    str(tmp_path / "absent" / output.name),
+                ],
+                0,
+            ),
+        ]:
+            receipt = child(name, env + argv + args, tmp_path / "cli", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: usage: experiment_8533_v733_nine_input_native_qualification.py
+E                    [-h] [--date {20261015}] [--root ROOT] [--output OUTPUT]
+E                    [--private-control] [--cold-replay COLD_REPLAY] [--deliberate-error]
+E                    [--consume CONSUME]
+E             experiment_8533_v733_nine_input_native_qualification.py: error: private control output must be outside repository
+E             
+E           assert False
+
+tests/python/test_nine_input_8533.py:179: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_nine_input_8533.py::test_offline_build_and_loader_rejections - assert False
+FAILED tests/python/test_nine_input_8533.py::test_private_cli_publish_replay_and_absence - AssertionError: usage: experiment_8533_v733_nine_input_native_qualification.py
+         [-h] [--date {20261015}] [--root ROOT] [--output OUTPUT]
+         [--private-control] [--cold-replay COLD_REPLAY] [--deliberate-error]
+         [--consume CONSUME]
+  experiment_8533_v733_nine_input_native_qualification.py: error: private control output must be outside repository
+  
+assert False
+=================== 2 failed, 18 passed, 1 warning in 49.62s ===================

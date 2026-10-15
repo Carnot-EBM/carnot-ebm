@@ -1,0 +1,123 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 18 items
+
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_matching_activation_and_consumed_stage PASSED [  5%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_old_active_and_changed_full_task_fail PASSED [ 11%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_core_mutations_fail[id] PASSED [ 16%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_core_mutations_fail[title] PASSED [ 22%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_core_mutations_fail[phase] PASSED [ 27%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_core_mutations_fail[deliverable] PASSED [ 33%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_core_mutations_fail[MODEL_SPECS] PASSED [ 38%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_core_mutations_fail[inference_substrate_class] PASSED [ 44%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_core_mutations_fail[gated_on] PASSED [ 50%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_missing_digest_and_inconsistent_design_count_fail PASSED [ 55%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_wrong_staged_digest_and_active_count_fail PASSED [ 61%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_immutable_snapshot_refuses_corruption PASSED [ 66%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_cli_private_success_failure_and_replay FAILED [ 72%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_terminal_recheck_failure_refuses_publication PASSED [ 77%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_child_deadline_seals_failed_receipt PASSED [ 83%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_authority_and_required_check_verdicts PASSED [ 88%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_terminal_recovery_rechecks_disqualified_bytes PASSED [ 94%]
+tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_direct_replay_date_and_publication_hash_exits PASSED [100%]
+
+=================================== FAILURES ===================================
+_________________ test_cli_private_success_failure_and_replay __________________
+
+authority_paths = (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualificati...3_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/snapshots'))
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0')
+
+    def test_cli_private_success_failure_and_replay(authority_paths, tmp_path):
+        """SCENARIO-REPORT-7891-VALIDATION: real CLI rejects a changed candidate."""
+        design, staged, active, _ = authority_paths
+        output, raw = tmp_path / "candidate.json", tmp_path / "rows.json"
+        base = [
+            sys.executable,
+            str(CLI),
+            "--date",
+            "20260929",
+            "--design",
+            str(design),
+            "--staged",
+            str(staged),
+            "--active",
+            str(active),
+            "--output",
+            str(output),
+            "--raw",
+            str(raw),
+            "--no-validation",
+        ]
+        done = subprocess.run(base, cwd=ROOT, capture_output=True, text=True, timeout=60)
+>       assert done.returncode == 0, done.stdout + done.stderr
+E       AssertionError: [exp7891] phase=startup event=start elapsed_s=0.000 completed_units=0
+E         [exp7891] phase=preconditions event=start elapsed_s=0.000 completed_units=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 513, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 481, in main
+E             candidate = build_candidate(args, raw_root)
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 233, in build_candidate
+E             assessed = assess_authorities(
+E                        ^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 98, in assess_authorities
+E             "design": _snapshot(design, design_raw, snapshot_dir, "design"),
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 56, in _snapshot
+E             "snapshot_sha256": sha256_file(target),
+E                                ^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 52, in sha256_file
+E             with path.open("rb") as stream:
+E                  ^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+E             return io.open(self, mode, buffering, encoding, errors, newline)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/tmp/carnot-child-results-guard-n3uuo5nc/sitecustomize.py", line 62, in opened
+E             return real(file, mode, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py', '--date', '20260929', '--design', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/design.md', '--staged', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/staged.yaml', '--active', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/active.yaml', '--output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/candidate.json', '--raw', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/rows.json', '--no-validation'], returncode=1, stdout='[exp7891] phase=startup event=start elapsed_s=0.000 completed_units=0\n[exp7891] phase=preconditions event=start elapsed_s=0.000 completed_units=0\n', stderr='Traceback (most recent call last):\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 513, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 481, in main\n    candidate = build_candidate(args, raw_root)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 233, in build_candidate\n    assessed = assess_authorities(\n               ^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 98, in assess_authorities\n    "design": _snapshot(design, design_raw, snapshot_dir, "design"),\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 56, in _snapshot\n    "snapshot_sha256": sha256_file(target),\n                       ^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 52, in sha256_file\n    with path.open("rb") as stream:\n         ^^^^^^^^^^^^^^^\n  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/tmp/carnot-child-results-guard-n3uuo5nc/sitecustomize.py", line 62, in opened\n    return real(file, mode, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: \'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin\'\n').returncode
+
+tests/python/test_experiment_7891_v685_authority_lifecycle.py:165: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_cli_private_success_failure_and_replay - AssertionError: [exp7891] phase=startup event=start elapsed_s=0.000 completed_units=0
+  [exp7891] phase=preconditions event=start elapsed_s=0.000 completed_units=0
+  Traceback (most recent call last):
+    File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 513, in <module>
+      raise SystemExit(main())
+                       ^^^^^^
+    File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 481, in main
+      candidate = build_candidate(args, raw_root)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 233, in build_candidate
+      assessed = assess_authorities(
+                 ^^^^^^^^^^^^^^^^^^^
+    File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 98, in assess_authorities
+      "design": _snapshot(design, design_raw, snapshot_dir, "design"),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 56, in _snapshot
+      "snapshot_sha256": sha256_file(target),
+                         ^^^^^^^^^^^^^^^^^^^
+    File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 52, in sha256_file
+      with path.open("rb") as stream:
+           ^^^^^^^^^^^^^^^
+    File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+      return io.open(self, mode, buffering, encoding, errors, newline)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/tmp/carnot-child-results-guard-n3uuo5nc/sitecustomize.py", line 62, in opened
+      return real(file, mode, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin'
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py', '--date', '20260929', '--design', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/design.md', '--staged', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/staged.yaml', '--active', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/active.yaml', '--output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/candidate.json', '--raw', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/rows.json', '--no-validation'], returncode=1, stdout='[exp7891] phase=startup event=start elapsed_s=0.000 completed_units=0\n[exp7891] phase=preconditions event=start elapsed_s=0.000 completed_units=0\n', stderr='Traceback (most recent call last):\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 513, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 481, in main\n    candidate = build_candidate(args, raw_root)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 233, in build_candidate\n    assessed = assess_authorities(\n               ^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 98, in assess_authorities\n    "design": _snapshot(design, design_raw, snapshot_dir, "design"),\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 56, in _snapshot\n    "snapshot_sha256": sha256_file(target),\n                       ^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 52, in sha256_file\n    with path.open("rb") as stream:\n         ^^^^^^^^^^^^^^^\n  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/tmp/carnot-child-results-guard-n3uuo5nc/sitecustomize.py", line 62, in opened\n    return real(file, mode, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: \'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-3/test_cli_private_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin\'\n').returncode
+========================= 1 failed, 17 passed in 8.73s =========================

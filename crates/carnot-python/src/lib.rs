@@ -17,6 +17,8 @@ mod experiment_7256_archive_controller;
 mod fixed_cardinality;
 mod kv260;
 mod mode_jump;
+#[cfg(feature = "nine-input-8533")]
+mod nine_input_8533;
 mod numerical_update_8027;
 mod one_axis_tempering;
 mod packed_belief;
@@ -439,6 +441,8 @@ fn py_project_gradient<'py>(
 /// Carnot EBM framework — Python bindings.
 #[pymodule]
 fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    #[cfg(feature = "nine-input-8533")]
+    nine_input_8533::register(m)?;
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
 
     // Math

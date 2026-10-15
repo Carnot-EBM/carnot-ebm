@@ -393,3 +393,4 @@ mod tests {
 }
 
 pub mod numerical_update_8027;
+pub mod nine_input_8533;

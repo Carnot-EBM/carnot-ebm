@@ -1,0 +1,343 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 7 items
+
+tests/python/test_restricted_decision_audit_8210.py::test_original_costs_missing_and_identity PASSED [ 14%]
+tests/python/test_restricted_decision_audit_8210.py::test_registered_gates_and_distinct_risk_denominators PASSED [ 28%]
+tests/python/test_restricted_decision_audit_8210.py::test_private_cli_and_rehashed_mutations FAILED [ 42%]
+tests/python/test_restricted_decision_audit_8210.py::test_natural_custody_and_owned_failure FAILED [ 57%]
+tests/python/test_restricted_decision_audit_8210.py::test_failure_receipts_and_primitive_hashes PASSED [ 71%]
+tests/python/test_restricted_decision_audit_8210.py::test_unpaired_and_duplicate_source_failures PASSED [ 85%]
+tests/python/test_restricted_decision_audit_8210.py::test_standalone_manifest_frozen_replay_and_scope PASSED [100%]
+
+=================================== FAILURES ===================================
+___________________ test_private_cli_and_rehashed_mutations ____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_private_cli_and_rehashed_0')
+
+    def test_private_cli_and_rehashed_mutations(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8210-CLI: real success, block and four cold mutation failures."""
+        output = tmp_path / (e.NAME + ".json")
+        result = cli(tmp_path, "--date", "20261006", "--fixture-output", output)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8210] phase=start completed=0 pending=0
+E         usage: experiment_8210_v709_restricted_decision_audit.py [-h]
+E                                                                  [--date {20261006}]
+E                                                                  [--root ROOT]
+E                                                                  [--output OUTPUT]
+E                                                                  [--fixture-output FIXTURE_OUTPUT]
+E                                                                  [--worker-output WORKER_OUTPUT]
+E                                                                  [--stream-path STREAM_PATH]
+E                                                                  [--mutation {,labels,roles,slots,source}]
+E                                                                  [--cold-replay COLD_REPLAY]
+E         experiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py', '--date', '20261006', '--fixture-output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_private_cli_and_rehashed_0/experiment_8210_v709_restricted_decision_audit.json'], returncode=2, stdout='[exp8210] phase=start completed=0 pending=0\n', stderr='usage: experiment_8210_v709_restricted_decision_audit.py [-h]\n                                                         [--date {20261006}]\n                                                         [--root ROOT]\n                                                         [--output OUTPUT]\n                                                         [--fixture-output FIXTURE_OUTPUT]\n                                                         [--worker-output WORKER_OUTPUT]\n                                                         [--stream-path STREAM_PATH]\n                                                         [--mutation {,labels,roles,slots,source}]\n                                                         [--cold-replay COLD_REPLAY]\nexperiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private\n').returncode
+
+tests/python/test_restricted_decision_audit_8210.py:110: AssertionError
+----------------------------- Captured stdout call -----------------------------
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--date", "20261006", "--fixture-output", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_private_cli_and_rehashed_0/experiment_8210_v709_restricted_decision_audit.json"], "exit_code": 2, "started_monotonic_ns": 358754493677019, "ended_monotonic_ns": 358756075305959, "stdout": "[exp8210] phase=start completed=0 pending=0\n", "stderr": "usage: experiment_8210_v709_restricted_decision_audit.py [-h]\n                                                         [--date {20261006}]\n                                                         [--root ROOT]\n                                                         [--output OUTPUT]\n                                                         [--fixture-output FIXTURE_OUTPUT]\n                                                         [--worker-output WORKER_OUTPUT]\n                                                         [--stream-path STREAM_PATH]\n                                                         [--mutation {,labels,roles,slots,source}]\n                                                         [--cold-replay COLD_REPLAY]\nexperiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private\n", "stdout_sha256": "4469c1946ea833de0634f01e8493fab4d662cacfc42f23634ef26b9c1dd95668", "stderr_sha256": "2f442a107c6a67ffd5b7405c4b139f7de01d584b96da4e6fe0f0d294ff75e551"}
+____________________ test_natural_custody_and_owned_failure ____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f19c478e750>
+
+    def test_natural_custody_and_owned_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """REQ-REPORT-8210: natural cached audit is ready; failed owned checks disqualify."""
+        private = tmp_path / "validation"
+        private.mkdir()
+        plan = e.manifest(private, tmp_path / "candidate.json")
+        cold = next(c for c in plan["terminal_commands"] if c["name"] == "cold_replay")
+        assert str(e.ROOT / e.CLI) in cold["argv"]
+        work = e.measure(e.ROOT, tmp_path / "natural")
+        assert work["evidence"] and not work["owned_failure"]
+        value = e.build(work, tmp_path / "natural", [dict(passed=True)])
+        assert value["action_audit_ready_score"] == 1
+        assert (value["completed_count"], value["failed_count"], value["excluded_count"]) == (97, 30, 1)
+        output = tmp_path / "natural.json"
+        atomic_json(output, value)
+        assert e.replay(output)
+        measurement = Path(value["measurement_reference"]["path"])
+        for mutation in ("row", "original_label", "permission_mask", "denominator", "pin"):
+            changed_work = deepcopy(work)
+            data = changed_work["evidence"]
+            if mutation == "original_label":
+                data["original_response_records"][0]["labels"] = []
+                data["original_response_records"][0]["quality"] = "changed"
+            elif mutation == "permission_mask":
+                data["predictions"][0]["allowed_actions"] = ["accept"]
+            elif mutation == "denominator":
+                data["predictions"][0]["denominator"] = 128
+            elif mutation == "pin":
+                changed_work["refs"][0]["sha256"] = "sha256:" + "0" * 64
+            else:
+                row = data["predictions"][0]
+                row["action"] = "reject" if row["action"] == "accept" else "accept"
+            atomic_json(measurement, changed_work)
+            changed = deepcopy(value)
+            changed["measurement_reference"] = e.reference(measurement)
+            changed.pop("reproducibility_checksum")
+            changed["reproducibility_checksum"] = canonical_hash(changed)
+            atomic_json(output, changed)
+            rejected = cli(tmp_path, "--cold-replay", output)
+            assert rejected.returncode == 1, mutation + rejected.stdout + rejected.stderr
+        atomic_json(measurement, work)
+        atomic_json(output, value)
+        assert e.replay(output)
+        monkeypatch.setattr(e, "OPTIONAL", "results/optional_missing_8210.json")
+        optional = e.measure(e.ROOT, tmp_path / "optional")
+        assert optional["evidence"] and "absent" in optional["optional_sibling_disposition"]
+        monkeypatch.undo()
+        assert (
+            e.build(work, tmp_path / "natural", [dict(passed=False)])["verdict_class"] == "disqualified"
+        )
+>       assert (
+            cli(
+                tmp_path,
+                "--root",
+                tmp_path / "absent",
+                "--worker-output",
+                tmp_path / "worker/measurement.json",
+            ).returncode
+            == 0
+        )
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py', '--root', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/absent', '--worker-output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json'], returncode=1, stdout='[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=before_preconditions completed=0 pending=0\n[exp8210] phase=terminal_operand_or_owned_failure completed=1 pending=0\n', stderr='Traceback (most recent call last):\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", line 13, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 480, in main\n    return int(execution.main(argv))\n               ^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py", line 180, in main\n    e.measure(args.root, args.worker_output.parent, stream_path=args.stream_path)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 263, in measure\n    atomic_json(raw / "measurement.json", work)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json\n    temporary.replace(path)\n  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace\n    os.replace(self, target)\n  File "/tmp/carnot-child-results-guard-yr0lmep8/sitecustomize.py", line 76, in moved\n    return real(src, dest if dest is not None else dst, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 18] Invalid cross-device link: \'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/.measurement.json.tmp-2941061\' -> \'/tmp/carnot-pytest-artifacts-rfxbl99o/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json\'\n').returncode
+E        +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py', '--root', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/absent', '--worker-output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json'], returncode=1, stdout='[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=before_preconditions completed=0 pending=0\n[exp8210] phase=terminal_operand_or_owned_failure completed=1 pending=0\n', stderr='Traceback (most recent call last):\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", line 13, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 480, in main\n    return int(execution.main(argv))\n               ^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py", line 180, in main\n    e.measure(args.root, args.worker_output.parent, stream_path=args.stream_path)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 263, in measure\n    atomic_json(raw / "measurement.json", work)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json\n    temporary.replace(path)\n  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace\n    os.replace(self, target)\n  File "/tmp/carnot-child-results-guard-yr0lmep8/sitecustomize.py", line 76, in moved\n    return real(src, dest if dest is not None else dst, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 18] Invalid cross-device link: \'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/.measurement.json.tmp-2941061\' -> \'/tmp/carnot-pytest-artifacts-rfxbl99o/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json\'\n') = cli(PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0'), '--root', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0') / 'absent'), '--worker-output', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0') / 'worker/measurement.json'))
+
+tests/python/test_restricted_decision_audit_8210.py:184: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8210] phase=before_preconditions completed=0 pending=0
+[exp8205] phase=before_subprocess_python_environment completed=0 pending=1
+[exp8205] phase=after_subprocess_python_environment completed=1 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8210] phase=predictions_authenticated_before_label_access completed=768 pending=0
+[exp8210] phase=after_preconditions completed=128 pending=0
+[exp8210] phase=before_benchmark_independent_reduction completed=0 pending=128
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8210] phase=after_benchmark_independent_reduction completed=128 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--cold-replay", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/natural.json"], "exit_code": 1, "started_monotonic_ns": 358758209579942, "ended_monotonic_ns": 358759913723040, "stdout": "[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=reduction_drift completed=0 pending=0\n", "stderr": "", "stdout_sha256": "d46bd74966b6bbc90e9ecc423b7a56cb7f80c4aeb332ea612999cf0e32572e58", "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--cold-replay", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/natural.json"], "exit_code": 1, "started_monotonic_ns": 358760107620495, "ended_monotonic_ns": 358761815835822, "stdout": "[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=reduction_drift completed=0 pending=0\n", "stderr": "", "stdout_sha256": "d46bd74966b6bbc90e9ecc423b7a56cb7f80c4aeb332ea612999cf0e32572e58", "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--cold-replay", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/natural.json"], "exit_code": 1, "started_monotonic_ns": 358762010097772, "ended_monotonic_ns": 358763711574600, "stdout": "[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=reduction_drift completed=0 pending=0\n", "stderr": "", "stdout_sha256": "d46bd74966b6bbc90e9ecc423b7a56cb7f80c4aeb332ea612999cf0e32572e58", "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--cold-replay", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/natural.json"], "exit_code": 1, "started_monotonic_ns": 358763906875040, "ended_monotonic_ns": 358765592442283, "stdout": "[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=reduction_drift completed=0 pending=0\n", "stderr": "", "stdout_sha256": "d46bd74966b6bbc90e9ecc423b7a56cb7f80c4aeb332ea612999cf0e32572e58", "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--cold-replay", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/natural.json"], "exit_code": 1, "started_monotonic_ns": 358765904464442, "ended_monotonic_ns": 358767572870459, "stdout": "[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=reduction_drift completed=0 pending=0\n", "stderr": "", "stdout_sha256": "d46bd74966b6bbc90e9ecc423b7a56cb7f80c4aeb332ea612999cf0e32572e58", "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8210] phase=before_preconditions completed=0 pending=0
+[exp8205] phase=before_subprocess_python_environment completed=0 pending=1
+[exp8205] phase=after_subprocess_python_environment completed=1 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8210] phase=predictions_authenticated_before_label_access completed=768 pending=0
+[exp8210] phase=after_preconditions completed=128 pending=0
+[exp8210] phase=before_benchmark_independent_reduction completed=0 pending=128
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8210] phase=after_benchmark_independent_reduction completed=128 pending=0
+[exp8209] phase=score completed=16 pending=112
+[exp8209] phase=score completed=32 pending=96
+[exp8209] phase=score completed=48 pending=80
+[exp8209] phase=score completed=64 pending=64
+[exp8209] phase=score completed=80 pending=48
+[exp8209] phase=score completed=96 pending=32
+[exp8209] phase=score completed=112 pending=16
+[exp8209] phase=score completed=128 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+[exp8185] phase=before_benchmark_source_bootstrap completed=0 pending=10000
+[exp8185] phase=after_benchmark_source_bootstrap completed=10000 pending=0
+before private8210 CLI
+{"event": "after_private8210_CLI", "argv": ["/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "-u", "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", "--root", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/absent", "--worker-output", "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json"], "exit_code": 1, "started_monotonic_ns": 358769440519060, "ended_monotonic_ns": 358771014988937, "stdout": "[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=before_preconditions completed=0 pending=0\n[exp8210] phase=terminal_operand_or_owned_failure completed=1 pending=0\n", "stderr": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py\", line 13, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py\", line 480, in main\n    return int(execution.main(argv))\n               ^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py\", line 180, in main\n    e.measure(args.root, args.worker_output.parent, stream_path=args.stream_path)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py\", line 263, in measure\n    atomic_json(raw / \"measurement.json\", work)\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py\", line 68, in atomic_json\n    temporary.replace(path)\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py\", line 1376, in replace\n    os.replace(self, target)\n  File \"/tmp/carnot-child-results-guard-yr0lmep8/sitecustomize.py\", line 76, in moved\n    return real(src, dest if dest is not None else dst, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/.measurement.json.tmp-2941061' -> '/tmp/carnot-pytest-artifacts-rfxbl99o/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json'\n", "stdout_sha256": "c402f2b2ab2966834498f976068e604c348acd61b6dde44dc512a77039afc5ce", "stderr_sha256": "af55507a1bb0cf131d484f5e8a390b5985924a84b6d0e14665d5d2f3ea891e2f"}
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_restricted_decision_audit_8210.py::test_private_cli_and_rehashed_mutations - AssertionError: [exp8210] phase=start completed=0 pending=0
+  usage: experiment_8210_v709_restricted_decision_audit.py [-h]
+                                                           [--date {20261006}]
+                                                           [--root ROOT]
+                                                           [--output OUTPUT]
+                                                           [--fixture-output FIXTURE_OUTPUT]
+                                                           [--worker-output WORKER_OUTPUT]
+                                                           [--stream-path STREAM_PATH]
+                                                           [--mutation {,labels,roles,slots,source}]
+                                                           [--cold-replay COLD_REPLAY]
+  experiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private
+  
+assert 2 == 0
+ +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py', '--date', '20261006', '--fixture-output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_private_cli_and_rehashed_0/experiment_8210_v709_restricted_decision_audit.json'], returncode=2, stdout='[exp8210] phase=start completed=0 pending=0\n', stderr='usage: experiment_8210_v709_restricted_decision_audit.py [-h]\n                                                         [--date {20261006}]\n                                                         [--root ROOT]\n                                                         [--output OUTPUT]\n                                                         [--fixture-output FIXTURE_OUTPUT]\n                                                         [--worker-output WORKER_OUTPUT]\n                                                         [--stream-path STREAM_PATH]\n                                                         [--mutation {,labels,roles,slots,source}]\n                                                         [--cold-replay COLD_REPLAY]\nexperiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private\n').returncode
+FAILED tests/python/test_restricted_decision_audit_8210.py::test_natural_custody_and_owned_failure - assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py', '--root', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/absent', '--worker-output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json'], returncode=1, stdout='[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=before_preconditions completed=0 pending=0\n[exp8210] phase=terminal_operand_or_owned_failure completed=1 pending=0\n', stderr='Traceback (most recent call last):\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", line 13, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 480, in main\n    return int(execution.main(argv))\n               ^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py", line 180, in main\n    e.measure(args.root, args.worker_output.parent, stream_path=args.stream_path)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 263, in measure\n    atomic_json(raw / "measurement.json", work)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json\n    temporary.replace(path)\n  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace\n    os.replace(self, target)\n  File "/tmp/carnot-child-results-guard-yr0lmep8/sitecustomize.py", line 76, in moved\n    return real(src, dest if dest is not None else dst, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 18] Invalid cross-device link: \'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/.measurement.json.tmp-2941061\' -> \'/tmp/carnot-pytest-artifacts-rfxbl99o/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json\'\n').returncode
+ +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py', '--root', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/absent', '--worker-output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json'], returncode=1, stdout='[exp8210] phase=start completed=0 pending=0\n[exp8210] phase=before_preconditions completed=0 pending=0\n[exp8210] phase=terminal_operand_or_owned_failure completed=1 pending=0\n', stderr='Traceback (most recent call last):\n  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8210_v709_restricted_decision_audit.py", line 13, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 480, in main\n    return int(execution.main(argv))\n               ^^^^^^^^^^^^^^^^^^^^\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/methods_stream_execution_8111.py", line 180, in main\n    e.measure(args.root, args.worker_output.parent, stream_path=args.stream_path)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/restricted_decision_audit_8210.py", line 263, in measure\n    atomic_json(raw / "measurement.json", work)\n  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json\n    temporary.replace(path)\n  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace\n    os.replace(self, target)\n  File "/tmp/carnot-child-results-guard-yr0lmep8/sitecustomize.py", line 76, in moved\n    return real(src, dest if dest is not None else dst, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 18] Invalid cross-device link: \'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/.measurement.json.tmp-2941061\' -> \'/tmp/carnot-pytest-artifacts-rfxbl99o/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0/worker/measurement.json\'\n') = cli(PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0'), '--root', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0') / 'absent'), '--worker-output', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8533_v733_nine_input_native_qualification/invocations/1792038782412198185/pytest-5/test_natural_custody_and_owned0') / 'worker/measurement.json'))
+=================== 2 failed, 5 passed, 1 warning in 25.97s ====================

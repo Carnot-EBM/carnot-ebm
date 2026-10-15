@@ -100763,3 +100763,24 @@ retain original sealed state and expose distinct numerical counts. The local
 diagnostic adapter preserves the original zero and failure references. All20
 owned tests pass. Historical reporting failures remain blocking; no scientific
 learning benefit or independent generalization is claimed.
+# REQ-REPORT-8533: Bind native qualification to original inference requests
+
+Exp8533 SHALL authenticate Exp8526 methods_ready_score and
+nine_input_inputs_ready_score, original V726 head/panel producer hashes and
+original historical dates. Source fitting SHALL remain independent. A complete
+900-row request tape SHALL retain original stable order, question/answer/source
+text and cached raw p2. Its first 64 test answers SHALL recompute eight public
+features, scale, evaluate, normalize, select and serialize in both timing arms.
+Only the residual evaluator SHALL differ. Qualification SHALL freeze the real
+extension and tape for the downstream timing consumer, with zero model calls.
+
+### SCENARIO-REPORT-8533-REPLAY: Bounded publication and failure accounting
+
+Fresh private CLI replay SHALL reconstruct primitive numeric evidence and reject
+absent inputs, owned failure and self-consistently rehashed tampering. Validation
+SHALL retain commands, exits, durations, log hashes, the exact disjoint collected
+test union, newly owned statement coverage and private E2E-018/E2E-021. Unchanged
+publication/adversarial/row consumers SHALL check final bytes before atomic
+publication and downstream consumption. Exposed history supplies no independent
+generalization or learning benefit. External absence blocks; owned failure
+disqualifies. Original five-input artifacts and quarantines SHALL be preserved.

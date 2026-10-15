@@ -55201,3 +55201,21 @@ nodes and run bounded serial pytest shards with real terminal-result accounting.
 Unit and actual-child coverage is442/442 new statements. Required historical
 failures remain failed validation and keep adapter readiness zero. Terminal
 receipts and the bound consumer record the actual invocation; no full suite runs.
+# REQ-VERIFY-8533: Qualify the separate nine-input native residual
+
+The versioned Rust/PyO3 evaluator SHALL accept nine finite scaled inputs in
+[0,1] and 109 finite effective coefficients. It SHALL use the exact clamped
+cubic knots from sparse_energy_7996, separate multiplication and addition,
+and no fitting or update operation. Python SHALL retain fit-only scaling,
+raw-p2 offset, temperature, stable two-energy normalization and typed policy.
+Dense SciPy controls SHALL include all 900 released rows, knots and adjacent
+binary64 values per dimension, clipping endpoints, zero and decayed weights,
+and malformed/nonfinite inputs. Error SHALL be <=1e-12*(1+abs(reference)).
+Native probabilities within 1e-10 of .2 or .8 SHALL use and count a Python
+reference fallback. All frozen finite-panel typed decisions SHALL match.
+
+### SCENARIO-VERIFY-8533-PARITY: Actual binary and finite controls
+
+An isolated offline pinned build, Rust tests/lint/measured coverage and actual
+PyO3 calls SHALL bind binary/source hashes. Numerical mismatch disqualifies;
+missing toolchain blocks. Qualification SHALL make no universal error claim.
