@@ -55317,3 +55317,19 @@ replay and reject absent input, deliberate owned failure and self-consistently
 rehashed tampering. Failed owned validation SHALL disqualify. Unchanged primary
 publication, adversarial and strict-row validators SHALL bind atomic final
 bytes, terminal sidecar and the actual downstream consumer. Retain all findings.
+
+## REQ-VERIFY-8540: Qualify V734 terminal bytes with bounded real children
+
+Require focused tests, 100 percent newly owned statement coverage, actual private
+CLI controls, Ruff check/format, strict mypy, spec tracing and private E2E-018/021.
+Collect original node IDs before disjoint serial bounded pytest children. Preserve
+commands, node outcomes, exits, durations and log hashes. Do not run the full
+repository suite or a nested historical validation runner. Use disk scratch.
+
+### SCENARIO-VERIFY-8540-CONTROLS
+
+Accept --date 20261015. Cold replay must accept original primitive rows and reject
+missing inputs, owned failures and self-consistently rehashed tampering. Killed
+children disqualify. Unchanged external absence blocks, never implies partial.
+Validate unchanged publication, adversarial and strict-row consumers, atomically
+publish exact final bytes and bind the terminal sidecar and downstream consumer.

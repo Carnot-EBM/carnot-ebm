@@ -100970,3 +100970,25 @@ Every prompt mandates flushed phase/child/loop progress and bounded file writes.
 Planning status20261015: staged only. Existing schema/authority/private CLI
 regressions validate the planning machinery; execution-specific tests and
 qualification receipts remain obligations of the future tasks.
+
+## REQ-REPORT-8540: Bind V734 without changing original science
+
+Compare exactly twelve complete tasks Exp8540–8551 across the visible table,
+embedded JSON, printed canonical digest and actual activated YAML. Preserve
+consumed staging as absent. Seal the original V733 design and numerical methods
+before measurement. Original learning, native and canary inputs qualify separately.
+Close unchanged exposed source tuning after Exp8529. FaithBench is exposed.
+Keep all historical quarantines and use original sealed family dates and authority.
+Current model loads and generations remain zero. Future tasks are dependencies.
+
+### SCENARIO-REPORT-8540-AUTHORITY
+
+Reject count, order, ID, title, phase, deliverable, model, substrate, gate, prompt,
+retirement flag and missing end marker mutations, including rehashed envelopes.
+
+### SCENARIO-REPORT-8540-METHODS
+
+Copy objective_updates, objective_audit, nine_input_native_inference,
+evidence_canary and arc_capability_mask exactly. Preserve question roles, heads,
+thresholds, seeds and budgets. Bind the V734 reference section to named tasks.
+Optional runtime absence must not block independent CPU qualification.
