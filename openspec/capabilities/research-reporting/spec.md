@@ -100650,3 +100650,30 @@ reopening requirements. Every task shall require flushed phase/long-call progres
 loop heartbeats and bounded file writes. Final reconciliation shall retain G1–G4.
 
 Implementation status: planning contract only; experiments await activation.
+
+## REQ-REPORT-8526: Seal V733 authority and independent readiness
+
+Exp8526 shall bind fourteen complete tasks8526–8539 through the shipped parser,
+visible table, embedded JSON, canonical digest and activated YAML. Consumed
+staging shall use authentic saved activation bytes. It shall preserve V732
+design SHA2561dc51cf5035a2b7635362d47f17db4ee5d5e34a777a088d24f6e7286d395f5aa.
+The six registered scientific sections shall equal V732 exactly. Only separate
+nine-input native inference and capability-mask ARC protocols are added.
+Original V726/V730 and V732 producer consumers shall run under frozen family
+authority and original dates. Source, learning, nine-input and optional CUDA
+readiness shall remain independent. No current model or hardware work runs.
+
+### SCENARIO-REPORT-8526-AUTHORITY
+
+Reject independent count, order, ID, title, phase, deliverable, model, substrate,
+gate, prompt, retirement and end-marker mutations, including rehashed objects.
+Missing authority retains all fourteen slots and exact failed gate operands.
+
+### SCENARIO-REPORT-8526-METHODS
+
+Accept unchanged identity-Brier, contrasts, optimization, objective updates,
+objective audit and evidence-canary operands. Reject changed inherited sections,
+method seals and original authority. Missing service evidence cannot block
+nine-input inference; absent CUDA cannot block CPU methods. All300 questions
+and900 answers remain exposed with original150/50/100 roles and closed V717
+hypotheses. Readiness grants no scientific benefit or factual generalization.

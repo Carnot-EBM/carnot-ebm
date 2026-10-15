@@ -55118,3 +55118,17 @@ and log hashes; a killed child fails validation. Fresh replay rejects missing
 inputs, intentional errors and self-consistently rehashed task/claim/row drift.
 Unchanged publication, adversarial and strict-row consumers validate terminal
 bytes before publication. Bind the sidecar and check the actual downstream reader.
+# REQ-VERIFY-8526: Validate exact V733 terminal bytes
+
+Exp8526 shall collect original test node IDs and preserve their exact union in
+bounded disjoint serial shards. Private E2E-018/021, lint, strict types and spec
+coverage shall qualify owned code with100 percent new statement coverage,
+including real child and rejection paths. Killed children fail qualification.
+
+## SCENARIO-VERIFY-8526-CONTROLS
+
+A bounded fresh process shall cold-replay primitive rows, reject missing inputs,
+owned errors and self-consistently rehashed tampering. Unchanged publication,
+adversarial and strict-row consumers shall validate final bytes before atomic
+publication. A bound terminal sidecar and actual downstream receipt shall name
+those bytes. Failed owned validation disqualifies; external absence is blocked.
