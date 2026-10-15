@@ -55403,3 +55403,19 @@ V733 activation through the shipped frozen-input adapter in a private pytest
 worker. Other suites retain their own fixture authority. A current V734 active
 roadmap SHALL remain unchanged. Original assertions and mutation refusals remain
 intact; a foreign sealed activation is rejected before pytest executes.
+
+## REQ-VERIFY-8550: Bind operation mapping to checked terminal bytes
+
+Use requirement-linked tests before implementation. Measure100 percent newly
+owned statement coverage, including real CLI children and rejection paths.
+Collect each original test union before bounded disjoint serial execution.
+Retain command, terminal outcome, duration, exit and log hashes. Run private
+E2E-018/021, scoped Ruff, strict mypy and explicit spec coverage. No full suite
+or nested historical validation runner is permitted for this invocation.
+
+### SCENARIO-VERIFY-8550-CLI
+
+Fresh replay SHALL accept original primitive operands and reject absent inputs,
+owned failed checks and self-consistently rehashed tampering. Unchanged scanners,
+atomic publication, bound terminal sidecar and actual downstream consumers SHALL
+agree. Owned failure disqualifies; external missing execution remains blocked.

@@ -101058,3 +101058,27 @@ Exp8537's independent primary, original authority and episode seals. Stored-byte
 replays and original capability fixtures supply infrastructure evidence only.
 The terminal artifact and its exact-byte sidecar own the final verdict; no old
 quarantine is cleared. Status/changelog/traceability reconciliation is conductor-owned.
+
+## REQ-REPORT-8550: Map complete costs to physical operation boundaries
+
+Exp8550 SHALL authenticate original board seals, dates and authority without
+hardware commands. It SHALL map nine complete operations for KV260, PolarFire,
+GateMate, NPU and TSU. Spline evaluation means the109-coefficient nine-input
+model. Linux CPU dispatch and quadratic Ising k<=5 do not qualify that spline.
+Absent or unqualified Exp8546 costs SHALL retain null numerical acceleration.
+Only reconciled non-overlapping complete costs permit conditional zero-cost
+ceilings, including fixed host work. A ceiling below10 cannot satisfy NFR01.
+Vendor Z1T comparisons SHALL retain excluded dense final logits and inter-device
+movement. Pipelined p-computer and250-MTJ papers remain future hypotheses.
+Physical readiness stays zero until qualified compatible execution exists.
+Preserve all prior quarantines and exact board reopening evidence.
+
+### SCENARIO-REPORT-8550-BOUNDARY
+
+Missing costs, false readiness, overlapping clocks, changed historical bytes
+and repaired summary hashes SHALL not qualify acceleration. Record missing
+transfer, precision, update and sampling costs separately. CPU mapping runs
+independently of optional hardware. No purchases, flashes or physical probes.
+
+Implementation20261015: scoped adapters, private CLI and primitive replay own
+the operation map. Conductor owns status, changelog and traceability updates.
