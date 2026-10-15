@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-15 — Operational retrospective for milestone 2026.10.734
+
+- Wrote `results/operational_retro_2026_10_734.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.734`. Authoritative disk-mtime fallback data records 6 experiments completed (0 compute-bound, 6 synthesis-only) across 105.1 total wall-time minutes (average 18 minutes per experiment).
+- Execution wall time was led entirely by synthesis tasks: 'Qualify original learning test families with isolated authority and bounded chil' (40.29 minutes), 'Qualify terminal ARC panel replay and actual subprocess coverage' (25.22 minutes), 'Repair the native build and private CLI contract, then qualify complete nine-inp' (12.73 minutes), 'Bind twelve tasks and preserve the source null and original scientific protocols' (12.1 minutes), and 'Reconcile twelve terminal outcomes without promoting quarantined or exposed evid' (8.0 minutes).
+- Point-in-time GPU monitor polling observed both RTX 3090 GPUs at 0% utilization (4MB allocated); `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for learning test family qualification, ARC panel replay, native build repair, task protocol binding, and outcome reconciliation when upstream dependencies remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-15 — Stage research milestone 2026.10.734
 
 - Added the exact twelve-task Exp8540–Exp8551 continuation in the vNEXT design

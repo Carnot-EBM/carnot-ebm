@@ -32,6 +32,10 @@ them, and follow-up review found no remaining issue. This validates the plan,
 not future science. Active roadmap, conductor and exclusion manifest hashes
 are unchanged; the preserved V733 design matches its original bytes.
 
+## 2026-10-15 — Milestone 2026.10.734 operational retrospective
+
+Milestone 2026.10.734 operational retrospective recorded in `results/operational_retro_2026_10_734.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime fallback timing records 6 completed experiments (0 compute-bound, 6 synthesis-only) across 105.1 total wall-time minutes (averaging 18 minutes per experiment). Execution was led by qualifying original learning test families with isolated authority and bounded children (40.29 min), qualifying terminal ARC panel replay and actual subprocess coverage (25.22 min), and repairing the native build and private CLI contract then qualifying complete nine-inputs (12.73 min). GPU utilization was 0% across both RTX 3090 GPUs with `gpu_idle_on_compute_bound_tasks: null` (expected idle state for non-GPU synthesis tasks).
+
 ## 2026-10-15 — Milestone 2026.10.733 operational retrospective
 
 Milestone 2026.10.733 operational retrospective recorded in `results/operational_retro_2026_10_733.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime fallback timing records 10 completed experiments (0 compute-bound, 10 synthesis-only) across 135.0 total wall-time minutes (averaging 14 minutes per experiment). Execution was led by qualifying causal update accounting and complete rejection diagnostics (28.97 min), reconciling fourteen outcomes and deciding source learning inference and ARC continu (21.13 min), and binding fourteen tasks and sealing independent source learning and inference protocols (20.13 min). GPU utilization was 0% across both RTX 3090 GPUs with `gpu_idle_on_compute_bound_tasks: null` (expected idle state for non-GPU synthesis tasks).
