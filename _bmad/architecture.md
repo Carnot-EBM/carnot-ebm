@@ -2,6 +2,23 @@
 
 **Last Reconciled:** 2026-10-11
 
+## Planned V734 qualification boundary — 2026-10-15
+
+The staged twelve-task V734 plan retains the current architecture. Original
+learning test families get isolated sealed authority; event accounting qualifies
+before causal energy-head training. Native parity qualifies the real loaded
+extension and private CLI before timing the complete nine-input inference path.
+ARC terminal replay and real child coverage qualify before a new application
+panel. No new learner, source refit, hidden solver or hardware backend is implied.
+
+Prediction sealing precedes delayed label release, and atomic update commits
+advance state and feedback acknowledgments together. Complete native inference
+includes feature extraction, scaling, offset, residual evaluation, normalization,
+typed decisions, serialization and startup; feedback/durable storage remain
+outside that specific boundary. Independent gate branches keep optional CUDA
+and board absence from blocking CPU evidence. This section is planned, not a
+claim of deployed behavior. Older planned vNEXT links below are historical.
+
 Exp8084 publication custody was reviewed for SCENARIO-REPORT-8084-WORKER-OUTPUT.
 The seal worker owns its explicit output independently of the primary publisher.
 The publisher retains its existing-terminal guard and validates prospective

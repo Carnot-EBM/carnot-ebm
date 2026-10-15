@@ -100914,3 +100914,59 @@ and available ARC episode reductions. Preserve failed, censored and oracle
 branches. Unmeasured real/shuffled learning and retention remain null operands;
 only a valid learning null permits an objective-change recommendation. Native
 speed requires complete native costs; another five-input benchmark is excluded.
+
+## REQ-REPORT-V734-PLAN: Bind the staged twelve-task continuation
+
+The planned V734 pair SHALL contain exactly twelve complete task objects,
+Exp8540 through Exp8551, in execution order. The visible table, embedded JSON,
+canonical task digest and staged YAML SHALL agree. Historical V733 design bytes
+SHALL remain preserved separately. Planning SHALL NOT activate the staged plan,
+modify the conductor or claim execution of its experiments.
+
+### SCENARIO-REPORT-V734-CONTRACT
+
+Schema, exclusion and gate checks SHALL accept the intact staged pair. Changes
+to count, order, IDs, title, phase, deliverable, model, substrate, gate, prompt,
+retirement flag or contract end marker SHALL be rejected. Every gate names an
+earlier same-roadmap producer and its own declared required artifact field.
+
+## REQ-REPORT-V734-QUALIFICATION: Separate repaired execution from benefit
+
+Planned Exp8541/8542 SHALL independently qualify historical learning families
+and actual event accounting before Exp8543/8544 train and audit continuous
+learning. Exp8545 SHALL qualify real loaded native/CLI execution before Exp8546
+measures complete inference. Exp8548 SHALL qualify replay/child coverage before
+Exp8549 measures reachable capability behavior. All V733 quarantines persist.
+Numerical protocols remain fixed; a qualified null closes its unchanged scope.
+
+### SCENARIO-REPORT-V734-CAUSAL-COST
+
+Execution SHALL preserve original question roles, proper-loss controls,
+prediction-before-feedback transactions, retention labels withheld from training,
+whole-question uncertainty, complete declared costs and live solve provenance.
+Every comparison emits primitive per-unit rows. Exposed conditional benefits
+SHALL NOT become independent-generalization claims. Equal accounting quantities
+remain equal; unchanged validators and every finding are retained.
+Every distinct counter SHALL retain a complete validator-visible numeric
+projection. A coincident-counter negative control SHALL prove that the unchanged
+validator still detects the condition in the final representation. Nesting
+metrics out of validator reach SHALL fail qualification.
+
+## REQ-REPORT-V734-INDEPENDENCE: Isolate optional runtime and physical evidence
+
+Exp8547 SHALL require a causal CUDA repair receipt and use only the mandated
+Qwen3.8-27B GGUF for actual bounded generation. Exp8550 and Exp8551 SHALL run
+without upstream success gates. Unknown physical support and missing costs
+remain unknown. Source tuning closed by Exp8529 SHALL not restart in V734.
+
+### SCENARIO-REPORT-V734-BLOCKED
+
+Missing optional hardware SHALL not block independent CPU studies. An unchanged
+external prerequisite failure SHALL terminate blocked with gate_check_summary,
+not partial. Owned check failures disqualify. Every repeated failed scope SHALL
+retain its prior verdict, changed prerequisite and retire_if_same_verdict=true.
+Every prompt mandates flushed phase/child/loop progress and bounded file writes.
+
+Planning status20261015: staged only. Existing schema/authority/private CLI
+regressions validate the planning machinery; execution-specific tests and
+qualification receipts remain obligations of the future tasks.

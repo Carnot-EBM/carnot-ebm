@@ -1,6 +1,23 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-12
+**Last Updated:** 2026-10-15
+
+## Planned V734 research milestone — 2026-10-15
+
+| Requirement / scenario | Planned experiments | Evidence boundary |
+|---|---|---|
+| REQ-REPORT-V734-PLAN / SCENARIO-REPORT-V734-CONTRACT; FR-09/10 | Exp8540, Exp8551 | Exact twelve-object table/JSON/YAML contract; staging only |
+| REQ-REPORT-V734-QUALIFICATION / SCENARIO-REPORT-V734-CAUSAL-COST; FR-06/11 | Exp8541–Exp8544 | Original-family qualification, truthful accounting, causal Brier training and independent retention audit |
+| Same qualification anchor; FR-05/08, NFR-01 | Exp8545–Exp8546 | Actual native build/private CLI and complete nine-input cost; no five-input speed transfer |
+| REQ-REPORT-V734-INDEPENDENCE / SCENARIO-REPORT-V734-BLOCKED; FR-12 | Exp8547 | Optional mandated Qwen bounded canary, new causal CUDA receipt required |
+| Qualification anchor and existing ARC live provenance | Exp8548–Exp8549 | Terminal replay/coverage before live capability-mask panel; no repeated solve credit |
+| Independence anchor and existing hardware custody | Exp8550–Exp8551 | Operation-complete cost boundaries, vendor exclusions and unconditional terminal accounting |
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`; staging:
+`research-roadmap-next.yaml`. These are planned requirements, not completed
+science. The V733 source null and all validation quarantines persist. Older
+planned sections below are historical; their mutable vNEXT link does not name
+the current task contract. The exact V733 design has a separate preserved copy.
 
 ## V724 CUDA reader environment repair — 2026-10-11
 

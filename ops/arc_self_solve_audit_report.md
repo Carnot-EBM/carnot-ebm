@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (98 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (99 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,9 +16,12 @@ OK: all solver-like ARC modules are reachable from the live agent path (98 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — zero recent artifacts; no demonstrated SELF_DISCOVERY_ADVANCE.** The 98-module reachability pass establishes connectivity, not autonomous discovery.
+**TL;DR: No demonstrated SELF_DISCOVERY_ADVANCE. Zero recent artifacts means nothing to classify—not proof the live agent satisfies the principle.**
 
-**Per-artifact:** None supplied (`[]`). No artifact verdicts to assign. Recommended action: award no new solve credit without live attempt traces, runtime model provenance, successful execution, and a registry comparison establishing novelty.
+Per-artifact: **None** (`[]`, last 7 days).
 
-**Pattern watch:** An accepted entrypoint still supports [hand verifiers]( /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:96) and [predefined level tails](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:183). Reachability can therefore conceal outer-loop assistance. Future artifacts must establish where those inputs came from; wiring a handcrafted solution into the live path does not make it self-discovery.
+- **Evidence:** The pre-pass reports 99 reachable modules, but supplies no solve artifacts, runtime attempt traces, discovery provenance, or registry comparisons.
+- **Recommended action:** Require each claimed advance to link a live-entrypoint run showing observations, attempts, runtime-derived knowledge, and a confirmed solve; compare against the registry before counting it.
+
+**Pattern watch:** Reachability does not establish self-discovery. A hand-built per-game adapter or offline ground-truth BFS remains **OUTER_LOOP_RE** when wired into the live agent. This empty sample establishes neither such drift nor compliance.
 

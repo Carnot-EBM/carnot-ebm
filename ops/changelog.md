@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-10-15 — Stage research milestone 2026.10.734
+
+- Added the exact twelve-task Exp8540–Exp8551 continuation in the vNEXT design
+  and `research-roadmap-next.yaml`, with full-object contract, visible table,
+  structured gates, prior-failure retirement flags and per-unit evidence.
+- Separated original learning-family, native consumer and ARC replay
+  qualifications from scientific measurements; retained the exposed source
+  null, numerical protocols, quarantines and optional hardware boundaries.
+- Added the V734 literature scan before design, including Z1T cost exclusions
+  and explicit Semantic Scholar/GitHub retrieval limitations. Preserved V733
+  design bytes and aligned planned OpenSpec, traceability and architecture notes.
+- Every task requires flushed phase/loop/child progress and bounded file writes.
+  The only LLM task uses mandated Qwen3.8-27B bounded generation. No activation,
+  experiment execution, conductor modification or push was performed.
+- Planning validation passed 120 scoped tests including private E2E-018/021,
+  spec references, activation linters, exact full-object/table/digest agreement
+  and twelve negative contract mutations. Independent review's counter-visibility
+  finding was corrected and re-reviewed; original protected hashes are unchanged.
+
 ## 2026-10-15 — Operational retrospective for milestone 2026.10.733
 
 - Wrote `results/operational_retro_2026_10_733.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.733`. Authoritative disk-mtime fallback data records 10 experiments completed (0 compute-bound, 10 synthesis-only) across 135.0 total wall-time minutes (average 14 minutes per experiment).

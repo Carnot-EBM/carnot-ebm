@@ -53047,3 +53047,78 @@ This scope inspects abstracts; it does not replicate papers or transfer theorems
   fit/tune prefixes0/25/50/100/200 with final step200. Exposed test losses cannot
   select checkpoints or establish sample efficiency. Importance anchoring and
   external-text reranking remain closed.
+
+## 2026-10-15 — V734 planning scan: finish causal tests and preserve nulls
+
+Recorded before V734 design. The scan covered all eight requested arXiv topics
+and six secondary channels. Revisited papers remain revisits, not new discoveries.
+V733's exposed source-information null is a reason to stop that comparison.
+Missing validation is not evidence against the still unmeasured learning methods.
+
+### Selected methods and boundaries
+
+| Primary source | Finding inspected | Use in the next milestone |
+|---|---|---|
+| [Calibeating Made Simple, 2603.22167](https://arxiv.org/abs/2603.22167), March 2026 | Online post-processing can be studied through proper losses. | Finish the registered Brier versus log-loss and frozen-head experiment after causal accounting qualifies. No nonlinear delayed-regret guarantee is imported. |
+| [Capacity-Constrained Online Convex Optimization with Delayed Feedback, 2606.11711](https://arxiv.org/abs/2606.11711), June 2026 | Finite feedback capacity and delayed observations need explicit accounting. | Preserve admission, pending feedback, actual updates and retained predictions as separate events. Do not infer learning from write counts. |
+| [Ultrafast On-chip Online Learning via Spline Locality in KANs, 2602.02056](https://arxiv.org/abs/2602.02056), February 2026 | Local spline support permits sparse fixed-point updates on FPGA. | Qualify the existing nine-input native implementation, then measure the complete request. Published device times cannot certify local hardware. |
+| [Extropic Z1T](https://extropic.ai/writing/z1t/), September 4, 2026 | The vendor's efficiency comparison excludes final dense logits and inter-device movement. Its fuller logit-inclusive estimate is substantially larger. | Require operation-complete cost boundaries in the board study. Record exclusions explicitly before any acquisition recommendation. These are vendor estimates, not Carnot measurements. |
+
+### Other primary topics and decisions
+
+- **EBM verification/reasoning:** revisited [EBT, 2507.02092](https://arxiv.org/abs/2507.02092)
+  and [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605).
+  Learned compatibility and probabilistic equivalence do not prove factual truth.
+  Defer generator training and energy-guided generation until runtime and utility qualify.
+- **Neural constraints:** [Certified Correctness, 2608.14569](https://arxiv.org/abs/2608.14569)
+  argues for symbolic certification where checking is cheap. Search metadata has
+  conflicting dates; no new October result is inferred. Keep oracle results separate.
+- **Hallucinations:** revisited [Enoki, 2609.00581v2](https://arxiv.org/abs/2609.00581)
+  and inspected its [method appendix](https://arxiv.org/html/2609.00581v1).
+  Shared relations connect extracted facts to text spans. Even its rule extraction
+  path uses a learned entailment verifier. It does not justify exact truth claims
+  from lexical overlap. Carnot already explored this lead; do not duplicate it.
+- **Newly checked lead:** [FaithJudge, 2505.04847](https://arxiv.org/abs/2505.04847)
+  uses human examples to guide a judge. It motivates annotation provenance, not
+  replacing independent labels with that judge. [FaithBench's official release](https://github.com/vectara/FaithBench)
+  is already exposed in Carnot V653–V657. Re-downloading it cannot create fresh data.
+- **Constrained generation:** revisited [Reward-Guided Decoding, 2605.28020](https://arxiv.org/abs/2605.28020).
+  Defer intervention; test the registered bounded evidence canary only after a causal runtime repair.
+- **Ising and hardware sampling:** revisited [pipelined p-computer, 2607.21077](https://arxiv.org/abs/2607.21077)
+  and checked [250-MTJ Ising hardware, 2506.14590](https://arxiv.org/pdf/2506.14590).
+  Memory organization and sampling quality both matter. Neither supplies a local
+  installed spline evaluator, transport measurement or authenticated TSU access.
+- **Continual KAN:** [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306)
+  remains context. Unchanged per-knot anchoring stays closed locally.
+
+### Secondary-channel coverage
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verification work. Inspected
+  [On the Emergence of Reasoning](https://openreview.net/pdf?id=bYkfHTcR1v),
+  [AtomGraph](https://openreview.net/forum?id=dNsIZln2uv) and
+  [VerifierQ](https://openreview.net/forum?id=qhOT0MisId). These are research leads,
+  not evidence that Carnot's existing inference or learning checks passed.
+- **Semantic Scholar:** both [EBT citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10)
+  were inaccessible. Exact-ID searches did not yield a reliable citing-paper list.
+  Citation coverage remains incomplete; this is not a claim of zero citations.
+- **Hugging Face papers:** searched verification work. Inspected
+  [RT4CHART](https://huggingface.co/papers/2603.27752),
+  [OpenHalDet](https://huggingface.co/papers/2606.06959) and
+  [Enoki](https://huggingface.co/papers/2609.00581). The direct FaithJudge page
+  returned a cache miss; its arXiv record was accessible. Feed dates are not paper dates.
+- **GitHub Trending:** [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) returned month-old
+  snapshots. No current trending claim is made. Rechecked
+  [irithyll](https://github.com/evilrat420/irithyll) as a Rust streaming API lead;
+  no dependency or performance result is adopted.
+- **Extropic:** the [writing index](https://extropic.ai/writing) had little article
+  text; the direct Z1T article supplied the boundary caveat above.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  still describes a constraint layer. No inspected reproducible architecture
+  release resolves Carnot's present validation or independent-evaluation gaps.
+
+Selection: qualify the unchanged causal-learning protocol, measure the actual
+nine-input complete request, and finish the unqualified live capability panel.
+Reserve fresh-data claims for demonstrably disjoint independent labels. Preserve
+the earlier source null, retired mechanisms and all hardware access boundaries.

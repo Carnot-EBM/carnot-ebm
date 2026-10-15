@@ -2,6 +2,36 @@
 
 **Last Updated:** 2026-10-15
 
+## 2026-10-15 — V734 staged research plan
+
+Milestone `2026.10.734` is staged in `research-roadmap-next.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md`: exactly twelve tasks,
+Exp8540–Exp8551, across four phases. It has not been activated or executed.
+The active roadmap and conductor are unchanged.
+
+V733 qualified an exposed source-information null; unchanged source refitting
+is closed. Learning accounting, complete native inference and the ARC panel
+failed owned validation, so their observations do not establish scientific
+benefit or nulls. V734 qualifies the specific failing execution boundaries
+before completing those fixed studies. It includes actual continuous energy-head
+updates, retention controls and complete cost measurements. The optional Qwen
+canary requires a new causal CUDA receipt; hardware/capstone readers remain
+unconditional. Fresh independent labels and physical execution remain gaps.
+
+The original V733 design is preserved as
+`openspec/change-proposals/research-roadmap-v733-preserved-20261015.md`.
+The literature scan and its inaccessible/stale-source limits are recorded in
+`research-references.md`. Historical planned sections below remain historical.
+
+Planning validation: 120 scoped schema, exclusion, gate and private E2E-018/021
+tests passed. Spec references, roadmap schema, exclusion/ARC/harness lint,
+twelve full-object/table/digest checks and twelve negative contract mutations
+passed. Independent review required a validator-visible numeric counter
+projection and detection control; both files and the planned spec now require
+them, and follow-up review found no remaining issue. This validates the plan,
+not future science. Active roadmap, conductor and exclusion manifest hashes
+are unchanged; the preserved V733 design matches its original bytes.
+
 ## 2026-10-15 — Milestone 2026.10.733 operational retrospective
 
 Milestone 2026.10.733 operational retrospective recorded in `results/operational_retro_2026_10_733.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime fallback timing records 10 completed experiments (0 compute-bound, 10 synthesis-only) across 135.0 total wall-time minutes (averaging 14 minutes per experiment). Execution was led by qualifying causal update accounting and complete rejection diagnostics (28.97 min), reconciling fourteen outcomes and deciding source learning inference and ARC continu (21.13 min), and binding fourteen tasks and sealing independent source learning and inference protocols (20.13 min). GPU utilization was 0% across both RTX 3090 GPUs with `gpu_idle_on_compute_bound_tasks: null` (expected idle state for non-GPU synthesis tasks).
