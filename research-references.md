@@ -53122,3 +53122,91 @@ Selection: qualify the unchanged causal-learning protocol, measure the actual
 nine-input complete request, and finish the unqualified live capability panel.
 Reserve fresh-data claims for demonstrably disjoint independent labels. Preserve
 the earlier source null, retired mechanisms and all hardware access boundaries.
+
+## 2026-10-15 — V735 planning scan: terminal evidence and evaluation validity
+
+Recorded before V735 experiment design. Sources were inspected on October 15.
+External results are research leads. They are not Carnot measurements.
+The completion archive ends at V733. V734 outcomes come from primary artifacts
+and the conductor log. Its three failed qualifications did not test benefit.
+
+### Selected findings
+
+- **Updated lead: HALLMARK v2.** Kim, Brendel and Reizinger,
+  [How to Diagnose LLM Citation Verifiers and When to Deploy Them,
+  2607.18360v2](https://arxiv.org/abs/2607.18360v2), revised October 11, 2026.
+  The earlier catalog entry uses the old title and author list. The revision
+  separates false-positive burden, abstention and label conventions.
+  [Construction and limitations](https://arxiv.org/html/2607.18360v2) describe
+  pipeline-assigned labels and database-confirmable valid entries. The reference
+  tool was co-designed with the benchmark. These limits rule out treating the
+  release as fresh, independent human truth. Inspect the
+  [author release](https://github.com/rpatrik96/hallmark), pin its version,
+  reconcile its count with the paper, and quantify the evaluation boundary.
+  Repository metadata says 2,525 entries; the paper says 2,526. Count actual bytes.
+  This can supply a bounded label-admissibility study without model calls.
+- **Rechecked: proper-loss learning.**
+  [Calibeating Made Simple, 2603.22167](https://arxiv.org/abs/2603.22167), March
+  2026, motivates the registered Brier objective and unchanged-forecast control.
+  [Delayed finite-capacity learning, 2606.11711](https://arxiv.org/abs/2606.11711),
+  June 2026, motivates explicit release, pending and lost-feedback accounting.
+  Finish the existing causal study after its exact test union qualifies. Do not
+  import immediate-feedback or convex guarantees into Carnot's nonlinear stream.
+- **Rechecked: sparse hardware learning.**
+  [On-chip online KAN learning, 2602.02056](https://arxiv.org/abs/2602.02056),
+  February 2026, exploits local spline support. Use its operation boundary to
+  assess the real nine-input head. Include feature extraction, normalization,
+  startup and serialization in complete inference. Paper FPGA timings do not
+  measure local board execution or durable feedback storage.
+- **Rechecked: consistency and labels.**
+  [CCHD, 2606.08158](https://arxiv.org/abs/2606.08158), June 2026, constrains
+  paraphrase agreement and label preservation separately. Carnot already explored
+  view consistency. Do not reopen the unchanged source-information null or treat
+  agreement as factual truth. This distinction informs the optional evidence canary.
+
+### Primary topics covered and deferred
+
+| Topic | Primary source inspected | Decision |
+|---|---|---|
+| EBM verification and reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605) | Architectural context; energy/likelihood does not certify sentence truth. No generator training. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), December 2025 | Linear equality/inequality projection is a future structured-constraint lead. Its tolerance guarantee does not verify natural-language extraction. |
+| Ising in ML and FPGA sampling | [Pipelined p-computer, 2607.21077](https://arxiv.org/abs/2607.21077), July 2026 | Memory/data movement belongs in the cost boundary. Optimization success does not establish Gibbs sample quality. |
+| Hallucination mitigation | HALLMARK revision above; [HalluScoring, 2609.38355v2](https://arxiv.org/abs/2609.38355v2), October 1 revision | Keep citation, Arabic QA, unseen-question and unseen-generator claims distinct. Defer an Arabic benchmark and new model inference. |
+| KANs and continual learning | Online KAN above; [KAC, 2503.21076](https://arxiv.org/abs/2503.21076), March 2025 | Locality informs sparse updates; vision-classifier retention does not establish Carnot retention. No basis replacement. |
+| Constrained generation | [Draft-conditioned decoding, 2603.03305](https://arxiv.org/abs/2603.03305), March 2026 | Syntax and answer quality require separate checks. Defer decoding intervention until runtime and useful verification qualify. |
+| Evidence alignment | [EAEV, 2609.08267](https://arxiv.org/abs/2609.08267), September 2026 | Existing lead; source sensitivity differs from support. No unchanged exposed source refit. |
+| Continuous online learning | Calibeating and finite-capacity delayed feedback above | Actual updates, later predictions and simultaneous retention are separate measurements. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** searched ICLR 2026 EBM submissions. The
+  [EBT PDF endpoint](https://openreview.net/pdf?id=ZBj3Qp1bYg) returned a browser
+  challenge. The [ICLR proceedings record](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html)
+  and arXiv remain primary alternatives. No unseen submission result is claimed.
+- **Semantic Scholar:** attempted citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Retrieval failed. Exact-ID site searches gave no reliable citing-paper list.
+  Citation coverage remains incomplete, not zero.
+- **Hugging Face:** inspected [HalluScan](https://huggingface.co/papers/2605.02443)
+  and its [primary abstract](https://arxiv.org/abs/2605.02443). It supports
+  domain-specific comparisons, not a substitute for local independent labels.
+  The CCHD feed page failed retrieval; its arXiv page was available.
+- **GitHub Trending:** inspected [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were a month old. No current trending or newly discovered EBM ranking is claimed.
+  HALLMARK came from its paper's repository link.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and the October
+  [research-agent update](https://extropic.ai/writing/baby-thermo-rsi/).
+  The index exposed little article text. Direct posts discuss heterogeneous
+  hardware and future plans. Preserve final-logit and data-movement exclusions;
+  vendor efficiency estimates do not establish local TSU access.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Product positioning remains useful context. No inspected reproducible update
+  changes the local architecture or closes its scientific gaps.
+
+Selection: qualify the three precisely observed execution failures, then finish
+fixed learning, native inference and live ARC measurements. Add a separate
+HALLMARK revision audit to assess new evaluation operands. Keep independent
+label readiness distinct from a successful download or a coherent benchmark.

@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-10-15 — Stage research milestone2026.10.735
+
+- Added matching thirteen-task design and staged YAML, Exp8552–Exp8564.
+- Preserved V734 design bytes and recorded its actual terminal evidence.
+- Added the literature scan before design, including HALLMARK's October11
+  revision, constructed-label limits and explicit inaccessible-source coverage.
+- Planned measured test-node partitioning, immutable native replay snapshots,
+  genuine ARC conditional execution, fixed causal learning and complete costs.
+- Retained required model/substrate declarations, full prior-failure entries,
+  exact upstream fields, per-unit evidence, flushed progress and bounded writes.
+- Aligned planned reporting requirements, traceability, architecture and status.
+  No experiment execution, activation, conductor modification or push occurred.
+
 ## 2026-10-15 — Operational retrospective for milestone 2026.10.734
 
 - Wrote `results/operational_retro_2026_10_734.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.734`. Authoritative disk-mtime fallback data records 6 experiments completed (0 compute-bound, 6 synthesis-only) across 105.1 total wall-time minutes (average 18 minutes per experiment).

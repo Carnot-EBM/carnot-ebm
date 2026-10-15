@@ -101105,3 +101105,51 @@ missing costs remain missing. Preserve G1-G4's exact publication-gate result.
 Retire unchanged source fitting and repeated failed inventories; require fresh
 independent labels, changed runtime or compatible physical execution to reopen.
 Conductor owns status, changelog and traceability reconciliation for this run.
+
+## REQ-REPORT-V735-PLAN: Stage thirteen matching research tasks
+
+Status: planned on2026-10-15. This requirement describes a research plan, not
+implemented scientific capability. V735 SHALL contain exactly thirteen tasks,
+Exp8552–Exp8564, in the design table, full JSON contract and staged YAML.
+Complete task objects, prompts, gates, models and retirement flags SHALL agree.
+Preserve V734 design bytes and all historical findings. Do not activate the plan.
+
+### SCENARIO-REPORT-V735-CONTRACT
+
+Parse the actual staged YAML and embedded JSON. Require exact full-object and
+table equality plus the canonical SHA256. Reject mutations of count, order, ID,
+title, phase, deliverable, model, substrate, gate, prompt, retirement and end marker.
+Every gate SHALL reference an earlier task and its exact required artifact field.
+Every prompt SHALL require flushed phase/long-call/loop progress and bounded writes.
+
+## REQ-REPORT-V735-EVIDENCE: Preserve causal and independent claim boundaries
+
+Exp8553 SHALL distinguish release-audit readiness from independent-label readiness.
+HALLMARK constructed labels SHALL NOT become independent human truth.
+Exp8554 SHALL preserve the complete158-node historical union while changing child
+partitioning. Exp8555 SHALL expose canonical counters to unchanged validators.
+Exp8556/8557 SHALL retain registered delayed updates, paired later-question losses
+and simultaneous retention. Qualified exposed-data benefit remains conditional.
+
+### SCENARIO-REPORT-V735-QUALIFICATION
+
+Exp8558 SHALL reproduce the native snapshot-order hypothesis and qualify immutable
+preliminary/terminal inputs before Exp8559 timing. Exp8561 SHALL resolve four ARC
+conditional anchors through genuine execution without changing shared coverage
+rules. Exp8562 SHALL use the live reachable path with adapters withheld. No old
+quarantine is cleared. Required owned-check failure disqualifies the new result.
+
+## REQ-REPORT-V735-BOUNDARY: Separate optional resources from CPU evidence
+
+Exp8560 SHALL name unsloth/Qwen3.8-27B-GGUF and model_bounded_generation for its
+fixed token canary. New causal CUDA evidence gates model use. Exp8563 SHALL retain
+KV260, PolarFire and GateMate operation limits without repeated physical probes.
+Exp8564 SHALL account for all thirteen slots through actual producer/pre-gate paths.
+Missing external evidence SHALL use blocked, not partial. Preserve G1–G4.
+
+### SCENARIO-REPORT-V735-VALIDATION
+
+Planning checks SHALL cover schema, exclusions, exact contracts, gate names and
+private E2E-018/E2E-021. Record pre-existing spec-tracing debt separately.
+Execution tasks SHALL run scoped unit/lint/spec/coverage and applicable E2E checks.
+Active roadmap, conductor, validation gates and prior result bytes stay unchanged.

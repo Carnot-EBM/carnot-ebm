@@ -4062,3 +4062,18 @@ remain intact. Active roadmap and conductor are unchanged.
 
 Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Queue: `research-roadmap-next.yaml`. Active V732 queue is unchanged.
+
+## 2026-10-15 — Planned V735 research milestone
+
+| Requirement | Tasks / evidence | Status |
+|---|---|---|
+| REQ-REPORT-V735-PLAN; FR-09/10 | Exp8552–8564 exact design/table/JSON/YAML, digest and mutation checks | Planned; no activation |
+| REQ-REPORT-V735-EVIDENCE; FR-12 | Exp8553 HALLMARK v2 provenance and evaluation admissibility | Planned; constructed labels cannot close independent truth |
+| REQ-REPORT-V735-EVIDENCE; FR-06/11 | Exp8554/8555 exact historical union and causal counters; Exp8556/8557 real small-head learning and retention | Planned; old science remains unmeasured |
+| REQ-REPORT-V735-EVIDENCE; SCENARIO-REPORT-V735-QUALIFICATION; FR-05/08/NFR-01 | Exp8558/8559 immutable replay and complete native timing; Exp8561/8562 genuine ARC execution and live transfer | Planned; no speed or solve claim |
+| REQ-REPORT-V735-BOUNDARY | Exp8560 bounded mandated-Qwen canary; Exp8563 board operations; Exp8564 terminal reconciliation | Planned; independent optional-resource gates |
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Queue: `research-roadmap-next.yaml`. Preserved V734 design:
+`openspec/change-proposals/research-roadmap-v734-preserved-20261015.md`.
+The V734 active queue and conductor remain unchanged.

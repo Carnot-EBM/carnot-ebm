@@ -1,5 +1,20 @@
 # Carnot — Architecture
 
+## Planned V735 evidence boundaries — 2026-10-15
+
+The thirteen-task staged plan retains the existing learner and live agent.
+It proposes immutable primitive snapshots before each native candidate and
+measured test-node partitions under original historical authority. Exact ARC
+statement execution remains required despite coverage-report normalization.
+Neither change relaxes shared validators or clears historical quarantines.
+
+A separate HALLMARK release audit evaluates label admissibility. Constructed
+citation labels cannot establish independent sentence-verification truth.
+Continuous small-head updates retain sealed predictions before delayed feedback.
+Complete native inference includes feature extraction and startup. Optional
+CUDA and physical board evidence do not gate independent CPU branches.
+This describes planned work, not deployed behavior or a scientific result.
+
 **Last Reconciled:** 2026-10-11
 
 ## Planned V734 qualification boundary — 2026-10-15

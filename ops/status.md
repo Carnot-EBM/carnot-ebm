@@ -1,5 +1,28 @@
 # Carnot — Operational Status
 
+## 2026-10-15 — V735 research plan staged
+
+Milestone2026.10.735 contains thirteen tasks, Exp8552–Exp8564, across four phases.
+The design and staged YAML share full task objects, a visible table and digest.
+This is planning only. The active V734 roadmap and conductor remain unchanged.
+
+V734 ended twelve scheduling slots. Six producers ran; six slots were pre-gated
+or cascade-skipped. Original learning tests reached152/158 nodes. Native parity
+observations passed but preliminary cold replay failed. ARC stored replay passed
+within240seconds, while four conditional statement anchors failed exact coverage.
+These owned failures do not establish learning, speed or ARC scientific nulls.
+
+V735 targets the observed qualification defects before completing fixed studies.
+It adds a HALLMARK v2 release-admissibility audit, preserves the exposed source
+null, and includes continuous energy-head learning with delayed feedback and
+retention. The Qwen canary requires changed causal CUDA evidence. Hardware and
+capstone readers run independently. No fresh human-label or device result is claimed.
+
+The V734 design is preserved at
+`openspec/change-proposals/research-roadmap-v734-preserved-20261015.md`.
+The new literature scan records citation/API and stale Trending limitations.
+Validation results will be appended after checks.
+
 **Last Updated:** 2026-10-15
 
 ## 2026-10-15 — V734 staged research plan
