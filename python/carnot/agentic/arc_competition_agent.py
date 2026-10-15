@@ -6073,6 +6073,14 @@ class E3AgentPolicy:
         new_transitions = len(self.transitions) - self._transitions_at_last_induction_attempt
         return new_transitions >= _REINDUCTION_TRANSITION_THRESHOLD
 
+    def trajectory_runtime_capabilities(self) -> dict[str, bool | None]:
+        """Report the same live gate used before induction can reach the proposer.
+
+        Reading it for each selection allows runtime changes without loading or
+        probing a model. Availability states permission, not successful generation.
+        """
+        return {"llm_reinduction": os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") != "1"}
+
     def _maybe_supervise_trajectory(self, latest: Any) -> None:
         """REQ-ARC-WMTE-6600/6660: one supervisor observation per routed action.
         Builds the snapshot from state the policy already tracks. A redirect
@@ -6127,6 +6135,10 @@ class E3AgentPolicy:
                 # every level after the first.
                 diversity_active=diversity_in_effect(explorer),
             )
+            if os.environ.get("CARNOT_ARC_SUPERVISOR_CAPABILITY_MASK") == "1":
+                from carnot.agentic.arc_supervisor_capability import with_capabilities
+
+                snapshot = with_capabilities(self, snapshot)
             predicate_reader = getattr(supervisor, "arm_eligibility", None)
             predicates = predicate_reader(snapshot) if callable(predicate_reader) else []
             decision_telemetry = getattr(

@@ -1,0 +1,27 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_default_off_wrapper_bytes_match_original_policy _____________
+
+    def test_default_off_wrapper_bytes_match_original_policy():
+        """REQ-VERIFY-8536: execute the original method at the actual wrapper boundary."""
+        import ast
+        from pathlib import Path
+        from carnot.agentic import arc_competition_agent as agent
+        from carnot.reporting import arc_capability_fixtures_8536 as fixtures
+        from carnot.reporting.current_work_receipt import canonical_hash
+    
+        path = Path(__file__).resolve().parents[2] / "results/raw/experiment_8536_v733_arc_capability_qualification/historical/arc_competition_agent.py"
+        tree = ast.parse(path.read_text())
+        cls = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == "E3AgentPolicy")
+        method = next(n for n in cls.body if isinstance(n, ast.FunctionDef) and n.name == "_maybe_supervise_trajectory")
+        namespace = dict(vars(agent))
+        exec(compile(ast.Module(body=[method], type_ignores=[]), str(path), "exec"), namespace)
+        current = fixtures.run("disabled", False, True)
+>       assert current["actions"][0]["name"] == "RESET"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: string indices must be integers, not 'str'
+
+tests/python/test_arc_capability_8536.py:168: TypeError
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_8536.py::test_default_off_wrapper_bytes_match_original_policy
+1 failed in 3.17s

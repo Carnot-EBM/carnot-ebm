@@ -1,0 +1,153 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_ready_and_original_source_replay _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T051652-2964238-bf83afc1/test_ready_and_original_source0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f30c34ca6c0>
+
+    def test_ready_and_original_source_replay(tmp_path, monkeypatch):
+        """REQ-REPORT-8536: readiness requires actual task authority and original evidence."""
+        work = e.measure(e.ROOT, tmp_path / "raw", tmp_path / "scratch")
+        assert work["failures"] == []
+        output = tmp_path / "results" / (e.NAME + ".json")
+        path = tmp_path / "work.json"
+        atomic_json(path, work)
+        value = e.build(path, checks(), output)
+        assert value["arc_capability_ready_score"] == 1
+        assert value["verdict_class"] == "circular_positive"
+        assert value["live_episodes_measured"] == 0
+        assert value["unknown_capabilities"]
+        assert e.replay(value)
+        for field, replacement in [("motivation", {}), ("original_date", "20261015"),
+                                   ("historical_model_provenance", {}), ("authority_reference", {})]:
+            changed = deepcopy(work)
+            changed["source"][field] = replacement
+            atomic_json(path, changed)
+>           assert not e.replay(e.build(path, checks(), output)), field
+E           AssertionError: original_date
+E           assert not True
+E            +  where True = <function replay at 0x7f30c110f600>({'MODEL_SPECS': [], 'acceptance_gates': {'action_parity': True, 'frozen_panel': True, 'original_primitives': True, 'ow...'sha256:1cb00a0b9d21cef26a3f0954276a645429ed46091adc26da26f590da94d79489', ...}, ...], 'adversarial_findings': [], ...})
+E            +    where <function replay at 0x7f30c110f600> = e.replay
+E            +    and   {'MODEL_SPECS': [], 'acceptance_gates': {'action_parity': True, 'frozen_panel': True, 'original_primitives': True, 'ow...'sha256:1cb00a0b9d21cef26a3f0954276a645429ed46091adc26da26f590da94d79489', ...}, ...], 'adversarial_findings': [], ...} = <function build at 0x7f30c110f560>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T051652-2964238-bf83afc1/test_ready_and_original_source0/work.json'), [{'name': 'intentional', 'passed': True}, {'name': 'owned_tests', 'passed': True}, {'name': 'ruff_format', 'passed': T... 'missing', 'passed': True}, {'name': 'strict_mypy', 'passed': True}, {'name': 'rehashed_tamper', 'passed': True}, ...], PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T051652-2964238-bf83afc1/test_ready_and_original_source0/results/experiment_8536_v733_arc_capability_qualification.json'))
+E            +      where <function build at 0x7f30c110f560> = e.build
+E            +      and   [{'name': 'intentional', 'passed': True}, {'name': 'owned_tests', 'passed': True}, {'name': 'ruff_format', 'passed': T... 'missing', 'passed': True}, {'name': 'strict_mypy', 'passed': True}, {'name': 'rehashed_tamper', 'passed': True}, ...] = checks()
+
+tests/python/test_arc_capability_qualification_8536.py:144: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8536] phase=preconditions_before completed=0 pending=0
+[exp8536] phase=preconditions_after completed=13 pending=0
+[exp8536] phase=historical_primitive_seals completed=1 pending=15
+[exp8536] phase=historical_primitive_seals completed=2 pending=14
+[exp8536] phase=historical_primitive_seals completed=3 pending=13
+[exp8536] phase=historical_primitive_seals completed=4 pending=12
+[exp8536] phase=historical_primitive_seals completed=5 pending=11
+[exp8536] phase=historical_primitive_seals completed=6 pending=10
+[exp8536] phase=historical_primitive_seals completed=7 pending=9
+[exp8536] phase=historical_primitive_seals completed=8 pending=8
+[exp8536] phase=historical_primitive_seals completed=9 pending=7
+[exp8536] phase=historical_primitive_seals completed=10 pending=6
+[exp8536] phase=historical_primitive_seals completed=11 pending=5
+[exp8536] phase=historical_primitive_seals completed=12 pending=4
+[exp8536] phase=historical_primitive_seals completed=13 pending=3
+[exp8536] phase=historical_primitive_seals completed=14 pending=2
+[exp8536] phase=historical_primitive_seals completed=15 pending=1
+[exp8536] phase=historical_primitive_seals completed=16 pending=0
+[exp8536] fixtures completed=0 pending=14
+[exp8536] fixtures completed=1 pending=13
+[exp8536] fixtures completed=2 pending=12
+[exp8536] fixtures completed=3 pending=11
+[exp8536] fixtures completed=4 pending=10
+[exp8536] fixtures completed=5 pending=9
+[exp8536] fixtures completed=6 pending=8
+[exp8536] fixtures completed=7 pending=7
+[exp8536] fixtures completed=8 pending=6
+[exp8536] fixtures completed=9 pending=5
+[exp8536] fixtures completed=10 pending=4
+[exp8536] fixtures completed=11 pending=3
+[exp8536] fixtures completed=12 pending=2
+[exp8536] fixtures completed=13 pending=1
+[exp8536] phase=historical_primitive_seals completed=1 pending=15
+[exp8536] phase=historical_primitive_seals completed=2 pending=14
+[exp8536] phase=historical_primitive_seals completed=3 pending=13
+[exp8536] phase=historical_primitive_seals completed=4 pending=12
+[exp8536] phase=historical_primitive_seals completed=5 pending=11
+[exp8536] phase=historical_primitive_seals completed=6 pending=10
+[exp8536] phase=historical_primitive_seals completed=7 pending=9
+[exp8536] phase=historical_primitive_seals completed=8 pending=8
+[exp8536] phase=historical_primitive_seals completed=9 pending=7
+[exp8536] phase=historical_primitive_seals completed=10 pending=6
+[exp8536] phase=historical_primitive_seals completed=11 pending=5
+[exp8536] phase=historical_primitive_seals completed=12 pending=4
+[exp8536] phase=historical_primitive_seals completed=13 pending=3
+[exp8536] phase=historical_primitive_seals completed=14 pending=2
+[exp8536] phase=historical_primitive_seals completed=15 pending=1
+[exp8536] phase=historical_primitive_seals completed=16 pending=0
+[exp8536] fixtures completed=0 pending=14
+[exp8536] fixtures completed=1 pending=13
+[exp8536] fixtures completed=2 pending=12
+[exp8536] fixtures completed=3 pending=11
+[exp8536] fixtures completed=4 pending=10
+[exp8536] fixtures completed=5 pending=9
+[exp8536] fixtures completed=6 pending=8
+[exp8536] fixtures completed=7 pending=7
+[exp8536] fixtures completed=8 pending=6
+[exp8536] fixtures completed=9 pending=5
+[exp8536] fixtures completed=10 pending=4
+[exp8536] fixtures completed=11 pending=3
+[exp8536] fixtures completed=12 pending=2
+[exp8536] fixtures completed=13 pending=1
+[exp8536] phase=historical_primitive_seals completed=1 pending=15
+[exp8536] phase=historical_primitive_seals completed=2 pending=14
+[exp8536] phase=historical_primitive_seals completed=3 pending=13
+[exp8536] phase=historical_primitive_seals completed=4 pending=12
+[exp8536] phase=historical_primitive_seals completed=5 pending=11
+[exp8536] phase=historical_primitive_seals completed=6 pending=10
+[exp8536] phase=historical_primitive_seals completed=7 pending=9
+[exp8536] phase=historical_primitive_seals completed=8 pending=8
+[exp8536] phase=historical_primitive_seals completed=9 pending=7
+[exp8536] phase=historical_primitive_seals completed=10 pending=6
+[exp8536] phase=historical_primitive_seals completed=11 pending=5
+[exp8536] phase=historical_primitive_seals completed=12 pending=4
+[exp8536] phase=historical_primitive_seals completed=13 pending=3
+[exp8536] phase=historical_primitive_seals completed=14 pending=2
+[exp8536] phase=historical_primitive_seals completed=15 pending=1
+[exp8536] phase=historical_primitive_seals completed=16 pending=0
+[exp8536] phase=historical_primitive_seals completed=1 pending=15
+[exp8536] phase=historical_primitive_seals completed=2 pending=14
+[exp8536] phase=historical_primitive_seals completed=3 pending=13
+[exp8536] phase=historical_primitive_seals completed=4 pending=12
+[exp8536] phase=historical_primitive_seals completed=5 pending=11
+[exp8536] phase=historical_primitive_seals completed=6 pending=10
+[exp8536] phase=historical_primitive_seals completed=7 pending=9
+[exp8536] phase=historical_primitive_seals completed=8 pending=8
+[exp8536] phase=historical_primitive_seals completed=9 pending=7
+[exp8536] phase=historical_primitive_seals completed=10 pending=6
+[exp8536] phase=historical_primitive_seals completed=11 pending=5
+[exp8536] phase=historical_primitive_seals completed=12 pending=4
+[exp8536] phase=historical_primitive_seals completed=13 pending=3
+[exp8536] phase=historical_primitive_seals completed=14 pending=2
+[exp8536] phase=historical_primitive_seals completed=15 pending=1
+[exp8536] phase=historical_primitive_seals completed=16 pending=0
+[exp8536] fixtures completed=0 pending=14
+[exp8536] fixtures completed=1 pending=13
+[exp8536] fixtures completed=2 pending=12
+[exp8536] fixtures completed=3 pending=11
+[exp8536] fixtures completed=4 pending=10
+[exp8536] fixtures completed=5 pending=9
+[exp8536] fixtures completed=6 pending=8
+[exp8536] fixtures completed=7 pending=7
+[exp8536] fixtures completed=8 pending=6
+[exp8536] fixtures completed=9 pending=5
+[exp8536] fixtures completed=10 pending=4
+[exp8536] fixtures completed=11 pending=3
+[exp8536] fixtures completed=12 pending=2
+[exp8536] fixtures completed=13 pending=1
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_qualification_8536.py::test_ready_and_original_source_replay
+1 failed, 1 warning in 10.78s

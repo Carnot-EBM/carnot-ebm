@@ -100784,3 +100784,37 @@ publication/adversarial/row consumers SHALL check final bytes before atomic
 publication and downstream consumption. Exposed history supplies no independent
 generalization or learning benefit. External absence blocks; owned failure
 disqualifies. Original five-input artifacts and quarantines SHALL be preserved.
+
+## REQ-REPORT-8536: Qualify runtime capability selection without solve credit
+
+Exp8536 SHALL freeze the four original public games, seeds11/22 and512-action/
+120-second caps before comparing baseline_applied and capability_masked_applied.
+Authenticate Exp8523 at its original20261014 date and sealed producer hash;
+eight diversity effects, eight disabled model latches and32 censored redirects
+motivate availability correction only. Preserve original authority and sidecars.
+Require actual wrapper fixtures, receipt parity, fresh primitive replay, missing
+and rehashed-tamper rejection, bounded validation and unchanged publication
+consumers. Readiness requires qualified code and the complete frozen panel.
+No fixture, repeat or exposed public game grants solve or generalization credit.
+
+### SCENARIO-REPORT-8536-PANEL
+
+Run both applied policies with the LLM disabled, without adapters, routes,
+solver artifacts or source introspection. Retain every intended episode and
+missing reason; registry solves are exposure only. Same-roadmap upstream
+outputs are future dependencies rather than an implicit execution prerequisite.
+
+### SCENARIO-REPORT-8536-REPLAY
+
+Fresh processes replay primitive rows, reject absent evidence and reject
+self-consistently rehashed invented selection/effects. Owned failed validation
+is disqualified; unchanged external absence is blocked. Terminal consumers
+bind exactly the atomically published bytes and their validation sidecar.
+
+Implementation20261015: Exp8536 records fourteen real-wrapper selection controls
+and freezes sixteen future Exp8537 slots. Original Exp8523 authority, direct
+rows and all primitive hashes authenticate eight diversity effects, eight
+model-disabled latches and32 censored redirects. Same-roadmap measurements
+remain future dependencies. Terminal validation receipts and exact consumer
+bindings are retained under results/raw/experiment_8536_v733_arc_capability_qualification/.
+Ops/status/changelog/traceability reconciliation is conductor-owned for this task.

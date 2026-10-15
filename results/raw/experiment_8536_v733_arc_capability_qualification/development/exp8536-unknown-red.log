@@ -1,0 +1,27 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________ test_unreadable_runtime_capability_is_unknown _________________
+
+    def test_unreadable_runtime_capability_is_unknown():
+        """REQ-VERIFY-8536: a failed capability reader cannot become evidence of absence."""
+        def unreadable():
+            raise ValueError("unknown_runtime")
+        plain = TrajectorySnapshot(0, False, True, 1, 201, False)
+>       state = cap.with_capabilities(SimpleNamespace(trajectory_runtime_capabilities=unreadable), plain)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_capability_8536.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/agentic/arc_supervisor_capability.py:30: in with_capabilities
+    capabilities = reader() if callable(reader) else None
+                   ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def unreadable():
+>       raise ValueError("unknown_runtime")
+E       ValueError: unknown_runtime
+
+tests/python/test_arc_capability_8536.py:142: ValueError
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_8536.py::test_unreadable_runtime_capability_is_unknown
+1 failed in 2.33s

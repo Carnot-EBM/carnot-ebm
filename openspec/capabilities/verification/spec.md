@@ -55219,3 +55219,34 @@ reference fallback. All frozen finite-panel typed decisions SHALL match.
 An isolated offline pinned build, Rust tests/lint/measured coverage and actual
 PyO3 calls SHALL bind binary/source hashes. Numerical mismatch disqualifies;
 missing toolchain blocks. Qualification SHALL make no universal error claim.
+
+## REQ-VERIFY-8536: Mask unavailable supervisor arms at the live boundary
+
+An exact opt-in flag SHALL attach current E3 policy/runtime capability to the
+snapshot used by the real supervisor selection. Explicitly disabled LLM arms
+remain in the ledger with baseline eligibility, capability eligibility and
+reason; they are neither selected nor tried. Unknown capability remains unknown
+and cannot establish mask benefit. Re-read capability on every action so a later
+change restores normal eligibility. Preserve curated order, window120, stall150,
+all baseline predicates and diversity_in_effect. With the flag off, retain exact
+legacy snapshot and receipt bytes. Distinguish no currently executable arm from
+all arms attempted, including when diversity is already active.
+
+### SCENARIO-VERIFY-8536-WRAPPER
+
+Drive make_carnot_agent/E3AgentPolicy with disabled, enabled-but-not-called,
+unknown, already-active diversity, level transition, capability change and
+shadow controls. Compare receipt on/off actions and state within each policy.
+No model is loaded. A candidate that ignores disabled capability MUST fail the
+same selection assertion. Require100 percent newly owned statement coverage,
+private E2E-011/013/018/021, scoped Ruff, strict mypy and spec tracing. Preserve
+original collected test IDs through disjoint bounded serial shards.
+
+Implementation20261015: the exact opt-in capability snapshot reads E3's current
+induction gate on every action. Both model arms retain baseline predicates but
+explicit unavailability prevents selection and tried-set consumption. The
+original method executes in a default-off byte-parity test. Real-wrapper
+controls cover receipt parity, unknown and changing capability, active diversity,
+level transitions and shadow mode; the ignore-disabled mutation is rejected.
+Owned coverage covers five new files and only added statements in the two
+existing live modules. Historical E2E assertions are collected unchanged.

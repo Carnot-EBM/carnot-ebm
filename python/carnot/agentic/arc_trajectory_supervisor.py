@@ -260,6 +260,11 @@ class TrajectorySupervisor:
             }
         )
 
+        if getattr(s, "capability_mask_enabled", False):
+            from carnot.agentic.arc_supervisor_capability import annotate_window
+
+            annotate_window(self, s, self._unredirected_windows[-1])
+
     def arm_eligibility(self, s: TrajectorySnapshot) -> list[dict[str, Any]]:
         """Expose the exact fixed-table predicates without selecting or mutating.
 
@@ -289,7 +294,7 @@ class TrajectorySupervisor:
             and s.induction_attempts < self.reinduction_attempt_cap
         )
         diversity_eligible = ARM_FORCE_DIVERSITY not in self._arms_used and not s.diversity_active
-        return [
+        rows = [
             {
                 "arm": ARM_DROP_GOAL_BIAS,
                 "enabled": True,
@@ -335,6 +340,12 @@ class TrajectorySupervisor:
                 ),
             },
         ]
+
+        if getattr(s, "capability_mask_enabled", False):
+            from carnot.agentic.arc_supervisor_capability import filter_rows
+
+            return filter_rows(rows, s)
+        return rows
 
     def _first_eligible_arm(self, s: TrajectorySnapshot) -> tuple[str | None, str]:
         """Return the first eligible row from the observable fixed decision table."""
