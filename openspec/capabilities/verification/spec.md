@@ -55454,3 +55454,23 @@ replays them in a fresh bounded process and rejects changed primitives, changed
 receipts, absent inputs and owned failures. Owned failure is disqualified;
 unchanged missing external evidence is blocked. Runtime receipt inspection uses
 the shipped Exp8410 reader without opening a device or loading a model.
+
+## REQ-VERIFY-8553: Validate owned release audit and real publication children
+
+Tests SHALL precede implementation and cover all new statements. Original test
+node IDs SHALL be collected before disjoint bounded serial children. Private
+E2E-018/021 retain original authority. Ruff, strict mypy, spec coverage, real CLI
+and cold primitive replay SHALL run. Missing input, owned failure and rehashed
+tampering SHALL fail. Unchanged publication and adversarial consumers SHALL
+validate final bytes before atomic publication and a bound sidecar reader.
+
+### SCENARIO-VERIFY-8553-CONTROLS
+
+Valid primitive replay succeeds in a fresh process. Altered summaries fail even
+with a repaired envelope hash. Owned failures disqualify; unavailable external
+release evidence blocks. Readiness and scientific benefit remain distinct.
+
+Exp8553 validation receipt (2026-10-15): 24 owned tests passed. All 279 newly
+owned statements were covered, including real CLI children. Scoped Ruff,
+strict mypy, spec tracing and private E2E-018/021 consumers passed. Terminal
+publication additionally binds cold replay, adversarial and strict-row checks.

@@ -1,0 +1,19 @@
+...........F.                                                            [100%]
+=================================== FAILURES ===================================
+______________________________ test_input_custody ______________________________
+
+    def test_input_custody() -> None:
+        """SCENARIO-REPORT-8553-RELEASE: author git blobs anchor local release files."""
+        from carnot.reporting import hallmark_release_inputs_8553 as inputs
+        data = inputs.load(inputs.MANIFEST)
+        result = e.reduce(data)
+        assert result['count_reconciliation']['observed_public_core'] == 2072
+        assert {r['split']:r['count'] for r in result['split_inventory']}['stress_test'] == 122
+        assert len(result['prediction_reductions']) == 2
+>       assert result['release_audit_ready_score'] == 1
+E       assert 0 == 1
+
+tests/python/test_hallmark_release_8553.py:103: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_hallmark_release_8553.py::test_input_custody - asser...
+1 failed, 12 passed in 6.42s

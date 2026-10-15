@@ -1,0 +1,496 @@
+{
+  "expected": {
+    "aggressive": {
+      "FN": 0,
+      "FP": 0,
+      "TN": 0,
+      "TP": 2,
+      "denominator": 2
+    },
+    "conservative": {
+      "FN": 1,
+      "FP": 0,
+      "TN": 0,
+      "TP": 1,
+      "denominator": 2
+    },
+    "independent_label_ready_score": 0,
+    "selective": {
+      "FN": 0,
+      "FP": 0,
+      "TN": 0,
+      "TP": 1,
+      "denominator": 1
+    }
+  },
+  "input": {
+    "declared_counts": {
+      "a": 2,
+      "b": 3
+    },
+    "missing_resources": [],
+    "predictions": [
+      {
+        "name": "rejection_control",
+        "rows": [
+          {
+            "bibtex_key": "a0",
+            "label": "HALLUCINATED"
+          },
+          {
+            "bibtex_key": "a1",
+            "label": "UNCERTAIN"
+          }
+        ],
+        "split": "a",
+        "version": "hand_checked_fixture_v1"
+      }
+    ],
+    "release_manifest": [],
+    "splits": {
+      "a": [
+        {
+          "bibtex_key": "a0",
+          "fields": {
+            "title": "shared"
+          },
+          "generation_method": "perturbation",
+          "label": "HALLUCINATED"
+        },
+        {
+          "bibtex_key": "a1",
+          "fields": {
+            "title": "unique"
+          },
+          "generation_method": "llm_generated",
+          "label": "HALLUCINATED"
+        }
+      ],
+      "b": [
+        {
+          "bibtex_key": "b0",
+          "fields": {
+            "title": "shared"
+          },
+          "generation_method": "scraped",
+          "label": "HALLUCINATED"
+        },
+        {
+          "bibtex_key": "b1",
+          "fields": {
+            "title": "other"
+          },
+          "generation_method": "real_world",
+          "label": "HALLUCINATED"
+        },
+        {
+          "bibtex_key": "b2",
+          "fields": {
+            "title": "last"
+          },
+          "generation_method": "adversarial",
+          "label": "HALLUCINATED"
+        }
+      ]
+    }
+  },
+  "observed": {
+    "admission_decision": {
+      "decision": "reject_for_carnot_independent_labels",
+      "future_use": "Citation metadata diagnostics only, after base-work grouping, human review and source-availability checks; no nine-input head ingestion.",
+      "independent_adjudication_required": true,
+      "target_compatible": false
+    },
+    "base_work_overlap_rows": [
+      {
+        "exact_citation_overlap_count": 1,
+        "hallucinated_left_matching_valid_right": 0,
+        "hallucinated_right_matching_valid_left": 0,
+        "left_split": "a",
+        "matching_left_rows": 1,
+        "matching_right_rows": 1,
+        "right_split": "b",
+        "shared_base_identity_count": 1,
+        "shared_hashes": [
+          "sha256:9d392fd2b9214439375eabcdf77f737c60c4518e05a04a8f9ec1dd033b28fb1f"
+        ],
+        "shared_identity_alias_count": 1,
+        "shared_work_groups": [
+          {
+            "base_alias_hashes": [
+              "sha256:9d392fd2b9214439375eabcdf77f737c60c4518e05a04a8f9ec1dd033b28fb1f"
+            ],
+            "members": [
+              {
+                "hallucination_type": null,
+                "label": "HALLUCINATED",
+                "split": "a",
+                "stable_id": "a0"
+              },
+              {
+                "hallucination_type": null,
+                "label": "HALLUCINATED",
+                "split": "b",
+                "stable_id": "b0"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "censored_count": 0,
+    "completed_count": 5,
+    "count_reconciliation": {
+      "explanation": "1119 + 831 + 122 + 454 = 2526. The stress split includes one VALID contamination canary; 2525 omits that record. Hidden count is metadata, not acquired rows.",
+      "hidden_declared_only": 454,
+      "observed_public_core": 0,
+      "paper_core": 2526,
+      "repository_description": 2525
+    },
+    "criterion_rows": [
+      {
+        "criterion": "disjoint_independent_adjudication",
+        "passed": false,
+        "reason": "Author review and pipeline checks do not establish disjoint independent human truth."
+      },
+      {
+        "criterion": "target_compatibility",
+        "passed": false,
+        "reason": "Bibliographic existence and metadata validity do not label Carnot sentence truth."
+      },
+      {
+        "criterion": "codesign_independence",
+        "passed": false,
+        "reason": "Paper sections 4.2 and G.2 identify taxonomy/tool co-design; reference scores are excluded from independent ranking."
+      }
+    ],
+    "excluded_count": 0,
+    "failed_count": 0,
+    "gate_check_summary": [],
+    "independent_count": 0,
+    "independent_label_ready_score": 0,
+    "intended_count": 5,
+    "label_provenance_rows": [
+      {
+        "count": 1,
+        "origin": "database_cross_check"
+      },
+      {
+        "count": 2,
+        "origin": "deterministic_perturbation"
+      },
+      {
+        "count": 0,
+        "origin": "explicit_human_adjudication"
+      },
+      {
+        "count": 0,
+        "origin": "model_judgment"
+      },
+      {
+        "count": 2,
+        "origin": "unknown"
+      }
+    ],
+    "overlap_limit": "DOI/title alias hashes measure observable overlap; fully corrupted or fabricated bases remain unresolved. Hidden splits were not fetched.",
+    "prediction_limitation": null,
+    "prediction_reductions": [
+      {
+        "abstained_count": 1,
+        "abstention_aware": {
+          "FN": 0,
+          "FP": 0,
+          "TN": 0,
+          "TP": 1,
+          "denominator": 1
+        },
+        "aggressive": {
+          "FN": 0,
+          "FP": 0,
+          "TN": 0,
+          "TP": 2,
+          "denominator": 2
+        },
+        "committed": {
+          "FN": 1,
+          "FP": 0,
+          "TN": 0,
+          "TP": 1,
+          "denominator": 2
+        },
+        "conservative": {
+          "FN": 1,
+          "FP": 0,
+          "TN": 0,
+          "TP": 1,
+          "denominator": 2
+        },
+        "convention": "conservative: UNCERTAIN to VALID; aggressive: UNCERTAIN to flag; selective: exclude UNCERTAIN. committed is the conservative full-split alias.",
+        "coverage_denominator": 2,
+        "coverage_numerator": 1,
+        "name": "rejection_control",
+        "rows": [
+          {
+            "prediction": "HALLUCINATED",
+            "stable_id": "a0",
+            "truth": "HALLUCINATED"
+          },
+          {
+            "prediction": "UNCERTAIN",
+            "stable_id": "a1",
+            "truth": "HALLUCINATED"
+          }
+        ],
+        "selective": {
+          "FN": 0,
+          "FP": 0,
+          "TN": 0,
+          "TP": 1,
+          "denominator": 1
+        },
+        "source_availability": "historical_snapshot_only; not re-queried",
+        "version": "hand_checked_fixture_v1"
+      }
+    ],
+    "provenance_samples": [
+      {
+        "inspected_count": 1,
+        "inventory_count": 1,
+        "records": [
+          {
+            "author_manual_review_documented": false,
+            "base_identity_hashes": [
+              "sha256:9d392fd2b9214439375eabcdf77f737c60c4518e05a04a8f9ec1dd033b28fb1f"
+            ],
+            "explanation": null,
+            "fields": {
+              "title": "shared"
+            },
+            "generation_method": "scraped",
+            "independent_human_truth": false,
+            "label": "HALLUCINATED",
+            "origin": "database_cross_check",
+            "record_hash": "sha256:e115cdbdfdc3cec4bc81e7e801717866de62d12d3af52d577f71bd1c97e9e0fd",
+            "source": null,
+            "split": "b",
+            "stable_id": "b0",
+            "subtests": null,
+            "target_compatible": false
+          }
+        ],
+        "stratum": "database_cross_check:scraped"
+      },
+      {
+        "inspected_count": 1,
+        "inventory_count": 1,
+        "records": [
+          {
+            "author_manual_review_documented": true,
+            "base_identity_hashes": [
+              "sha256:29afd93e55217eeccca0f76499611e20760bcf67a8d912968ec44fad6e77d78b"
+            ],
+            "explanation": null,
+            "fields": {
+              "title": "last"
+            },
+            "generation_method": "adversarial",
+            "independent_human_truth": false,
+            "label": "HALLUCINATED",
+            "origin": "deterministic_perturbation",
+            "record_hash": "sha256:2ea7174e28791d278ebe0b3f75346d2cea450b33d5a91dc9edbf869b40120e40",
+            "source": null,
+            "split": "b",
+            "stable_id": "b2",
+            "subtests": null,
+            "target_compatible": false
+          }
+        ],
+        "stratum": "deterministic_perturbation:adversarial"
+      },
+      {
+        "inspected_count": 1,
+        "inventory_count": 1,
+        "records": [
+          {
+            "author_manual_review_documented": false,
+            "base_identity_hashes": [
+              "sha256:9d392fd2b9214439375eabcdf77f737c60c4518e05a04a8f9ec1dd033b28fb1f"
+            ],
+            "explanation": null,
+            "fields": {
+              "title": "shared"
+            },
+            "generation_method": "perturbation",
+            "independent_human_truth": false,
+            "label": "HALLUCINATED",
+            "origin": "deterministic_perturbation",
+            "record_hash": "sha256:c4cab7658217c21df5764da5abc1c94d564716ea4a716f85de8dff4a9728c197",
+            "source": null,
+            "split": "a",
+            "stable_id": "a0",
+            "subtests": null,
+            "target_compatible": false
+          }
+        ],
+        "stratum": "deterministic_perturbation:perturbation"
+      },
+      {
+        "inspected_count": 1,
+        "inventory_count": 1,
+        "records": [
+          {
+            "author_manual_review_documented": false,
+            "base_identity_hashes": [
+              "sha256:87a03dd58475df2442fbc3d43f1f151e5e6671957c1cec9a445ee2ac97e5000c"
+            ],
+            "explanation": null,
+            "fields": {
+              "title": "unique"
+            },
+            "generation_method": "llm_generated",
+            "independent_human_truth": false,
+            "label": "HALLUCINATED",
+            "origin": "unknown",
+            "record_hash": "sha256:ad19ad6d32b6687fa490c3935b71c774c9b15af6b1402f71ab0641fe7fe0e539",
+            "source": null,
+            "split": "a",
+            "stable_id": "a1",
+            "subtests": null,
+            "target_compatible": false
+          }
+        ],
+        "stratum": "unknown:llm_generated"
+      },
+      {
+        "inspected_count": 1,
+        "inventory_count": 1,
+        "records": [
+          {
+            "author_manual_review_documented": true,
+            "base_identity_hashes": [
+              "sha256:2c6a758007a0ce2a38d6efdd34bea2c6c958837749eba3b1e001c4c031914b88"
+            ],
+            "explanation": null,
+            "fields": {
+              "title": "other"
+            },
+            "generation_method": "real_world",
+            "independent_human_truth": false,
+            "label": "HALLUCINATED",
+            "origin": "unknown",
+            "record_hash": "sha256:e742c95c272d1de89a3ae0df44f0d03cf09a24eac58476b66340bee7159cc06d",
+            "source": null,
+            "split": "b",
+            "stable_id": "b1",
+            "subtests": null,
+            "target_compatible": false
+          }
+        ],
+        "stratum": "unknown:real_world"
+      }
+    ],
+    "release_audit_ready_score": 1,
+    "released_prediction_summaries": {},
+    "rows": [
+      {
+        "author_manual_review_documented": false,
+        "base_identity_hashes": [
+          "sha256:9d392fd2b9214439375eabcdf77f737c60c4518e05a04a8f9ec1dd033b28fb1f"
+        ],
+        "generation_method": "perturbation",
+        "independent_human_truth": false,
+        "label": "HALLUCINATED",
+        "origin": "deterministic_perturbation",
+        "record_hash": "sha256:c4cab7658217c21df5764da5abc1c94d564716ea4a716f85de8dff4a9728c197",
+        "source": null,
+        "split": "a",
+        "stable_id": "a0",
+        "target_compatible": false
+      },
+      {
+        "author_manual_review_documented": false,
+        "base_identity_hashes": [
+          "sha256:87a03dd58475df2442fbc3d43f1f151e5e6671957c1cec9a445ee2ac97e5000c"
+        ],
+        "generation_method": "llm_generated",
+        "independent_human_truth": false,
+        "label": "HALLUCINATED",
+        "origin": "unknown",
+        "record_hash": "sha256:ad19ad6d32b6687fa490c3935b71c774c9b15af6b1402f71ab0641fe7fe0e539",
+        "source": null,
+        "split": "a",
+        "stable_id": "a1",
+        "target_compatible": false
+      },
+      {
+        "author_manual_review_documented": false,
+        "base_identity_hashes": [
+          "sha256:9d392fd2b9214439375eabcdf77f737c60c4518e05a04a8f9ec1dd033b28fb1f"
+        ],
+        "generation_method": "scraped",
+        "independent_human_truth": false,
+        "label": "HALLUCINATED",
+        "origin": "database_cross_check",
+        "record_hash": "sha256:e115cdbdfdc3cec4bc81e7e801717866de62d12d3af52d577f71bd1c97e9e0fd",
+        "source": null,
+        "split": "b",
+        "stable_id": "b0",
+        "target_compatible": false
+      },
+      {
+        "author_manual_review_documented": true,
+        "base_identity_hashes": [
+          "sha256:2c6a758007a0ce2a38d6efdd34bea2c6c958837749eba3b1e001c4c031914b88"
+        ],
+        "generation_method": "real_world",
+        "independent_human_truth": false,
+        "label": "HALLUCINATED",
+        "origin": "unknown",
+        "record_hash": "sha256:e742c95c272d1de89a3ae0df44f0d03cf09a24eac58476b66340bee7159cc06d",
+        "source": null,
+        "split": "b",
+        "stable_id": "b1",
+        "target_compatible": false
+      },
+      {
+        "author_manual_review_documented": true,
+        "base_identity_hashes": [
+          "sha256:29afd93e55217eeccca0f76499611e20760bcf67a8d912968ec44fad6e77d78b"
+        ],
+        "generation_method": "adversarial",
+        "independent_human_truth": false,
+        "label": "HALLUCINATED",
+        "origin": "deterministic_perturbation",
+        "record_hash": "sha256:2ea7174e28791d278ebe0b3f75346d2cea450b33d5a91dc9edbf869b40120e40",
+        "source": null,
+        "split": "b",
+        "stable_id": "b2",
+        "target_compatible": false
+      }
+    ],
+    "sample_size_budget": {
+      "independent_labels": 0,
+      "per_stratum_inspection": 20,
+      "public_inventory": 5
+    },
+    "split_inventory": [
+      {
+        "count": 2,
+        "labels": {
+          "HALLUCINATED": 2
+        },
+        "missing_labels": 0,
+        "split": "a"
+      },
+      {
+        "count": 3,
+        "labels": {
+          "HALLUCINATED": 3
+        },
+        "missing_labels": 0,
+        "split": "b"
+      }
+    ]
+  },
+  "purpose": "Hand-check each two-entry confusion cell; fabricated fixture is an administrative rejection control, never detector accuracy."
+}

@@ -101179,3 +101179,26 @@ exact. Original producer consumers qualify learning heads/streams and canary
 inputs independently. A missing stream cannot invalidate the nine-input branch.
 V734 primaries and reader-resolved pre-gates preserve all original flags; the
 archive ending at V733 cannot provide fabricated V734 observations.
+
+## REQ-REPORT-8553: Audit HALLMARK release admissibility without a detector
+
+Exp8553 SHALL seal its checklist before row access. It SHALL acquire only bounded
+public paper, metadata, license, schema and released JSONL bytes at a pinned
+commit. It SHALL preserve exact counts, missing labels, label origin, first20
+stable-ID samples per origin and hashed base-work overlap. Citation checks SHALL
+remain separate from Carnot sentence verification. Pipeline labels and database
+positives SHALL NOT establish independent human truth. Independent label
+readiness requires disjointness, independent adjudication and target compatibility.
+Audit readiness can pass a justified rejection. No model or verifier runs occur.
+
+### SCENARIO-REPORT-8553-RELEASE
+
+Versioned bytes reconcile the paper/repository count difference. Absent release
+or prediction bytes produce explicit missing conditions. Predictions, if public,
+require versions and complete denominators before confusion-count reduction.
+Source availability is separate. The report cites the co-design limitation and
+preserves all V734 quarantines. Same-roadmap results remain future dependencies.
+
+Exp8553 implementation receipt (2026-10-15): the runner and authenticated
+reducer retain 3,813 public split rows and reject independent Carnot-label use.
+The research note and raw release inventory preserve the reason for rejection.

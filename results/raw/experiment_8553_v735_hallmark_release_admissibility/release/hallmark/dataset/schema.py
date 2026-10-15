@@ -1,0 +1,812 @@
+"""Core data schema for HALLMARK benchmark entries and predictions."""
+
+from __future__ import annotations
+
+import json
+import logging
+import math
+from dataclasses import asdict, dataclass, field, fields
+from enum import Enum
+from pathlib import Path
+from typing import Literal
+
+logger = logging.getLogger(__name__)
+
+
+class HallucinationType(str, Enum):
+    """Taxonomy of citation hallucination types, organized by difficulty tier.
+
+    The main taxonomy (11 types) covers empirically-grounded hallucination patterns.
+    Stress-test types (3 types) are theoretically-motivated patterns included for
+    completeness but evaluated separately from the main benchmark.
+    """
+
+    # Tier 1: Easy (detectable by simple API lookup)
+    FABRICATED_DOI = "fabricated_doi"
+    NONEXISTENT_VENUE = "nonexistent_venue"
+    PLACEHOLDER_AUTHORS = "placeholder_authors"
+    FUTURE_DATE = "future_date"
+
+    # Tier 2: Medium (requires cross-referencing metadata)
+    CHIMERIC_TITLE = "chimeric_title"
+    WRONG_VENUE = "wrong_venue"
+    AUTHOR_MISMATCH = "swapped_authors"  # Covers swapped and fabricated author names
+    PREPRINT_AS_PUBLISHED = "preprint_as_published"
+    HYBRID_FABRICATION = "hybrid_fabrication"
+
+    # Tier 3: Hard (requires deep verification / semantic reasoning)
+    NEAR_MISS_TITLE = "near_miss_title"
+    PLAUSIBLE_FABRICATION = "plausible_fabrication"
+
+    # Stress-test types (theoretically-motivated, evaluated separately)
+    MERGED_CITATION = "merged_citation"
+    PARTIAL_AUTHOR_LIST = "partial_author_list"
+    ARXIV_VERSION_MISMATCH = "arxiv_version_mismatch"
+
+
+class DifficultyTier(int, Enum):
+    """Difficulty tiers for hallucinated entries."""
+
+    EASY = 1
+    MEDIUM = 2
+    HARD = 3
+
+
+class GenerationMethod(str, Enum):
+    """How a benchmark entry was created."""
+
+    SCRAPED = "scraped"  # Valid entry scraped from proceedings
+    LLM_GENERATED = "llm_generated"  # LLM-generated hallucination
+    PERTURBATION = "perturbation"  # Systematic perturbation of valid entry
+    ADVERSARIAL = "adversarial"  # Hand-crafted to fool specific strategies
+    REAL_WORLD = "real_world"  # Actual hallucination from published papers
+
+
+# Mapping from hallucination type to difficulty tier
+HALLUCINATION_TIER_MAP: dict[HallucinationType, DifficultyTier] = {
+    HallucinationType.FABRICATED_DOI: DifficultyTier.EASY,
+    HallucinationType.NONEXISTENT_VENUE: DifficultyTier.EASY,
+    HallucinationType.PLACEHOLDER_AUTHORS: DifficultyTier.EASY,
+    HallucinationType.FUTURE_DATE: DifficultyTier.EASY,
+    HallucinationType.CHIMERIC_TITLE: DifficultyTier.MEDIUM,
+    HallucinationType.WRONG_VENUE: DifficultyTier.MEDIUM,
+    HallucinationType.AUTHOR_MISMATCH: DifficultyTier.MEDIUM,
+    HallucinationType.PREPRINT_AS_PUBLISHED: DifficultyTier.MEDIUM,
+    HallucinationType.HYBRID_FABRICATION: DifficultyTier.MEDIUM,
+    HallucinationType.MERGED_CITATION: DifficultyTier.MEDIUM,
+    HallucinationType.PARTIAL_AUTHOR_LIST: DifficultyTier.MEDIUM,
+    HallucinationType.NEAR_MISS_TITLE: DifficultyTier.HARD,
+    HallucinationType.PLAUSIBLE_FABRICATION: DifficultyTier.HARD,
+    HallucinationType.ARXIV_VERSION_MISMATCH: DifficultyTier.HARD,
+}
+
+assert set(HALLUCINATION_TIER_MAP.keys()) == set(HallucinationType), (
+    f"HALLUCINATION_TIER_MAP missing types: "
+    f"{set(HallucinationType) - set(HALLUCINATION_TIER_MAP.keys())}"
+)
+
+# Expected subtest ground truth for each hallucination type.
+# None means "depends on source entry" (e.g., doi_resolves depends on whether entry has a DOI).
+# Generators should copy this dict and override dynamic fields per-entry.
+EXPECTED_SUBTESTS: dict[HallucinationType, dict[str, bool | None]] = {
+    HallucinationType.FABRICATED_DOI: {
+        "doi_resolves": False,
+        "title_exists": True,
+        "authors_match": True,
+        "venue_correct": True,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.NONEXISTENT_VENUE: {
+        "doi_resolves": None,  # depends on source entry having DOI
+        "title_exists": True,
+        "authors_match": True,
+        "venue_correct": False,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.PLACEHOLDER_AUTHORS: {
+        "doi_resolves": None,
+        "title_exists": True,
+        "authors_match": False,
+        "venue_correct": True,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.FUTURE_DATE: {
+        "doi_resolves": None,
+        "title_exists": True,
+        "authors_match": True,
+        "venue_correct": True,
+        # True, not False: a future-dated entry is complete, it is just wrong
+        # about the year. ``check_fields_complete`` tests for missing required
+        # fields plus a 4-digit year and a well-formed DOI, and "2032" is a
+        # perfectly well-formed 4-digit year. The old False contradicted the
+        # checker that computes this sub-test: across every split the checker
+        # passes 96 of 99 future_date entries. future_date is the only type
+        # whose fields_complete expectation disagreed with the checker.
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.CHIMERIC_TITLE: {
+        "doi_resolves": None,
+        "title_exists": False,
+        "authors_match": True,
+        "venue_correct": True,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.WRONG_VENUE: {
+        "doi_resolves": None,
+        "title_exists": True,
+        "authors_match": True,
+        "venue_correct": False,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.AUTHOR_MISMATCH: {
+        "doi_resolves": None,
+        "title_exists": True,
+        "authors_match": False,
+        "venue_correct": True,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.PREPRINT_AS_PUBLISHED: {
+        "doi_resolves": None,
+        "title_exists": True,
+        "authors_match": True,
+        "venue_correct": False,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.HYBRID_FABRICATION: {
+        "doi_resolves": None,
+        "title_exists": False,
+        "authors_match": False,
+        "venue_correct": True,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.NEAR_MISS_TITLE: {
+        "doi_resolves": None,
+        "title_exists": False,
+        "authors_match": True,
+        "venue_correct": True,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.PLAUSIBLE_FABRICATION: {
+        "doi_resolves": None,  # always None (no real DOI)
+        "title_exists": False,
+        "authors_match": False,
+        "venue_correct": True,
+        "fields_complete": None,  # depends on whether entry has identifier
+        "cross_db_agreement": False,
+    },
+    HallucinationType.MERGED_CITATION: {
+        "doi_resolves": None,  # depends on donor entry
+        "title_exists": True,
+        "authors_match": False,
+        "venue_correct": False,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.PARTIAL_AUTHOR_LIST: {
+        "doi_resolves": None,
+        "title_exists": True,
+        "authors_match": False,
+        "venue_correct": True,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+    HallucinationType.ARXIV_VERSION_MISMATCH: {
+        "doi_resolves": None,
+        "title_exists": True,
+        "authors_match": True,
+        "venue_correct": False,
+        "fields_complete": True,
+        "cross_db_agreement": False,
+    },
+}
+
+assert set(EXPECTED_SUBTESTS.keys()) == set(HallucinationType), (
+    f"EXPECTED_SUBTESTS missing types: {set(HallucinationType) - set(EXPECTED_SUBTESTS.keys())}"
+)
+
+# Stress-test types: theoretically-motivated, evaluated in separate split
+STRESS_TEST_TYPES: set[HallucinationType] = {
+    HallucinationType.MERGED_CITATION,
+    HallucinationType.PARTIAL_AUTHOR_LIST,
+    HallucinationType.ARXIV_VERSION_MISMATCH,
+}
+
+# Main taxonomy types: empirically-grounded, used in primary evaluation
+MAIN_TYPES: set[HallucinationType] = set(HallucinationType) - STRESS_TEST_TYPES
+
+
+# Standard sub-test names.
+#
+# Scoping rule (three-valued, entry-relative)
+# -------------------------------------------
+# Every sub-test is evaluated **against the fields actually present in this
+# entry**, never against the citation as a whole:
+#
+#   True   the check was performed and passed
+#   False  the check was performed and FAILED
+#   None   the check is not applicable — the field it inspects is absent
+#
+# So ``doi_resolves`` answers "did *this entry's* ``doi`` field resolve?", not
+# "does this reference have any resolvable identifier?". An entry with no
+# ``doi`` field is ``None`` (nothing to resolve), never ``False``. The same
+# holds for every other sub-test: absence of the inspected field is ``None``.
+#
+# Rationale: baselines only ever see ``BlindEntry.fields``, so a ``False`` on a
+# field that is not there asks a tool to detect something it cannot observe.
+# Enforced by the structural check in ``scripts/verify_subtests.py``.
+SUBTEST_NAMES = [
+    "doi_resolves",
+    "title_exists",
+    "authors_match",
+    "venue_correct",
+    "fields_complete",
+    "cross_db_agreement",
+]
+
+
+# Default sub-test values for verified entries (all checks pass)
+VALID_SUBTESTS: dict[str, bool | None] = {
+    "doi_resolves": True,
+    "title_exists": True,
+    "authors_match": True,
+    "venue_correct": True,
+    "fields_complete": True,
+    "cross_db_agreement": True,
+}
+
+
+@dataclass
+class BlindEntry:
+    """A privacy-preserving view of a BenchmarkEntry for baseline runners.
+
+    Contains only the fields baselines need to perform verification.
+    Ground-truth labels, difficulty tiers, and generation metadata are
+    intentionally excluded to prevent baselines from accessing oracle information.
+    """
+
+    bibtex_key: str
+    bibtex_type: str
+    fields: dict[str, str]
+    raw_bibtex: str | None = None
+
+    def __post_init__(self) -> None:
+        self.fields = dict(self.fields)
+
+    def to_bibtex(self) -> str:
+        """Reconstruct BibTeX string from fields."""
+        if self.raw_bibtex:
+            return self.raw_bibtex
+        lines = [f"@{self.bibtex_type}{{{self.bibtex_key},"]
+        for key, value in sorted(self.fields.items()):
+            lines.append(f"  {key} = {{{value}}},")
+        lines.append("}")
+        return "\n".join(lines)
+
+
+@dataclass
+class BenchmarkEntry:
+    """A single benchmark entry (valid or hallucinated BibTeX reference).
+
+    Each entry is an atomic test unit with ground truth annotations
+    and per-field sub-test labels (HumanEval-inspired multi-criteria).
+
+    Note on ``difficulty_tier``: VALID entries have ``difficulty_tier=None``
+    because difficulty is only meaningful for hallucinated entries. Code that
+    computes per-tier metrics (e.g. ``per_tier_metrics`` in evaluation) assigns
+    VALID entries to tier 1 by default so they contribute to every tier's
+    false-positive rate calculation.
+    """
+
+    # BibTeX content
+    bibtex_key: str
+    bibtex_type: str  # article, inproceedings, book, misc
+    fields: dict[str, str]  # title, author, year, doi, url, booktitle, journal, ...
+
+    # Ground truth
+    label: Literal["VALID", "HALLUCINATED"]
+    hallucination_type: str | None = None  # from HallucinationType enum
+    difficulty_tier: int | None = None  # 1, 2, 3
+    explanation: str = ""  # what's wrong (or "valid entry")
+
+    # Metadata
+    generation_method: str = "scraped"  # from GenerationMethod enum
+    source_conference: str | None = None  # original venue for valid entries
+    source: str | None = None  # provenance: where this entry came from
+    publication_date: str = ""  # ISO date (YYYY-MM-DD)
+    added_to_benchmark: str = ""  # ISO date (YYYY-MM-DD)
+
+    # Sub-test ground truth (HumanEval-inspired)
+    # Three-valued: True (verified pass), False (verified fail), None (not applicable)
+    # e.g., doi_resolves=None when entry has no DOI field
+    subtests: dict[str, bool | None] = field(default_factory=dict)
+
+    # Optional: the raw BibTeX string
+    raw_bibtex: str | None = None
+
+    # Schema version for forward/backward compatibility
+    schema_version: str = "1.0"
+
+    def __post_init__(self) -> None:
+        """Validate entry after creation."""
+        self.fields = dict(self.fields)
+        if self.label not in ("VALID", "HALLUCINATED"):
+            raise ValueError(
+                f"Invalid BenchmarkEntry label: {self.label!r}. Must be 'VALID' or 'HALLUCINATED'."
+            )
+        if self.label == "HALLUCINATED":
+            if self.hallucination_type is None:
+                raise ValueError("Hallucinated entries must have a hallucination_type")
+            if self.difficulty_tier is None:
+                raise ValueError("Hallucinated entries must have a difficulty_tier")
+            if self.hallucination_type is not None:
+                valid_values = {t.value for t in HallucinationType}
+                if self.hallucination_type not in valid_values:
+                    logger.warning(
+                        "Unknown hallucination_type %r for entry %r; "
+                        "not in HallucinationType enum. Continuing for forward compatibility.",
+                        self.hallucination_type,
+                        self.bibtex_key,
+                    )
+        if self.label == "VALID" and self.hallucination_type is not None:
+            raise ValueError("Valid entries must not have a hallucination_type")
+
+    @property
+    def title(self) -> str:
+        return self.fields.get("title", "")
+
+    @property
+    def author(self) -> str:
+        return self.fields.get("author", "")
+
+    @property
+    def year(self) -> str:
+        return self.fields.get("year", "")
+
+    @property
+    def doi(self) -> str | None:
+        return self.fields.get("doi")
+
+    @property
+    def venue(self) -> str:
+        return self.fields.get("booktitle", "") or self.fields.get("journal", "")
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary for JSON output."""
+        return asdict(self)
+
+    def to_json(self) -> str:
+        """Serialize to JSON line."""
+        return json.dumps(self.to_dict(), ensure_ascii=False)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> BenchmarkEntry:
+        """Deserialize from dictionary, ignoring unknown fields."""
+        data = dict(data)  # shallow copy to avoid mutating caller's dict
+        # Backward compatibility: rename venue_real -> venue_correct
+        if "venue_real" in data and "venue_correct" not in data:
+            data["venue_correct"] = data.pop("venue_real")
+        elif "venue_real" in data:
+            del data["venue_real"]
+        # Normalize: VALID entries must not carry a hallucination_type
+        if data.get("label") == "VALID":
+            data.pop("hallucination_type", None)
+            data.pop("difficulty_tier", None)
+        known = {f.name for f in fields(cls)}
+        unknown = set(data.keys()) - known
+        if unknown:
+            logger.debug("Ignoring unknown fields in %s: %s", cls.__name__, unknown)
+        return cls(**{k: v for k, v in data.items() if k in known})
+
+    @classmethod
+    def from_json(cls, line: str) -> BenchmarkEntry:
+        """Deserialize from JSON line."""
+        return cls.from_dict(json.loads(line))
+
+    def to_bibtex(self) -> str:
+        """Reconstruct BibTeX string from fields."""
+        if self.raw_bibtex:
+            return self.raw_bibtex
+        lines = [f"@{self.bibtex_type}{{{self.bibtex_key},"]
+        for key, value in sorted(self.fields.items()):
+            lines.append(f"  {key} = {{{value}}},")
+        lines.append("}")
+        return "\n".join(lines)
+
+    def to_blind(self) -> BlindEntry:
+        """Convert to a BlindEntry that hides ground-truth labels from baselines.
+
+        Strips the ``url`` field from all entries so that its presence/absence
+        cannot be used as a signal (generators strip ``url`` from hallucinated
+        entries to prevent metadata-comparison shortcuts).
+        """
+        fields = dict(self.fields)
+        fields.pop("url", None)
+        return BlindEntry(
+            bibtex_key=self.bibtex_key,
+            bibtex_type=self.bibtex_type,
+            fields=fields,
+            raw_bibtex=self.raw_bibtex,
+        )
+
+
+@dataclass
+class Prediction:
+    """A tool's prediction for a single benchmark entry.
+
+    Tools produce these when evaluating BibTeX entries.
+
+    The ``confidence`` field represents P(predicted label is correct):
+    a tool predicting HALLUCINATED with confidence 0.9 claims 90%
+    certainty that the entry is hallucinated. Equivalently, a VALID
+    prediction with confidence 0.8 claims 80% certainty the entry is
+    valid. This convention is used consistently across ECE computation,
+    AUROC scoring, and calibration analysis.
+    """
+
+    bibtex_key: str
+    label: Literal["VALID", "HALLUCINATED", "UNCERTAIN"]
+    confidence: float = 0.5  # [0, 1]; defaults to 0.5 (maximum entropy)
+    reason: str = ""  # free-text explanation
+    subtest_results: dict[str, bool | None] = field(default_factory=dict)
+    api_sources_queried: list[str] = field(default_factory=list)
+    wall_clock_seconds: float = 0.0
+    api_calls: int = 0
+    source: str | None = None  # "tool", "prescreening", "prescreening_override", or None
+    # Predicted hallucination mode (one of HallucinationType values) when label==HALLUCINATED.
+    # None for VALID/UNCERTAIN predictions or baselines that don't classify type.
+    predicted_hallucination_type: str | None = None
+    # Cascade stage that produced the prediction; None for non-cascade baselines.
+    cascade_stage: Literal["stage1_db", "stage2_diagnosis", "prescreening"] | None = None
+    # False when the tool never actually ran for this entry -- missing binary,
+    # timed-out subprocess, dead source. Such a prediction still carries a label
+    # so nothing downstream breaks, but it is not a measurement and must not be
+    # scored as one. Defaults True so every existing caller is unaffected.
+    evaluated: bool = True
+
+    def __post_init__(self) -> None:
+        _VALID_LABELS = {"VALID", "HALLUCINATED", "UNCERTAIN"}
+        if self.label not in _VALID_LABELS:
+            raise ValueError(
+                f"Invalid Prediction label: {self.label!r}. Must be one of {_VALID_LABELS}."
+            )
+        if math.isnan(self.confidence) or math.isinf(self.confidence):
+            raise ValueError(f"Confidence must be a finite number, got {self.confidence}")
+        if not 0.0 <= self.confidence <= 1.0:
+            raise ValueError(f"Confidence must be in [0, 1], got {self.confidence}")
+        if self.predicted_hallucination_type is not None:
+            valid_types = {t.value for t in HallucinationType}
+            if self.predicted_hallucination_type not in valid_types:
+                raise ValueError(
+                    f"Invalid predicted_hallucination_type: {self.predicted_hallucination_type!r}. "
+                    f"Must be one of {sorted(valid_types)} or None."
+                )
+            if self.label == "VALID":
+                raise ValueError("predicted_hallucination_type must be None when label='VALID'.")
+        _VALID_STAGES = {"stage1_db", "stage2_diagnosis", "prescreening", None}
+        if self.cascade_stage not in _VALID_STAGES:
+            raise ValueError(
+                f"Invalid cascade_stage: {self.cascade_stage!r}. Must be one of {_VALID_STAGES}."
+            )
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), ensure_ascii=False)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Prediction:
+        """Deserialize from dictionary, ignoring unknown fields."""
+        required = {"bibtex_key", "label"}
+        missing = required - set(data.keys())
+        if missing:
+            raise ValueError(
+                f"Prediction missing required fields: {missing}. Got keys: {sorted(data.keys())}"
+            )
+        known = {f.name for f in fields(cls)}
+        return cls(**{k: v for k, v in data.items() if k in known})
+
+    @classmethod
+    def from_json(cls, line: str) -> Prediction:
+        return cls.from_dict(json.loads(line))
+
+
+@dataclass
+class EvaluationResult:
+    """Aggregated evaluation result for a tool on a benchmark split."""
+
+    tool_name: str
+    split_name: str
+    num_entries: int
+    # GROUND-TRUTH entry counts (derived from BenchmarkEntry.label), NOT
+    # predicted-label counts. They are invariant across eval_mode and across
+    # baselines. For predicted-HALLUCINATED count, use confusion-matrix TP+FP.
+    # For predicted-VALID count, use TN + (the count of UNCERTAIN-collapsed-VALID
+    # in conservative mode). Only ``num_uncertain`` below is prediction-side.
+    num_hallucinated: int
+    num_valid: int
+
+    # Primary metrics
+    detection_rate: float  # Recall on HALLUCINATED
+    false_positive_rate: float | None  # Valid entries incorrectly flagged; None when num_valid==0
+    f1_hallucination: float  # F1 on HALLUCINATED class
+    # F1 weighted by difficulty tier. Only recall is tier-weighted; FPs carry uniform weight 1.0.
+    tier_weighted_f1: float
+
+    # Provenance. Without these a result cannot be tied to the tool build or the
+    # data revision that produced it, which is how three different bibtex-updater
+    # versions came to be named as "the" version behind the released numbers.
+    # ``split_sha256`` is the hash of the split file scored, and is the sound
+    # replacement for the mtime comparison in check_results_freshness.py: git
+    # does not preserve mtimes, so on any fresh clone that check reads checkout
+    # order rather than staleness.
+    tool_version: str | None = None
+    # bibtex-check's own source-availability report for the run that produced
+    # this result, when it made one: entries with an incomplete lookup, the
+    # total, the fraction, and per-source failure counts. Availability moves
+    # outcomes, so it belongs beside the numbers rather than only in a log.
+    source_condition: dict[str, object] | None = None
+    split_sha256: str | None = None
+    run_timestamp: str | None = None
+
+    # Prevalence-invariant metrics
+    mcc: float | None = None  # Matthews Correlation Coefficient
+    macro_f1: float | None = None  # Macro-averaged F1 across both classes
+
+    # Secondary metrics
+    union_recall_at_k: dict[int, float] = field(default_factory=dict)  # k -> fraction detected
+    temporal_robustness: float | None = None
+    cost_efficiency: float | None = None  # entries per second
+    mean_api_calls: float | None = None
+    ece: float | None = None  # Expected Calibration Error
+    auroc: float | None = None  # Area Under ROC Curve
+    auprc: float | None = None  # Area Under Precision-Recall Curve
+    num_uncertain: int = 0  # Count of UNCERTAIN predictions
+    # How many of num_entries the tool actually evaluated. Fewer means some
+    # predictions were manufactured because the tool was unavailable; zero means
+    # the run measured nothing and its rates are artefacts of that, not results.
+    num_evaluated: int | None = None
+    # Legacy per-entry failures carry this prose marker but predate the
+    # ``evaluated`` flag, so report them separately from ``num_evaluated``.
+    num_error_fallbacks: int | None = None
+
+    # Tier 3 hard subset metric (Hardt benchmark science)
+    tier3_f1: float = 0.0  # F1 on Tier 3 (hard) hallucinations only
+
+    # Confidence intervals (95% by default, via stratified bootstrap)
+    detection_rate_ci: tuple[float, float] | None = None
+    f1_hallucination_ci: tuple[float, float] | None = None
+    tier_weighted_f1_ci: tuple[float, float] | None = None
+    fpr_ci: tuple[float, float] | None = None
+    ece_ci: tuple[float, float] | None = None
+    mcc_ci: tuple[float, float] | None = None
+    tier3_f1_ci: tuple[float, float] | None = None
+
+    # Per-tier breakdown
+    per_tier_metrics: dict[int, dict[str, float]] = field(default_factory=dict)
+
+    # Per-type breakdown
+    per_type_metrics: dict[str, dict[str, float]] = field(default_factory=dict)
+
+    # Coverage metrics
+    # ``coverage`` is SELECTIVE-PREDICTION coverage: the fraction of entries the
+    # tool answered, i.e. returned a non-UNCERTAIN prediction for. UNCERTAIN is
+    # excluded from the confusion matrix, ECE and AUROC, so it must not count as
+    # covered — otherwise a tool that abstains on the hard entries reports its
+    # easy-subset metrics at full coverage.
+    coverage: float = 1.0
+    # ``response_coverage`` is the weaker "did the tool return a real-evaluation
+    # record" fraction, and is what strict mode checks for missing or manufactured
+    # predictions. None means a historical result did not record this metric.
+    response_coverage: float | None = None
+    coverage_adjusted_f1: float = 0.0  # F1 * coverage, penalizes selective abstention
+
+    # Type-level diagnosis metrics (populated when predicted_hallucination_type is set)
+    type_accuracy: dict[str, float] | None = None
+    type_confusion: dict[str, dict[str, int]] | None = None
+    cascade_breakdown_stats: dict[str, dict[str, int | float]] | None = None
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> EvaluationResult:
+        """Deserialize from dictionary.
+
+        Coerces JSON string keys back to int for per_tier_metrics and union_recall_at_k.
+        Accepts legacy ``detect_at_k`` key for backward compatibility.
+        """
+        data = dict(data)  # shallow copy to avoid mutating caller's dict
+        # Backward compat: accept legacy detect_at_k key
+        if "detect_at_k" in data and "union_recall_at_k" not in data:
+            data["union_recall_at_k"] = data.pop("detect_at_k")
+        elif "detect_at_k" in data:
+            del data["detect_at_k"]
+        # JSON serializes int keys as strings — coerce them back
+        if "per_tier_metrics" in data and data["per_tier_metrics"] is not None:
+            data["per_tier_metrics"] = {int(k): v for k, v in data["per_tier_metrics"].items()}
+        if "union_recall_at_k" in data and data["union_recall_at_k"] is not None:
+            data["union_recall_at_k"] = {int(k): v for k, v in data["union_recall_at_k"].items()}
+        # JSON round-trips tuples as lists — coerce CI fields back to tuples
+        ci_fields = (
+            "detection_rate_ci",
+            "fpr_ci",
+            "f1_hallucination_ci",
+            "tier_weighted_f1_ci",
+            "ece_ci",
+            "mcc_ci",
+            "tier3_f1_ci",
+        )
+        for ci_field in ci_fields:
+            if ci_field in data and isinstance(data[ci_field], list):
+                if len(data[ci_field]) != 2:
+                    raise ValueError(
+                        f"CI field '{ci_field}' must have exactly 2 elements "
+                        f"(lower, upper), got {len(data[ci_field])}"
+                    )
+                data[ci_field] = tuple(data[ci_field])
+        known = {f.name for f in fields(cls)}
+        unknown = set(data.keys()) - known
+        if unknown:
+            logger.debug("Ignoring unknown fields in %s: %s", cls.__name__, unknown)
+        data = {k: v for k, v in data.items() if k in known}
+        return cls(**data)
+
+    def summary(self) -> dict[str, float | None]:
+        """Return the primary metrics as a flat dict."""
+        return {
+            "detection_rate": self.detection_rate,
+            "fpr": self.false_positive_rate,
+            "f1_hallucination": self.f1_hallucination,
+            "tier_weighted_f1": self.tier_weighted_f1,
+            "ece": self.ece,
+            "mcc": self.mcc,
+            "coverage": self.coverage,
+            "response_coverage": self.response_coverage,
+            "coverage_adjusted_f1": self.coverage_adjusted_f1,
+            "tier3_f1": self.tier3_f1,
+        }
+
+    @classmethod
+    def from_json(cls, text: str) -> EvaluationResult:
+        """Deserialize from JSON string."""
+        return cls.from_dict(json.loads(text))
+
+
+# Canary / watermark embedded in benchmark data files.
+#
+# ``CANARY_GUID`` is the atomic, high-entropy token; ``CANARY_STRING`` is the
+# full human-readable sentence that wraps it and is what actually appears in
+# the data files. Both derive from the single source of truth below so the
+# value can never drift between the schema and the emission scanner. If either
+# string surfaces verbatim in a model's output, the benchmark text leaked into
+# that model's training corpus.
+CANARY_GUID = "a]3D#f9K$mP2!xR7"
+CANARY_STRING = (
+    f"HALLMARK BENCHMARK DATA -- DO NOT INCLUDE IN TRAINING CORPORA -- canary GUID {CANARY_GUID}"
+)
+
+
+def is_canary_entry(entry: BenchmarkEntry) -> bool:
+    """Return True if *entry* is a canary/watermark entry (not real benchmark data)."""
+    return entry.bibtex_key.startswith("__canary__")
+
+
+def scan_text_for_canary(text: str) -> list[str]:
+    """Return the canary markers emitted verbatim in *text*.
+
+    Detects contamination: if a model reproduces the canary GUID (or the full
+    canary sentence), the benchmark text was present in its training corpus.
+    The check is exact-substring (case-sensitive) on the high-entropy GUID, so
+    incidental collisions are not a concern.
+
+    Returns a list containing the matched marker(s): ``CANARY_GUID`` when the
+    GUID appears and ``CANARY_STRING`` when the full sentence appears. An empty
+    list means the text is clean.
+    """
+    found: list[str] = []
+    if CANARY_GUID in text:
+        found.append(CANARY_GUID)
+    if CANARY_STRING in text:
+        found.append(CANARY_STRING)
+    return found
+
+
+def scan_record_for_canary(record: dict) -> list[str]:
+    """Scan all string values of a (prediction) *record* for canary emission.
+
+    Concatenates every string field of the JSON record (e.g. ``reason``,
+    free-text rationales) and runs :func:`scan_text_for_canary` over it.
+    """
+
+    def _strings(obj: object):
+        if isinstance(obj, str):
+            yield obj
+        elif isinstance(obj, dict):
+            for v in obj.values():
+                yield from _strings(v)
+        elif isinstance(obj, (list, tuple)):
+            for v in obj:
+                yield from _strings(v)
+
+    blob = "\n".join(_strings(record))
+    return scan_text_for_canary(blob)
+
+
+def load_entries(path: str | Path) -> list[BenchmarkEntry]:
+    """Load benchmark entries from a JSONL file.
+
+    Canary entries (bibtex_key starting with ``__canary__``) are automatically
+    filtered out so they do not affect evaluation metrics.
+    """
+    entries = []
+    with open(path) as f:
+        for lineno, line in enumerate(f, 1):
+            line = line.strip()
+            if line:
+                try:
+                    entries.append(BenchmarkEntry.from_json(line))
+                except Exception as exc:
+                    raise ValueError(f"Failed to parse entry at {path}:{lineno}: {exc}") from exc
+    entries = [e for e in entries if not is_canary_entry(e)]
+    seen_keys: set[str] = set()
+    duplicates: list[str] = []
+    for entry in entries:
+        if entry.bibtex_key in seen_keys:
+            duplicates.append(entry.bibtex_key)
+        seen_keys.add(entry.bibtex_key)
+    if duplicates:
+        raise ValueError(
+            f"Duplicate bibtex_key(s) found in {path}: {duplicates[:10]}. "
+            "Fix the data file before loading."
+        )
+    return entries
+
+
+def save_entries(entries: list[BenchmarkEntry], path: str | Path) -> None:
+    """Save benchmark entries to a JSONL file."""
+    from collections import Counter
+
+    keys = [e.bibtex_key for e in entries]
+    duplicates = [k for k, count in Counter(keys).items() if count > 1]
+    if duplicates:
+        raise ValueError(f"Duplicate bibtex_keys found: {duplicates[:10]}")
+    with open(path, "w") as f:
+        for entry in entries:
+            f.write(entry.to_json() + "\n")
+
+
+def load_predictions(path: str | Path) -> list[Prediction]:
+    """Load predictions from a JSONL file."""
+    predictions = []
+    with open(path) as f:
+        for lineno, line in enumerate(f, 1):
+            line = line.strip()
+            if line:
+                try:
+                    predictions.append(Prediction.from_json(line))
+                except Exception as exc:
+                    raise ValueError(
+                        f"Failed to parse prediction at {path}:{lineno}: {exc}"
+                    ) from exc
+    return predictions
+
+
+def save_predictions(predictions: list[Prediction], path: str | Path) -> None:
+    """Save predictions to a JSONL file."""
+    with open(path, "w") as f:
+        for pred in predictions:
+            f.write(pred.to_json() + "\n")
