@@ -20336,3 +20336,5 @@ code |
 | 2026-10-15 02:22 UTC | Train identity-admissible calibrated energy heads  | OK | 98 passed, 1 warning in 146.41s (0:02:26) |
 | 2026-10-15 03:00 UTC | Measure source information beyond raw and equally  | OK | 97 passed, 1 warning in 151.54s (0:02:31) |
 | 2026-10-15 04:06 UTC | Qualify causal update accounting and complete reje | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 195.03s (0:03:15) |
+| 2026-10-15 04:13 UTC | Measure continuous delayed Brier learning with ind | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8530-update-accounting-qualification.online_adapter_ready_score (actual=0 == expected=1) |
+| 2026-10-15 04:15 UTC | Audit later proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8531-causal-brier-learning) |
