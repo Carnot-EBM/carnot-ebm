@@ -100734,3 +100734,32 @@ their intended slots and reasons. Only100 complete paired questions provide inde
 
 External absence is blocked with exact gate operands. Failed owned work disqualifies.
 Readiness can qualify a measured null and never establishes independent generalization.
+## REQ-REPORT-8530: Qualify causal update accounting without retraining history
+
+Exp8530 shall retain Exp8517's failure, quarantine and stale sidecar. Its local
+diagnostic adapter shall name every gate operand, distinguishing absence from
+zero and rejecting wrong tasks, hashes and stale publications. Reconcile the
+old coefficient_change_count and label_updates from original state and cost
+rows. Distinguish applied events, physical assignments, changed serialized
+coordinates, distinct coordinates, decay-scale changes and effective logical
+coefficient changes. Preserve the qualified Exp8516 consumer and V726 head.
+
+### SCENARIO-REPORT-8530-ACCOUNTING
+
+Independent before/after comparisons shall detect zero-gradient, repeated-index
+and decay-only cases. Small deterministic fixtures shall exercise causal seals,
+real exit73 and exact resume. No full scientific stream is trained. Qualification
+grants no learning benefit or independent generalization; both scores stay zero.
+
+### SCENARIO-REPORT-8530-DIAGNOSTICS
+
+Missing, zero, wrong-task, wrong-hash and stale-sidecar inputs retain complete
+named operands. New exact-byte publication and the actual stream consumer must
+pass before online_adapter_ready_score=1. Owned failures disqualify; external
+absence blocks. Imported historical model evidence never counts as a current call.
+
+Implementation20261015: v733_update_accounting, update_metrics and update_fixture
+retain original sealed state and expose distinct numerical counts. The local
+diagnostic adapter preserves the original zero and failure references. All20
+owned tests pass. Historical reporting failures remain blocking; no scientific
+learning benefit or independent generalization is claimed.

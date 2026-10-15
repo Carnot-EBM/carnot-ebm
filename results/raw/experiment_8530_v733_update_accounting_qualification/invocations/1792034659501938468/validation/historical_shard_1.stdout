@@ -1,0 +1,588 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 24 items
+
+tests/python/test_objective_reporting_8461.py::test_manifest_and_cli_failures PASSED [  4%]
+tests/python/test_objective_reporting_8461.py::test_blocked_measure_and_rehashed_tampering PASSED [  8%]
+tests/python/test_objective_reporting_8461.py::test_qualified_primitive_replay FAILED [ 12%]
+tests/python/test_objective_reporting_8461.py::test_private_cli_publication_and_date PASSED [ 16%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[code] PASSED [ 20%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[authority] FAILED [ 25%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[head] PASSED [ 29%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[derivative] FAILED [ 33%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[state] FAILED [ 37%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[hash] FAILED [ 41%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[exit] FAILED [ 45%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[receipt] PASSED [ 50%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[log] PASSED [ 54%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[pass] PASSED [ 58%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[authority_object] FAILED [ 62%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[primary_pin] PASSED [ 66%]
+tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[transition] FAILED [ 70%]
+tests/python/test_objective_reporting_8461.py::test_external_resource_and_deadline_gates PASSED [ 75%]
+tests/python/test_objective_reporting_8461.py::test_foreign_task_authority_is_rejected PASSED [ 79%]
+tests/python/test_objective_reporting_8461.py::test_original_producer_rejection_is_recorded PASSED [ 83%]
+tests/python/test_objective_reporting_8461.py::test_real_cli_validation_copies_genuine_coverage PASSED [ 87%]
+tests/python/test_objective_reporting_8461.py::test_recovery_runtime_paths_are_private FAILED [ 91%]
+tests/python/test_objective_reporting_8461.py::test_recovery_deadline_stops_before_child PASSED [ 95%]
+tests/python/test_objective_reporting_8461.py::test_failed_child_stops_recovery PASSED [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_qualified_primitive_replay ________________________
+
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+
+    def test_qualified_primitive_replay(measured):
+        """SCENARIO-REPORT-8461-TERMINAL: real states qualify only with every owned check."""
+        work, parent = measured
+>       assert not work["failures"]
+E       AssertionError: assert not [{'check': 'required_authority', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'required_authority', 'op': '==', 'expected': True, 'observed': 'V728 JSON contract missing', 'passed': False}, {'check': 'independent_visible_task_table', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'independent_visible_task_table', 'op': '==', 'expected': 14, 'observed': None, 'passed': False}, {'check': 'embedded_complete_task_objects', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'embedded_complete_task_objects', 'op': '==', 'expected': 14, 'observed': None, 'passed': False}, {'check': 'printed_canonical_task_digest', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'printed_canonical_task_digest', 'op': '==', 'expected': '1a6bb695f9ef6e97d0891d20ae2aad7a9f04fd3bdf3707cdf4a5e79bacaed7ae', 'observed': None, 'passed': False}, {'check': 'complete_json_markers', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'complete_json_markers', 'op': '==', 'expected': True, 'observed': False, 'passed': False}, {'check': 'current_full_authority', 'upstream': 'exp8461-objective-checkpoint-qualification', 'path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'sha256': None, 'field': 'current_full_authority', 'operator': '==', 'expected_value': True, 'observed_value': '', 'passed': False}]
+
+tests/python/test_objective_reporting_8461.py:85: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8461] phase=preconditions completed=0 pending=0
+[exp8205] phase=before_subprocess_original_producer_8433 completed=0 pending=1
+[exp8205] phase=after_subprocess_original_producer_8433 completed=1 pending=0
+[exp8205] phase=before_subprocess_original_producer_8434 completed=0 pending=1
+[exp8205] phase=after_subprocess_original_producer_8434 completed=1 pending=0
+[exp8461] phase=derivatives completed=0 pending=0
+[exp8461] phase=derivatives_complete completed=0 pending=0
+___________ test_rehashed_primitive_and_receipt_controls[authority] ____________
+
+tmp_path = PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re0')
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+operand = 'authority'
+
+    @pytest.mark.parametrize(
+        "operand",
+        [
+            "code",
+            "authority",
+            "head",
+            "derivative",
+            "state",
+            "hash",
+            "exit",
+            "receipt",
+            "log",
+            "pass",
+            "authority_object",
+            "primary_pin",
+            "transition",
+        ],
+    )
+    def test_rehashed_primitive_and_receipt_controls(tmp_path, measured, operand):
+        """SCENARIO-REPORT-8461-TERMINAL: rebuilds reject repaired hashes over incorrect operands."""
+        import shutil
+    
+        work, parent = measured
+        work = deepcopy(work)
+        primitive = deepcopy(q.read(work["primitive_reference"]))
+        receipt = child(
+            "required",
+            [sys.executable, "-c", 'print("independent log")'],
+            tmp_path / "logs",
+            deadline=10,
+        )
+        if operand == "code":
+            work["code_refs"] = work["code_refs"][1:]
+        elif operand == "authority":
+            work["authority"]["activated"] = False
+        elif operand == "authority_object":
+            work["authority"]["tasks"][0]["MODEL_SPECS"] = ["forged"]
+        elif operand == "primary_pin":
+            ref = next(
+                r
+                for r in work["source_refs"]
+                if r["path"].endswith("experiment_8434_v726_capacity_online_learning.json")
+            )
+            changed_primary = q.read(ref)
+            changed_primary["tampered"] = True
+            path = tmp_path / "experiment_8434_v726_capacity_online_learning.json"
+            atomic_json(path, changed_primary)
+            ref.update(q.reference(path))
+        elif operand == "transition":
+            primitive["transition_rows"][0]["observed_error"] = "forged"
+        elif operand == "pass":
+            receipt["passed"] = False
+        elif operand == "head":
+            primitive["head"]["parameters"][0] += 0.1
+        elif operand == "derivative":
+            primitive["derivative_rows"][0]["absolute_error"] = 999
+        elif operand == "state":
+            state = deepcopy(q.read(primitive["restart_rows"][0]["final_state"]))
+            state["head"]["parameters"][0] += 0.1
+            atomic_json(tmp_path / "state.json", state)
+            primitive["restart_rows"][0]["final_state"] = q.reference(tmp_path / "state.json")
+        elif operand == "hash":
+            primitive["restart_rows"][0]["logical_state_hash"] = "wrong"
+        elif operand == "exit":
+            primitive["process_exit_rows"][0]["actual_exit"] = 0
+        elif operand == "receipt":
+            receipt["duration_s"] += 1
+        else:
+            receipt["stdout_sha256"] = "wrong"
+            atomic_json(Path(receipt["stdout_path"]).with_suffix(".receipt.json"), receipt)
+        atomic_json(tmp_path / "primitives.json", primitive)
+        work["primitive_reference"] = q.reference(tmp_path / "primitives.json")
+        shutil.copyfile(parent / "raw/update_adapter.py", tmp_path / "update_adapter.py")
+        atomic_json(tmp_path / "measurement.json", work)
+        output = tmp_path / (q.NAME + ".json")
+        value = q.build(work, [receipt], tmp_path, output)
+        atomic_json(output, value)
+>       assert not q.replay(output)
+E       AssertionError: assert not True
+E        +  where True = <function replay at 0x7f6f090c2ca0>(PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re0/experiment_8461_v728_objective_checkpoint_qualification.json'))
+E        +    where <function replay at 0x7f6f090c2ca0> = q.replay
+
+tests/python/test_objective_reporting_8461.py:194: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_required completed=0 pending=1
+[exp8205] phase=after_subprocess_required completed=1 pending=0
+___________ test_rehashed_primitive_and_receipt_controls[derivative] ___________
+
+tmp_path = PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re1')
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+operand = 'derivative'
+
+    @pytest.mark.parametrize(
+        "operand",
+        [
+            "code",
+            "authority",
+            "head",
+            "derivative",
+            "state",
+            "hash",
+            "exit",
+            "receipt",
+            "log",
+            "pass",
+            "authority_object",
+            "primary_pin",
+            "transition",
+        ],
+    )
+    def test_rehashed_primitive_and_receipt_controls(tmp_path, measured, operand):
+        """SCENARIO-REPORT-8461-TERMINAL: rebuilds reject repaired hashes over incorrect operands."""
+        import shutil
+    
+        work, parent = measured
+        work = deepcopy(work)
+        primitive = deepcopy(q.read(work["primitive_reference"]))
+        receipt = child(
+            "required",
+            [sys.executable, "-c", 'print("independent log")'],
+            tmp_path / "logs",
+            deadline=10,
+        )
+        if operand == "code":
+            work["code_refs"] = work["code_refs"][1:]
+        elif operand == "authority":
+            work["authority"]["activated"] = False
+        elif operand == "authority_object":
+            work["authority"]["tasks"][0]["MODEL_SPECS"] = ["forged"]
+        elif operand == "primary_pin":
+            ref = next(
+                r
+                for r in work["source_refs"]
+                if r["path"].endswith("experiment_8434_v726_capacity_online_learning.json")
+            )
+            changed_primary = q.read(ref)
+            changed_primary["tampered"] = True
+            path = tmp_path / "experiment_8434_v726_capacity_online_learning.json"
+            atomic_json(path, changed_primary)
+            ref.update(q.reference(path))
+        elif operand == "transition":
+            primitive["transition_rows"][0]["observed_error"] = "forged"
+        elif operand == "pass":
+            receipt["passed"] = False
+        elif operand == "head":
+            primitive["head"]["parameters"][0] += 0.1
+        elif operand == "derivative":
+>           primitive["derivative_rows"][0]["absolute_error"] = 999
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/python/test_objective_reporting_8461.py:172: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_required completed=0 pending=1
+[exp8205] phase=after_subprocess_required completed=1 pending=0
+_____________ test_rehashed_primitive_and_receipt_controls[state] ______________
+
+tmp_path = PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re2')
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+operand = 'state'
+
+    @pytest.mark.parametrize(
+        "operand",
+        [
+            "code",
+            "authority",
+            "head",
+            "derivative",
+            "state",
+            "hash",
+            "exit",
+            "receipt",
+            "log",
+            "pass",
+            "authority_object",
+            "primary_pin",
+            "transition",
+        ],
+    )
+    def test_rehashed_primitive_and_receipt_controls(tmp_path, measured, operand):
+        """SCENARIO-REPORT-8461-TERMINAL: rebuilds reject repaired hashes over incorrect operands."""
+        import shutil
+    
+        work, parent = measured
+        work = deepcopy(work)
+        primitive = deepcopy(q.read(work["primitive_reference"]))
+        receipt = child(
+            "required",
+            [sys.executable, "-c", 'print("independent log")'],
+            tmp_path / "logs",
+            deadline=10,
+        )
+        if operand == "code":
+            work["code_refs"] = work["code_refs"][1:]
+        elif operand == "authority":
+            work["authority"]["activated"] = False
+        elif operand == "authority_object":
+            work["authority"]["tasks"][0]["MODEL_SPECS"] = ["forged"]
+        elif operand == "primary_pin":
+            ref = next(
+                r
+                for r in work["source_refs"]
+                if r["path"].endswith("experiment_8434_v726_capacity_online_learning.json")
+            )
+            changed_primary = q.read(ref)
+            changed_primary["tampered"] = True
+            path = tmp_path / "experiment_8434_v726_capacity_online_learning.json"
+            atomic_json(path, changed_primary)
+            ref.update(q.reference(path))
+        elif operand == "transition":
+            primitive["transition_rows"][0]["observed_error"] = "forged"
+        elif operand == "pass":
+            receipt["passed"] = False
+        elif operand == "head":
+            primitive["head"]["parameters"][0] += 0.1
+        elif operand == "derivative":
+            primitive["derivative_rows"][0]["absolute_error"] = 999
+        elif operand == "state":
+>           state = deepcopy(q.read(primitive["restart_rows"][0]["final_state"]))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/python/test_objective_reporting_8461.py:174: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_required completed=0 pending=1
+[exp8205] phase=after_subprocess_required completed=1 pending=0
+______________ test_rehashed_primitive_and_receipt_controls[hash] ______________
+
+tmp_path = PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re3')
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+operand = 'hash'
+
+    @pytest.mark.parametrize(
+        "operand",
+        [
+            "code",
+            "authority",
+            "head",
+            "derivative",
+            "state",
+            "hash",
+            "exit",
+            "receipt",
+            "log",
+            "pass",
+            "authority_object",
+            "primary_pin",
+            "transition",
+        ],
+    )
+    def test_rehashed_primitive_and_receipt_controls(tmp_path, measured, operand):
+        """SCENARIO-REPORT-8461-TERMINAL: rebuilds reject repaired hashes over incorrect operands."""
+        import shutil
+    
+        work, parent = measured
+        work = deepcopy(work)
+        primitive = deepcopy(q.read(work["primitive_reference"]))
+        receipt = child(
+            "required",
+            [sys.executable, "-c", 'print("independent log")'],
+            tmp_path / "logs",
+            deadline=10,
+        )
+        if operand == "code":
+            work["code_refs"] = work["code_refs"][1:]
+        elif operand == "authority":
+            work["authority"]["activated"] = False
+        elif operand == "authority_object":
+            work["authority"]["tasks"][0]["MODEL_SPECS"] = ["forged"]
+        elif operand == "primary_pin":
+            ref = next(
+                r
+                for r in work["source_refs"]
+                if r["path"].endswith("experiment_8434_v726_capacity_online_learning.json")
+            )
+            changed_primary = q.read(ref)
+            changed_primary["tampered"] = True
+            path = tmp_path / "experiment_8434_v726_capacity_online_learning.json"
+            atomic_json(path, changed_primary)
+            ref.update(q.reference(path))
+        elif operand == "transition":
+            primitive["transition_rows"][0]["observed_error"] = "forged"
+        elif operand == "pass":
+            receipt["passed"] = False
+        elif operand == "head":
+            primitive["head"]["parameters"][0] += 0.1
+        elif operand == "derivative":
+            primitive["derivative_rows"][0]["absolute_error"] = 999
+        elif operand == "state":
+            state = deepcopy(q.read(primitive["restart_rows"][0]["final_state"]))
+            state["head"]["parameters"][0] += 0.1
+            atomic_json(tmp_path / "state.json", state)
+            primitive["restart_rows"][0]["final_state"] = q.reference(tmp_path / "state.json")
+        elif operand == "hash":
+>           primitive["restart_rows"][0]["logical_state_hash"] = "wrong"
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/python/test_objective_reporting_8461.py:179: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_required completed=0 pending=1
+[exp8205] phase=after_subprocess_required completed=1 pending=0
+______________ test_rehashed_primitive_and_receipt_controls[exit] ______________
+
+tmp_path = PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re4')
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+operand = 'exit'
+
+    @pytest.mark.parametrize(
+        "operand",
+        [
+            "code",
+            "authority",
+            "head",
+            "derivative",
+            "state",
+            "hash",
+            "exit",
+            "receipt",
+            "log",
+            "pass",
+            "authority_object",
+            "primary_pin",
+            "transition",
+        ],
+    )
+    def test_rehashed_primitive_and_receipt_controls(tmp_path, measured, operand):
+        """SCENARIO-REPORT-8461-TERMINAL: rebuilds reject repaired hashes over incorrect operands."""
+        import shutil
+    
+        work, parent = measured
+        work = deepcopy(work)
+        primitive = deepcopy(q.read(work["primitive_reference"]))
+        receipt = child(
+            "required",
+            [sys.executable, "-c", 'print("independent log")'],
+            tmp_path / "logs",
+            deadline=10,
+        )
+        if operand == "code":
+            work["code_refs"] = work["code_refs"][1:]
+        elif operand == "authority":
+            work["authority"]["activated"] = False
+        elif operand == "authority_object":
+            work["authority"]["tasks"][0]["MODEL_SPECS"] = ["forged"]
+        elif operand == "primary_pin":
+            ref = next(
+                r
+                for r in work["source_refs"]
+                if r["path"].endswith("experiment_8434_v726_capacity_online_learning.json")
+            )
+            changed_primary = q.read(ref)
+            changed_primary["tampered"] = True
+            path = tmp_path / "experiment_8434_v726_capacity_online_learning.json"
+            atomic_json(path, changed_primary)
+            ref.update(q.reference(path))
+        elif operand == "transition":
+            primitive["transition_rows"][0]["observed_error"] = "forged"
+        elif operand == "pass":
+            receipt["passed"] = False
+        elif operand == "head":
+            primitive["head"]["parameters"][0] += 0.1
+        elif operand == "derivative":
+            primitive["derivative_rows"][0]["absolute_error"] = 999
+        elif operand == "state":
+            state = deepcopy(q.read(primitive["restart_rows"][0]["final_state"]))
+            state["head"]["parameters"][0] += 0.1
+            atomic_json(tmp_path / "state.json", state)
+            primitive["restart_rows"][0]["final_state"] = q.reference(tmp_path / "state.json")
+        elif operand == "hash":
+            primitive["restart_rows"][0]["logical_state_hash"] = "wrong"
+        elif operand == "exit":
+>           primitive["process_exit_rows"][0]["actual_exit"] = 0
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/python/test_objective_reporting_8461.py:181: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_required completed=0 pending=1
+[exp8205] phase=after_subprocess_required completed=1 pending=0
+________ test_rehashed_primitive_and_receipt_controls[authority_object] ________
+
+tmp_path = PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re5')
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+operand = 'authority_object'
+
+    @pytest.mark.parametrize(
+        "operand",
+        [
+            "code",
+            "authority",
+            "head",
+            "derivative",
+            "state",
+            "hash",
+            "exit",
+            "receipt",
+            "log",
+            "pass",
+            "authority_object",
+            "primary_pin",
+            "transition",
+        ],
+    )
+    def test_rehashed_primitive_and_receipt_controls(tmp_path, measured, operand):
+        """SCENARIO-REPORT-8461-TERMINAL: rebuilds reject repaired hashes over incorrect operands."""
+        import shutil
+    
+        work, parent = measured
+        work = deepcopy(work)
+        primitive = deepcopy(q.read(work["primitive_reference"]))
+        receipt = child(
+            "required",
+            [sys.executable, "-c", 'print("independent log")'],
+            tmp_path / "logs",
+            deadline=10,
+        )
+        if operand == "code":
+            work["code_refs"] = work["code_refs"][1:]
+        elif operand == "authority":
+            work["authority"]["activated"] = False
+        elif operand == "authority_object":
+>           work["authority"]["tasks"][0]["MODEL_SPECS"] = ["forged"]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'tasks'
+
+tests/python/test_objective_reporting_8461.py:153: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_required completed=0 pending=1
+[exp8205] phase=after_subprocess_required completed=1 pending=0
+___________ test_rehashed_primitive_and_receipt_controls[transition] ___________
+
+tmp_path = PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re6')
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+operand = 'transition'
+
+    @pytest.mark.parametrize(
+        "operand",
+        [
+            "code",
+            "authority",
+            "head",
+            "derivative",
+            "state",
+            "hash",
+            "exit",
+            "receipt",
+            "log",
+            "pass",
+            "authority_object",
+            "primary_pin",
+            "transition",
+        ],
+    )
+    def test_rehashed_primitive_and_receipt_controls(tmp_path, measured, operand):
+        """SCENARIO-REPORT-8461-TERMINAL: rebuilds reject repaired hashes over incorrect operands."""
+        import shutil
+    
+        work, parent = measured
+        work = deepcopy(work)
+        primitive = deepcopy(q.read(work["primitive_reference"]))
+        receipt = child(
+            "required",
+            [sys.executable, "-c", 'print("independent log")'],
+            tmp_path / "logs",
+            deadline=10,
+        )
+        if operand == "code":
+            work["code_refs"] = work["code_refs"][1:]
+        elif operand == "authority":
+            work["authority"]["activated"] = False
+        elif operand == "authority_object":
+            work["authority"]["tasks"][0]["MODEL_SPECS"] = ["forged"]
+        elif operand == "primary_pin":
+            ref = next(
+                r
+                for r in work["source_refs"]
+                if r["path"].endswith("experiment_8434_v726_capacity_online_learning.json")
+            )
+            changed_primary = q.read(ref)
+            changed_primary["tampered"] = True
+            path = tmp_path / "experiment_8434_v726_capacity_online_learning.json"
+            atomic_json(path, changed_primary)
+            ref.update(q.reference(path))
+        elif operand == "transition":
+>           primitive["transition_rows"][0]["observed_error"] = "forged"
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+tests/python/test_objective_reporting_8461.py:166: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_required completed=0 pending=1
+[exp8205] phase=after_subprocess_required completed=1 pending=0
+___________________ test_recovery_runtime_paths_are_private ____________________
+
+measured = ({'authority': {'activated': False}, 'code_refs': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot...ull_authority', 'observed_value': '', ...}], ...}, PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/8461-measured0'))
+
+    def test_recovery_runtime_paths_are_private(measured):
+        """SCENARIO-VERIFY-8461-RECOVERY: primitive copies outlive private child checkpoints."""
+        work, parent = measured
+        workers = [r for r in work["process_receipts"] if "--worker" in r["argv"]]
+>       assert workers
+E       assert []
+
+tests/python/test_objective_reporting_8461.py:282: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_objective_reporting_8461.py::test_qualified_primitive_replay - AssertionError: assert not [{'check': 'required_authority', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'required_authority', 'op': '==', 'expected': True, 'observed': 'V728 JSON contract missing', 'passed': False}, {'check': 'independent_visible_task_table', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'independent_visible_task_table', 'op': '==', 'expected': 14, 'observed': None, 'passed': False}, {'check': 'embedded_complete_task_objects', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'embedded_complete_task_objects', 'op': '==', 'expected': 14, 'observed': None, 'passed': False}, {'check': 'printed_canonical_task_digest', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'printed_canonical_task_digest', 'op': '==', 'expected': '1a6bb695f9ef6e97d0891d20ae2aad7a9f04fd3bdf3707cdf4a5e79bacaed7ae', 'observed': None, 'passed': False}, {'check': 'complete_json_markers', 'upstream_id': 'exp8457-contract-methods', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'artifact_hash': 'sha256:16895212c69e7ec0e916b6a65aeca584c6e036aacdb343f3ec3170ede2d0c827', 'artifact_field': 'complete_json_markers', 'op': '==', 'expected': True, 'observed': False, 'passed': False}, {'check': 'current_full_authority', 'upstream': 'exp8461-objective-checkpoint-qualification', 'path': '/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md', 'sha256': None, 'field': 'current_full_authority', 'operator': '==', 'expected_value': True, 'observed_value': '', 'passed': False}]
+FAILED tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[authority] - AssertionError: assert not True
+ +  where True = <function replay at 0x7f6f090c2ca0>(PosixPath('/var/tmp/exp8530-owned-9qal4463/shard-1/test_rehashed_primitive_and_re0/experiment_8461_v728_objective_checkpoint_qualification.json'))
+ +    where <function replay at 0x7f6f090c2ca0> = q.replay
+FAILED tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[derivative] - IndexError: list index out of range
+FAILED tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[state] - IndexError: list index out of range
+FAILED tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[hash] - IndexError: list index out of range
+FAILED tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[exit] - IndexError: list index out of range
+FAILED tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[authority_object] - KeyError: 'tasks'
+FAILED tests/python/test_objective_reporting_8461.py::test_rehashed_primitive_and_receipt_controls[transition] - IndexError: list index out of range
+FAILED tests/python/test_objective_reporting_8461.py::test_recovery_runtime_paths_are_private - assert []
+================== 9 failed, 15 passed, 2 warnings in 47.56s ===================

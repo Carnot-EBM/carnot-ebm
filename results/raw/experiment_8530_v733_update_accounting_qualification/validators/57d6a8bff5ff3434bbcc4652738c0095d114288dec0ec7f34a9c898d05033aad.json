@@ -1,0 +1,95 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8530_v733_update_accounting_qualification.json",
+  "primary_sha256": "sha256:57d6a8bff5ff3434bbcc4652738c0095d114288dec0ec7f34a9c898d05033aad",
+  "report": {
+    "findings": [
+      {
+        "detail": "applied_update_events=1800.0 and decay_scale_changes=1800.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      },
+      {
+        "detail": "applied_update_events=1800.0 and label_updates=1800.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      },
+      {
+        "detail": "changed_coordinate_count=47472.0 and physical_coordinate_writes=47472.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      },
+      {
+        "detail": "coefficient_change_count=47472.0 and physical_coordinate_writes=47472.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      },
+      {
+        "detail": "decay_scale_changes=1800.0 and label_updates=1800.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "passed": true,
+    "publication_qualification_passed": false,
+    "receipts": [
+      {
+        "actual_exit": 1,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 1.016204483,
+        "ended_monotonic_ns": 356154047253430,
+        "exit_code": 1,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/invocations/1792034659501938468/terminal_validators/adversarial.stdout",
+        "log_sha256": "sha256:cb2dea34dc14c706effafe08528f941dd0119d024f7836f45d1150107bfdca05",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": false,
+        "scope": "owned",
+        "started_monotonic_ns": 356153031048947,
+        "started_wall_ns": 1792036397810907810,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/invocations/1792034659501938468/terminal_validators/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/invocations/1792034659501938468/terminal_validators/adversarial.stdout",
+        "stdout_sha256": "sha256:cb2dea34dc14c706effafe08528f941dd0119d024f7836f45d1150107bfdca05",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/terminal_candidate.json",
+        "deadline_s": 60,
+        "duration_s": 0.031857564,
+        "ended_monotonic_ns": 356154080273247,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/invocations/1792034659501938468/terminal_validators/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 356154048415683,
+        "started_wall_ns": 1792036398828274066,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/invocations/1792034659501938468/terminal_validators/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8530_v733_update_accounting_qualification/invocations/1792034659501938468/terminal_validators/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ]
+  }
+}

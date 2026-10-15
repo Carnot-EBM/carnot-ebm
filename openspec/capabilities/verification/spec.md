@@ -55179,3 +55179,25 @@ pins and seals. Unchanged publication, adversarial and strict-row consumers vali
 terminal bytes before atomic publication. Bind sidecar and actual downstream receipt.
 Use no model loads or current LLM calls. Print phases and child heartbeats within60s.
 Stop measurement by3600s and reserve900s inside4800s. Preserve historical artifacts.
+## REQ-VERIFY-8530: Complete bounded validation and primitive replay
+
+Collect the original test union before exact disjoint serial shards. Require a
+terminal result for every node and clean shard exits; runner start lines and
+killed children cannot pass. Use original sealed dates and private authority.
+Require scoped tests, private E2E-018/021, Ruff, strict types, spec tracing and
+100 percent newly owned statement coverage including real children and rejection.
+
+### SCENARIO-VERIFY-8530-CONTROLS
+
+Accept20261015. Authenticate task, hashes, tools, memory and disk scratch. Flush
+phase progress and child heartbeats within60s. Stop measurement by3600s and
+reserve900s within4800s. Fresh replay rejects absence, owned errors and locally
+rehashed tampering. Unchanged publication, adversarial and strict-row validators
+bind final bytes, terminal sidecar and actual downstream consumer. No historical
+primary, active roadmap, conductor or gate changes. Ops reconciliation is conductor-owned.
+
+Implementation20261015: the thin8530 CLI and update_validation collect158 original
+nodes and run bounded serial pytest shards with real terminal-result accounting.
+Unit and actual-child coverage is442/442 new statements. Required historical
+failures remain failed validation and keep adapter readiness zero. Terminal
+receipts and the bound consumer record the actual invocation; no full suite runs.

@@ -1,0 +1,163 @@
+........FFF                                                              [100%]
+=================================== FAILURES ===================================
+_________________ test_real_exit_resume_and_repeated_delivery __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T031029-2889904-4a4068cc/test_real_exit_resume_and_repe0')
+
+    def test_real_exit_resume_and_repeated_delivery(tmp_path):
+        """SCENARIO-REPORT-8530-ACCOUNTING: an actual process exits73 after a durable release."""
+        from carnot.reporting import v733_update_fixture as f
+>       cfg = f.configuration()
+              ^^^^^^^^^^^^^^^^^
+
+tests/python/test_v733_update_accounting_8530.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v733_update_fixture.py:26: in configuration
+    return dict(adapter.config(original.source()['heads'][0], 2, 'uniform'))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/verify/objective_checkpoint_8461.py:93: in config
+    cfg = legacy.config(capacity, policy, frozen=frozen, shuffled=shuffled)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+capacity = 2, policy = 'uniform'
+
+    def config(
+        capacity: int = 8, policy: str = "fifo", *, frozen: bool = False, shuffled: bool = False
+    ) -> Json:
+        """Keep initial numerical and random operands independent of saved state."""
+        if capacity not in (8, 16) or policy not in ("fifo", "uniform"):
+>           raise ValueError("configuration")
+E           ValueError: configuration
+
+python/carnot/verify/block_feedback_state_8433.py:53: ValueError
+________________________ test_historical_reconciliation ________________________
+
+    def test_historical_reconciliation():
+        """SCENARIO-REPORT-8530-ACCOUNTING: original serialized state refutes the1800-change summary."""
+>       historical = e.historical_accounting()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v733_update_accounting_8530.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def historical_accounting() -> Json:
+        """Replay original primitive updates without training a new scientific stream.
+    
+        The original steps seal before/after head hashes and final block states. The
+        cost file independently records assignments from committed update calls.
+        Neither the old parameter counter nor the reported summary determines changes.
+        """
+        path = historical.ROOT / 'results' / (historical.NAME + '.json')
+        value = read(dict(path=str(path), sha256=HISTORICAL_PIN))
+        work = read(value['primitive_reference'])
+        rows, checks, refs = [], [], [reference(path), value['primitive_reference']]
+        for cell in work['cells']:
+            cfg, costs = read(cell['configuration']), read(cell['costs'])
+            refs.extend([cell['configuration'], cell['costs'], cell['final'], *cell['steps']])
+            event_rows = []
+            for step_ref in cell['steps']:
+                step = read(step_ref)
+                head = deepcopy(step['sealed_state']['head'])
+                pending = step['sealed_state']['pending']
+                for record, trace in zip(pending, step['updates'], strict=True):
+                    before = deepcopy(head)
+                    if cfg['frozen']:
+                        checks.append(before == step['after_state']['head'])
+                        continue
+                    kernel = stream._LOG_UPDATE if cell['arm'] == 'log_loss' else stream.adapter.update
+>                   head, info = kernel(before, np.asarray(record['x'], dtype=float), trace['target'])
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   TypeError: update() missing 1 required positional argument: 'learning_rate'
+
+python/carnot/reporting/v733_update_metrics.py:75: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8517] phase=accounted_original_cell completed=10 pending=19
+_________________ test_cli_rejections_and_private_publication __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T031029-2889904-4a4068cc/test_cli_rejections_and_privat0')
+
+    def test_cli_rejections_and_private_publication(tmp_path):
+        """SCENARIO-VERIFY-8530-CONTROLS: real private bytes replay and reject repaired tampering."""
+        from carnot.reporting import v733_update_accounting_runner as runner
+        assert runner.main(['--deliberate-error']) == 7
+        assert runner.main(['--cold-replay', str(tmp_path / 'missing')]) == 1
+        assert runner.main(['--fixture-worker', str(tmp_path)]) == 1
+        assert runner.main(['--private-control']) == 2
+        with pytest.raises(SystemExit):
+            runner.main(['--date', '20261014'])
+        output = tmp_path / (e.NAME + '.json')
+>       assert runner.main(['--private-control', '--root', str(tmp_path / 'absent'), '--output', str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v733_update_accounting_8530.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v733_update_accounting_runner.py:130: in main
+    return run(args.root, output, Path(directory), control=args.private_control)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v733_update_accounting_runner.py:29: in run
+    work = e.measure(root, raw)
+           ^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v733_update_accounting.py:107: in measure
+    history = historical_accounting()
+              ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def historical_accounting() -> Json:
+        """Replay original primitive updates without training a new scientific stream.
+    
+        The original steps seal before/after head hashes and final block states. The
+        cost file independently records assignments from committed update calls.
+        Neither the old parameter counter nor the reported summary determines changes.
+        """
+        path = historical.ROOT / 'results' / (historical.NAME + '.json')
+        value = read(dict(path=str(path), sha256=HISTORICAL_PIN))
+        work = read(value['primitive_reference'])
+        rows, checks, refs = [], [], [reference(path), value['primitive_reference']]
+        for cell in work['cells']:
+            cfg, costs = read(cell['configuration']), read(cell['costs'])
+            refs.extend([cell['configuration'], cell['costs'], cell['final'], *cell['steps']])
+            event_rows = []
+            for step_ref in cell['steps']:
+                step = read(step_ref)
+                head = deepcopy(step['sealed_state']['head'])
+                pending = step['sealed_state']['pending']
+                for record, trace in zip(pending, step['updates'], strict=True):
+                    before = deepcopy(head)
+                    if cfg['frozen']:
+                        checks.append(before == step['after_state']['head'])
+                        continue
+                    kernel = stream._LOG_UPDATE if cell['arm'] == 'log_loss' else stream.adapter.update
+>                   head, info = kernel(before, np.asarray(record['x'], dtype=float), trace['target'])
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   TypeError: update() missing 1 required positional argument: 'learning_rate'
+
+python/carnot/reporting/v733_update_metrics.py:75: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8530] phase=start_no_model_load_LLM_calls_0 completed=0 pending=0
+[exp8530] phase=start_no_model_load_LLM_calls_0 completed=0 pending=0
+[exp8530] phase=replay_rejected completed=0 pending=0
+[exp8530] phase=start_no_model_load_LLM_calls_0 completed=0 pending=0
+[exp8530] phase=start_no_model_load_LLM_calls_0 completed=0 pending=0
+[exp8530] phase=start_no_model_load_LLM_calls_0 completed=0 pending=0
+[exp8530] phase=start_no_model_load_LLM_calls_0 completed=0 pending=0
+[exp8530] phase=preconditions completed=0 pending=0
+[exp8530] phase=historical_accounting completed=0 pending=0
+[exp8517] phase=accounted_original_cell completed=10 pending=19
+----------------------------- Captured stderr call -----------------------------
+usage: pytest [-h] [--date {20261015}] [--root ROOT] [--output OUTPUT]
+              [--private-control] [--cold-replay COLD_REPLAY]
+              [--deliberate-error] [--configuration CONFIGURATION]
+              [--fixture-worker FIXTURE_WORKER] [--crash]
+pytest: error: argument --date: invalid choice: '20261014' (choose from 20261015)
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v733_update_accounting_8530.py::test_real_exit_resume_and_repeated_delivery
+FAILED tests/python/test_v733_update_accounting_8530.py::test_historical_reconciliation
+FAILED tests/python/test_v733_update_accounting_8530.py::test_cli_rejections_and_private_publication
+3 failed, 8 passed, 1 warning in 3.68s
