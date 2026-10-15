@@ -20357,3 +20357,4 @@ code |
 | 2026-10-15 14:53 UTC | Measure complete nine-input native inference again | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8545-nine-input-native-qualification.nine_input_native_ready_score (actual=0 == expected=1) |
 | 2026-10-15 15:00 UTC | Run the bounded Qwen source-evidence canary only a | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8540-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-10-15 16:23 UTC | Qualify terminal ARC panel replay and actual subpr | OK | 100 passed, 1 warning in 84.34s (0:01:24) |
+| 2026-10-15 16:30 UTC | Measure the live capability mask on the fixed adap | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8548-arc-panel-replay-qualification.arc_panel_execution_ready_score (actual=0 == expected=1) |
