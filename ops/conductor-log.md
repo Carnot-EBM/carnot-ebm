@@ -20350,3 +20350,6 @@ code |
 | 2026-10-15 11:54 UTC | Milestone 2026.10.734 activated | OK | 12 tasks queued |
 | 2026-10-15 12:42 UTC | Bind twelve tasks and preserve the source null and | OK | 130 passed, 1 warning in 192.86s (0:03:12) |
 | 2026-10-15 13:58 UTC | Qualify original learning test families with isola | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 95 passed, 1 warning in 60.12s (0:01:00) |
+| 2026-10-15 14:05 UTC | Qualify event accounting from actual state transit | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8541-historical-learning-qualification.historical_learning_validation_ready_score (actual=0 == expected=1) |
+| 2026-10-15 14:07 UTC | Train the continuous energy head with delayed feed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8542-canonical-update-accounting) |
+| 2026-10-15 14:07 UTC | Independently test later-block Brier benefit, rete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8543-causal-brier-stream) |
