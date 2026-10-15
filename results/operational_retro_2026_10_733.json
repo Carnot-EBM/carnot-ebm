@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.733",
+  "generated_at": "2026-10-15T09:37:04Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 135.0,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify causal update accounting and complete rejection diagnostics",
+      "duration_minutes": 28.97,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and decide source learning inference and ARC continu",
+      "duration_minutes": 21.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and seal independent source learning and inference protocols",
+      "duration_minutes": 20.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure capability-aware ARC supervision across adapter-withheld games",
+      "duration_minutes": 12.42,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Train identity-admissible calibrated energy heads on frozen question roles",
+      "duration_minutes": 12.41,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.733 completed 10 experiments (0 compute-bound, 10 synthesis-only) across 135.0 total wall-time minutes (averaging 14 minutes per experiment) reconstructed from disk-mtime fallback data. Execution was driven entirely by synthesis tasks, led by qualifying causal update accounting and complete rejection diagnostics (28.97 minutes), reconciling fourteen outcomes and deciding source learning inference and ARC continuation (21.13 minutes), binding fourteen tasks and sealing independent source learning and inference protocols (20.13 minutes), measuring capability-aware ARC supervision across adapter-withheld games (12.42 minutes), and training identity-admissible calibrated energy heads on frozen question roles (12.41 minutes), with the top 5 slowest tasks accounting for 95.06 minutes (~70.4% of total wall time). With zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null, observed 0% utilization across both RTX 3090 GPUs reflects correct idle behavior for non-GPU synthesis workloads.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 10 completed experiments totaling 135.0 wall-time minutes), with the top two synthesis tasks—qualifying causal update accounting and complete rejection diagnostics (28.97 minutes) and reconciling fourteen outcomes and deciding source learning inference and ARC continuation (21.13 minutes)—consuming 50.10 minutes (~37.1% of total milestone wall time).",
+    "Synthesis qualification, task binding, and outcome reconciliation procedures executed serially without incremental receipt caching or evidence memoization when evaluating invariant baselines, protocol seals, or diagnostic checks.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Experiment receipts lack granular intra-task phase telemetry (separating fixture setup, diagnostic qualification, assertion sweeps, and artifact serialization), obscuring which sub-phase drove the 28.97-minute and 21.13-minute latencies in causal update accounting and outcome reconciliation."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for causal update accounting qualification, outcome reconciliation, task protocol binding, ARC supervision measurement, and energy head calibration when upstream contracts and inputs remain unchanged.",
+    "Instrument long-running synthesis tasks with granular intra-task phase timers (fixture setup, qualification checks, assertion sweeps, artifact serialization) to isolate latency drivers.",
+    "Persist synchronous start, completion, and duration lifecycle timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for causal update accounting qualification, outcome reconciliation, and task binding workflows when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, diagnostic checks, assertion sweeps, serialization) to isolate sub-phase latency drivers.",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.733 completed 10 synthesis-only experiments in 135.0 wall-time minutes with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% utilization across both RTX 3090 GPUs represented expected idle behavior for non-GPU synthesis workloads, and no multi-model task required DualGPURunner dispatch. Operational improvements should prioritize deploying incremental receipt caching for diagnostic qualification and reconciliation sweeps and persisting synchronous lifecycle timestamps directly in receipts, with estimated time savings held at 0% until measured."
+}

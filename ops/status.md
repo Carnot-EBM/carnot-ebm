@@ -1,6 +1,10 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-10-14
+**Last Updated:** 2026-10-15
+
+## 2026-10-15 — Milestone 2026.10.733 operational retrospective
+
+Milestone 2026.10.733 operational retrospective recorded in `results/operational_retro_2026_10_733.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime fallback timing records 10 completed experiments (0 compute-bound, 10 synthesis-only) across 135.0 total wall-time minutes (averaging 14 minutes per experiment). Execution was led by qualifying causal update accounting and complete rejection diagnostics (28.97 min), reconciling fourteen outcomes and deciding source learning inference and ARC continu (21.13 min), and binding fourteen tasks and sealing independent source learning and inference protocols (20.13 min). GPU utilization was 0% across both RTX 3090 GPUs with `gpu_idle_on_compute_bound_tasks: null` (expected idle state for non-GPU synthesis tasks).
 
 ## 2026-10-14 — Milestone 2026.10.730 operational retrospective
 

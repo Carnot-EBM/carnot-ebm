@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-15 — Operational retrospective for milestone 2026.10.733
+
+- Wrote `results/operational_retro_2026_10_733.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.733`. Authoritative disk-mtime fallback data records 10 experiments completed (0 compute-bound, 10 synthesis-only) across 135.0 total wall-time minutes (average 14 minutes per experiment).
+- Execution wall time was led entirely by synthesis tasks: 'Qualify causal update accounting and complete rejection diagnostics' (28.97 minutes), 'Reconcile fourteen outcomes and decide source learning inference and ARC continu' (21.13 minutes), 'Bind fourteen tasks and seal independent source learning and inference protocols' (20.13 minutes), 'Measure capability-aware ARC supervision across adapter-withheld games' (12.42 minutes), and 'Train identity-admissible calibrated energy heads on frozen question roles' (12.41 minutes).
+- Point-in-time GPU monitor polling observed both RTX 3090 GPUs at 0% utilization (4MB allocated); `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for causal update accounting qualification, outcome reconciliation, task protocol binding, ARC supervision measurement, and energy head calibration when upstream dependencies remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-14 — Operational retrospective for milestone 2026.10.732
 
 - Wrote `results/operational_retro_2026_10_732.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.732`. Authoritative disk-mtime fallback data records 10 experiments completed (0 compute-bound, 10 synthesis-only) across 223.6 total wall-time minutes (average 22 minutes per experiment).
