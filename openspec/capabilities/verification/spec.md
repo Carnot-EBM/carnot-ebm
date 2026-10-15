@@ -55435,3 +55435,22 @@ objects again. Unchanged primary publication, adversarial and strict-row checks
 validate final bytes, atomically publish and bind the terminal sidecar. A new
 artifact cannot clear an old quarantine. Preserve the4800-second task cap,
 3600-second measurement cap and900-second validation reserve with flushed counts.
+
+## REQ-VERIFY-8552: Qualify bounded V735 primitive replay and publication
+
+Exp8552 SHALL collect original consumer node IDs before disjoint serial pytest
+children, retain their exact union and terminal outcomes, and execute private
+E2E-018/E2E-021. Owned statements, including real CLI children and rejection
+paths, SHALL have 100 percent coverage. Killed required children fail validation.
+Cold reduction SHALL reject absent inputs and independently rehashed tampering.
+Atomic publication SHALL use unchanged primary_publication, adversarial and
+strict row consumers, bind a terminal sidecar and exercise the live downstream
+reader. Existing scientific quarantines cannot be cleared by a new artifact.
+
+### SCENARIO-VERIFY-8552-CONTROLS
+
+Private CLI accepts the original date, publishes authentic administrative rows,
+replays them in a fresh bounded process and rejects changed primitives, changed
+receipts, absent inputs and owned failures. Owned failure is disqualified;
+unchanged missing external evidence is blocked. Runtime receipt inspection uses
+the shipped Exp8410 reader without opening a device or loading a model.

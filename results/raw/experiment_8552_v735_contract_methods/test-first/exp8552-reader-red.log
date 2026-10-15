@@ -1,0 +1,57 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_rehashed_primitives[upstream] ______________________
+
+full_root = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T195352-3355457-869cc01d/test_rehashed_primitives_upstr0/authority')
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T195352-3355457-869cc01d/test_rehashed_primitives_upstr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f513f179b20>
+mode = 'upstream'
+
+    @pytest.mark.parametrize("mode", ["valid", "protocol", "authority", "family", "source", "receipt", "upstream"])
+    def test_rehashed_primitives(full_root, tmp_path, monkeypatch, mode):
+        """SCENARIO-VERIFY-8552-CONTROLS: independent operands defeat repaired hashes."""
+        monkeypatch.setattr(e, "historical", lambda *a: fake_history())
+        raw = tmp_path / "raw"
+        work = e.measure(full_root, raw)
+        receipt = child("real", [sys.executable, "-c", "print('real')"], raw / "logs")
+        if mode == "protocol":
+            work["protocol"]["partition"]["reseeding"] = True
+        if mode == "authority":
+            work["contract"]["contract_rows"][0]["checks"]["full_object"] = False
+        if mode == "family":
+            work["history"]["families"][0]["qualified"] = False
+        if mode == "upstream":
+            work["v734_reader_receipts"][0]["summary"] = "forged current reader selection"
+        atomic_json(raw / "measurement.json", work)
+        value = e.build(work, [receipt], raw, tmp_path / (e.NAME + ".json"))
+        if mode == "source":
+            value["code_config_hashes"][0]["sha256"] = "changed"
+        if mode == "receipt":
+            value["validation_receipts"][0]["duration_s"] += 1
+        value["reproducibility_checksum"] = e.checksum(value)
+        candidate = tmp_path / "candidate.json"
+        atomic_json(candidate, value)
+>       assert e.replay(candidate) == (mode == "valid")
+E       AssertionError: assert True == ('upstream' == 'valid'
+E        +  where True = <function replay at 0x7f513d298ea0>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T195352-3355457-869cc01d/test_rehashed_primitives_upstr0/candidate.json'))
+E        +    where <function replay at 0x7f513d298ea0> = e.replay
+E         
+E         - valid
+E         + upstream)
+
+tests/python/test_v735_contract_replay_8552.py:92: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8552] phase=preconditions_before completed=0 pending=14
+[exp8552] phase=authority_after completed=13 pending=1
+[exp8552] phase=methods_frozen_after completed=14 pending=0
+[exp8205] phase=before_subprocess_real completed=0 pending=1
+[exp8205] phase=after_subprocess_real completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v735_contract_replay_8552.py::test_rehashed_primitives[upstream]
+1 failed, 1 warning in 7.58s

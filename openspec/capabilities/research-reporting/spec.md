@@ -101153,3 +101153,29 @@ Planning checks SHALL cover schema, exclusions, exact contracts, gate names and
 private E2E-018/E2E-021. Record pre-existing spec-tracing debt separately.
 Execution tasks SHALL run scoped unit/lint/spec/coverage and applicable E2E checks.
 Active roadmap, conductor, validation gates and prior result bytes stay unchanged.
+
+## REQ-REPORT-8552: Bind isolated V735 methods to thirteen complete tasks
+
+Exp8552 SHALL bind Exp8552–Exp8564 across the independent visible table,
+embedded full dictionaries, printed digest and activated YAML. It SHALL retain
+consumed staging as absent and authenticate the actual activation. It SHALL
+freeze V734 scientific operands and original authority dates before measurement,
+including design SHA256 9a213619fcc67cbaa26e0b8fcdc8492917b6b874e22d332b1038ded73d2231a8.
+Learning, nine-input and canary readiness SHALL be independent of optional CUDA,
+HALLMARK availability and unrelated failed historical families. HALLMARK release
+admissibility SHALL be registered separately before any row inspection. No model
+load, device command, new source fit or scientific benefit is authorized.
+
+### SCENARIO-REPORT-8552-AUTHORITY
+
+Exactly thirteen complete objects qualify. Count, order, ID, title, phase,
+deliverable, model, substrate, gate, prompt, retirement flag, missing end marker,
+missing input and self-consistently rehashed contract mutations fail.
+
+### SCENARIO-REPORT-8552-METHODS
+
+Inherited objective updates, audits, nine-input, canary and ARC operands remain
+exact. Original producer consumers qualify learning heads/streams and canary
+inputs independently. A missing stream cannot invalidate the nine-input branch.
+V734 primaries and reader-resolved pre-gates preserve all original flags; the
+archive ending at V733 cannot provide fabricated V734 observations.
