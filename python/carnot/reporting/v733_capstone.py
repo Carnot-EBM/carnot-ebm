@@ -20,7 +20,10 @@ SUITES = shipped.SUITES
 def manifest(private: Path) -> list[Json]:
     """Collect first and preserve the complete consumer union in disjoint serial shards."""
     with patch.object(shipped, "e", e):
-        return list(shipped.manifest(private))
+        plan = list(shipped.manifest(private))
+    config = private / "coverage.ini"
+    config.write_text(config.read_text().replace("[run]\n", "[run]\ncore=sysmon\n", 1))
+    return plan
 
 
 def run(

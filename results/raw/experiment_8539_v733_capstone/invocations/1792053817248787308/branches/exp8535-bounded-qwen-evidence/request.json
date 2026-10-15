@@ -1,0 +1,59 @@
+{
+  "closure": null,
+  "primary": {
+    "exists": true,
+    "expected_sha256": null,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8535_bounded_qwen_evidence.json",
+    "sha256": "sha256:485b5b997c4f734a66463f1b48729cbf8920d92accc6e66f141b1c130704cd30",
+    "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8539_v733_capstone/invocations/1792053817248787308/pregates/8535/485b5b997c4f734a66463f1b48729cbf8920d92accc6e66f141b1c130704cd30.json"
+  },
+  "task": {
+    "MODEL_SPECS": [
+      "unsloth/Qwen3.8-27B-GGUF"
+    ],
+    "agent_type": "claude",
+    "deliverable": "results/experiment_8535_v733_bounded_qwen_evidence.json",
+    "estimated_wall_time_min": 45,
+    "gated_on": [
+      {
+        "artifact_field": "runtime_repair_ready_score",
+        "op": "==",
+        "upstream": "exp8526-contract-methods",
+        "value": 1
+      },
+      {
+        "artifact_field": "comparator_inputs_ready_score",
+        "op": "==",
+        "upstream": "exp8527-source-consumer-qualification",
+        "value": 1
+      }
+    ],
+    "id": "exp8535-bounded-qwen-evidence",
+    "inference_substrate_class": "model_bounded_generation",
+    "max_turns": 30,
+    "milestone": "2026.10.733",
+    "model": "sonnet",
+    "per_unit_rows": true,
+    "phase": 3,
+    "prior_failures": [
+      {
+        "addressed_by": "Only a newly authenticated causal CUDA receipt and repaired source consumer can reopen generation; structured gates skip the task without a synthesis call when unchanged.",
+        "experiment_id": "exp8521-bounded-qwen-evidence",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      },
+      {
+        "addressed_by": "Retain the original small evidence-view protocol and require changed runtime operands before any current model load.",
+        "experiment_id": "exp8495-bounded-qwen-evidence",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. V732 completed fourteen scheduling slots, not fourteen successful scientific studies. Its contract, objective qualification, append runner and direct ARC receipts qualified. Exp8513 failed its missing-input upstream diagnostic; source fitting did not run. Exp8517 failed its field diagnostic, historical validation and coefficient/update accounting; its learning benefit remains unqualified. Exp8520 measured a five-input host-service speedup of 2.16268, CI95 [2.03877,2.29157], not nine-input inference or Rust/Python NFR-01. Exp8523 measured eight effective diversity changes and eight model-disabled reinduction latch changes; none of 32 redirects resolved. Original historical authority, exposure and quarantines remain intact. V733 targets those exact gaps.\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; python/carnot/verify/cuda_reader_8410.py; python/carnot/inference/llama_cpp_process.py; python/carnot/inference/sota_models.py; openspec/change-proposals/v732-methods-protocol.json; research-references.md\nTASK:\nTest bounded mandated-Qwen evidence views after authenticated CUDA recovery. Deliver results/experiment_8535_v733_bounded_qwen_evidence.json. Create thin runner scripts/experiments/experiment_8535_v733_bounded_qwen_evidence.py, primitive evidence under results/raw/experiment_8535_v733_bounded_qwen_evidence/, and docs/research-notes/v733-bounded-qwen-evidence.md. Same-roadmap upstream outputs are future dependencies.\nCONCRETE STEPS:\n1. PRECONDITIONS: Print a flushed start line. Authenticate the current task, original input hashes, tools, free memory, writable disk-backed scratch and deadlines. Use original sealed dates and authority for historical inputs. Record exact missing inputs and observed values in gate_check_summary. CUDA and board absence must not block independent CPU work.\n2. Print a flushed progress line at every phase boundary and before and after any model load, generation, benchmark or subprocess that can take minutes. Use unbuffered output and print completed/pending counts inside long loops. Supervise children with a status line at least every 60 seconds; keep every output gap under 600 seconds. Write any file over about 200 lines in several tool calls of at most about 150 lines, with a progress message between calls. Bound every tool call. Stop measurement by 3600 seconds and reserve at least 900 seconds for validation within the 4800-second hard cap. Never pad duration.\n3. Spec first: ensure applicable REQ-* and SCENARIO-* exist before implementation. Write focused failing tests first. Preserve existing assertions, thresholds and historical source snapshots. Reuse shipped code through small explicit adapters. Keep runners in scripts/experiments/, tests in tests/python/, scratch outside the repository root. Accept --date {date}. Do not modify the active roadmap, conductor, validation gates, generator weights or external services.\n4. Declare MODEL_SPECS=[unsloth/Qwen3.8-27B-GGUF], inference_substrate_class=model_bounded_generation (10-second authenticity floor), and inference_mode=live_gpu only after actual CUDA generation. This fixed-budget canary is not model_full_generation (60 seconds). A load-only probe would instead be model_load_no_generation (2 seconds). No simulation fallback, sleep padding, or small-model headline substitution.\n5. Require Exp8526.runtime_repair_ready_score=1 and Exp8527.comparator_inputs_ready_score=1. Reauthenticate the supplied causal repair,actual library hashes,CUDA context/copy and GPU lease immediately before use. If unchanged or unavailable,record blocked without probing again. No runtime rebuild,download or dual-GPU integration.\n6. Pin cached unsloth/Qwen3.8-27B-GGUF Q4_K_M bytes,embedded tokenizer,context,CUDA backend and actual offloaded layers. Use the existing qualified native loader and --single-turn. The original four fit questions and first generator sibling remain fixed with source-present,source-absent,explicit span contradiction and fixed instruction-paraphrase views. Keep the exact evidence_canary operands from V732.\n7. Run16 calls,temperature0,max128 generated tokens each. Load deadline600 seconds,each call120 seconds,total measurement2400 seconds including load. Supervise with60-second heartbeat during load and calls; flush actual token/call counts. Store every raw output,token count,truncation,error and actual duration. Four question clusters remain four independent units.\n8. Reduce evidence-span compliance,abstention,contradicted-claim rejection and paraphrase sensitivity. SURE-RAG and RT4CHART motivate distinguishing evidence sufficiency from factual truth; neither is replicated here. No headline hallucination reduction or training from this tiny panel. Legacy small models may appear only in separate CPU smoke records and cannot replace mandated Qwen. Emit qwen_views_complete_score for protocol completion independently of diagnostic success.\n9. Run scoped unit tests, actual private CLI checks, Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Run applicable ops/e2e-test-plan.md checks, including private E2E-018 and E2E-021 for authority/publication consumers. Require 100 percent newly owned statement coverage, including child and rejection paths. Collect original test node IDs first and preserve their exact union in disjoint bounded shards using pytest -n 0 -o addopts= --no-cov. Supervise each shard with heartbeats; record commands, exit codes, durations and log hashes. Do not launch a nested full historical validation runner or the full repository suite. A killed child is failed validation, not a skipped success.\n10. Cold-replay primitive rows in a fresh bounded process; exercise absent inputs, owned failure and self-consistently rehashed tampering. Run unchanged primary_publication, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>. Preserve every finding. Validate final bytes, publish atomically, bind the terminal sidecar, then exercise the actual downstream consumer. Historical flagged bytes and sidecars stay immutable. Owned validation failure is disqualified. Unchanged external absence is blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md.\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind evidence to the actual invocation.\nhonest_verdict, verdict_class: principle: Terminal honest_verdict starts complete_; verdict_class is exactly positive | circular_positive | null | blocked | disqualified | partial. Only unfinished owned work that another attempt can finish is partial.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* outcome names check, upstream, path/hash, field, operator, expected and observed; missing is distinct from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance: principle: Record actual calls and separate imported evidence from current generation.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Each intended question, arm, seed, episode or repeat retains its own metric or missing reason; siblings and deterministic repeats do not multiply independence.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle fixtures and exposed-history positives are circular_positive, with generalization scores zero.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Qualification is distinct from benefit; failed required checks forbid positive classes.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Preserve real measured work and immutable primitive operands.\ncited_upstream_artifacts, field_principles: principle: Explain each additional metric and acceptance gate and identify original producer hashes.\nqwen_views_complete_score, model_file_reference, runtime_repair_reference, cuda_receipt, per_question_view_rows, raw_outputs_reference, token_counts, evidence_sufficiency_scope, current_model_acquisition_cost: principle: Bounded real generation is a canary,not a full benchmark or proof of independent factuality.\nRun command: cd {project_root} && CARNOT_FORCE_LIVE=1 PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8535_v733_bounded_qwen_evidence.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+    "requires_gpu": true,
+    "title": "Test bounded mandated-Qwen evidence views after authenticated CUDA recovery",
+    "track": "research"
+  },
+  "task_sha256": "sha256:fcc065c8bfa6caf8f2dc3a3863474fd93e4479be7a67344b3bf18c8056139a72"
+}

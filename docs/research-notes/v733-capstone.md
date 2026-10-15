@@ -42,3 +42,9 @@ zero exclusions and an exact disjoint23-node passing union. This supplemental
 proof does not promote the failed producer. Original failed receipts remain
 under raw evidence. The supplemental qualification and coverage receipts are in
 `results/raw/experiment_8539_v733_capstone/invocations/1792051021434149638/supplemental_validation/`.
+
+The next invocation selects Coverage.py's supported sysmon core in its private
+configuration. A tests-first regression requires that setting and retains the
+complete original test union. ARC replay keeps its existing 300-second deadline
+and every assertion. The earlier timeout and supplemental receipts stay intact;
+only the new invocation's actual checks determine its terminal qualification.

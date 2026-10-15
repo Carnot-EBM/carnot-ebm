@@ -83,8 +83,9 @@ def test_rehashed_controls(private, tmp_path):
 
 
 def test_manifest(tmp_path):
-    """REQ-VERIFY-8539: collect original node IDs and retain their exact disjoint union."""
+    """SCENARIO-VERIFY-8539-MONITORING: preserve all IDs under bounded child coverage."""
     plan = runner.manifest(tmp_path)
+    assert "core=sysmon\n" in (tmp_path / "coverage.ini").read_text()
     assert "--fail-under=100" in next(p for p in plan if p["name"] == "coverage_report")["argv"]
     for suite in runner.SUITES:
         nodes = next(

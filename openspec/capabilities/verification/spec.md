@@ -55303,6 +55303,13 @@ original consumer node IDs first; retain their exact union in disjoint serial
 bounded shards with unbuffered heartbeats. Preserve command, exit, duration and
 log hashes. No nested historical validation runner or full repository suite.
 
+### SCENARIO-VERIFY-8539-MONITORING
+
+The invocation coverage configuration SHALL select the supported sysmon core
+for owned code and real children. This keeps full ARC replay within its existing
+300-second child deadline without removing assertions or excluding statements.
+Earlier timeout receipts SHALL remain immutable and failed.
+
 ### SCENARIO-VERIFY-8539-CONTROLS
 
 Accept --date20261015. Fresh bounded processes SHALL accept cold primitive
