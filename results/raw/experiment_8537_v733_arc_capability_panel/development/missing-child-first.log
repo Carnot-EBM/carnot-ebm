@@ -1,0 +1,25 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________ test_missing_child_terminal_is_owned_failure _________________
+
+    def test_missing_child_terminal_is_owned_failure():
+        """REQ-VERIFY-8537: killed or broken children cannot become skipped successes."""
+        units = e.units(e.qualification.protocol())
+        ref = dict(unit=units[0], directory='/absent/owned_child', terminal_sha256=None)
+        summary = e.reduce([ref], units)
+>       assert summary['rows'][0]['status'] == 'failed'
+E       AssertionError: assert 'unstarted' == 'failed'
+E         
+E         - failed
+E         + unstarted
+
+tests/python/test_arc_capability_panel_8537.py:372: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_panel_8537.py::test_missing_child_terminal_is_owned_failure
+1 failed, 1 warning in 3.97s

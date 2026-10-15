@@ -1,0 +1,56 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_full_primitive_replay_uses_validation_reserve ______________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T061323-2995195-54ac3508/test_full_primitive_replay_use0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb06b59efc0>
+
+    def test_full_primitive_replay_uses_validation_reserve(tmp_path, monkeypatch):
+        """REQ-VERIFY-8537: full primitive replay needs a bound inside the900-second reserve."""
+        def execute(name, argv, logs, **kwargs):
+            assert 180 <= kwargs['deadline'] <= 900 if name == 'terminal_replay' else kwargs['deadline'] == 90
+            return dict(name=name, passed=True)
+    
+        def publishing(output, value, validator):
+            candidate = tmp_path / 'candidate.json'
+            atomic_json(candidate, value)
+            assert validator(candidate)['passed']
+            raise RuntimeError('validator_completed')
+    
+        monkeypatch.setattr(runner, 'child', execute)
+        monkeypatch.setattr(runner, 'publish_primary', publishing)
+        monkeypatch.setattr(runner, 'reader_receipt', lambda *_a, **_k: dict(passed=True))
+        with pytest.raises(RuntimeError, match='validator_completed'):
+>           runner.publish(dict(arc_capability_panel_ready_score=0), tmp_path / (e.NAME + '.json'), tmp_path / 'raw')
+
+tests/python/test_arc_capability_panel_runner_8537.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_capability_panel_runner_8537.py:97: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/python/test_arc_capability_panel_runner_8537.py:166: in publishing
+    assert validator(candidate)['passed']
+           ^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_capability_panel_runner_8537.py:63: in validate
+    child(name, argv, raw / "terminal", deadline=90)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'terminal_replay'
+argv = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/sc...y', '/var/tmp/pytest-carnot-ianblenke/20261015T061323-2995195-54ac3508/test_full_primitive_replay_use0/candidate.json']
+logs = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T061323-2995195-54ac3508/test_full_primitive_replay_use0/raw/terminal')
+kwargs = {'deadline': 90}, @py_assert0 = False, @py_format2 = 'assert False'
+
+    def execute(name, argv, logs, **kwargs):
+>       assert 180 <= kwargs['deadline'] <= 900 if name == 'terminal_replay' else kwargs['deadline'] == 90
+E       assert False
+
+tests/python/test_arc_capability_panel_runner_8537.py:160: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_panel_runner_8537.py::test_full_primitive_replay_uses_validation_reserve
+1 failed, 1 warning in 3.87s

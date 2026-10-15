@@ -1,0 +1,287 @@
+.....F..F.                                                               [100%]
+=================================== FAILURES ===================================
+________________ test_real_wrapper_replays_capability_snapshots ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055544-2984605-3b69238c/test_real_wrapper_replays_capa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff057b5d1f0>
+
+    def test_real_wrapper_replays_capability_snapshots(tmp_path, monkeypatch):
+        """REQ-REPORT-8537: constructed observations drive the actual wrapper in both modes."""
+        from test_arc_supervisor_live_panel_8384 import Arcade
+    
+        monkeypatch.setattr(e.history.panel_runtime, "sdk", Arcade)
+        for unit in e.units(e.qualification.protocol())[:2]:
+            directory = tmp_path / unit["mode"]
+            directory.mkdir()
+            unit = dict(unit, game="aa", directory=str(directory), max_actions=365)
+            path = directory / "unit.json"
+            atomic_json(path, unit)
+            assert e.episode(path) == 0
+            ref = dict(
+                unit=unit,
+                directory=str(directory),
+                terminal_sha256=e.sha256_file(directory / "episode.json"),
+                steps_sha256=e.sha256_file(directory / "steps.jsonl"),
+            )
+            row, events, exclusions = e.reduce_episode(ref)
+            assert row["actions_used"] > 1
+            assert row["model_tripwire_passed"]
+            assert row["selected_disabled_attempts"] == 0
+>           assert row["actual_disabled_attempts"] == 0
+E           assert 1 == 0
+
+tests/python/test_arc_capability_panel_8537.py:160: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8384] episode_before ar25-0c556536:11:baseline_applied
+[exp8384] numeric_head_load_before no_LLM_load
+[exp8384] numeric_head_load_after no_LLM_load
+[exp8384] ar25-0c556536:11:baseline_applied completed=1 pending=364
+[exp8384] ar25-0c556536:11:baseline_applied completed=2 pending=363
+[exp8384] ar25-0c556536:11:baseline_applied completed=3 pending=362
+[exp8384] ar25-0c556536:11:baseline_applied completed=4 pending=361
+[exp8384] ar25-0c556536:11:baseline_applied completed=5 pending=360
+[exp8384] ar25-0c556536:11:baseline_applied completed=6 pending=359
+[exp8384] ar25-0c556536:11:baseline_applied completed=7 pending=358
+[exp8384] ar25-0c556536:11:baseline_applied completed=8 pending=357
+[exp8384] ar25-0c556536:11:baseline_applied completed=9 pending=356
+[exp8384] episode_after ar25-0c556536:11:baseline_applied completed=9 error=None
+_____________________ test_build_and_replay_owned_refusals _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055544-2984605-3b69238c/test_build_and_replay_owned_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff2013da030>
+
+    def test_build_and_replay_owned_refusals(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8537-REPLAY rejects self-consistently rehashed envelopes."""
+        work = e.measure(tmp_path / "absent", tmp_path / "raw", tmp_path / "scratch")
+        output = tmp_path / "results" / (e.NAME + ".json")
+        source = e.authenticate(e.ROOT, tmp_path / "source")
+        from carnot.reporting.v721_capstone_evidence import freeze
+    
+        for case in [
+            "clean",
+            "frozen",
+            "protocol",
+            "task",
+            "absent_authority",
+            "absent_source",
+            "source",
+            "code",
+            "log",
+            "aggregate",
+            "source_clean",
+        ]:
+            changed = deepcopy(work)
+            receipts = [dict(name=n, passed=True) for n in e.REQUIRED]
+            if case == "frozen":
+                changed["panel"]["units"] = []
+            elif case == "protocol":
+                changed["panel"]["protocol"]["max_actions"] = 511
+                target = tmp_path / "frozen.json"
+                atomic_json(target, changed["panel"])
+                changed["frozen_reference"] = dict(path=str(target), sha256=e.sha256_file(target))
+            elif case == "task":
+                active = tmp_path / "active.yaml"
+                active.write_text("tasks: []\n")
+                changed["activation_reference"] = freeze(active, tmp_path / "authority")
+                changed["failures"] = []
+            elif case in ["absent_authority", "absent_source"]:
+                changed["failures"] = []
+                if case == "absent_source":
+                    changed["activation_reference"] = freeze(
+                        e.ROOT / "research-roadmap.yaml", tmp_path / "current"
+                    )
+            elif case in ["source", "source_clean"]:
+                changed["source"] = deepcopy(source)
+                if case == "source":
+                    changed["source"]["primary"]["headline_solve_credit"] = 1
+            elif case == "code":
+                changed["code_config_hashes"][str(e.ROOT / e.CLI)] = "bad"
+            elif case == "log":
+                log = tmp_path / "log"
+                log.write_text("changed")
+                receipts.append(
+                    dict(name="private", passed=True, stdout_path=str(log), stdout_sha256="bad")
+                )
+            path = tmp_path / "work.json"
+            atomic_json(path, changed)
+            value = e.build(path, receipts, output)
+            if case == "aggregate":
+                value["headline_solve_credit"] = 1
+            assert e.replay(value) == (case in ["clean", "source_clean"]), case
+        changed = deepcopy(work)
+        changed["references"] = [
+            dict(
+                unit=e.units(e.qualification.protocol())[0],
+                directory=str(tmp_path / "gone"),
+                terminal_sha256="bad",
+            )
+        ]
+        atomic_json(path, changed)
+>       value = e.build(path, receipts, output)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_capability_panel_8537.py:288: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055544-2984605-3b69238c/test_build_and_replay_owned_re0/work.json')
+receipts = [{'name': 'ruff_check', 'passed': True}, {'name': 'coverage_report', 'passed': True}, {'name': 'strict_mypy', 'passed'... 'ruff_format', 'passed': True}, {'name': 'missing', 'passed': True}, {'name': 'rehashed_tamper', 'passed': True}, ...]
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055544-2984605-3b69238c/test_build_and_replay_owned_re0/results/experiment_8537_v733_arc_capability_panel.json')
+
+    def build(work_path: Path, receipts: list[Json], output: Path) -> Json:
+        """A complete qualified panel may be a terminal null on useful efficiency."""
+        work = json.loads(work_path.read_bytes())
+        primitive_error = None
+        try:
+            summary = reduce(work["references"], work["panel"]["units"])
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            primitive_error = str(exc)
+            summary = reduce([], work["panel"]["units"])
+        rows = summary["rows"]
+        qualified = (
+            bool(receipts)
+            and all(r["passed"] for r in receipts)
+            and REQUIRED <= {r["name"] for r in receipts}
+        )
+        execution = (
+            not primitive_error
+            and all(r["passed"] for r in work["measurement_receipts"])
+            and not any(r["status"] == "failed" for r in rows)
+            and (bool(work['failures']) or len(work['references']) == 16)
+        )
+        ready = int(
+            qualified
+            and execution
+            and not work["failures"]
+            and all(p["matched_initial_state"] for p in summary["paired_results"])
+            and all(
+                r["status"] == "completed"
+                and r["receipt_count"] > 0
+                and r["model_tripwire_passed"]
+                and r["solve_provenance"] == "live_agent_self_discovery"
+                for r in rows
+            )
+        )
+        efficiency = int(bool(ready and summary["useful_efficiency"]))
+        verdict = (
+            "disqualified"
+            if not execution or receipts and not all(r["passed"] for r in receipts)
+            else "blocked"
+            if work["failures"]
+            else "circular_positive"
+            if efficiency
+            else "null"
+        )
+        source = work["source"] or {}
+        failures = list(work["failures"])
+        if primitive_error:
+            failures.append(
+                history.shipped.gate(
+                    "primitive_replay", work_path, "valid_primitive_operands", True, primitive_error
+                )
+            )
+        value = dict(
+            experiment_id=8537,
+            task_id=TASK,
+            milestone="2026.10.733",
+            run_date="20261015",
+            honest_verdict=f"complete_{verdict}_v733_arc_capability_panel",
+            verdict_class=verdict,
+            gate_check_summary=failures,
+            inference_substrate="aggregation_from_upstream_artifacts",
+            inference_substrate_class="no_model_load",
+            MODEL_SPECS=[],
+            model_invocation_counts=dict(history.ZERO_INVOCATION_COUNTS),
+            llm_invocation_count=0,
+            historical_model_provenance=source.get("primary", {}).get(
+                "historical_model_provenance", {}
+            ),
+            **summary,
+            intended_count=16,
+            completed_count=sum(r["status"] == "completed" for r in rows),
+            failed_count=sum(r["status"] == "failed" for r in rows)
+            if not primitive_error
+            else len(work["references"]),
+            censored_count=summary["censoring_counts"]["episodes"],
+            excluded_count=0,
+            sample_size_budget=dict(
+                independent_games=4,
+                episodes=16,
+                seeds=[11, 22],
+                modes=MODES,
+                max_actions=512,
+                episode_cap_s=120,
+                aggregate_cap_s=2400,
+            ),
+            verifier_is_oracle=False,
+            exposure_scope="adapter_withheld_historically_exposed_public_games",
+            independent_generalization_score=0,
+            generalized_learning_benefit_score=0,
+            required_checks_passed=qualified,
+            flagged_adversarial=False,
+            acceptance_gates=dict(
+                owned_validation=qualified,
+                qualified_upstream=bool(source),
+                collection_qualified=bool(ready),
+                useful_efficiency=bool(efficiency),
+                arm_support=summary["arm_refinement_authorized"],
+                scientific_reasoning_benefit_claimed=False,
+            ),
+            validation_receipts=receipts,
+            terminal_validation_sidecar_path=str(
+                output.parent / "raw" / output.stem / "terminal_validation.json"
+            ),
+            adversarial_findings=[],
+            preconditions_checked=work["preconditions_checked"],
+            duration_s=work["duration_s"],
+            phase_spans=work["phase_spans"],
+            random_seed=7338537,
+            reproducibility_checksum=canonical_hash(work),
+            source_artifact_hashes=work["source_artifact_hashes"],
+            code_config_hashes=work["code_config_hashes"],
+            raw_shard_hashes={
+>               str(Path(r["directory"]) / f): r[k]
+                                               ^^^^
+                for r in work["references"]
+                for f, k in [("episode.json", "terminal_sha256"), ("steps.jsonl", "steps_sha256")]
+            },
+            cited_upstream_artifacts=[
+                dict(
+                    task_id=qualification.TASK,
+                    path=UPSTREAM,
+                    sha256=UPSTREAM_PIN,
+                    original_date="20261015",
+                )
+            ],
+            arc_capability_panel_ready_score=ready,
+            capability_efficiency_score=efficiency,
+            registry_precheck=work["panel"]["registry_precheck"],
+            solve_provenance="live_agent_self_discovery" if work["references"] else "unmeasured",
+            headline_solve_credit=0,
+            official_score=None,
+            official_score_missing_reason="offline_public_engineering_panel",
+            offline_reproduced=False,
+            reproduced_levels=0,
+            frozen_panel_reference=work["frozen_reference"],
+            measurement_receipts=work["measurement_receipts"],
+            work_reference=dict(path=str(work_path), sha256=sha256_file(work_path)),
+            next_model_enabled_condition="Qualify a separate mandated Qwen runtime and MODEL_SPECS with live generator receipts, then preregister a fresh model-enabled study; this exposed engineering panel cannot select priorities from censoring.",
+            methodology_note="Sixteen fresh model-disabled make_carnot_agent episodes on four historically exposed public games. Seeds average within game. Capability exclusions establish mechanical gating only. Useful efficiency requires fewer actual disabled attempts, nondecreasing paired levels and no complete wall-cost increase. No pooled action-level significance, hidden-game result, improved reasoning, learned priorities or new solve is claimed. Unresolved windows stay right-censored; null is terminal.",
+        )
+E       KeyError: 'steps_sha256'
+
+python/carnot/reporting/arc_capability_panel_8537.py:569: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8537] phase=preconditions_before completed=0 pending=0
+[exp8537] phase=preconditions_after completed=9 pending=0
+[exp8537] phase=measurement_before completed=0 pending=16
+[exp8537] phase=measurement_after completed=0 pending=16
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_panel_8537.py::test_real_wrapper_replays_capability_snapshots
+FAILED tests/python/test_arc_capability_panel_8537.py::test_build_and_replay_owned_refusals
+2 failed, 8 passed, 1 warning in 5.63s

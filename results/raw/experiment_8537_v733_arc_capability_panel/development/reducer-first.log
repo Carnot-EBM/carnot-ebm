@@ -1,0 +1,67 @@
+....FF                                                                   [100%]
+=================================== FAILURES ===================================
+________________ test_primitive_reduction_and_rehashed_refusals ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055322-2983194-61136401/test_primitive_reduction_and_r0')
+
+    def test_primitive_reduction_and_rehashed_refusals(tmp_path):
+        """SCENARIO-VERIFY-8537-REJECTION keeps attempts independently observable."""
+        units = e.units(e.qualification.protocol())
+        refs = [primitive(tmp_path, u, resolved=True) for u in units]
+        summary = e.reduce(refs, units)
+        assert summary['independent_count'] == 4
+        assert summary['resolved_redirects'] == 16
+        assert len(summary['capability_exclusion_rows']) == 16
+        assert all(r['actual_disabled_attempts'] == 1 for r in summary['rows'])
+        assert all(r['selected_reinduction_count'] == 0 for r in summary['rows'])
+>       assert all(r['exhaustion_states'] for r in summary['rows'])
+E       assert False
+E        +  where False = all(<generator object test_primitive_reduction_and_rehashed_refusals.<locals>.<genexpr> at 0x7f3f6f973370>)
+
+tests/python/test_arc_capability_panel_8537.py:101: AssertionError
+________________ test_real_wrapper_replays_capability_snapshots ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055322-2983194-61136401/test_real_wrapper_replays_capa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3f6f932360>
+
+    def test_real_wrapper_replays_capability_snapshots(tmp_path, monkeypatch):
+        """REQ-REPORT-8537: constructed observations drive the actual wrapper in both modes."""
+        from test_arc_supervisor_live_panel_8384 import Arcade
+        monkeypatch.setattr(e.history.panel_runtime, 'sdk', Arcade)
+        for unit in e.units(e.qualification.protocol())[:2]:
+            directory = tmp_path / unit['mode']
+            directory.mkdir()
+            unit = dict(unit, game='aa', directory=str(directory), max_actions=365)
+            path = directory / 'unit.json'
+            atomic_json(path, unit)
+            assert e.episode(path) == 0
+            ref = dict(unit=unit, directory=str(directory), terminal_sha256=e.sha256_file(directory / 'episode.json'), steps_sha256=e.sha256_file(directory / 'steps.jsonl'))
+            row, events, exclusions = e.reduce_episode(ref)
+>           assert row['actions_used'] == 365
+E           assert 9 == 365
+
+tests/python/test_arc_capability_panel_8537.py:135: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8384] episode_before ar25-0c556536:11:baseline_applied
+[exp8384] numeric_head_load_before no_LLM_load
+[exp8384] numeric_head_load_after no_LLM_load
+[exp8384] ar25-0c556536:11:baseline_applied completed=1 pending=364
+[exp8384] ar25-0c556536:11:baseline_applied completed=2 pending=363
+[exp8384] ar25-0c556536:11:baseline_applied completed=3 pending=362
+[exp8384] ar25-0c556536:11:baseline_applied completed=4 pending=361
+[exp8384] ar25-0c556536:11:baseline_applied completed=5 pending=360
+[exp8384] ar25-0c556536:11:baseline_applied completed=6 pending=359
+[exp8384] ar25-0c556536:11:baseline_applied completed=7 pending=358
+[exp8384] ar25-0c556536:11:baseline_applied completed=8 pending=357
+[exp8384] ar25-0c556536:11:baseline_applied completed=9 pending=356
+[exp8384] episode_after ar25-0c556536:11:baseline_applied completed=9 error=None
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_panel_8537.py::test_primitive_reduction_and_rehashed_refusals
+FAILED tests/python/test_arc_capability_panel_8537.py::test_real_wrapper_replays_capability_snapshots
+2 failed, 4 passed, 1 warning in 4.15s

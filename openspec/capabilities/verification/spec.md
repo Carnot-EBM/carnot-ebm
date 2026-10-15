@@ -55250,3 +55250,26 @@ controls cover receipt parity, unknown and changing capability, active diversity
 level transitions and shadow mode; the ignore-disabled mutation is rejected.
 Owned coverage covers five new files and only added statements in the two
 existing live modules. Historical E2E assertions are collected unchanged.
+
+## REQ-VERIFY-8537: Preserve capability-panel operands and publication
+
+Replay both applied modes using the shipped direct-effect reducer and qualified
+capability snapshots. Bind original producer, policy, protocol and authority
+hashes independently of reported aggregates. Preserve all original assertions
+in disjoint bounded shards after collecting their exact test-node union.
+Require100 percent newly owned statement coverage, including child and rejection
+paths, Ruff check/format, strict mypy and spec tracing. Bind terminal sidecars to
+exact primary bytes and exercise actual downstream consumers.
+
+### SCENARIO-VERIFY-8537-REJECTION
+
+Missing inputs remain distinct from zero. Failed children cannot qualify
+readiness. Rehashed changed selections, counts, protocols or terminal claims
+fail cold replay. No current model calls or registry solve credit are allowed.
+
+Implementation20261015:49 unchanged nodes and19 original owned tests passed;
+owned coverage was313/313 statements. A killed90-second terminal replay remains
+failed validation. A tests-first regression raises only full replay to240 seconds
+inside the900-second reserve. Exact final disqualification bytes must replay,
+pass unchanged validators and bind downstream consumers; this cannot promote
+the failed panel to readiness or scientific benefit.

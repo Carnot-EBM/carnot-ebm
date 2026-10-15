@@ -100818,3 +100818,42 @@ model-disabled latches and32 censored redirects. Same-roadmap measurements
 remain future dependencies. Terminal validation receipts and exact consumer
 bindings are retained under results/raw/experiment_8536_v733_arc_capability_qualification/.
 Ops/status/changelog/traceability reconciliation is conductor-owned for this task.
+
+## REQ-REPORT-8537: Adapter-withheld capability engineering panel
+
+Consume the independently sealed Exp8536 policy, runner and frozen sixteen-slot
+panel at original20261015 authority. Run four exposed public games, seeds11/22,
+baseline_applied and capability_masked_applied,512 actions/120 seconds each.
+Use make_carnot_agent with adapters, routes, outputs and hints withheld, no model
+loads and zero LLM calls. Retain missing slots. Count selected reinduction and
+actual disabled_by_env attempts separately. Mechanical exclusion proves gating
+only. Pair levels, actions to progress, complete wall cost and unique visible
+states; average seeds within game and report all four game deltas descriptively.
+Keep censoring, zero headroom, exhaustion and unknown capability explicit.
+Readiness and efficiency are separate; efficiency requires fewer actual disabled
+attempts, nondecreasing paired levels and no complete wall-cost increase.
+No hidden-game, generalization, learning or solve credit is established. Keep
+three overlapping games/five resolved observations per shared arm/mode cell.
+
+### SCENARIO-REPORT-8537-PANEL
+
+The original sealed panel fixes all sixteen starts and budgets before outcomes;
+every executed episode records visible operands, direct effects, exclusions,
+induction attempts and exhaustion. External absence blocks; owned failure
+disqualifies. An honest qualified null is terminal. No outcome-driven reruns.
+
+### SCENARIO-REPORT-8537-REPLAY
+
+Fresh bounded children replay primitives and reject absent evidence, deliberate
+owned errors and self-consistently rehashed tampering. Exact terminal bytes pass
+unchanged publication, adversarial and strict-row consumers before atomic publish.
+Record scoped tests,100 percent owned statements and private E2E-018/021 receipts.
+
+Implementation20261015: Exp8537 collected all16 frozen episodes without errors.
+Selected disabled reinductions fell8 to0; total disabled attempts fell16 to8.
+No level progressed and no redirect resolved. Complete wall cost increased.
+The initial full-evidence cold replay exceeded90 seconds and was killed; this
+owned failure is retained and the final attempt is disqualified, readiness0.
+Publication resumes from the same primitives with a tested240-second validation
+bound, without episode reruns. Original runner bytes and all failed receipts
+remain sealed in raw evidence. Ops/traceability reconciliation is conductor-owned.

@@ -1,0 +1,178 @@
+.....FF...                                                               [100%]
+=================================== FAILURES ===================================
+_________________ test_private_block_and_owned_failure[False] __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055242-2982246-bacb00dc/test_private_block_and_owned_f0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f82b9864230>
+failed = False
+
+    @pytest.mark.parametrize("failed", [False, True])
+    def test_private_block_and_owned_failure(tmp_path, monkeypatch, failed):
+        """REQ-VERIFY-8537: blocked and failed work reach unchanged byte consumers."""
+        monkeypatch.setattr(
+            runner, "validate_checks", lambda *_: [dict(name="private", passed=not failed)]
+        )
+        output = tmp_path / "results" / (e.NAME + ".json")
+>       assert runner.main(["--root", str(tmp_path / "missing"), "--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_capability_panel_runner_8537.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_capability_panel_runner_8537.py:152: in main
+    side = publish(value, output, raw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_capability_panel_runner_8537.py:97: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055242-2982246-bacb00dc/test_private_block_and_owned_f0/results/experiment_8537_v733_arc_capability_panel.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'arm_support': False, 'collection_qualified': False, 'owned_validation': Fals... 'episode_id': 'ft09-0d8bbf25:11:capability_masked_applied', 'runtime_s': None}, ...], 'adversarial_findings': [], ...}
+validator = <function publish.<locals>.validate at 0x7f82b985f560>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8537] phase=start_no_model_load_MODEL_SPECS_empty_LLM_calls_zero completed=0 pending=0
+[exp8537] phase=preconditions_before completed=0 pending=0
+[exp8537] phase=preconditions_after completed=9 pending=0
+[exp8537] phase=measurement_before completed=0 pending=16
+[exp8537] phase=measurement_after completed=0 pending=16
+[exp8537] phase=validation_before completed=0 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_intentional completed=0 pending=1
+[exp8205] phase=after_subprocess_intentional completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8537] phase=publication_before completed=0 pending=0
+[exp8205] phase=before_subprocess_terminal_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+__________________ test_private_block_and_owned_failure[True] __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055242-2982246-bacb00dc/test_private_block_and_owned_f1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f82b9865df0>
+failed = True
+
+    @pytest.mark.parametrize("failed", [False, True])
+    def test_private_block_and_owned_failure(tmp_path, monkeypatch, failed):
+        """REQ-VERIFY-8537: blocked and failed work reach unchanged byte consumers."""
+        monkeypatch.setattr(
+            runner, "validate_checks", lambda *_: [dict(name="private", passed=not failed)]
+        )
+        output = tmp_path / "results" / (e.NAME + ".json")
+>       assert runner.main(["--root", str(tmp_path / "missing"), "--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_capability_panel_runner_8537.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_capability_panel_runner_8537.py:152: in main
+    side = publish(value, output, raw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_capability_panel_runner_8537.py:97: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055242-2982246-bacb00dc/test_private_block_and_owned_f1/results/experiment_8537_v733_arc_capability_panel.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'arm_support': False, 'collection_qualified': False, 'owned_validation': Fals... 'episode_id': 'ft09-0d8bbf25:11:capability_masked_applied', 'runtime_s': None}, ...], 'adversarial_findings': [], ...}
+validator = <function publish.<locals>.validate at 0x7f82b97563e0>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8537] phase=start_no_model_load_MODEL_SPECS_empty_LLM_calls_zero completed=0 pending=0
+[exp8537] phase=preconditions_before completed=0 pending=0
+[exp8537] phase=preconditions_after completed=9 pending=0
+[exp8537] phase=measurement_before completed=0 pending=16
+[exp8537] phase=measurement_after completed=0 pending=16
+[exp8537] phase=validation_before completed=0 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_intentional completed=0 pending=1
+[exp8205] phase=after_subprocess_intentional completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8537] phase=publication_before completed=0 pending=0
+[exp8205] phase=before_subprocess_terminal_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_panel_runner_8537.py::test_private_block_and_owned_failure[False]
+FAILED tests/python/test_arc_capability_panel_runner_8537.py::test_private_block_and_owned_failure[True]
+2 failed, 8 passed, 1 warning in 38.61s

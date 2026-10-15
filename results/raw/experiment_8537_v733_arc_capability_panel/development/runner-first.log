@@ -1,0 +1,225 @@
+.FF..F                                                                   [100%]
+=================================== FAILURES ===================================
+_________________ test_private_block_and_owned_failure[False] __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055206-2981482-f1d20610/test_private_block_and_owned_f0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f26d363f950>
+failed = False
+
+            text=True,
+            timeout=60,
+        )
+        assert result.returncode == expected, result.stdout + result.stderr
+    bad = tmp_path / "bad.json"
+>   bad.write_text("{")
+           ^^^^^^^^^^^^^
+
+tests/python/test_arc_capability_panel_runner_8537.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_capability_panel_runner_8537.py:86: in main
+    primary.write_bytes(candidate.read_bytes())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_capability_panel_runner_8537.py:43: in publish
+    """The original direct-receipt tamper is also invalid in two applied arms."""
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_effect_panel_runner_8523.py:156: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/primary_publication.py:71: in publish_primary
+    report = validator(candidate)
+             ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+candidate = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055206-2981482-f1d20610/test_private_block_and_owned_f0/results/raw/experiment_8537_v733_arc_capability_panel/terminal_candidate.json')
+
+    def validate(candidate: Path) -> Json:
+        checks = [
+            child(name, argv, raw / "terminal", deadline=90)
+            for name, argv in [
+                (
+                    "terminal_replay",
+                    [sys.executable, "-u", str(e.ROOT / e.CLI), "--cold-replay", str(candidate)],
+                ),
+                (
+                    "adversarial",
+                    [sys.executable, "scripts/adversarial_verify.py", "--json", str(candidate)],
+                ),
+                (
+                    "strict_rows",
+                    [
+                        sys.executable,
+                        "scripts/verdict_row_consistency_lint.py",
+                        "--strict",
+                        str(candidate),
+                    ],
+                ),
+            ]
+        ]
+        with TemporaryDirectory(prefix="exp8523-consumer-", dir="/var/tmp") as directory:
+            primary = Path(directory) / output.name
+            primary.write_bytes(candidate.read_bytes())
+            consumer = reader_receipt(
+                e.TASK,
+                primary.parent,
+                field="arc_effect_panel_ready_score",
+>               expected=value["arc_effect_panel_ready_score"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            )
+E           KeyError: 'arc_effect_panel_ready_score'
+
+python/carnot/reporting/arc_effect_panel_runner_8523.py:145: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8523] phase=start_no_model_load_MODEL_SPECS_empty_LLM_calls_zero completed=0 pending=0
+[exp8523] phase=preconditions_before completed=0 pending=0
+[exp8523] phase=preconditions_after completed=9 pending=0
+[exp8523] phase=measurement_before completed=0 pending=16
+[exp8523] phase=measurement_after completed=0 pending=16
+[exp8523] phase=validation_before completed=0 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_intentional completed=0 pending=1
+[exp8205] phase=after_subprocess_intentional completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8523] phase=publication_before completed=0 pending=0
+[exp8205] phase=before_subprocess_terminal_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+__________________ test_private_block_and_owned_failure[True] __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055206-2981482-f1d20610/test_private_block_and_owned_f1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f26cf5cc9b0>
+failed = True
+
+            text=True,
+            timeout=60,
+        )
+        assert result.returncode == expected, result.stdout + result.stderr
+    bad = tmp_path / "bad.json"
+>   bad.write_text("{")
+           ^^^^^^^^^^^^^
+
+tests/python/test_arc_capability_panel_runner_8537.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_capability_panel_runner_8537.py:86: in main
+    primary.write_bytes(candidate.read_bytes())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_capability_panel_runner_8537.py:43: in publish
+    """The original direct-receipt tamper is also invalid in two applied arms."""
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_effect_panel_runner_8523.py:156: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/primary_publication.py:71: in publish_primary
+    report = validator(candidate)
+             ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+candidate = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055206-2981482-f1d20610/test_private_block_and_owned_f1/results/raw/experiment_8537_v733_arc_capability_panel/terminal_candidate.json')
+
+    def validate(candidate: Path) -> Json:
+        checks = [
+            child(name, argv, raw / "terminal", deadline=90)
+            for name, argv in [
+                (
+                    "terminal_replay",
+                    [sys.executable, "-u", str(e.ROOT / e.CLI), "--cold-replay", str(candidate)],
+                ),
+                (
+                    "adversarial",
+                    [sys.executable, "scripts/adversarial_verify.py", "--json", str(candidate)],
+                ),
+                (
+                    "strict_rows",
+                    [
+                        sys.executable,
+                        "scripts/verdict_row_consistency_lint.py",
+                        "--strict",
+                        str(candidate),
+                    ],
+                ),
+            ]
+        ]
+        with TemporaryDirectory(prefix="exp8523-consumer-", dir="/var/tmp") as directory:
+            primary = Path(directory) / output.name
+            primary.write_bytes(candidate.read_bytes())
+            consumer = reader_receipt(
+                e.TASK,
+                primary.parent,
+                field="arc_effect_panel_ready_score",
+>               expected=value["arc_effect_panel_ready_score"],
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            )
+E           KeyError: 'arc_effect_panel_ready_score'
+
+python/carnot/reporting/arc_effect_panel_runner_8523.py:145: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8523] phase=start_no_model_load_MODEL_SPECS_empty_LLM_calls_zero completed=0 pending=0
+[exp8523] phase=preconditions_before completed=0 pending=0
+[exp8523] phase=preconditions_after completed=9 pending=0
+[exp8523] phase=measurement_before completed=0 pending=16
+[exp8523] phase=measurement_after completed=0 pending=16
+[exp8523] phase=validation_before completed=0 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_intentional completed=0 pending=1
+[exp8205] phase=after_subprocess_intentional completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8523] phase=publication_before completed=0 pending=0
+[exp8205] phase=before_subprocess_terminal_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+_________________ test_measured_adapter_and_complete_wall_cost _________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055206-2981482-f1d20610/test_measured_adapter_and_comp0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f26cf3632f0>
+
+>   ???
+
+tests/python/test_arc_capability_panel_runner_8537.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7f26cf6fe500>
+
+>   ???
+        
+E   KeyError: 'complete_wall_s'
+
+tests/python/test_arc_capability_panel_runner_8537.py:110: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8523] phase=measurement_before completed=0 pending=16
+[exp8523] phase=episodes completed=1 pending=15
+[exp8523] phase=episodes completed=2 pending=14
+[exp8523] phase=episodes completed=3 pending=13
+[exp8523] phase=episodes completed=4 pending=12
+[exp8523] phase=episodes completed=5 pending=11
+[exp8523] phase=episodes completed=6 pending=10
+[exp8523] phase=episodes completed=7 pending=9
+[exp8523] phase=episodes completed=8 pending=8
+[exp8523] phase=episodes completed=9 pending=7
+[exp8523] phase=episodes completed=10 pending=6
+[exp8523] phase=episodes completed=11 pending=5
+[exp8523] phase=episodes completed=12 pending=4
+[exp8523] phase=episodes completed=13 pending=3
+[exp8523] phase=episodes completed=14 pending=2
+[exp8523] phase=episodes completed=15 pending=1
+[exp8523] phase=episodes completed=16 pending=0
+[exp8523] phase=measurement_after completed=16 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_panel_runner_8537.py::test_private_block_and_owned_failure[False]
+FAILED tests/python/test_arc_capability_panel_runner_8537.py::test_private_block_and_owned_failure[True]
+FAILED tests/python/test_arc_capability_panel_runner_8537.py::test_measured_adapter_and_complete_wall_cost
+3 failed, 3 passed, 1 warning in 36.87s

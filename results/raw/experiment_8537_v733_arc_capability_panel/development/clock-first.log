@@ -1,0 +1,37 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_complete_cost_is_bound_to_child_clock __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055508-2983940-ee69ef8d/test_complete_cost_is_bound_to0')
+
+    def test_complete_cost_is_bound_to_child_clock(tmp_path):
+        """REQ-VERIFY-8537: rehashed wall-cost claims must match child clock operands."""
+        work = e.measure(tmp_path / 'absent', tmp_path / 'raw', tmp_path / 'scratch')
+        ref = primitive(tmp_path / 'primitive', work['panel']['units'][0])
+        work['references'] = [dict(ref, complete_wall_s=0.0)]
+        work['measurement_receipts'] = [dict(name='episode_00', passed=True, duration_s=1.0, started_monotonic_ns=10, ended_monotonic_ns=1000000010)]
+        path = tmp_path / 'work.json'
+        atomic_json(path, work)
+        output = tmp_path / 'results' / (e.NAME + '.json')
+>       assert not e.replay(e.build(path, [], output))
+E       AssertionError: assert not True
+E        +  where True = <function replay at 0x7fd8191d47c0>({'MODEL_SPECS': [], 'acceptance_gates': {'arm_support': False, 'collection_qualified': False, 'owned_validation': Fals... 'episode_id': 'ft09-0d8bbf25:11:capability_masked_applied', 'runtime_s': None}, ...], 'adversarial_findings': [], ...})
+E        +    where <function replay at 0x7fd8191d47c0> = e.replay
+E        +    and   {'MODEL_SPECS': [], 'acceptance_gates': {'arm_support': False, 'collection_qualified': False, 'owned_validation': Fals... 'episode_id': 'ft09-0d8bbf25:11:capability_masked_applied', 'runtime_s': None}, ...], 'adversarial_findings': [], ...} = <function build at 0x7fd8191d4720>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055508-2983940-ee69ef8d/test_complete_cost_is_bound_to0/work.json'), [], PosixPath('/var/tmp/pytest-carnot-ianblenke/20261015T055508-2983940-ee69ef8d/test_complete_cost_is_bound_to0/results/experiment_8537_v733_arc_capability_panel.json'))
+E        +      where <function build at 0x7fd8191d4720> = e.build
+
+tests/python/test_arc_capability_panel_8537.py:303: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8537] phase=preconditions_before completed=0 pending=0
+[exp8537] phase=preconditions_after completed=9 pending=0
+[exp8537] phase=measurement_before completed=0 pending=16
+[exp8537] phase=measurement_after completed=0 pending=16
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_panel_8537.py::test_complete_cost_is_bound_to_child_clock
+1 failed, 1 warning in 4.53s

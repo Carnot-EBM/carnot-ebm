@@ -1,0 +1,21 @@
+[exp8205] phase=before_subprocess_budget_regression completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_regression completed=1 pending=0
+[exp8205] phase=before_subprocess_budget_ruff_check completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_ruff_check completed=1 pending=0
+[exp8205] phase=before_subprocess_budget_ruff_format completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_ruff_format completed=1 pending=0
+[exp8205] phase=before_subprocess_budget_strict_mypy completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_strict_mypy completed=1 pending=0
+[exp8205] phase=before_subprocess_budget_spec_coverage completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_spec_coverage completed=1 pending=0
+[exp8205] phase=before_subprocess_budget_coverage_combine completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_coverage_combine completed=1 pending=0
+[exp8205] phase=before_subprocess_budget_coverage_report completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_coverage_report completed=1 pending=0
+[exp8205] phase=before_subprocess_budget_coverage_json completed=0 pending=1
+[exp8205] phase=after_subprocess_budget_coverage_json completed=1 pending=0
+Traceback (most recent call last):
+  File "/tmp/exp8537_finalize.py", line 30, in <module>
+    assert all(r['passed'] for r in receipts), [(r['name'], r['passed']) for r in receipts]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [('budget_regression', True), ('budget_ruff_check', True), ('budget_ruff_format', True), ('budget_strict_mypy', True), ('budget_spec_coverage', True), ('budget_coverage_combine', True), ('budget_coverage_report', False), ('budget_coverage_json', False)]
