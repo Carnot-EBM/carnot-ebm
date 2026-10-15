@@ -100710,3 +100710,27 @@ sample-efficiency, independent generalization or learning benefit is inferred.
 Verify13/109/109 coefficients, fixed seeds17/29/43/71/101, deterministic duplicates,
 fit/tune per-question losses and norms at0/25/50/100/200, endpoint limiting energies,
 alpha ties toward zero and exact raw endpoint probabilities. No test labels enter fitting.
+
+## REQ-REPORT-8529: Audit incremental source information against strong controls
+
+Consume exact qualified Exp8528 sealed predictions. Preserve V732 primary_contrasts
+operands. Reconstruct all five arm losses from answer rows. Average sibling answers
+and seeds within each question before10000 paired question draws at seed7318502.
+Use98.3333333333 percent two-sided Bonferroni intervals for the three registered
+raw/scalar/permuted contrasts. All lower bounds must exceed zero. Typed cost must
+not increase versus raw or scalar. Legacy full-source and A2 remain descriptive.
+Report all question gains, risk/coverage, calibration, class support, missing bounds,
+clipping and identity degeneracy. Audit readiness is separate from benefit.
+Exposed favorable results are circular_positive with both generalization scores0.
+Failed contrasts close unchanged tuning; reopening needs a registered changed
+information source or independently adjudicated disjoint questions, never re-splitting.
+
+### SCENARIO-REPORT-8529-PAIR
+
+Identical controls cannot qualify benefit. Missing probabilities or targets retain
+their intended slots and reasons. Only100 complete paired questions provide independence.
+
+### SCENARIO-REPORT-8529-VERDICT
+
+External absence is blocked with exact gate operands. Failed owned work disqualifies.
+Readiness can qualify a measured null and never establishes independent generalization.

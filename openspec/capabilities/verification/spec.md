@@ -55163,3 +55163,19 @@ Accept20261015; distinguish absent upstream from zero readiness and owned failur
 Reject self-consistently rehashed heads, predictions, operands or aggregate metrics.
 Bind atomic publication and terminal sidecar to actual downstream consumer bytes.
 No current LLM calls. Failed owned checks disqualify; external absence blocks.
+
+## REQ-VERIFY-8529: Qualify incremental source audit and immutable operands
+
+Require100 percent newly owned statement coverage including real CLI children and
+rejection paths, scoped units, Ruff, strict mypy and spec coverage. Collect original
+test IDs before bounded disjoint serial shards and preserve their exact union.
+Run private E2E-018/021 with original authority and dates. No full repository suite.
+
+### SCENARIO-VERIFY-8529-CONTROLS
+
+Accept20261015. Fresh bounded replay must reconstruct primitive losses and reject
+absence, owned errors and self-consistently rehashed predictions, targets, summaries,
+pins and seals. Unchanged publication, adversarial and strict-row consumers validate
+terminal bytes before atomic publication. Bind sidecar and actual downstream receipt.
+Use no model loads or current LLM calls. Print phases and child heartbeats within60s.
+Stop measurement by3600s and reserve900s inside4800s. Preserve historical artifacts.
