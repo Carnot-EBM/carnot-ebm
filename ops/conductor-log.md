@@ -20335,3 +20335,4 @@ code |
 | 2026-10-15 01:40 UTC | Qualify source comparator custody after the missin | OK | 93 passed, 1 warning in 79.54s (0:01:19) |
 | 2026-10-15 02:22 UTC | Train identity-admissible calibrated energy heads  | OK | 98 passed, 1 warning in 146.41s (0:02:26) |
 | 2026-10-15 03:00 UTC | Measure source information beyond raw and equally  | OK | 97 passed, 1 warning in 151.54s (0:02:31) |
+| 2026-10-15 04:06 UTC | Qualify causal update accounting and complete reje | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 195.03s (0:03:15) |
