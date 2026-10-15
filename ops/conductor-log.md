@@ -20355,3 +20355,4 @@ code |
 | 2026-10-15 14:07 UTC | Independently test later-block Brier benefit, rete | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8543-causal-brier-stream) |
 | 2026-10-15 14:47 UTC | Repair the native build and private CLI contract,  | OK | 91 passed, 1 warning in 95.97s (0:01:35) |
 | 2026-10-15 14:53 UTC | Measure complete nine-input native inference again | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8545-nine-input-native-qualification.nine_input_native_ready_score (actual=0 == expected=1) |
+| 2026-10-15 15:00 UTC | Run the bounded Qwen source-evidence canary only a | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8540-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
