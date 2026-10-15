@@ -20338,3 +20338,4 @@ code |
 | 2026-10-15 04:06 UTC | Qualify causal update accounting and complete reje | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY — result quarantined, not a clean success, excluded from headline / capstone. 101 passed, 1 warning in 195.03s (0:03:15) |
 | 2026-10-15 04:13 UTC | Measure continuous delayed Brier learning with ind | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8530-update-accounting-qualification.online_adapter_ready_score (actual=0 == expected=1) |
 | 2026-10-15 04:15 UTC | Audit later proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8531-causal-brier-learning) |
+| 2026-10-15 04:52 UTC | Qualify a native residual evaluator for the actual | OK | 101 passed, 1 warning in 160.26s (0:02:40) |
