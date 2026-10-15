@@ -101034,3 +101034,27 @@ terminal sidecar and actual downstream consumers SHALL agree. Preserve command
 receipts, terminal node outcomes, logs and hashes. Same-roadmap future outputs
 SHALL NOT be required inputs. Ops/status/traceability reconciliation is owned by
 the conductor for this invocation.
+
+## REQ-REPORT-8548: Qualify stored ARC terminal replay without benefit credit
+
+Exp8548 SHALL authenticate original Exp8537 terminal receipts and sixteen sealed
+historical episodes before use. Reproduce its old90-second timeout and missing
+child coverage in disk scratch. Measure replay before selecting the shipped
+240-second bound. Replay selection, executed actions, disabled induction, latch,
+outcome and censor operands through the shipped reducers. No new episode, solve,
+policy null, learning benefit or generalization credit is permitted. Preserve
+Exp8537 disqualification and all other quarantines. Readiness requires terminal
+replay, original capability controls, actual CLI and exact owned coverage.
+
+### SCENARIO-REPORT-8548-REPLAY
+
+Fresh bounded processes accept authenticated primitives and reject absent,
+owned-failed and self-consistently rehashed tampered evidence. Publish exact
+checked bytes atomically through unchanged publication and downstream consumers.
+Known-zero capability remains distinct from unknown, changing and shadow cases.
+
+Implementation20261015: the Exp8548 thin CLI and reporting adapters authenticate
+Exp8537's independent primary, original authority and episode seals. Stored-byte
+replays and original capability fixtures supply infrastructure evidence only.
+The terminal artifact and its exact-byte sidecar own the final verdict; no old
+quarantine is cleared. Status/changelog/traceability reconciliation is conductor-owned.

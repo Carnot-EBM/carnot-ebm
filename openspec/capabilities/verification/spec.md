@@ -55374,3 +55374,32 @@ temperature, normalization, decisions and serialization. Actual text-to-decision
 private CLI calls SHALL match; threshold distances <=1e-10 SHALL use and count
 real Python fallbacks. Compiler and extension bytes SHALL be retained. No speed
 claim or five-input benchmark is allowed.
+
+## REQ-VERIFY-8548: Measure actual child statement coverage and terminal union
+
+Bind coverage to exact owned source hashes. Combine executed acceptance and
+rejection statements from real subprocesses, require100 percent newly owned
+statements and retain raw shards. Collect original node IDs before execution;
+run their exact disjoint union in bounded serial children with original authority,
+-n 0 -o addopts= --no-cov. A killed, omitted, skipped or failed node fails.
+Require scoped pytest, actual private CLI, Ruff, strict mypy, spec tracing and
+private E2E-018/021. Never invoke a full repository or nested historical runner.
+
+### SCENARIO-VERIFY-8548-CHILDREN
+
+Supervisor status gaps are at most60 seconds. Missing coverage, stale source
+hashes, missing nodes and forged terminal outcomes fail even with exit zero.
+The4800-second cap reserves900 seconds after at most3600 seconds of measurement.
+
+Implementation20261015: Exp8548 uses disk-backed coverage workspaces, explicit
+coverage execution for real CLI children, persisted executed-line shards and
+independent statement analysis. Its validation records exact original terminal
+node outcomes, bounded process receipts and unchanged publication consumers.
+
+### SCENARIO-VERIFY-8548-AUTHORITY
+
+The original Exp8536 qualification suite SHALL read its independently pinned
+V733 activation through the shipped frozen-input adapter in a private pytest
+worker. Other suites retain their own fixture authority. A current V734 active
+roadmap SHALL remain unchanged. Original assertions and mutation refusals remain
+intact; a foreign sealed activation is rejected before pytest executes.

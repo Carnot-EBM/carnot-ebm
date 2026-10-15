@@ -1,0 +1,107 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 6 items
+
+tests/python/test_arc_capability_qualification_8536.py::test_frozen_panel_and_original_history PASSED [ 16%]
+tests/python/test_arc_capability_qualification_8536.py::test_absent_inputs_owned_failure_and_replay PASSED [ 33%]
+tests/python/test_arc_capability_qualification_8536.py::test_historical_direct_rows_cannot_be_promoted PASSED [ 50%]
+tests/python/test_arc_capability_qualification_8536.py::test_replay_independent_rejection_paths PASSED [ 66%]
+tests/python/test_arc_capability_qualification_8536.py::test_ready_and_original_source_replay FAILED [ 83%]
+tests/python/test_arc_capability_qualification_8536.py::test_history_authority_and_deadline_refusals PASSED [100%]
+
+=================================== FAILURES ===================================
+____________________ test_ready_and_original_source_replay _____________________
+
+tmp_path = PosixPath('/var/tmp/exp8548-cv27w0jy/shard-3-0/test_ready_and_original_source0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f370bb27f80>
+
+    def test_ready_and_original_source_replay(tmp_path, monkeypatch):
+        """REQ-REPORT-8536: readiness requires actual task authority and original evidence."""
+        work = e.measure(e.ROOT, tmp_path / "raw", tmp_path / "scratch")
+>       assert work["failures"] == []
+E       AssertionError: assert [{'check': 'activated_task', 'upstream': 'exp8536-arc-capability-qualification', 'path': '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml', 'hash': 'sha256:069507a4cd35417eec796bd74b729b97018ab08f733b1ed6aae28a119999bd99', 'field': 'canonical_complete_task_sha256', 'operator': '==', 'expected': 'sha256:cabec01ecd9b785a14af7c4545c4955e9e8ffd69ab65d5e866df046ab4584f1a', 'observed': None, 'passed': False}] == []
+E         
+E         Left contains one more item: {'check': 'activated_task', 'expected': 'sha256:cabec01ecd9b785a14af7c4545c4955e9e8ffd69ab65d5e866df046ab4584f1a', 'fi...anonical_complete_task_sha256', 'hash': 'sha256:069507a4cd35417eec796bd74b729b97018ab08f733b1ed6aae28a119999bd99', ...}
+E         
+E         Full diff:
+E         - []
+E         + [
+E         +     {
+E         +         'check': 'activated_task',
+E         +         'expected': 'sha256:cabec01ecd9b785a14af7c4545c4955e9e8ffd69ab65d5e866df046ab4584f1a',
+E         +         'field': 'canonical_complete_task_sha256',
+E         +         'hash': 'sha256:069507a4cd35417eec796bd74b729b97018ab08f733b1ed6aae28a119999bd99',
+E         +         'observed': None,
+E         +         'operator': '==',
+E         +         'passed': False,
+E         +         'path': '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml',
+E         +         'upstream': 'exp8536-arc-capability-qualification',
+E         +     },
+E         + ]
+
+tests/python/test_arc_capability_qualification_8536.py:144: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8536] phase=preconditions_before completed=0 pending=0
+[exp8536] phase=preconditions_after completed=13 pending=0
+[exp8536] phase=historical_primitive_seals completed=1 pending=15
+[exp8536] phase=historical_primitive_seals completed=2 pending=14
+[exp8536] phase=historical_primitive_seals completed=3 pending=13
+[exp8536] phase=historical_primitive_seals completed=4 pending=12
+[exp8536] phase=historical_primitive_seals completed=5 pending=11
+[exp8536] phase=historical_primitive_seals completed=6 pending=10
+[exp8536] phase=historical_primitive_seals completed=7 pending=9
+[exp8536] phase=historical_primitive_seals completed=8 pending=8
+[exp8536] phase=historical_primitive_seals completed=9 pending=7
+[exp8536] phase=historical_primitive_seals completed=10 pending=6
+[exp8536] phase=historical_primitive_seals completed=11 pending=5
+[exp8536] phase=historical_primitive_seals completed=12 pending=4
+[exp8536] phase=historical_primitive_seals completed=13 pending=3
+[exp8536] phase=historical_primitive_seals completed=14 pending=2
+[exp8536] phase=historical_primitive_seals completed=15 pending=1
+[exp8536] phase=historical_primitive_seals completed=16 pending=0
+[exp8536] fixtures completed=0 pending=14
+[exp8536] fixtures completed=1 pending=13
+[exp8536] fixtures completed=2 pending=12
+[exp8536] fixtures completed=3 pending=11
+[exp8536] fixtures completed=4 pending=10
+[exp8536] fixtures completed=5 pending=9
+[exp8536] fixtures completed=6 pending=8
+[exp8536] fixtures completed=7 pending=7
+[exp8536] fixtures completed=8 pending=6
+[exp8536] fixtures completed=9 pending=5
+[exp8536] fixtures completed=10 pending=4
+[exp8536] fixtures completed=11 pending=3
+[exp8536] fixtures completed=12 pending=2
+[exp8536] fixtures completed=13 pending=1
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_capability_qualification_8536.py::test_ready_and_original_source_replay - AssertionError: assert [{'check': 'activated_task', 'upstream': 'exp8536-arc-capability-qualification', 'path': '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml', 'hash': 'sha256:069507a4cd35417eec796bd74b729b97018ab08f733b1ed6aae28a119999bd99', 'field': 'canonical_complete_task_sha256', 'operator': '==', 'expected': 'sha256:cabec01ecd9b785a14af7c4545c4955e9e8ffd69ab65d5e866df046ab4584f1a', 'observed': None, 'passed': False}] == []
+  
+  Left contains one more item: {'check': 'activated_task', 'expected': 'sha256:cabec01ecd9b785a14af7c4545c4955e9e8ffd69ab65d5e866df046ab4584f1a', 'fi...anonical_complete_task_sha256', 'hash': 'sha256:069507a4cd35417eec796bd74b729b97018ab08f733b1ed6aae28a119999bd99', ...}
+  
+  Full diff:
+  - []
+  + [
+  +     {
+  +         'check': 'activated_task',
+  +         'expected': 'sha256:cabec01ecd9b785a14af7c4545c4955e9e8ffd69ab65d5e866df046ab4584f1a',
+  +         'field': 'canonical_complete_task_sha256',
+  +         'hash': 'sha256:069507a4cd35417eec796bd74b729b97018ab08f733b1ed6aae28a119999bd99',
+  +         'observed': None,
+  +         'operator': '==',
+  +         'passed': False,
+  +         'path': '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml',
+  +         'upstream': 'exp8536-arc-capability-qualification',
+  +     },
+  + ]
+=================== 1 failed, 5 passed, 1 warning in 12.27s ====================
