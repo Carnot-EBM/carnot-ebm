@@ -55588,3 +55588,19 @@ and self-consistently rehashed tampering SHALL be checked. Unchanged scanners,
 primary publication, bound terminal sidecar and actual downstream consumers must
 accept final bytes. Child supervision interval is at most60 seconds. Measurements
 stop by3600 seconds; validation reserves900 seconds within the4800-second cap.
+
+## REQ-VERIFY-8564: Verify bounded capstone publication
+
+Requirement-linked tests SHALL precede implementation. Collect scoped original
+node IDs and preserve their exact disjoint union in bounded serial children.
+Require100 percent newly owned statements including actual CLI rejection paths.
+Run private E2E-018/021, Ruff check/format, strict mypy and owned spec coverage.
+No full repository suite or nested historical validation runner is authorized.
+
+### SCENARIO-VERIFY-8564-CONTROLS
+
+Fresh cold replay SHALL rebuild primitive rows and full authority. Missing input,
+owned child failure and self-consistently rehashed tampering cannot grant success.
+Keep all unchanged scanner findings; validate final bytes, publish atomically,
+bind terminal sidecar and exercise actual downstream consumers. Stop measurement
+by3600 seconds and reserve900 seconds within4800. Heartbeats are at most60 seconds.

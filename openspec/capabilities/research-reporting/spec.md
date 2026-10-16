@@ -101348,3 +101348,31 @@ Missing inputs block independently of optional hardware. Owned failures
 disqualify. Fresh bounded replay rejects rehashed summaries and primitive drift.
 Retain prior quarantines and Exp8529's exposed source-information null.
 Conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+## REQ-REPORT-8564: Reconcile thirteen V735 terminal slots
+
+Exp8564 SHALL authenticate twelve preceding scheduling outcomes and seal its own
+thirteenth row without hashing itself. Compare complete activated YAML objects
+with the sealed design. Preserve every historical quarantine and Exp8529 null.
+Copy qualified Exp8553 admission_decision verbatim with its source hash. Separate
+qualified exposed nulls, conditional exposed benefits, unavailable prerequisites
+and owned disqualifications. Missing or pre-gated science is blocked, never partial.
+Use no model loads or calls. Recompute bounded original learning, native-cost and
+ARC samples and consume shipped downstream interfaces. Retain exact G1-G4 output.
+
+### SCENARIO-REPORT-8564-ACCOUNTING
+
+All thirteen contract rows and twelve preceding outcomes remain visible. Original
+dates, roles, numerical protocols and exposure stay sealed. Native costs can
+qualify without speed benefit. Learning and mask benefit require qualified
+producers. Fresh independent human labels, causal runtime repair and physical
+hardware evidence remain separate gaps. Retire unchanged exposed source refits.
+Conductor owns ops/status/changelog/traceability reconciliation for this run.
+
+### SCENARIO-REPORT-8564-SAMPLES
+
+A fresh bounded child recomputes one original learning transition and one stored
+ARC episode without new observations. Reduce canonical counters from an original
+Exp8555 event, retain its actual learning-consumer rejection, and reconcile stored
+complete native clocks through the shipped Exp8559 cost consumer. The ARC panel
+consumer must preserve Exp8561's failed readiness. Add zero independent units.
