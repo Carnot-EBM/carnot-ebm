@@ -505,3 +505,18 @@ Additional official ARC-AGI-3 Semi-Private results absent from the supplied hist
 | [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
 | [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | 30.2% | — |
 
+## 2026-10-16 13:11 UTC -- NEW
+
+Official ARC-AGI-3 Semi-Private results absent from your supplied history, showing each harness’s best score:
+
+| Date (2026) | Model / official source | Standard | Provider Adapter |
+|---|---|---:|---:|
+| October 13 | [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8% | 97.5% |
+| September 22 | [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+| September 10 | [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| September 3 | [GPT-6 Astra announcement](https://arcprize.org/blog/astra) | 62.7% | 99.9% |
+| August 11 | [Grok 4.6](https://arcprize.org/results/xai-grok-4-6) | 2.1% | — |
+| July 16 | [Grok 4.5](https://arcprize.org/results/xai-grok-4-5) | 0.3% | — |
+
+Gemini 4 Argon’s Standard evaluation was incomplete because of API issues: its best-scoring configuration completed 42 of 55 environments; the reported score includes all 55, retaining partial credit from incomplete runs. [Official evaluation note](https://arcprize.org/results/google-gemini-4-argon)
+
