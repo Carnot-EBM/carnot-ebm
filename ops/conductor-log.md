@@ -20397,3 +20397,4 @@ code |
 | 2026-10-16 01:45 UTC | Run the bounded Qwen source-evidence canary only a | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8552-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-10-16 02:51 UTC | Qualify ARC conditional anchors with actual child  | OK | 95 passed, 1 warning in 68.44s (0:01:08) |
 | 2026-10-16 02:58 UTC | Measure the live capability mask on the fixed adap | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8561-arc-panel-replay-qualification.arc_panel_execution_ready_score (actual=0 == expected=1) |
+| 2026-10-16 03:31 UTC | Map qualified complete-operation costs to the actu | OK | 87 passed, 1 warning in 111.79s (0:01:51) |
