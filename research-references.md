@@ -1,3 +1,72 @@
+## 2026-10-16 — V736 planning scan: useful updates and complete serving cost
+
+Recorded before experiment design. The scan covered all eight requested arXiv
+topics and all six secondary channels. Rechecked sources are marked below.
+The V735 primaries supersede stale planning prose. Its qualified native cost
+null and HALLMARK label rejection must remain closed under unchanged conditions.
+
+### Findings selected for experiments
+
+- **Rechecked: proper losses.** [Calibeating Made Simple, 2603.22167](https://arxiv.org/abs/2603.22167)
+  studies online forecast post-processing with proper losses. Finish Carnot's
+  registered Brier versus log-loss experiment after event accounting qualifies.
+  Its nonlinear delayed learner does not inherit the paper's regret bounds.
+- **Rechecked: finite feedback.** [Capacity-Constrained Online Convex Optimization
+  with Delayed Feedback, 2606.11711](https://arxiv.org/abs/2606.11711)
+  distinguishes tracked observations from lost feedback. Preserve event types,
+  causal ordering and measured coordinate writes. Equal integer totals are
+  possible; they neither prove learning nor justify hiding counters from audits.
+- **Rechecked: sparse KAN operations.** [Ultrafast On-Chip Online Learning,
+  2602.02056](https://arxiv.org/abs/2602.02056) motivates local spline updates.
+  Carnot's new complete-cost evidence makes process lifetime the next variable.
+  Compare resident Python and native workers with startup, transport and shutdown
+  included. This is a Carnot inference from its measurements, not a paper result.
+- **Newly inspected implementation lead:** [LTBs-KAN, 2604.22034](https://arxiv.org/abs/2604.22034),
+  April 23, 2026, proposes cheaper spline evaluation and parameter factorization.
+  Defer basis changes: local arithmetic is already a small part of complete cost.
+  First measure the existing evaluator under a declared session lifetime.
+- **Newly inspected allocation lead:** [SEVRA, 2606.19808](https://arxiv.org/abs/2606.19808),
+  June 18, 2026, and its [author code](https://github.com/Sajib-006/SEVRA).
+  Selective verification can reduce harmful interventions, yet a longer initial
+  solve can dominate total cost. Adopt explicit useful, harmful and unresolved
+  intervention rows in the live supervisor study. Keep the current policy fixed.
+  This is an adaptation of evaluation criteria, not an ARC replication or permission
+  to revive the retired token-budget lever. A feed showing October 15 does not
+  make this a new October paper.
+
+### Other primary topics and deferrals
+
+| Topic | Inspected source | Boundary |
+|---|---|---|
+| EBM verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605) | Compatibility and probabilistic equivalence do not establish factual truth. No generator training. |
+| Neural constraints | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461) | Linear feasibility is useful structured evidence; it does not certify language extraction. |
+| Hallucination mitigation | [HalluWorld, 2605.19341](https://arxiv.org/abs/2605.19341) | Reference worlds distinguish observation, state tracking and forward simulation. Automatic labels remain oracle-derived; defer a new world benchmark. |
+| Energy-guided generation | [ETS, 2601.21484](https://arxiv.org/abs/2601.21484); [draft-conditioned decoding, 2603.03305](https://arxiv.org/abs/2603.03305) | Do not change decoding before useful verification and local runtime qualify. |
+| Ising in ML; FPGA sampling | [Pipelined p-computer, 2607.21077](https://arxiv.org/abs/2607.21077) | Data movement and supported operations matter. An optimization result is not a sample-quality certificate. |
+| Continual/test-time learning | [Energy Ring, 2610.14525](https://arxiv.org/abs/2610.14525), October 10, 2026 | Feature-energy stabilization is a separate discovery setting. Defer transfer to the fixed Carnot head; no implied retention guarantee. |
+
+### Secondary coverage and retrieval limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. The
+  [EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) returned a browser challenge.
+  The primary arXiv paper was accessible. No unseen review conclusion is claimed.
+- **Semantic Scholar:** attempted citation APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both failed retrieval. Exact-ID searches supplied no reliable citation inventory.
+- **Hugging Face papers:** searched verification and inspected
+  [SEVRA](https://huggingface.co/papers/2606.19808). Method claims were checked
+  against arXiv. The HalluWorld feed page failed retrieval.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were a month old. SEVRA came from paper search, not a verified trending rank.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). Preserve the vendor's final-logit and
+  device-movement exclusions. Vendor estimates do not establish local TSU access.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Its product positioning supplies no inspected reproducible update that closes
+  Carnot's current independent-verification or deployment gaps.
+
 ## 2026-10-10 — V723 planning scan: label criteria and recoverable online services
 
 This scan precedes V723 experiment design. External results are research leads,
