@@ -20423,3 +20423,4 @@ code |
 | 2026-10-16 20:19 UTC | Train the small energy head through sealed delayed | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 96 passed, 1 warning in 1091.37s (0:18:11) |
 | 2026-10-16 20:26 UTC | Measure later Brier benefit and simultaneous reten | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8582-causal-brier-stream.causal_learning_rows_ready_score (actual=0 == expected=1) |
 | 2026-10-16 21:40 UTC | Measure complete resident-session cost at matched  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 97 passed, 1 warning in 83.75s (0:01:23) |
+| 2026-10-16 22:07 UTC | Audit HalluTruthQA label authority and constructio | OK | 94 passed, 1 warning in 17.10s |
