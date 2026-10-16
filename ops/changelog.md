@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-16 — Operational retrospective for milestone 2026.10.736
+
+- Wrote `results/operational_retro_2026_10_736.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.736`. Authoritative disk-mtime fallback data records 8 experiments completed (0 compute-bound, 8 synthesis-only) across 67.8 total wall-time minutes (average 8 minutes per experiment).
+- Execution wall time was led entirely by synthesis tasks: 'Qualify resident request isolation and Python-native decision parity' (13.04 minutes), 'Correct proved discrete-count classification while retaining fabrication detecti' (12.20 minutes), 'Reconcile fourteen outcomes and close unchanged nulls without erasing historical' (8.60 minutes), 'Map resident-session costs to supported hardware operations and acquisition need' (7.68 minutes), and 'Bind fourteen tasks and seal changed validation and resident-serving protocols' (7.48 minutes).
+- Point-in-time GPU monitor polling observed GPU 0 at 0% utilization (4MB allocated) and GPU 1 running separate long-lived processes; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and 0% GPU utilization is expected behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: implement incremental receipt caching and evidence memoization for resident request isolation, Python-native decision parity, discrete-count classification proofs, task protocol binding, and outcome reconciliation when upstream contracts remain unchanged; instrument multi-minute synthesis tasks with granular intra-phase timers; and persist synchronous start and end lifecycle timestamps directly into experiment receipts.
+
 ## 2026-10-16 — Fix standalone count-validator imports
 
 - Resolve the checkout root before the shared verifier loads the frozen count

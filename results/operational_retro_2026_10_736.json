@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.736",
+  "generated_at": "2026-10-16T13:26:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 67.8,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify resident request isolation and Python-native decision parity",
+      "duration_minutes": 13.04,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Correct proved discrete-count classification while retaining fabrication detecti",
+      "duration_minutes": 12.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and close unchanged nulls without erasing historical",
+      "duration_minutes": 8.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map resident-session costs to supported hardware operations and acquisition need",
+      "duration_minutes": 7.68,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and seal changed validation and resident-serving protocols",
+      "duration_minutes": 7.48,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.736 completed 8 experiments (0 compute-bound, 8 synthesis-only) across 67.8 total wall-time minutes (averaging 8 minutes per experiment) reconstructed from disk-mtime fallback data. Execution was driven entirely by synthesis tasks, led by qualifying resident request isolation and Python-native decision parity (13.04 minutes), correcting proved discrete-count classification while retaining fabrication detecti (12.20 minutes), reconciling fourteen outcomes and closing unchanged nulls without erasing historical (8.60 minutes), mapping resident-session costs to supported hardware operations and acquisition need (7.68 minutes), and binding fourteen tasks and sealing changed validation and resident-serving protocols (7.48 minutes), with the top 5 slowest tasks accounting for 49.00 minutes (~72.3% of total wall time). With zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null, milestone execution required no GPU compute, and GPU utilization is not flagged as a bottleneck.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 8 completed experiments totaling 67.8 wall-time minutes), with the top two synthesis tasks—qualifying resident request isolation and Python-native decision parity (13.04 minutes) and correcting proved discrete-count classification while retaining fabrication detecti (12.20 minutes)—consuming 25.24 minutes (~37.2% of total milestone wall time).",
+    "Synthesis qualification sweeps, decision parity validations, and outcome reconciliations executed serially without incremental receipt caching or evidence memoization when evaluating invariant contracts or unchanged baseline nulls.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Experiment receipts lack granular intra-task phase telemetry (separating fixture setup, test qualification, subprocess execution sweeps, and artifact serialization), obscuring which sub-phase drove the 13.04-minute and 12.20-minute latencies in resident request isolation qualification and discrete-count classification."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for resident request isolation, Python-native decision parity, discrete-count classification proofs, and task protocol bindings when upstream contracts and inputs remain unchanged.",
+    "Instrument long-running synthesis tasks with granular intra-task phase timers (fixture setup, qualification checks, child subprocess sweeps, artifact serialization) to isolate latency drivers.",
+    "Persist synchronous start, completion, and duration lifecycle timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for resident request isolation qualification, discrete-count classification verification, and outcome reconciliation when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, diagnostic checks, child subprocess sweeps, serialization) to isolate sub-phase latency drivers.",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.736 completed 8 synthesis-only experiments in 67.8 wall-time minutes with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. Observed GPU utilization reflected expected idle behavior for non-GPU synthesis workloads, and no multi-model tasks required DualGPURunner dispatch. Operational improvements should prioritize deploying incremental receipt caching for qualification sweeps and persisting synchronous lifecycle timestamps directly in experiment receipts, with estimated time savings held at 0% until measured."
+}

@@ -7492,3 +7492,11 @@ criteria. This operational record makes no scientific-result claim.
 - theme: Operational efficiency across 9 completed experiments (0 compute-bound, 9 synthesis-only) in 142 minutes of milestone wall time.
 - key result: honest operational negative — 9 synthesis-only experiments completed in 141.5 wall-time minutes (averaging 16 minutes per experiment) led by qualifying the original learning union with measured node budgets (41.25 min), sealing native replay primitives before qualification and complete inference timing (20.09 min), qualifying ARC conditional anchors with actual child execution receipts (20.08 min), assessing HALLMARK revision labels and deployment criteria without fitting a detect (14.35 min), and measuring complete nine-input native inference against the qualified Python path (13.73 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization across both RTX 3090 GPUs reflecting expected idle behavior for non-GPU synthesis workloads.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.736
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 8 completed experiments (0 compute-bound, 8 synthesis-only) in 68 minutes of milestone wall time.
+- key result: honest operational negative — 8 synthesis-only experiments completed in 67.8 wall-time minutes (averaging 8 minutes per experiment) led by qualifying resident request isolation and Python-native decision parity (13.04 min), correcting proved discrete-count classification while retaining fabrication detecti (12.20 min), reconciling fourteen outcomes and closing unchanged nulls without erasing historical (8.60 min), mapping resident-session costs to supported hardware operations and acquisition need (7.68 min), and binding fourteen tasks and sealing changed validation and resident-serving protocols (7.48 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization on GPU 0 reflecting expected idle behavior for non-GPU synthesis workloads.
+- acceptance: no data available this milestone
+
