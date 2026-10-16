@@ -20395,3 +20395,4 @@ code |
 | 2026-10-16 00:50 UTC | Seal native replay primitives before qualification | OK | 94 passed, 1 warning in 179.84s (0:02:59) |
 | 2026-10-16 01:38 UTC | Measure complete nine-input native inference again | OK | 97 passed, 1 warning in 174.39s (0:02:54) |
 | 2026-10-16 01:45 UTC | Run the bounded Qwen source-evidence canary only a | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8552-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-10-16 02:51 UTC | Qualify ARC conditional anchors with actual child  | OK | 95 passed, 1 warning in 68.44s (0:01:08) |
