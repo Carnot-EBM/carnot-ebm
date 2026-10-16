@@ -55772,3 +55772,24 @@ G1/G2/G3/G4, paper_ready and unmet_gates SHALL be retained without redefinition.
 Given private valid, missing, failed-child and rehashed candidates, real bounded
 children accept valid evidence and reject invented claims; final sidecars bind
 the published bytes and consumer identity. No external publication occurs.
+
+## REQ-VERIFY-8579: Validate V737 immutable publication in bounded children
+
+Focused tests SHALL precede code. Preserve original collected IDs and exact
+bounded disjoint E2E-018/021 unions. Run private CLI controls, Ruff, strict mypy,
+spec tracing and100 percent newly owned statement coverage, including real
+children. Never run a full repository suite or historical controller. Retain
+commands, exits, clocks and log hashes. Cold replay SHALL reject absent inputs,
+owned failures and self-consistently rehashed summaries or primitives. Validate
+exact candidate bytes through unchanged primary, adversarial and strict row
+consumers before atomic publication. Exercise actual downstream consumers.
+Owned required-check failure disqualifies; unchanged external absence blocks.
+
+### SCENARIO-VERIFY-8579-CONTROLS
+
+Fresh processes accept valid sealed evidence and reject missing or tampered
+operands. Optional devices do not gate CPU methods. Generalization stays zero.
+
+Implementation for REQ-VERIFY-8579: the existing supervised serial runner uses
+explicit V737 bindings. Immutable authority snapshots support cold replay after
+planning changes. Receipt logs retain scoped coverage and private consumer checks.

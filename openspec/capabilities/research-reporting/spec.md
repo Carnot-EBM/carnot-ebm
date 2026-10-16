@@ -101623,3 +101623,34 @@ conditions without erasing Exp8555 or Exp8561 failures.
 
 Given immutable original operands, bounded arithmetic reproduces learning and ARC
 rows and two resident clock totals; repeated comparisons add no independence.
+
+## REQ-REPORT-8579: Seal twelve V737 tasks and independent scientific families
+
+Exp8579 SHALL bind all twelve complete tasks, Exp8579 through Exp8590, across
+activated YAML, authentic consumed staging, visible table, embedded JSON, end
+marker and canonical digest. Full objects include prompts, routes and retirement
+flags. It SHALL preserve the failed V736 authority without inventing its design.
+Before measurements, seal V735 objective_updates, objective_audit, evidence_canary
+and arc_capability_mask by value and hash. Inherit the V736 resident_session as a
+registered design only. Retain its four arms, 64 stable-order answers, batches1/8,
+lengths1/4/16, ten pairs, primary length16/batch1, seed7368573 and limit1.05.
+Authenticate original head/scaler/temperature, exact158-node learning receipt,
+resident prototype and qualification independently. A dependency change blocks
+only affected families. Optional runtime absence cannot lower methods readiness.
+Read only supplied runtime evidence through the bounded Exp8410 reader. Register
+HalluTruthQA release questions separately; keep the learning corpus unchanged.
+Preserve all old quarantines, source null, label rejection and cold-cost null.
+
+### SCENARIO-REPORT-8579-AUTHORITY
+
+Count, order, ID, title, phase, deliverable, model, substrate, gate, prompt,
+retirement, end marker and consistently rehashed task changes fail closed.
+
+### SCENARIO-REPORT-8579-FAMILIES
+
+Missing or changed original family bytes lower only dependent readiness fields.
+Current authority and fixed protocols alone qualify methods, without new science.
+
+Implementation for REQ-REPORT-8579: V737 adapters seal complete current tasks and
+inherit original methods by value and hash. The result records independent
+family readiness, closed comparisons and exact downstream gate field bindings.
