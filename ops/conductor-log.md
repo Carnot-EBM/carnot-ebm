@@ -20411,3 +20411,5 @@ code |
 | 2026-10-16 11:34 UTC | Qualify resident request isolation and Python-nati | OK | 95 passed, 1 warning in 234.87s (0:03:54) |
 | 2026-10-16 11:41 UTC | Measure complete resident-session cost against mat | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-16 11:49 UTC | Run the bounded mandated-Qwen evidence canary only | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-16 11:56 UTC | Exercise the real ARC publication closure before q | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-16 11:58 UTC | Measure useful harmful and unresolved capability-m | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8575-arc-publication-qualification) |
