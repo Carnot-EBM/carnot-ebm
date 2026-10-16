@@ -55722,3 +55722,20 @@ Implementation: length-framed pipes bound reads and writes, session requests,
 queue depth and shutdown. Fresh replay reconstructs serialized answers and
 rejects changed operands. Serial validation reuses the qualified controller with
 an explicit owned scope. Duplicate check names cannot erase an earlier failure.
+
+## REQ-VERIFY-8572: Qualify real resident children and fail closed
+
+Write focused tests before worker implementation. Exercise malformed frames,
+oversize input, truncated EOF, crash, expired deadlines, full queue, duplicate
+IDs and clean shutdown in bounded real private children. Failed requests receive
+explicit errors or censored outcomes without stale successes. Authenticate the
+actually loaded native extension. Retain exact collected test-node unions,
+private E2E-018/021 receipts, Ruff, strict mypy, spec tracing and100 percent newly
+owned statement coverage including genuine children and rejection paths.
+
+### SCENARIO-VERIFY-8572-REPLAY
+
+Cold replay rejects absent evidence, owned failures and self-consistently rehashed
+summary or primitive tampering. Check exact final bytes with unchanged publication,
+adversarial and strict row consumers. Owned failures disqualify and external
+missing prerequisites block. Preserve all historical authority and quarantines.

@@ -101509,3 +101509,20 @@ Implementation: the thin Exp8571 runner uses the shipped complete evaluator
 through explicit resident adapters. Four sessions retain eight attempts, two
 intentional rejections and distinct valid inputs after rejection. The primary
 binds original cost-null clocks, versioned methods and immutable raw operands.
+
+## REQ-REPORT-8572: Qualify resident request isolation and decision parity
+
+Authenticate Exp8571 prototype readiness, the frozen Exp8565 resident protocol,
+and immutable Exp8558 operands. Compare actual Python/native panel and resident
+processes on all900 answer inputs and274 finite numerical controls. Preserve
+1e-12*(1+abs(reference)), thresholds0.2/0.8 and counted1e-10 fallback.
+Qualification makes no timing, learning or generalization benefit claim.
+
+### SCENARIO-REPORT-8572-PARITY
+
+Duplicate text with distinct IDs, reversed order, restarted sessions and changed
+configuration must retain decision parity without cross-request state. Every
+parent launch-through-exit clock has disjoint component intervals and visible
+unattributed overhead. Seal separate immutable preliminary/final snapshots and
+cold-replay original operands before atomic publication and real consumer reads.
+Conductor owns status, changelog and traceability reconciliation.

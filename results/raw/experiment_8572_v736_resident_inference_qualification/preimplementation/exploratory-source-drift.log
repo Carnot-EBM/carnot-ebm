@@ -1,0 +1,128 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 12 items
+
+tests/python/test_resident_qualification_8572.py::test_original_operands_and_absence PASSED [  8%]
+tests/python/test_resident_qualification_8572.py::test_real_panel_resident_parity_and_clocks PASSED [ 16%]
+tests/python/test_resident_qualification_8572.py::test_worker_rejections_and_recovery PASSED [ 25%]
+tests/python/test_resident_qualification_8572.py::test_decide_validation_and_numerical_controls PASSED [ 33%]
+tests/python/test_resident_qualification_8572.py::test_snapshot_replay_consumer_and_tampering PASSED [ 41%]
+tests/python/test_resident_qualification_8572.py::test_worker_startup_and_terminal_errors PASSED [ 50%]
+tests/python/test_resident_qualification_8572.py::test_evaluation_deadline_and_bad_operands PASSED [ 58%]
+tests/python/test_resident_qualification_8572.py::test_blocked_owned_errors_and_snapshot_drift PASSED [ 66%]
+tests/python/test_resident_qualification_8572.py::test_runner_private_publication_and_dispatch PASSED [ 75%]
+tests/python/test_resident_qualification_8572.py::test_scoped_controller_retains_exact_nodes_and_failure PASSED [ 83%]
+tests/python/test_resident_qualification_8572.py::test_runner_acceptance_and_owned_failure FAILED [ 91%]
+
+=================================== FAILURES ===================================
+___________________ test_runner_acceptance_and_owned_failure ___________________
+
+measured = {'bundle': {'answers': [{'cached_p2': {'confidence': 0.86, 'label': 0, 'raw_sha256': 'sha256:ecc7fe59b8495db623900e6af...'start_ns': 467448787092417}, {'end_ns': 467569363955603, 'phase': 'qualification', 'start_ns': 467449288564771}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T104754-3770690-7cbbaaa8/test_runner_acceptance_and_own0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff59befb950>
+
+    def test_runner_acceptance_and_owned_failure(measured, tmp_path, monkeypatch):
+        """REQ-VERIFY-8572: private publication exercises both readiness and failed owned checks."""
+        from carnot.reporting import resident_runner_8572 as runner
+    
+        def cached(root, raw):
+            value = deepcopy(measured)
+            value["raw"] = str(raw)
+            return value
+    
+        monkeypatch.setattr(e, "measure", cached)
+        # These fixture receipts exercise publication branches; production uses real collected checks.
+        monkeypatch.setattr(
+            runner.validation,
+            "validate",
+            lambda work, raw: [dict(name=n, passed=True) for n in e.REQUIRED],
+        )
+        monkeypatch.setattr(runner.validation, "finish", lambda work, raw: [])
+        output = tmp_path / "ready" / (e.NAME + ".json")
+>       assert runner.run(e.ROOT, output) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_resident_qualification_8572.py:300: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/resident_runner_8572.py:86: in run
+    publication = publish_primary(output, value, validator)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T104754-3770690-7cbbaaa8/test_runner_acceptance_and_own0/ready/experiment_8572_v736_resident_inference_qualification.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'clock_accounting': True, 'harmful_decision_changes_allowed': 0, 'parity_and_...arget_model. Methodology unverifiable.', 'kind': 'METHODOLOGY_MISSING', 'severity': 'warn'}], 'censored_count': 0, ...}
+validator = <function run.<locals>.validator at 0x7ff60849f920>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_owned_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_owned_failure completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=validation completed=0 pending=2
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=validation completed=1 pending=1
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=validation_complete completed=2 pending=0
+[exp8205] phase=before_subprocess_final_byte_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_final_byte_cold completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_resident_qualification_8572.py::test_runner_acceptance_and_owned_failure - ValueError: candidate_rejected
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+============= 1 failed, 10 passed, 1 warning in 386.38s (0:06:26) ==============
