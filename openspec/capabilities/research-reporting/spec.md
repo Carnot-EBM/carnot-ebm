@@ -101795,3 +101795,25 @@ All 2419 character spans match; exact cross-split question overlap is retained.
 Original human protocol is evidence; individual adjudication logs are absent.
 Single-generator, exposure and rights limits keep evaluation eligibility closed.
 The natural-error eligibility gate is Boolean false, not a zero-error estimate.
+
+## REQ-REPORT-8587: Qualify the actual ARC publication closure
+
+Authenticate Exp8561 source, combined SQL coverage and genuine child shards.
+Recompute exact statement differences without changing historical operands.
+Execute publish, checked_publish, validate and validator(candidate) in a private
+child before coverage is sealed. Retain original quarantines and zero new solve,
+learning and independent generalization credit. Use no model and no external service.
+
+### SCENARIO-REPORT-8587-PUBLICATION
+
+Valid blocked and disqualified private terminal bytes cross the real publisher,
+validators and future Exp8588 panel consumer. A self-consistently rehashed invalid
+candidate is rejected without replacing the checked primary. Immutable work
+snapshots precede candidates. Current readiness also requires terminal replay
+within240seconds, exact original node union and100percent newly owned statements.
+
+Implementation20261016 for REQ-REPORT-8587: reporting adapters preserve the
+shipped publication closure and add genuine private publication regressions.
+Authenticated historical source identifies a context-entry statement at line282;
+its validator call at line265 was already executed. The result records this
+prompt discrepancy and separately qualifies current publication at line280.

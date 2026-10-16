@@ -1,0 +1,318 @@
+{
+  "immutable_snapshots": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/blocked_work.json",
+      "sha256": "sha256:63cbd27b9e9210b2c7a66043f3f8b16185478a67e6927c704839ea4a801fb4dc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed_work.json",
+      "sha256": "sha256:bcee778b078ad9e2e28e38ecab215873f494fc8e4546353f3daba666605d2fec"
+    }
+  ],
+  "invalid": {
+    "candidate_sha256": "sha256:0ce74122a3570f7baf64980076cde40b2aee09674593fd65b900d899061fbebb",
+    "panel_consumer": {
+      "accepted": false,
+      "authority_sha256": "sha256:13567176ba82d5d1a6eabf5e83620dad1468bd2bb1b4171e40858ae82f16d939",
+      "consumer_task_id": "exp8588-arc-capability-panel",
+      "gates": [
+        {
+          "artifact_field": "arc_panel_execution_ready_score",
+          "op": "==",
+          "upstream": "exp8587-arc-publication-qualification",
+          "value": 1
+        }
+      ],
+      "matched_expectation": true,
+      "primary_sha256": "sha256:0ce74122a3570f7baf64980076cde40b2aee09674593fd65b900d899061fbebb",
+      "summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8587-arc-publication-qualification.arc_panel_execution_ready_score (actual=0 == expected=1)"
+    },
+    "primary_unchanged": true,
+    "rejected": true
+  },
+  "owned_failure": {
+    "consumer": {
+      "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+      "document_sha256": "sha256:3c5f7fc8d85409d985855795a823163a943799b8753ff373e5e6e407683fdaa9",
+      "document_status": "\u26a0\ufe0f Research Finding",
+      "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+      "gate_sha256": "sha256:3c5f7fc8d85409d985855795a823163a943799b8753ff373e5e6e407683fdaa9",
+      "gates": [
+        {
+          "actual": 0,
+          "artifact_field": "arc_panel_execution_ready_score",
+          "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+          "artifact_sha256": "sha256:3c5f7fc8d85409d985855795a823163a943799b8753ff373e5e6e407683fdaa9",
+          "expected": 0,
+          "op": "==",
+          "passed": true,
+          "reason": "actual=0 == expected=0",
+          "upstream": "exp8587-arc-publication-qualification",
+          "upstream_final": true
+        }
+      ],
+      "passed": true,
+      "summary": "1 gate(s) satisfied",
+      "task_id": "exp8587-arc-publication-qualification"
+    },
+    "passed": true,
+    "publication": {
+      "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+      "primary_sha256": "sha256:3c5f7fc8d85409d985855795a823163a943799b8753ff373e5e6e407683fdaa9",
+      "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/validators/3c5f7fc8d85409d985855795a823163a943799b8753ff373e5e6e407683fdaa9.json"
+    },
+    "terminal": {
+      "checks": [
+        {
+          "actual_exit": 0,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "coverage",
+            "run",
+            "--rcfile=/var/tmp/exp8548-qqw0ymdf/coverage.ini",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8587_v737_arc_publication_qualification.py",
+            "--cold-replay",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json"
+          ],
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --rcfile=/var/tmp/exp8548-qqw0ymdf/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8587_v737_arc_publication_qualification.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json",
+          "deadline_s": 240,
+          "duration_s": 3.171378703,
+          "ended_monotonic_ns": 511865576533371,
+          "exit_code": 0,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/terminal_replay.stdout",
+          "log_sha256": "sha256:8832cfa6dbd51351b543213ddbde9a1f0e1482536e5570c9fd16667a67560888",
+          "name": "terminal_replay",
+          "normal_exit": true,
+          "passed": true,
+          "scope": "owned",
+          "started_monotonic_ns": 511862405154668,
+          "started_wall_ns": 1792192107185012970,
+          "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/terminal_replay.stderr",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/terminal_replay.stdout",
+          "stdout_sha256": "sha256:8832cfa6dbd51351b543213ddbde9a1f0e1482536e5570c9fd16667a67560888",
+          "timed_out": false
+        },
+        {
+          "actual_exit": 0,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "scripts/adversarial_verify.py",
+            "--json",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json"
+          ],
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json",
+          "deadline_s": 90,
+          "duration_s": 0.766095107,
+          "ended_monotonic_ns": 511866343514809,
+          "exit_code": 0,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/adversarial.stdout",
+          "log_sha256": "sha256:69479f9a0ee5e2f69e63839297c14b6fd7f78b1d723a0e16d3cff4e8fa313b21",
+          "name": "adversarial",
+          "normal_exit": true,
+          "passed": true,
+          "scope": "owned",
+          "started_monotonic_ns": 511865577419702,
+          "started_wall_ns": 1792192110357277854,
+          "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/adversarial.stderr",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/adversarial.stdout",
+          "stdout_sha256": "sha256:69479f9a0ee5e2f69e63839297c14b6fd7f78b1d723a0e16d3cff4e8fa313b21",
+          "timed_out": false
+        },
+        {
+          "actual_exit": 0,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "scripts/verdict_row_consistency_lint.py",
+            "--strict",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json"
+          ],
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json",
+          "deadline_s": 90,
+          "duration_s": 0.114810022,
+          "ended_monotonic_ns": 511866459909853,
+          "exit_code": 0,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/strict_rows.stdout",
+          "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+          "name": "strict_rows",
+          "normal_exit": true,
+          "passed": true,
+          "scope": "owned",
+          "started_monotonic_ns": 511866345099831,
+          "started_wall_ns": 1792192111124958484,
+          "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/strict_rows.stderr",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/failed/terminal/strict_rows.stdout",
+          "stdout_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+          "timed_out": false
+        }
+      ],
+      "findings": [],
+      "panel_consumer": {
+        "accepted": false,
+        "authority_sha256": "sha256:13567176ba82d5d1a6eabf5e83620dad1468bd2bb1b4171e40858ae82f16d939",
+        "consumer_task_id": "exp8588-arc-capability-panel",
+        "gates": [
+          {
+            "artifact_field": "arc_panel_execution_ready_score",
+            "op": "==",
+            "upstream": "exp8587-arc-publication-qualification",
+            "value": 1
+          }
+        ],
+        "matched_expectation": true,
+        "primary_sha256": "sha256:3c5f7fc8d85409d985855795a823163a943799b8753ff373e5e6e407683fdaa9",
+        "summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8587-arc-publication-qualification.arc_panel_execution_ready_score (actual=0 == expected=1)"
+      },
+      "passed": true
+    }
+  },
+  "passed": true,
+  "valid": {
+    "consumer": {
+      "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+      "document_sha256": "sha256:e166e127bf86d9acaa0f97491f23461addaf69e5331c6a105ca17291dc17c217",
+      "document_status": "\u26a0\ufe0f Blocked",
+      "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+      "gate_sha256": "sha256:e166e127bf86d9acaa0f97491f23461addaf69e5331c6a105ca17291dc17c217",
+      "gates": [
+        {
+          "actual": 0,
+          "artifact_field": "arc_panel_execution_ready_score",
+          "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+          "artifact_sha256": "sha256:e166e127bf86d9acaa0f97491f23461addaf69e5331c6a105ca17291dc17c217",
+          "expected": 0,
+          "op": "==",
+          "passed": true,
+          "reason": "actual=0 == expected=0",
+          "upstream": "exp8587-arc-publication-qualification",
+          "upstream_final": true
+        }
+      ],
+      "passed": true,
+      "summary": "1 gate(s) satisfied",
+      "task_id": "exp8587-arc-publication-qualification"
+    },
+    "passed": true,
+    "publication": {
+      "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/experiment_8587_v737_arc_publication_qualification.json",
+      "primary_sha256": "sha256:e166e127bf86d9acaa0f97491f23461addaf69e5331c6a105ca17291dc17c217",
+      "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/validators/e166e127bf86d9acaa0f97491f23461addaf69e5331c6a105ca17291dc17c217.json"
+    },
+    "terminal": {
+      "checks": [
+        {
+          "actual_exit": 0,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-m",
+            "coverage",
+            "run",
+            "--rcfile=/var/tmp/exp8548-qqw0ymdf/coverage.ini",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8587_v737_arc_publication_qualification.py",
+            "--cold-replay",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json"
+          ],
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --rcfile=/var/tmp/exp8548-qqw0ymdf/coverage.ini /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8587_v737_arc_publication_qualification.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json",
+          "deadline_s": 240,
+          "duration_s": 3.169594368,
+          "ended_monotonic_ns": 511861517042236,
+          "exit_code": 0,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/terminal_replay.stdout",
+          "log_sha256": "sha256:8832cfa6dbd51351b543213ddbde9a1f0e1482536e5570c9fd16667a67560888",
+          "name": "terminal_replay",
+          "normal_exit": true,
+          "passed": true,
+          "scope": "owned",
+          "started_monotonic_ns": 511858347447868,
+          "started_wall_ns": 1792192103127306131,
+          "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/terminal_replay.stderr",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/terminal_replay.stdout",
+          "stdout_sha256": "sha256:8832cfa6dbd51351b543213ddbde9a1f0e1482536e5570c9fd16667a67560888",
+          "timed_out": false
+        },
+        {
+          "actual_exit": 0,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "scripts/adversarial_verify.py",
+            "--json",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json"
+          ],
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json",
+          "deadline_s": 90,
+          "duration_s": 0.715572414,
+          "ended_monotonic_ns": 511862233723429,
+          "exit_code": 0,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/adversarial.stdout",
+          "log_sha256": "sha256:284171672919a83922e0dbf24a038065e5ffafde3b85784581bac0664af451a9",
+          "name": "adversarial",
+          "normal_exit": true,
+          "passed": true,
+          "scope": "owned",
+          "started_monotonic_ns": 511861518151015,
+          "started_wall_ns": 1792192106298009237,
+          "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/adversarial.stderr",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/adversarial.stdout",
+          "stdout_sha256": "sha256:284171672919a83922e0dbf24a038065e5ffafde3b85784581bac0664af451a9",
+          "timed_out": false
+        },
+        {
+          "actual_exit": 0,
+          "argv": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "scripts/verdict_row_consistency_lint.py",
+            "--strict",
+            "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json"
+          ],
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/raw/experiment_8587_v737_arc_publication_qualification/terminal_candidate.json",
+          "deadline_s": 90,
+          "duration_s": 0.114890725,
+          "ended_monotonic_ns": 511862349877903,
+          "exit_code": 0,
+          "expected_exit": 0,
+          "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/strict_rows.stdout",
+          "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+          "name": "strict_rows",
+          "normal_exit": true,
+          "passed": true,
+          "scope": "owned",
+          "started_monotonic_ns": 511862234987178,
+          "started_wall_ns": 1792192107014845270,
+          "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/strict_rows.stderr",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8587_v737_arc_publication_qualification/invocations/1792190948055643515/private_publication/valid/terminal/strict_rows.stdout",
+          "stdout_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+          "timed_out": false
+        }
+      ],
+      "findings": [],
+      "panel_consumer": {
+        "accepted": false,
+        "authority_sha256": "sha256:13567176ba82d5d1a6eabf5e83620dad1468bd2bb1b4171e40858ae82f16d939",
+        "consumer_task_id": "exp8588-arc-capability-panel",
+        "gates": [
+          {
+            "artifact_field": "arc_panel_execution_ready_score",
+            "op": "==",
+            "upstream": "exp8587-arc-publication-qualification",
+            "value": 1
+          }
+        ],
+        "matched_expectation": true,
+        "primary_sha256": "sha256:e166e127bf86d9acaa0f97491f23461addaf69e5331c6a105ca17291dc17c217",
+        "summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8587-arc-publication-qualification.arc_panel_execution_ready_score (actual=0 == expected=1)"
+      },
+      "passed": true
+    }
+  }
+}

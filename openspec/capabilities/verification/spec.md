@@ -55896,3 +55896,23 @@ statements are covered, including real standalone CLI and rejection children.
 Original private E2E-018 (18 tests), E2E-021 (7 tests) and publication-consumer
 checks (12 tests) pass. The exact final disjoint 50-node union is retained.
 Scoped Ruff check/format, strict mypy and owned-test spec tracing pass.
+
+## REQ-VERIFY-8587: Measure publication before sealing coverage
+
+Preserve the sysmon collector, statement containment, source hashes and exact
+shard unions. Collect original test nodes before bounded disjoint children.
+Run scoped tests, private E2E-018/021, Ruff, strict mypy and spec tracing. Retain
+commands, exits, real durations and log hashes. Killed children fail validation.
+
+### SCENARIO-VERIFY-8587-REPLAY
+
+Fresh bounded processes reject missing inputs, owned failures and rehashed
+aggregate tampering. Validate final bytes before atomic publication through
+primary_publication, adversarial verification and strict row checks. Exercise
+the actual panel consumer. External absence blocks; owned failure disqualifies.
+Conductor owns ops and traceability reconciliation.
+
+Implementation20261016 for REQ-VERIFY-8587: bounded CLI children exercise actual
+validators and the Exp8588 consumer before coverage sealing. Fresh replay also
+authenticates publication receipts and immutable private work snapshots. Original
+V735 tests use sealed authority through an explicit child import adapter.
