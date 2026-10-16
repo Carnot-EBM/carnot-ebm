@@ -101526,3 +101526,21 @@ parent launch-through-exit clock has disjoint component intervals and visible
 unattributed overhead. Seal separate immutable preliminary/final snapshots and
 cold-replay original operands before atomic publication and real consumer reads.
 Conductor owns status, changelog and traceability reconciliation.
+
+## REQ-REPORT-8577: Map resident costs without promoting cold hardware ceilings
+
+Authenticate the original V735 hardware primary within60 seconds without device
+commands. Preserve cold ceilings1.008746 and1.007981. Resident ceilings require
+qualified complete Exp8573 clocks and parity, separately by session length and
+batch. Charge fixed host work, transport and shutdown once. Unknown device,
+precision, update and sampling costs remain null. Keep physical readiness zero
+without compatible execution. Existing CPU residence precedes acquisition.
+
+### SCENARIO-REPORT-8577-BOUNDARY
+
+Map startup/imports, frame transport, text features, scaling, offset,
+109-coefficient residual, normalization/fallback, typed policy, serialization
+and shutdown. Keep resident sessions, cold64-answer panels and durable learning
+distinct. Preserve KV260 k<=5, PolarFire CPU scope and GateMate physical/source/
+build/ID/flash/smoke obligations. Vendor ratios never become local measurements.
+Conductor owns status, changelog and traceability reconciliation.

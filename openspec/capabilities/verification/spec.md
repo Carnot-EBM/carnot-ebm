@@ -55739,3 +55739,18 @@ Cold replay rejects absent evidence, owned failures and self-consistently rehash
 summary or primitive tampering. Check exact final bytes with unchanged publication,
 adversarial and strict row consumers. Owned failures disqualify and external
 missing prerequisites block. Preserve all historical authority and quarantines.
+
+## REQ-VERIFY-8577: Authenticate resident hardware evidence and terminal publication
+
+Write focused failing tests first. Keep exact original test-node unions in
+disjoint bounded serial children. Run private E2E-018/021, real private CLI,
+Ruff, strict mypy, spec tracing and100 percent newly owned statement coverage.
+Use no model loads or device commands. Retain commands, exits, clocks and logs.
+
+### SCENARIO-VERIFY-8577-REPLAY
+
+Fresh bounded replay rejects missing inputs, failed owned acceptance and
+self-consistently rehashed summary or primitive tampering. Validate exact final
+bytes with primary_publication, adversarial verification and strict row lint.
+Exercise both actual downstream consumers. External blockage stays blocked;
+owned failures disqualify. Historical flags and authority remain unchanged.
