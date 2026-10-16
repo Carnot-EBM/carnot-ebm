@@ -101655,6 +101655,27 @@ Implementation for REQ-REPORT-8579: V737 adapters seal complete current tasks an
 inherit original methods by value and hash. The result records independent
 family readiness, closed comparisons and exact downstream gate field bindings.
 
+## REQ-REPORT-8581: Bind fresh accounting to the qualified current revision
+
+Exp8581 SHALL consume Exp8580 current_validator_reference explicitly and
+Exp8579 learning_inputs_ready_score. Retain original Exp8554 test authority,
+Exp8516 numerical mechanics and Exp8568 event production, names and aliases.
+Historical readers and the old validator pin SHALL remain unchanged.
+Readiness requires every current owned check. Qualification grants no learning
+benefit, independent generalization, resident cost or live mask measurement.
+
+### SCENARIO-REPORT-8581-REVISION
+
+Reject a different source, test or control revision and forged current receipts.
+Keep Exp8568 blocked with its original failed revision gate. Preserve every old
+quarantine, Exp8529 source null, Exp8553 rejection and Exp8559 cold-cost null.
+
+### SCENARIO-REPORT-8581-COUNTERS
+
+Reduce actual before/after transitions and assignment lists. Keep proof-backed
+integer cardinalities, finite differences, zero gradients, frozen heads,
+duplicate assignments, clipping, decay, pending feedback and restart controls.
+
 ## REQ-REPORT-8580: Qualify the current count-validator revision
 
 Bind Exp8567 original authority and Exp8566 frozen controls without changing

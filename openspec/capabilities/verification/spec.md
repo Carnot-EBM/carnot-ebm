@@ -55794,6 +55794,21 @@ Implementation for REQ-VERIFY-8579: the existing supervised serial runner uses
 explicit V737 bindings. Immutable authority snapshots support cold replay after
 planning changes. Receipt logs retain scoped coverage and private consumer checks.
 
+## REQ-VERIFY-8581: Qualify fresh accounting through bounded current evidence
+
+Collect original node IDs before disjoint bounded children. Reuse the unchanged
+Exp8554 exact original union without a nested historical controller. Require
+scoped unit checks, private E2E-018/021, Ruff, strict mypy, spec tracing and100
+percent newly owned statements, including genuine children and rejection paths.
+
+### SCENARIO-VERIFY-8581-REPLAY
+
+Seal preliminary and final primitives. Fresh bounded replay SHALL reject absent
+inputs, failed owned checks and self-consistently rehashed tampering. Validate
+exact candidate bytes through unchanged publication, adversarial and strict row
+checks. Exercise the actual stream consumer. Owned failure disqualifies;
+unchanged external absence blocks. Conductor owns ops and traceability updates.
+
 ## REQ-VERIFY-8580: Measure the repaired validator without changing its checks
 
 Collect the original repair receipt node identities before bounded disjoint
