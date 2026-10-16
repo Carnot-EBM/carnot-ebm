@@ -101299,3 +101299,23 @@ inputs block; owned failures disqualify. Rehashed summary or operand tampering
 fails. Validate final bytes with unchanged publication/adversarial/strict-row
 consumers, publish atomically, bind sidecar and exercise downstream cost reader.
 Conductor owns status, changelog and traceability reconciliation for this run.
+
+## REQ-REPORT-8561: Qualify actual conditional execution receipts
+
+Exp8561 SHALL pin V734's primary, original source bytes, combined coverage and
+all child shards. Recompute the four multiline anchor differences from those
+operands. Preserve the successful 134.137591152-second replay and every prior
+quarantine. Equivalent named predicates with single-line branches SHALL retain
+all assertions and seal checks. No model, fresh episode or solve is authorized.
+
+### SCENARIO-REPORT-8561-REPLAY
+
+Original authority, corrupt seals, unavailable/unknown capability, shadow and
+rehashed rows remain checked. Fresh bounded children SHALL replay stored bytes
+under the unchanged 240-second deadline. Only exact checked final bytes accepted
+by the actual panel gate may publish execution readiness. Scientific benefit,
+learning, independent generalization and new solve credit remain zero.
+
+Exp8561 implementation (2026-10-16): explicit predicate adapters retain the
+original reducers and quarantines. The invocation artifact and bound sidecar
+record the final measured qualification and actual Exp8562 gate acceptance.

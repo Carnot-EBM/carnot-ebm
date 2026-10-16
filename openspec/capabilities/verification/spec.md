@@ -55551,3 +55551,23 @@ No repository-wide or nested historical validation runner is authorized.
 Missing sources, failed owned children and self-consistently rehashed tampering
 cannot grant readiness. Child heartbeats are at most60 seconds. Measurement stops
 by3600 seconds; at least900 seconds remain for validation inside4800 seconds.
+
+## REQ-VERIFY-8561: Require real sysmon statement receipts
+
+Reproduce the multiline discrepancy in real sysmon children before equivalent
+predicate repair. Require complete statement containment and exact combined to
+shard executed-line union with independent source hashes. No collector changes,
+statement exclusions, shard edits or relaxed thresholds are authorized.
+
+### SCENARIO-VERIFY-8561-CHILDREN
+
+Tests precede implementation and exercise accepted and rejected predicates.
+Collect original IDs before disjoint bounded serial pytest shards under original
+suite authority. Preserve outcomes, log hashes, exits and durations. Run scoped
+unit tests, real CLI, private E2E-018/021, Ruff, strict mypy and spec tracing.
+Require100 percent newly owned statements including real rejection children.
+Stop measurements by3600 seconds and reserve900 seconds inside the4800 cap.
+
+Exp8561 implementation (2026-10-16): sysmon controls and structural regression
+checks cover the original and newly owned branch anchors. Actual current child
+data, source hashes, terminal node outcomes and exact unions determine acceptance.

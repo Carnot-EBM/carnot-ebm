@@ -40,6 +40,7 @@ OWNED = [
     CLI,
 ]
 MODEL_SPECS: list[Json] = []
+RUN_DATE = "20261015"
 REQUIRED = {
     "owned_tests",
     "coverage_report",
@@ -75,12 +76,13 @@ def authenticate(root: Path) -> tuple[Json, Json]:
     authority = work["activation_reference"]
     plan = yaml.safe_load(panel.checked_bytes(authority["snapshot_path"], authority["sha256"]))
     task = next(t for t in plan["tasks"] if t["id"] == panel.TASK)
-    if (
+    original_authority_invalid = (
         canonical_hash(task) != panel.TASK_PIN
         or primary["run_date"] != "20261015"
         or primary["verdict_class"] != "disqualified"
         or not bound["report"]["passed"]
-    ):
+    )
+    if original_authority_invalid:
         raise ValueError("original_authority_or_quarantine")
     for path, digest in work["code_config_hashes"].items():
         panel.checked_bytes(path, digest)
@@ -367,18 +369,20 @@ def replay(value: Json) -> bool:
                     panel.checked_bytes(receipt[stream + "_path"], receipt[stream + "_sha256"])
         if work["replay_rows"]:
             primary, original = authenticate(ROOT)
-            if (
+            history_mismatch = (
                 episode_hashes(original) != work["episode_hashes"]
                 or reduce_history(original) != work["replay_rows"]
                 or history_receipts(primary) != work["history"]
-            ):
+            )
+            if history_mismatch:
                 return False
             config = Path(work["coverage_config"])
-            if (
+            receipt_mismatch = (
                 coverage_receipt(config, work["code_hashes"]) != work["coverage"]
                 or exact_union(work["union"]["collected_node_ids"], work["family_receipts"])
                 != work["union"]
-            ):
+            )
+            if receipt_mismatch:
                 return False
         output = Path(value["terminal_validation_sidecar_path"]).parents[2] / (NAME + ".json")
         return build(Path(value["work_reference"]["path"]), output) == value

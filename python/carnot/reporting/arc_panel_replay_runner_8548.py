@@ -381,12 +381,13 @@ def run(
         plan = yaml.safe_load((root / "research-roadmap.yaml").read_bytes())
         task = next((t for t in plan["tasks"] if t["id"] == e.TASK), None)
         resource = work["preconditions"]
-        if (
+        resource_gate_failed = (
             e.canonical_hash(task) != e.TASK_PIN
             or resource["filesystem"] in ("tmpfs", "ramfs", "unknown")
             or not all(resource["tools"].values())
             or min(resource["available_memory_bytes"], resource["free_disk_bytes"]) < 2**30
-        ):
+        )
+        if resource_gate_failed:
             work["failures"][0].update(
                 check="authority_disk_memory_tools",
                 field="original_authority_and_resources",
@@ -485,7 +486,7 @@ def main(argv: list[str] | None = None) -> int:
     """Direct CLI controls exercise the same import and publication boundaries."""
     e.progress("start_no_model_load_MODEL_SPECS_empty_LLM_calls_zero")
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--date", choices=["20261015"], default="20261015")
+    parser.add_argument("--date", choices=[e.RUN_DATE], default=e.RUN_DATE)
     parser.add_argument("--root", type=Path, default=e.ROOT)
     parser.add_argument("--output", type=Path, default=e.ROOT / "results" / (e.NAME + ".json"))
     parser.add_argument("--private-control", action="store_true")
