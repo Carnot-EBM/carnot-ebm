@@ -101544,3 +101544,28 @@ and shutdown. Keep resident sessions, cold64-answer panels and durable learning
 distinct. Preserve KV260 k<=5, PolarFire CPU scope and GateMate physical/source/
 build/ID/flash/smoke obligations. Vendor ratios never become local measurements.
 Conductor owns status, changelog and traceability reconciliation.
+
+## REQ-REPORT-8578: Reconcile fourteen V736 outcomes without promoting missing science
+
+Exp8578 SHALL bind this invocation to the original V736 protocol, current primary
+and terminal sidecar hashes, and all thirteen preceding conductor slots. It SHALL
+use the existing reader to locate pre-gate receipts, retain missing cascade
+artifacts, compare the full YAML/document contract, and emit fourteen ordered
+rows including its own terminal disposition. No model shall load; all current
+invocation counts and independent generalization scores SHALL remain zero.
+Historical source and cold-cost nulls, HALLMARK label rejection and every prior
+quarantine SHALL survive. Small original learning, resident-clock and ARC samples
+SHALL be recomputed without rerunning experiments. Continuation decisions SHALL
+name changed mechanisms; external missing inputs SHALL be blocked, never partial.
+
+### SCENARIO-REPORT-8578-ACCOUNTING
+
+Given current V736 producer and conductor receipts, all fourteen dispositions
+remain visible despite stale authority, absent cost, optional CUDA and boards.
+The fixed Brier, resident native and ARC scopes receive explicit continuation
+conditions without erasing Exp8555 or Exp8561 failures.
+
+### SCENARIO-REPORT-8578-SAMPLES
+
+Given immutable original operands, bounded arithmetic reproduces learning and ARC
+rows and two resident clock totals; repeated comparisons add no independence.

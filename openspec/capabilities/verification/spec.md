@@ -55754,3 +55754,21 @@ self-consistently rehashed summary or primitive tampering. Validate exact final
 bytes with primary_publication, adversarial verification and strict row lint.
 Exercise both actual downstream consumers. External blockage stays blocked;
 owned failures disqualify. Historical flags and authority remain unchanged.
+
+## REQ-VERIFY-8578: Qualify only owned V736 capstone code and exact final bytes
+
+Exp8578 SHALL preserve original collected node IDs and their exact disjoint
+bounded union, private E2E-018/021, lint, strict typing and spec checks. Invocation
+coverage SHALL include genuine CLI children and rejection paths and cover all
+newly owned statements. Cold replay SHALL reconstruct immutable operands and
+reject absent inputs, owned failure claims and self-consistently rehashed
+summary or primitive tampering. Required owned failure SHALL disqualify.
+Publication SHALL use unchanged primary_publication, adversarial and strict row
+validators before atomic replacement, retain findings and exercise live readers.
+G1/G2/G3/G4, paper_ready and unmet_gates SHALL be retained without redefinition.
+
+### SCENARIO-VERIFY-8578-CONTROLS
+
+Given private valid, missing, failed-child and rehashed candidates, real bounded
+children accept valid evidence and reject invented claims; final sidecars bind
+the published bytes and consumer identity. No external publication occurs.
