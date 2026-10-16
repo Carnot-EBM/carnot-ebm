@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.735",
+  "generated_at": "2026-10-16T04:19:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 141.5,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify the original learning union with measured node budgets",
+      "duration_minutes": 41.25,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Seal native replay primitives before qualification and complete inference timing",
+      "duration_minutes": 20.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify ARC conditional anchors with actual child execution receipts",
+      "duration_minutes": 20.08,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Assess HALLMARK revision labels and deployment criteria without fitting a detect",
+      "duration_minutes": 14.35,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure complete nine-input native inference against the qualified Python path",
+      "duration_minutes": 13.73,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.735 completed 9 experiments (0 compute-bound, 9 synthesis-only) across 141.5 total wall-time minutes (averaging 16 minutes per experiment) reconstructed from disk-mtime fallback data. Execution was driven entirely by synthesis tasks, led by qualifying the original learning union with measured node budgets (41.25 minutes), sealing native replay primitives before qualification and complete inference timing (20.09 minutes), qualifying ARC conditional anchors with actual child execution receipts (20.08 minutes), assessing HALLMARK revision labels and deployment criteria without fitting a detect (14.35 minutes), and measuring complete nine-input native inference against the qualified Python path (13.73 minutes), with the top 5 slowest tasks accounting for 109.50 minutes (~77.4% of total wall time). With zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null, milestone execution required no GPU compute, and GPU utilization is not flagged as a bottleneck.",
+  "bottlenecks_identified": [
+    "Synthesis-only tasks accounted for the entirety of milestone execution time (all 9 completed experiments totaling 141.5 wall-time minutes), with the top three synthesis tasks—qualifying the original learning union with measured node budgets (41.25 minutes), sealing native replay primitives before qualification and complete inference timing (20.09 minutes), and qualifying ARC conditional anchors with actual child execution receipts (20.08 minutes)—consuming 81.42 minutes (~57.5% of total milestone wall time).",
+    "Synthesis qualification sweeps, replay primitive sealing, and anchor qualification procedures executed serially without incremental receipt caching or evidence memoization when evaluating invariant node budgets or child execution receipts.",
+    "Milestone timing analysis relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits in the milestone interval.",
+    "Experiment receipts lack granular intra-task phase telemetry (separating fixture setup, test qualification, subprocess execution sweeps, and artifact serialization), obscuring which sub-phase drove the 41.25-minute and ~20-minute latencies in learning union qualification and native replay sealing."
+  ],
+  "improvements_suggested": [
+    "Implement incremental receipt caching and evidence memoization for learning union qualification, native replay primitives, ARC conditional anchor receipts, and native inference parity checks when upstream contracts and inputs remain unchanged.",
+    "Instrument long-running synthesis tasks with granular intra-task phase timers (fixture setup, qualification checks, child subprocess sweeps, artifact serialization) to isolate latency drivers.",
+    "Persist synchronous start, completion, and duration lifecycle timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Maintain strict DualGPURunner dispatch boundaries restricted to concurrent multi-model pipelines, avoiding unnecessary invocation overhead for single-model or synthesis workloads.",
+    "Retain the failure_ledger doomed-rerun pre-launch guard to immediately prevent wasted execution on recurring failing configurations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Deploy incremental receipt caching and evidence memoization for learning union qualification, native replay primitives, and ARC conditional anchor checks when upstream artifacts are unchanged.",
+    "Instrument synthesis tasks with granular intra-task phase timers (setup, diagnostic checks, child subprocess sweeps, serialization) to isolate sub-phase latency drivers.",
+    "Persist explicit synchronous start and completion lifecycle timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.735 completed 9 synthesis-only experiments in 141.5 wall-time minutes with zero compute-bound tasks executed and gpu_idle_on_compute_bound_tasks recorded as null. Observed GPU utilization reflected expected idle behavior for non-GPU synthesis workloads, and no multi-model tasks required DualGPURunner dispatch. Operational improvements should prioritize deploying incremental receipt caching for qualification sweeps and persisting synchronous lifecycle timestamps directly in experiment receipts, with estimated time savings held at 0% until measured."
+}
