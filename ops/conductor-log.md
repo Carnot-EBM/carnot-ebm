@@ -20414,3 +20414,4 @@ code |
 | 2026-10-16 11:56 UTC | Exercise the real ARC publication closure before q | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-16 11:58 UTC | Measure useful harmful and unresolved capability-m | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8575-arc-publication-qualification) |
 | 2026-10-16 12:32 UTC | Map resident-session costs to supported hardware o | OK | 87 passed, 1 warning in 105.32s (0:01:45) |
+| 2026-10-16 13:16 UTC | Reconcile fourteen outcomes and close unchanged nu | OK | 88 passed, 1 warning in 200.23s (0:03:20) |
