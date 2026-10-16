@@ -6608,3 +6608,16 @@ Total realized serving cost and harmful decision changes are explicit criteria.
 The eight-request lifecycle prototype grants comprehensive qualification only.
 Exp8559 remains a complete-inference null. See
 `docs/research-notes/v736-resident-inference-prototype.md` for mappings and limits.
+
+## 2026-10-16 — Exp8585 HalluTruthQA release authority — EXAMINED
+
+Inspected complete author commit e6e2b14733effc8da7b87fa79230a20cc4b7336b,
+HalluTruthQA-4K 2608.03966v1 and HalluScoring 2609.38355v2. The
+[V737 audit](docs/research-notes/v737-hallutruth-release-audit.md) records human
+protocol evidence, missing individual adjudication receipts, exact question
+overlap, unchanged character spans and NC/ND rights. Release inspection does
+not qualify unseen generators, deployment prevalence or exposed questions.
+Reused original Exp8513 proper-loss/KAN method mappings and Exp8571 online KAN
+scope; no theorem or FPGA timing transfers. Preserve HALLMARK rejection and
+exposed-source findings. Future evaluation needs unexposed questions and a
+language-qualified feature pipeline. No multilingual protocol or corpus change.

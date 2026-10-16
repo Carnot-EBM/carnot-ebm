@@ -101752,3 +101752,46 @@ Measured clocks reconstruct first-frame startup for every batched answer.
 Canonical roster, original operands and exact disjoint intervals govern replay.
 Final owned checks determine readiness independently of the measured native and
 Python lifecycle contrasts. No ops or traceability files are changed here.
+
+## REQ-REPORT-8585: Audit HalluTruthQA release authority before evaluation
+
+Exp8585 SHALL inspect the complete public author release at a pinned commit,
+bounded by 5000 rows and 100MiB. Raw text SHALL remain unchanged in private
+/var/tmp storage. Published evidence SHALL contain hashes and aggregate
+counts only. Question, generator, response, reference, human verdict and
+construction metadata SHALL remain separate. Character spans SHALL be checked
+against unchanged decoded UTF-8, with byte-offset diagnostics kept distinct.
+Default false review flags SHALL NOT prove completed adjudication.
+
+### SCENARIO-REPORT-8585-RELEASE
+
+A full inspection can qualify audit readiness while rejecting deployment,
+unseen-generator, natural-prevalence and exposed unseen-question evaluation.
+Documented expert/reviewer lineage is evidence, not row-level adjudication logs.
+Exact question duplicates and cross-split overlap SHALL retain official splits.
+A data-only exclusion manifest SHALL remove labels, keys, spans, notes and
+construction fields from a prospective question/response/evidence reader.
+No detector, model call, translation, redistribution or corpus change occurs.
+Old HALLMARK rejection, exposed source null, cold-cost null and quarantines stay.
+
+## REQ-REPORT-8585-REPLAY: Bind immutable operands and honest terminal outcomes
+
+The CPU-only runner SHALL accept --date 20261016, retain real preconditions,
+clocks, input/code hashes, private per-instance rows and bounded child receipts.
+Missing external release evidence SHALL block; failed owned checks SHALL
+disqualify. Generalization and learning benefit SHALL remain zero. Cold replay
+SHALL authenticate source bytes and recompute the complete published object.
+
+### SCENARIO-REPORT-8585-TAMPER
+
+A changed aggregate with a repaired envelope checksum SHALL fail replay.
+Missing inputs and owned failures SHALL remain distinguishable. Validated
+bytes SHALL pass unchanged publication, adversarial and strict-row consumers
+before atomic replacement and the actual downstream reader.
+
+Exp8585 implementation receipt (2026-10-16): complete pinned 4000-row author
+release inspected with unchanged private text and aggregate public diagnostics.
+All 2419 character spans match; exact cross-split question overlap is retained.
+Original human protocol is evidence; individual adjudication logs are absent.
+Single-generator, exposure and rights limits keep evaluation eligibility closed.
+The natural-error eligibility gate is Boolean false, not a zero-error estimate.

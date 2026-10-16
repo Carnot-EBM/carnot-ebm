@@ -55875,3 +55875,24 @@ Implementation20261016 for REQ-VERIFY-8584: focused tests exercise actual framed
 children, deadline cleanup, malformed/duplicate/expired batches, immutable inputs,
 rehashed rows and private publication. Retained command logs back readiness.
 The final terminal report binds fresh replay and both live publication readers.
+
+## REQ-VERIFY-8585: Cover release audit and genuine private CLI rejection paths
+
+Tests SHALL precede code and reference the reporting requirements. All newly
+owned statements SHALL be covered, including real child publication and cold
+replay. Collect original node IDs before bounded disjoint children. Run scoped
+Ruff check/format, strict mypy, spec coverage and private E2E-018/021 under
+original authority. Never run a nested historical validation controller.
+
+### SCENARIO-VERIFY-8585-CONTROLS
+
+Exercise invalid offsets, missing fields, review defaults, duplicates, overlap,
+label exclusion, unavailable releases, owned failure, byte changes and
+self-consistently rehashed tampering. Retain commands, exits, clocks and log
+hashes. Killed children fail validation. CUDA/board absence does not gate CPU.
+
+Exp8585 validation receipt (2026-10-16): 13 owned tests pass. All 220 owned
+statements are covered, including real standalone CLI and rejection children.
+Original private E2E-018 (18 tests), E2E-021 (7 tests) and publication-consumer
+checks (12 tests) pass. The exact final disjoint 50-node union is retained.
+Scoped Ruff check/format, strict mypy and owned-test spec tracing pass.

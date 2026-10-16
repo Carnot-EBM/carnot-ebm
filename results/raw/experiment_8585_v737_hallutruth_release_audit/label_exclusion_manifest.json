@@ -1,0 +1,30 @@
+{
+  "allowed_fields": [
+    "question",
+    "generated_answer"
+  ],
+  "excluded_fields": [
+    "label",
+    "gold_answer",
+    "answer",
+    "hallucinations",
+    "options",
+    "id",
+    "generator_model",
+    "split",
+    "needs_human_review",
+    "truncated",
+    "level",
+    "gold_match",
+    "historical_note",
+    "data_note",
+    "quality_note"
+  ],
+  "excluded_nested_fields": [
+    "hallucinations.*",
+    "*.explanation",
+    "*.review_notes"
+  ],
+  "permitted_evidence": "Separately supplied, provenance-checked evidence only; no release gold.",
+  "policy": "Strict allowlist also excludes unknown future fields. No label-based selection."
+}
