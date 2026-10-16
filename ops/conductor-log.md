@@ -20409,3 +20409,4 @@ code |
 | 2026-10-16 09:48 UTC | Test later Brier benefit and simultaneous retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8569-causal-brier-stream) |
 | 2026-10-16 10:34 UTC | Ingest serving-cost methods and build a bounded re | OK | 97 passed, 1 warning in 114.93s (0:01:54) |
 | 2026-10-16 11:34 UTC | Qualify resident request isolation and Python-nati | OK | 95 passed, 1 warning in 234.87s (0:03:54) |
+| 2026-10-16 11:41 UTC | Measure complete resident-session cost against mat | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
