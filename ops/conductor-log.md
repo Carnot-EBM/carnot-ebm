@@ -20407,3 +20407,4 @@ code |
 | 2026-10-16 09:38 UTC | Qualify fresh causal update accounting through the | OK | 91 passed, 1 warning in 181.64s (0:03:01) |
 | 2026-10-16 09:46 UTC | Train the small energy head with delayed feedback  | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-16 09:48 UTC | Test later Brier benefit and simultaneous retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8569-causal-brier-stream) |
+| 2026-10-16 10:34 UTC | Ingest serving-cost methods and build a bounded re | OK | 97 passed, 1 warning in 114.93s (0:01:54) |
