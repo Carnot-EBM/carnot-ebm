@@ -1,0 +1,38 @@
+......F.                                                                 [100%]
+=================================== FAILURES ===================================
+____________________ test_private_publication_and_consumer _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T095800-3746068-0c3bcea9/test_private_publication_and_c0')
+
+    def test_private_publication_and_consumer(tmp_path):
+        """REQ-VERIFY-8571: real CLI publication binds bytes even in unqualified control mode."""
+        import subprocess
+        import sys
+    
+        output=tmp_path/(e.NAME+'.json')
+        argv=[sys.executable,'-u',str(e.ROOT/e.CLI)]
+        result=subprocess.run([*argv,'--private-control','--output',str(output)],
+                              capture_output=True,timeout=120)
+        assert result.returncode==0,result.stderr
+        value=json.loads(output.read_bytes())
+        assert value['prototype_ready_score']==0
+        terminal=json.loads(Path(value['terminal_validation_sidecar_path']).read_bytes())
+        assert terminal['publication']['primary_sha256']==e.reference(output)['sha256']
+        assert terminal['selected_identity']['gate_path']==str(output)
+        result=subprocess.run([*argv,'--cold-replay',str(output)],capture_output=True,timeout=60)
+>       assert result.returncode==0,result.stderr
+E       AssertionError: b'[exp8571] phase=start no_model_load MODEL_SPECS=[] current_LLM_calls=0
+E         '
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...e.json'], returncode=1, stdout=b'', stderr=b'[exp8571] phase=start no_model_load MODEL_SPECS=[] current_LLM_calls=0\n').returncode
+
+tests/python/test_resident_inference_8571.py:183: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_resident_inference_8571.py::test_private_publication_and_consumer
+1 failed, 7 passed, 1 warning in 101.48s (0:01:41)

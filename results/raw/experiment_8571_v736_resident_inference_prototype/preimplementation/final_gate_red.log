@@ -1,0 +1,96 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______________ test_eight_requests_real_processes_and_restarts ________________
+
+bundle = {'extension': {'actual_loaded': True, 'compiler_flags': '-C target-feature=-fma -C instrument-coverage', 'fast_math': ...roducer': 8464, 'producer_hash': 'sha256:759bd38012061675801027e8d053b6df2ebe06970453bceede8c822648629f77'}, ...], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T101151-3753651-4528dd6a/test_eight_requests_real_proce0')
+
+    def test_eight_requests_real_processes_and_restarts(bundle, tmp_path):
+        """SCENARIO-REPORT-8571-PROTOTYPE: real native/Python children restart cleanly."""
+        result = e.prototype(bundle, tmp_path)
+        assert len(result["prototype_request_rows"]) == 8
+        assert all(r["passed"] for r in result["prototype_request_rows"])
+        assert len({r["pid"] for r in result["lifecycle_receipts"]}) == 4
+        assert all(r["exit_code"] == 0 and r["clean_shutdown"] for r in result["lifecycle_receipts"])
+        assert sum(r["response"]["status"] == "error" for r in result["prototype_request_rows"]) == 2
+        valid = [r for r in result["prototype_request_rows"] if r["session"] == 0 and r["kind"] == "valid"]
+>       assert valid[0]["request"]["row"] != valid[1]["request"]["row"]
+E       AssertionError: assert {'cached_p2': {'confidence': 0.88, 'label': 0, 'raw_sha256': 'sha256:5e9d989d128e9d87ce4802938d43e0092edf4b088bed8b2a4...6520556e69746564205374617465732e', 'family_id': 'hotpotqa_s00909__llama3-8b', 'source_bytes': '416d65726963616e'}, ...} != {'cached_p2': {'confidence': 0.88, 'label': 0, 'raw_sha256': 'sha256:5e9d989d128e9d87ce4802938d43e0092edf4b088bed8b2a4...6520556e69746564205374617465732e', 'family_id': 'hotpotqa_s00909__llama3-8b', 'source_bytes': '416d65726963616e'}, ...}
+
+tests/python/test_resident_inference_8571.py:91: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8571] phase=before_session session=0 arm=python
+[exp8571] phase=private_request completed=1 pending=7
+[exp8571] phase=private_request completed=2 pending=6
+[exp8571] phase=private_request completed=3 pending=5
+[exp8571] phase=after_session completed=1 pending=3
+[exp8571] phase=before_session session=1 arm=native
+[exp8571] phase=private_request completed=4 pending=4
+[exp8571] phase=private_request completed=5 pending=3
+[exp8571] phase=private_request completed=6 pending=2
+[exp8571] phase=after_session completed=2 pending=2
+[exp8571] phase=before_session session=2 arm=python
+[exp8571] phase=private_request completed=7 pending=1
+[exp8571] phase=after_session completed=3 pending=1
+[exp8571] phase=before_session session=3 arm=native
+[exp8571] phase=private_request completed=8 pending=0
+[exp8571] phase=after_session completed=4 pending=0
+____________________ test_artifact_replay_and_owned_failure ____________________
+
+bundle = {'extension': {'actual_loaded': True, 'compiler_flags': '-C target-feature=-fma -C instrument-coverage', 'fast_math': ...roducer': 8464, 'producer_hash': 'sha256:759bd38012061675801027e8d053b6df2ebe06970453bceede8c822648629f77'}, ...], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T101151-3753651-4528dd6a/test_artifact_replay_and_owned0')
+
+    def test_artifact_replay_and_owned_failure(bundle, tmp_path):
+        """SCENARIO-VERIFY-8571-REPLAY: checksum repair cannot grant semantic authority."""
+        primitive = e.prototype(bundle, tmp_path / "primitive")
+        work = dict(
+            bundle=bundle,
+            primitive=primitive,
+            raw=str(tmp_path),
+            gate_check_summary=[],
+            preconditions_checked={},
+            duration_s=1.0,
+            phase_spans=[],
+        )
+        atomic_json(tmp_path / "work.json", work)
+        receipts = [dict(name=name, passed=True) for name in e.REQUIRED]
+        value = e.artifact(work, receipts, tmp_path / (e.NAME + ".json"))
+        candidate = tmp_path / "candidate.json"
+        atomic_json(candidate, value)
+        assert e.replay(candidate)
+        assert value["prototype_ready_score"] == 1 and value["verdict_class"] == "null"
+        repeated = [dict(name="cold", passed=False), *receipts]
+>       assert e.artifact(work, repeated, tmp_path / (e.NAME + ".json"))["prototype_ready_score"] == 0
+E       assert 1 == 0
+
+tests/python/test_resident_inference_8571.py:118: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8571] phase=before_session session=0 arm=python
+[exp8571] phase=private_request completed=1 pending=7
+[exp8571] phase=private_request completed=2 pending=6
+[exp8571] phase=private_request completed=3 pending=5
+[exp8571] phase=after_session completed=1 pending=3
+[exp8571] phase=before_session session=1 arm=native
+[exp8571] phase=private_request completed=4 pending=4
+[exp8571] phase=private_request completed=5 pending=3
+[exp8571] phase=private_request completed=6 pending=2
+[exp8571] phase=after_session completed=2 pending=2
+[exp8571] phase=before_session session=2 arm=python
+[exp8571] phase=private_request completed=7 pending=1
+[exp8571] phase=after_session completed=3 pending=1
+[exp8571] phase=before_session session=3 arm=native
+[exp8571] phase=private_request completed=8 pending=0
+[exp8571] phase=after_session completed=4 pending=0
+----------------------------- Captured stderr call -----------------------------
+[exp8533] phase=before_extension_load completed=0 pending=1
+[exp8533] phase=after_extension_load completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_resident_inference_8571.py::test_eight_requests_real_processes_and_restarts
+FAILED tests/python/test_resident_inference_8571.py::test_artifact_replay_and_owned_failure
+2 failed, 1 warning in 20.33s

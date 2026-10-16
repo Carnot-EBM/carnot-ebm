@@ -101486,3 +101486,26 @@ historical diagnostics. Every current owned gate must pass for readiness one.
 Missing upstream authority blocks; owned failure disqualifies. Immutable
 preliminary and final snapshots bind replay and checked atomic publication.
 Conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+## REQ-REPORT-8571: Build a private resident inference lifecycle prototype
+
+Authenticate original Exp8558 parity and Exp8559 complete-cost operands. Preserve
+its ratio1.010149 and confidence interval containing1 without another comparison.
+Pin serial primary-method reads for2602.02056v4,2604.22034v1,2606.19808v1.
+Map locality, basis evaluation, total serving cost and harmful interventions to
+existing code. Defer basis replacement, policy training and deployment claims.
+Use no model loads, empty MODEL_SPECS and zero current LLM calls.
+
+### SCENARIO-REPORT-8571-PROTOTYPE
+
+Run eight private requests over Python/native pipes, including malformed input,
+changed configuration rejection and clean restarts. Load immutable configuration
+once per session. Preserve extraction,109 coefficients, normalization and typed
+threshold fallback through the existing complete evaluator. Readiness one means
+only a runnable bounded research CLI. Generalization and learning scores stay0.
+Conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+Implementation: the thin Exp8571 runner uses the shipped complete evaluator
+through explicit resident adapters. Four sessions retain eight attempts, two
+intentional rejections and distinct valid inputs after rejection. The primary
+binds original cost-null clocks, versioned methods and immutable raw operands.

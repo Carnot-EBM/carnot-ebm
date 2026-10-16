@@ -6597,3 +6597,14 @@ Exp8527 reads original exposed history without fitting or LLM calls. Its
 qualification can enable Exp8528; it cannot establish source value. Original
 fit/tune/test roles and permutations stay fixed. Importance anchoring and
 external-text reranking are not reopened.
+
+## 2026-10-16 — Exp8571 V736 resident serving methods — INGESTED
+
+Serial primary reads pinned2602.02056v4,2604.22034v1 and2606.19808v1 under
+`results/raw/experiment_8571_v736_resident_inference_prototype/literature/`.
+Local spline support and linear-time basis methods map to the unchanged109-term
+complete evaluator. Basis replacement and policy training remain deferred.
+Total realized serving cost and harmful decision changes are explicit criteria.
+The eight-request lifecycle prototype grants comprehensive qualification only.
+Exp8559 remains a complete-inference null. See
+`docs/research-notes/v736-resident-inference-prototype.md` for mappings and limits.

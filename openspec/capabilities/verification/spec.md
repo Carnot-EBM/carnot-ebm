@@ -55700,3 +55700,25 @@ row gates plus the corrected count validator. Exercise the real next-stream
 consumer with exact checked bytes. Child heartbeats remain at most60 seconds;
 measurements stop by3600 and reserve900 seconds within4800. Optional CUDA and
 board absence cannot block independent CPU work. Historical quarantines stay.
+
+## REQ-VERIFY-8571: Bound resident transport and authenticate publication
+
+Use length-bounded frames, unique request IDs, configuration hashes, bounded
+serial queues, deadlines, explicit EOF and clean shutdown. Reject malformed,
+oversized, expired and changed-hash requests without returning earlier answers.
+Require focused tests first, private real children, scoped exact test-node union,
+E2E-018/021, Ruff, strict mypy, spec tracing and100 percent owned statements.
+Preserve original authority and prior findings. Do not run the full suite.
+
+### SCENARIO-VERIFY-8571-REPLAY
+
+Cold replay in a fresh process recomputes responses from original immutable
+operands. Missing inputs, failed owned checks and self-consistently rehashed
+summary or response tampering fail. Validate exact bytes before atomic publication
+and consume the primary through both shipped readers. Owned failures disqualify;
+missing external prerequisites block. Qualification establishes no speed benefit.
+
+Implementation: length-framed pipes bound reads and writes, session requests,
+queue depth and shutdown. Fresh replay reconstructs serialized answers and
+rejects changed operands. Serial validation reuses the qualified controller with
+an explicit owned scope. Duplicate check names cannot erase an earlier failure.

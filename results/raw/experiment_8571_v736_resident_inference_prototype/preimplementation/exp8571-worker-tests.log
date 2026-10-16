@@ -1,0 +1,44 @@
+....F.                                                                   [100%]
+=================================== FAILURES ===================================
+____________________ test_artifact_replay_and_owned_failure ____________________
+
+bundle = {'extension': {'actual_loaded': True, 'compiler_flags': '-C target-feature=-fma -C instrument-coverage', 'fast_math': ...roducer': 8464, 'producer_hash': 'sha256:759bd38012061675801027e8d053b6df2ebe06970453bceede8c822648629f77'}, ...], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T095448-3743862-4ec67909/test_artifact_replay_and_owned0')
+
+    def test_artifact_replay_and_owned_failure(bundle, tmp_path):
+        """SCENARIO-VERIFY-8571-REPLAY: checksum repair cannot grant semantic authority."""
+        primitive = e.prototype(bundle, tmp_path / "primitive")
+        work = dict(bundle=bundle, primitive=primitive, raw=str(tmp_path), gate_check_summary=[],
+                    preconditions_checked={}, duration_s=1.0, phase_spans=[])
+        atomic_json(tmp_path / "work.json", work)
+>       receipts = [dict(name=name, passed=True) for name in e.REQUIRED]
+                                                             ^^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.resident_inference_8571' has no attribute 'REQUIRED'
+
+tests/python/test_resident_inference_8571.py:94: AttributeError
+----------------------------- Captured stdout call -----------------------------
+[exp8571] phase=before_session session=0 arm=python
+[exp8571] phase=private_request completed=1 pending=7
+[exp8571] phase=private_request completed=2 pending=6
+[exp8571] phase=private_request completed=3 pending=5
+[exp8571] phase=after_session completed=1 pending=3
+[exp8571] phase=before_session session=1 arm=native
+[exp8571] phase=private_request completed=4 pending=4
+[exp8571] phase=private_request completed=5 pending=3
+[exp8571] phase=private_request completed=6 pending=2
+[exp8571] phase=after_session completed=2 pending=2
+[exp8571] phase=before_session session=2 arm=python
+[exp8571] phase=private_request completed=7 pending=1
+[exp8571] phase=after_session completed=3 pending=1
+[exp8571] phase=before_session session=3 arm=native
+[exp8571] phase=private_request completed=8 pending=0
+[exp8571] phase=after_session completed=4 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_resident_inference_8571.py::test_artifact_replay_and_owned_failure
+1 failed, 5 passed, 1 warning in 33.90s
