@@ -55854,3 +55854,24 @@ child supervisor, explicit subprocess/exit coverage, exact collected node union,
 original objective-checkpoint tests and private authority/publication E2Es.
 `test_causal_brier_stream_8582.py` exercises owned failures and repaired hashes.
 The final primary and terminal sidecar determine whether all checks passed.
+
+## REQ-VERIFY-8584: Qualify immutable complete resident-cost evidence
+
+Write requirement-linked failing tests first. Collect exact original owned and
+private E2E-018/021 nodes before bounded disjoint children. Require scoped tests,
+Ruff check/format,strict mypy,spec tracing and100 percent newly owned statement
+coverage including genuine children and rejection paths. Retain command,exit,
+duration and log hashes. Never run a historical validation controller or full suite.
+
+### SCENARIO-VERIFY-8584-REPLAY
+
+Fresh bounded replay recomputes primitives and rejects missing inputs,owned
+failures and self-consistently rehashed tampering. Validate final bytes with
+unchanged primary publication,adversarial verification and strict row lint before
+atomic replacement. Exercise actual downstream readers. Owned failures disqualify;
+unchanged external blockage stays blocked. Conductor owns ops and traceability.
+
+Implementation20261016 for REQ-VERIFY-8584: focused tests exercise actual framed
+children, deadline cleanup, malformed/duplicate/expired batches, immutable inputs,
+rehashed rows and private publication. Retained command logs back readiness.
+The final terminal report binds fresh replay and both live publication readers.

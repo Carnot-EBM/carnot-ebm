@@ -1,0 +1,33 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 16 items
+
+tests/python/test_resident_complete_cost_8584.py::test_registered_roster_and_original_inputs PASSED [  6%]
+tests/python/test_resident_complete_cost_8584.py::test_paired_bootstrap_and_benefit_boundary PASSED [ 12%]
+tests/python/test_resident_complete_cost_8584.py::test_real_batched_children_and_rejections PASSED [ 18%]
+tests/python/test_resident_complete_cost_8584.py::test_missing_gate_and_owned_failures PASSED [ 25%]
+tests/python/test_resident_complete_cost_8584.py::test_cold_replay_and_rehashed_tampering PASSED [ 31%]
+tests/python/test_resident_complete_cost_8584.py::test_measure_checkpoint_failures_and_budget PASSED [ 37%]
+tests/python/test_resident_complete_cost_8584.py::test_admission_drift_and_unavailable_inputs PASSED [ 43%]
+tests/python/test_resident_complete_cost_8584.py::test_replay_rejects_rehashed_bundle PASSED [ 50%]
+tests/python/test_resident_complete_cost_8584.py::test_real_worker_negative_frames PASSED [ 56%]
+tests/python/test_resident_complete_cost_8584.py::test_deadline_reaps_real_session PASSED [ 62%]
+tests/python/test_resident_complete_cost_8584.py::test_worker_saturation_without_hidden_requests PASSED [ 68%]
+tests/python/test_resident_complete_cost_8584.py::test_real_private_cli_and_owned_failure PASSED [ 75%]
+tests/python/test_resident_complete_cost_8584.py::test_live_deadline_and_error_cleanup PASSED [ 81%]
+tests/python/test_resident_complete_cost_8584.py::test_immutable_roster_and_operation_tampering PASSED [ 87%]
+tests/python/test_resident_complete_cost_8584.py::test_orchestration_and_downstream_reader PASSED [ 93%]
+tests/python/test_resident_complete_cost_8584.py::test_validation_receipts_need_real_bytes PASSED [100%]
+
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 16 passed, 1 warning in 177.61s (0:02:57) ===================

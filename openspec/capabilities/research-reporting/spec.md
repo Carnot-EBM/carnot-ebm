@@ -101724,3 +101724,31 @@ head and current qualified prerequisites; `causal_brier_evidence_8582.py`
 reconstructs primitive transitions. The thin experiment CLI publishes the
 single primary and its bound terminal report. Qualification is determined by
 that invocation's retained receipts. Conductor owns ops and traceability upkeep.
+
+## REQ-REPORT-8584: Measure complete matched resident-session costs
+
+Authenticate original Exp8572 dependencies and qualified Exp8579 methods and
+resident inputs. Preserve four arms,64 stable-order answers per panel,
+lengths1/4/16 panels,batches1/8,ten paired repeats,alternating AB/BA and balanced
+four-arm rotation. Cold processes launch per panel; resident processes launch
+per session. Include immutable setup,imports,all requests,transport,features,
+fallback,serialization and shutdown. No cache or hidden warmup is permitted.
+Separate native effect at length16/batch1 from Python lifecycle effect.
+Use10000 paired-repeat bootstrap draws with seed7368573. Benefit requires lower95
+throughput ratio>1,p95 latency ratio<=1.05 and full parity; NFR01 needs lower95>=10.
+A qualified null retains readiness1. One host supplies one independent timing
+unit. Generalization scores and current model invocations remain zero.
+
+### SCENARIO-REPORT-8584-COST
+
+Every session and request has measured clocks or an explicit missing reason.
+First-request latency includes startup. Disjoint operation shares sum to complete
+cost. Keep Exp8559 cold null and all old quarantines. Fixed cells that exceed the
+2400-second measurement budget remain censored without a complete claim.
+
+Implementation20261016 for REQ-REPORT-8584: the thin runner and resident complete
+cost adapters preserve all240 cells,960 processes and107520 answer observations.
+Measured clocks reconstruct first-frame startup for every batched answer.
+Canonical roster, original operands and exact disjoint intervals govern replay.
+Final owned checks determine readiness independently of the measured native and
+Python lifecycle contrasts. No ops or traceability files are changed here.
