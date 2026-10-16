@@ -11,10 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
-| NO_CLAIM | 7 |
+| NO_CLAIM | 8 |
 
-## experiment_8556_causal_brier_stream.json
+## experiment_8569_causal_brier_stream.json
 
 **NO_CLAIM**
 
@@ -25,23 +24,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-execution receipt, with no experimental success or comparative claim to falsify.
+Not applicable: this artifact records a blocked run and makes no claim of successful training or comparative value.
 
 ## WAS THAT CHECKED
-No experimental claim was tested. Only prerequisite gates were evaluated; the adapter-readiness gate failed before the experiment ran.
+No experimental claim was tested. Both prerequisite gates were checked and failed in `gates_evaluated`, blocking execution at `conductor_pre_gate`.
 
 ## EVIDENCE
 - `schema`: `blocked_gate_check_v1`
 - `status`: `blocked`
 - `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `online_adapter_ready_score`
-- `failed_expected`: `1`; `failed_observed`: `0`
+- `gate_check_summary`: `gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1)`
 - `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8558_v735_nine_input_native_qualification.json
+## experiment_8571_v736_resident_inference_prototype.json
 
 **NO_CLAIM**
 
@@ -52,52 +50,57 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-This is an engineering qualification receipt without a comparative benefit claim. Its limited qualification would fail if a non-fallback native residual exceeded the stated tolerance, a native decision disagreed with the reference, or required validation failed.
+This is a prototype readiness receipt, without a comparative benefit claim. Its narrower readiness assertion could fail through a typed-decision mismatch, acceptance of an intentionally invalid request, a failed restart or shutdown, or a required validation failure.
 
 ## WAS THAT CHECKED
-Yes, for qualification: the artifact reports 1,180 finite parity comparisons, explicit boundary fallbacks, complete-request comparisons, and passing acceptance gates. These checks could expose implementation failures. Agreement with the reference oracle establishes fidelity; the artifact assigns zero independent generalization and learning benefit.
+Yes, within the recorded protocol scope: six valid evaluations and two intentional rejections pass; Python and native outputs match on the repeated inputs; lifecycle receipts record restarts and clean shutdowns.
+
+Oracle-defined parity supports this execution check without establishing verifier value. Exposed records are not presented as independent generalization. The Python comparator ties, consistent with the parity objective. The two error responses are expected rejection successes, not invalid evaluations counted as accuracy wins. Timing evidence is explicitly imported historical evidence.
 
 ## EVIDENCE
 
-- `nine_input_native_ready_score`: `One only after native calls, finite controls, complete request consumer and all required validation pass; no speed or learning claim.`
-- `max_residual_error`: `Maximum absolute dense-SciPy versus native residual difference; every row must satisfy 1e-12*(1+abs(reference)).`
-- `finite_parity_rows`: `1180`; `failed_count`: `0`.
-- `generalized_learning_benefit_score`: `0`; `independent_generalization_score`: `0`.
-- `exposure_scope`: `all 900 answers and 300 questions are exposed development history`.
+- `honest_verdict`: `complete_null_v736_resident_inference_prototype`
+- `prototype_ready_score`: `1`
+- `harmful_intervention_criterion`: `Any typed decision change from shipped complete evaluator fails this prototype; this is numerical parity, not correctness labeling.`
+- `completed_count`: `Eight protocol attempts include six valid evaluations and two intentional rejections; repeated inputs add no independence.`
+- `kind`: `malformed_json`, `changed_config_hash`; `status`: `error`; `passed`: `true`
+- `clean_shutdown`: `true`; `required_checks_passed`: `true`
+- `comparative_timing_trials`: `0`; `new_timing_comparison`: `false`
+- `independent_generalization_score`: `0`; `generalized_learning_benefit_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8559_v735_complete_native_cost.json
+## experiment_8572_v736_resident_inference_qualification.json
 
-**CLAIM_SUPPORTED**
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_SUPPORTED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-The primary batch-1 complete-cost comparison does not establish a native throughput advantage over Python.
+no claim
 
 ## WHAT WOULD REFUTE IT
-A primary batch-1 throughput confidence interval entirely above 1, based on complete measured costs and valid paired runs, would contradict this scoped null.
+No comparative benefit is asserted. The limited operational qualification would fail if a resident/native path changed a reference decision, a failure/recovery control failed, or clock intervals overlapped.
 
 ## WAS THAT CHECKED
-Yes. Paired native/Python wall times and bootstrap intervals directly test throughput; neither arm was guaranteed to win. The primary interval crosses 1.
-
-Python is a serious comparator. Batch-8 throughput and p95 latency show improvements, so the null must remain scoped to primary throughput. Oracle status and exposed inputs do not make this timing comparison circular; no independent generalization benefit is claimed. No exclusions or censoring are reported, and the cited timing fields exist.
+Yes, for operational qualification: displayed four-path parity and numerical-control rows report no decision mismatches; displayed failure controls and clock accounting pass. Ties support this equivalence check. Oracle-defined correctness and exposed inputs are not presented as verifier value or generalization. The timing null is explicitly historical.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_v735_complete_native_cost`
-- `batch`: `1`; `complete_throughput_ratio`: `1.0101493212248978`; `throughput_ratio_ci95`: `0.9974283026343478`, `1.0234577501521551`
-- `batch`: `8`; `throughput_ratio_ci95`: `1.0069912996713701`, `1.0202474770692178`
-- `native_s`: `1.63813082`; `python_s`: `1.633614336`
+
+- `honest_verdict`: `complete_null_v736_resident_inference_qualification`
+- `methodology_note`: `Qualification only. No timing benefit is inferred from fixtures or launch-through-exit clock accounting.`
+- `new_timing_comparison`: `false`
+- `decision_mismatch`: `false`
+- `no_overlapping_intervals`: `true`
+- `generalized_learning_benefit_score`: `0`
 - `independent_generalization_score`: `0`
-- `excluded_count`: `0`; `censored_count`: `0`; `failed_count`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8560_qwen_evidence_canary.json
+## experiment_8573_resident_complete_cost.json
 
 **NO_CLAIM**
 
@@ -108,24 +111,24 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no experimental claim to falsify. This artifact records a failed prerequisite and blocked execution, without claiming canary success or comparative value.
+Not applicable: this artifact records a blocked experiment, with no comparative cost conclusion to falsify.
 
 ## WAS THAT CHECKED
-No experimental claim was tested. The prerequisite was checked in `gates_evaluated`: runtime readiness was 0 against a required 1, and the gate failed.
+No cost comparison is reported. Prerequisite gates were checked, and methods readiness failed, blocking execution.
 
 ## EVIDENCE
 - `schema`: `blocked_gate_check_v1`
 - `status`: `blocked`
 - `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `runtime_repair_ready_score`
-- `failed_expected`: `1`; `failed_observed`: `0`
-- `duration_s`: `0.0`
+- `failed_field`: `methods_ready_score`
+- `failed_expected`: `1`
+- `failed_observed`: `0`
 - `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8561_v735_arc_panel_replay_qualification.json
+## experiment_8574_qwen_evidence_canary.json
 
 **NO_CLAIM**
 
@@ -136,26 +139,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim is asserted. Failed owned coverage or terminal replay would defeat infrastructure qualification; those failures would not refute an artifact that already reports disqualification.
+No experimental benefit is asserted. For the blocking report itself, gate rows showing all prerequisites passed would contradict the stated reason for blocking.
 
 ## WAS THAT CHECKED
-Yes. The acceptance gates report both failures, execution readiness is zero, and the verdict remains disqualified. Replay completion and fixture parity are not presented as scientific benefit or generalization.
+Yes. The gates_evaluated entries record two failed prerequisites and one passed prerequisite, consistent with the blocked outcome. Canary effectiveness was not evaluated.
 
 ## EVIDENCE
-
-- `honest_verdict`: `complete_disqualified_v735_arc_panel_replay_qualification`
-- `no_scientific_benefit_claim`: `true`
-- `owned_coverage`: `false`
-- `terminal_replay`: `false`
-- `arc_panel_execution_ready_score`: `0`
-- `headline_solve_credit`: `0`
-- `independent_count`: `0`
-- `independent_generalization_score`: `0`
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `gate_check_summary`: `gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1)`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8562_arc_capability_panel.json
+## experiment_8575_arc_publication_qualification.json
 
 **NO_CLAIM**
 
@@ -166,18 +165,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-run receipt, not a claim about capability or comparative value.
+A passing prerequisite gate would contradict the recorded reason for blocking. There is no claim of successful qualification or comparative value to refute.
 
 ## WAS THAT CHECKED
-No capability evaluation occurred. The prerequisite readiness gate was checked and failed: observed 0, required 1. The artifact reports the block without claiming success.
+Yes. The prerequisite was checked in gates_evaluated: methods_ready_score was 0 against a required value of 1. The artifact records the failure and stops at the prerequisite gate.
 
 ## EVIDENCE
-`blocked_gate_check_v1`, `blocked`, `blocked_gate_check_failed`, `arc_panel_execution_ready_score`, `actual=0 == expected=1`, `conductor_pre_gate`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `artifact_field`: `methods_ready_score`
+- `expected`: `1`; `actual`: `0`; `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8563_v735_hardware_operation_boundary.json
+## experiment_8577_v736_resident_hardware_boundary.json
 
 **NO_CLAIM**
 
@@ -188,25 +191,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative benefit is asserted. A qualified compatible device execution with parity and complete host/device clocks would contradict the recorded blocked hardware boundary.
+No comparative benefit is asserted. A hardware acceleration claim would be refuted by a qualified resident CPU baseline tying or beating compatible hardware on complete session cost with matching correctness.
 
 ## WAS THAT CHECKED
-No physical execution was tested in this invocation. The artifact records compatibility checks and host-only operation costs, while explicitly treating acceleration ceilings as conditional. This is an engineering accounting receipt, not a positive performance or generalization result.
+No comparative benefit test is reported. This is an evidence-boundary artifact: resident costs remain unqualified, physical-execution gates fail, and operation-mapping readiness is explicitly distinguished from physical readiness. Those limitations are acknowledged rather than promoted into a positive result.
 
 ## EVIDENCE
-
-- `exposure_scope`: `historical_exposed_evidence_engineering_accounting_only`
-- `One qualifies scope accounting only.`
-- `cost_scope`: `Python batch1 ten complete repeats; no device execution`
-- `deployment_ready`: `false`
-- `device_commands_executed`: `[]`
-- `conditional`: `true`
+- `hardware_boundary_ready_score`: `1`
+- `One means qualified operation mapping; resident cost and physical readiness are separate.`
+- `physical_execution`: `false`
+- `resident_cost`: `false`
 - `measured_acceleration`: `null`
+- `Exp8573_complete_rows_and_parity_unqualified`
+- `future_dependency_not_observation`
+- `generalized_learning_benefit_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8564_v735_capstone.json
+## experiment_8578_v736_capstone.json
 
 **NO_CLAIM**
 
@@ -217,21 +220,20 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative scientific claim is asserted. An unaccounted scheduling slot or failed required owned check would contradict administrative completeness; blocked scientific work does not.
+No comparative scientific claim is asserted. A blocked or ineligible row credited as qualified learning, ARC, or resident-speed benefit would contradict the artifact’s stated qualification boundary.
 
 ## WAS THAT CHECKED
-Yes, for administrative accounting: the acceptance gates report complete slot accounting and required checks. Failed scientific prerequisites remain recorded as blocked or skipped. Oracle verification is not presented as evidence of added value, and ineligible scheduling receipts are not presented as scientific successes.
+Yes, at the qualification boundary: the corresponding acceptance gates are false, generalization credit is zero, and resident complete cost is explicitly unmeasured. Blocked slots count toward administrative completion. This provides no comparative benefit test, and the elided rows limit a complete accounting audit.
 
 ## EVIDENCE
-
 - `administrative_complete`: `true`
-- `all_slots_accounted`: `true`
-- `required_owned_checks`: `true`
-- `scientific_claims_independently_generalize`: `false`
-- `producer_executed`: `false`; `eligible`: `false`
-- `disposition`: `pre_gate_receipt`
-- `disposition`: `cascade_skip`
-- `Stored ARC replay checks execution mechanics and grants no hidden-game capability benefit.`
+- `qualified_learning_benefit`: `false`
+- `qualified_arc_panel`: `false`
+- `qualified_resident_cost`: `false`
+- `generalization_credit`: `0`
+- `no_qualified_learning_or_arc_benefit_no_resident_speed_measurement`
+- `Exp8573 pre-gated; qualification clocks are not a serving benchmark`
+- `Exposed original questions and public ARC diagnostic; no independent labels or learning credit`
 
 ## RECOMMENDATION
 KEEP

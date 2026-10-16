@@ -1,5 +1,12 @@
 # Carnot — Session Metrics
 
+## Session: 2026-10-16 V737 Research Planning
+
+| Turn | Start | End | Description | Tokens (est) |
+|---|---|---|---|---|
+| 1 | Not captured; log opened 2026-10-16T14:56:03+00:00 | In progress | User requested the next research milestone after V736, recent literature, two matching staged files, mandated Qwen and continuous learning | Not measured |
+
+
 ## Session: 2026-10-16 Milestone 2026.10.736 Operational Retrospective
 
 ### Turn Log

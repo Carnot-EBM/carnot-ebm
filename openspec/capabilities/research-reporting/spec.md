@@ -1,3 +1,57 @@
+## Planned V737 studies — 2026-10-16
+
+### REQ-REPORT-V737-CONTRACT: Bind the complete staged milestone
+
+Milestone2026.10.737 contains exactly twelve tasks, Exp8579–Exp8590, in conductor
+order. The visible table, full embedded JSON, staged YAML and canonical digest
+must agree. Include prompts, gates, routes and retirement flags. Preserve V736's
+failed authority and its genuine qualification results. No historical design
+may be reconstructed as if it existed during V736 execution.
+
+#### SCENARIO-REPORT-V737-CONTRACT
+
+Planning validation rejects missing tasks, reordered IDs, changed titles,
+phases, deliverables, prompts, model declarations, gates, routes, retirement
+flags and the missing end marker. Existing active roadmap and conductor bytes
+remain unchanged. Every gate names an earlier producer and its declared field.
+
+### REQ-REPORT-V737-STUDIES: Qualify changed dependencies before fixed science
+
+Qualify the repaired count-validator revision against original sealed controls.
+New causal accounting must accept an explicit qualified revision and reject
+drift. Historical failed hashes remain failed. Continuous delayed Brier updates,
+log-loss/frozen/shuffled controls and retention retain their registered operands.
+Resident sessions retain four arms, complete clocks and the fixed primary cell.
+Readiness must remain separate from measured benefit.
+
+#### SCENARIO-REPORT-V737-CAUSAL-COST
+
+Sealed predictions precede feedback. Real interrupted processes resume exactly.
+Per-question losses and state changes support independent benefit reduction.
+Resident comparisons include startup, features, transport and shutdown. Qualified
+nulls remain terminal; current owned failures disqualify. Unchanged external
+blocks use blocked, never partial. Every task prints phase, loop and child
+progress. Large files use several bounded tool calls with progress between them.
+
+### REQ-REPORT-V737-EVIDENCE: Keep label, model, live-agent and hardware limits
+
+Inspect actual HalluTruthQA rights, annotations, construction and split evidence
+before any fit. Its single-generator Arabic scope does not establish unseen-model
+or English transfer. Use only bounded Qwen3.8-27B generation after causal CUDA
+repair. ARC publication closure qualifies before the fixed adapter-withheld
+four-game live panel. Every credited solve requires live_agent_self_discovery.
+Hardware and capstone readers run independently of optional branch success.
+
+#### SCENARIO-REPORT-V737-BOUNDARIES
+
+Missing CUDA does not block CPU studies. Raw dataset text stays private and
+unmodified. Label-bearing fields cannot enter future detector inputs. Registry
+prechecks prevent duplicate solve credit. Existing board receipts establish
+only their measured operations. No inferred speedup or vendor ratio becomes a
+local result. The capstone retains all twelve scheduling dispositions and G1–G4.
+
+Status: planned only. This update stages research; no implementation or science
+result is asserted. Experiment-specific tests and requirements precede later code.
 
 
 ## REQ-REPORT-8441: Carry sealed GateMate obligations under activated V726

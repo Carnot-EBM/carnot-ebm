@@ -16,9 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (99 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — zero recent solve artifacts; no demonstrated SELF_DISCOVERY_ADVANCE.** An empty review window earns no capability credit.
+**TL;DR:** No self-discovery advance demonstrated. Zero recent solve artifacts; passing reachability lint does not establish autonomous discovery.
 
-Per-artifact: none (`[]`). No solve provenance or registry novelty can be assessed. Recommended action: provide artifacts linking live-entrypoint execution, observations, attempts, runtime discoveries, verified outcomes, and registry deltas.
+**Per-artifact:** None supplied (`[]`). No artifact verdicts or actions to assign.
 
-**Pattern watch:** Static reachability of 99 modules proves neither runtime use nor autonomous discovery. Wiring source-derived models, offline ground-truth BFS results, or hand-built game adapters into the live path still constitutes OUTER_LOOP_RE. No artifacts here establish whether that drift occurred.
+**Pattern watch:** This empty sample cannot establish drift. Reachable solvers can still embody outer-loop reverse-engineering. Require live attempt/runtime-RE traces supporting each claimed solve, plus a registry check for duplicates, before crediting `SELF_DISCOVERY_ADVANCE`.
 

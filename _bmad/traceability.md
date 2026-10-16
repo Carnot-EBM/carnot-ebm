@@ -2,6 +2,22 @@
 
 **Last Updated:** 2026-10-16
 
+## Planned V737 research milestone — 2026-10-16
+
+| Requirement / scenario | Planned experiments | Evidence boundary |
+|---|---|---|
+| REQ-REPORT-V737-CONTRACT / SCENARIO-REPORT-V737-CONTRACT; FR-09/10 | Exp8579, Exp8590 | Twelve complete objects; corrected current authority preserves failed V736 history |
+| REQ-REPORT-V737-STUDIES / SCENARIO-REPORT-V737-CAUSAL-COST; FR-06/11 | Exp8580–Exp8583 | Qualified changed validator revision, fresh accounting, fixed causal small-head learning and retention |
+| Same study anchor; FR-05/08, NFR-01 | Exp8584 | Complete resident/cold Python/native sessions with qualified parity |
+| REQ-REPORT-V737-EVIDENCE / SCENARIO-REPORT-V737-BOUNDARIES; FR-12 | Exp8585–Exp8586 | Actual expert-label release audit; optional bounded mandated-Qwen canary |
+| Same evidence anchor; live-agent provenance | Exp8587–Exp8588 | Real publication closure before the fixed adapter-withheld live panel |
+| Same evidence anchor; hardware continuity | Exp8589–Exp8590 | Qualified operation costs, preserved board limits and unconditional terminal accounting |
+
+The matching design and staged YAML are `openspec/change-proposals/research-roadmap-vNEXT.md`
+and `research-roadmap-next.yaml`. This is planning evidence only. V736 had no
+matching design; its failed authority is not retroactively repaired. The actual
+old design remains preserved as V735. No implementation or experiment ran here.
+
 ## Planned V734 research milestone — 2026-10-15
 
 | Requirement / scenario | Planned experiments | Evidence boundary |

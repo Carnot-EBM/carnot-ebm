@@ -9,26 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_8556_causal_brier_stream.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because upstream `online_adapter_ready_score` was 0, failing the required value of 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8558_v735_nine_input_native_qualification.json
+## experiment_8569_causal_brier_stream.json
 
 **CHECKABLE**
 
@@ -36,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The native implementation passes the listed acceptance gates, including Python parity, supported by paired per-unit results in "complete_request_rows".
+Training was blocked because both upstream readiness checks returned 0 against a required value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -44,7 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8559_v735_complete_native_cost.json
+## experiment_8571_v736_resident_inference_prototype.json
 
 **CANNOT_DETERMINE**
 
@@ -52,31 +36,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-Native execution is reported ready, with complete throughput approximately 1.010× Python’s.
+The visible text reports a historical timing null, but the artifact’s headline verdict is not shown.
 
 ## WHAT IS MISSING
-The artifact truncates inside "component_span_rows", mid-"start_ns". "cell_statistics" provides batch summaries, but the remaining measurements and any final verdict or diagnostics are unavailable.
+The artifact cuts off inside "historical_cost_null.operation_rows". Actual values for "honest_verdict", "verdict_class", "prototype_ready_score", and "required_checks_passed" are absent; these names appear only in "field_principles".
 
 ## THE CHECK A READER CANNOT DO
-Do complete-boundary measurements for both arms across repeats support the reported "complete_throughput_ratio"?
+Does the artifact’s final verdict report successful prototype qualification or a blocker?
 
-## experiment_8560_qwen_evidence_canary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The canary was blocked because upstream `runtime_repair_ready_score` was 0, while the gate required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8561_v735_arc_panel_replay_qualification.json
+## experiment_8572_v736_resident_inference_qualification.json
 
 **CANNOT_DETERMINE**
 
@@ -84,15 +52,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion reports failed qualification gates but contains no explicit headline verdict or comparative claim.
+The visible fragment claims clock partitioning passed, but the overall headline claim cannot be identified.
 
 ## WHAT IS MISSING
-The artifact cuts off inside "child_coverage_receipts.shards". "acceptance_gates.owned_coverage", "acceptance_gates.terminal_replay", and "child_coverage_receipts.passed" are false, but the remainder containing any final verdict or blocker diagnostic is unavailable.
+The artifact is truncated mid-entry in "clock_partition_receipt.sessions[].intervals". "acceptance_gates" is present, but the overall verdict and any later comparative results or blocker diagnostics are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Does the missing remainder explain which check caused qualification to fail and what value it observed?
+Does the complete artifact provide evidence sufficient to check its headline verdict?
 
-## experiment_8562_arc_capability_panel.json
+## experiment_8573_resident_complete_cost.json
 
 **CHECKABLE**
 
@@ -100,7 +68,7 @@ Does the missing remainder explain which check caused qualification to fail and 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `arc_panel_execution_ready_score` was 0, while the gate required 1.
+Experiment 8573 was blocked because upstream `methods_ready_score` was 0, failing the required value of 1, as recorded in `gate_check_summary` and `gates_evaluated`.
 
 ## WHAT IS MISSING
 nothing
@@ -108,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8563_v735_hardware_operation_boundary.json
+## experiment_8574_qwen_evidence_canary.json
 
 **CHECKABLE**
 
@@ -116,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Hardware deployment and acquisition remain unqualified because compatible installed operations and qualified device costs are missing.
+The canary was blocked because `methods_ready_score` and `runtime_repair_ready_score` each equaled 0 while their gates required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8564_v735_capstone.json
+## experiment_8575_arc_publication_qualification.json
 
 **CHECKABLE**
 
@@ -132,10 +100,42 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports administrative completion, with documented blocked tasks and no comparative scientific benefit claimed.
+Execution was blocked because upstream `exp8565-contract-methods.methods_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_8577_v736_resident_hardware_boundary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Hardware acquisition remains unauthorized because resident CPU benefit is unmeasured, with failed qualification checks documented in "gate_check_summary".
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8578_v736_capstone.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible excerpt reports administrative completion with several acceptance gates false, but the headline verdict is not shown.
+
+## WHAT IS MISSING
+The artifact is truncated mid-string inside "historical_model_provenance". The remaining verdict and any blocker diagnostics are unavailable; the visible "blocked_inputs" entry has "checks": [], while "downstream_consumer.gates" records a passing check.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact explain which failed check caused the "external_blocked_producer" disposition?

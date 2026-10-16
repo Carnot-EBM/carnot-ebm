@@ -1,3 +1,77 @@
+## 2026-10-16 — V737 planning scan: independent labels and executable studies
+
+Recorded before designing V737. All eight requested arXiv topics and all six
+secondary channels were checked. Paper claims remain external evidence.
+
+### Promising findings and proposed uses
+
+- **Newly inspected release:** [HalluTruthQA-4K, 2608.03966](https://arxiv.org/abs/2608.03966)
+  describes expert annotation, independent verification and adjudication of
+  Arabic responses. The [author dataset](https://huggingface.co/datasets/Bekhouche/HalluTruthQA-4K)
+  is accessible. Its [full text](https://arxiv.org/html/2608.03966v1) describes
+  controlled generation, so expert review alone does not prove natural error
+  prevalence. Audit release bytes, rights, annotation provenance, construction
+  cues and repeated questions before any detector fit. Arabic language shift
+  also prevents importing Carnot's English feature calibration unchanged.
+  This is a candidate evidence source, not a qualified independent benchmark.
+  The dataset card states `cc-by-nc-nd-4.0` and exposes label-bearing metadata.
+  The paper reports one generator. Preserve these limits: private analysis only,
+  no redistributed transformed text, no unseen-generator claim, and no label
+  fields in any later detector input. Record separate permission and provenance
+  decisions rather than assuming general product-use eligibility.
+- **Newly inspected generalization criteria:**
+  [HalluScoring 2026, 2609.38355](https://arxiv.org/abs/2609.38355), September 29,
+  separates unseen questions from unseen generators. Use both as distinct
+  eligibility checks in the release audit. Neither a random row split nor
+  repeated generator siblings supplies both forms of generalization.
+- **Rechecked proper-loss learning:** [Calibeating Made Simple,
+  2603.22167](https://arxiv.org/abs/2603.22167) and
+  [capacity-constrained delayed learning, 2606.11711](https://arxiv.org/abs/2606.11711)
+  motivate the registered Brier/log-loss controls and explicit feedback events.
+  Complete the existing causal study after authenticating the repaired validator.
+  Do not transfer their regret guarantees to Carnot's nonlinear delayed learner.
+- **Rechecked implementation path:** [online spline KAN,
+  2602.02056](https://arxiv.org/abs/2602.02056) motivates sparse local updates.
+  Measure complete resident service costs before changing spline bases or
+  buying hardware. [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) and its
+  [author code](https://github.com/Ethanhuhuhu/KAC) provide an RBF classifier
+  alternative. Defer that architecture change until the fixed objective study
+  yields an admissible result. Classification retention is not a calibration guarantee.
+
+### Primary topic coverage and deferrals
+
+| Topic | Source | Decision |
+|---|---|---|
+| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605) | Learned compatibility and probabilistic equivalence do not certify factual truth. No generator training. |
+| Structured verification | [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871) | Keep learned confidence, deterministic constraints and generator-identity shortcuts separate. |
+| Neural constraints | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461) | Linear feasibility does not resolve natural-language extraction. Defer a new solver track. |
+| Hallucinations | HalluTruthQA-4K and HalluScoring above | Inspect independent label authority and construction before scoring. |
+| Guided generation | [DCCD, 2603.03305](https://arxiv.org/abs/2603.03305); [ETS, 2601.21484](https://arxiv.org/abs/2601.21484) | Syntax validity differs from semantic correctness. No decoding change before the local runtime qualifies. |
+| Ising and FPGA sampling | [pipelined p-computer, 2607.21077](https://arxiv.org/abs/2607.21077) | Compare supported operations and data movement. Optimization success does not establish sampling fidelity. |
+| KAN and continual learning | Online KAN, KAC and delayed-feedback papers above | Preserve fixed head, causal release order, retention controls and full cost. |
+
+### Secondary checks and limits
+
+- **OpenReview:** the [ICLR 2026 EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  was indexed with paper text. [NRGPT](https://openreview.net/pdf?id=B3Muyi2zgo)
+  discusses causal token energies. Neither closes local verification gaps.
+- **Semantic Scholar:** both citation endpoints for `ARXIV:2507.02092` and
+  `ARXIV:2512.15605` failed retrieval. Exact-ID site search did not recover a
+  usable citation inventory. Citation-following coverage remains incomplete.
+- **Hugging Face:** the [HalluTruthQA paper page](https://huggingface.co/papers/2608.03966)
+  led to the author dataset. Feed dates are not paper publication dates.
+- **GitHub Trending:** [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) returned month-old
+  snapshots. No current trending-rank claim follows. KAC came from its paper.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). The latter labels energy figures as
+  projections and excludes final dense logits and inter-device movement from
+  its main ratio. Preserve those exclusions in complete-cost comparisons.
+  This supplies no local TSU access or measured Carnot speedup.
+- **Logical Intelligence:** [Kona](https://logicalintelligence.com/kona)
+  describes constraint enforcement. The inspected page supplies no reproducible
+  new architecture result that changes this milestone's gates.
+
 ## 2026-10-16 — V736 planning scan: useful updates and complete serving cost
 
 Recorded before experiment design. The scan covered all eight requested arXiv

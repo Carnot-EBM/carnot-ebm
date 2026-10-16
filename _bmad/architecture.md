@@ -1,5 +1,19 @@
 # Carnot — Architecture
 
+## Planned V737 revision and evidence boundaries — 2026-10-16
+
+The twelve-task plan preserves the small energy head, resident workers and live
+ARC agent. A qualified current count-validator receipt feeds an explicit new
+accounting adapter. Historical readers retain their original pins. The validator
+algorithm and shared publication checks do not change under this plan.
+
+Fixed delayed-feedback learning, retention and complete resident cost follow
+their own readiness fields. The HalluTruthQA release audit remains separate from
+the exposed learning corpus. Optional bounded Qwen3.8 generation requires changed
+causal CUDA evidence. Actual ARC publication closure precedes the four-game live
+panel. Hardware evidence remains operation-specific. This is staged research,
+not deployed behavior or a new scientific result.
+
 ## Planned V735 evidence boundaries — 2026-10-15
 
 The thirteen-task staged plan retains the existing learner and live agent.

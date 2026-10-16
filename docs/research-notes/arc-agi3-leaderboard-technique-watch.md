@@ -531,3 +531,11 @@ Their concrete memory-saving stack is **4-bit QLoRA + FSDP2 + PLE CPU offload**,
 
 ## 2026-10-15 13:32 UTC -- checked, nothing new
 
+## 2026-10-16 13:37 UTC -- NEW
+
+**Son & Mark & Ronen — newly discovered loading optimization, published September 27.** Their SGLang package supports loading ten original **FP8 PLE embedding shards** instead of BF16 copies. The dataset description reports **about 51 GB less checkpoint I/O**, with no conversion required. [Public artifact](https://www.kaggle.com/datasets/sonphamorg/arc3-flashnext-ple-fp8-v1), [provenance receipt](https://www.kaggle.com/api/v1/datasets/download/sonphamorg/arc3-flashnext-ple-fp8-v1/ple-fp8-receipt.json).
+
+**Classification: (b)** — general-purpose model serving; this mechanism requires no game-source access or per-game rules. Linkage to their current scoring submission and a measured gameplay benefit remain unverified.
+
+**POSSIBLE CARNOT LEVER:** For a Flash-Next generator deployment, native FP8 embedding loading could reduce startup I/O within Kaggle’s fixed runtime.
+
