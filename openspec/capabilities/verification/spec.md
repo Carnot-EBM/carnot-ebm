@@ -55916,3 +55916,23 @@ Implementation20261016 for REQ-VERIFY-8587: bounded CLI children exercise actual
 validators and the Exp8588 consumer before coverage sealing. Fresh replay also
 authenticates publication receipts and immutable private work snapshots. Original
 V735 tests use sealed authority through an explicit child import adapter.
+
+## REQ-VERIFY-8588: Qualify only newly owned live panel statements
+
+Write focused traced tests first. Keep original node IDs and their disjoint union.
+Require100 percent owned statement coverage including genuine CLI children and
+rejection paths; run scoped lint, strict types, spec tracing and private E2E-018/021.
+Retain command exits, real durations and log hashes. Never invoke a full suite or
+historical validation controller. Conductor owns ops and traceability reconciliation.
+
+### SCENARIO-VERIFY-8588-CONTROLS
+
+Cold replay must reject absent inputs and rehashed aggregate claims. Deliberate
+owned errors stay disqualified. Final bytes cross unchanged primary publication,
+adversarial verification, strict row checks and actual downstream consumers.
+
+Exp8588 validation receipt (2026-10-16): all10 owned tests and the exact
+disjoint37-node original E2E/publication-consumer union passed. Genuine unit
+and CLI child coverage measures99/99 newly owned statements. Scoped Ruff
+check/format, strict mypy and owned-test specification tracing passed. Terminal
+replay and publication receipts remain authoritative in the bound sidecar.

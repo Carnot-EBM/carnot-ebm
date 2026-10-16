@@ -101817,3 +101817,33 @@ shipped publication closure and add genuine private publication regressions.
 Authenticated historical source identifies a context-entry statement at line282;
 its validator call at line265 was already executed. The result records this
 prompt discrepancy and separately qualifies current publication at line280.
+
+## REQ-REPORT-8588: Measure the fixed live capability mask panel
+
+Authenticate Exp8587 publication readiness and original Exp8536 wrapper authority
+before sixteen adapter-withheld, model-disabled live episodes. Preserve four games,
+seeds11/22, alternating arm order, window120, stall150 and512 actions/120 seconds.
+Keep unavailable induction attempts separate from changed latches. Report all game
+pairs, complete wall costs, action primitives, censoring and observed intervention
+associations. Efficiency requires less unavailable work, no paired level regression
+and no wall increase. Both generalization scores remain zero; no default changes.
+
+### SCENARIO-REPORT-8588-PANEL
+
+Registry levels and arc_loop_solve evidence are exposure only. Unknown capability
+stays unknown. Preserve all historical nulls and quarantines. A qualified null
+closes this unchanged panel. Refinement needs three shared games and five resolved
+observations per shared cell. Same-roadmap outputs remain future dependencies.
+
+### SCENARIO-REPORT-8588-REPLAY
+
+Fresh bounded replay authenticates immutable primitives and rejects missing inputs,
+owned failures and self-consistently rehashed tampering. Use unchanged publication
+and downstream consumers. Owned check failure disqualifies; external absence blocks.
+
+Exp8588 collection receipt (2026-10-16): all16 fixed live episodes completed,
+8192 actions and zero level progress. Disabled attempts decreased16 to8, but
+complete wall cost increased72.013856832 to73.240272943 seconds. Efficiency
+therefore remains zero. All interventions stay unresolved; no refinement, new
+solve, generalization or learning credit follows. The primary and bound sidecar
+record terminal qualification. Ops/traceability reconciliation is conductor-owned.
