@@ -20413,3 +20413,4 @@ code |
 | 2026-10-16 11:49 UTC | Run the bounded mandated-Qwen evidence canary only | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-16 11:56 UTC | Exercise the real ARC publication closure before q | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-10-16 11:58 UTC | Measure useful harmful and unresolved capability-m | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8575-arc-publication-qualification) |
+| 2026-10-16 12:32 UTC | Map resident-session costs to supported hardware o | OK | 87 passed, 1 warning in 105.32s (0:01:45) |
