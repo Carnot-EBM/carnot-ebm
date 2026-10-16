@@ -20426,3 +20426,4 @@ code |
 | 2026-10-16 22:07 UTC | Audit HalluTruthQA label authority and constructio | OK | 94 passed, 1 warning in 17.10s |
 | 2026-10-16 22:15 UTC | Run bounded mandated-Qwen evidence views only afte | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8579-contract-methods.canary_inputs_ready_score (actual=0 == expected=1) |
 | 2026-10-16 23:23 UTC | Qualify actual ARC publication closure before the  | OK | 95 passed, 1 warning in 68.23s (0:01:08) |
+| 2026-10-16 23:56 UTC | Measure adapter-withheld live supervisor effects a | OK | 91 passed, 1 warning in 71.58s (0:01:11) |
