@@ -1,0 +1,92 @@
+...F.....                                                                [100%]
+=================================== FAILURES ===================================
+________________ test_rejected_authority_and_primitive_repairs _________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T090549-3731289-9cb34db0/test_rejected_authority_and_pr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f97741a2090>
+
+    def test_rejected_authority_and_primitive_repairs(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8568-REPLAY: hash and operand repairs cannot replace original sources."""
+        from carnot.reporting import causal_accounting_runner_8568 as runner
+    
+        work = runner.prepare(tmp_path / "raw", tmp_path / "scratch", private=True)
+        path = tmp_path / (e.NAME + ".json")
+        work["private"] = False
+        monkeypatch.setattr(e.old, "history", lambda: (e.old.controls(), []))
+        atomic_json(Path(work["raw"]) / "final.json", work)
+        atomic_json(path, e.build(work, path))
+        assert e.replay(path)
+        value = json.loads(path.read_bytes())
+        value["reproducibility_checksum"] = "wrong"
+        atomic_json(path, value)
+        assert not e.replay(path)
+        value = e.build(work, path)
+        value["code_config_hashes"][0]["sha256"] = "wrong"
+        value["reproducibility_checksum"] = e.old.checksum(value)
+        atomic_json(path, value)
+        assert not e.replay(path)
+        work["code"][0] = e.old.reference(Path(work["code"][0]["path"]))
+        changed = deepcopy(work["receipts"][0])
+        work["receipts"][0]["passed"] = False
+        atomic_json(Path(work["raw"]) / "final.json", work)
+        atomic_json(path, e.build(work, path))
+        assert not e.replay(path)
+        work["receipts"][0] = changed
+        work["receipts"][0]["stdout_sha256"] = "wrong"
+        atomic_json(Path(changed["stdout_path"]).with_suffix(".receipt.json"), work["receipts"][0])
+        atomic_json(Path(work["raw"]) / "final.json", work)
+        atomic_json(path, e.build(work, path))
+        assert not e.replay(path)
+        work["receipts"] = []
+        rows = e.old.controls()
+        rows[0]["after"]["parameters"][0] = 3.0
+        atomic_json(Path(work["events"]["path"]), rows)
+        work["events"] = e.old.reference(Path(work["events"]["path"]))
+        atomic_json(Path(work["raw"]) / "final.json", work)
+        atomic_json(path, e.build(work, path))
+        assert not e.replay(path)
+        monkeypatch.setattr(
+            e.sealed, "reduce", lambda rows: dict(e.old.reduce(rows), admission_events=999)
+        )
+        with pytest.raises(ValueError, match="independent_count_reduction"):
+            e.proof(e.old.controls())
+        monkeypatch.setattr(e.old, "authenticate", lambda root: ({}, [], []))
+        monkeypatch.setattr(
+            e.old,
+            "read",
+            lambda ref: dict(
+                count_validator_ready_score=0,
+                terminal_validation_sidecar_path="unused",
+                publication=dict(sidecar_path="unused"),
+            ),
+        )
+        monkeypatch.setattr(e, "read_bound_sidecar", lambda *args: dict(report=dict(passed=True)))
+        _, _, failures = e.authority(e.ROOT)
+>       assert failures[0]["observed"] == "validator_qualification"
+E       AssertionError: assert None == 'validator_qualification'
+
+tests/python/test_causal_accounting_8568.py:144: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8568] start date=20261016 no_model_load MODEL_SPECS=[] current_llm_calls=0
+[exp8568] authenticate_complete reduce_events
+[exp8568] before_independent_finite_differences
+[exp8461] derivative_completed=30 derivative_pending=60
+[exp8461] derivative_completed=60 derivative_pending=30
+[exp8461] derivative_completed=90 derivative_pending=0
+[exp8568] after_independent_finite_differences before_restart_children
+[exp8205] phase=before_subprocess_baseline completed=0 pending=1
+[exp8205] phase=after_subprocess_baseline completed=1 pending=0
+[exp8205] phase=before_subprocess_restart completed=0 pending=1
+[exp8205] phase=after_subprocess_restart completed=1 pending=0
+[exp8205] phase=before_subprocess_resume completed=0 pending=1
+[exp8205] phase=after_subprocess_resume completed=1 pending=0
+[exp8568] after_restart_children
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_causal_accounting_8568.py::test_rejected_authority_and_primitive_repairs
+1 failed, 8 passed, 1 warning in 177.69s (0:02:57)

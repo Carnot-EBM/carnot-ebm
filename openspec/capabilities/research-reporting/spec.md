@@ -101461,3 +101461,28 @@ sidecar provide terminal qualification; this correction measures no learning.
 Standalone verifier imports are anchored to the checkout before loading the
 sealed reducer. SCENARIO-VERIFY-8567-STANDALONE-CLI checks equivalent JSON
 diagnostics from an unrelated working directory with `PYTHONPATH` absent.
+
+## REQ-REPORT-8568: Qualify fresh causal accounting with sealed count proofs
+
+Authenticate the qualified Exp8554 original-family receipt and Exp8567 revision.
+Reuse unchanged sealed historical dependencies without rerunning158 nodes.
+Reduce admissions, releases, updates, assignments, stored changes and effective
+ decay independently from original events. Preserve names, integers and aliases.
+Supply discrete-counter-proof-v1 operands to the corrected validator.
+Use no model loads or current LLM calls. Qualification establishes no learning
+benefit. All scientific and generalization scores remain zero.
+
+### SCENARIO-REPORT-8568-COUNTERS
+
+Equal and unequal counts retain exact values. Zero gradients, duplicate stores,
+rejection, pending feedback, frozen heads, clipping, decay and exit73/resume
+remain distinct controls. Original Brier finite-difference tolerances stay fixed.
+
+### SCENARIO-REPORT-8568-PUBLICATION
+
+Diagnose all three old controller failures from hash-bound logs. Test repaired
+owned paths and run a fresh bounded controller to normal exit. Old failures are
+historical diagnostics. Every current owned gate must pass for readiness one.
+Missing upstream authority blocks; owned failure disqualifies. Immutable
+preliminary and final snapshots bind replay and checked atomic publication.
+Conductor owns ops/status/changelog/traceability reconciliation for this task.

@@ -55677,3 +55677,26 @@ reducer's verifier dependency. From either the checkout or an unrelated working
 directory with `PYTHONPATH` absent, it emits a JSON report matching the imported
 verifier. Valid proved identities remain warnings; missing or corrupt proofs
 remain critical. A flagged report returns exit one without an import traceback.
+
+## REQ-VERIFY-8568: Bound fresh accounting validation and replay
+
+Write requirement-linked tests first. Collect owned and private E2E-018/021 IDs
+before disjoint serial children. Preserve their exact terminal union, commands,
+exits, clocks and log hashes. Use -n0, empty addopts and --no-cov. Run Ruff,
+strict mypy and owned spec coverage. Require100 percent newly owned statements,
+including real CLI rejection children. No full suite or historical controller.
+
+### SCENARIO-VERIFY-8568-CONTROLLERS
+
+Coverage configuration is explicit. Combine keeps immutable child shards and
+never saves a live parent tracer. All three saved failure receipts remain
+historical diagnostics. A fresh real controller must exit normally.
+
+### SCENARIO-VERIFY-8568-REPLAY
+
+Fresh bounded replay rejects absent primitives, failed owned checks and
+self-consistently rehashed summaries or events. Run unchanged publication and
+row gates plus the corrected count validator. Exercise the real next-stream
+consumer with exact checked bytes. Child heartbeats remain at most60 seconds;
+measurements stop by3600 and reserve900 seconds within4800. Optional CUDA and
+board absence cannot block independent CPU work. Historical quarantines stay.

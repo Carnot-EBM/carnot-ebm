@@ -1,0 +1,96 @@
+..FF..                                                                   [100%]
+=================================== FAILURES ===================================
+_________________ test_build_gate_classes_and_immutable_replay _________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T090321-3730390-a97c7145/test_build_gate_classes_and_im0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2ef7443290>
+
+    def test_build_gate_classes_and_immutable_replay(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8568-REPLAY: repaired envelopes cannot replace original events."""
+        from carnot.reporting import causal_accounting_runner_8568 as runner
+    
+        work = runner.prepare(tmp_path / "raw", tmp_path / "scratch", private=True)
+        path = tmp_path / (e.NAME + ".json")
+>       atomic_json(path, e.build(work, path))
+                          ^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_causal_accounting_8568.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/causal_accounting_8568.py:148: in build
+    events = old.read(work["events"])
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/var/tmp/pytest-carnot-ianblenke/20261016T090321-3730390-a97c7145/test_build_gate_classes_and_im0/raw/events.json', 'sha256': 'sha256:3a6cad789865dcdea108d43583e042e40e191ccaeb8d7bea5e24218f4a0c1ff8'}
+
+    def read(ref: Json) -> Json:
+        """A repaired outer envelope cannot authorize different source bytes."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+            raise ValueError("source_hash")
+>       return dict(json.loads(path.read_bytes()))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: dictionary update sequence element #0 has length 15; 2 is required
+
+python/carnot/reporting/historical_learning_8541.py:71: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8568] start date=20261016 no_model_load MODEL_SPECS=[] current_llm_calls=0
+[exp8568] authenticate_complete reduce_events
+[exp8568] before_independent_finite_differences
+[exp8461] derivative_completed=30 derivative_pending=60
+[exp8461] derivative_completed=60 derivative_pending=30
+[exp8461] derivative_completed=90 derivative_pending=0
+[exp8568] after_independent_finite_differences before_restart_children
+[exp8205] phase=before_subprocess_baseline completed=0 pending=1
+[exp8205] phase=after_subprocess_baseline completed=1 pending=0
+[exp8205] phase=before_subprocess_restart completed=0 pending=1
+[exp8205] phase=after_subprocess_restart completed=1 pending=0
+[exp8205] phase=before_subprocess_resume completed=0 pending=1
+[exp8205] phase=after_subprocess_resume completed=1 pending=0
+[exp8568] after_restart_children
+_________________ test_real_private_controller_and_rejections __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T090321-3730390-a97c7145/test_real_private_controller_a0')
+
+    def test_real_private_controller_and_rejections(tmp_path):
+        """SCENARIO-VERIFY-8568-CONTROLLERS: normal exit fixes all saved controller defects."""
+        output = tmp_path / (e.NAME + ".json")
+        argv = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        receipt = child(
+            "private", [*argv, "--private-output", str(output)], tmp_path / "logs", deadline=180
+        )
+>       assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8568_v736_causal_accounting_qualification.py", line 14, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_accounting_runner_8568.py", line 194, in main
+E             return run(
+E                    ^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_accounting_runner_8568.py", line 153, in run
+E             value = e.build(work, output)
+E                     ^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_accounting_8568.py", line 148, in build
+E             events = old.read(work["events"])
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/historical_learning_8541.py", line 71, in read
+E             return dict(json.loads(path.read_bytes()))
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         ValueError: dictionary update sequence element #0 has length 15; 2 is required
+E         
+E       assert False
+
+tests/python/test_causal_accounting_runner_8568.py:22: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_causal_accounting_8568.py::test_build_gate_classes_and_immutable_replay
+FAILED tests/python/test_causal_accounting_runner_8568.py::test_real_private_controller_and_rejections
+2 failed, 4 passed, 1 warning in 51.13s
