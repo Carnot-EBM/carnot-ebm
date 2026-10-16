@@ -1,0 +1,43 @@
+[exp8559] phase=start no_model_load MODEL_SPECS=[] current_LLM_calls=0
+[exp8205] phase=8559_start_no_model_load_MODEL_SPECS_empty_LLM_calls_0 completed=0 pending=0
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 20 items
+
+tests/python/test_nine_input_8533.py::test_finite_controls_and_negative_inputs PASSED [  5%]
+tests/python/test_nine_input_8533.py::test_boundary_fallback_and_shared_policy PASSED [ 10%]
+tests/python/test_nine_input_8533.py::test_authenticated_tape_and_request_boundary PASSED [ 15%]
+tests/python/test_nine_input_8533.py::test_cold_replay_rejects_rehashed_tamper PASSED [ 20%]
+tests/python/test_nine_input_8533.py::test_offline_build_and_loader_rejections PASSED [ 25%]
+tests/python/test_nine_input_8533.py::test_owned_numeric_failure_and_blocked_inputs PASSED [ 30%]
+tests/python/test_nine_input_8533.py::test_private_cli_publish_replay_and_absence PASSED [ 35%]
+tests/python/test_nine_input_8533.py::test_input_rejections[readiness] PASSED [ 40%]
+tests/python/test_nine_input_8533.py::test_input_rejections[publication] PASSED [ 45%]
+tests/python/test_nine_input_8533.py::test_input_rejections[authority] PASSED [ 50%]
+tests/python/test_nine_input_8533.py::test_input_rejections[task] PASSED [ 55%]
+tests/python/test_nine_input_8533.py::test_input_rejections[family] PASSED [ 60%]
+tests/python/test_nine_input_8533.py::test_input_rejections[head] PASSED [ 65%]
+tests/python/test_nine_input_8533.py::test_input_rejections[text] PASSED [ 70%]
+tests/python/test_nine_input_8533.py::test_input_rejections[tape] PASSED [ 75%]
+tests/python/test_nine_input_8533.py::test_input_rejections[source_hash] PASSED [ 80%]
+tests/python/test_nine_input_8533.py::test_validation_collection_and_coverage_rejections PASSED [ 85%]
+tests/python/test_nine_input_8533.py::test_independent_primitive_tampering PASSED [ 90%]
+tests/python/test_nine_input_8533.py::test_complete_consumer_mismatch_and_malformed_acceptance PASSED [ 95%]
+tests/python/test_nine_input_8533.py::test_historical_adapter_and_production_route PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 20 passed, 2 warnings in 148.94s (0:02:28) ==================

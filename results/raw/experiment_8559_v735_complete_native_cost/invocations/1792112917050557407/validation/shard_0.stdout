@@ -1,0 +1,39 @@
+[exp8559] phase=start no_model_load MODEL_SPECS=[] current_LLM_calls=0
+[exp8205] phase=8559_start_no_model_load_MODEL_SPECS_empty_LLM_calls_0 completed=0 pending=0
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 16 items
+
+tests/python/test_complete_native_cost_8559.py::test_original_protocol_and_request_roster PASSED [  6%]
+tests/python/test_complete_native_cost_8559.py::test_component_adapter_matches_shipped_requests PASSED [ 12%]
+tests/python/test_complete_native_cost_8559.py::test_bootstrap_and_acceptance_are_complete PASSED [ 18%]
+tests/python/test_complete_native_cost_8559.py::test_missing_admission PASSED [ 25%]
+tests/python/test_complete_native_cost_8559.py::test_real_worker_and_rejections PASSED [ 31%]
+tests/python/test_complete_native_cost_8559.py::test_complete_reduction_and_replay PASSED [ 37%]
+tests/python/test_complete_native_cost_8559.py::test_blocked_and_owned_failure PASSED [ 43%]
+tests/python/test_complete_native_cost_8559.py::test_reduction_rejects_rehashed_primitives PASSED [ 50%]
+tests/python/test_complete_native_cost_8559.py::test_ready_null_and_consumer PASSED [ 56%]
+tests/python/test_complete_native_cost_8559.py::test_cli_controls_and_private_publication PASSED [ 62%]
+tests/python/test_complete_native_cost_8559.py::test_validation_adapters_execute_exact_plan PASSED [ 68%]
+tests/python/test_complete_native_cost_8559.py::test_worker_and_measure_owned_rejections PASSED [ 75%]
+tests/python/test_complete_native_cost_8559.py::test_more_primitive_rejections PASSED [ 81%]
+tests/python/test_complete_native_cost_8559.py::test_latency_bootstrap_preserves_repeat_pairs PASSED [ 87%]
+tests/python/test_complete_native_cost_8559.py::test_replay_rejects_rebound_bundle_and_log PASSED [ 93%]
+tests/python/test_complete_native_cost_8559.py::test_actual_private_cli_absent_inputs PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 16 passed, 2 warnings in 299.62s (0:04:59) ==================

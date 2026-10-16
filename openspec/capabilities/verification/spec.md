@@ -55535,3 +55535,19 @@ Exp8558 implementation receipt (2026-10-15):91/91 scoped nodes passed;
 replay stages, final bytes, unchanged validators and actual timing consumer
 passed. Native readiness1 is finite exposed qualification; speed and learning
 remain unmeasured. Exp8545 stays quarantined. Conductor owns ops reconciliation.
+
+## REQ-VERIFY-8559: Verify complete native costs in bounded private children
+
+Tests SHALL precede implementation and reference the cost requirements. Collect
+original node IDs before disjoint serial children with -n0, empty addopts and
+--no-cov. Preserve exact union, original authority, terminal outcomes, commands,
+exit codes, durations and log hashes. Run owned tests, real CLI controls, private
+E2E-018/021, Ruff check/format, strict mypy and owned-test spec coverage. Require
+100 percent newly owned statements including real child and rejection paths.
+No repository-wide or nested historical validation runner is authorized.
+
+### SCENARIO-VERIFY-8559-CONTROLS
+
+Missing sources, failed owned children and self-consistently rehashed tampering
+cannot grant readiness. Child heartbeats are at most60 seconds. Measurement stops
+by3600 seconds; at least900 seconds remain for validation inside4800 seconds.

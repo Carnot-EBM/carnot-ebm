@@ -101270,3 +101270,32 @@ Exp8558 implementation receipt (2026-10-15):91/91 scoped nodes passed;
 replay stages, final bytes, unchanged validators and actual timing consumer
 passed. Native readiness1 is finite exposed qualification; speed and learning
 remain unmeasured. Exp8545 stays quarantined. Conductor owns ops reconciliation.
+
+## REQ-REPORT-8559: Measure the complete qualified nine-input boundary
+
+Exp8559 SHALL authenticate Exp8558, its bound publication, loaded extension,
+original dense reference, request IDs and sealed numerical/timing protocol.
+Use first64 stable-order test answers, ten alternating AB/BA pairs for batch1
+(primary) and batch8, plus one explicit charged warmup per arm/cell. Fresh-child
+startup, recomputed public text features, scaling, offset, residual, normalization,
+typed decision and serialization SHALL enter the complete clock. Model acquisition,
+feedback and durable storage are excluded. No model loads or current LLM calls.
+
+### SCENARIO-REPORT-8559-COST
+
+Preserve every request, repeat, fallback, timeout and component clock. Require
+zero typed mismatches and original tolerance before interpreting speed. Bootstrap
+paired repeat indices10000 times with seed7338534. Scoped benefit requires
+batch1 throughput lower95>1 and p95 native/Python<=1.05; NFR01 lower95>=10.
+Complete clean measurement readiness is independent of speed. Disjoint operation
+shares reconcile to the measured wall, with overlap and unattributed time explicit.
+Repeated clocks describe one machine, not independent workloads. Old append costs
+and all prior quarantines remain separate. Exp8560–8564 are future dependencies.
+
+### SCENARIO-REPORT-8559-REPLAY
+
+Fresh bounded replay reconstructs primitive rows and the full envelope. Missing
+inputs block; owned failures disqualify. Rehashed summary or operand tampering
+fails. Validate final bytes with unchanged publication/adversarial/strict-row
+consumers, publish atomically, bind sidecar and exercise downstream cost reader.
+Conductor owns status, changelog and traceability reconciliation for this run.
