@@ -1,0 +1,26 @@
+[
+  {
+    "current": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_count_validator_correction_8567.py",
+      "sha256": "sha256:9dddd0fab6df58395fc957c08a647163a4b2afcc10f5f300c3ec76642f66776d"
+    },
+    "diff": "--- original/tests/python/test_count_validator_correction_8567.py\n+++ current/tests/python/test_count_validator_correction_8567.py\n@@ -2,6 +2,7 @@\n \n from copy import deepcopy\n import json\n+import os\n from pathlib import Path\n import subprocess\n import sys\n@@ -109,6 +110,34 @@\n     assert not any(r[\"severity\"] == \"critical\" for r in av.verify_artifact(path)[\"flags\"])\n \n \n+@pytest.mark.parametrize(\"proof_state\", [\"valid\", \"corrupt\", \"missing\"])\n+def test_standalone_cli_without_pythonpath(corpus, tmp_path, proof_state):\n+    \"\"\"SCENARIO-VERIFY-8567-STANDALONE-CLI: cold imports preserve proof diagnostics.\"\"\"\n+    value = candidate(corpus, corpus[\"cases\"][0])\n+    if proof_state == \"corrupt\":\n+        value[\"discrete_count_proof\"][\"claims\"][\"observed_alpha\"][\"table_sha256\"] = \"wrong\"\n+    elif proof_state == \"missing\":\n+        del value[\"discrete_count_proof\"]\n+    path = tmp_path / \"candidate.json\"\n+    path.write_text(json.dumps(value))\n+    result = subprocess.run(\n+        [sys.executable, str(Path(av.__file__).resolve()), \"--json\", str(path)],\n+        cwd=tmp_path,\n+        env={key: value for key, value in os.environ.items() if key != \"PYTHONPATH\"},\n+        capture_output=True,\n+        text=True,\n+        timeout=60,\n+    )\n+    assert result.returncode == 1, result.stdout + result.stderr\n+    assert result.stdout, result.stderr\n+    actual = json.loads(result.stdout)[\"reports\"][0][\"flags\"]\n+    assert actual == av.verify_artifact(path)[\"flags\"]\n+    assert any(row[\"severity\"] == \"critical\" for row in actual) == (proof_state != \"valid\")\n+    assert any(\"structural count relation\" in row[\"detail\"] for row in actual) == (\n+        proof_state == \"valid\"\n+    )\n+\n+\n def test_bounded_proof_rejections(corpus, monkeypatch):\n     \"\"\"REQ-VERIFY-8567: malformed and over-budget evidence never earns proof.\"\"\"\n     from carnot.reporting.discrete_count_proof import independent_totals, proven_counts\n",
+    "original": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_count_validator_correction_8567.py",
+      "sha256": "sha256:0f0bce3051e22c0e655ea99d7acb171849c96f301f1c246260d7a51d0519ab24"
+    },
+    "path": "tests/python/test_count_validator_correction_8567.py"
+  },
+  {
+    "current": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:18dfabaaed325c91bd03cd584c8f7b945a068529f00cbd68e45c0e0c013d49d2"
+    },
+    "diff": "--- original/scripts/adversarial_verify.py\n+++ current/scripts/adversarial_verify.py\n@@ -106,8 +106,12 @@\n from pathlib import Path\n from typing import Any\n \n+# Direct execution starts with scripts/ on sys.path. The count-proof reducer\n+# also imports scripts.adversarial_verify, so resolve that package from this checkout.\n+if __package__ in (None, \"\"):\n+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))\n+\n from carnot.reporting.discrete_count_proof import proven_counts\n-\n from carnot.terminal_artifacts import (\n     TerminalClassification,\n     classify_artifact_path,\n",
+    "original": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:b5209d4347b28bb973b42e6c0fd69e2fcd0e50872a33fe1ab90a188afad9c95a"
+    },
+    "path": "scripts/adversarial_verify.py"
+  }
+]

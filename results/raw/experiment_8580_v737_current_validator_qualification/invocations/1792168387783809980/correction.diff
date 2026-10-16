@@ -1,0 +1,43 @@
+--- old/adversarial_verify.py
++++ new/adversarial_verify.py
+@@ -106,6 +106,12 @@
+ from pathlib import Path
+ from typing import Any
+ 
++# Direct execution starts with scripts/ on sys.path. The count-proof reducer
++# also imports scripts.adversarial_verify, so resolve that package from this checkout.
++if __package__ in (None, ""):
++    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
++
++from carnot.reporting.discrete_count_proof import proven_counts
+ from carnot.terminal_artifacts import (
+     TerminalClassification,
+     classify_artifact_path,
+@@ -1835,6 +1841,7 @@
+     that's where two distinct loss-function gradient norms shouldn't
+     coincide.
+     """
++    proved_counts = proven_counts(d)
+     for k1, k2, v1, v2 in _numeric_pairs(d):
+         if _legitimate_pair(k1, k2):
+             continue
+@@ -1845,6 +1852,19 @@
+         # this rule was false-flagging as TAUTOLOGY). Two identifiers agreeing
+         # is structural, not a coincidence between two distinct measurements.
+         if _is_identifier_field(k1) or _is_identifier_field(k2):
++            continue
++        if k1 in proved_counts and proved_counts.get(k2) == proved_counts[k1] and d[k1] == d[k2]:
++            flags.append(
++                Flag(
++                    kind="TAUTOLOGY",
++                    severity="warn",
++                    detail=(
++                        f"{k1}={d[k1]!r} and {k2}={d[k2]!r}: structural count relation; "
++                        f"exact integers, units and independent bounded reductions "
++                        f"verified against {proved_counts[k1]}. Metrics remain visible."
++                    ),
++                )
++            )
+             continue
+         # Skip two SCORE metrics both pinned at the 0.5 chance floor. An AUROC
+         # majority-class control is 0.5 BY CONSTRUCTION; a successful null /

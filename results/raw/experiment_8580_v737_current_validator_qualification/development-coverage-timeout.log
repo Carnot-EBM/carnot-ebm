@@ -1,0 +1,62 @@
+.F.......                                                                [100%]
+=================================== FAILURES ===================================
+____________________ test_private_cli_replay_and_mutations _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T161907-3880848-05931db0/test_private_cli_replay_and_mu0')
+
+    def test_private_cli_replay_and_mutations(tmp_path):
+        """SCENARIO-VERIFY-8580-REPLAY: real children reject rehashed invented evidence."""
+        output = tmp_path / (e.NAME + ".json")
+    
+        def cli(*args):
+            return subprocess.run(
+                [sys.executable, str(runner.CLI), *map(str, args)],
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+    
+>       result = cli("--date", "20261016", "--fixture-output", output)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_current_validator_8580.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_current_validator_8580.py:35: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....>
+endtime = 487455.855333872, orig_timeout = 120
+stdout_seq = [b'[exp8580] start date=20261016 no_model_load MODEL_SPECS=[] current_llm_calls=0\n[exp8567] start date=20261016 no_mo...d=1 pending=16\n', b'[exp8567] controls completed=2 pending=15\n', b'[exp8567] controls completed=3 pending=14\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8580_v737_current_validator_qualification.py', '--date', '20261016', '--fixture-output', '/var/tmp/pytest-carnot-ianblenke/20261016T161907-3880848-05931db0/test_private_cli_replay_and_mu0/experiment_8580_v737_current_validator_qualification.json']' timed out after 120 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired
+=============================== warnings summary ===============================
+tests/python/test_current_validator_8580.py::test_actual_accounting_adapter
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_current_validator_8580.py::test_private_cli_replay_and_mutations
+1 failed, 8 passed, 1 warning in 389.85s (0:06:29)

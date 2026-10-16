@@ -101654,3 +101654,23 @@ Current authority and fixed protocols alone qualify methods, without new science
 Implementation for REQ-REPORT-8579: V737 adapters seal complete current tasks and
 inherit original methods by value and hash. The result records independent
 family readiness, closed comparisons and exact downstream gate field bindings.
+
+## REQ-REPORT-8580: Qualify the current count-validator revision
+
+Bind Exp8567 original authority and Exp8566 frozen controls without changing
+historical hashes. Authenticate the standalone import repair and its test delta.
+Replay all seventeen controls through imported and outside-checkout CLI paths.
+Preserve copied-continuous detections, original classifications and quarantines.
+Publish an immutable explicit current_validator_reference for new accounting
+consumers. Readiness requires every owned check; it grants no learning benefit.
+
+### SCENARIO-REPORT-8580-REVISION
+
+The explicit revision consumer accepts qualified current evidence and rejects
+missing evidence, source drift and self-consistently rehashed summaries.
+Old Exp8568 hash rejection remains valid. No model loads or device commands run.
+
+Implementation20261016: the thin CLI authenticates original qualification and
+reverses only the documented repair. The explicit accounting adapter reuses
+Exp8568 numerical proof. The immutable primary and terminal sidecar own readiness.
+Historical pins stay unchanged. Conductor owns ops and traceability reconciliation.

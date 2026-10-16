@@ -55793,3 +55793,22 @@ operands. Optional devices do not gate CPU methods. Generalization stays zero.
 Implementation for REQ-VERIFY-8579: the existing supervised serial runner uses
 explicit V737 bindings. Immutable authority snapshots support cold replay after
 planning changes. Receipt logs retain scoped coverage and private consumer checks.
+
+## REQ-VERIFY-8580: Measure the repaired validator without changing its checks
+
+Collect the original repair receipt node identities before bounded disjoint
+execution. Run the actual112 regression and161 affected/private E2E nodes when
+collection matches their stored union. Require scoped tests, Ruff, strict mypy,
+spec tracing and100 percent newly owned statements, including real CLI paths.
+Retain commands, clocks, exits and log hashes. A killed child fails validation.
+
+### SCENARIO-VERIFY-8580-REPLAY
+
+Fresh bounded replay reconstructs frozen controls and rejects missing inputs,
+owned failures and rehashed tampering. Validate exact bytes before atomic
+publication and exercise both shipped readers. Conductor owns ops reconciliation.
+
+Implementation20261016: focused tests cover genuine outside-checkout children,
+revision drift and rehashed primitive rejection. The supervised runner retains
+original repair XML nodes and checks their disjoint terminal union. Fresh scoped
+coverage and exact-byte publication remain mandatory qualification gates.
