@@ -55571,3 +55571,20 @@ Stop measurements by3600 seconds and reserve900 seconds inside the4800 cap.
 Exp8561 implementation (2026-10-16): sysmon controls and structural regression
 checks cover the original and newly owned branch anchors. Actual current child
 data, source hashes, terminal node outcomes and exact unions determine acceptance.
+## REQ-VERIFY-8563: Validate operation accounting with bounded real children
+
+Requirement-linked tests SHALL precede implementation. Collect each scoped suite's
+original node IDs before disjoint bounded serial pytest shards with -n0, empty
+addopts and --no-cov. Preserve exact unions, terminal outcomes, commands, exits,
+durations, original suite authority and log hashes. Require100 percent newly owned
+statement coverage including real CLI children and rejection paths. Run private
+E2E-018/021, Ruff check/format, strict mypy and owned-test spec coverage. No full
+repository suite or nested historical validation runner is authorized.
+
+### SCENARIO-VERIFY-8563-CLI
+
+Actual private publication, missing inputs, owned errors, bad dates, scan timeout
+and self-consistently rehashed tampering SHALL be checked. Unchanged scanners,
+primary publication, bound terminal sidecar and actual downstream consumers must
+accept final bytes. Child supervision interval is at most60 seconds. Measurements
+stop by3600 seconds; validation reserves900 seconds within the4800-second cap.

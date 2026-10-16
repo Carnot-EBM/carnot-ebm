@@ -101319,3 +101319,32 @@ learning, independent generalization and new solve credit remain zero.
 Exp8561 implementation (2026-10-16): explicit predicate adapters retain the
 original reducers and quarantines. The invocation artifact and bound sidecar
 record the final measured qualification and actual Exp8562 gate acceptance.
+## REQ-REPORT-8563: Reconcile complete costs with actual hardware boundaries
+
+Exp8563 SHALL run an unconditional CPU evidence reader with no model load or
+device commands. Authenticate original V734 board history and optional Exp8559
+through independent producer hashes, original dates, bound terminal bytes and
+the shipped complete-cost consumer. Missing costs retain null numerical fields.
+Map all nine complete operations on KV260, PolarFire, GateMate, NPU and TSU.
+Keep startup and unattributed host work in every conditional zero-cost ceiling.
+Aggregate each original arm/batch separately; repeats give no independent credit.
+Only reconciled non-overlapping qualified costs permit numerical ceilings.
+Transfer, precision, update and sampling costs remain explicitly unknown.
+Ceilings below10 are insufficient for NFR01 and never measured acceleration.
+
+### SCENARIO-REPORT-8563-BOUNDARY
+
+KV260 k<=5 Ising is not the109-coefficient nine-input spline. PolarFire Linux
+CPU dispatch grants no fabric execution. GateMate requires recovered source/build
+hashes, dated physical cable/port/power evidence, expected ID0x20000001, n16 flash
+and sample-hash smoke before execution. No purchase, flash or probe is authorized.
+Z1T exclusions for dense final logits and inter-device movement accompany each
+scope comparison; vendor ratios never transfer to Carnot. Pipelined p-computer
+and250-MTJ papers remain future hypotheses. All physical readiness stays zero.
+
+### SCENARIO-REPORT-8563-REPLAY
+
+Missing inputs block independently of optional hardware. Owned failures
+disqualify. Fresh bounded replay rejects rehashed summaries and primitive drift.
+Retain prior quarantines and Exp8529's exposed source-information null.
+Conductor owns ops/status/changelog/traceability reconciliation for this task.
