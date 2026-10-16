@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-10-16 — Fix standalone count-validator imports
+
+- Resolve the checkout root before the shared verifier loads the frozen count
+  reducer's `scripts.adversarial_verify` dependency. This fixes the CLI crash
+  that returned exit one with empty stdout instead of a JSON report.
+- Preserve the original failing test and add three standalone regressions for
+  valid, corrupt and missing proofs from an unrelated directory without `PYTHONPATH`.
+- Passed 112 regression tests, 161 affected/private E2E-018/021 tests and all 17
+  standalone sealed controls. Measured 100% coverage across 362 new-module
+  statements and all seven added verifier statements, including real CLI execution.
+  Scoped Ruff, strict mypy and spec tracing passed; the full spec audit retains
+  1,142 existing missing references. The conductor source is unchanged.
+
 ## 2026-10-15 — Stage research milestone2026.10.735
 
 - Added matching thirteen-task design and staged YAML, Exp8552–Exp8564.

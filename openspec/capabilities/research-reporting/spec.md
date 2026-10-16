@@ -101434,3 +101434,30 @@ Exact cardinalities2400,1800,47472 can carry proof-backed identity annotations;
 duplicates, absent evidence, wrong units, mismatched totals, booleans, floats,
 non-finite numbers and copied losses/latencies cannot acquire that annotation.
 Exp8555 remains disqualified. Only complete controls grant readiness.
+
+## REQ-REPORT-8567: Publish count-validator qualification without learning promotion
+
+Authenticate Exp8566 sealed controls and its exact old-validator hash. Publish
+old/new classifications, preserved detections, exact diff, source/test hashes,
+mutation receipts and immutable primitives. Readiness requires all scoped
+checks and complete owned statement coverage. No model loads or current LLM
+calls occur; learning and generalization scores remain zero. Exp8530 and
+Exp8555 remain disqualified, untouched and historically authoritative.
+
+### SCENARIO-REPORT-8567-PUBLICATION
+
+Ready regression correction yields complete_null with readiness one. Missing
+external authority yields blocked; required owned failure yields disqualified.
+Cold replay reconstructs the controls from pinned original bytes and rejects
+self-consistently rehashed tampering. Same-roadmap producers remain future
+dependencies and must create fresh artifacts through the corrected validator.
+
+Implementation: the thin Exp8567 runner records source-bound old/new controls,
+original private count diagnoses, preserved findings, immutable operands and
+actual child receipts. It publishes exact validated bytes through the shared
+primary publisher and exercises both live consumers. The primary and bound
+sidecar provide terminal qualification; this correction measures no learning.
+
+Standalone verifier imports are anchored to the checkout before loading the
+sealed reducer. SCENARIO-VERIFY-8567-STANDALONE-CLI checks equivalent JSON
+diagnostics from an unrelated working directory with `PYTHONPATH` absent.

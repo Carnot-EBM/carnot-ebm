@@ -1,5 +1,25 @@
 # Carnot — Operational Status
 
+## 2026-10-16 — Standalone count-validator import repair
+
+The shared verifier now resolves repository imports from its script location
+before loading the count-proof reducer. Direct CLI execution emits the same
+JSON findings as the imported verifier, including outside the checkout without
+`PYTHONPATH`. Valid proofs remain warnings; corrupt or absent proofs remain critical.
+
+Validation: 112 regression tests and 161 affected/private E2E-018/021 tests
+passed. All 17 sealed controls also passed standalone CLI/import comparisons.
+Subprocess-inclusive coverage passed the 100% gate for all 362 statements in
+the four new modules and all seven added shared-verifier statements. Scoped
+Ruff, strict mypy and spec tracing passed. The whole-repository spec audit
+still reports 1,142 existing tests without requirement references.
+Documentation freshness passed; final reconciliation reports only that
+repository-wide spec-tracing issue.
+
+This verifies the code repair; historical research verdicts retain their authority.
+
+**Last Updated:** 2026-10-16
+
 ## 2026-10-15 — V735 research plan staged
 
 Milestone2026.10.735 contains thirteen tasks, Exp8552–Exp8564, across four phases.

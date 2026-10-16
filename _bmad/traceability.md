@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-15
+**Last Updated:** 2026-10-16
 
 ## Planned V734 research milestone — 2026-10-15
 
@@ -4077,3 +4077,14 @@ Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Queue: `research-roadmap-next.yaml`. Preserved V734 design:
 `openspec/change-proposals/research-roadmap-v734-preserved-20261015.md`.
 The V734 active queue and conductor remain unchanged.
+
+## 2026-10-16 — Count-validator standalone CLI repair
+
+| Requirement / scenario | Implementation / evidence | Status |
+|---|---|---|
+| REQ-VERIFY-8567; SCENARIO-VERIFY-8567-STANDALONE-CLI | `scripts/adversarial_verify.py` anchors direct imports to the checkout; `tests/python/test_count_validator_correction_8567.py` preserves the original regression and checks valid, corrupt and missing proofs outside the checkout without `PYTHONPATH` | Verified; all 17 sealed controls agree across CLI and imports |
+| REQ-REPORT-8567; SCENARIO-VERIFY-8567-REPLAY | `discrete_count_proof.py`, `count_validator_8567.py`, `count_validator_runner_8567.py`, the Exp8567 CLI and both count-validator test files | 112 regression tests plus 161 affected/private E2E-018/021 tests passed; all 362 new-module statements and seven added shared-verifier statements covered (100%) |
+
+Scoped Ruff, strict mypy and spec tracing passed. The full repository spec audit
+retains 1,142 existing missing references. Historical verdicts retain their
+authority; this entry records code verification only.

@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_original_seven_relations_use_private_proof ________________
+
+    def test_original_seven_relations_use_private_proof():
+        """SCENARIO-VERIFY-8567-CONTROLS: original names and values survive all seven diagnoses."""
+        from carnot.reporting import count_validator_8567 as study
+    
+        upstream, work, _ = study.authenticate()
+>       row = study.original_proof(work)
+              ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.count_validator_8567' has no attribute 'original_proof'
+
+tests/python/test_count_validator_correction_8567.py:146: AttributeError
+=========================== short test summary info ============================
+FAILED tests/python/test_count_validator_correction_8567.py::test_original_seven_relations_use_private_proof
+1 failed in 3.07s

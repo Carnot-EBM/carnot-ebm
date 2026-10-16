@@ -55637,3 +55637,43 @@ Sealed primitive operands reconstruct classifications in a fresh bounded process
 Owned validation failure disqualifies; missing external authority blocks. Shared
 validator, conductor, active roadmap, historical bytes and quarantines stay fixed.
 Conductor owns ops/status/changelog/traceability reconciliation for this run.
+
+## REQ-VERIFY-8567: Prove discrete cardinalities before count reclassification
+
+Only exact JSON integer metrics with the frozen discrete-counter-proof-v1
+contract may receive an annotated structural count relation. Validate bounded
+unique row identities, units, table hashes and independent primitive reductions.
+Absent or inconsistent proof retains the old critical detection. No artifact,
+name, verdict or rounded/stringified metric grants an exemption. All other
+checks and thresholds remain unchanged.
+
+### SCENARIO-VERIFY-8567-CONTROLS
+
+Run every sealed Exp8566 control, copied continuous metrics, historical real
+bugs, malformed rows and self-consistently rehashed corrupt tables. Imported
+and actual CLI paths agree; removing the correction restores count false
+positives while corrupted evidence stays rejected. Preserve all old quarantines.
+
+### SCENARIO-VERIFY-8567-REPLAY
+
+Collect scoped node IDs before disjoint bounded children. Require their exact
+union, all owned statements including genuine CLI and rejection paths, strict
+types, Ruff, spec tracing and private E2E-018/021. Fresh replay rejects absent
+inputs, failed owned validation and rehashed tampering. Publish checked bytes
+atomically and exercise downstream consumers. No full-suite or historical
+controller execution. Conductor owns ops and traceability reconciliation.
+
+Implementation: `discrete_count_proof.py` cross-checks the sealed reducer with
+an independent bounded reduction. `check_tautology` emits annotated warnings
+only for exact equal proved counts. Regression tests cover every sealed control,
+private original pairs and corrupted evidence. The published invocation binds
+validation and coverage receipts; historical quarantines remain unchanged.
+
+### SCENARIO-VERIFY-8567-STANDALONE-CLI
+
+Direct execution of `scripts/adversarial_verify.py --json` must resolve its
+repository imports from the script's location, including the frozen count
+reducer's verifier dependency. From either the checkout or an unrelated working
+directory with `PYTHONPATH` absent, it emits a JSON report matching the imported
+verifier. Valid proved identities remain warnings; missing or corrupt proofs
+remain critical. A flagged report returns exit one without an import traceback.

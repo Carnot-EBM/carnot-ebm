@@ -1,0 +1,96 @@
+FFF................F                                                     [100%]
+=================================== FAILURES ===================================
+_________________________ test_all_sealed_controls[0] __________________________
+
+corpus = {'cases': [{'expected': 'valid_discrete_identity', 'id': 'equal_2400', 'left': {'operation': 'rows', 'table': '2400', ...': 0.9, 'parameters': [...]}, 'applied': True, 'assignment_indices': [0], ...}]}, ...}, 'version': 'count-controls-v1'}
+index = 0
+
+    @pytest.mark.parametrize('index', range(17))
+    def test_all_sealed_controls(corpus, index):
+        """SCENARIO-VERIFY-8567-CONTROLS: sealed positives and negatives remain fixed."""
+        case = corpus['cases'][index]
+        result = flags(candidate(corpus, case))
+        critical = [r for r in result if r['severity'] == 'critical']
+        if case['expected'] == 'valid_discrete_identity':
+>           assert not critical
+E           AssertionError: assert not [{'detail': 'observed_alpha=2400.0 and observed_beta=2400.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.', 'kind': 'TAUTOLOGY', 'severity': 'critical'}]
+
+tests/python/test_count_validator_correction_8567.py:51: AssertionError
+_________________________ test_all_sealed_controls[1] __________________________
+
+corpus = {'cases': [{'expected': 'valid_discrete_identity', 'id': 'equal_2400', 'left': {'operation': 'rows', 'table': '2400', ...': 0.9, 'parameters': [...]}, 'applied': True, 'assignment_indices': [0], ...}]}, ...}, 'version': 'count-controls-v1'}
+index = 1
+
+    @pytest.mark.parametrize('index', range(17))
+    def test_all_sealed_controls(corpus, index):
+        """SCENARIO-VERIFY-8567-CONTROLS: sealed positives and negatives remain fixed."""
+        case = corpus['cases'][index]
+        result = flags(candidate(corpus, case))
+        critical = [r for r in result if r['severity'] == 'critical']
+        if case['expected'] == 'valid_discrete_identity':
+>           assert not critical
+E           AssertionError: assert not [{'detail': 'observed_alpha=1800.0 and observed_beta=1800.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.', 'kind': 'TAUTOLOGY', 'severity': 'critical'}]
+
+tests/python/test_count_validator_correction_8567.py:51: AssertionError
+_________________________ test_all_sealed_controls[2] __________________________
+
+corpus = {'cases': [{'expected': 'valid_discrete_identity', 'id': 'equal_2400', 'left': {'operation': 'rows', 'table': '2400', ...': 0.9, 'parameters': [...]}, 'applied': True, 'assignment_indices': [0], ...}]}, ...}, 'version': 'count-controls-v1'}
+index = 2
+
+    @pytest.mark.parametrize('index', range(17))
+    def test_all_sealed_controls(corpus, index):
+        """SCENARIO-VERIFY-8567-CONTROLS: sealed positives and negatives remain fixed."""
+        case = corpus['cases'][index]
+        result = flags(candidate(corpus, case))
+        critical = [r for r in result if r['severity'] == 'critical']
+        if case['expected'] == 'valid_discrete_identity':
+>           assert not critical
+E           AssertionError: assert not [{'detail': 'observed_alpha=47472.0 and observed_beta=47472.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.', 'kind': 'TAUTOLOGY', 'severity': 'critical'}]
+
+tests/python/test_count_validator_correction_8567.py:51: AssertionError
+__________________________ test_actual_cli_and_import __________________________
+
+corpus = {'cases': [{'expected': 'valid_discrete_identity', 'id': 'equal_2400', 'left': {'operation': 'rows', 'table': '2400', ...': 0.9, 'parameters': [...]}, 'applied': True, 'assignment_indices': [0], ...}]}, ...}, 'version': 'count-controls-v1'}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T075157-3683233-4a4a182e/test_actual_cli_and_import0')
+
+    def test_actual_cli_and_import(corpus, tmp_path):
+        """SCENARIO-VERIFY-8567-CONTROLS: genuine CLI and imported consumer agree."""
+        path = tmp_path / 'candidate.json'
+        value = candidate(corpus, corpus['cases'][0])
+        path.write_text(json.dumps(value))
+        result = subprocess.run([sys.executable, 'scripts/adversarial_verify.py', '--json', str(path)],
+                                capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: {
+E           "reports": [
+E             {
+E               "artifact": "/var/tmp/pytest-carnot-ianblenke/20261016T075157-3683233-4a4a182e/test_actual_cli_and_import0/candidate.json",
+E               "loaded": true,
+E               "exp_id": null,
+E               "title": "",
+E               "honest_verdict": "",
+E               "flag_count": 1,
+E               "max_severity": 2,
+E               "flags": [
+E                 {
+E                   "kind": "TAUTOLOGY",
+E                   "severity": "critical",
+E                   "detail": "observed_alpha=2400.0 and observed_beta=2400.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+E                 }
+E               ],
+E               "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+E             }
+E           ],
+E           "flagged_count": 1
+E         }
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', 'scripts/adversarial_verify.py'..."38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"\n    }\n  ],\n  "flagged_count": 1\n}\n', stderr='').returncode
+
+tests/python/test_count_validator_correction_8567.py:102: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_count_validator_correction_8567.py::test_all_sealed_controls[0]
+FAILED tests/python/test_count_validator_correction_8567.py::test_all_sealed_controls[1]
+FAILED tests/python/test_count_validator_correction_8567.py::test_all_sealed_controls[2]
+FAILED tests/python/test_count_validator_correction_8567.py::test_actual_cli_and_import
+4 failed, 16 passed in 6.09s

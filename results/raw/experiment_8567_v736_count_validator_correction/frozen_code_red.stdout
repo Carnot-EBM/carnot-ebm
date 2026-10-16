@@ -1,0 +1,60 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_original_authority_rejections ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7efd266c84a0>
+
+    def test_original_authority_rejections(monkeypatch):
+        """REQ-REPORT-8567: original hash, publication and exact source bytes stay pinned."""
+        upstream, original, corpus = study.authenticate()
+        for mode in ["identity", "old", "bound", "source", "frozen"]:
+            with monkeypatch.context() as patch:
+                real_read = study.read
+                changed = deepcopy(upstream)
+                if mode == "identity":
+                    changed["count_controls_ready_score"] = 0
+                patch.setattr(
+                    study,
+                    "read",
+                    lambda ref: changed if ref["path"] == str(study.UPSTREAM) else real_read(ref),
+                )
+                if mode == "old":
+                    real_reference = study.reference
+                    patch.setattr(
+                        study,
+                        "reference",
+                        lambda p: (
+                            dict(path=str(p), sha256="wrong")
+                            if p.name == "old_adversarial_verify.py"
+                            else real_reference(p)
+                        ),
+                    )
+                if mode == "bound":
+                    patch.setattr(
+                        study, "read_bound_sidecar", lambda *a: dict(report=dict(passed=False))
+                    )
+                if mode == "source":
+                    real_reference = study.reference
+                    patch.setattr(
+                        study,
+                        "reference",
+                        lambda p: (
+                            dict(path=str(p), sha256="wrong")
+                            if str(p) == original["evidence"]["sources"][0]["path"]
+                            else real_reference(p)
+                        ),
+                    )
+                if mode == "frozen":
+                    real_reference = study.reference
+                    patch.setattr(study, "reference", lambda p: dict(path=str(p), sha256="wrong")
+                        if str(p) == upstream["code_config_hashes"][0]["path"] else real_reference(p))
+                import pytest
+    
+>               with pytest.raises(ValueError):
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+E               Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_count_validator_runner_8567.py:227: Failed
+=========================== short test summary info ============================
+FAILED tests/python/test_count_validator_runner_8567.py::test_original_authority_rejections
+1 failed in 3.31s
