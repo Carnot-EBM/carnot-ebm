@@ -55827,3 +55827,30 @@ Implementation20261016: focused tests cover genuine outside-checkout children,
 revision drift and rehashed primitive rejection. The supervised runner retains
 original repair XML nodes and checks their disjoint terminal union. Fresh scoped
 coverage and exact-byte publication remain mandatory qualification gates.
+
+## REQ-VERIFY-8582: Validate current causal histories in bounded processes
+
+Collect original test node IDs before disjoint children; preserve the exact
+terminal union and original authority. Require scoped unit tests, private
+E2E-018/021, real CLI, Ruff, strict mypy, spec tracing and100 percent newly owned
+statements including genuine child execution and rejection paths. Use disk-backed
+private scratch, flushed phase counts,30-second supervision and4800-second cap.
+Measurements stop at3600 seconds with900 seconds reserved for validation.
+
+### SCENARIO-VERIFY-8582-RESTART
+
+A real seed17 process exits73 after block2 in every arm; resumed predictions and
+states exactly match uninterrupted controls, with idempotent repeat delivery.
+Wrong-rule checkpoints and future/retention feedback are rejected unchanged.
+
+### SCENARIO-VERIFY-8582-PUBLICATION
+
+Fresh bounded replay reconstructs immutable primitive transitions. Preserve
+adversarial findings, strict row lint and exact-byte atomic publication, then
+exercise the real downstream authority consumers. A killed child never passes.
+
+Implementation20261016: `causal_brier_runner_8582.py` uses the existing bounded
+child supervisor, explicit subprocess/exit coverage, exact collected node union,
+original objective-checkpoint tests and private authority/publication E2Es.
+`test_causal_brier_stream_8582.py` exercises owned failures and repaired hashes.
+The final primary and terminal sidecar determine whether all checks passed.

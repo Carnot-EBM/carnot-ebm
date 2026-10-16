@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="8" failures="0" skipped="0" tests="27" time="80.848" timestamp="2026-10-16T15:39:37.198528-04:00" hostname="icbfl1"><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_original_authority_and_missing" time="15.896" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_fixed_stream_restart_and_counters" time="0.001"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_wrong_rule_and_duplicate_delivery" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_real_cli_publication_and_rejections" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_owned_failures_and_gate_classes" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_source_resource_and_upstream_rejections" time="0.353" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_rehashed_primitive_rejections" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_measurement_adapter_and_counter_rejection" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_production_dispatch_and_deadline" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_validation_requires_exact_nodes_and_measured_statements" time="0.153" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_owned_worker_cli_uses_original_head" time="0.000"><error message="failed on setup with &quot;FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261016T193925-4002042-55a4b68e'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """Execute the complete CPU design once; other tests only read its primitives."""
+        root = tmp_path_factory.mktemp("causal8582")
+        supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+        work = (
+&gt;           json.loads(Path(supplied).read_bytes())
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if supplied
+            else e.measure(e.ROOT, root / "raw", root / "scratch")
+        )
+
+tests/python/test_causal_brier_stream_8582.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792179537884759776/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</error></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_validation_supervision_budget" time="0.001" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_rejected_publication_and_readiness" time="0.005" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_derivatives_and_negative_controls" time="0.384" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_update_and_contract" time="0.004" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_store_rules_labels_duplicates_and_semantics" time="1.694" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[temporary_write-seal]" time="7.440" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[temporary_write-release]" time="7.035" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[file_fsync-seal]" time="7.036" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[file_fsync-release]" time="7.036" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[atomic_replace-seal]" time="7.741" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[atomic_replace-release]" time="7.136" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[acknowledgment-seal]" time="7.137" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[acknowledgment-release]" time="7.740" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_transition_controls_and_invalid_configuration" time="0.008" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_negative_control_failure_and_rule_isolation" time="0.007" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_nonfinite_update_and_checkpoint_rejected" time="0.585" /></testsuite></testsuites>

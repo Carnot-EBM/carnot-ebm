@@ -101695,3 +101695,32 @@ Implementation20261016: the thin CLI authenticates original qualification and
 reverses only the documented repair. The explicit accounting adapter reuses
 Exp8568 numerical proof. The immutable primary and terminal sidecar own readiness.
 Historical pins stay unchanged. Conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8582: Execute the fixed causal Brier stream
+
+Consume sealed Exp8579 methods and qualified Exp8581 online adapter through
+original byte pins and real publication/revision interfaces. Train only the
+original Exp8431 spline head: four fixed arms, five seeds, five blocks of20
+questions and three siblings yield6000 predictions. Keep capacity8, rate0.01,
+L2=0.001 and original scaler/temperature. Readiness measures complete causal
+histories independently of benefit. Preserve historical quarantines, zero
+current model calls and zero generalization scores. Exp8583 is future evidence.
+
+### SCENARIO-REPORT-8582-STREAM
+
+Predictions and target-blind admissions precede released admitted labels;
+original question/sibling order governs sparse updates. Emit atomic state,
+per-event hashes, distinct proven counters, retention and inclusive final-drain
+cost. All50 retention questions are read-only at five windows.
+
+### SCENARIO-REPORT-8582-AUTHORITY
+
+Missing prerequisites block; failed owned checks disqualify. Rehashed input,
+configuration, prediction, counter or checkpoint tampering fails cold replay.
+Original Exp8568 rejection and every historical null remain unchanged.
+
+Implementation20261016: `causal_brier_stream_8582.py` binds the original
+head and current qualified prerequisites; `causal_brier_evidence_8582.py`
+reconstructs primitive transitions. The thin experiment CLI publishes the
+single primary and its bound terminal report. Qualification is determined by
+that invocation's retained receipts. Conductor owns ops and traceability upkeep.

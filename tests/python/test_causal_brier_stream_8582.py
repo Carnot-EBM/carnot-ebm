@@ -1,0 +1,421 @@
+"""REQ-REPORT-8582, REQ-VERIFY-8582: fixed causal histories and honest qualification."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import sys
+from types import SimpleNamespace
+
+import pytest
+
+from carnot.reporting import causal_brier_stream_8582 as e
+from carnot.reporting import causal_brier_runner_8582 as r
+from carnot.reporting.current_work_receipt import atomic_json
+from carnot.reporting.v709_execution import child
+
+
+def test_original_authority_and_missing(tmp_path):
+    """SCENARIO-REPORT-8582-AUTHORITY: missing is distinct from a measured zero."""
+    checked = e.inspect(e.ROOT, tmp_path / "raw", tmp_path)
+    assert not checked["failures"] and checked["authority"]["activated"]
+    assert e.inspect(tmp_path, tmp_path / "missing", tmp_path)["failures"]
+    assert e.source()["heads"] == e.old.source()["heads"]
+
+
+@pytest.fixture(scope="module")
+def measured(tmp_path_factory):
+    """Execute the complete CPU design once; other tests only read its primitives."""
+    root = tmp_path_factory.mktemp("causal8582")
+    supplied = os.environ.get("CARNOT_8582_MEASUREMENT")
+    work = (
+        json.loads(Path(supplied).read_bytes())
+        if supplied
+        else e.measure(e.ROOT, root / "raw", root / "scratch")
+    )
+    return root, work
+
+
+def test_fixed_stream_restart_and_counters(measured):
+    """SCENARIO-REPORT-8582-STREAM: real updates affect later sealed decisions."""
+    root, work = measured
+    output = root / (e.NAME + ".json")
+    value = e.build(work, output)
+    assert value["completed_count"] == value["intended_count"] == 6000
+    assert len(value["retention_rows"]) == 15000
+    assert len(value["checkpoint_restart_rows"]) == 4
+    assert all(row["actual_exit"] == 73 and row["passed"] for row in work["restart_rows"])
+    assert len(value["canonical_counter_rows"]) == len(value["metrics"])
+    assert len(value["coefficient_transition_rows"]) == 2400
+    assert all("primitive" in row for row in value["coefficient_transition_rows"])
+    assert value["metrics"]["applied_update_events"] == 1800
+    assert value["metrics"]["admission_events"] == 2400
+    assert value["metrics"]["physical_coordinate_writes"] > 1800
+    assert value["complete_learning_cost"]["includes_final_feedback_drain"]
+    assert value["generalized_learning_benefit_score"] == 0
+    assert value["causal_learning_rows_ready_score"] == 0
+    atomic_json(output, value)
+    assert e.replay(output)
+    assert not e.replay(root / "missing")
+    changed = deepcopy(value)
+    changed["metrics"]["applied_update_events"] += 1
+    changed["reproducibility_checksum"] = e.old.checksum(changed)
+    atomic_json(root / "tampered.json", changed)
+    assert not e.replay(root / "tampered.json")
+
+
+def test_wrong_rule_and_duplicate_delivery(measured, tmp_path):
+    """SCENARIO-VERIFY-8582-RESTART: wrong rules and future labels never commit."""
+    _, work = measured
+    cfg = e.old.read(work["cells"][2]["configuration"])
+    with e.stream.binding(cfg):
+        store = e.stream.shipped.state.Store(tmp_path / "store", cfg)
+        store.initialize()
+        store.seal(0, cfg["blocks"][0])
+        sealed = store.read()
+        labels = e.stream.shipped.released(cfg, sealed)
+        with pytest.raises(ValueError):
+            store.release(0, dict(labels, future_label=1))
+        assert store.read() == sealed
+        store.release(0, labels)
+        final = store.read()
+        store.release(0, labels)
+        assert store.read() == final
+        wrong = deepcopy(cfg)
+        wrong["update_rule_hash"] = "wrong"
+        with pytest.raises(ValueError):
+            e.stream.shipped.state.Store(tmp_path / "store", wrong).read()
+
+
+def test_real_cli_publication_and_rejections(measured, tmp_path):
+    """SCENARIO-VERIFY-8582-PUBLICATION: private actual CLI and cold mutations."""
+    _, work = measured
+    output = tmp_path / (e.NAME + ".json")
+    argv = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+    receipt = child(
+        "private",
+        [
+            *argv,
+            "--private-output",
+            str(output),
+            "--resume-measurement",
+            str(Path(work["raw"]) / "measurement.json"),
+        ],
+        tmp_path / "logs",
+        deadline=600,
+    )
+    assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+    value = json.loads(output.read_bytes())
+    assert value["verdict_class"] == "disqualified" and e.replay(output)
+    terminal = json.loads(Path(value["terminal_validation_sidecar_path"]).read_bytes())
+    assert terminal["selected_identity"]["passed"]
+    for name, args, expected in [
+        ("cold", ["--cold-replay", str(output)], 0),
+        ("missing", ["--cold-replay", str(tmp_path / "missing")], 1),
+        ("owned", ["--deliberate-error"], 7),
+        ("date", ["--date", "wrong"], 2),
+        ("unsafe", ["--private-output", str(e.ROOT / "bad")], 2),
+    ]:
+        assert child(name, [*argv, *args], tmp_path / "logs", expected=expected, deadline=120)[
+            "passed"
+        ]
+    assert r.main(["--date", "wrong"]) == 2
+    assert r.main(["--deliberate-error"]) == 7
+
+
+def test_owned_failures_and_gate_classes(measured, monkeypatch, tmp_path):
+    """SCENARIO-REPORT-8582-AUTHORITY: owned failure outranks external blocking."""
+    _, original = measured
+    work = deepcopy(original)
+    output = tmp_path / (e.NAME + ".json")
+    monkeypatch.setattr(e, "validated", lambda w: w["owned_ready"])
+    work["owned_ready"] = True
+    required = e.validation.REQUIRED
+    work["receipts"] = [
+        dict(work["process_receipts"][0], name=name, passed=True) for name in required
+    ]
+    ready_value = e.build(work, output)
+    assert ready_value["causal_learning_rows_ready_score"] == 1
+    assert all(ready_value["acceptance_gates"].values())
+    assert ready_value["alias_map"]["released_feedback_count"] == "label_release_events"
+    work["adversarial_findings"] = [
+        dict(severity="warn", kind="TAUTOLOGY", detail="verified integer proof")
+    ]
+    assert e.build(work, output)["causal_learning_rows_ready_score"] == 1
+    work["adversarial_findings"] = [
+        dict(severity="critical", kind="TAUTOLOGY", detail="unproved duplicate")
+    ]
+    assert e.build(work, output)["verdict_class"] == "disqualified"
+    work["adversarial_findings"] = []
+    work["failures"].append(
+        e.accounting.old.gate(tmp_path / "absent", "online_adapter_ready_score", 1, None)
+    )
+    assert e.build(work, output)["verdict_class"] == "blocked"
+    work["receipts"][0]["passed"] = False
+    assert e.build(work, output)["verdict_class"] == "disqualified"
+
+
+def test_source_resource_and_upstream_rejections(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8582-AUTHORITY: fixed rules and byte-bound prerequisites."""
+    original = e.source()
+    monkeypatch.setattr(e, "_SOURCE", lambda: dict(original, heads=[]))
+    with pytest.raises(ValueError, match="original_head"):
+        e.source()
+    protocol = e.methods.protocol()
+    monkeypatch.setattr(e.methods, "protocol", lambda: dict(protocol, objective_updates={}))
+    with pytest.raises(ValueError, match="registered_stream"):
+        e.source()
+    monkeypatch.setattr(
+        e.old.report.methods.legacy,
+        "resources",
+        lambda p: dict(
+            private_disk_backed_scratch=False, available_memory_bytes=0, minimum_memory_bytes=1
+        ),
+    )
+    assert (
+        e.inspect(tmp_path, tmp_path / "raw", tmp_path)["failures"][-1]["field"]
+        == "disk_memory_tools_deadline"
+    )
+    assert r.main(["--worker", str(tmp_path)]) == 1
+
+
+def test_rehashed_primitive_rejections(measured, tmp_path):
+    """SCENARIO-REPORT-8582-AUTHORITY: repaired outer hashes cannot bless causal drift."""
+    _, original = measured
+    value = e.build(original, tmp_path / (e.NAME + ".json"))
+    for attack in (
+        "hash",
+        "qualification",
+        "upstream",
+        "source",
+        "roster",
+        "configuration",
+        "unstarted",
+        "chain",
+        "prediction",
+        "final",
+        "retention",
+        "restart",
+        "receipt",
+        "projection",
+        "counter_projection",
+    ):
+        work = deepcopy(original)
+        cell = work["cells"][0]
+        if attack == "hash":
+            work["code_refs"][0]["sha256"] = "wrong"
+        elif attack == "qualification":
+            work["owned_ready"] = True
+        elif attack == "upstream":
+            work["source_refs"] = [
+                ref for ref in work["source_refs"] if Path(ref["path"]).stem not in e.PINS
+            ]
+        elif attack == "source":
+            work["source"]["heads"] = []
+        elif attack == "roster":
+            work["cells"] = work["cells"][1:]
+        elif attack == "configuration":
+            cfg = e.old.read(cell["configuration"])
+            cfg["seed"] = 29
+            atomic_json(tmp_path / "cfg.json", cfg)
+            cell["configuration"] = e.old.reference(tmp_path / "cfg.json")
+        elif attack == "unstarted":
+            cell.pop("configuration")
+            cell["steps"] = []
+        elif attack in ("chain", "prediction"):
+            step = e.old.read(cell["steps"][0])
+            if attack == "chain":
+                step["before_state"]["cursor"] += 1
+            else:
+                step["predictions"][0]["probability"] += 0.01
+            atomic_json(tmp_path / "step.json", step)
+            cell["steps"][0] = e.old.reference(tmp_path / "step.json")
+        elif attack == "final":
+            state = e.old.read(cell["final"])
+            state["cursor"] += 1
+            atomic_json(tmp_path / "state.json", state)
+            cell["final"] = e.old.reference(tmp_path / "state.json")
+        elif attack == "retention":
+            rows = e.old.read(cell["retention"])
+            rows["rows"][0]["probability"] += 0.01
+            atomic_json(tmp_path / "retention.json", rows)
+            cell["retention"] = e.old.reference(tmp_path / "retention.json")
+        elif attack == "restart":
+            work["restart_rows"][0]["actual_exit"] = 0
+        elif attack == "receipt":
+            work["process_receipts"][0]["passed"] = False
+        else:
+            private = tmp_path / "projection"
+            private.mkdir(exist_ok=True)
+            for name in (
+                "stream_rows.json",
+                "released_feedback.json",
+                "retention_rows.json",
+                "coefficient_transitions.json",
+            ):
+                atomic_json(private / name, e.old.read(e.old.reference(Path(work["raw"]) / name)))
+            if attack == "counter_projection":
+                atomic_json(private / "coefficient_transitions.json", [])
+            else:
+                atomic_json(private / "stream_rows.json", dict(rows=[]))
+            work["raw"] = str(private)
+        primitive = tmp_path / (attack + "-work.json")
+        atomic_json(primitive, work)
+        changed = deepcopy(value)
+        changed["primitive_reference"] = e.old.reference(primitive)
+        changed["reproducibility_checksum"] = e.old.checksum(changed)
+        path = tmp_path / (attack + ".json")
+        atomic_json(path, changed)
+        assert not e.replay(path), attack
+
+
+def test_measurement_adapter_and_counter_rejection(measured, monkeypatch, tmp_path):
+    """REQ-VERIFY-8582: explicit adapter dispatch retains raw operands and rejects altered effects."""
+    _, original = measured
+    monkeypatch.setattr(e.old, "measure", lambda *a: deepcopy(original))
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    work = e.measure(e.ROOT, raw, tmp_path)
+    assert (raw / "released_feedback.json").is_file() and work["owned_ready"] is False
+    assert e.counters(dict(cells=[{}])) == []
+    bad = deepcopy(original)
+    cell = bad["cells"][0]
+    step = e.old.read(cell["steps"][0])
+    step["updates"][0]["after_head_hash"] = "wrong"
+    atomic_json(tmp_path / "bad-step.json", step)
+    cell["steps"][0] = e.old.reference(tmp_path / "bad-step.json")
+    with pytest.raises(ValueError, match="coefficient_transition"):
+        e.counters(bad)
+    assert not e.validated(dict())
+
+
+def test_production_dispatch_and_deadline(measured, monkeypatch, tmp_path):
+    """REQ-VERIFY-8582: production validation and deadline failure are explicit."""
+    _, original = measured
+    work = deepcopy(original)
+    monkeypatch.setattr(e, "measure", lambda *a: work)
+    monkeypatch.setattr(e.validation, "validate", lambda w: None)
+    monkeypatch.setattr(r, "publish_primary", lambda *a: dict(sidecar_path="test"))
+    monkeypatch.setattr(r, "reader_receipt", lambda *a, **k: dict(passed=True))
+    clock = iter([0.0, 3601.0, 3602.0])
+    monkeypatch.setattr(
+        r,
+        "time",
+        SimpleNamespace(
+            monotonic=lambda: next(clock), monotonic_ns=r.time.monotonic_ns, time_ns=r.time.time_ns
+        ),
+    )
+    monkeypatch.setattr(r, "verify_artifact", lambda path: dict(flags=[]))
+    assert r.run(tmp_path / (e.NAME + ".json")) == 0
+    assert work["failures"][-1]["field"] == "measurement_deadline"
+    monkeypatch.setattr(r, "run", lambda *a, **k: 0)
+    assert r.main([]) == 0
+
+
+def test_validation_requires_exact_nodes_and_measured_statements(tmp_path):
+    """REQ-VERIFY-8582: a claimed boolean cannot replace measured statement or node evidence."""
+    coverage = tmp_path / "coverage.json"
+    atomic_json(coverage, dict(files={p: dict(summary=dict(missing_lines=0)) for p in e.OWNED}))
+    node = e.TESTS[0] + "::test_original_authority_and_missing"
+    work = dict(
+        coverage_complete=True,
+        coverage_reference=e.old.reference(coverage),
+        union_passed=True,
+        node_union=dict(
+            original_node_ids=[node],
+            child_node_ids=[[node]],
+            terminal_node_outcomes=[dict(node_id=node, outcome="passed")],
+        ),
+        receipts=[dict(name=n, passed=True) for n in e.validation.REQUIRED],
+    )
+    assert e.validated(work)
+    work["node_union"]["child_node_ids"].append([node])
+    assert not e.validated(work)
+
+
+def test_owned_worker_cli_uses_original_head(measured, tmp_path):
+    """SCENARIO-VERIFY-8582-RESTART: genuine owned children cover current worker dispatch."""
+    _, work = measured
+    cell = work["cells"][0]
+    output = tmp_path / "worker"
+    argv = [
+        sys.executable,
+        "-u",
+        str(e.ROOT / e.CLI),
+        "--configuration",
+        cell["configuration"]["path"],
+        "--worker",
+        str(output),
+    ]
+    receipt = child("owned-worker", argv, tmp_path / "logs", deadline=150)
+    assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+    assert e.old.read(e.old.reference(output / "final.json")) == e.old.read(cell["final"])
+
+
+def test_validation_supervision_budget(monkeypatch, tmp_path):
+    """REQ-VERIFY-8582: explicit validation budget preserves original command and exit operands."""
+    calls = []
+    monkeypatch.setattr(r, "child", lambda *a, **k: calls.append((a, k)) or dict(passed=True))
+    assert r.validation_child("owned", ["original"], tmp_path, deadline=600, expected=7)["passed"]
+    assert calls[-1][1]["deadline"] == 900 and calls[-1][1]["expected"] == 7
+    r.validation_child("other", ["original"], tmp_path, deadline=90)
+    assert calls[-1][1]["deadline"] == 90
+
+
+def test_rejected_publication_and_readiness(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8582-AUTHORITY: present but unqualified differs from missing evidence."""
+    state = dict(publication=True, score=1)
+    atomic_json(tmp_path / "terminal", {})
+
+    def read(ref):
+        if ref["path"].endswith("terminal"):
+            return dict(publication=dict(sidecar_path="bound"))
+        return dict(
+            terminal_validation_sidecar_path=str(tmp_path / "terminal"),
+            methods_ready_score=state["score"],
+            online_adapter_ready_score=state["score"],
+            required_checks_passed=True,
+            flagged_adversarial=False,
+            current_validator_reference={},
+            primitive_reference=dict(path="primitive", sha256="fixture"),
+        )
+
+    monkeypatch.setattr(e.old, "read", read)
+    monkeypatch.setattr(
+        e, "read_bound_sidecar", lambda *a: dict(report=dict(passed=state["publication"]))
+    )
+    monkeypatch.setattr(e.accounting, "accept_revision", lambda ref: {})
+    state["publication"] = False
+    assert all(
+        g["field"] == "upstream_authentication"
+        for g in e.inspect(tmp_path, tmp_path / "raw", tmp_path)["failures"]
+    )
+    state.update(publication=True, score=0)
+    assert all(
+        g["observed"] == 0 for g in e.inspect(tmp_path, tmp_path / "raw", tmp_path)["failures"]
+    )
+
+
+def test_retention_comparison_rejects_drift(measured, monkeypatch, tmp_path):
+    """SCENARIO-REPORT-8582-AUTHORITY: retention computation is independently compared."""
+    _, work = measured
+    output = tmp_path / (e.NAME + ".json")
+    atomic_json(output, e.build(work, output))
+    monkeypatch.setattr(
+        e.stream.shipped, "retention", lambda *a: dict(rows=[], labels_fed_to_learner=0)
+    )
+    assert not e.replay(output)
+
+
+def test_resumed_history_is_sealed_before_validation(measured, monkeypatch, tmp_path):
+    """REQ-VERIFY-8582: resumed validation reads a complete immutable measurement."""
+    _, work = measured
+
+    def stop_after_seal(candidate):
+        path = Path(candidate["raw"]) / "measurement.json"
+        assert json.loads(path.read_bytes()) == candidate
+        raise RuntimeError("sealed_before_validation")
+
+    monkeypatch.setattr(e.validation, "validate", stop_after_seal)
+    with pytest.raises(RuntimeError, match="sealed_before_validation"):
+        r.run(tmp_path / (e.NAME + ".json"), measurement=Path(work["raw"]) / "measurement.json")

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="27" time="552.955" timestamp="2026-10-16T15:29:16.215533-04:00" hostname="icbfl1"><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_original_authority_and_missing" time="16.539" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_fixed_stream_restart_and_counters" time="47.445" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_wrong_rule_and_duplicate_delivery" time="0.539" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_real_cli_publication_and_rejections" time="252.117" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_owned_failures_and_gate_classes" time="42.741" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_source_resource_and_upstream_rejections" time="0.368" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_rehashed_primitive_rejections" time="75.454" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_measurement_adapter_and_counter_rejection" time="5.902" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_production_dispatch_and_deadline" time="2.543"><failure message="StopIteration">measured = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T192903-3996764-1c59a44c/causal85820'), {'adversarial_findings': ...ning_report_8434.py', 'sha256': 'sha256:132c9e3171f1369892a0ab7d23bc02cb87ff473aa3456c70128023a1fae9927e'}, ...], ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f9e82fca270&gt;
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261016T192903-3996764-1c59a44c/test_production_dispatch_and_d0')
+
+    def test_production_dispatch_and_deadline(measured, monkeypatch, tmp_path):
+        """REQ-VERIFY-8582: production validation and deadline failure are explicit."""
+        _, original = measured
+        work = deepcopy(original)
+        monkeypatch.setattr(e, "measure", lambda *a: work)
+        monkeypatch.setattr(e.validation, "validate", lambda w: None)
+        monkeypatch.setattr(r, "publish_primary", lambda *a: dict(sidecar_path="test"))
+        monkeypatch.setattr(r, "reader_receipt", lambda *a, **k: dict(passed=True))
+        clock = iter([0.0, 3601.0, 3602.0])
+        monkeypatch.setattr(r.time, "monotonic", lambda: next(clock))
+&gt;       assert r.run(tmp_path / (e.NAME + ".json")) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_causal_brier_stream_8582.py:301: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/causal_brier_runner_8582.py:105: in run
+    atomic_json(candidate, e.build(work, output))
+                           ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/causal_brier_stream_8582.py:235: in build
+    events = counters(work)
+             ^^^^^^^^^^^^^^
+python/carnot/reporting/causal_brier_stream_8582.py:180: in counters
+    head, info = kernel(head, np.asarray(record["x"]), trace["target"], 0.01)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/verify/sparse_energy_7996.py:158: in update
+    began = time.monotonic()
+            ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+&gt;   monkeypatch.setattr(r.time, "monotonic", lambda: next(clock))
+                                                     ^^^^^^^^^^^
+E   StopIteration
+
+tests/python/test_causal_brier_stream_8582.py:300: StopIteration</failure></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_validation_requires_exact_nodes_and_measured_statements" time="0.002" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_owned_worker_cli_uses_original_head" time="38.847" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_validation_supervision_budget" time="0.001" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_rejected_publication_and_readiness" time="0.005" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_derivatives_and_negative_controls" time="0.360" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_update_and_contract" time="0.004" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_store_rules_labels_duplicates_and_semantics" time="2.079" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[temporary_write-seal]" time="8.042" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[temporary_write-release]" time="7.739" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[file_fsync-seal]" time="7.338" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[file_fsync-release]" time="7.538" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[atomic_replace-seal]" time="7.840" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[atomic_replace-release]" time="8.343" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[acknowledgment-seal]" time="8.745" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_actual_exits_and_exact_resume[acknowledgment-release]" time="8.644" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_transition_controls_and_invalid_configuration" time="0.012" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_negative_control_failure_and_rule_isolation" time="0.011" /><testcase classname="tests.python.test_objective_checkpoint_8461" name="test_nonfinite_update_and_checkpoint_rejected" time="0.176" /></testsuite></testsuites>
