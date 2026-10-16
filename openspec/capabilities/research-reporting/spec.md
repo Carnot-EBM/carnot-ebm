@@ -101215,6 +101215,30 @@ Absent sources, failed owned checks and self-consistently rehashed tampering
 cannot grant readiness. Publish checked bytes atomically and bind the unchanged
 accounting consumers. Historical results and validators remain unchanged.
 
+## REQ-REPORT-8558: Seal each native qualification candidate independently
+
+Exp8558 SHALL preserve the original nine-input numerical protocol, all900 answer
+inputs,274 controls and1800 complete request rows. It SHALL use no_model_load,
+MODEL_SPECS=[] and zero current LLM calls. Exp8545 remains quarantined. Same-roadmap
+outputs are future dependencies; speed and learning benefits remain unmeasured.
+
+### SCENARIO-REPORT-8558-SNAPSHOTS
+
+Reproduce the preliminary exit1 in private scratch and retain field-level
+expected-versus-reduced diagnostics. Seal post-validation work before building
+the preliminary candidate. Seal a distinct terminal snapshot after receipts.
+Each candidate references exactly one immutable version. Reject stale snapshots,
+post-seal writes, missing evidence and self-consistently rehashed counters using
+full-equality reduction and unchanged numerical replay.
+
+### SCENARIO-REPORT-8558-PUBLICATION
+
+Preliminary and terminal replay are separate required children. A later pass
+cannot erase an earlier failure. Require the real private complete-request CLI,
+loaded original Rust/PyO3 identity, unchanged validators, atomic publication and
+bound downstream consumer. Preserve every finding and original quarantine.
+The conductor owns status, changelog and traceability reconciliation.
+
 ## REQ-REPORT-8555: Qualify canonical counters from original transitions
 
 Exp8555 SHALL authenticate Exp8554 and its exact source/test bytes. It SHALL
@@ -101240,3 +101264,9 @@ critical findings or failed owned checks disqualify and force readiness zero.
 Cold replay SHALL reject absent evidence and self-consistently rehashed tampering.
 Atomic publication SHALL bind terminal bytes and exercise actual stream readers.
 Conductor owns status, changelog and traceability reconciliation for this run.
+
+Exp8558 implementation receipt (2026-10-15):91/91 scoped nodes passed;
+253/253 newly owned statements and genuine Rust lines covered. Both immutable
+replay stages, final bytes, unchanged validators and actual timing consumer
+passed. Native readiness1 is finite exposed qualification; speed and learning
+remain unmeasured. Exp8545 stays quarantined. Conductor owns ops reconciliation.

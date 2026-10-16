@@ -55491,6 +55491,23 @@ terminal node once and its elapsed time. A timed-out node is never a pass.
 Require full new statement coverage, real CLI controls, Ruff, strict mypy,
 spec coverage and private E2E-018 and E2E-021 before readiness can equal one.
 
+## REQ-VERIFY-8558: Measure immutable replay qualification in bounded children
+
+Collect original node IDs before disjoint bounded pytest children using -n0,
+empty addopts and --no-cov. Bind each suite to its original authority. Retain
+commands, terminal outcomes, exit codes, durations and log hashes. Killed children
+fail validation. Do not run a repository-wide or nested historical runner.
+
+### SCENARIO-VERIFY-8558-CONTROLS
+
+Require100 percent newly owned statement coverage, including real CLI children
+and rejection paths, plus Ruff check/format, strict mypy and spec coverage.
+Run private E2E-018/021 consumers. Retain genuine Python/Rust coverage and all
+original tolerances, fallback thresholds and exact typed decisions. Missing
+external evidence blocks; owned failure disqualifies. Every child has a deadline
+and at most60-second heartbeats. Measurements stop by3600 seconds, with at least
+900 seconds for validation inside4800 seconds. No duration padding.
+
 ## REQ-VERIFY-8555: Preserve numerical and terminal accounting evidence
 
 Exp8555 SHALL use original objective mechanics, independent finite differences
@@ -55512,3 +55529,9 @@ Run owned tests, private E2E-018/E2E-021, Ruff, strict mypy and spec tracing.
 Source hashes, complete projection, negative validator control, cold replay,
 owned failure and rehashed tamper rejection SHALL be required gates. Missing
 upstream qualification blocks; an owned check failure disqualifies.
+
+Exp8558 implementation receipt (2026-10-15):91/91 scoped nodes passed;
+253/253 newly owned statements and genuine Rust lines covered. Both immutable
+replay stages, final bytes, unchanged validators and actual timing consumer
+passed. Native readiness1 is finite exposed qualification; speed and learning
+remain unmeasured. Exp8545 stays quarantined. Conductor owns ops reconciliation.

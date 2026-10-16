@@ -1,0 +1,35 @@
+[exp8533] phase=start_8558_no_model_load_LLM_calls_0 completed=0 pending=0
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 13 items
+
+tests/python/test_nine_input_8558.py::test_snapshot_order_and_separate_versions PASSED [  7%]
+tests/python/test_nine_input_8558.py::test_cold_replay_rejects_changed_operands[checksum] PASSED [ 15%]
+tests/python/test_nine_input_8558.py::test_cold_replay_rejects_changed_operands[counter] PASSED [ 23%]
+tests/python/test_nine_input_8558.py::test_cold_replay_rejects_changed_operands[snapshot] PASSED [ 30%]
+tests/python/test_nine_input_8558.py::test_cold_replay_rejects_changed_operands[missing] PASSED [ 38%]
+tests/python/test_nine_input_8558.py::test_cold_replay_rejects_changed_operands[rows] PASSED [ 46%]
+tests/python/test_nine_input_8558.py::test_historical_failure_reproduces PASSED [ 53%]
+tests/python/test_nine_input_8558.py::test_blocked_and_required_failure PASSED [ 61%]
+tests/python/test_nine_input_8558.py::test_actual_cli_rejections PASSED  [ 69%]
+tests/python/test_nine_input_8558.py::test_runner_and_consumer_routes PASSED [ 76%]
+tests/python/test_nine_input_8558.py::test_original_binary_rejection_and_private_absence PASSED [ 84%]
+tests/python/test_nine_input_8558.py::test_validation_adapters PASSED    [ 92%]
+tests/python/test_nine_input_8558.py::test_complete_ready_and_failed_gates PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; _hypothesis_globals
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1309: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; hypothesis
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 13 passed, 2 warnings in 317.03s (0:05:17) ==================
