@@ -1,0 +1,80 @@
+...............................FF.                                       [100%]
+=================================== FAILURES ===================================
+_______________________________ test_private_cli _______________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8565_v736_contract_methods/validation/owned-tests/test_private_cli0')
+
+    def test_private_cli(tmp_path):
+        """SCENARIO-VERIFY-8565-CONTROLS: real publication and cold children retain terminal logs."""
+        output = tmp_path / "results" / (e.NAME + ".json")
+        common = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        r = child(
+            "private",
+            common
+            + [
+                "--date",
+                "20261016",
+                "--root",
+                str(tmp_path / "absent"),
+                "--output",
+                str(output),
+                "--private-control",
+            ],
+            tmp_path / "logs",
+            deadline=120,
+        )
+>       assert r["passed"], Path(r["stderr_path"]).read_text()
+E       AssertionError: usage: experiment_8565_v736_contract_methods.py [-h] [--date {20261016}]
+E                                                         [--root ROOT]
+E                                                         [--output OUTPUT]
+E                                                         [--private-control]
+E                                                         [--cold-replay COLD_REPLAY]
+E                                                         [--deliberate-error]
+E         experiment_8565_v736_contract_methods.py: error: private controls require an output outside the checkout
+E         
+E       assert False
+
+tests/python/test_v736_contract_runner_8565.py:31: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+_____________________________ test_validation_plan _____________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8565_v736_contract_methods/validation/owned-tests/test_validation_plan0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f625a29d1c0>
+
+    def test_validation_plan(tmp_path, monkeypatch):
+        """REQ-VERIFY-8565: only scoped checks and exact original node unions are authorized."""
+        monkeypatch.setattr(
+            runner.collection,
+            "collect",
+            lambda private, suite: (
+                [suite + "::private"],
+                dict(name="collect_" + Path(suite).stem, argv=[]),
+            ),
+        )
+>       plan = runner.manifest(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v736_contract_runner_8565.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+private = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8565_v736_contract_methods/validation/owned-tests/test_validation_plan0')
+
+    def manifest(private: Path) -> list[Json]:
+        """Collect original node IDs before disjoint serial children; preserve their exact union."""
+        if private.absolute().is_relative_to(e.ROOT):
+>           raise ValueError("validation scratch must be private and outside the checkout")
+E           ValueError: validation scratch must be private and outside the checkout
+
+python/carnot/reporting/v736_contract_runner.py:33: ValueError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v736_contract_runner_8565.py::test_private_cli - Ass...
+FAILED tests/python/test_v736_contract_runner_8565.py::test_validation_plan
+2 failed, 32 passed, 1 warning in 71.50s (0:01:11)

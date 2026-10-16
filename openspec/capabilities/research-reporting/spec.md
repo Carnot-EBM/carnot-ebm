@@ -101376,3 +101376,44 @@ ARC episode without new observations. Reduce canonical counters from an original
 Exp8555 event, retain its actual learning-consumer rejection, and reconcile stored
 complete native clocks through the shipped Exp8559 cost consumer. The ARC panel
 consumer must preserve Exp8561's failed readiness. Add zero independent units.
+
+## REQ-REPORT-8565: Seal V736 contract and independent methods
+
+Exp8565 SHALL compare fourteen complete objects Exp8565–8578 across activated
+YAML, visible table, embedded JSON and a pinned canonical digest. Prompts,
+routes, gates and retirement flags participate in full dictionary equality.
+Missing authority is a blocked operand and cannot be replaced by current planning.
+It SHALL preserve V735 scientific numerical operands and separately version
+count-evidence and resident-session protocols before measurement. Resident panels
+contain 64 stable-order test answers, batches1/8, session lengths1/4/16, ten
+alternating pairs, full launch-to-shutdown costs and primary length16/batch1.
+The p95 slowdown limit remains1.05. Qualified historical receipts may be reused
+only while their original sources, tests, dependencies and log hashes match.
+Runtime and board absence SHALL NOT suppress CPU input readiness. No model loads.
+
+### SCENARIO-REPORT-8565-AUTHORITY
+
+Count, order, ID, title, phase, deliverable, model, substrate, gate, prompt,
+retirement, end-marker and self-consistently rehashed changes fail closed.
+Missing design, staged authority or original producer bytes cannot grant readiness.
+
+### SCENARIO-REPORT-8565-METHODS
+
+Original head/scaler/temperature and exact158-node receipt are authenticated.
+Learning, native and canary inputs qualify independently. Source-null and
+complete-native-cost comparisons stay closed. All prior findings remain intact.
+
+## REQ-VERIFY-8565: Bounded private validation and immutable replay
+
+Focused requirement-linked tests precede implementation. Scoped serial children
+retain collected IDs, exact disjoint unions, exits, durations and log hashes.
+Private E2E-018/021, real CLI rejection controls, Ruff, strict mypy, spec tracing
+and100 percent newly owned statement coverage SHALL qualify publication. Cold
+replay reconstructs primitives in a fresh process and rejects rehashed tampering.
+Owned failures disqualify; unchanged external blockage is blocked. Atomic
+publication validates exact final bytes and exercises the downstream consumers.
+
+### SCENARIO-VERIFY-8565-CONTROLS
+
+Valid private evidence replays; absent primitives, owned failures and rehashed
+summary changes fail acceptance. Optional runtime absence does not block CPU.

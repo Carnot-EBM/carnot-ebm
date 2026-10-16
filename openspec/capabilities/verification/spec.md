@@ -55604,3 +55604,20 @@ owned child failure and self-consistently rehashed tampering cannot grant succes
 Keep all unchanged scanner findings; validate final bytes, publish atomically,
 bind terminal sidecar and exercise actual downstream consumers. Stop measurement
 by3600 seconds and reserve900 seconds within4800. Heartbeats are at most60 seconds.
+
+## REQ-VERIFY-8565-PROCESS: Isolate V736 registration validation
+
+Exp8565 SHALL use bounded serial children with unbuffered progress and durable
+command/exit/duration/log-hash receipts. It SHALL collect original IDs before
+partitioning private E2E-018/021 consumer nodes, preserving the exact disjoint
+union. Coverage applies to newly owned statements including actual CLI children
+and rejection paths. Full-suite and nested historical controller execution are
+excluded. Supplied runtime repair evidence is read through Exp8410 within60s;
+no model or device command is authorized. Qualification cannot clear older flags.
+
+### SCENARIO-VERIFY-8565-OWNED
+
+Scoped tests, real private CLI, Ruff check/format, strict mypy, spec coverage and
+100 percent new statement coverage precede atomic publication. Fresh replay
+rejects absent primitives, owned failures and rehashed tampering. Required owned
+failures disqualify; unchanged external authority blockage remains blocked.
