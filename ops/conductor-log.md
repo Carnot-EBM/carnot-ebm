@@ -20405,3 +20405,5 @@ code |
 | 2026-10-16 07:47 UTC | Reproduce count-coincidence flags and freeze adver | OK | 96 passed, 1 warning in 105.56s (0:01:45) |
 | 2026-10-16 08:54 UTC | Correct proved discrete-count classification while | OK | 112 passed, 1 warning in 105.94s (0:01:45) |
 | 2026-10-16 09:38 UTC | Qualify fresh causal update accounting through the | OK | 91 passed, 1 warning in 181.64s (0:03:01) |
+| 2026-10-16 09:46 UTC | Train the small energy head with delayed feedback  | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8565-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-10-16 09:48 UTC | Test later Brier benefit and simultaneous retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8569-causal-brier-stream) |
