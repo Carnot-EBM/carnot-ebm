@@ -101417,3 +101417,20 @@ publication validates exact final bytes and exercises the downstream consumers.
 
 Valid private evidence replays; absent primitives, owned failures and rehashed
 summary changes fail acceptance. Optional runtime absence does not block CPU.
+## REQ-REPORT-8566: Freeze count semantics without changing the audit
+
+Exp8566 SHALL reproduce all seven Exp8555 TAUTOLOGY findings on private exact
+copies. Independently reduce sealed events; preserve every distinct integer and
+every owned controller defect. Freeze versioned equal/unequal, corrupt evidence,
+continuous metric and stable-ID historical controls before Exp8567. A bounded
+data-only counter proof requires exact JSON integers, units, unique event-table
+identity and independently recomputable reductions. Names and verdicts grant no
+exemption. Missing proof retains critical expectation. No model is loaded and
+generalization and learning-benefit scores remain zero.
+
+### SCENARIO-REPORT-8566-CONTROLS
+
+Exact cardinalities2400,1800,47472 can carry proof-backed identity annotations;
+duplicates, absent evidence, wrong units, mismatched totals, booleans, floats,
+non-finite numbers and copied losses/latencies cannot acquire that annotation.
+Exp8555 remains disqualified. Only complete controls grant readiness.

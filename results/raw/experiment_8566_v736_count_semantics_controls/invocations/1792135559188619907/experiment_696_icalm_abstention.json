@@ -1,0 +1,128 @@
+{
+  "experiment": 696,
+  "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+  "run_date": "20260805",
+  "started_at": "2026-08-05T12:00:35Z",
+  "finished_at": "2026-08-05T12:00:35Z",
+  "duration_s": 0.005,
+  "status": "success",
+  "random_seed": 42,
+  "reproducibility_checksum": "a6bb133cb1e3638a",
+  "metrics_used": "unknown",
+  "fp_rate_baseline": 0.15,
+  "fp_rate_no_abstention": 0.2,
+  "fp_rate_best_abstention": 0.2,
+  "best_threshold": 0.1,
+  "abstention_rate_at_best": 0.0,
+  "recall_at_best": 1.0,
+  "honest_verdict": "abstention_no_improvement",
+  "n_questions": 50,
+  "n_violations": 50,
+  "n_fp": 10,
+  "n_tp": 40,
+  "sweep_results": [
+    {
+      "threshold": 0.1,
+      "fp_rate": 0.2,
+      "recall": 1.0,
+      "abstention_rate": 0.0
+    },
+    {
+      "threshold": 0.2,
+      "fp_rate": 0.2,
+      "recall": 1.0,
+      "abstention_rate": 0.0
+    },
+    {
+      "threshold": 0.3,
+      "fp_rate": 0.0,
+      "recall": 0.0,
+      "abstention_rate": 1.0
+    },
+    {
+      "threshold": 0.4,
+      "fp_rate": 0.0,
+      "recall": 0.0,
+      "abstention_rate": 1.0
+    },
+    {
+      "threshold": 0.5,
+      "fp_rate": 0.0,
+      "recall": 0.0,
+      "abstention_rate": 1.0
+    },
+    {
+      "threshold": 0.6,
+      "fp_rate": 0.0,
+      "recall": 0.0,
+      "abstention_rate": 1.0
+    },
+    {
+      "threshold": 0.7,
+      "fp_rate": 0.0,
+      "recall": 0.0,
+      "abstention_rate": 1.0
+    },
+    {
+      "threshold": 0.8,
+      "fp_rate": 0.0,
+      "recall": 0.0,
+      "abstention_rate": 1.0
+    },
+    {
+      "threshold": 0.9,
+      "fp_rate": 0.0,
+      "recall": 0.0,
+      "abstention_rate": 1.0
+    }
+  ],
+  "schema": [
+    "abstention_rate_at_best",
+    "best_threshold",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "fp_rate_baseline",
+    "fp_rate_best_abstention",
+    "fp_rate_no_abstention",
+    "honest_verdict",
+    "metrics_used",
+    "n_fp",
+    "n_questions",
+    "n_tp",
+    "n_violations",
+    "random_seed",
+    "recall_at_best",
+    "reproducibility_checksum",
+    "run_date",
+    "started_at",
+    "status",
+    "sweep_results",
+    "title"
+  ],
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+  "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+  "flagged_adversarial_restored_fields": [
+    "flagged_adversarial",
+    "corrigendum_pending",
+    "corrigendum_note"
+  ],
+  "restored_2026_08_03_keys": [
+    "flagged_adversarial",
+    "corrigendum_pending",
+    "corrigendum_note",
+    "flagged_adversarial_restoration_note",
+    "flagged_adversarial_restored_fields"
+  ],
+  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8.",
+  "provenance_timestamp_corrigendum_20260803": "Corrigendum 2026-08-03. The run_date/started_at/finished_at fields in this artifact are NOT the provenance of the original experiment. Before conductor commit 4b7c813d28 they read run_date=20260726, started_at=finished_at=2026-07-26T22:05:36Z (see git show 509b3ed0e8:results/experiment_696_icalm_abstention.json). They were overwritten by a `pytest tests/python` child that re-executed the experiment module in place, then swept in by `git add -A`; duration_s is unchanged at 0.002, confirming a trivial re-execution rather than a new measurement. The prior values are recorded here rather than restored over the current ones, per fail-forward + never-prune: the numbers are kept as the conductor left them, and the dating is corrected in the record instead of silently."
+}

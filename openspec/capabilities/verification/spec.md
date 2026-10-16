@@ -55621,3 +55621,19 @@ Scoped tests, real private CLI, Ruff check/format, strict mypy, spec coverage an
 100 percent new statement coverage precede atomic publication. Fresh replay
 rejects absent primitives, owned failures and rehashed tampering. Required owned
 failures disqualify; unchanged external authority blockage remains blocked.
+## REQ-VERIFY-8566: Seal the old failure and replay immutable controls
+
+Tests SHALL precede code. Ordinary tests assert the old audit's critical failure;
+a private red harness records the proposed proof contract's disagreement. Scoped
+serial children preserve collected IDs and exact union, exits, clocks and log
+hashes. Run private E2E-018/021, unchanged scanners, Ruff, strict mypy and spec
+coverage. Require100 percent newly owned statements including CLI rejection.
+Cold replay rejects absent inputs, owned failures and self-consistently rehashed
+tampering. Validate final bytes atomically and exercise actual consumers.
+
+### SCENARIO-VERIFY-8566-REPLAY
+
+Sealed primitive operands reconstruct classifications in a fresh bounded process.
+Owned validation failure disqualifies; missing external authority blocks. Shared
+validator, conductor, active roadmap, historical bytes and quarantines stay fixed.
+Conductor owns ops/status/changelog/traceability reconciliation for this run.
