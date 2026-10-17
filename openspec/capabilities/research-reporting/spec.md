@@ -102179,3 +102179,18 @@ dependencies. Independent learning/resident inputs and explicit V738 canary
 revision retain their own gates. Terminal receipts under Exp8602 raw primitives
 record actual scoped validation and any external authority blockage. The conductor
 owns ops/status/changelog and traceability reconciliation.
+## REQ-REPORT-8603: Bind a fresh deadline qualification to original authority
+
+Exp8603 SHALL preserve Exp8580/8581 authority and the disqualified Exp8582/8592
+bytes. It SHALL report no_model_load, empty MODEL_SPECS, zero current language
+model calls and the actual 109-coefficient spline checkpoint. Readiness qualifies
+execution only. Both generalization scores remain zero. Preserve historical
+nulls and quarantines. Same-roadmap outputs remain future dependencies.
+
+### SCENARIO-REPORT-8603-BOUNDARY
+
+Three deadline rows identify below, exact and above boundary observations,
+diagnostic elapsed values, failure fields and cleanup. Original and executed node
+IDs, measured anchors, kernel independence and current revision references bind
+the receipt to this invocation. A required owned failure is disqualified; an
+unchanged external failure is blocked. Neither outcome is positive.

@@ -56142,3 +56142,27 @@ controls exercise registration, original authority reuse, optional CUDA failure,
 owned failure and cold tamper rejection. The runner preserves collected node IDs,
 disjoint E2E consumers, coverage, actual scanner findings and atomic publication
 receipts. Terminal checks determine acceptance; no scientific benefit is claimed.
+## REQ-VERIFY-8603: Qualify the exact isolated deadline edge
+
+Execute the real Exp8582 runner with a runner-owned finite clock. Preserve all
+original assertions and real numerical clocks. Below 3600 seconds passes the
+deadline predicate. Exactly 3600 and above fail it. Record the separate diagnostic
+read and normal scratch cleanup. No case can claim scientific benefit.
+Collect the original 27 nodes, affected Exp8592 nodes and new regression nodes
+before bounded disjoint children. Cover all new statements and the four original
+clock statements, including the diagnostic read at original line 94. Keep actual
+CLI coverage separate from mocked imported dispatch. Failed owned checks retire
+this scope. Conductor owns status and traceability reconciliation.
+
+### SCENARIO-VERIFY-8603-EDGE
+
+A three-read clock supplies start, predicate and diagnostic elapsed time. Kernel
+updates cannot consume its reads. Exp8592 coverage reproduces missing line 94
+privately; the new expired-path nodes execute it without a global clock patch.
+
+### SCENARIO-VERIFY-8603-REPLAY
+
+Fresh bounded replay authenticates original authority, immutable fixtures,
+current source/tests, exact node outcomes and coverage. Missing inputs, failed
+owned checks and rehashed tampering cannot earn readiness. Private E2E-018/021,
+strict row lint and unchanged adversarial verification precede atomic publication.
