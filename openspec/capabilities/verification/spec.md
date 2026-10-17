@@ -2,6 +2,21 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8617: Replay original private release operands
+
+Cold replay must authenticate independently pinned Git blobs and original methods
+authority, rebuild derived rows and reject missing inputs and self-consistently
+rehashed tampering. Bound downloads to ten30-second requests,300seconds and100MiB.
+Collect original test IDs before disjoint bounded children; retain exact union,
+logs, exits and Coverage.py executable statement accounting for all owned code.
+
+### SCENARIO-VERIFY-8617-CONTROLS
+
+Valid private evidence passes standalone replay. Changed aggregates, swapped
+automatic targets, missing source and changed original authority fail. Private
+publication readers and E2E-018/021 keep their original assertions. Killed children
+fail validation. Current language-model calls and model loads remain zero.
+
 ## REQ-VERIFY-8441: Qualify continuity with real private CLI children
 
 Freeze scoped commands, check tools, disk-backed scratch, memory and4800-second

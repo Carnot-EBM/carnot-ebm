@@ -1,3 +1,21 @@
+## REQ-REPORT-8617: Authenticate private Trivia+ release custody
+
+Pin author README, data details, license, checker and parquet to one immutable
+Git revision. Keep source and transformed text outside results in private local
+storage. Reconstruct human sentence votes using contradicts > not-mentioned >
+supports > supplementary ties. Preserve missing votes and disagreement; exclude
+automatic/noisy targets. Internal evaluation only; no text redistribution or
+product-training permission follows. Seal the Exp8615 label-blind roster before
+opening targets and retain all sibling IDs across official splits. Unknown prior
+exposure remains unknown. Readiness is separate from independent generalization.
+
+### SCENARIO-REPORT-8617-CUSTODY
+
+Given authenticated complete source, answer and human annotations, emit exact
+hashes, source lengths, support and aggregation rows. Missing custody blocks;
+owned validation failure disqualifies. All five readiness fields and the combined
+coverage readiness field are numeric 0/1. No detector-benefit claim is made.
+
 ## Planned V737 studies — 2026-10-16
 
 ### REQ-REPORT-V737-CONTRACT: Bind the complete staged milestone
