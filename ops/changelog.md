@@ -22451,3 +22451,4 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
 - 2026-10-17: Map qualified resident operations to existing boards and sampling boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_v738_resident_hardware_boundary; results/experiment_8600_v738_resident_hardware_boundary.json
 - 2026-10-17: Reconcile eleven outcomes and close unchanged nulls with exact evidence requirements (⚠️ Blocked) — honest_verdict=complete_blocked_v738_capstone; results/experiment_8601_v738_capstone.json
 - 2026-10-17: Bind thirteen tasks and ingest long-context evidence and serving methods (⚠️ Blocked) — honest_verdict=complete_blocked_v739_contract_methods; results/experiment_8602_v739_contract_methods.json
+- 2026-10-17: Qualify the exact expired-deadline path under isolated clocks (⚠️ Research Finding) — honest_verdict=complete_disqualified_v739_deadline_edge_qualification; results/experiment_8603_v739_deadline_edge_qualification.json
