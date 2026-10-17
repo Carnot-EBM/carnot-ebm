@@ -56035,3 +56035,19 @@ and traceability reconciliation. Never run the full suite or historical controll
 An unchanged scanner returns warning exit1 for the private original candidate.
 Publication refuses that candidate. A truthful corrected candidate passes exact
 byte checks and the owned provenance consumer without clearing historical flags.
+## REQ-VERIFY-8596: Qualify resident provenance and exact publication bytes
+
+Write requirement-linked failing tests before implementation. Require100 percent
+new statement coverage including real child routes and rejection paths. Retain
+exact collected node unions, private E2E-018/021 authority, command exits, clocks
+and log hashes. Run scoped lint, strict types and spec coverage. Replay immutable
+primitives in a fresh bounded process before unchanged publication consumers.
+Rehashed tampering and owned failures must not acquire readiness. Unchanged
+external blockage remains blocked. Shared ops reconciliation belongs to conductor.
+
+### SCENARIO-VERIFY-8596-REJECT
+
+Missing upstream bytes, changed seals, false readiness, wrong descriptors and
+self-consistently rehashed summaries fail authentication or replay. Preserve
+warning exits and actual downstream acceptance. Do not run historical validation
+controllers or the full repository suite.

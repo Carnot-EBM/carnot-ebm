@@ -102021,3 +102021,21 @@ The owned consumer accepts only the original sealed head descriptor. Absent,
 wrong-head and self-consistently rehashed inconsistent descriptors fail. A private
 corrected candidate must earn unchanged publication, row and adversarial checks.
 Fresh serving costs belong to Exp8596. Generalization scores remain zero.
+## REQ-REPORT-8596: Measure fresh resident cost with authenticated head identity
+
+Authenticate Exp8591 resident and methods gates and Exp8593 measurement readiness
+before collecting fresh clocks. Bind the exact Exp8431 spline9 seed17 checkpoint,
+scaler, native extension and typed policy. Reuse the original Exp8572 parity and
+complete four-arm implementation only when its sealed dependencies match.
+Preserve64 stable answers, lengths1/4/16, batches1/8, ten paired repetitions,
+balanced rotation, seed7368573 and10000 paired bootstrap draws. Include startup,
+all numerical work, transport and shutdown. Numerical head inference uses
+no_model_load, empty MODEL_SPECS and zero current language-model calls.
+
+### SCENARIO-REPORT-8596-FRESH
+
+All240 fixed arm/repeat cells retain primitives or explicit censoring reasons.
+Primary native effect compares resident_native with resident_python at length16
+and batch1. Python lifecycle benefit stays separate. A qualified null remains
+ready. Preserve the Exp8559 cold null and quarantined Exp8584 findings and bytes.
+Accept a valid runtime date without requiring the planning date.

@@ -1,0 +1,64 @@
+{
+  "cost_consumer": {
+    "lifecycle_contrast": {
+      "baseline": "cold_python",
+      "batch": 1,
+      "contrast": "lifecycle",
+      "full_parity": true,
+      "length": 16,
+      "p95_request_latency_ratio": 0.903149598723823,
+      "paired_repeats": 10,
+      "throughput_ratio_ci95": [
+        11.462653466221406,
+        11.702661328052224
+      ],
+      "treatment": "resident_python"
+    },
+    "passed": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8596_v738_resident_complete_cost.json",
+    "primary_contrast": {
+      "baseline": "resident_python",
+      "batch": 1,
+      "contrast": "native",
+      "full_parity": true,
+      "length": 16,
+      "p95_request_latency_ratio": 0.836081817018632,
+      "paired_repeats": 10,
+      "throughput_ratio_ci95": [
+        1.0740525244779107,
+        1.105777420052135
+      ],
+      "treatment": "resident_native"
+    },
+    "sha256": "sha256:5dd00385cb4f330b900f842af1a43b580f06c5948a658c36ce3b01d35b46ac6c"
+  },
+  "publication": {
+    "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8596_v738_resident_complete_cost.json",
+    "primary_sha256": "sha256:5dd00385cb4f330b900f842af1a43b580f06c5948a658c36ce3b01d35b46ac6c",
+    "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8596_v738_resident_complete_cost/validators/5dd00385cb4f330b900f842af1a43b580f06c5948a658c36ce3b01d35b46ac6c.json"
+  },
+  "selected_identity": {
+    "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8596_v738_resident_complete_cost.json",
+    "document_sha256": "sha256:5dd00385cb4f330b900f842af1a43b580f06c5948a658c36ce3b01d35b46ac6c",
+    "document_status": "\u26a0\ufe0f Research Finding",
+    "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8596_v738_resident_complete_cost.json",
+    "gate_sha256": "sha256:5dd00385cb4f330b900f842af1a43b580f06c5948a658c36ce3b01d35b46ac6c",
+    "gates": [
+      {
+        "actual": 1,
+        "artifact_field": "resident_cost_ready_score",
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8596_v738_resident_complete_cost.json",
+        "artifact_sha256": "sha256:5dd00385cb4f330b900f842af1a43b580f06c5948a658c36ce3b01d35b46ac6c",
+        "expected": 1,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=1 == expected=1",
+        "upstream": "exp8596-resident-complete-cost",
+        "upstream_final": true
+      }
+    ],
+    "passed": true,
+    "summary": "1 gate(s) satisfied",
+    "task_id": "exp8596-resident-complete-cost"
+  }
+}
