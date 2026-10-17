@@ -22435,3 +22435,4 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
   required review. These were this planner's additive architecture, traceability,
   status and changelog edits. Their contents were preserved; only that run's
   identified marker was deliberately removed before a quiet-tree rerun.
+- 2026-10-17: Bind eleven tasks and ingest causal learning and evidence criteria (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v738_contract_methods; results/experiment_8591_v738_contract_methods.json
