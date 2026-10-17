@@ -56215,3 +56215,18 @@ Verified 2026-10-17: all four outside-checkout worker arms and the standalone
 CLI pass without `PYTHONPATH`. The full 122-node union and private E2E-018/021
 pass; combined owned statement coverage is 552/552, with fresh replay, tamper
 controls and unchanged publication validators passing.
+
+## REQ-VERIFY-8613: Validate the operation boundary without historical controllers
+
+Write focused tests first. Require100 percent newly owned statements including
+real CLI children and rejection paths. Freeze original node IDs before bounded,
+disjoint test children with -n0, cleared addopts and no pytest coverage. Run
+private E2E-018/021 publication readers, scoped lint, format, strict types and
+spec coverage. Retain command exits, clocks and log hashes. Validate exact
+candidate bytes before atomic publication; preserve actual downstream findings.
+
+### SCENARIO-VERIFY-8613-CONTROLS
+
+Private CLI runs cover missing inputs, owned failure, valid cold replay, bad
+dates and rehashed tampering. Cold replay never reruns measurement or old
+validation controllers. Failed owned checks forbid positive readiness.

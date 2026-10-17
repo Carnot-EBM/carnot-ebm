@@ -1,0 +1,52 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 18 items
+
+<Dir carnot>
+  <Dir tests>
+    <Dir python>
+      <Module test_experiment_7891_v685_authority_lifecycle.py>
+        REQ-REPORT-7891-V685: private authority lifecycle and CLI checks.
+        <Function test_matching_activation_and_consumed_stage>
+          SCENARIO-REPORT-7891-LIFECYCLE: only matching active bytes prove activation.
+        <Function test_old_active_and_changed_full_task_fail>
+          SCENARIO-REPORT-7891-LIFECYCLE: prompt and lineage belong to the digest.
+        <Function test_core_mutations_fail[id]>
+          SCENARIO-REPORT-7891-LIFECYCLE: every visible core operand is checked.
+        <Function test_core_mutations_fail[title]>
+          SCENARIO-REPORT-7891-LIFECYCLE: every visible core operand is checked.
+        <Function test_core_mutations_fail[phase]>
+          SCENARIO-REPORT-7891-LIFECYCLE: every visible core operand is checked.
+        <Function test_core_mutations_fail[deliverable]>
+          SCENARIO-REPORT-7891-LIFECYCLE: every visible core operand is checked.
+        <Function test_core_mutations_fail[MODEL_SPECS]>
+          SCENARIO-REPORT-7891-LIFECYCLE: every visible core operand is checked.
+        <Function test_core_mutations_fail[inference_substrate_class]>
+          SCENARIO-REPORT-7891-LIFECYCLE: every visible core operand is checked.
+        <Function test_core_mutations_fail[gated_on]>
+          SCENARIO-REPORT-7891-LIFECYCLE: every visible core operand is checked.
+        <Function test_missing_digest_and_inconsistent_design_count_fail>
+          SCENARIO-REPORT-7891-LIFECYCLE: both design bindings are required.
+        <Function test_wrong_staged_digest_and_active_count_fail>
+          SCENARIO-REPORT-7891-LIFECYCLE: each authority has its own task checks.
+        <Function test_immutable_snapshot_refuses_corruption>
+          SCENARIO-REPORT-7891-LIFECYCLE: a prior snapshot cannot be overwritten.
+        <Function test_cli_private_success_failure_and_replay>
+          SCENARIO-REPORT-7891-VALIDATION: real CLI rejects a changed candidate.
+        <Function test_terminal_recheck_failure_refuses_publication>
+          SCENARIO-REPORT-7891-VALIDATION: failed final bytes cannot publish.
+        <Function test_child_deadline_seals_failed_receipt>
+          SCENARIO-REPORT-7891-VALIDATION: a timed-out check cannot pass.
+        <Function test_authority_and_required_check_verdicts>
+          SCENARIO-REPORT-7891-VALIDATION: readiness follows authority and checks.
+        <Function test_terminal_recovery_rechecks_disqualified_bytes>
+          SCENARIO-REPORT-7891-VALIDATION: a repaired verdict gets checked again.
+        <Function test_direct_replay_date_and_publication_hash_exits>
+          SCENARIO-REPORT-7891-VALIDATION: CLI exits match replay and byte checks.
+
+========================= 18 tests collected in 2.12s ==========================

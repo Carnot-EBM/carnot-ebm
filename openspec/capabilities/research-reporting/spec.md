@@ -102233,3 +102233,27 @@ Verified 2026-10-17 after private import repair: all 122 affected tests and all
 owned validation receipts pass with 100 percent coverage of 552 statements.
 The final publication remains blocked on the original Exp8602 methods authority;
 readiness stays zero and no benchmark or independent science credit is awarded.
+
+## REQ-REPORT-8613: Map service and sparse learning to supported operations
+
+Authenticate original board and cost publication bytes without device commands.
+Use qualified Exp8610 complete disjoint clocks only when available; otherwise
+retain Exp8596 as historical resident evidence. Missing Exp8605 update costs
+remain null. Keep resident inference and delayed learning matrices separate.
+Charge fixed host work once in conditional zero-cost ceilings. Preserve board
+limits, original authority, all nulls and quarantines. Mapping readiness does
+not establish physical readiness, learning benefit or NFR01.
+
+### SCENARIO-REPORT-8613-BOUNDARY
+
+The historical resident head has nine inputs and109 coefficients. KV260 retains
+quadratic Ising k<=5 support. PolarFire Linux CPU execution is distinct from
+fabric acceleration. GateMate requires changed cable/port/power evidence,
+ID0x20000001, source/build hashes, n16 flash and sample-hash smoke. Literature
+on sampling and argmin does not install deterministic spline evaluation.
+
+### SCENARIO-REPORT-8613-REPLAY
+
+Missing, altered or self-consistently rehashed operands cannot qualify costs.
+Cold replay checks immutable original pins and reconstructs every derived field.
+Unchanged external failure is blocked; failed owned checks disqualify.

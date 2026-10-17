@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 12 items
+
+<Dir carnot>
+  <Dir tests>
+    <Dir python>
+      <Module test_primary_publication_7928.py>
+        Exercise actual consumers and byte custody for REQ-REPORT-7928.
+        <Function test_nested_reports_and_terminal_revalidation>
+          SCENARIO-REPORT-7928-1: newer nested reports cannot shadow the primary.
+        <Function test_legacy_shadow_is_required_negative>
+          SCENARIO-REPORT-7928-1: retain the actual newest-top-level failure.
+        <Function test_validation_rejects_unsafe_primary[mutation0-producer_identity]>
+          REQ-REPORT-7928: reject unsafe bytes before exposing them.
+        <Function test_validation_rejects_unsafe_primary[mutation1-producer_identity]>
+          REQ-REPORT-7928: reject unsafe bytes before exposing them.
+        <Function test_validation_rejects_unsafe_primary[mutation2-terminal_verdict]>
+          REQ-REPORT-7928: reject unsafe bytes before exposing them.
+        <Function test_validation_rejects_unsafe_primary[mutation3-terminal_verdict]>
+          REQ-REPORT-7928: reject unsafe bytes before exposing them.
+        <Function test_validation_rejects_unsafe_primary[mutation4-unsafe_readiness]>
+          REQ-REPORT-7928: reject unsafe bytes before exposing them.
+        <Function test_validation_rejects_unsafe_primary[mutation5-unsafe_readiness]>
+          REQ-REPORT-7928: reject unsafe bytes before exposing them.
+        <Function test_validation_rejects_unsafe_primary[mutation6-unsafe_readiness]>
+          REQ-REPORT-7928: reject unsafe bytes before exposing them.
+        <Function test_invalid_names_shapes_and_failed_validator>
+          REQ-REPORT-7928: malformed identity and failed checks leave no primary.
+        <Function test_conflicts_stale_hashes_and_concurrent_replacement>
+          SCENARIO-REPORT-7928-1: serialize replacements and reject stale bindings.
+        <Function test_real_readers_missing_malformed_disqualified_absent>
+          SCENARIO-REPORT-7928-1: record reader failures without changing APIs.
+
+========================= 12 tests collected in 2.14s ==========================
