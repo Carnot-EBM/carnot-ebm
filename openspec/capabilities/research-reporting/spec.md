@@ -1,3 +1,29 @@
+## REQ-REPORT-8620: Census complete Trivia+ extraction before labels
+
+Exp8620 SHALL authenticate qualified Exp8617 descriptors and Exp8615 methods,
+retain all siblings of the sealed 128-question roster, and run the shipped
+extract and source_alignment.prepare in a child receiving only opaque IDs and
+complete source/answer bytes. Keep limits128 windows and16 answer units.
+Seal four fixed lexical scores before opening human votes: numeric mismatch
+maximum, negation mismatch maximum, uncovered fraction mean, and1-overlap mean.
+Do not run the nine-input head: released p2 confidence q is unavailable.
+
+### SCENARIO-REPORT-8620-CENSUS
+
+Preserve complete lengths, raw/deduplicated window counts, answer units, values
+and every abstention. Report window strata1..32/33..128/>128 crossed with answer
+units<=16/>16, unsupported/contradicted and unanimous/disputed human labels.
+Recompute strict human aggregation separately from raw votes. A complete honest
+census earns extraction_audit_ready_score1 even with no usable score rows.
+
+### SCENARIO-REPORT-8620-SUPPORT
+
+Four AUROCs are descriptive exploratory comparisons; select no winner. Bootstrap
+whole question clusters10000 draws, seed7398607. Comparative intervals require
+32 usable clusters and8 clusters supporting each class; retain insufficient
+support and selective coverage explicitly. Unknown historical overlap limits
+independence. No thresholds, fitting, calibration or Qwen-performance claim.
+
 ## REQ-REPORT-8617: Authenticate private Trivia+ release custody
 
 Pin author README, data details, license, checker and parquet to one immutable

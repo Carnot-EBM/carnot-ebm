@@ -56298,3 +56298,14 @@ REQ-VERIFY-8616 validation reserve correction: the measurement window remains
 4500 seconds. Initial killed reader children disqualify that attempt and remain
 in immutable diagnostics. A corrected revision must earn fresh passing reader
 and owned-control receipts without changing the learner deadline or assertions.
+## REQ-VERIFY-8620: Bind extraction replay to original operands
+
+### SCENARIO-VERIFY-8620-CONTROLS
+
+Test complete-source rejection, empty inputs, missing authority, owned failure,
+and self-consistently rehashed derived tampering. Cold replay SHALL authenticate
+original release Git blobs, methods pins, source/code hashes, predictor order,
+feature seal and all derived aggregates. Require100 percent owned executable
+statement coverage including real child CLI and rejection paths; preserve exact
+collected test unions and bounded command/log receipts. Run private E2E-018/021,
+primary publication and unchanged adversarial/row validators before publication.
