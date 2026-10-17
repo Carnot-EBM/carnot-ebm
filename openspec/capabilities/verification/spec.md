@@ -56106,3 +56106,16 @@ or the full repository suite. Validate exact final bytes before atomic publicati
 Fresh private CLI runs cover missing operands, owned failure, valid replay and
 rehashed tampering. Run unchanged adversarial and strict row validators and both
 publication consumers. Preserve actual warning exits and acceptance outcomes.
+
+## REQ-VERIFY-8601: Qualify bounded capstone and exact publication bytes
+
+Run focused tests, private E2E-018/021, Ruff, strict types and scoped spec tracing.
+Require100 percent newly owned statements including real CLI children. Collect
+original nodes before disjoint serial shards. Keep exact commands, exits, clocks
+and log hashes. Do not run historical validation controllers or the full suite.
+
+### SCENARIO-VERIFY-8601-CONTROLS
+
+Fresh CLI replay accepts immutable primitives and rejects missing inputs, owned
+failures and self-consistently rehashed tampering. Preserve actual scanner exits
+and downstream acceptance. Validate final bytes before atomic publication.

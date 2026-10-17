@@ -102118,3 +102118,26 @@ Missing or unqualified Exp8596 leaves resident ceilings null. Fresh replay rejec
 self-consistently rehashed summaries, primitives and source drift. Owned required
 failure disqualifies; unchanged absent compatible hardware blocks. Both learning
 scores remain zero. Conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8601: Reconcile eleven V738 dispositions from original evidence
+
+Bind all eleven full task objects, original primary hashes, primitive operands,
+terminal sidecars and conductor pre-gates. Missing cascades remain missing.
+Preserve V737 twelve-slot history and the archive ending at V736. Retain source,
+cold-cost and ARC nulls, label rejections, rights limits and all quarantines.
+Separate qualified resident lifecycle results from native-kernel benefit.
+MedExpert audit completion supplies no independent evaluation. A repeated clock
+qualification failure closes unchanged retries with its precise failed assertion.
+Runtime calendar dates identify invocations. Use no_model_load and zero LLM calls.
+Conductor owns ops/status/changelog/traceability reconciliation.
+
+### SCENARIO-REPORT-8601-ACCOUNTING
+
+All eleven dispositions survive optional hardware absence. Qualified nulls close
+unchanged scopes. Independent generalization and generalized learning stay zero.
+Original G1 through G4 determine readiness without publication authorization.
+
+### SCENARIO-REPORT-8601-SAMPLES
+
+Recompute small learning losses, retention contrasts, resident session totals and
+ARC event reductions from immutable operands in fresh bounded processes.

@@ -1,0 +1,68 @@
+{
+  "current_dependency": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+    "sha256": "sha256:18dfabaaed325c91bd03cd584c8f7b945a068529f00cbd68e45c0e0c013d49d2"
+  },
+  "current_validator_primary": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8591_v738_contract_methods/sealed/7656f6f49b69237528263cd6dc38ac9503e853b1f53d1b5b1037f6510d2892f4.json",
+    "sha256": "sha256:7656f6f49b69237528263cd6dc38ac9503e853b1f53d1b5b1037f6510d2892f4",
+    "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8580_v737_current_validator_qualification.json"
+  },
+  "current_validator_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8580_v737_current_validator_qualification/invocations/1792168387783809980/current_validator_revision.json",
+    "sha256": "sha256:223078ff937b1cceff66d065ac5079274fd52bb194703020990c38cc90c092a5"
+  },
+  "evidence_canary": {
+    "call_deadline_s": 120,
+    "calls": 16,
+    "fit_questions": 4,
+    "inference_substrate_class": "model_bounded_generation",
+    "instruction_paraphrase": "Using only the supplied source, identify the supporting span for this claim; abstain if the source does not support it.",
+    "load_deadline_s": 600,
+    "max_output_tokens": 128,
+    "measurement_cap_s": 2400,
+    "metrics": [
+      "source_sensitivity",
+      "instruction_paraphrase_disagreement"
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "oracle_scope": "source span or abstention only",
+    "paraphrase_preserves": [
+      "claim_bytes",
+      "source_bytes"
+    ],
+    "quantization": "Q4_K_M",
+    "requires_causal_cuda_repair": true,
+    "scope": "bounded diagnostic on exposed fit questions; no detector training or population theorem",
+    "sibling": "first",
+    "temperature": 0,
+    "views": [
+      "source_present",
+      "source_absent",
+      "source_present_contradicted_claim",
+      "source_present_instruction_paraphrase"
+    ]
+  },
+  "evidence_canary_sha256": "sha256:7cfac4e68e44135d8275997f714e7f4229611ff22d34ffb51483701f0b4bde57",
+  "head_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8565_v736_contract_methods/sealed/38db38433d5e2803a7d4b008c88fba5a1a91138abceb42e52f3dadf5b2f10b7f.json",
+    "sha256": "sha256:38db38433d5e2803a7d4b008c88fba5a1a91138abceb42e52f3dadf5b2f10b7f",
+    "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8431_v726_criterion_energy_fit.json"
+  },
+  "original_canary_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8565_v736_contract_methods/sealed/f8ec5af49484f9abda497bfc89aef8a65e4463b0fd32acf1028fae9ca3c3dab7.json",
+    "sha256": "sha256:f8ec5af49484f9abda497bfc89aef8a65e4463b0fd32acf1028fae9ca3c3dab7",
+    "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8552_v735_contract_methods.json"
+  },
+  "original_rejection_controls_preserved": true,
+  "rejected_original_dependency": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+    "sha256": "sha256:16ad1fa750f505182dd996fdd500663d0c777a55a4cd080f377db9ff18cec43c"
+  },
+  "schema": "carnot.v738.canary_revision.v1",
+  "source_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8565_v736_contract_methods/sealed/14e26b0268b08c640909378420ee58d9d5c47c1ca91cad5c49a836c53c3de8a8.json",
+    "sha256": "sha256:14e26b0268b08c640909378420ee58d9d5c47c1ca91cad5c49a836c53c3de8a8",
+    "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8529_v733_incremental_source_audit.json"
+  }
+}
