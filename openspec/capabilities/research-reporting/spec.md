@@ -102375,3 +102375,18 @@ Historical evidence and the original27-node authority remain unchanged.
 Implementation20261017 for REQ-REPORT-8616: the V740 adapter preserves sealed
 Exp8603 bytes, all literal anchors and source-bound parser/bytecode evidence.
 The producer stores current primitives and consumer receipts below its raw path.
+## REQ-REPORT-8621: Bind fresh lean qualification to explicit V740 methods
+
+Exp8621 SHALL authenticate immutable Exp8615 methods and its producer map,
+compare the registered four-arm protocol and every numerical operand by value,
+and qualify fresh invocation evidence without promoting Exp8609. Historical
+Exp8609 replay remains bound to Exp8602 with zero readiness. Qualification
+permits fresh complete clocks only; speed, NFR01 and learning remain unclaimed.
+
+### SCENARIO-REPORT-8621-CURRENT
+
+Given registered V740 authority and fresh four-arm evidence, readiness requires
+all owned checks, exact original 122-node union, subprocess statement coverage,
+cold reconstruction and private publication readers. Missing authority blocks;
+an owned failure disqualifies. Current authority substituted into old evidence
+and self-consistently rehashed changed operands SHALL be rejected.

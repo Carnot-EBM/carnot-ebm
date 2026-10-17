@@ -1,0 +1,71 @@
+{
+  "name": "failed_attempt_cancelled",
+  "passed": false,
+  "verdict_class": "disqualified",
+  "reason": "Historical test_original_authority_checkout failed; cancel private attempt before fixing design sealing; no result promoted.",
+  "terminated_processes": [
+    {
+      "pid": 638391,
+      "command": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_8621_v740_lean_resident_qualification.py",
+        "--date",
+        "20261017"
+      ]
+    },
+    {
+      "pid": 649095,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/var/tmp/carnot8621-validation-g1m7zk_f/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_resident_complete_cost_8584.py::test_registered_roster_and_original_inputs",
+        "tests/python/test_resident_complete_cost_8584.py::test_paired_bootstrap_and_benefit_boundary",
+        "tests/python/test_resident_complete_cost_8584.py::test_real_batched_children_and_rejections",
+        "tests/python/test_resident_complete_cost_8584.py::test_missing_gate_and_owned_failures",
+        "tests/python/test_resident_complete_cost_8584.py::test_cold_replay_and_rehashed_tampering",
+        "tests/python/test_resident_complete_cost_8584.py::test_measure_checkpoint_failures_and_budget",
+        "tests/python/test_resident_complete_cost_8584.py::test_admission_drift_and_unavailable_inputs",
+        "tests/python/test_resident_complete_cost_8584.py::test_replay_rejects_rehashed_bundle",
+        "tests/python/test_resident_complete_cost_8584.py::test_real_worker_negative_frames",
+        "tests/python/test_resident_complete_cost_8584.py::test_deadline_reaps_real_session",
+        "tests/python/test_resident_complete_cost_8584.py::test_worker_saturation_without_hidden_requests",
+        "tests/python/test_resident_complete_cost_8584.py::test_real_private_cli_and_owned_failure",
+        "tests/python/test_resident_complete_cost_8584.py::test_live_deadline_and_error_cleanup",
+        "tests/python/test_resident_complete_cost_8584.py::test_immutable_roster_and_operation_tampering",
+        "tests/python/test_resident_complete_cost_8584.py::test_orchestration_and_downstream_reader",
+        "tests/python/test_resident_complete_cost_8584.py::test_validation_receipts_need_real_bytes",
+        "--junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8621_v740_lean_resident_qualification/invocations/1792275969896605088/nodes-4.xml",
+        "--basetemp=/var/tmp/carnot8621-validation-g1m7zk_f/suite-4"
+      ]
+    },
+    {
+      "pid": 649586,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8584_v737_resident_complete_cost.py",
+        "--worker",
+        "/var/tmp/carnot8621-validation-g1m7zk_f/suite-4/test_measure_checkpoint_failur0/measured/sessions/L1-B8-R3-cold_python/0/config.json",
+        "--config-hash",
+        "sha256:560bca51f7a1486a5374d409e562eff491d21ea02c829f373ec66fbb0c7f4d02",
+        "--arm",
+        "python",
+        "--timeout",
+        "15"
+      ]
+    }
+  ],
+  "wall_ns": 1792276502610317519
+}

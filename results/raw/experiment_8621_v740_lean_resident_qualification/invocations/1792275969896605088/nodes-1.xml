@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="6" time="60.640" timestamp="2026-10-17T18:31:56.322455-04:00" hostname="icbfl1"><testcase classname="tests.python.test_lean_runner_8609" name="test_standalone_cli_imports_without_pythonpath" time="3.087" /><testcase classname="tests.python.test_lean_runner_8609" name="test_private_cli_and_replay" time="52.036" /><testcase classname="tests.python.test_lean_runner_8609" name="test_validation_commands_and_union" time="0.029" /><testcase classname="tests.python.test_lean_runner_8609" name="test_cli_rejects_rehashed_owned_failure" time="0.014" /><testcase classname="tests.python.test_lean_runner_8609" name="test_original_authority_checkout" time="0.856"><failure message="assert False">tmp_path = PosixPath('/var/tmp/carnot8621-validation-g1m7zk_f/suite-1/test_original_authority_checko0')
+
+    def test_original_authority_checkout(tmp_path):
+        """REQ-VERIFY-8609: original nodes execute unchanged against sealed V738 authority."""
+        from carnot.reporting.lean_original_8609 import checkout
+        from carnot.reporting import v738_contract_methods as methods
+    
+        receipt = checkout(tmp_path / "original")
+        root = Path(receipt["root"])
+&gt;       assert methods.authority(root)["ready"]
+E       assert False
+
+tests/python/test_lean_runner_8609.py:122: AssertionError</failure></testcase><testcase classname="tests.python.test_lean_runner_8609" name="test_historical_copy_tampering" time="0.786" /></testsuite></testsuites>

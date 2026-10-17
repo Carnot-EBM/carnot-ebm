@@ -56309,3 +56309,24 @@ feature seal and all derived aggregates. Require100 percent owned executable
 statement coverage including real child CLI and rejection paths; preserve exact
 collected test unions and bounded command/log receipts. Run private E2E-018/021,
 primary publication and unchanged adversarial/row validators before publication.
+## REQ-VERIFY-8621: Preserve historical pins and actual lean child behavior
+
+Exp8621 SHALL reuse original numerical workers, probability tolerance, typed
+decisions, fallbacks and response fields. Private real children outside the
+checkout with PYTHONPATH unset SHALL exercise all four arms, original64,
+knots, neighboring floats, nonfinite and empty inputs, malformed/partial frames,
+duplicates, stale requests, deadlines, backpressure, idle and abnormal exit.
+
+### SCENARIO-VERIFY-8621-CUSTODY
+
+Collect the unchanged 122 historical node identities before bounded disjoint
+execution and preserve V738 provenance authority. Hash-authenticate child
+imports, loaded extension, complete operation partitions, original operands,
+log bytes and fresh cold replay. Reject stale success, orphan children, absent
+inputs, owned failures and rehashed tampering. Require 100 percent Coverage.py
+executable statements in newly owned files, including actual subprocesses.
+
+Historical authority sealing includes both the original design and activation.
+The old checkout regression additionally retains the current live activation as
+its source fixture, so its unchanged assertion can distinguish original replay
+from live authority. Private copies SHALL preserve original test and code bytes.

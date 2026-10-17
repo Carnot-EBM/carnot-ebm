@@ -1,0 +1,26 @@
+....F.                                                                   [100%]
+=================================== FAILURES ===================================
+_______________________ test_original_authority_checkout _______________________
+
+tmp_path = PosixPath('/var/tmp/carnot8621-validation-g1m7zk_f/suite-1/test_original_authority_checko0')
+
+    def test_original_authority_checkout(tmp_path):
+        """REQ-VERIFY-8609: original nodes execute unchanged against sealed V738 authority."""
+        from carnot.reporting.lean_original_8609 import checkout
+        from carnot.reporting import v738_contract_methods as methods
+    
+        receipt = checkout(tmp_path / "original")
+        root = Path(receipt["root"])
+>       assert methods.authority(root)["ready"]
+E       assert False
+
+tests/python/test_lean_runner_8609.py:122: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_lean_runner_8609.py::test_original_authority_checkout
+1 failed, 5 passed, 1 warning in 63.71s (0:01:03)
