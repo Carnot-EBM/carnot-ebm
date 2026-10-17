@@ -22452,3 +22452,4 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
 - 2026-10-17: Reconcile eleven outcomes and close unchanged nulls with exact evidence requirements (⚠️ Blocked) — honest_verdict=complete_blocked_v738_capstone; results/experiment_8601_v738_capstone.json
 - 2026-10-17: Bind thirteen tasks and ingest long-context evidence and serving methods (⚠️ Blocked) — honest_verdict=complete_blocked_v739_contract_methods; results/experiment_8602_v739_contract_methods.json
 - 2026-10-17: Qualify the exact expired-deadline path under isolated clocks (⚠️ Research Finding) — honest_verdict=complete_disqualified_v739_deadline_edge_qualification; results/experiment_8603_v739_deadline_edge_qualification.json
+- 2026-10-17: Build a minimal resident import path with unchanged numerical decisions (⚠️ Research Finding) — honest_verdict=complete_null_v739_lean_resident_prototype; results/experiment_8608_v739_lean_resident_prototype.json
