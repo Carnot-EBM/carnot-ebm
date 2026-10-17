@@ -20458,3 +20458,4 @@ code |
 | 2026-10-17 05:59 UTC | Measure continuous small-head learning with sealed | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8592-learning-clock-qualification.learning_execution_ready_score (actual=0 == expected=1) |
 | 2026-10-17 06:01 UTC | Test later Brier benefit and simultaneous retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8594-causal-brier-stream) |
 | 2026-10-17 06:51 UTC | Measure complete resident cost with authenticated  | OK | 86 passed, 1 warning in 39.49s |
+| 2026-10-17 07:14 UTC | Audit original and assisted MedExpert labels befor | OK | 88 passed, 1 warning in 21.14s |
