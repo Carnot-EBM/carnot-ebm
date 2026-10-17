@@ -20472,3 +20472,4 @@ code |
 | 2026-10-17 13:25 UTC | Test later Brier benefit and simultaneous retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8605-causal-brier-stream) |
 | 2026-10-17 13:25 UTC | Measure complete-source extraction coverage on hum | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8604-triviaplus-release) |
 | 2026-10-17 13:48 UTC | Build a minimal resident import path with unchange | OK | 117 passed, 1 warning in 30.18s |
+| 2026-10-17 15:30 UTC | Qualify lean worker parity isolation and complete- | OK | 114 passed, 1 warning in 154.07s (0:02:34) |
