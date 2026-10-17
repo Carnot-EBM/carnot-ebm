@@ -20467,3 +20467,4 @@ code |
 | 2026-10-17 11:12 UTC | Milestone 2026.10.739 activated | OK | 13 tasks queued |
 | 2026-10-17 11:48 UTC | Bind thirteen tasks and ingest long-context eviden | OK | 122 passed, 1 warning in 162.46s (0:02:42) |
 | 2026-10-17 13:09 UTC | Qualify the exact expired-deadline path under isol | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 91 passed, 1 warning in 462.75s (0:07:42) |
+| 2026-10-17 13:16 UTC | Authenticate Trivia+ human labels and private eval | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8602-contract-methods.methods_ready_score (actual=0 == expected=1) |
