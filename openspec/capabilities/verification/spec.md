@@ -56330,3 +56330,24 @@ Historical authority sealing includes both the original design and activation.
 The old checkout regression additionally retains the current live activation as
 its source fixture, so its unchanged assertion can distinguish original replay
 from live authority. Private copies SHALL preserve original test and code bytes.
+
+## REQ-VERIFY-8622: Reconstruct immutable clocks before atomic publication
+
+Exp8622 SHALL retain bounded child commands, normal exits, durations, log hashes,
+original collected node IDs and their exact disjoint union. Require100 percent
+new owned Coverage.py statements including real worker and rejection paths.
+Cold replay authenticates original authority and reconstructs totals, responses,
+clock partitions, gates and all reductions. Required checks include private
+E2E-018/021, publication readers, Ruff, strict mypy and spec coverage.
+
+### SCENARIO-VERIFY-8622-REPLAY
+
+Fresh bounded processes accept unchanged evidence and reject missing inputs,
+owned failures, self-consistently rehashed aggregate or primitive tampering.
+Final candidate bytes pass original publication, adversarial and strict row
+validators; terminal findings and actual downstream acceptance remain visible.
+
+Implementation20261017 for REQ-VERIFY-8622: private original-reader tests,
+subprocess Coverage.py shards and fresh replay receipts accompany the canonical
+result. Separate finalization directories preserve failed reporting attempts;
+reduction corrections do not alter measurement clocks or historical producers.

@@ -102390,3 +102390,29 @@ all owned checks, exact original 122-node union, subprocess statement coverage,
 cold reconstruction and private publication readers. Missing authority blocks;
 an owned failure disqualifies. Current authority substituted into old evidence
 and self-consistently rehashed changed operands SHALL be rejected.
+
+## REQ-REPORT-8622: Measure complete matched lean resident sessions
+
+Exp8622 SHALL authenticate original Exp8615 methods and Exp8621 readiness before
+fresh original64 panels. All legacy/lean by Python/native arms remain resident.
+Lengths1/4/16, batches1/8 and ten paired repeats retain all240 cells, deterministic
+rotating AB/BA order, host load, complete launch-through-clean-exit clocks,
+per-request responses, RSS and disjoint operation costs. Recompute public features.
+The L16/B1 primary compares lean_native to legacy_native; Python lifecycle and
+lean arithmetic remain separate. Use10000 paired-index bootstrap draws, seed7368573,
+lower95>1, p95<=1.05 and exact decisions. Unchanged lean arithmetic NFR01 requires
+lower95>=10. Readiness is independent of either benefit; no generalization follows.
+
+### SCENARIO-REPORT-8622-COST
+
+Every registered slot is measured or retains its missing reason. First-cell
+forecast never selects favorable cells or reduces repeats. Missing upstream
+blocks, owned failure disqualifies and incomplete owned measurement is partial.
+Original checkpoint, native build, scaler, temperature and historical nulls stay
+bound to producer bytes; imported generator activity is historical only.
+
+Implementation20261017 for REQ-REPORT-8622: `lean_cost_8622`, its bounded
+session/worker modules and thin experiment CLI retain all240 registered cells.
+Completed request counters are reconstructed from immutable frames, including
+when provisional measurement counters differ. Reporting corrections preserve
+all original clocks and source snapshots and use separate validation receipts.
