@@ -9,10 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| CANNOT_DETERMINE | 3 |
+| CHECKABLE | 6 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_8569_causal_brier_stream.json
+## experiment_8583_learning_benefit_audit.json
 
 **CHECKABLE**
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Training was blocked because both upstream readiness checks returned 0 against a required value of 1.
+Experiment 8583 was blocked because upstream `causal_learning_rows_ready_score` was 0, failing the required value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -28,7 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8571_v736_resident_inference_prototype.json
+## experiment_8584_v737_resident_complete_cost.json
 
 **CANNOT_DETERMINE**
 
@@ -36,15 +36,95 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible text reports a historical timing null, but the artifact’s headline verdict is not shown.
+The fragment reports 240 completed measurements, but the headline verdict is not visible.
 
 ## WHAT IS MISSING
-The artifact cuts off inside "historical_cost_null.operation_rows". Actual values for "honest_verdict", "verdict_class", "prototype_ready_score", and "required_checks_passed" are absent; these names appear only in "field_principles".
+The artifact ends mid-string inside "field_principles.honest_verdict"; the actual verdict and supporting results are unavailable. "acceptance_gates" and "completed_count" are present but do not establish a comparative claim or blocked outcome.
 
 ## THE CHECK A READER CANNOT DO
-Does the artifact’s final verdict report successful prototype qualification or a blocker?
+Does the completed artifact claim a comparative benefit, report a blocker, or make no claim?
 
-## experiment_8572_v736_resident_inference_qualification.json
+## experiment_8585_v737_hallutruth_release_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The 4,000-row release audit completed as a null, making no comparative performance claim and documenting reasons for failed eligibility gates.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8586_qwen_evidence_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The run was blocked because canary_inputs_ready_score and runtime_repair_ready_score each equaled 0 when their gates required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8587_v737_arc_publication_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+ARC publication and terminal replay qualification passed, with no scientific-benefit claim and with per-panel and per-check receipts recorded.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8588_v737_arc_capability_panel.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The arm-support and useful-efficiency gates are unmet, and no scientific reasoning benefit is claimed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8589_v737_resident_hardware_boundary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Resident acceleration is unmeasured and acquisition is unauthorized because qualified resident costs and compatible device execution are missing, with failed checks and observed values recorded in "gate_check_summary".
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8590_v737_capstone.json
 
 **CANNOT_DETERMINE**
 
@@ -52,90 +132,10 @@ Does the artifact’s final verdict report successful prototype qualification or
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible fragment claims clock partitioning passed, but the overall headline claim cannot be identified.
+The visible excerpt reports administrative completion and ARC-panel qualification, with learning benefit and resident cost unqualified.
 
 ## WHAT IS MISSING
-The artifact is truncated mid-entry in "clock_partition_receipt.sessions[].intervals". "acceptance_gates" is present, but the overall verdict and any later comparative results or blocker diagnostics are unavailable.
+The artifact cuts off inside "historical_model_provenance"; its top-level verdict and any remaining supporting rows are unavailable. "acceptance_gates" is present. Blocker diagnostics are present in "blocked_inputs" → "source_gates", including failed checks and expected/observed values.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact provide evidence sufficient to check its headline verdict?
-
-## experiment_8573_resident_complete_cost.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Experiment 8573 was blocked because upstream `methods_ready_score` was 0, failing the required value of 1, as recorded in `gate_check_summary` and `gates_evaluated`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8574_qwen_evidence_canary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The canary was blocked because `methods_ready_score` and `runtime_repair_ready_score` each equaled 0 while their gates required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8575_arc_publication_qualification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Execution was blocked because upstream `exp8565-contract-methods.methods_ready_score` was 0, while the gate required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8577_v736_resident_hardware_boundary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Hardware acquisition remains unauthorized because resident CPU benefit is unmeasured, with failed qualification checks documented in "gate_check_summary".
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8578_v736_capstone.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible excerpt reports administrative completion with several acceptance gates false, but the headline verdict is not shown.
-
-## WHAT IS MISSING
-The artifact is truncated mid-string inside "historical_model_provenance". The remaining verdict and any blocker diagnostics are unavailable; the visible "blocked_inputs" entry has "checks": [], while "downstream_consumer.gates" records a passing check.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact explain which failed check caused the "external_blocked_producer" disposition?
+Does the reported ARC-panel qualification have supporting per-unit metrics in the complete artifact?

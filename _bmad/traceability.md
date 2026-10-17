@@ -4104,3 +4104,18 @@ The V734 active queue and conductor remain unchanged.
 Scoped Ruff, strict mypy and spec tracing passed. The full repository spec audit
 retains 1,142 existing missing references. Historical verdicts retain their
 authority; this entry records code verification only.
+
+## 2026-10-16 — Planned V738 research milestone
+
+| Requirement | Planned tasks and evidence | Status |
+|---|---|---|
+| REQ-REPORT-V738-PLAN; FR-09/10 | Exp8591 exact eleven-object table/JSON/YAML contract, digest, gates and twelve authority mutations | Staged; not activated |
+| REQ-REPORT-V738-STUDIES; FR-06/11 | Exp8592 clock isolation; Exp8594 fresh delayed small-head training; Exp8595 independent benefit/retention | Planned; V737 learning remains disqualified |
+| REQ-REPORT-V738-STUDIES; FR-05/08/NFR-01 | Exp8593 actual-head provenance; Exp8596 fresh complete resident costs | Planned; historical cold null and quarantined timing preserved |
+| REQ-REPORT-V738-EVIDENCE; FR-12 | Exp8597 original/assisted MedExpert label authority and release eligibility | Planned; no detector fit or independent win |
+| REQ-REPORT-V738-EVIDENCE | Exp8598 bounded mandated-Qwen canary; Exp8599 cross-game live-outcome support; Exp8600 board boundaries; Exp8601 closure | Planned; optional resources cannot block CPU science |
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Queue: `research-roadmap-next.yaml`. Preserved historical design:
+`openspec/change-proposals/research-roadmap-v737-preserved-20261016.md`.
+The active V737 roadmap and conductor remain unchanged.

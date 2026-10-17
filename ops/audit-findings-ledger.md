@@ -278,3 +278,4 @@ of truth, not this line.)
 | 2026-10-14 | experiment_claim_audit | experiment_8492_v730_publication_cost_model.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-10-15 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_null_delta_descriptor | REAL_BUG | OPEN | |
 | 2026-10-15 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor | REAL_BUG | OPEN | |
+| 2026-10-17 | qa_layer_authenticity_audit | adversarial_verify.py::_cheap_learned_value_marker | REAL_BUG | OPEN | |

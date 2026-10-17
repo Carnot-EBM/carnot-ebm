@@ -53353,3 +53353,94 @@ Selection: qualify the three precisely observed execution failures, then finish
 fixed learning, native inference and live ARC measurements. Add a separate
 HALLMARK revision audit to assess new evaluation operands. Keep independent
 label readiness distinct from a successful download or a coherent benchmark.
+
+## 2026-10-16 — V738 planning scan: causal learning and complete evidence
+
+Recorded before V738 experiment design. This scan checked the eight requested
+arXiv topics and six secondary channels. Revisited papers remain revisits.
+External claims are research leads, not measured Carnot results.
+
+### Findings selected for bounded follow-up
+
+- **Newly inspected evaluation lead:** Huang et al., [Where Does Retrieval-Based
+  Open-Ended Evaluation Fail?](https://arxiv.org/abs/2609.30467), September 24,
+  2026, found through [Hugging Face Papers](https://huggingface.co/papers/2609.30467).
+  The authors distinguish retrieved passages from evidence that supports or
+  contradicts a claim. Their clinician-annotated MedExpert setting motivates
+  an author-release and criterion audit. Verify actual release availability,
+  annotation authority, rights, question overlap and evidence provenance before
+  considering independent evaluation. Medical-domain annotations do not establish
+  general-domain performance. Do not train a detector or treat retrieval relevance
+  as truth in this audit. If release bytes are absent, record that external block.
+- **Revisited online learning:** [Calibeating Made Simple](https://arxiv.org/abs/2603.22167)
+  studies forecast post-processing under proper losses. [Finite-capacity delayed
+  feedback](https://arxiv.org/abs/2606.11711) motivates explicit pending and lost
+  feedback. Complete the registered Brier/log-loss comparison after fixing the
+  observed runner-clock interference. Neither paper supplies a regret guarantee
+  for Carnot's nonlinear, delayed small-head learner.
+- **Revisited implementation path:** [On-chip online KAN learning](https://arxiv.org/abs/2602.02056),
+  revised June 19, exploits local spline support. Its [KANELÉ author repository](https://github.com/Duchstf/KANELE)
+  describes RTL simulation and device-specific build steps. Keep the existing
+  head and evaluate complete resident costs before proposing a new basis or
+  hardware build. A small energy head needs truthful checkpoint provenance even
+  when no language model is loaded.
+- **Newly inspected synthesis:** [Probabilistic Algorithms for Ising Machines
+  from Optimization to Generative AI](https://arxiv.org/abs/2610.03972), October 2,
+  reviews algorithm/hardware co-design, tempering and sampling. Use it to separate
+  an optimization workload, a distribution-sampling workload and a deterministic
+  spline evaluator in the hardware mapping. They are not interchangeable devices
+  or performance claims.
+
+### Other primary topics and decisions
+
+| Topic | Primary source inspected | Decision |
+|---|---|---|
+| EBM verification and reasoning | [EBT](https://arxiv.org/abs/2507.02092); [ARM–EBM v4](https://arxiv.org/abs/2512.15605) | Compatibility and likelihood do not certify factual correctness. Preserve generator weights and retired external-text reranking. |
+| Neural constraint satisfaction | [HardNet++](https://arxiv.org/abs/2604.19669); [AS2](https://arxiv.org/abs/2603.18436) | Structured feasibility and soft fixed points merit future work. They do not resolve language extraction or justify replacing the current learner. |
+| Hallucination labels | [The Labeling Problem](https://arxiv.org/html/2610.08026v1), revisited | Distinguish factual correctness from reference faithfulness. The previously exposed LPHB data cannot become fresh by downloading again. |
+| Agentic verification | [VeriHarness](https://arxiv.org/abs/2610.00972), revisited | Evidence-bearing checks matter more than consensus. Do not transfer its model or benchmark gains to ARC. |
+| Energy-guided generation | [Reward-Guided Decoding](https://arxiv.org/abs/2605.28020), revisited | Defer decoding changes until local runtime and verifier utility qualify. |
+| Ising sampling and FPGA | [Pipelined p-computer](https://arxiv.org/abs/2607.21077), revisited | Include communication and sample-quality checks; no local board acceleration follows from the paper. |
+| KANs | [Sample-Efficiency of KANs](https://arxiv.org/abs/2610.10627), revisited | Preserve fixed training budgets and test isolation. No post-test checkpoint selection. |
+| Continual learning | Proper-loss, delayed-feedback and sparse KAN papers above | Test future predictions and retention separately from successful updates. |
+
+### Secondary sources and retrieval limits
+
+- **OpenReview:** searched NeurIPS/ICML/ICLR energy-based submissions. The
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser
+  challenge. Indexed ICLR PDFs provided leads; arXiv supplied the verified EBT
+  methods. No unread review decision is claimed.
+- **Semantic Scholar:** attempted the citation APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both failed retrieval. Exact-ID site searches gave no reliable citing-paper
+  inventory. Citation coverage is incomplete; no zero-citation claim follows.
+- **Hugging Face Papers:** verification search found MedExpert, VeriHarness,
+  SIFT and OpenHalDet. Technical claims were checked against primary papers.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were month-old. Separate repository search found KANELÉ and
+  [KAEM](https://github.com/thezettascale/KAEM), which is archived. Neither is
+  asserted to be currently trending; no dependency is adopted.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [recursive intelligence](https://extropic.ai/writing/baby-thermo-rsi/).
+  Preserve projected versus measured status and final-logit/data-movement cost
+  exclusions. These posts do not supply local TSU access.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The inspected product page supplies no reproducible architecture update that
+  resolves Carnot's current learning, extraction or deployment gaps.
+
+Selection: qualify the two observed execution defects, finish the fixed learning
+and resident-cost studies, assess MedExpert evidence eligibility, and preserve
+V737's ARC null through a bounded cross-game outcome analysis. Unchanged nulls,
+constructed label sets, old quarantines and unsupported hardware remain closed.
+
+V738 full-text follow-up: [Appendix A.2](https://arxiv.org/html/2609.30467v1)
+selects MedExpert-gold from originally error-marked sentences, then shows
+adjudicators six verifier votes and reasoning. This introduces selection and
+assistance dependencies. Unmarked sentences are not automatically independently
+verified true. The follow-up must distinguish original blinded annotations,
+assisted adjudication and evidence availability; the selected subset cannot
+estimate deployment precision or natural prevalence. The inspected paper did
+not expose an obvious author data link. Release availability remains unverified.

@@ -18387,3 +18387,19 @@ contract, fourteen gate conditions,217 read-first paths and twelve authority
 mutations pass. Scoped Ruff lint and spec tracing pass. Ruff format identifies
 existing formatting debt in unchanged scripts/audit_roadmap_gates.py. Remaining
 activation and repository reconciliation results are recorded in the design.
+
+## 2026-10-16 — V738 research plan staged; execution pending
+
+Milestone2026.10.738 stages exactly eleven tasks, Exp8591–Exp8601, across four
+phases. The design, complete task JSON, digest and YAML agree. The full V737
+design is preserved before replacing vNEXT. The active roadmap and conductor
+remain unchanged; no experiment is activated or executed by this planning task.
+
+V737 qualified current validator/accounting and the ARC publication/panel path.
+Its learner failed a shared-clock regression; its resident benchmark failed
+actual-head provenance. V738 separately qualifies those defects before fresh
+fixed-method learning and timing. It preserves the qualified ARC null and
+analyzes its new cross-game action receipts without rerunning the same panel.
+A primary/secondary literature scan precedes design. MedExpert's assisted labels
+and error-selected subset receive an explicit release/eligibility audit. Optional
+Qwen3.8 generation and hardware evidence stay separate from CPU science.

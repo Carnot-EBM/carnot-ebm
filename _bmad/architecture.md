@@ -614,3 +614,21 @@ measures actual disabled calls separately from progress. The bounded mandated
 Qwen canary remains conditional on changed CUDA evidence. Board operation and
 physical recovery limits remain explicit. These are planned studies; no new
 runtime component, deployment or scientific benefit is implemented by this plan.
+
+## Planned V738 evidence and execution boundaries — 2026-10-16
+
+V738 stages eleven tasks, Exp8591–Exp8601. It retains the current small energy
+head, resident Python/native workers and live ARC agent. An isolated runner
+clock qualifies orchestration without changing numerical timing or derivatives.
+An authenticated head descriptor qualifies real CPU inference provenance through
+unchanged validators. Fresh scientific measurements follow those separate gates.
+The V737 learning and cost artifacts remain disqualified.
+
+The fixed delayed-feedback protocol seals predictions before updates and keeps
+retention labels out of training. Complete resident costs include setup, features,
+transport and shutdown. MedExpert annotation assistance and selection are audited
+before any new evaluation. V737 ARC action receipts support cross-game outcome
+analysis; zero resolved outcomes do not authorize a policy change or repeat panel.
+The optional Qwen canary requires changed CUDA evidence and explicit current
+validator custody. Board support stays operation-specific. These are planned
+studies, not implementation, deployment or new scientific findings.

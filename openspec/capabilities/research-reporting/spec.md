@@ -101910,3 +101910,44 @@ unseen-question, unseen-generator, deployment or natural-prevalence permission.
 Bounded original-operand reductions and actual downstream interfaces reproduce
 qualified diagnostic claims without rerunning experiments or historical suites.
 Unqualified resident speed remains quarantined and cannot revise cold-path nulls.
+
+## REQ-REPORT-V738-PLAN: Complete staged next-milestone authority
+
+The V738 design and staged YAML SHALL describe exactly eleven ordered tasks,
+Exp8591 through Exp8601. The visible table, full-task JSON, canonical task digest
+and end marker SHALL agree. Preserve V737 before replacing vNEXT. Keep the active
+roadmap, conductor and historical evidence unchanged during planning.
+
+### SCENARIO-REPORT-V738-CONTRACT
+
+Schema and gate checks reject missing tasks, reordered IDs, changed prompts,
+changed routes, absent required fields and altered retirement flags. Each gate
+points to an earlier task and an identically spelled required artifact field.
+Every task requires flushed progress, bounded calls and incremental large writes.
+
+## REQ-REPORT-V738-STUDIES: Qualified causal learning and complete cost
+
+Plan separate qualifications for runner-clock isolation and truthful small-head
+provenance. Preserve the original numerical learning and resident-session methods.
+Qualify fresh delayed Brier learning before independent retention/benefit analysis.
+Fresh resident costs SHALL include the full request lifetime. Quarantined V737
+measurements SHALL NOT become accepted science by changing report metadata.
+
+### SCENARIO-REPORT-V738-BOUNDARIES
+
+Use sealed predictions before delayed feedback and keep test/retention labels out
+of training. Keep independent generalization scores zero on exposed data. Source,
+cold inference and ARC nulls stay closed. Optional CUDA absence cannot block CPU
+branches. A repeated external block uses verdict_class=blocked, not partial.
+
+## REQ-REPORT-V738-EVIDENCE: Evaluate provenance before new claims
+
+The staged plan SHALL audit MedExpert original and assisted annotation authority,
+release availability, rights and selection. It SHALL analyze qualified V737 ARC
+cross-game outcomes without rerunning the closed panel or tuning from unresolved
+outcomes. The only LLM task SHALL mandate unsloth/Qwen3.8-27B-GGUF and declare
+model_bounded_generation. Hardware analysis SHALL retain separate KV260,
+PolarFire and GateMate obligations and distinguish sampling from spline inference.
+
+Implementation status: planning contract only; experiments are not implemented,
+executed or activated by this update. Validation is recorded in the design.

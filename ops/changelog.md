@@ -22413,3 +22413,25 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
 - 2026-10-16: Measure adapter-withheld live supervisor effects across the fixed four games (⚠️ Research Finding) — honest_verdict=complete_null_v737_arc_capability_panel; results/experiment_8588_v737_arc_capability_panel.json
 - 2026-10-17: Map qualified resident operations to board support and acquisition needs (⚠️ Blocked) — honest_verdict=complete_blocked_v737_resident_hardware_boundary; results/experiment_8589_v737_resident_hardware_boundary.json
 - 2026-10-17: Reconcile twelve outcomes and retain only evidence-qualified continuation (⚠️ Blocked) — honest_verdict=complete_blocked_v737_capstone; results/experiment_8590_v737_capstone.json
+
+## 2026-10-16 — Stage V738 qualified learning and complete evidence
+
+- Added the complete eleven-task V738 design and matching staged queue,
+  Exp8591–Exp8601, in four phases; preserved the full V737 design.
+- Recorded the requested primary/secondary literature scan before design,
+  including retrieval limits and MedExpert assisted-annotation/selection caveats.
+- Planned isolated clock qualification, actual-head provenance qualification,
+  fresh fixed delayed learning, retention analysis and complete resident costs.
+- Preserved source/cold/ARC nulls and quarantined measurements. Added bounded
+  MedExpert evidence and cross-game ARC outcome analyses; kept optional Qwen
+  generation and per-board support boundaries explicit.
+- Reconciled planning requirements, traceability, architecture and status.
+  Every prompt includes progress, bounded writes/calls, per-unit evidence,
+  closed verdict classes and complete prior-failure metadata.
+- Left the active roadmap, conductor and exclusion manifest unchanged. No
+  experiment, external publication, activation or push occurred.
+- Planning validation initially passed89 tests. The mutation guard observed four
+  documentation changes while tests ran, attributed none to tests, and correctly
+  required review. These were this planner's additive architecture, traceability,
+  status and changelog edits. Their contents were preserved; only that run's
+  identified marker was deliberately removed before a quiet-tree rerun.

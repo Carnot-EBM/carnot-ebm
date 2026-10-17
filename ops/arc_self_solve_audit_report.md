@@ -16,9 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (99 modul
 
 ## Hostile LLM review
 
-**TL;DR:** No self-discovery advance demonstrated. Zero recent solve artifacts; passing reachability lint does not establish autonomous discovery.
+**TL;DR: UNCLEAR — zero supplied artifacts demonstrate a new autonomous solve. Reachability passes; self-discovery remains unproven.**
 
-**Per-artifact:** None supplied (`[]`). No artifact verdicts or actions to assign.
+**Per-artifact:** None (`[]`). No artifact verdicts or recommended actions to assign.
 
-**Pattern watch:** This empty sample cannot establish drift. Reachable solvers can still embody outer-loop reverse-engineering. Require live attempt/runtime-RE traces supporting each claimed solve, plus a registry check for duplicates, before crediting `SELF_DISCOVERY_ADVANCE`.
+**Pattern watch:** Static import reachability cannot distinguish runtime discovery from an outer-loop solution wired into the agent. Also, the [artifact scan](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_self_solve_audit.py:193) requires `offline_reproduced: true` and specific fields; zero matches does not establish zero solve claims.
+
+Credit `SELF_DISCOVERY_ADVANCE` only with live action/observation traces, evidence the model came from those attempts, and a registry novelty check. This empty sample neither demonstrates progress nor establishes outer-loop drift.
 
