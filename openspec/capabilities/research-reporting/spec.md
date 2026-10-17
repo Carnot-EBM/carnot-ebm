@@ -101881,3 +101881,32 @@ Implementation20261016 for REQ-REPORT-8589: resident hardware adapters bind the
 original board report and qualified resident execution primitives independently
 of the unqualified complete-cost producer. The report maps fifty operation/board
 units; its primary and bound terminal sidecar determine current readiness.
+## REQ-REPORT-8590: Reconcile twelve V737 outcomes from original evidence
+
+Exp8590 SHALL emit twelve ordered dispositions from the sealed V737 contract,
+including its unconditional capstone slot. Authenticate original primaries,
+primitive and terminal sidecars, current flags and actual pre-gate reader paths.
+Missing cascade artifacts remain missing. No model loads; current invocation
+counts and both generalization scores remain zero. Recompute a fixed small
+sample of original learning, resident clocks and current ARC operands.
+Separate qualified nulls, exposed conditional benefits, external blockage and
+owned disqualification. Retain Exp8529, Exp8553, Exp8559 and every old quarantine.
+Exp8580/8581 current receipts never repair Exp8567/8568 historical revision hashes.
+Record HalluTruthQA rights, Arabic language, single generator, controlled
+construction and exposed questions separately from audit readiness.
+Exact continuation decisions require a diagnosed changed prerequisite, qualified
+benefit or a qualified null. Retain original G1/G2/G3/G4 definitions and results.
+Conductor owns status, changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8590-ACCOUNTING
+
+All twelve dispositions survive optional CUDA, board and canary absence.
+Disqualified learning and resident costs receive no benefit credit. The qualified
+ARC null closes unchanged panel retries. Release audit completion supplies no
+unseen-question, unseen-generator, deployment or natural-prevalence permission.
+
+### SCENARIO-REPORT-8590-SAMPLES
+
+Bounded original-operand reductions and actual downstream interfaces reproduce
+qualified diagnostic claims without rerunning experiments or historical suites.
+Unqualified resident speed remains quarantined and cannot revise cold-path nulls.

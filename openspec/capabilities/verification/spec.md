@@ -55956,3 +55956,20 @@ Implementation20261016 for REQ-VERIFY-8589: the thin CLI uses unchanged bounded
 child, publication and downstream reader helpers. Focused regressions cover
 original reference schemas, serialization partitioning, external absence, owned
 failure and repaired primitive/report hashes. Final receipts govern qualification.
+## REQ-VERIFY-8590: Validate a bounded immutable V737 capstone
+
+Write traced failing tests first. Collect original node IDs before disjoint
+bounded serial children and retain their exact union. Require100 percent newly
+owned statement coverage including real CLI children and rejection paths.
+Run scoped unit, private E2E-018/021, Ruff check/format, strict mypy and spec
+tracing. Retain commands, exits, durations and log hashes. Never run the full
+repository suite or a historical validation controller. Stop measurements by
+3600seconds; reserve900seconds within4800seconds. Use disk-backed private scratch.
+
+### SCENARIO-VERIFY-8590-CONTROLS
+
+Cold replay rejects missing inputs, owned failures and self-consistently rehashed
+summary or primitive tampering. Validate final bytes with unchanged primary,
+adversarial and strict-row consumers before atomic publication, then exercise
+actual downstream readers. Killed children fail validation. Owned failures
+disqualify; unchanged external absence blocks. Conductor owns ops reconciliation.

@@ -1,0 +1,109 @@
+.F......                                                                 [100%]
+=================================== FAILURES ===================================
+________________________________ test_controls _________________________________
+
+private = (PosixPath('/var/tmp/exp8578-validation-aoox8awh/owned-tests/v737-capstone0'), PosixPath('/var/tmp/exp8578-validation-...alidation': True, 'qualified_arc_panel': True, ...}, 'administrative_complete': True, 'adversarial_findings': [], ...})
+tmp_path = PosixPath('/var/tmp/exp8578-validation-aoox8awh/owned-tests/test_controls0')
+
+    def test_controls(private, tmp_path):
+        """SCENARIO-VERIFY-8590-CONTROLS: failed owned work cannot qualify."""
+        root, _, value = private
+        failed = tmp_path / (e.NAME + ".json")
+        result = cli("--root", root, "--output", failed, "--private-control", "--failed-child")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8590] phase=start_no_model_load_current_LLM_calls_0 completed=0 pending=12
+E         [exp8590] phase=start_no_model_load_current_LLM_calls_0 completed=0 pending=12
+E         [exp8579] phase=preconditions_before completed=0 pending=12
+E         [exp8579] phase=authority_before completed=0 pending=12
+E         [exp8579] phase=authority_after completed=12 pending=0
+E         [exp8579] phase=family_8431_before completed=0 pending=6
+E         [exp8579] phase=family_8431_after completed=1 pending=5
+E         [exp8579] phase=family_8529_before completed=1 pending=5
+E         [exp8579] phase=family_8529_after completed=2 pending=4
+E         [exp8579] phase=family_8552_before completed=2 pending=4
+E         [exp8579] phase=family_8552_after completed=3 pending=3
+E         [exp8579] phase=family_8554_before completed=3 pending=3
+E         [exp8579] phase=family_8554_after completed=4 pending=2
+E         [exp8579] phase=family_8571_before completed=4 pending=2
+E         [exp8579] phase=family_8571_after completed=5 pending=1
+E         [exp8579] phase=family_8572_before completed=5 pending=1
+E         [exp8579] phase=family_8572_after completed=6 pending=0
+E         [exp8579] phase=measurement_frozen completed=12 pending=0
+E         [exp8579] phase=twelve_task_measurement_complete completed=12 pending=0
+E         [exp8590] phase=slot_before_exp8579-contract-methods completed=0 pending=11
+E         [exp8590] phase=slot_after_exp8579-contract-methods completed=1 pending=10
+E         [exp8590] phase=slot_before_exp8580-current-validator-qualification completed=1 pending=10
+E         [exp8590] phase=slot_after_exp8580-current-validator-qualification completed=2 pending=9
+E         [exp8590] phase=slot_before_exp8581-causal-accounting-qualification completed=2 pending=9
+E         [exp8590] phase=slot_after_exp8581-causal-accounting-qualification completed=3 pending=8
+E         [exp8590] phase=slot_before_exp8582-causal-brier-stream completed=3 pending=8
+E         [exp8590] phase=slot_after_exp8582-causal-brier-stream completed=4 pending=7
+E         [exp8590] phase=slot_before_exp8583-learning-benefit-audit completed=4 pending=7
+E         [exp8590] phase=slot_after_exp8583-learning-benefit-audit completed=5 pending=6
+E         [exp8590] phase=slot_before_exp8584-resident-complete-cost completed=5 pending=6
+E         [exp8590] phase=slot_after_exp8584-resident-complete-cost completed=6 pending=5
+E         [exp8590] phase=slot_before_exp8585-hallutruth-release-audit completed=6 pending=5
+E         [exp8590] phase=slot_after_exp8585-hallutruth-release-audit completed=7 pending=4
+E         [exp8590] phase=slot_before_exp8586-qwen-evidence-canary completed=7 pending=4
+E         [exp8590] phase=slot_after_exp8586-qwen-evidence-canary completed=8 pending=3
+E         [exp8590] phase=slot_before_exp8587-arc-publication-qualification completed=8 pending=3
+E         [exp8590] phase=slot_after_exp8587-arc-publication-qualification completed=9 pending=2
+E         [exp8590] phase=slot_before_exp8588-arc-capability-panel completed=9 pending=2
+E         [exp8590] phase=slot_after_exp8588-arc-capability-panel completed=10 pending=1
+E         [exp8590] phase=slot_before_exp8589-resident-hardware-boundary completed=10 pending=1
+E         [exp8590] phase=slot_after_exp8589-resident-hardware-boundary completed=11 pending=0
+E         [exp8590] phase=diagnostic_before completed=11 pending=1
+E         [exp8205] phase=before_subprocess_sample_operands completed=0 pending=1
+E         [exp8205] phase=after_subprocess_sample_operands completed=1 pending=0
+E         [exp8590] phase=diagnostic_after completed=12 pending=0
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8205] phase=validation completed=0 pending=1
+E         [exp8205] phase=before_subprocess_private_child completed=0 pending=1
+E         [exp8205] phase=after_subprocess_private_child completed=1 pending=0
+E         [exp8205] phase=validation_complete completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_valid completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_valid completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_missing completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_missing completed=1 pending=0
+E         [exp8205] phase=before_subprocess_cold_rehashed completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_rehashed completed=1 pending=0
+E         [exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+E         [exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8590_v737_capstone.py", line 14, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v737_capstone.py", line 31, in main
+E             return int(base.main(["--date", "20261016", *rest]))
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v736_capstone.py", line 178, in main
+E             shipped.publish(value, output, raw)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v736_contract_runner.py", line 142, in publish
+E             publication = publish_primary(output, value, validate)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_v737_capstone_8590.py:77: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 2 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (2): ['ops/anomaly-escalations.md', 'ops/conductor-log.md']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v737_capstone_8590.py::test_controls - AssertionErro...
+1 failed, 7 passed, 2 warnings in 162.09s (0:02:42)
