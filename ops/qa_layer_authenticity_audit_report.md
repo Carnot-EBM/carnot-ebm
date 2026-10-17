@@ -3,46 +3,44 @@
 
 # qa_layer_authenticity_audit_report — 2026-10-17
 
-Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 11 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 11 of 20 unit(s); rotation advances by 11 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 0 |
+| `CLEAN` | 4 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 8 |
+| `SILENT_NON_FIRING` | 7 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_execution_venue` — json {"execution_venue": null}
-- `adversarial_verify.py::_artifact_run_date` — "run_date": 20261002` — an actual top-level field/value in results/experiment_8021_v695_typed_decision_test.json that this parser fails to recognize as a post-cutover date.
-- `adversarial_verify.py::check_substrate_class` — json { "inference_substrate_class": "blocked_no_run", "honest_verdict": "complete: blocked_cuda_unavailable", "model_loaded": true, "generation_invoked": true, "duration_s": 0.1 } ``` Observed: zero flags from this function and the full verifier.
-- `adversarial_verify.py::check_duration_vs_claim` — results/experiment_3590_fr11_continuous_self_learning_v5.json`: completed `verifier_ensemble_against_cached_candidates` work reporting `duration_s: 0.0`.
-- `adversarial_verify.py::check_sample_size` — Each fragment independently produces no sample-size flag: ```json [ {"n_samples": 50, "n_spins": 64, "ks_pvalue": 0.99}, {"sample_size": 50, "n_spins": 64, "kl_divergence": 0.02}, {"n_samples": 50, "n_spins": 64, "mean_kl_divergence": 0.02}, {"n_samples": 50, "n_spins": 64, "sample_mean_energy_delta": 0.001}, {"n_samples": 0, "n_spins": 64, "kl_divergence": 0.02} ]
-- `adversarial_verify.py::check_gate_passed_without_data` — Required score absent: ```json { "acceptance_gate_passed": true, "acceptance_gates": [ {"condition": "score >= 0.8"} ] } ``` Required AUROC explicitly null: ```json { "acceptance_gate_passed": true, "acceptance_gates": [ {"condition": "auroc >= 0.8"} ], "auroc": null } ``` Both produce zero flags when executed against the supplied function.
-- `adversarial_verify.py::check_preconditions_declared` — Actual artifact: `results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json`. ```json { "inference_substrate": { "principle": "This task performs live hidden-state or embedding extraction from local LLM weights.", "value": "live_llm_hidden_state_extraction" }, "duration_s": 381.562474 } ``` The artifact lacks `preconditions_checked`. Calling this function on it produces no flags
-- `adversarial_verify.py::check_methodology_present` — This genuine measurement receives no methodology flag despite lacking seed and checksum: ```json { "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm", "honest_verdict": "complete: bounded ARC environment rollout", "actions_executed": 64, "duration_s": 12.4 } ``` This explicit model-compute declaration also receives no methodology flag: ```json { "inference_substrate_c
+- `adversarial_verify.py::check_implausible_tight_ci` — results/experiment_4781_structural_energy_s1_contrastive_landscape.json`, field `energy_ranking_loo_auroc_ci95`, value `[0.7133175599984811, 0.7137104171413382]`, with `n_seeds: 10`.
+- `adversarial_verify.py::_flatten_metrics` — metrics.value.auroc = 1.0` with `metrics.principle` present and `metrics.value.n_samples = 40`. Another missed arrangement: `{"results": {"summary": {"auroc": 1.0, "n_samples": 40}}}`.
+- `adversarial_verify.py::_claims_moat` — Actual honest_verdict from results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json: ```text complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget ``` Observed recognition: false. The isolated circularity check emitted no flags.
+- `adversarial_verify.py::_flips_gate` — This concrete, principle-annotated affirmative decision returns false and receives no circularity flag: ```json { "diffusiongemma_gate": { "met": { "principle": "True only when the DiffusionGemma gate criteria are satisfied.", "value": true } }, "verifier_is_oracle": true }
+- `adversarial_verify.py::_moat_rigor_claim_text` — json { "honest_verdict": "complete: evaluation finished", "conclusion": "complete: verifier_beats_sc_on_held_out_tasks", "verifier_is_oracle": true, "delta_vs_tuned_sc": 0.12 } ``` Observed: zero moat-rigor flags despite an explicitly circular verifier superiority claim.
+- `adversarial_verify.py::_moat_rigor_positive_delta_items` — Both realistic field representations were executed and returned no candidates: ```json {"gain_vs_tuned_sc": 0.05} ``` ```json {"verifier_minus_majority_voting_delta": 0.05}
+- `adversarial_verify.py::_moat_rigor_headroom_state` — The field spelling `oracle_pass_at_k` exists in `results/experiment_4139_decisive_verifier_graft_sudoku.json`. Using that real spelling in this constructed fragment silently bypasses the floor: ```json { "headroom_present": true, "oracle_pass_at_k": 0.65, "tuned_sc_accuracy": 0.60, "n_flips_possible": 7 } ``` The function returns true despite headroom of 0.05. This is not an allegation that the hi
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::check_execution_venue` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_artifact_run_date` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_substrate_class` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_duration_vs_claim` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_sample_size` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_gate_passed_without_data` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_preconditions_declared` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_methodology_present` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_implausible_tight_ci` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_flatten_metrics` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_moat` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_flips_gate` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_claim_text` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_positive_delta_items` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_headroom_state` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::check_execution_venue
+## adversarial_verify.py::check_implausible_tight_ci
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -50,421 +48,160 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-Validate declared execution venues against a closed set, permit absence, and impose no duration floor.
-
-## FINDINGS
-1. **A / F — Explicit null silently bypasses validation.** `raw_venue = d.get(EXECUTION_VENUE_FIELD)` conflates an absent field with a present null, and `if raw_venue is None:` returns before validation. A declared non-string therefore receives no flag. REQ-SUBSTRATE-VENUE-1 explicitly requires non-string declarations to be critical. Reproduced through the full verifier: zero flags.
-2. **Field extraction.** `if not isinstance(raw_venue, str) or raw_venue not in EXECUTION_VENUES:` rejects dictionaries, lists, numbers, and booleans. The standalone helper rejects principle wrappers, but the production caller unwraps them first; that is not an end-to-end false positive. Null remains the demonstrated hole.
-3. **B / string boundaries / context / thresholds.** `EXECUTION_VENUES` represents the approved host and board identifiers; no omitted approved member was established. Membership is exact, with no substring or negation scanning. There are no numeric comparisons, and reading no duration matches the docstring.
-4. **C — Tests miss null.** All nine focused tests pass. In-memory deletion of the absence guard, type guard, or membership check independently breaks existing tests. No deletable validation branch was demonstrated, but the suite never distinguishes explicit null from omission.
-5. **D / E / G.** This function contains no absolute filesystem target, filesystem write, or measurement computation. Its existing integration test writes into a temporary directory. Unrecognized non-null values are flagged; the null early return is the silent bypass.
-
-## COUNTEREXAMPLE
-```json
-{"execution_venue": null}
-```
-Expected: a critical invalid-venue flag because the declared value is not a string. Actual: no venue flag.
-
-## MISSED INPUT
-```json
-{"execution_venue": null}
-```
-
-## RECOMMENDATION
-ADD_TEST_CASE
-
-## RATIONALE
-Distinguish an absent key from an explicit null before validating the declared value, and add a null regression test. The current suite passes while a malformed declaration receives exactly the same result as an omitted optional field.
-
-
-## adversarial_verify.py::_artifact_run_date
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Return “The artifact's own run_date, or None when it carries none this reader can parse,” supporting both dashed and compact dates.
-
-## FINDINGS
-1. **A/F — A real date representation silently disables the cutover.** results/experiment_8021_v695_typed_decision_test.json stores its top-level run date as integer 20261002; its producer explicitly emits that integer. `if not isinstance(raw, str):` rejects it and executes `return None`. With a recognized substrate and no declared class, I reproduced zero flags; changing only the integer to its string representation produced a critical missing-class flag. The historical artifact itself declares a class, so this demonstrates a supported producer shape enabling bypass, rather than proving that artifact escaped enforcement.
-
-2. **Field extraction — String-only payload assumption survives unwrapping.** `raw = d.get("run_date")` and `raw = raw.get("value")` correctly handle a single principle wrapper containing a string. A wrapper containing the same integer date still fails. Lists, missing values, and explicit None return None without crashing, but valid numeric dates become indistinguishable from absent or malformed dates.
-
-3. **C — Relevant tests leave parsing behavior unprotected.** All eight dedicated cutover test functions passed when executed directly. Separate in-memory mutations removing whitespace trimming at `text = raw.strip()` and prefix truncation at `text[:width]` also passed all eight. Those tests contain no numeric-date regression. This establishes gaps in that test file; it does not establish that the entire repository suite survives either mutation.
-
-4. **B / string boundaries / numeric boundaries — Limited findings.** The format tuple enumerates the two advertised textual encodings; no additional required textual format was established. `text[:width]` accepts arbitrary suffixes without validating their context, but the docstring does not specify full-string validation. There are no forbidden-phrase scans, negation checks, or numeric thresholds in this helper. Both advertised date formats parse the exact cutover date correctly when supplied as strings.
-
-5. **D/E/G — No findings in the supplied function.** It computes no filesystem paths, writes no tracked state, and records no measurements. The dedicated tests inspected also contain no artifact writes.
-
-## COUNTEREXAMPLE
-```json
-{
-  "run_date": 20261002,
-  "inference_substrate": "aggregation_from_upstream_artifacts"
-}
-```
-
-The helper returns None, and the caller emits no missing-class flag. Using `"20261002"` instead produces a critical flag.
-
-## MISSED INPUT
-`"run_date": 20261002` — an actual top-level field/value in results/experiment_8021_v695_typed_decision_test.json that this parser fails to recognize as a post-cutover date.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-A date representation already emitted by the project disables the cutover requirement without a diagnostic. Normalize supported numeric dates and make absent or malformed dates an explicit validation outcome, so parsing failure cannot silently grant the historical exemption.
-
-
-## adversarial_verify.py::check_substrate_class
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-“Hold a declared `inference_substrate_class` to the closed enum and its floor,” cross-checking the declaration against verdict and invocation evidence.
+“Detect bootstrap/empirical CIs much tighter than sample-variance floor.”
 
 ## FINDINGS
 
-1. **A/B — Blocked declarations escape the invocation contradiction check.** `if substrate_class == SUBSTRATE_CLASS_BLOCKED_NO_RUN and not blocked:` checks only verdict compatibility. The set tested by `if substrate_class in _NO_MODEL_SUBSTRATE_CLASSES and live_evidence:` omits the blocked class, although its own diagnostic says it “says nothing ran.” The MISSED INPUT below produces **zero flags from both this function and the full verifier**, despite explicitly reporting model loading and generation.
+1. **A/B — Real CI field silently missed.** `ci_field_suffixes` represents confidence/credible intervals, but its spelling list omits the CI95 naming convention used by the actual artifact in MISSED INPUT. `if not any(k.lower().endswith(s) for s in ci_field_suffixes):` skips it. Replaying that artifact produces zero flags; changing only the suffix to `_ci_95` produces one.
 
-2. **False positive — Negative evidence loses the operation it describes.** `if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:` treats any negative invocation evidence as contradicting every model class. An honest load-only run can report successful model loading and no generation; the latter becomes negative evidence and triggers a critical mismatch. The COUNTEREXAMPLE below reproduces this through the full verifier.
+2. **Field extraction loses known sample counts.** `n_seeds_raw = d.get("n_seeds") or d.get("seeds") or 0` followed by `int(n_seeds_raw)` cannot count a list of seed IDs. Such lists occur in this repository. Conversion fails, and `n_seeds_for_floor = 1000` silently substitutes a much larger sample count, weakening the check for experiments with fewer seeds. Boolean counts are accepted, fractional counts are truncated, and positive infinity raises an uncaught overflow exception.
 
-3. **Silent non-firing — Generation does not contradict a load-only declaration.** The opposite error also occurs: positive generation evidence is accepted for the load-only class. The function reaches `floor = SUBSTRATE_CLASS_FLOORS[substrate_class]` without checking whether generation contradicts that class. A load-only declaration with generation reported true and a 2.5-second duration receives no class flag and retains the cheaper floor.
+3. **Wrapped fields require external normalization.** The extraction above cannot unwrap annotated seed counts; `if not isinstance(v, list) or len(v) != 2:` also silently skips annotated CI dictionaries. None and unsupported endpoint types are skipped or treated as unknown. The repository’s current verification entrypoint normalizes top-level annotations before this call, so the wrapper failure is demonstrated for direct calls, not that normalized entrypoint; seed-list failure survives normalization.
 
-4. **Field reads — Null and wrapper handling depend on the caller.** `raw_class = d.get(SUBSTRATE_CLASS_FIELD)` followed by `if raw_class is None:` conflates an absent field with an explicitly null value. An undated artifact with null class and a recognised substrate produces no flag, despite the docstring promising CRITICAL for a value “not a bare string.” Lists and dictionaries are explicitly rejected; legitimate principle wrappers are normalized by the full verifier before this function runs.
+4. **Zero-width intervals receive an exemption.** `if hi <= lo:` followed by `continue  # invalid CI, ignore` excludes equal endpoints. A collapsed bootstrap interval is precisely a possible signature of repeatedly resampling one observation. Its width is below every positive threshold here, yet the function never flags it.
 
-5. **Field reads — Invalid durations silently disable the floor locally.** `duration = d.get("duration_s")` and `and _is_finite_number(duration)` skip the comparison for wrappers, lists, None, numeric strings, and nonfinite values without recording that duration was unchecked. A wrapped subfloor duration therefore escapes a direct call; the full verifier correctly unwraps a legitimate principle wrapper first. Both occurrences of `row.get("field", "?")` affect diagnostic labels only; no detection bypass follows from their string conversion. The classification dictionary reads use the helper’s fixed return structure.
+5. **The implemented thresholds contradict the documentation.** The docstring promises detection below `0.1 / sqrt(N)`. The arithmetic actually produces 0.0196 divided by √N—a threshold approximately 5.1 times smaller. At 30 seeds, widths between approximately 0.00358 and 0.01826 escape despite satisfying the documented condition. The unknown-count fallback similarly implements approximately 0.000620, although the comment promises `width < 1e-3`. The strict comparison itself agrees with “below”; the constants are wrong.
 
-6. **F — Missing dates permit silent absence of the required class.** With no parseable date, only `if classification["source"] == "unknown_top_level_inference_substrate":` can issue the missing-class warning. A recognised substrate with no class and no date returns silently. The comments acknowledge this gap, but the output still supplies no indication that cutover enforcement was skipped. Unknown *present* class values are rejected; that part fails closed.
+6. **The claimed variance floor is assumed, not measured.** `assumed_sigma = 0.05` applies regardless of observed seed variance, estimator construction, or measurement units. A stochastic metric averaging millions of observations per seed can legitimately have a standard deviation far below that assumption. Its correct empirical CI is flagged anyway. A metric’s midpoint does not establish a positive lower bound on its variance.
 
-7. **C — The None-floor guard lacks independent coverage in the focused suite.** Removing `floor is not None` in memory left all **29 focused tests green**. Their valid None-floor example is also blocked, so `and not blocked` independently suppresses comparison. This establishes a surviving mutation in those tests; whole-suite survival was not tested.
+7. **C — Three suffix rules are behaviorally redundant.** `_bootstrap_ci_95`, `_bootstrap_ci_90`, and `_bootstrap_ci` are respectively subsumed by `_ci_95`, `_ci_90`, and `_ci`. Deleting each individually cannot change suffix recognition. Isolated mutation checks confirmed identical flags across 180 cases per deletion; no full-suite mutation run was performed.
 
-8. **Boundaries and documentation.** `float(duration) < floor` correctly implements “below”; equality passed for every floor-bearing class. `run_date >= SUBSTRATE_CLASS_CUTOVER_DATE` correctly includes the cutover day. The docstring’s “A recognised name draws nothing here” is stale: the implementation issues CRITICAL after cutover even for recognised names.
+8. **F — Skipped coverage is indistinguishable from passing.** Unsupported names, shapes, and endpoints all reach `continue` without recording an unverified interval. An artifact whose intervals were never examined leaves `flags` unchanged, just like an artifact whose intervals passed.
 
-9. **Other requested classes.** This function contains no direct free-text substring or regex matching, so no local boundary or textual-negation defect is established. No omitted member was established for the other enum sets. It contains no absolute filesystem target, artifact write, or measurement computation; its writes append flags. The inspected focused tests use temporary artifact paths. No D/E/G defect was found in this scope.
-
-## COUNTEREXAMPLE
-
-Honest model-loading smoke test; generation was deliberately not attempted:
-
-```json
-{
-  "inference_substrate_class": "model_load_no_generation",
-  "honest_verdict": "complete: model_load_smoke_passed_generation_not_attempted",
-  "model_loaded": true,
-  "generation_invoked": false,
-  "duration_s": 12.4
-}
-```
-
-Observed: critical SUBSTRATE_CLASS_MISMATCH claiming the model did not run.
-
-## MISSED INPUT
-
-```json
-{
-  "inference_substrate_class": "blocked_no_run",
-  "honest_verdict": "complete: blocked_cuda_unavailable",
-  "model_loaded": true,
-  "generation_invoked": true,
-  "duration_s": 0.1
-}
-```
-
-Observed: zero flags from this function and the full verifier.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The evidence model collapses loading and generation into interchangeable positive or negative signals, producing both false accusations and missed contradictions. The blocked class additionally escapes the no-model evidence check entirely. Validate evidence against each class’s actual operation constraints and test contradictory blocked receipts separately from honest load-only receipts.
-
-
-## adversarial_verify.py::check_duration_vs_claim
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Detect a “`Compute-bound artifact with implausibly short duration.`”
-
-## FINDINGS
-
-1. **A/B/F — A recognized floor can silently go unenforced.** The historical artifact below declares completed verifier scoring with a zero-second duration. Its selected minimum is one second, yet this function emits nothing. The guard combining `not _has_compute_bound_marker(d)`, `not _is_live_llm_inference(d)`, `not _declares_arc_live_no_llm`, and `not _claim_requires_live_floor` returns before enforcing that floor. The eligibility list represents work requiring duration verification but omits recognized non-LLM work, including verifier scoring and deterministic verification. Because the floor exists, `SUBSTRATE_HAS_NO_DURATION_FLOOR` also stays silent. The implementation is narrower than its intended floor enforcement.
-
-2. **Field extraction — Duration handling depends on caller normalization.** `duration = d.get("duration_s")` reads the raw value; `if not _is_finite_number(duration):` silently returns for a principle-wrapped duration, list, or None. Direct-call probes confirmed that a wrapped, implausibly short live-inference duration produces no flag. The normal verifier unwraps top-level fields beforehand, so this is a direct-call limitation, not a demonstrated wrapper bypass through that normal entry point. The other dictionary reads access helper-produced classifications and floor descriptors; no equivalent artifact-field assumption was established for them.
-
-3. **C — Four reason-specific branches survive deletion in the focused tests.** Removing the branches for `cheap_learned_value_scoring`, `aggregation`, `deterministic_verifier`, and `arc_live_agent_no_llm` simultaneously left all 111 focused tests passing. Their numeric enforcement falls through to the identical generic comparison; these tests do not distinguish their specialized diagnostics. Removing `verifier_scoring` additionally caused two diagnostic assertions to fail. This establishes mutation survival for the focused tests, not the entire repository suite.
-
-4. **Docstring/name versus diagnostics — The fallback asserts an unsupported cause.** Its message concludes `completed too fast to have invoked the model.` even when the selected floor concerns local timing without model invocation. A probe confirmed that adding an upstream-model reference to an otherwise identical local-timing artifact activates this message. A duration violation does not establish the claimed model-invocation failure.
-
-5. **Substring boundaries and negation — No direct defect demonstrated.** This function performs no direct free-text substring or regex matching. Its `in` expression compares enumerated claim states. Boundary and negation handling inside delegated recognizers cannot be established from the supplied function alone.
-
-6. **Numeric boundaries — No off-by-one defect found.** Every `if float(duration) < min_duration:` comparison accepts equality, consistent with the stated minimum. Exact-threshold probes behaved accordingly.
-
-7. **D/E/G — No corresponding operation appears here.** The supplied function contains no absolute filesystem target, artifact-file write, or computation of elapsed time. It consumes an existing duration and appends flags. The audit’s artifact probes used temporary paths, and mutations affected loaded code in memory.
+9. **Other requested classes:** No free-text substring or negation scanning occurs here. The supplied function contains no absolute filesystem target, tracked-state writes, or measurement evaluated before its underlying work.
 
 ## COUNTEREXAMPLE
 
-Existing artifact: `results/experiment_3590_fr11_continuous_self_learning_v5.json`.
+This fragment uses actual values and the actual field name from experiment 4781:
 
 ```json
 {
-  "inference_substrate": "verifier_ensemble_against_cached_candidates",
-  "duration_s": 0.0,
-  "honest_verdict": "complete: fr11_conservative_default_calibrates_factual_verifier_holds_quality_maintained"
-}
-```
-
-The complete artifact selects a 1.0-second floor. This function emits zero flags, including after the normal flattening and unwrapping steps.
-
-## MISSED INPUT
-
-`results/experiment_3590_fr11_continuous_self_learning_v5.json`: completed `verifier_ensemble_against_cached_candidates` work reporting `duration_s: 0.0`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Enforce every selected duration floor independently of model-marker eligibility, and explicitly surface durations that cannot be checked. The current guard silently discards a valid floor on a real historical artifact; the existing warning only covers missing floors.
-
-
-## adversarial_verify.py::check_sample_size
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-
-SILENT_NON_FIRING
-
-## CLAIM
-
-Detects distributional claims whose sample size falls below a statistical threshold.
-
-## FINDINGS
-
-1. **A/F — Recognizer failure silently disables checking.** `has_ks = "ks_p_value" in d or "ks_statistic" in d` misses the ordinary KS p-value spelling in the first MISSED INPUT fragment. That fragment reports only 50 samples at 64 spins and receives no flag. An unrecognized distributional metric is indistinguishable from an artifact with no distributional claim.
-
-2. **Zero samples bypass the check.** `n = d.get("n_samples") or d.get("n_examples")` treats numeric zero as absent. Without the alternate count, zero becomes `None` and triggers the early return. With a sufficiently large alternate count, the zero-sample claim passes using that alternate instead.
-
-3. **Field extraction assumes scalar values.** The same count-extraction line followed by `n = int(n)` rejects wrapped dictionaries and lists, then silently returns through `except (TypeError, ValueError):`. Missing or null counts also disable checking. Neither failure produces an “unverified” finding.
-
-4. **Substrate shape can silently weaken the floor.** `n_spins = d.get("n_spins")` followed by `isinstance(n_spins, (int, float))` ignores wrapped dictionaries, numeric strings, lists, and null values. A declared 64-spin substrate in those shapes receives the 1,000 floor instead of 10,000. **Qualification:** the current repository caller unwraps principle annotations before invoking this function; wrapper failures concern direct calls, while numeric strings remain affected.
-
-5. **B — Hardcoded names underspecify their concepts.** The count alternatives represent sample count; the two KL keys represent KL estimates; the two KS keys represent KS results; and the mean-prefix predicate represents mean-difference estimates. Each omits a concrete spelling shown independently under MISSED INPUT. The count spelling and KS and mean-difference alternatives already occur in repository artifacts or tests.
-
-6. **Substring and context errors cause false positives.** `k.startswith("mean_") and "delta" in k` accepts threshold metadata as a measured mean difference. Dictionary membership itself uses exact keys, but `has_kl` and `has_ks` accept null, list, or prose values as evidence of a claim. No verdict text is inspected, so explicitly declaring that a null KS test was not attempted does not prevent the warning. Both counterexamples below reproduce this.
-
-7. **Numeric conversion is incomplete.** `except (TypeError, ValueError):` omits OverflowError: an infinite sample count crashes at `int(n)`. An infinite substrate size crashes at `int(10 * n_spins)`. A NaN sample count instead disappears through the caught ValueError, producing no finding.
-
-8. **Threshold equality is correct; the documented scope is not.** `n < min_required` correctly permits equality, and `n_spins >= 32` and `n_spins >= 64` include their boundary values. However, the comment promises `At minimum, 10k samples` followed by `for any non-toy claim.`, while a 32-spin claim passes with 1,000. The docstring’s `Distributional claims with sample size below statistical threshold.` is broader than the recognized metric names, while presence-only recognition also captures fields that contain no measured claim.
-
-9. **C — Deleting the entire check escaped the passing tests.** Replacing `check_sample_size` with a no-op introduced no additional failures across 40 verifier test modules: baseline and mutant each had 479 passes and the same unrelated duration-floor assertion failure. The check was called 202 times. One corpus sweep was excluded and repository pytest hooks were disabled for isolation; a completely green full-suite mutation result was not established.
-
-10. **D/E/G — No defects found in these classes.** This function contains no absolute paths, filesystem writes, or measurements taken before the work they describe. Its only external mutation appends to the supplied flag list.
-
-## COUNTEREXAMPLE
-
-Honest unattempted KS test: incorrectly emits `SAMPLE_SIZE_BELOW_CLAIM`.
-
-```json
-{
-  "n_samples": 50,
-  "n_spins": 64,
-  "ks_p_value": null,
-  "honest_verdict": "blocked_ks_not_attempted_no_distributional_claim"
-}
-```
-
-Threshold metadata alone independently triggers the same false positive:
-
-```json
-{
-  "n_samples": 50,
-  "mean_energy_delta_tolerance": 0.000001
-}
-```
-
-## MISSED INPUT
-
-Each fragment independently produces no sample-size flag:
-
-```json
-[
-  {"n_samples": 50, "n_spins": 64, "ks_pvalue": 0.99},
-  {"sample_size": 50, "n_spins": 64, "kl_divergence": 0.02},
-  {"n_samples": 50, "n_spins": 64, "mean_kl_divergence": 0.02},
-  {"n_samples": 50, "n_spins": 64, "sample_mean_energy_delta": 0.001},
-  {"n_samples": 0, "n_spins": 64, "kl_divergence": 0.02}
-]
-```
-
-## RECOMMENDATION
-
-NEEDS_REDESIGN
-
-## RATIONALE
-
-Unsupported metric names, zero counts, and invalid count shapes can silently disable enforcement, while null results and threshold metadata can flag honest work. Define typed distributional claims, distinguish unverifiable inputs from passes, and require independent tests that fail when each recognition and threshold rule is deleted.
-
-
-## adversarial_verify.py::check_gate_passed_without_data
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Detect artifacts where `acceptance_gate_passed=true but key metric fields are null/missing/0.`
-
-## FINDINGS
-
-1. **A — Missing fields are undetectable.** `for k, v in d.items():` visits only existing fields. The first MISSED INPUT explicitly requires a score but omits it; the function returns without flagging. This directly contradicts “missing” in its docstring.
-
-2. **B — The token list is narrower than gate evidence.** `("threshold", "delta", "rate", "score", "lift", "ratio")` stands for numerical evidence supporting acceptance, but omits AUROC, accuracy, precision, recall, and loss. It even omits the comment’s `"gate"`. An explicitly null required AUROC silently passes, as demonstrated below.
-
-3. **Substring collisions cause critical false positives.** `any(s in kl for s in ("threshold", "delta", "rate", "score", "lift", "ratio"))` matches inside unrelated field names. In the COUNTEREXAMPLE, `"ratio"` occurs inside the configuration field’s name, causing an ordinary zero seed to be flagged.
-
-4. **Field extraction requires normalized scalars.** `if d.get("acceptance_gate_passed") is not True:` silently skips wrapped true values. `if v is None:` and `elif _is_finite_number(v) and float(v) == 0.0:` miss wrapped null/zero metrics and empty metric lists. The repository’s normal verifier caller unwraps top-level annotated fields first, so wrapper failures are a direct-call limitation, not a demonstrated bypass through that caller. A missing or null gate declaration appropriately fails to assert acceptance.
-
-5. **The implementation confuses zero with absent evidence.** `float(v) == 0.0` flags legitimate measured zero error, valid zero thresholds, and zero differences allowed by a gate. It also scans every matching field without determining whether that field supports acceptance; an unused optional metric can therefore quarantine otherwise valid work. Exact zero, including negative zero, is handled consistently with the literal docstring: the defect is semantic, not an off-by-one comparison.
-
-6. **F — Unrecognized evidence silently receives no check.** When no field matches the tuple, `if suspect:` is false and the function produces nothing. Missing evidence, unsupported field shapes, and genuinely satisfactory evidence are indistinguishable through this function’s flag output.
-
-7. **C — Deletion survival remains unverified.** Repository searches found no direct references to this function or its flag in the verifier-specific test files. That does not prove individual token deletions would survive the entire suite; no such mutation result is established.
-
-8. **Other requested classes:** This function performs no free-text phrase scan, so the described negation bug is absent. It contains no absolute filesystem target, filesystem write, duration measurement, or measurement-before-work operation. Its only external mutation is appending to `flags`; test-side filesystem safety requires inspecting the tests themselves.
-
-## COUNTEREXAMPLE
-
-Honest measured result with a reproducible zero seed:
-
-```json
-{
-  "acceptance_gate_passed": true,
-  "acceptance_gates": [
-    {"condition": "score >= 0.8"}
-  ],
-  "score": 0.91,
-  "configuration_seed": 0
-}
-```
-
-Actual result: a critical GATE_PASSED_WITHOUT_DATA flag identifying configuration_seed=0. The seed is not missing gate evidence.
-
-## MISSED INPUT
-
-Required score absent:
-
-```json
-{
-  "acceptance_gate_passed": true,
-  "acceptance_gates": [
-    {"condition": "score >= 0.8"}
+  "n_seeds": 10,
+  "energy_ranking_loo_auroc_ci95": [
+    0.7133175599984811,
+    0.7137104171413382
   ]
 }
 ```
 
-Required AUROC explicitly null:
+Observed flags: `[]`. Its width is approximately **0.000393**, below even the implemented threshold of **0.006198**. Renaming the field to `energy_ranking_loo_auroc_ci_95` produces `IMPLAUSIBLE_TIGHT_CI`.
 
-```json
-{
-  "acceptance_gate_passed": true,
-  "acceptance_gates": [
-    {"condition": "auroc >= 0.8"}
-  ],
-  "auroc": null
-}
-```
+## MISSED INPUT
 
-Both produce zero flags when executed against the supplied function.
+`results/experiment_4781_structural_energy_s1_contrastive_landscape.json`, field `energy_ranking_loo_auroc_ci95`, value `[0.7133175599984811, 0.7137104171413382]`, with `n_seeds: 10`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The check approximates required evidence through field-name substrings, so it cannot establish completeness or distinguish legitimate zeros from missing measurements. Validate the fields actually required by each gate, normalize their representations, and distinguish absent evidence from measured values before assigning critical findings.
+An existing research artifact escapes solely because its CI field uses an omitted spelling; execution reproduced the miss. Correcting that suffix alone leaves seed-count degradation, collapsed-interval exemptions, contradictory thresholds, and an unsupported universal variance floor. Recognition coverage must be explicit, and statistical plausibility must account for the estimator and its measured variance.
 
 
-## adversarial_verify.py::check_preconditions_declared
+## adversarial_verify.py::_flatten_metrics
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
-
 SILENT_NON_FIRING
 
 ## CLAIM
+Flatten common nested metric dictionaries into top-level fields so verification checks see them, while preserving existing top-level keys.
 
-Warn when a compute-bound artifact lacks `preconditions_checked`, checking presence regardless of field contents.
+## FINDINGS
+1. **Wrapped containers hide metrics.** `v = d.get(container)` followed by `for k, sub in v.items():` treats a principle-wrapped container as the metric dictionary itself. It promotes annotation fields instead of metric leaves. Verified through the actual artifact verifier: the bare counterexample triggers a perfect-metric warning; the wrapped version produces **zero flags**. Subsequent field normalization does not recover the missing metrics.
+
+2. **The container list samples the concept.** `nested_containers = ("metrics", "report", "summary", "case_scores", "results")` represents containers holding experiment measurements. It omits evaluation and statistics, both present in real repository artifacts. Measurements under these names remain hidden, and `return out` provides no indication that inspection skipped them.
+
+3. **Flattening stops after one level.** `out[k] = sub` copies child dictionaries without traversing them. Even two nested, explicitly supported containers leave numeric leaves invisible. The actual verifier also produced **zero flags** for that arrangement. `if isinstance(v, dict):` silently skips lists and None; list-valued metric records receive no inspection or unsupported-shape diagnostic.
+
+4. **Existing wrapping tests do not protect flattening.** Direct execution of all 10 existing principle-wrapping test methods passed after deleting each container entry individually. They also passed after replacing the entire flattener with a shallow dictionary copy. Full-suite mutation survival was not tested.
+
+## COUNTEREXAMPLE
+```json
+{
+  "metrics": {
+    "principle": "Report held-out classifier quality and sample size.",
+    "value": {
+      "auroc": 1.0,
+      "n_samples": 40
+    }
+  }
+}
+```
+False negative: the actual verifier returns zero flags. Removing the annotation wrapper makes the same measurements trigger IMPLAUSIBLE_PERFECT.
+
+## MISSED INPUT
+`metrics.value.auroc = 1.0` with `metrics.principle` present and `metrics.value.n_samples = 40`.
+
+Another missed arrangement: `{"results": {"summary": {"auroc": 1.0, "n_samples": 40}}}`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The implementation is narrower than its claim: permitted wrappers, omitted container names, and deeper nesting make suspicious measurements disappear from inspection without a diagnostic. Normalize annotations before traversal, retain metric paths, and independently test container recognition and traversal depth. Dictionary membership is exact; this function contains no free-text matching, numeric thresholds, absolute paths, filesystem writes, or timing measurements.
+
+
+## adversarial_verify.py::_normalize_principle_wrapped_fields
+
+**Verdict:** `CLEAN`
+
+## VERDICT
+CLEAN
+
+## CLAIM
+Unwrap top-level fields containing both `value` and `principle` into their bare values, without recursively changing nested structures.
+
+## FINDINGS
+none found
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The guarded extraction accepts any wrapped value, and exact dictionary-key membership introduces no substring or negation ambiguity; leaving nested structures untouched matches the explicit contract. This function contains no numeric thresholds, filesystem writes, timing measurements, or default branches that disable validation. Seven existing unit tests passed in isolation, and deleting any of the three predicates or either branch assignment caused test failures.
+
+
+## adversarial_verify.py::_moat_marker_present
+
+**Verdict:** `CLEAN`
+
+## VERDICT
+
+CLEAN
+
+## CLAIM
+
+Match a marker with a right token boundary only, allowing concatenated prefixes and delegating negation handling to the caller.
 
 ## FINDINGS
 
-1. **A/B/F — Compute detection is narrower than its concept.** `if _match_declared_substrate(raw, _PRECONDITIONS_REQUIRED_SUBSTRATES) is None:` silently excludes genuine compute declarations outside three names. The historical hidden-state extraction artifact identified below lacks the required field and produces zero flags. The docstring explicitly restricts recognition, but that restriction defeats its broader compute-bound claim and the discipline it enforces.
-
-2. **Field extraction and presence semantics disagree.** `if d.get("preconditions_checked") is not None:` tests non-nullness rather than presence. A present null value warns; wrapping that same null value in a principle dictionary passes. Lists and populated wrappers correctly pass, but equivalent null representations receive different classifications despite the stated `Presence-only, WARN-only` contract.
-
-3. **Declaration matching has another silent bypass.** `_match_declared_substrate(raw, _PRECONDITIONS_REQUIRED_SUBSTRATES)` rejects a canonical compute declaration followed by a newline and explanatory prose. I reproduced zero flags with that input, while the equivalent declaration with an ordinary appended note warns. The delegated matcher’s separator handling creates this failure; the supplied function contains no direct substring scan.
-
-4. **C — Tests miss these distinctions.** All five existing focused tests passed when executed directly. Removing any individual substrate entry, either guard, or flag emission failed at least one test; no decorative rule was demonstrated. However, replacing the non-null test with actual key presence left all five green, demonstrating missing null coverage.
-
-5. **Remaining classes:** No forbidden-phrase negation check or numeric threshold exists here. Requiring preconditions on blocked artifacts is explicitly intentional. The function computes no absolute write target, performs no filesystem writes, and measures no operation; its existing integration test writes into a temporary directory.
+none found
 
 ## COUNTEREXAMPLE
 
-```json
-{
-  "inference_substrate": "live_llm_inference",
-  "preconditions_checked": null
-}
-```
-
-Actual: PRECONDITIONS_UNDECLARED warning claiming the field is absent. Expected under the presence-only contract: no warning. Wrapping null as `{"principle":"Record checked resources","value":null}` suppresses it.
-
-A separate silent bypass:
-
-```json
-{
-  "inference_substrate": "live_llm_inference\nGGUF loaded locally; CUDA available."
-}
-```
-
-Actual: no warning despite the absent precondition field.
+none constructed
 
 ## MISSED INPUT
 
-Actual artifact: `results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json`.
-
-```json
-{
-  "inference_substrate": {
-    "principle": "This task performs live hidden-state or embedding extraction from local LLM weights.",
-    "value": "live_llm_hidden_state_extraction"
-  },
-  "duration_s": 381.562474
-}
-```
-
-The artifact lacks `preconditions_checked`. Calling this function on it produces no flags.
+none found
 
 ## RECOMMENDATION
 
-WIDEN_PATTERN_TO_CONCEPT
+KEEP
 
 ## RATIONALE
 
-The three-name allowlist excludes an existing live-model workload, making missing precondition evidence indistinguishable from compliance. Recognize compute requirements across the declared taxonomy, expose unrecognized declarations, and make field-presence semantics consistent across wrappers. Add regressions for the demonstrated omissions and representation differences.
+The escaped regex implements the documented boundary; omitting a left boundary is deliberate, and callers lowercase inputs and handle the documented negations. This helper reads no artifact fields, writes no files, and has no skip-on-unknown fallback; 26 related tests and 20 direct boundary/cache assertions passed.
 
 
-## adversarial_verify.py::check_methodology_present
+## adversarial_verify.py::_claims_moat
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -472,115 +209,391 @@ The three-name allowlist excludes an existing live-model workload, making missin
 SILENT_NON_FIRING
 
 ## CLAIM
-`Compute-bound artifact missing methodology evidence.`
+Return true when an artifact headlines a verifier moat or superiority win.
+
+## FINDINGS
+1. **A/F — Confirmed silent miss.** The real headline in results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json explicitly claims verifier superiority but reaches `return False`. The repository’s circularity guard consequently skips this claim. Other rigor checks can still flag the artifact; this is a demonstrated recognizer and circularity-check gap.
+
+2. **Field assumptions.** `if d.get("verifier_value_added") is True or d.get("verifier_efficiency_win") is True:` requires bare booleans. Both principle-wrapped true values are missed. Similarly, `v = d.get(key)` followed by `if isinstance(v, str) and any(` silently ignores wrapped strings and lists across all four headline fields. None safely produces no claim. The production verifier normalizes principle wrappers upstream, so wrapped-field failure is demonstrated for direct calls, not established as a production bypass.
+
+3. **Negation/context blindness.** `_moat_marker_present(v.lower(), m)` accepts marker presence as an affirmative claim without checking denial, quoted discussion, or an explicit false suffix. The counterexample below returns true despite both structured win declarations being false. The repository helper checks right token boundaries, but those boundaries do not resolve negation.
+
+4. **B — Lists substitute vocabulary for concepts.** `_MOAT_HEADLINE_MARKERS` represents affirmative superiority language but omits the real wording under MISSED INPUT. `("honest_verdict", "status", "headline_outcome", "headline")` represents locations carrying headline claims but excludes a decision field containing the same claim. Detection is narrower than the docstring’s semantic claim.
+
+5. **C — Decorative marker confirmed.** In the repository marker table, efficiency_moat_won is wholly covered by moat_won: the helper matches the shorter suffix with the same right boundary. Removing the longer entry cannot change recognition. No independent behavioral test can protect that entry; a full-suite mutation run was not performed.
+
+6. **Remaining checks.** No numeric thresholds, absolute filesystem targets, tracked-state writes, or measurements occur in this function. The inspected focused tests use temporary artifact paths. No off-by-one, write-target, or measurement-order finding is supported.
+
+## COUNTEREXAMPLE
+```json
+{
+  "verifier_value_added": false,
+  "verifier_efficiency_win": false,
+  "honest_verdict": "complete: verifier_efficiency_win_false"
+}
+```
+
+Expected: false. Observed with the repository helper and marker table: true.
+
+## MISSED INPUT
+Actual honest_verdict from results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json:
+
+```text
+complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget
+```
+
+Observed recognition: false. The isolated circularity check emitted no flags.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The recognizer demonstrably misses affirmative superiority claims and accepts explicit negative declarations. All 28 focused tests passed despite these reproduced failures, so the current tests do not establish semantic correctness. Use explicit claim declarations with consistency checks, retaining text recognition as a separately tested compatibility mechanism.
+
+
+## adversarial_verify.py::_flips_gate
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+`True if the artifact asserts a (DiffusionGemma) gate is MET / flipped.`
 
 ## FINDINGS
 
-1. **A — Real measurements silently escape all requirements.** `if claim["state"] in {CLAIM_STATE_BLOCKED, CLAIM_STATE_NON_LIVE}:` returns before checking any methodology field. The completed no-LLM ARC rollout in MISSED INPUT produces no flags despite missing seed and checksum. This directly contradicts the comment that these are `STILL required (this substrate is a real measurement, just not a model-inference one).`
+1. **A/F — Confirmed silent bypass.** `g.get("met") is True` rejects a principle-annotated true value. `_MET_LEADING_RE.match(str(g.get("status", "")).strip().upper())` stringifies an annotated status instead of extracting its value. Both reach `return False`; both survive the verifier’s top-level normalization. The full verifier consequently omits the circularity flag for the annotated affirmative decision in MISSED INPUT.
 
-2. **Field extraction accepts wrappers containing no evidence.** `d.get("model_specs")`, `d.get("MODEL_SPECS")`, `d.get("target_model")`, `d.get("models_tested")`, and `has_repro = d.get("reproducibility_checksum")` test raw truthiness. A nonempty annotation wrapper counts as evidence even when its value is null or empty. Individually replacing model metadata or checksum with a wrapped null produced no missing-field warning.
+2. **Field extraction assumptions.** `v = d.get("diffusiongemma_gate_status")` requires a bare string; `g = d.get("diffusiongemma_gate")` requires a dict containing bare decision values; `hv = d.get("honest_verdict")` requires a bare string. Top-level annotation wrappers fail when this function is called directly, although the normal verifier pipeline unwraps them first. Lists and None produce no recognition or diagnostic. A status object under the first field is also ignored; that object shape already occurs in five corpus artifacts, currently with pending decisions.
 
-3. **Every seed read lacks payload validation.** `d.get("random_seed") is not None` and `d.get("seed") is not None` accept empty lists, empty dictionaries, empty strings, and booleans. `d.get("random_seeds_used")`, `d.get("seeds")`, and `preconditions.get("seeds")` accept truthy wrappers whose actual seed value is null or empty. Conversely, `preconditions = d.get("preconditions_checked", {})` never unwraps the container: valid seeds inside an annotated preconditions object are reported missing. Lists and null containers avoid a crash through the dictionary check, but annotated dictionaries are misread.
+3. **B — Patterns are narrower than their concept.** The hardcoded fields represent gate decisions, but support structured status objects under only one of the two gate fields. The status prefix and two verdict patterns represent affirmative gate assertions, but omit ordinary prose and explicit flipped wording despite the docstring’s promise. The concrete flipped verdict in COUNTEREXAMPLE returns false and receives no circularity flag.
 
-4. **Valid annotated duration produces a false positive.** `has_duration = _is_finite_number(d.get("duration_s"))` passes the wrapper itself to the numeric predicate. The repository predicate does not unwrap it. A legitimate wrapped 120-second duration is reported missing.
+4. **Negation and context blindness.** `if _GATE_MET_RE.search(hv_lower) or _DIFFUSIONGEMMA_MET_RE.search(hv_lower):` treats mentioning a marker as asserting it. Explicitly unattempted claims trigger it. The generic gate marker also treats a resource preflight gate as a DiffusionGemma gate decision. Both false positives were reproduced through the full verifier.
 
-5. **B — Field-name samples substitute for methodology concepts.** The four model aliases represent model identity, but omit the model-name field already used by historical artifacts. The seed alternatives represent recorded RNG provenance, but omit the conventional RNG-seed field recognized elsewhere in this repository’s identifier tests. Concrete omitted names appear in COUNTEREXAMPLE. The six substrate alternatives represent no-model measurements; no additional omitted subtype was established, and their larger defect is the blanket exemption in finding 1.
+5. **Substring boundaries remain incomplete.** The repository definition used by `_DIFFUSIONGEMMA_MET_RE.search(hv_lower)` lacks a left boundary. It recognizes the model name inside a longer baseline label; the corresponding COUNTEREXAMPLE returns true. The generic gate pattern has both boundaries, and both verdict patterns reject the documented meta/method/metric collisions.
 
-6. **String boundaries and negation fail through the verifier exemption.** `if _is_deterministic_verifier(d):` delegates to a repository helper that searches the entire substrate declaration for replay or reconciliation substrings. It grants the exemption for a live declaration explicitly saying it is not replay, and for a longer word saying the stream cannot be replayed. Both reproduced inputs appear below. An explicit live classification does not prevent this later unconditional return.
+6. **C — Verified test gaps.** All 28 tests in the two focused test modules pass unchanged. Removing the generic gate pattern’s left boundary, or removing digit exclusions from any of the three regexes, independently leaves all 28 passing. Deleting any of the five positive recognition paths causes failures; those paths are independently tested. This establishes gaps in the focused tests, not a claim about the entire repository suite.
 
-7. **F — Unrecognized applicability silently becomes permission to skip.** The branch using `CLAIM_STATE_AMBIGUOUS`, `not claim["has_compute_markers"]`, and `not claim["live_evidence"]` returns without recording uncertainty. The explicit full-generation class in MISSED INPUT receives a 60-second floor from the repository’s duration selector, yet this function emits no methodology warning despite absent model, seed, and checksum evidence. The applicability mechanisms disagree.
-
-8. **C — Mutation tests expose substantial missing isolation coverage.** Six relevant test modules passed 148 baseline tests. Individual in-memory mutations produced these results:
-
-   | Deleted rule or alternative | Focused tests |
-   |---|---|
-   | Initial `CLAIM_STATE_BLOCKED` membership | All passed |
-   | Initial `CLAIM_STATE_NON_LIVE` membership; ambiguous applicability gate | Failed |
-   | Each of the five subsequent helper-based early returns | All passed |
-   | Each of the six `no_model_spec_required` alternatives; entire exemption disjunction disabled | All passed |
-   | Acceptance through `d.get("model_specs")` | Failed |
-   | Acceptance through `d.get("MODEL_SPECS")`, `d.get("target_model")`, or `d.get("models_tested")` | All passed |
-   | Acceptance through `d.get("random_seed") is not None` | Failed |
-   | Other four seed alternatives; nested seed extraction | All passed |
-   | `if not has_seed:` or `if not has_repro:` | All passed |
-   | `if not has_model_spec:`, `if not has_duration:`, or final `if missing:` | Failed |
-
-   These are focused-suite results, not a claim that the entire repository suite was mutation-tested. The duplicate blocked return is logically redundant because the classifier already invokes the same predicate.
-
-9. **Numeric boundaries and internal dictionary reads:** no off-by-one defect found. There is no numerical floor comparison here; finite-duration presence is the intended local test. `d.get("random_seed") is not None` correctly preserves a zero seed. The helper-produced claim and substrate dictionaries have fixed internal shapes.
-
-10. **D/E/G:** no baked absolute write target, tracked-artifact write, or prematurely evaluated measurement occurs in this function. Its output mutation is `flags.append(`. The inspected artifact-writing tests use temporary paths.
+7. **Numeric boundaries, D/E/G.** No numeric thresholds, absolute paths, writes, or measurements occur in this function. The inspected focused tests use temporary artifact files. No finding in these classes.
 
 ## COUNTEREXAMPLE
 
-This otherwise complete live artifact incorrectly receives a missing-duration warning:
+Each fragment was reproduced through the full verifier with `"verifier_is_oracle": true`.
+
+False negative: returns false and omits the circularity flag.
+
+```json
+{"honest_verdict": "success_diffusiongemma_gate_flipped"}
+```
+
+False positives: each returns true and emits the circularity flag.
+
+```json
+{"honest_verdict": "blocked_diffusiongemma_met_claim_not_attempted"}
+```
+
+```json
+{"honest_verdict": "complete_preflight_resource_gate_met_diffusiongemma_still_pending"}
+```
+
+```json
+{"honest_verdict": "complete_nondiffusiongemma_met_baseline_only"}
+```
+
+## MISSED INPUT
+
+This concrete, principle-annotated affirmative decision returns false and receives no circularity flag:
 
 ```json
 {
-  "inference_substrate": "live_llm_inference",
-  "model_specs": {
-    "generator": "unsloth/gemma-4-31B-it-GGUF"
+  "diffusiongemma_gate": {
+    "met": {
+      "principle": "True only when the DiffusionGemma gate criteria are satisfied.",
+      "value": true
+    }
   },
-  "random_seed": 42,
-  "reproducibility_checksum": "sha256:2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
-  "duration_s": {
-    "principle": "Wall time across model loading and inference",
-    "value": 120.0
+  "verifier_is_oracle": true
+}
+```
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+The nested annotation failure survives normal pipeline preprocessing and silently removes a required circularity flag. Context-blind text matching also produces critical flags for explicit nonclaims and unrelated gates. Normalize supported decision structures, distinguish unsupported declarations from negative decisions, and test affirmative, negated, and contextual cases independently.
+
+
+## adversarial_verify.py::_moat_rigor_claim_text
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+There is no docstring; `_moat_rigor_claim_text` implies extracting lowercased artifact claim text for moat-rigor checks.
+
+## FINDINGS
+
+1. **A/B — Claim-bearing fields silently excluded.** The repository definition of `_MOAT_RIGOR_CLAIM_KEYS` represents fields containing moat claims but omits conclusion. I verified that the MISSED INPUT produces zero moat-rigor flags through the full verifier; moving the same claim into honest_verdict produces three critical flags.
+
+2. **Field extraction uses representations instead of values.** The specific line is `return " ".join(str(d.get(key, "")) for key in _MOAT_RIGOR_CLAIM_KEYS).lower()`. Dictionaries contribute keys and annotation prose, lists contribute Python representations, and explicit null becomes textual “none.” Direct calls therefore scan annotation principles as assertions. The main verifier unwraps standard principle annotations before calling this helper, which prevents that particular wrapper failure through its normal entrypoint.
+
+3. **Context loss suppresses enforcement.** `" ".join` discards field identity and combines current claims with historical commentary. In the COUNTEREXAMPLE, a negative statement about the previous baseline suppresses the current positive claim’s headroom and significance checks. Full verification emits only a warning; removing the historical commentary produces two critical flags.
+
+4. **Negation blindness exists in the consuming checks.** Full verification of an honest verdict describing a blocked comparison that was not attempted produces a moat-rigor critical. This helper preserves that text without distinguishing assertions from denials; the misclassification occurs in its callers.
+
+5. **C — Five extraction entries lack independent protection in the focused suite.** Removing headline_outcome, headline, paper_summary, decision, or oracle_distinct_status from `_MOAT_RIGOR_CLAIM_KEYS`, individually and in memory, leaves all 26 tests in the two moat-rigor test modules passing. Removing honest_verdict or status fails tests. These results establish a coverage gap in that focused suite.
+
+6. **Boundary checks and D–G.** The generator’s `in` iterates keys; it performs no substring matching. This function contains no numeric thresholds, absolute paths, writes, recognizer chain, or measurements. The inspected tests write artifact copies to temporary directories.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "complete: verifier_beats_sc_on_held_out_tasks",
+  "paper_summary": "The previous baseline does_not_beat_sc; our hybrid improves by 0.12.",
+  "verifier_is_oracle": false,
+  "delta_vs_tuned_sc": 0.12
+}
+```
+
+False negative: historical commentary suppresses both current-win criticals for missing headroom and paired significance. Only a null-claim warning remains.
+
+## MISSED INPUT
+
+```json
+{
+  "honest_verdict": "complete: evaluation finished",
+  "conclusion": "complete: verifier_beats_sc_on_held_out_tasks",
+  "verifier_is_oracle": true,
+  "delta_vs_tuned_sc": 0.12
+}
+```
+
+Observed: zero moat-rigor flags despite an explicitly circular verifier superiority claim.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Temporary-artifact probes reproduced both missed enforcement and false criticals through the full verifier. Extract typed claims with their field identity, subject, and polarity preserved; add independent tests for every supported claim location.
+
+
+## adversarial_verify.py::_moat_rigor_norm
+
+**Verdict:** `CLEAN`
+
+## VERDICT
+CLEAN
+
+## CLAIM
+The function normalizes text by lowercasing it, replacing runs of non-ASCII-alphanumeric characters with underscores, and trimming surrounding underscores.
+
+## FINDINGS
+none found
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The parameter explicitly requires a string; support for wrapped fields, lists, or None is not part of the supplied contract. This helper contains no detection rules, thresholds, recognizer defaults, writes, or measurements; neither a concrete misclassification nor test coverage can be established from this snippet.
+
+
+## adversarial_verify.py::_moat_rigor_numeric_items
+
+**Verdict:** `CLEAN`
+
+## VERDICT
+CLEAN
+
+## CLAIM
+Collect finite numeric artifact values as lowercase field paths paired with floats.
+
+## FINDINGS
+none found
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+Helper inspection and direct probes confirmed that annotation wrappers and lists preserve numeric values, while booleans, nulls, and non-finite values are excluded. All 26 focused tests passed; this function contains no phrase matching, numeric thresholds, write targets, recognizer fallthrough, or measurement timing.
+
+
+## adversarial_verify.py::_moat_rigor_positive_delta_items
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Positive numeric deltas measured against an SC-equivalent baseline.`
+
+## FINDINGS
+
+1. **A/B/F — Silent bypass:** `if "delta" not in path_norm:` requires one literal spelling of a measured difference. A genuine positive gain using another conventional field name returns an empty list; repository execution confirmed that the surrounding moat-rigor guard then skips headroom/significance enforcement and emits no flags.
+
+2. **B — Baseline vocabulary gap:** `_SC_EQUIVALENT_TOKEN_RE.search(path_norm)` stands for SC-equivalent baselines. The repository helper’s vocabulary omits the majority-voting spelling demonstrated below; that positive delta also returns no candidates.
+
+3. **2/3/5 — Ancestor context contaminates numeric descendants:** Matching the full path admits confidence bounds and sample counts beneath a matching comparison container. `if value > 0.0:` accepts those values even when the actual estimate is negative. These are not positive measured deltas.
+
+4. **5 — Subtraction direction is unchecked:** The two path filters and `value > 0.0` also accept a positive baseline-minus-verifier difference. The surrounding win recognizer treats that result as positive verifier evidence, although it measures the verifier losing.
+
+5. **C — Positivity is unprotected by the targeted tests:** Removing `if value > 0.0:` while retaining the append left all **26 tests passing** across both moat-rigor test modules. Removing either path filter caused failures. This establishes a surviving positivity mutation in those modules; the entire repository suite was not run.
+
+## COUNTEREXAMPLE
+
+Verified constructed artifact:
+
+```json
+{
+  "honest_verdict": "complete: hybrid_beats_sc_on_gsm8k",
+  "verifier_is_oracle": false,
+  "tuned_sc_accuracy": 0.60,
+  "gain_vs_tuned_sc": 0.05
+}
+```
+
+The function returns `[]`; the moat-rigor guard emits no flags despite missing headroom and paired-significance evidence.
+
+Verified false-positive candidate extraction:
+
+```json
+{
+  "delta_vs_tuned_sc": {
+    "estimate": -0.02,
+    "ci95": [-0.08, 0.04],
+    "n_pairs": 200
   }
 }
 ```
 
-With a bare duration of 120, replacing any one of model metadata, seed, or checksum with `{"principle": "Record actual provenance", "value": null}` instead produces no missing-field warning.
+The function returns the upper confidence endpoint `0.04` and sample count `200` as positive deltas.
 
-These substrate strings each bypass the methodology check on a live artifact missing all four required fields:
-
-```text
-live_llm_inference -- fresh generation, not replay
-live_llm_inference -- nonreplayable streaming generation
-```
-
-Other reproduced false positives, with the remaining methodology complete:
+It also accepts this reversed comparison:
 
 ```json
-{"preconditions_checked": {"principle": "Record checked preconditions", "value": {"seeds": [42]}}}
+{"tuned_sc_minus_verifier_delta": 0.05}
 ```
-
-```json
-{"model_name": "unsloth/gemma-4-31B-it-GGUF"}
-```
-
-```json
-{"rng_seed": 42}
-```
-
-The latter two substitute for the recognized model and seed fields respectively.
 
 ## MISSED INPUT
 
-This genuine measurement receives no methodology flag despite lacking seed and checksum:
+Both realistic field representations were executed and returned no candidates:
 
 ```json
-{
-  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
-  "honest_verdict": "complete: bounded ARC environment rollout",
-  "actions_executed": 64,
-  "duration_s": 12.4
-}
+{"gain_vs_tuned_sc": 0.05}
 ```
 
-This explicit model-compute declaration also receives no methodology flag:
-
 ```json
-{
-  "inference_substrate_class": "model_full_generation",
-  "honest_verdict": "complete: served batch evaluation",
-  "duration_s": 120.0
-}
+{"verifier_minus_majority_voting_delta": 0.05}
 ```
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The implementation both misses absent methodology and flags valid annotated evidence; its blanket non-live exemption contradicts its own measurement requirements. Normalize field values, reconcile applicability classifications, and test each required field and exemption independently. The 148-test focused baseline and Ruff passed; repository-wide spec coverage failed with 1,142 tests lacking specification references.
+Path spelling does not establish measurement role, baseline identity, or subtraction direction. The inspected helper handles wrappers, lists, and nulls; zero is correctly excluded, and this function contains no writes, absolute targets, verdict-text negation checks, or timing measurements. Require explicit comparison metadata and point-estimate identification, with visible handling of unsupported representations and regression tests covering these failures.
+
+
+## adversarial_verify.py::_moat_rigor_headroom_state
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`_moat_rigor_headroom_state` checks whether a true headroom declaration is consistent with available oracle-minus-tuned-SC and flip evidence; it has no docstring.
+
+## FINDINGS
+
+1. **A/B/F — Populated oracle evidence can silently escape checking.** `if "oracle_at_k" in path_text or "oracle@k" in path_text` recognizes two spellings of oracle best-of-K accuracy. It omits the existing field spelling shown in MISSED INPUT. Consequently, `if oracle_values and tuned_sc_values:` skips the numerical check and the function returns success despite contradictory measurements.
+
+2. **Unrelated corpora are paired together.** `best_headroom = max(o - s for o in oracle_values for s in tuned_sc_values)` takes a Cartesian product across the entire artifact. It can subtract one corpus’s baseline from another corpus’s oracle score. The counterexample passes although neither corpus meets the floor.
+
+3. **Substring matches do not identify measurement types.** `("tuned_sc" in path_text or "tuned_self_consistency" in path_text)` also matches untuned baselines. Both oracle and baseline comprehensions accept numeric descendants such as sample counts and confidence bounds as accuracies. `and "delta" not in path_text` excludes one difference marker; it does not establish that the remaining numbers are baseline accuracies.
+
+4. **Flip evidence can be supplied by configuration rather than observation.** `"flip" in path_text` accepts any matching numeric field, and `max(flip_values)` lets a positive configuration limit conceal an actual zero count. The concept is observed selection-change evidence; the implementation accepts arbitrary matching quantities. `value >= 0.0` also removes negative values before validation.
+
+5. **Nested annotated declarations are rejected.** `path[-1].lower() == "headroom_present" and value is True` requires the boolean to occur directly under the declaration’s name. The inspected walker exposes an annotation’s dictionary and then its inner boolean under a different leaf name. Upstream normalization handles top-level annotations only, so nested annotations still produce false rejections. There are no direct dictionary reads here; numeric traversal already handles lists and wrapped numeric descendants.
+
+6. **The threshold operator is mathematically correct, but subtraction causes an equality failure.** `if best_headroom < MOAT_HEADROOM_MIN_DELTA:` rejects the nominal decimal boundary demonstrated below because floating-point subtraction rounds downward. The resulting message prints the measured gap and floor identically while rejecting the artifact.
+
+7. **C — Both numerical rejection paths lack independent protection in the targeted tests.** All 26 tests in the two relevant test files passed after individually deleting the oracle threshold branch, the zero-flips rejection, the second oracle spelling, the second tuned-baseline spelling, or the delta exclusion. Deleting the declaration rejection failed three tests. This establishes surviving mutations in those targeted tests; a whole-suite mutation run was not performed.
+
+8. **D/E/G and prose negation — No finding in this function.** It contains no absolute paths, writes, or measurement-producing operations. The inspected tests use temporary artifact copies. It scans field paths rather than verdict prose, so natural-language negation is not directly applicable; the field-context failures are described above.
+
+## COUNTEREXAMPLE
+
+Both corpora have headroom of only 0.05:
+
+```json
+{
+  "headroom_present": true,
+  "per_corpus": {
+    "musr": {
+      "oracle_at_k": 0.65,
+      "tuned_sc_accuracy": 0.60
+    },
+    "arc": {
+      "oracle_at_k": 0.25,
+      "tuned_sc_accuracy": 0.20
+    }
+  },
+  "n_flips_possible": 7
+}
+```
+
+The function returns true by computing 0.65 − 0.20 = 0.45.
+
+Additional independently reproduced fragments:
+
+| Fragment | Actual result | Misclassification |
+|---|---|---|
+| `{"headroom_present":true,"oracle_at_k":0.65,"tuned_sc_accuracy":0.60,"untuned_self_consistency_accuracy":0.20}` | true | Untuned baseline conceals inadequate headroom. |
+| `{"headroom_present":true,"oracle_at_k":{"accuracy":0.65,"n":200},"tuned_sc_accuracy":0.60}` | true | Sample count is treated as oracle accuracy. |
+| `{"headroom_present":true,"oracle_at_k":0.82,"tuned_sc_accuracy":0.60,"n_flips_possible":0,"max_flips":100}` | true | Configuration limit conceals zero observed opportunities. |
+| `{"headroom_present":true,"oracle_at_k":0.70,"tuned_sc_accuracy":0.60}` | false | Nominal headroom of exactly 0.10 is rejected. |
+| `{"evidence":{"headroom_present":{"principle":"Declare measured oracle headroom.","value":true}},"oracle_at_k":0.82,"tuned_sc_accuracy":0.60}` | false | Valid nested annotation is rejected. |
+
+These failures also reproduced through the full verifier when supplied with otherwise sufficient moat-claim fields.
+
+## MISSED INPUT
+
+The field spelling `oracle_pass_at_k` exists in `results/experiment_4139_decisive_verifier_graft_sudoku.json`. Using that real spelling in this constructed fragment silently bypasses the floor:
+
+```json
+{
+  "headroom_present": true,
+  "oracle_pass_at_k": 0.65,
+  "tuned_sc_accuracy": 0.60,
+  "n_flips_possible": 7
+}
+```
+
+The function returns true despite headroom of 0.05. This is not an allegation that the historical artifact itself contains this contradictory declaration.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The implementation can certify contradictory measurements by ignoring their spelling or combining unrelated quantities, while rejecting valid annotated declarations and threshold-equal measurements. Evidence needs typed extraction within the evaluated corpus, recursive annotation handling, and independent regression tests for every rejection path.
 

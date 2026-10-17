@@ -53529,3 +53529,93 @@ shutdown as large costs. A smaller import path is a concrete new mechanism to
 test. Keep Python/native arithmetic controls separate from this service change.
 The current learning failure needs an exact deadline-edge test, not a new learner.
 Trivia+ provides a testable evidence lead; its eligibility remains to be measured.
+
+## 2026-10-17 — V740 planning scan: observable learning and complete evidence
+
+Recorded before writing the V740 experiment design. This pass searched all eight
+requested arXiv topics and checked all six secondary channels. Previously filed
+papers remain revisits. External results do not establish Carnot performance.
+
+### Methods selected for follow-up
+
+- **Revisited, still unmeasured locally: Trivia+.** The May 2026
+  [paper](https://arxiv.org/abs/2605.11330) and
+  [author release](https://github.com/amazon-science/hallucination-benchmark-trivialplus)
+  provide a concrete long-context evaluation lead. V739's release and extraction
+  tasks never ran because their authority gate failed. Preserve that distinction
+  from a negative dataset result. Audit release bytes, question groups, complete
+  context, annotation authority and local exposure before measuring extraction.
+  The [data description](https://raw.githubusercontent.com/amazon-science/hallucination-benchmark-trivialplus/main/DATA_DETAILS.md)
+  separates human votes from weak and perturbed labels. Recompute its strict
+  sentence-to-response aggregation. Report disagreement-sensitive results
+  separately. Do not treat source faithfulness as open-domain factual truth.
+  The repository declares CC BY-NC-ND 4.0; keep this study internal and preserve
+  original bytes. No example redistribution or commercial deployment is planned.
+- **Revisited: delay and capacity are separate operands.**
+  [Delay reduction, February 2026](https://arxiv.org/abs/2602.02634) separates
+  learning and delay-induced drift in convex online optimization.
+  [Capacity-constrained feedback, June 2026](https://arxiv.org/abs/2606.11711)
+  models finite tracking capacity and lost feedback.
+  [Calibeating, March 2026](https://arxiv.org/abs/2603.22167) motivates proper-loss
+  controls against the unchanged forecast. Retain the fixed causal Brier study.
+  Record release lag, pending counts and lost feedback alongside future loss.
+  These papers do not prove regret bounds for Carnot's nonlinear small head.
+- **Revisited: complete claim and context coverage.**
+  [RT4CHART](https://arxiv.org/abs/2603.27752), also found through
+  [Hugging Face Papers](https://huggingface.co/papers/2603.27752), motivates
+  claim-level evidence accounting. Use full-source coverage and explicit
+  unsupported-span records. Do not copy an LLM judge or infer truth from lexical
+  overlap. This does not reopen the retired external-text reranking program.
+- **Revisited: sparse learning and hardware boundaries.**
+  [Online KAN learning](https://arxiv.org/abs/2602.02056), revised June 19,
+  exploits local spline support. [KANELÉ](https://arxiv.org/abs/2512.12850) and
+  its [author code](https://github.com/Duchstf/KANELE) give a concrete FPGA lead.
+  Measure the existing head and complete service first. Sparse arithmetic,
+  feature extraction, process lifecycle and durable feedback have different
+  costs. Paper latency ratios do not measure Carnot's boards.
+
+### Topic coverage and bounded decisions
+
+| Topic | Primary source inspected | Decision |
+|---|---|---|
+| EBM reasoning and verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, 2512.15605](https://arxiv.org/abs/2512.15605) | Compatibility and probability identities do not certify factual correctness. Preserve the hybrid verifier architecture. |
+| Neural constraint satisfaction | [CAffNet, 2605.24437](https://arxiv.org/abs/2605.24437) | Affine feasibility is a useful structured-constraint lead. It cannot certify that language extraction captured the right constraint. Defer new projection code. |
+| Ising in ML | [Probabilistic Algorithms for Ising Machines, 2610.03972](https://arxiv.org/abs/2610.03972) | Distinguish optimization, distribution sampling and deterministic energy evaluation. |
+| Hallucination detection | Trivia+ and RT4CHART above | Test evidence availability and extractor reach before detector benefit. |
+| KANs | Online KAN and KANELÉ above | Keep current basis and fixed learning protocol; assess complete operations. |
+| Constrained and energy-guided generation | [EBD, 2605.28020](https://arxiv.org/abs/2605.28020); [GrammarRL, 2609.39869](https://arxiv.org/abs/2609.39869) | GrammarRL is a newly checked September lead. Syntax and semantic quality need separate criteria. Defer generator training and decoding changes pending runtime and verifier utility. |
+| Hardware sampling | [Million-p-bit computer, 2606.25313](https://arxiv.org/abs/2606.25313) | An operation-compatible device and complete costs must precede a local speed claim. |
+| Continual learning | Calibeating, delay reduction and finite capacity above | Preserve prediction-before-feedback, actual updates and independent retention checks. |
+
+### Secondary channels and retrieval limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS energy-based work. Indexed EBT
+  conference PDFs were found, but the
+  [opened PDF](https://openreview.net/pdf/b5c1f17dbfdebf892a3632b91afeadc9cf135e52.pdf)
+  returned a browser challenge. Use arXiv for the verified method; no unread
+  review outcome is claimed.
+- **Semantic Scholar:** attempted both citation APIs,
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Retrieval failed. Exact-ID site searches did not recover a dependable citing
+  inventory. Citation coverage is incomplete; this is not a zero-citation claim.
+- **Hugging Face Papers:** checked Trivia+, RT4CHART, HalluTruthQA-4K and
+  OpenHalDet leads. Method claims above use primary papers. Existing release
+  limitations remain; this scan does not authorize another ungrounded label set.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were marked a month old. No current ranking or newly trending EBM repository
+  is claimed. Trivia+ and KANELÉ came from author links.
+- **Extropic:** inspected [Writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t/) and
+  [recursive intelligence](https://extropic.ai/writing/baby-thermo-rsi/).
+  Z1T's September 4 estimates exclude the final dense vocabulary operation.
+  Keep projections, measured software work and local hardware access separate.
+  These posts do not qualify a Carnot TSU run.
+- **Logical Intelligence:** inspected [Kona](https://logicalintelligence.com/kona).
+  Its decision-layer positioning is relevant, but the inspected page supplies
+  no reproducible implementation update that closes Carnot's current gaps.
+
+Planning inference: finish the unmeasured causal, extraction and lean-service
+questions with explicit current authority. Preserve prior scientific nulls.
+Prefer a precise measurement repair over changing the learner to evade a gate.

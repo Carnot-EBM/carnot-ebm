@@ -16,9 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (99 modul
 
 ## Hostile LLM review
 
-**TL;DR: No demonstrated SELF_DISCOVERY_ADVANCE. Zero recent solve artifacts supplied; reachability passes, solve provenance remains unassessed.**
+**TL;DR: Zero demonstrated SELF_DISCOVERY_ADVANCEs. The empty artifact list supports no claim of autonomous solving progress.**
 
-Per-artifact: none (`[]`). No artifacts to classify, validate against live attempts, or compare with the registry.
+Per-artifact: none (`[]`). No artifacts to classify, inspect for provenance, or compare against the registry.
 
-**Pattern watch:** Import reachability can make a hand-built per-game solver reachable without making its discovery autonomous. The 99-module closure proves neither runtime use nor agent-originated learning. Credit future claims only with linked live observations/actions → runtime model discovery → executed level completion, plus registry evidence of novelty. Missing provenance warrants **UNCLEAR**; demonstrated source-derived or hand-built solutions warrant **OUTER_LOOP_RE**, even when reachable.
+**Pattern watch:** Recent drift is unassessable, but existing mechanisms warrant scrutiny: [arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:1) explicitly uses per-game adapters and hand verifiers; [arc_competition_agent.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py:11) describes banked solution replay. Both can satisfy import reachability without proving self-discovery.
+
+Recommended action: credit future solves only with an entrypoint execution trace linking the agent’s own attempts and runtime induction to a successful new level, registry comparison, and provenance establishing freedom from source-derived rules, offline oracle search, or hand-built per-game logic.
 
