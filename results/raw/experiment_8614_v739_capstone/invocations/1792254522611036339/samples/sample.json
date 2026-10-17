@@ -1,0 +1,151 @@
+{
+  "arc_horizons": {
+    "matches_original": true,
+    "observer_cannot_authorize_panel": true,
+    "original_refinement_eligible_score": 0,
+    "resolved_count": 0,
+    "rows": [
+      {
+        "applied": true,
+        "attribution": "association_only",
+        "changed_action": null,
+        "changed_action_missing_reason": "no_same_state_counterfactual",
+        "competing_redirect_ids": [
+          "ar25:240"
+        ],
+        "effective_action_policy_change": true,
+        "event_id": "ar25:120",
+        "induction_latch_changed": false,
+        "missing_reason": "action_budget_exhausted",
+        "next_level": 0,
+        "next_observation_sha256": "sha256:371ded3c6fe3f219635d10b6967887075a70304b3de1fa0ce2b5aab24f6baf87",
+        "observable_post_intervention_actions": 392,
+        "observed_action_changed_from_previous": true,
+        "outcome_observed": true,
+        "resolved_by_levelup": false,
+        "right_censored": true,
+        "selected": true,
+        "uncontested_observable_actions": 120,
+        "wrapper_action_index": 121
+      },
+      {
+        "applied": true,
+        "attribution": "association_only",
+        "changed_action": null,
+        "changed_action_missing_reason": "no_same_state_counterfactual",
+        "competing_redirect_ids": [],
+        "effective_action_policy_change": false,
+        "event_id": "ar25:240",
+        "induction_latch_changed": true,
+        "missing_reason": "action_budget_exhausted",
+        "next_level": 0,
+        "next_observation_sha256": "sha256:881007993650e97f35350e3782a41267d670542c9f5a6875c23383ce7e969cb3",
+        "observable_post_intervention_actions": 272,
+        "observed_action_changed_from_previous": false,
+        "outcome_observed": true,
+        "resolved_by_levelup": false,
+        "right_censored": true,
+        "selected": true,
+        "uncontested_observable_actions": 272,
+        "wrapper_action_index": 241
+      }
+    ]
+  },
+  "causal_losses": [
+    {
+      "brier": 0.008288197400969638,
+      "matches_original": true,
+      "qualified": false,
+      "unit_id": "s17-c8-frozen:hotpotqa_s01403__llama3-8b"
+    },
+    {
+      "brier": 0.00784881457383841,
+      "matches_original": true,
+      "qualified": false,
+      "unit_id": "s17-c8-frozen:hotpotqa_s01403__gemma-2-9b"
+    }
+  ],
+  "complete_lean_cost": {
+    "missing_reason": "Exp8610 pre-gated; no complete lean-session measurement",
+    "total_s": null
+  },
+  "deadline_failure": {
+    "coverage_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8603_v739_deadline_edge_qualification/invocations/1792238314436784723/coverage_owned.json",
+      "sha256": "sha256:3f42796cc7ce93146894607e6572cb8e58e3be43305c8875640cb70d80452628"
+    },
+    "expected": 0,
+    "failed_assertion": "all(not f['summary']['missing_lines'] for f in coverage['files'].values())",
+    "field": "files.python/carnot/reporting/causal_brier_runner_8582.py.summary.missing_lines",
+    "missing_lines": [
+      94
+    ],
+    "observed": 1,
+    "operator": "==",
+    "primary": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8603_v739_deadline_edge_qualification.json",
+      "sha256": "sha256:e23c4f3823f971b10ec82ce55efb388bb644d99fee40485c5dc0bdd3581d9b10"
+    }
+  },
+  "historical_resident_total": {
+    "matches_original": true,
+    "source": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8596_v738_resident_complete_cost/invocations/1792217161878553467/primitives/L1-B1-R0-cold_python.json",
+      "sha256": "sha256:d25013b68f0ee622b5537c7150fbe3f8ba4dfea2fdf52c38a32f52b4e0b88fb7"
+    },
+    "total_s": 1.637539009
+  },
+  "independent_units_added": 0,
+  "lean_prototype_sessions": [
+    {
+      "arm": "baseline_python",
+      "contiguous_interval_ns": 1242304,
+      "matches_original": true,
+      "operation_subtotal_ns": 1242304,
+      "qualified_cost": false,
+      "scope": "prototype_operation_subtotal_not_complete_session_cost"
+    },
+    {
+      "arm": "baseline_native",
+      "contiguous_interval_ns": 750700,
+      "matches_original": true,
+      "operation_subtotal_ns": 750700,
+      "qualified_cost": false,
+      "scope": "prototype_operation_subtotal_not_complete_session_cost"
+    },
+    {
+      "arm": "lean_python",
+      "contiguous_interval_ns": 1814228,
+      "matches_original": true,
+      "operation_subtotal_ns": 1814228,
+      "qualified_cost": false,
+      "scope": "prototype_operation_subtotal_not_complete_session_cost"
+    },
+    {
+      "arm": "lean_native",
+      "contiguous_interval_ns": 1465562,
+      "matches_original": true,
+      "operation_subtotal_ns": 1465562,
+      "qualified_cost": false,
+      "scope": "prototype_operation_subtotal_not_complete_session_cost"
+    }
+  ],
+  "retention_maximum": {
+    "count": 15000,
+    "matches_original": true,
+    "maximum_delta": 0.030210404871421903,
+    "qualified": false,
+    "source": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8582_v737_causal_brier_stream/invocations/1792178016318586202/retention_rows.json",
+      "sha256": "sha256:1115ee1e3ae8e4f181778281d3bb223b096a097d7c0cb43126e5766c2a967016"
+    }
+  },
+  "triviaplus_coverage": {
+    "energy_head_transfer_allowed": false,
+    "factual_correctness_established": false,
+    "intended_questions": 128,
+    "judge_confidence_available": false,
+    "missing_reason": "Exp8604 pre-gated; Exp8607 primary absent",
+    "observed_questions": null
+  }
+}

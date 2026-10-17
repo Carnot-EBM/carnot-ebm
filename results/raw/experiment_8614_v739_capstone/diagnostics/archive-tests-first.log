@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_archive_and_prior_comparison _______________________
+
+    def test_archive_and_prior_comparison():
+        """REQ-REPORT-8614: planning lag and actual prior failures must remain distinct."""
+>       assert report.ARCHIVE_AUTHORITY["completed_archive_ends_at"] == "2026.10.737"
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.v739_capstone_report' has no attribute 'ARCHIVE_AUTHORITY'
+
+tests/python/test_v739_capstone_8614.py:238: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v739_capstone_8614.py::test_archive_and_prior_comparison
+1 failed, 1 warning in 3.69s

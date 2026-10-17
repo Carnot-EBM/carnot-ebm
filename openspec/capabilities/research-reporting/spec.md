@@ -102257,3 +102257,28 @@ on sampling and argmin does not install deterministic spline evaluation.
 Missing, altered or self-consistently rehashed operands cannot qualify costs.
 Cold replay checks immutable original pins and reconstructs every derived field.
 Unchanged external failure is blocked; failed owned checks disqualify.
+
+## REQ-REPORT-8614: Reconcile thirteen V739 outcomes without scientific credit
+
+The capstone SHALL bind all thirteen original task objects and actual producer
+or conductor receipts. Missing primaries SHALL remain missing. Original nulls,
+quarantines, native versus lifecycle contrasts, and zero generalization credit
+SHALL remain unchanged. Administrative completion SHALL be separate from benefit.
+
+### SCENARIO-REPORT-8614-ACCOUNTING
+
+The original reader finds five executed producers, five pre-gate receipts and
+two missing cascade primaries. Conductor skip receipts close administrative
+slots. The repeated deadline coverage failure at line94 remains disqualified.
+
+### SCENARIO-REPORT-8614-SAMPLES
+
+Fixed causal losses, full retention maxima, lean session totals and ARC horizon
+states SHALL be reduced from authenticated immutable operands. Unavailable
+Trivia+ release and complete lean-cost evidence SHALL remain unavailable.
+
+## REQ-REPORT-8614-REPLAY: Reject repaired envelopes with changed claims
+
+Fresh bounded replay SHALL reconstruct task dispositions and numerical samples
+and validate original source, authority, code and receipt hashes before atomic
+primary publication. G1 through G4 SHALL retain their shipped definitions.

@@ -1,0 +1,51 @@
+F.E..F                                                                   [100%]
+==================================== ERRORS ====================================
+______________________ ERROR at teardown of test_samples _______________________
+Memory leak: +821MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +821MB
+=================================== FAILURES ===================================
+_______________________________ test_accounting ________________________________
+
+private = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T162517-515426-938b8488/v739-capstone0/experiment_8614_v739_capst...lidation': True, 'qualified_lean_cost': False, ...}, 'administrative_complete': True, 'adversarial_findings': [], ...})
+
+    def test_accounting(private):
+        """SCENARIO-REPORT-8614-ACCOUNTING: thirteen dispositions preserve missing science."""
+        output, value = private
+        assert value["task_count"] == value["completed_count"] == 13
+        assert value["administrative_complete"] and value["required_checks_passed"]
+        assert value["verdict_class"] == "blocked" and value["failed_count"] == 1
+        assert [r["experiment_id"] for r in value["rows"]] == list(range(8602, 8615))
+>       assert sum(r["disposition"] == "pre_gate_receipt" for r in value["rows"]) == 6
+E       assert 5 == 6
+E        +  where 5 = sum(<generator object test_accounting.<locals>.<genexpr> at 0x7efc2811acf0>)
+
+tests/python/test_v739_capstone_8614.py:49: AssertionError
+___________________________ test_evidence_boundaries ___________________________
+
+private = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T162517-515426-938b8488/v739-capstone0/experiment_8614_v739_capst...lidation': True, 'qualified_lean_cost': False, ...}, 'administrative_complete': True, 'adversarial_findings': [], ...})
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T162517-515426-938b8488/test_evidence_boundaries0')
+
+    def test_evidence_boundaries(private, tmp_path):
+        """REQ-VERIFY-8614: missing primaries and broken seals cannot become eligible."""
+        task = e.methods.protocol()["task_map_v739"][0]
+        with patch.object(e, "_find_artifact_by_task_id", return_value=None):
+            row = e.resolve(task, tmp_path, [])
+>       assert row["verdict_class"] == "blocked" and not row["producer_executed"]
+E       AssertionError: assert ('blocked' == 'blocked'
+E         
+E           blocked and not True)
+
+tests/python/test_v739_capstone_8614.py:135: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v739_capstone_8614.py::test_accounting - assert 5 == 6
+FAILED tests/python/test_v739_capstone_8614.py::test_evidence_boundaries - As...
+ERROR tests/python/test_v739_capstone_8614.py::test_samples - Failed: Memory ...
+2 failed, 3 passed, 1 warning, 1 error in 80.64s (0:01:20)

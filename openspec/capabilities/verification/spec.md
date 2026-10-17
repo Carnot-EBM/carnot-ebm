@@ -56230,3 +56230,15 @@ candidate bytes before atomic publication; preserve actual downstream findings.
 Private CLI runs cover missing inputs, owned failure, valid cold replay, bad
 dates and rehashed tampering. Cold replay never reruns measurement or old
 validation controllers. Failed owned checks forbid positive readiness.
+
+## REQ-VERIFY-8614: Qualify owned capstone statements and real children
+
+Owned tests SHALL retain original node IDs and disjoint execution unions,
+private E2E-018/021 consumer checks, strict lint/types and100 percent newly
+owned statement coverage. Killed or failed required children disqualify.
+
+### SCENARIO-VERIFY-8614-CONTROLS
+
+Actual private CLI processes SHALL accept valid replay, reject missing inputs,
+owned failures and self-consistently rehashed tampering. Original authority
+failure blocks science without erasing completed administrative dispositions.
