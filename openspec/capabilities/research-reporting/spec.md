@@ -102005,3 +102005,19 @@ summary or primitive tampering are rejected. Exact final bytes pass unchanged
 publication, adversarial and strict row consumers before atomic replacement.
 Qualification proves execution mechanics only; the imported fixture is no new
 six-thousand-row learning measurement.
+
+## REQ-REPORT-8593: Qualify truthful small-head provenance
+
+Authenticate the original Exp8431 nine-input,109-coefficient energy head and
+unchanged Exp8572 dependencies. Declare no_model_load, empty MODEL_SPECS and zero
+current LLM calls. Bind checkpoint, scaler, temperature, basis, dtype, feature
+order, native build and typed policy in target_model. Reproduce Exp8584's
+METHODOLOGY_MISSING privately without changing shared validators. Qualification
+is separate from speed; Exp8584 and all old quarantines remain disqualified.
+
+### SCENARIO-REPORT-8593-DESCRIPTOR
+
+The owned consumer accepts only the original sealed head descriptor. Absent,
+wrong-head and self-consistently rehashed inconsistent descriptors fail. A private
+corrected candidate must earn unchanged publication, row and adversarial checks.
+Fresh serving costs belong to Exp8596. Generalization scores remain zero.

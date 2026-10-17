@@ -1,0 +1,34 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 16 items
+
+tests/python/test_resident_inference_8571.py::test_original_parity_cost_and_missing PASSED [  6%]
+tests/python/test_resident_inference_8571.py::test_protocol_rejects_without_stale_response PASSED [ 12%]
+tests/python/test_resident_inference_8571.py::test_framing_eof_oversize_and_deadline PASSED [ 18%]
+tests/python/test_resident_inference_8571.py::test_eight_requests_real_processes_and_restarts PASSED [ 25%]
+tests/python/test_resident_inference_8571.py::test_artifact_replay_and_owned_failure PASSED [ 31%]
+tests/python/test_resident_inference_8571.py::test_worker_cli_eof_rejections_and_date PASSED [ 37%]
+tests/python/test_resident_inference_8571.py::test_private_publication_and_consumer PASSED [ 43%]
+tests/python/test_resident_inference_8571.py::test_validation_scope_adapter_restores_originals PASSED [ 50%]
+tests/python/test_resident_inference_8571.py::test_typed_validation_and_evaluation_deadline PASSED [ 56%]
+tests/python/test_resident_inference_8571.py::test_request_limit_configuration_change_and_idle_child PASSED [ 62%]
+tests/python/test_resident_inference_8571.py::test_invalid_child_handshake_is_killed PASSED [ 68%]
+tests/python/test_resident_inference_8571.py::test_precondition_gate_and_cli_dispatch PASSED [ 75%]
+tests/python/test_resident_inference_8571.py::test_replay_primitive_rejects_rehashed_operands PASSED [ 81%]
+tests/python/test_resident_inference_8571.py::test_stalled_pipe_write_is_bounded PASSED [ 87%]
+tests/python/test_resident_inference_8571.py::test_owned_measurement_failure_is_explicit PASSED [ 93%]
+tests/python/test_resident_inference_8571.py::test_owned_validation_failure_blocks_readiness PASSED [100%]
+
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /var/tmp/exp8593-validation-1792214429309756606/shard-2.xml -
+================== 16 passed, 1 warning in 163.12s (0:02:43) ===================

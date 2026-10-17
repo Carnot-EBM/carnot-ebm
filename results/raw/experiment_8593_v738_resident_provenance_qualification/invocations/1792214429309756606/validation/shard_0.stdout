@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collecting ... collected 12 items
+
+tests/python/test_resident_provenance_8593.py::test_original_descriptor_and_mutations PASSED [  8%]
+tests/python/test_resident_provenance_8593.py::test_classifier_and_private_publication PASSED [ 16%]
+tests/python/test_resident_provenance_8593.py::test_replay_missing_and_owned_failure PASSED [ 25%]
+tests/python/test_resident_provenance_8593.py::test_real_cli_rejections_and_date PASSED [ 33%]
+tests/python/test_resident_provenance_8593.py::test_immutable_replay_and_real_controls PASSED [ 41%]
+tests/python/test_resident_provenance_8593.py::test_rehashed_primitive_and_original_byte_drift PASSED [ 50%]
+tests/python/test_resident_provenance_8593.py::test_owned_checks_and_qualification_boundary PASSED [ 58%]
+tests/python/test_resident_provenance_8593.py::test_runner_flow_private_success_and_blocked PASSED [ 66%]
+tests/python/test_resident_provenance_8593.py::test_bounded_validation_collection_and_finish[pass] PASSED [ 75%]
+tests/python/test_resident_provenance_8593.py::test_bounded_validation_collection_and_finish[missing] PASSED [ 83%]
+tests/python/test_resident_provenance_8593.py::test_bounded_validation_collection_and_finish[failed] PASSED [ 91%]
+tests/python/test_resident_provenance_8593.py::test_measure_resource_error_and_blocked_replay PASSED [100%]
+
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /var/tmp/exp8593-validation-1792214429309756606/shard-0.xml -
+================== 12 passed, 1 warning in 205.41s (0:03:25) ===================

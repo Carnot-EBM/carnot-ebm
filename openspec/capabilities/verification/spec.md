@@ -56018,3 +56018,20 @@ The isolated runner clock triggers the same measurement deadline gate while
 real kernel updates complete with real durations. Timed-out child groups are
 reaped and cannot qualify. Measurements stop by3600 seconds, reserve900 seconds
 for validation and remain within4800 seconds. Optional devices cannot gate CPU.
+
+## REQ-VERIFY-8593: Replay immutable provenance qualification
+
+Write traced tests first. Collect the original complete resident test union
+before disjoint bounded children. Preserve original authority and test dates.
+Run private E2E-018/021, scoped Ruff, strict mypy and spec tracing. Require100
+percent newly owned statement coverage including genuine CLI rejection paths.
+Retain child exits, durations and log hashes. Accept valid runtime calendar dates.
+Cold replay must reject missing bytes, owned failure and repaired-hash tampering.
+Owned failure disqualifies; unchanged external absence blocks. Conductor owns ops
+and traceability reconciliation. Never run the full suite or historical controllers.
+
+### SCENARIO-VERIFY-8593-REPLAY
+
+An unchanged scanner returns warning exit1 for the private original candidate.
+Publication refuses that candidate. A truthful corrected candidate passes exact
+byte checks and the owned provenance consumer without clearing historical flags.
