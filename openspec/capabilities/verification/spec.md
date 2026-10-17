@@ -55973,3 +55973,26 @@ summary or primitive tampering. Validate final bytes with unchanged primary,
 adversarial and strict-row consumers before atomic publication, then exercise
 actual downstream readers. Killed children fail validation. Owned failures
 disqualify; unchanged external absence blocks. Conductor owns ops reconciliation.
+
+## REQ-VERIFY-8591: Validate immutable V738 registration in bounded children
+
+Write focused tests before implementation. Run scoped tests with original node
+collection and disjoint private E2E-018/021 children. Require Ruff, strict mypy,
+spec tracing and 100 percent newly owned statement coverage including real CLI
+children. Keep all original node IDs and execution log hashes. Never run the full
+suite or historical validation controllers. Cold replay rejects missing inputs,
+owned failures and consistently rehashed summaries or primitive tampering. Use
+unchanged primary publication, adversarial and strict row consumers on exact
+candidate bytes. Preserve warning exits. Failed owned checks disqualify; unchanged
+external blocks remain blocked. Accept any valid runtime --date, including 20261017.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-VERIFY-8591-REPLAY
+
+A genuine fresh CLI accepts valid private bytes, rejects drift and missing inputs,
+and records actual downstream selection. Child termination fails validation.
+
+Implementation for REQ-VERIFY-8591: the thin Exp8591 runner uses supervised serial
+children, explicit private revision controls, original collected IDs, disjoint
+JUnit unions, scoped statement coverage and unchanged atomic publication readers.
+The terminal sidecar retains exact-byte consumer acceptance and command logs.

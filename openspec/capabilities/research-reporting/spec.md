@@ -101951,3 +101951,36 @@ PolarFire and GateMate obligations and distinguish sampling from spline inferenc
 
 Implementation status: planning contract only; experiments are not implemented,
 executed or activated by this update. Validation is recorded in the design.
+
+## REQ-REPORT-8591: Bind V738 methods and separate evidence inputs
+
+Exp8591 SHALL bind exactly eleven complete task dictionaries, Exp8591–Exp8601,
+against staged or authenticated activated YAML, the visible table, embedded JSON,
+canonical digest and closing marker. Prompts, routes, gates and retirement fields
+are operands. A V737 active queue is not V738 authority. Inherit scientific
+operands from the authenticated V737 protocol by value and hash before execution.
+Keep learning, resident, optional canary and runtime readiness separate. Authenticate
+Exp8580/8581, the original head, original 158-node union and resident parity.
+Retain old dependency hashes in any new canary revision binding. Require actual
+private CLI acceptance and drift rejection before setting canary readiness.
+Ingest bounded primary method bytes for the five registered papers. Seal a
+MedExpert provenance audit plan and a V737-only ARC manifest. Preserve all
+historical nulls, label rejections and quarantines. Future V738 outputs are not
+contract prerequisites. Current model loads and LLM calls are zero.
+
+### SCENARIO-REPORT-8591-AUTHORITY
+
+Count, order, identity, title, phase, deliverable, model, substrate, gate, prompt,
+retirement, digest and end-marker mutations fail, including repaired envelopes.
+
+### SCENARIO-REPORT-8591-INPUTS
+
+Changed affected dependencies lose qualification independently. Missing optional
+CUDA receipts cannot lower methods, learning or resident readiness. Paper claims
+and exposed labels cannot establish independent generalization or learning benefit.
+
+Implementation for REQ-REPORT-8591: the V738 methods, input and report adapters
+bind eleven full dictionaries and original independent family receipts. The
+sealed v738-methods-protocol.json and v738-contract-methods research note retain
+primary method hashes, adoption limits, new revision authority and old quarantines.
+The Exp8591 primary records the invocation's observed qualification and gates.

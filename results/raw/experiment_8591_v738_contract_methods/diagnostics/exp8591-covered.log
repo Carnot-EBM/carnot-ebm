@@ -1,0 +1,112 @@
+..........................F.....F...                                     [100%]
+=================================== FAILURES ===================================
+_________________________________ test_replay __________________________________
+
+authority = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T031916-73792-c1c24a74/test_replay0')
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T031916-73792-c1c24a74/test_replay0')
+
+    def test_replay(authority, tmp_path):
+        """SCENARIO-VERIFY-8591-REPLAY: repaired summaries and owned failures remain falsifiable."""
+        from carnot.reporting import v738_contract_report as report
+    
+        raw = tmp_path / "raw"
+        work = e.measure(authority, raw, "20261018")
+        checks = raw / "checks.json"
+        e.atomic_json(checks, dict(receipts=[]))
+        output = tmp_path / (e.NAME + ".json")
+        value = report.build(work, e.reference(checks), raw, output)
+        e.atomic_json(output, value)
+>       assert report.replay(output)
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7f06c1674e00>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T031916-73792-c1c24a74/test_replay0/experiment_8591_v738_contract_methods.json'))
+E        +    where <function replay at 0x7f06c1674e00> = <module 'carnot.reporting.v738_contract_report' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v738_contract_report.py'>.replay
+
+tests/python/test_v738_contract_methods_8591.py:136: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8591] phase=preconditions_before completed=0 pending=14
+[exp8591] phase=authority_before completed=0 pending=14
+[exp8591] phase=authority_after completed=11 pending=3
+[exp8579] phase=family_8431_before completed=0 pending=6
+[exp8579] phase=family_8431_after completed=1 pending=5
+[exp8579] phase=family_8529_before completed=1 pending=5
+[exp8579] phase=family_8529_after completed=2 pending=4
+[exp8579] phase=family_8552_before completed=2 pending=4
+[exp8579] phase=family_8552_after completed=3 pending=3
+[exp8579] phase=family_8554_before completed=3 pending=3
+[exp8579] phase=family_8554_after completed=4 pending=2
+[exp8579] phase=family_8571_before completed=4 pending=2
+[exp8579] phase=family_8571_after completed=5 pending=1
+[exp8579] phase=family_8572_before completed=5 pending=1
+[exp8579] phase=family_8572_after completed=6 pending=0
+[exp8591] phase=family_8580_before completed=0 pending=0
+[exp8591] phase=family_8580_after completed=1 pending=0
+[exp8591] phase=family_8581_before completed=0 pending=0
+[exp8591] phase=family_8581_after completed=1 pending=0
+[exp8591] phase=measurement_frozen completed=14 pending=0
+[exp8205] phase=before_subprocess_canary_valid completed=0 pending=1
+[exp8205] phase=after_subprocess_canary_valid completed=1 pending=0
+[exp8205] phase=before_subprocess_canary_drift completed=0 pending=1
+[exp8205] phase=after_subprocess_canary_drift completed=1 pending=0
+[exp8567] controls completed=0 pending=17
+[exp8567] controls completed=1 pending=16
+[exp8567] controls completed=2 pending=15
+[exp8567] controls completed=3 pending=14
+[exp8567] controls completed=4 pending=13
+[exp8567] controls completed=5 pending=12
+[exp8567] controls completed=6 pending=11
+[exp8567] controls completed=7 pending=10
+[exp8567] controls completed=8 pending=9
+[exp8567] controls completed=9 pending=8
+[exp8567] controls completed=10 pending=7
+[exp8567] controls completed=11 pending=6
+[exp8567] controls completed=12 pending=5
+[exp8567] controls completed=13 pending=4
+[exp8567] controls completed=14 pending=3
+[exp8567] controls completed=15 pending=2
+[exp8567] controls completed=16 pending=1
+[exp8591] phase=eleven_task_measurement_frozen completed=11 pending=0
+_______________________________ test_private_cli _______________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T031916-73792-c1c24a74/test_private_cli0')
+
+    def test_private_cli(tmp_path):
+        """SCENARIO-VERIFY-8591-REPLAY: real publication and cold children retain terminal logs."""
+        output = tmp_path / "results" / (e.NAME + ".json")
+        common = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        r = child(
+            "private",
+            common
+            + [
+                "--date",
+                "20261017",
+                "--root",
+                str(tmp_path / "absent"),
+                "--output",
+                str(output),
+                "--private-control",
+            ],
+            tmp_path / "logs",
+            deadline=300,
+        )
+>       assert r["passed"], Path(r["stderr_path"]).read_text()
+E       AssertionError: 
+E       assert False
+
+tests/python/test_v738_contract_runner_8591.py:31: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=waiting_private completed=0 pending=1
+[exp8205] phase=waiting_private completed=0 pending=1
+[exp8205] phase=waiting_private completed=0 pending=1
+[exp8205] phase=waiting_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v738_contract_methods_8591.py::test_replay - Asserti...
+FAILED tests/python/test_v738_contract_runner_8591.py::test_private_cli - Ass...
+2 failed, 34 passed, 1 warning in 392.57s (0:06:32)
