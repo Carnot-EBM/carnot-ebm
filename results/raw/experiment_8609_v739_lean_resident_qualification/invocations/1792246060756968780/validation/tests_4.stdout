@@ -1,0 +1,66 @@
+....EEEE....                                                             [100%]
+==================================== ERRORS ====================================
+__________ ERROR at setup of test_immutable_replay_and_real_controls ___________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _trace=<pluggy._tracing...._basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """REQ-REPORT-8593: one genuine immutable reproduction supplies private test operands."""
+        raw = tmp_path_factory.mktemp("provenance")
+        work = e.measure(raw, "20261017")
+>       assert not work["gate_check_summary"]
+E       AssertionError: assert not [{'check': 'eleven_task_authority', 'expected': True, 'field': 'eleven_task_authority', 'observed': False, ...}]
+
+tests/python/test_resident_provenance_8593.py:73: AssertionError
+______ ERROR at setup of test_rehashed_primitive_and_original_byte_drift _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _trace=<pluggy._tracing...._basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """REQ-REPORT-8593: one genuine immutable reproduction supplies private test operands."""
+        raw = tmp_path_factory.mktemp("provenance")
+        work = e.measure(raw, "20261017")
+>       assert not work["gate_check_summary"]
+E       AssertionError: assert not [{'check': 'eleven_task_authority', 'expected': True, 'field': 'eleven_task_authority', 'observed': False, ...}]
+
+tests/python/test_resident_provenance_8593.py:73: AssertionError
+________ ERROR at setup of test_owned_checks_and_qualification_boundary ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _trace=<pluggy._tracing...._basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """REQ-REPORT-8593: one genuine immutable reproduction supplies private test operands."""
+        raw = tmp_path_factory.mktemp("provenance")
+        work = e.measure(raw, "20261017")
+>       assert not work["gate_check_summary"]
+E       AssertionError: assert not [{'check': 'eleven_task_authority', 'expected': True, 'field': 'eleven_task_authority', 'observed': False, ...}]
+
+tests/python/test_resident_provenance_8593.py:73: AssertionError
+________ ERROR at setup of test_runner_flow_private_success_and_blocked ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _trace=<pluggy._tracing...._basetemp=PosixPath('/var/tmp/carnot8609-validation-0ulpig7f/suite-4'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def measured(tmp_path_factory):
+        """REQ-REPORT-8593: one genuine immutable reproduction supplies private test operands."""
+        raw = tmp_path_factory.mktemp("provenance")
+        work = e.measure(raw, "20261017")
+>       assert not work["gate_check_summary"]
+E       AssertionError: assert not [{'check': 'eleven_task_authority', 'expected': True, 'field': 'eleven_task_authority', 'observed': False, ...}]
+
+tests/python/test_resident_provenance_8593.py:73: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/python/test_resident_provenance_8593.py::test_immutable_replay_and_real_controls
+ERROR tests/python/test_resident_provenance_8593.py::test_rehashed_primitive_and_original_byte_drift
+ERROR tests/python/test_resident_provenance_8593.py::test_owned_checks_and_qualification_boundary
+ERROR tests/python/test_resident_provenance_8593.py::test_runner_flow_private_success_and_blocked
+8 passed, 1 warning, 4 errors in 46.62s

@@ -1,6 +1,16 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-16
+**Last Updated:** 2026-10-17
+
+## Exp8609 private process imports — 2026-10-17
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-8609 / SCENARIO-VERIFY-8609-PRIVATE-IMPORTS | `lean_peer_8609.py`; standalone Exp8609 CLI | Four real worker arms and direct CLI launched outside the checkout without `PYTHONPATH`; original response identity and clean reap, legacy source identity, lean import graph |
+| REQ-REPORT-8609 / SCENARIO-REPORT-8609-QUALIFICATION | Unchanged qualification and publication gates | 122 distinct tests passed, including private E2E-018/021 and original provenance tests; fresh replay, tamper controls and publication validators passed; 552 owned statements covered at 100% |
+
+The repair addresses process-local import resolution. The blocked Exp8602
+methods authority and historical scientific verdicts retain their original scope.
 
 ## Planned V737 research milestone — 2026-10-16
 

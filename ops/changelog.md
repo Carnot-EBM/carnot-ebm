@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-10-17 — Fix Exp8609 worker and CLI import failures
+
+- Bootstrap the selected checkout's package and repository paths in private
+  legacy workers and the standalone qualification CLI before reporting imports.
+- Add real subprocess regressions for all four workers and the CLI outside the
+  checkout with `PYTHONPATH` unset. Retain all original test assertions and the
+  lean inference-only import graph.
+- Verified all 122 affected tests, private E2E-018/021, fresh replay, tamper
+  controls and publication validators. Combined unit/subprocess coverage is
+  100% for 552 statements across five owned files; scoped Ruff, formatting,
+  strict mypy and spec tracing pass.
+- Regenerated the qualification artifact and its bound terminal validation;
+  existing methods authority keeps readiness at zero with all owned checks
+  passing. Global spec tracing retains 1,142 pre-existing missing references.
+
 ## 2026-10-17 — Operational retrospective for milestone 2026.10.738
 
 - Wrote `results/operational_retro_2026_10_738.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.738`. Authoritative disk-mtime fallback data records 8 experiments completed (1 compute-bound, 7 synthesis-only) across 107.6 total wall-time minutes (average 13 minutes per experiment).

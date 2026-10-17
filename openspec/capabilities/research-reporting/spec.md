@@ -102212,3 +102212,24 @@ Cold replay rejects missing inputs, failed owned checks and rehashed semantic
 changes. Private publication readers and unchanged validators accept final bytes.
 Readiness denotes an executable prototype only; Exp8609 independently qualifies
 parity/isolation before Exp8610 measures cost. Generalization scores stay zero.
+
+## REQ-REPORT-8609: Qualify lean parity and complete operation custody
+
+Authenticate Exp8608, Exp8602 methods and the original Exp8593 head descriptor.
+Compare legacy_python, legacy_native, lean_python and lean_native on original64
+requests and original knot/decay controls. Retain response fields, typed decisions,
+fallback flags and the original nine-input tolerance. Preserve every historical
+null and quarantine. Use no_model_load, empty MODEL_SPECS and zero current LLM calls.
+Independent generalization and generalized learning benefit remain zero.
+
+### SCENARIO-REPORT-8609-QUALIFICATION
+
+Readiness requires loaded parity, rejection isolation, authenticated head identity,
+fresh-process reconstruction and 100 percent newly owned statement coverage.
+External unchanged authority failure is blocked. Any owned failure disqualifies.
+Neither outcome permits a benchmark. Fixtures prove mechanics only.
+
+Verified 2026-10-17 after private import repair: all 122 affected tests and all
+owned validation receipts pass with 100 percent coverage of 552 statements.
+The final publication remains blocked on the original Exp8602 methods authority;
+readiness stays zero and no benchmark or independent science credit is awarded.

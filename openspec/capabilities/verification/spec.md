@@ -56180,3 +56180,38 @@ Tests compare the complete shipped fixture responses with both lean arms,
 including threshold fallback and malformed inputs. Actual private child execution
 and rejection paths count toward 100 percent newly owned statement coverage.
 Timing diagnostics establish dependency location only and cannot establish speed.
+
+## REQ-VERIFY-8609: Preserve response isolation in real private children
+
+Run real private subprocesses for timeout, partial frame, backpressure, idle
+shutdown, abnormal exit and next-request contamination. Cover duplicate IDs,
+stale configuration, expired requests, long text, nonfinite and empty inputs.
+Retain complete-operation intervals and actual loaded module paths and hashes.
+Collect original test nodes before disjoint bounded children. Keep unchanged
+assertions and original authority. Run private E2E-018/021 and unchanged validators.
+
+### SCENARIO-VERIFY-8609-CUSTODY
+
+Missing evidence, owned failures and self-consistently rehashed tampering cannot
+earn readiness. Replay immutable primitives in a fresh bounded process. Validate
+final bytes before atomic publication. Conductor owns ops and traceability updates.
+
+Historical Exp8593 nodes SHALL run unchanged in a private source copy with the
+sealed V738 activation. Preserve source hashes, original dates and all assertions.
+The current thirteen-task queue cannot substitute for historical eleven-task
+authority. Retain failed live-queue diagnostics without changing the live queue.
+
+### SCENARIO-VERIFY-8609-PRIVATE-IMPORTS
+
+Every private legacy and lean worker SHALL resolve its source from the selected
+checkout when launched outside the repository with `PYTHONPATH` unset. Legacy
+workers SHALL resolve repository-local `scripts` imports before accepting work.
+Lean workers SHALL retain their inference-only import graph. Each arm must
+return the original response and exit cleanly without parent import state.
+The standalone qualification CLI SHALL also bootstrap its checkout paths before
+importing reporting modules, and retain structured errors for invalid inputs.
+
+Verified 2026-10-17: all four outside-checkout worker arms and the standalone
+CLI pass without `PYTHONPATH`. The full 122-node union and private E2E-018/021
+pass; combined owned statement coverage is 552/552, with fresh replay, tamper
+controls and unchanged publication validators passing.

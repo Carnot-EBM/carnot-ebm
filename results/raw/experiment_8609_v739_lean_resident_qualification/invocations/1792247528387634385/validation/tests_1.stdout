@@ -1,0 +1,157 @@
+FF...                                                                    [100%]
+=================================== FAILURES ===================================
+_________________________ test_private_cli_and_replay __________________________
+
+tmp_path = PosixPath('/var/tmp/carnot8609-validation-9qses9jb/suite-1/test_private_cli_and_replay0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f203c1d7da0>
+
+    def test_private_cli_and_replay(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8609-CUSTODY: actual CLI bytes reach unchanged readers."""
+        work = e.measure(tmp_path / "work", "20261017", root=tmp_path)
+        monkeypatch.setattr(runner.e, "measure", lambda *a: work)
+        monkeypatch.setattr(runner, "validate", lambda *a: [{"name": "unit_required", "passed": True}])
+        output = tmp_path / (e.NAME + ".json")
+>       assert runner.main(["--date", "20261017", "--output", str(output)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f1fb81cab60>(['--date', '20261017', '--output', '/var/tmp/carnot8609-validation-9qses9jb/suite-1/test_private_cli_and_replay0/experiment_8609_v739_lean_resident_qualification.json'])
+E        +    where <function main at 0x7f1fb81cab60> = runner.main
+
+tests/python/test_lean_runner_8609.py:21: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=8609_start_no_model_load_MODEL_SPECS=[]_current_llm_calls=0 completed=0 pending=0
+[exp8205] phase=8609_primitives_complete completed=0 pending=0
+[exp8205] phase=8609_start_no_model_load_MODEL_SPECS=[]_current_llm_calls=0 completed=0 pending=0
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+[exp8205] phase=before_subprocess_owned_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_owned_failure completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+----------------------------- Captured stderr call -----------------------------
+[exp8609] error=candidate_rejected
+______________________ test_validation_commands_and_union ______________________
+
+tmp_path = PosixPath('/var/tmp/carnot8609-validation-9qses9jb/suite-1/test_validation_commands_and_u0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f203c1d7890>
+
+    def test_validation_commands_and_union(tmp_path, monkeypatch):
+        """REQ-VERIFY-8609: empty collection cannot expand into the repository suite."""
+        nodes = [
+            e.TESTS[0] + "::test_one",
+            e.TESTS[1] + "::test_two",
+            runner.historical.e.TEST + "::test_original",
+        ]
+        commands = []
+    
+        def child(name, argv, raw, **kwargs):
+            commands.append(argv)
+            raw.mkdir(parents=True, exist_ok=True)
+            log = raw / (name + ".stdout")
+            log.write_text("\n".join(nodes) if name == "collection" else "")
+            for arg in argv:
+                if arg.startswith("--junitxml="):
+                    Path(arg.split("=", 1)[1]).write_text("<testsuite/>")
+            if name == "coverage_json":
+                files = {
+                    str(e.ROOT / p): dict(
+                        summary=dict(num_statements=1, covered_lines=1), missing_lines=[]
+                    )
+                    for p in e.OWNED
+                }
+                Path(argv[-1]).write_text(
+                    json.dumps(dict(files=files, totals=dict(percent_covered=100)))
+                )
+            return dict(name=name, passed=True, stdout_path=str(log))
+    
+        work = e.measure(tmp_path / "unit-work", "20261017", root=tmp_path)
+        monkeypatch.setattr(runner, "child", child)
+        monkeypatch.setattr(
+            runner.e, "upstream", lambda *a: (dict(original_node_union=dict(collected=nodes[:])), [])
+        )
+        monkeypatch.setattr(runner, "checkout", lambda root: dict(root=str(tmp_path)))
+>       monkeypatch.setattr(runner, "xml_nodes", lambda p: [nodes[int(p.stem.split("-")[-1])]])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_runner_8609.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/carnot8609-validation-9qses9jb/suite-1/test_validation_commands_and_u0/unit-work')
+run_date = '20261017'
+
+    def measure(raw: Path, run_date: str, *, root: Path = ROOT) -> Json:
+        """Run independent CPU mechanics even when current scheduling authority is blocked."""
+        progress("8609_start_no_model_load_MODEL_SPECS=[]_current_llm_calls=0")
+        raw.mkdir(parents=True, exist_ok=True)
+        work: Json = dict(
+            raw=str(raw),
+            run_date=run_date,
+            started_ns=time.monotonic_ns(),
+            gate_check_summary=[],
+            sources=[],
+            sessions=[],
+            lifecycle_rows=[],
+            rejection_rows=[],
+            parity_rows=[],
+            case_kinds=[],
+            target_model=None,
+            loaded_extension_identity=[],
+        )
+        with TemporaryDirectory(prefix="carnot8609-", dir="/var/tmp") as scratch:
+            path = Path(scratch) / "probe"
+            path.write_bytes(b"disk-backed qualification scratch")
+            work["preconditions_checked"] = dict(
+                scratch=str(path.parent),
+                writable=path.read_bytes() == b"disk-backed qualification scratch",
+                disk_free_bytes=shutil.disk_usage(scratch).free,
+                memory=Path("/proc/meminfo").read_text(),
+                tools={n: shutil.which(n) for n in ["python", "findmnt"]},
+                python=sys.version,
+                scratch_mount=subprocess.check_output(
+                    ["findmnt", "-T", scratch, "-n", "-o", "FSTYPE"], text=True, timeout=5
+                ).strip(),
+                optional_gpu="not required",
+                optional_board="not required",
+            )
+        admitted = {}
+        for name, field in [
+            (prototype.NAME, "lean_prototype_ready_score"),
+            ("experiment_8602_v739_contract_methods", "methods_ready_score"),
+        ]:
+            gate: Json = dict(
+                check="qualified_input",
+                upstream=name,
+                path=str(root / "results" / (name + ".json")),
+                sha256=None,
+                field=field,
+                operator="==",
+                expected=1,
+                observed="missing",
+            )
+            try:
+                value, refs = upstream(root, name)
+                work["sources"].extend(refs)
+>               gate.update(sha256=refs[0]["sha256"], observed=value.get(field, "missing"))
+                                   ^^^^^^^
+E               IndexError: list index out of range
+
+python/carnot/reporting/lean_qualification_8609.py:227: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=8609_start_no_model_load_MODEL_SPECS=[]_current_llm_calls=0 completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_lean_runner_8609.py::test_private_cli_and_replay - A...
+FAILED tests/python/test_lean_runner_8609.py::test_validation_commands_and_union
+2 failed, 3 passed, 1 warning in 26.96s

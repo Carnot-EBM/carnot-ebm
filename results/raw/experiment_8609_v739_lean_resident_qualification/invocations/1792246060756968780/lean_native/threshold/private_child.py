@@ -1,0 +1,18 @@
+import sys,json,hashlib
+from pathlib import Path
+sys.path.insert(0,'/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference')
+from resident_protocol import serve
+try:
+    result=serve(Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8609_v739_lean_resident_qualification/invocations/1792246060756968780/lean_native/threshold/configuration.json'),'sha256:78b1aaed8e66d9c7ad896de354330d8153e46d3714e2b62cdfa7a3c7edf0f1bf','native',15)
+finally:
+    rows=[]
+    hashes={}
+    for name,module in list(sys.modules.items()):
+        path=Path(getattr(module,'__file__','') or '')
+        if path.is_file():
+            path=path.absolute()
+            if str(path) not in hashes:
+                hashes[str(path)]='sha256:'+hashlib.sha256(path.read_bytes()).hexdigest()
+            rows.append(dict(name=name,path=str(path),sha256=hashes[str(path)]))
+    Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8609_v739_lean_resident_qualification/invocations/1792246060756968780/lean_native/threshold/modules.json').write_text(json.dumps(rows,sort_keys=True))
+raise SystemExit(result)

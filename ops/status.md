@@ -1,5 +1,24 @@
 # Carnot — Operational Status
 
+## 2026-10-17 — Exp8609 private process import repair
+
+Legacy worker wrappers and the standalone qualification CLI now resolve the
+selected checkout before importing repository-local reporting dependencies.
+Real worker and CLI regressions pass from outside the repository without
+`PYTHONPATH`; lean workers retain their inference-only import graph.
+
+Validation: all 122 distinct affected tests passed, including private
+E2E-018/021 and unchanged historical provenance tests under sealed V738
+authority. Combined unit/subprocess coverage passed at 100% for all 552 owned
+statements across five files. Ruff, formatting, strict mypy, scoped spec tracing,
+fresh replay, tamper rejection, publication readers and terminal validators all
+passed. The standalone producer also exited zero with `PYTHONPATH` unset.
+
+The final artifact retains the existing Exp8602 methods authority blockage and
+zero readiness; no owned check failed. Documentation freshness passed. Global
+spec tracing and final reconciliation still report the previously documented
+1,142 tests without requirement references.
+
 ## 2026-10-16 — Standalone count-validator import repair
 
 The shared verifier now resolves repository imports from its script location
