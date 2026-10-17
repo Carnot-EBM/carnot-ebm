@@ -20487,3 +20487,4 @@ code |
 | 2026-10-17 21:48 UTC | Test later proper-loss benefit and simultaneous re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8618-causal-brier-stream) |
 | 2026-10-17 22:12 UTC | Measure complete-source extraction and annotation  | OK | 94 passed, 1 warning in 35.17s |
 | 2026-10-17 23:13 UTC | Qualify lean workers under explicit current method | OK | 99 passed, 1 warning in 136.94s (0:02:16) |
+| 2026-10-17 23:46 UTC | Measure complete lean resident costs with matched  | OK | 97 passed, 1 warning in 45.91s |
