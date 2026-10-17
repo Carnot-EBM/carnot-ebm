@@ -20447,3 +20447,4 @@ code |
 | 2026-10-17 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::backfill_stamps age-week 3: OPEN 21 days: SILENT_NON_FIRI |
 | 2026-10-17 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::main age-week 3: OPEN 21 days: SILENT_NON_FIRING on adver |
 | 2026-10-17 00:14 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_positive_control_failed_or_unchecked age-week 3: OPEN 21 |
+| 2026-10-17 00:30 UTC | Map qualified resident operations to board support | OK | 89 passed, 1 warning in 65.85s (0:01:05) |
