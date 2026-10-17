@@ -20486,3 +20486,4 @@ code |
 | 2026-10-17 21:46 UTC | Measure continuous Brier learning after qualified  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8616-deadline-statement-qualification.learning_execution_ready_score (actual=0 == expected=1) |
 | 2026-10-17 21:48 UTC | Test later proper-loss benefit and simultaneous re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8618-causal-brier-stream) |
 | 2026-10-17 22:12 UTC | Measure complete-source extraction and annotation  | OK | 94 passed, 1 warning in 35.17s |
+| 2026-10-17 23:13 UTC | Qualify lean workers under explicit current method | OK | 99 passed, 1 warning in 136.94s (0:02:16) |
