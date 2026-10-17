@@ -102093,3 +102093,28 @@ five resolved observations in every shared arm/mode/game cell. Do not fit or ran
 the outcome table. Zero resolved observations imply no supported update. Preserve
 source and cold-cost nulls, label rejections, historical hashes and quarantines.
 Both generalization scores and headline solve credit remain zero.
+## REQ-REPORT-8600: Map qualified resident operations without granting hardware benefit
+
+Authenticate the original Exp8563 board report and fresh Exp8596 complete costs
+independently within60 seconds. Require full parity, immutable primitives and
+bound publication before using resident clocks. Map ten operation groups to five
+boards. Preserve cold64 ceilings1.008746 and1.007981. Compute conditional ideal
+removal ceilings by session length and batch with fixed host and transport work.
+Keep unknown device, precision, update and sampling costs null. No device probes,
+language-model loads, purchases or redesign are authorized. Preserve every historical quarantine.
+Use eleven-task V738 authority; runtime dates identify the invocation.
+
+### SCENARIO-REPORT-8600-BOUNDARY
+
+Qualified resident clocks can describe CPU bottleneck removal but never qualify
+a physical spline kernel. KV260 quadratic Ising k<=5, PolarFire CPU-only scope
+and GateMate source/build/physical-change/ID/n16/smoke obligations remain intact.
+Separate distribution sampling, argmin and deterministic evaluation. Retain
+KANELE device/toolchain scope and Z1T exclusions without vendor ratio transfer.
+
+### SCENARIO-REPORT-8600-REPLAY
+
+Missing or unqualified Exp8596 leaves resident ceilings null. Fresh replay rejects
+self-consistently rehashed summaries, primitives and source drift. Owned required
+failure disqualifies; unchanged absent compatible hardware blocks. Both learning
+scores remain zero. Conductor owns ops and traceability reconciliation.

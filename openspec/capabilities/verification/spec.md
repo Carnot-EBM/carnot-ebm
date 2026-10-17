@@ -56093,3 +56093,16 @@ failure and self-consistently rehashed tampering. Validate exact final bytes wit
 primary_publication, adversarial_verify and strict verdict-row lint. Preserve real
 exits and findings. External absence blocks; owned required-check failure
 disqualifies. Accept a valid runtime date without fixing it to the planning date.
+## REQ-VERIFY-8600: Validate resident mapping and exact publication bytes
+
+Write focused tests before code. Require100 percent newly owned statements,
+real CLI rejection paths, private E2E-018/021, Ruff check/format, strict mypy and
+scoped spec tracing. Collect original nodes before disjoint bounded children.
+Retain command exits, clocks and log hashes. Never run historical controllers
+or the full repository suite. Validate exact final bytes before atomic publication.
+
+### SCENARIO-VERIFY-8600-PUBLICATION
+
+Fresh private CLI runs cover missing operands, owned failure, valid replay and
+rehashed tampering. Run unchanged adversarial and strict row validators and both
+publication consumers. Preserve actual warning exits and acceptance outcomes.
