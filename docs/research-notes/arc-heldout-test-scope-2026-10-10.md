@@ -236,3 +236,59 @@ direction, not a measured effect.
 
 **Open.** Rerun the 7 timeout cells with a longer generator timeout (about 15 hours) to
 fill the gap. Not started.
+
+## Addendum 2026-10-17: the 7-cell rerun with a 7200 s induce timeout
+
+The 7 cells with an unavailable generator ran again. Settings: one level-1 sample per
+game, `--k 1`, `CARNOT_ARC_INDUCE_TIMEOUT=7200`, GPU 1 only (device confirmed by the PID
+to UUID join). Results are in `results/arc_induction_plans_20261015_timeout7200/`. Wall
+time was 23.6 hours (85,088 s).
+
+| Cell | Generator calls / responses | Skip reason | First win |
+|---|---|---|---|
+| bp35 | 2 / 2 | heldout_transition_verification_failed | no |
+| cd82 | 2 / 2 | heldout_transition_verification_failed | no |
+| cn04 | 4 / 3 | heldout_transition_verification_failed | no |
+| r11l | 4 / 3 | heldout_transition_verification_failed | no |
+| re86 | 2 / 2 | heldout_transition_verification_failed | no |
+| tr87 | 3 / 1 | proposer_failed (2 content failures) | no |
+| wa30 | 2 / 2 | heldout_transition_verification_failed | no |
+
+**What the rerun shows.**
+
+- The timeout was the cause of the earlier generator failures. Generator errors fell from
+  20 across the 7 cells to 0. The one remaining proposer_failed (tr87) is a content
+  failure, not a timeout.
+- No cell reached a first win, and no cell finished an attempt that passed the held-out
+  check. Six of seven stopped at heldout_transition_verification_failed.
+- No cell had a server failure. The generator was healthy after every cell.
+
+**Correction to the first-run table above (append only; the table is not edited).** The
+table says "Attempts that installed a plan: 10". That number is the count of the
+`induction_attempts_planned` flag. The flag means the attempt reached the planning stage.
+It does not mean a plan was installed. Two cells in this rerun show the flag set and
+still skip with heldout_transition_verification_failed (cd82, r11l). The cleaner count is
+attempts that were not skipped. In the first run that count is 5 of 31, and all 5 are
+the 5 first wins. Treat "10 of 31 installed a plan" as an overstatement. Commit
+6e50c652f6 carries the same wording in its title. I did not check how the flag is set in
+the driver code, so the exact meaning of the flag is not confirmed.
+
+**Plan rates, split as the earlier note asked.**
+
+| Group | Cells | Attempts | Flag set | Not skipped | First wins |
+|---|---|---|---|---|---|
+| First run, 18 cells with a working generator | 18 | 24 | 9 | 5 | 5 |
+| First run, 7 cells with a failing generator | 7 | 7 | 1 | 0 | 0 |
+| Rerun, same 7 cells, 7200 s timeout | 7 | 7 | 2 | 0 | 0 |
+
+These are counts from one sample per game. They carry no interval. The 7 cells were chosen
+because the first run failed on them, so they are not a random sample. Do not compare
+the groups as rates.
+
+**Reading.** A working generator does not make the plan pass. On these 7 cells the
+generator now answers and the induced model still fails the held-out transition check.
+The earlier result that "6 of 31 attempts failed because of the generator" is closed.
+The next limit is the quality of the induced model, not the generator timeout.
+
+**Cost.** The longer timeout cost 23.6 hours of GPU 1 for 7 attempts and no wins. The
+value 7200 s was my choice, not an operator decision.
