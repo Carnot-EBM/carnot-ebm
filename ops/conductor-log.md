@@ -20466,3 +20466,4 @@ code |
 | 2026-10-17 11:00 UTC | Plan milestone 2026.10.739 | OK | 13 tasks proposed |
 | 2026-10-17 11:12 UTC | Milestone 2026.10.739 activated | OK | 13 tasks queued |
 | 2026-10-17 11:48 UTC | Bind thirteen tasks and ingest long-context eviden | OK | 122 passed, 1 warning in 162.46s (0:02:42) |
+| 2026-10-17 13:09 UTC | Qualify the exact expired-deadline path under isol | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 91 passed, 1 warning in 462.75s (0:07:42) |
