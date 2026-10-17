@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.738",
+  "generated_at": "2026-10-17T09:28:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 107.6,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete resident cost with authenticated energy-head provenance",
+      "duration_minutes": 33.11,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Isolate runner deadlines from numerical update clocks and qualify the fixed stre",
+      "duration_minutes": 21.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify truthful small-head provenance through the unchanged resident validators",
+      "duration_minutes": 20.19,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure cross-game support and censoring in the newly qualified live ARC outcome",
+      "duration_minutes": 9.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile eleven outcomes and close unchanged nulls with exact evidence requirem",
+      "duration_minutes": 8.63,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.738 executed 8 experiments (1 compute-bound, 7 synthesis-only) across 107.6 total wall-time minutes based on disk-mtime fallback reconstruction data. Milestone duration was led by measuring complete resident cost with authenticated energy-head provenance (33.11 minutes), isolating runner deadlines from numerical update clocks and qualifying the fixed stre (21.34 minutes), and qualifying truthful small-head provenance through unchanged resident validators (20.19 minutes, the sole compute-bound task). The compute-bound task engaged GPU execution with gpu_idle_on_compute_bound_tasks recorded as false, while 0% utilization across both RTX 3090 GPUs at monitor snapshot reflected expected idle behavior for non-GPU synthesis workloads.",
+  "bottlenecks_identified": [
+    "Synthesis tasks accounted for 7 of 8 completed experiments and 87.41 minutes of total milestone wall time, led by 'Measure complete resident cost with authenticated energy-head provenance' (33.11 minutes) and 'Isolate runner deadlines from numerical update clocks and qualify the fixed stre' (21.34 minutes), which together constituted 54.45 minutes (~50.6% of milestone duration).",
+    "The sole compute-bound task 'Qualify truthful small-head provenance through the unchanged resident validators' consumed 20.19 minutes (~18.8% of milestone duration) performing unpartitioned validation runs on the GPU without intermediate checkpointing.",
+    "Recurring qualification and outcome reconciliation tasks ('Measure cross-game support and censoring in the newly qualified live ARC outcome' at 9.02 minutes and 'Reconcile eleven outcomes and close unchanged nulls with exact evidence requirem' at 8.63 minutes) ran as un-memoized full-suite passes despite operating on immutable evidence.",
+    "Timing data required disk-mtime fallback reconstruction due to the live git-log path discovering 0 commits in the milestone interval.",
+    "Lack of intra-task phase telemetry within synthesis and compute receipts, preventing precise attribution of latency across environment initialization, runner synchronization, validator execution, and artifact serialization."
+  ],
+  "improvements_suggested": [
+    "Introduce incremental receipt caching and evidence memoization for recurring qualification checks (ARC cross-game support and outcome reconciliation) when operating on immutable evidence.",
+    "Partition resident cost benchmarking and runner deadline isolation runs into modular sub-phases to allow isolated measurement and identify internal latency drivers.",
+    "Persist synchronous execution start, finish, and elapsed duration timestamps directly into experiment JSON receipts to avoid reliance on disk-mtime fallback reconstruction.",
+    "Preserve DualGPURunner boundaries strictly for concurrent multi-model inference pipelines, avoiding unnecessary runner overhead on single-model compute tasks like small-head provenance qualification.",
+    "Maintain active failure_ledger pre-launch checks to ensure non-viable runs are aborted within <1s before consuming milestone wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement incremental evidence memoization for recurring qualification and outcome reconciliation tasks operating on immutable evidence.",
+    "Instrument resident cost measurement and small-head provenance validation with granular intra-task phase timers.",
+    "Record explicit synchronous start and end lifecycle timestamps directly in experiment result receipts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.738 completed 8 experiments in 107.6 wall-time minutes with 1 compute-bound task and 7 synthesis-only tasks. GPU execution on the single compute-bound small-head provenance task was active with gpu_idle_on_compute_bound_tasks recorded as false, while 0% utilization across both RTX 3090 GPUs at monitor snapshot matched expected idle behavior for non-GPU synthesis workloads. Future throughput improvements will depend on incremental memoization for unchanged validator qualifications and granular phase telemetry in experiment receipts."
+}
