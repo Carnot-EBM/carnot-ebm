@@ -56077,3 +56077,19 @@ private CLI children cover160/160 newly owned statements. Cold replay rejects
 source drift, repaired summaries, missing bytes and changed validation streams.
 The immutable validation directory retains original node collection and bounded
 private E2E-018/021 consumer receipts. Conductor owns ops and traceability updates.
+
+## REQ-VERIFY-8599: Bind the outcome diagnostic to immutable operands
+
+Use no_model_load, empty MODEL_SPECS and zero current language-model calls.
+Authenticate current invocation authority separately from original producer
+snapshots. Use disk-backed scratch and bounded children. Require scoped unit,
+private authority/publication E2E, Ruff, strict typing, spec coverage and100 percent
+new statement coverage. Preserve original collected node IDs and disjoint unions.
+
+### SCENARIO-VERIFY-8599-REPLAY
+
+Fresh CLI replay must recompute primitives and reject missing inputs, owned check
+failure and self-consistently rehashed tampering. Validate exact final bytes with
+primary_publication, adversarial_verify and strict verdict-row lint. Preserve real
+exits and findings. External absence blocks; owned required-check failure
+disqualifies. Accept a valid runtime date without fixing it to the planning date.

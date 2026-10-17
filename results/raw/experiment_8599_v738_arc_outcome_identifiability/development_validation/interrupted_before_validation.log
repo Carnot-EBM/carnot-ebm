@@ -1,0 +1,43 @@
+[exp8599] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=0
+[exp8599] phase=preconditions_before completed=0 pending=0
+[exp8599] phase=preconditions_after completed=9 pending=0
+[exp8599] phase=authenticate_and_measure_before completed=0 pending=0
+[exp8599] phase=replay_episode_before completed=0 pending=16
+[exp8599] phase=replay_episode_after completed=1 pending=15
+[exp8599] phase=replay_episode_before completed=1 pending=15
+[exp8599] phase=replay_episode_after completed=2 pending=14
+[exp8599] phase=replay_episode_before completed=2 pending=14
+[exp8599] phase=replay_episode_after completed=3 pending=13
+[exp8599] phase=replay_episode_before completed=3 pending=13
+[exp8599] phase=replay_episode_after completed=4 pending=12
+[exp8599] phase=replay_episode_before completed=4 pending=12
+[exp8599] phase=replay_episode_after completed=5 pending=11
+[exp8599] phase=replay_episode_before completed=5 pending=11
+[exp8599] phase=replay_episode_after completed=6 pending=10
+[exp8599] phase=replay_episode_before completed=6 pending=10
+[exp8599] phase=replay_episode_after completed=7 pending=9
+[exp8599] phase=replay_episode_before completed=7 pending=9
+[exp8599] phase=replay_episode_after completed=8 pending=8
+[exp8599] phase=replay_episode_before completed=8 pending=8
+[exp8599] phase=replay_episode_after completed=9 pending=7
+[exp8599] phase=replay_episode_before completed=9 pending=7
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8599_v738_arc_outcome_identifiability.py", line 17, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_outcome_runner_8599.py", line 149, in main
+    data = e.audit(args.root, raw / "primitives")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_outcome_identifiability_8599.py", line 211, in audit
+    terminal = json.loads((directory / "episode.json").read_bytes())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py", line 354, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

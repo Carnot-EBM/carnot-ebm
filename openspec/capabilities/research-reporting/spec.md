@@ -102073,3 +102073,23 @@ original publication and release metadata, separates annotation lineage and
 records unavailable sentence inventories. The bounded acquisition retains the
 assisted repository HTTP401 response. Counts and overlap remain unresolved.
 The research note preserves original source hashes and all historical quarantines.
+
+## REQ-REPORT-8599: Identify support in qualified live ARC outcomes
+
+Authenticate original Exp8587 publication and Exp8588 panel bytes and authority.
+Replay all sixteen episodes and8192 actions without new game execution. Preserve
+original event identities, unavailable attempts, latch changes, next observations,
+wall costs and right censoring. Four games are independent units; eight seed pairs
+are repeated observations. Separate selected, applied, policy change, actual action
+change, observed outcome and level-up resolution. Actual counterfactual action
+change remains unknown without a control at the same state.
+
+### SCENARIO-REPORT-8599-SUPPORT
+
+Compute intervention windows through the next redirect and through terminal action.
+Retain competing redirects without crediting censored windows as failures. For each
+held-out game, priority refinement requires three overlapping training games and
+five resolved observations in every shared arm/mode/game cell. Do not fit or rank
+the outcome table. Zero resolved observations imply no supported update. Preserve
+source and cold-cost nulls, label rejections, historical hashes and quarantines.
+Both generalization scores and headline solve credit remain zero.
