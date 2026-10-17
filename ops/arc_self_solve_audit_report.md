@@ -16,11 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (99 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — zero supplied artifacts demonstrate a new autonomous solve. Reachability passes; self-discovery remains unproven.**
+**TL;DR: No demonstrated SELF_DISCOVERY_ADVANCE. Zero recent solve artifacts supplied; reachability passes, solve provenance remains unassessed.**
 
-**Per-artifact:** None (`[]`). No artifact verdicts or recommended actions to assign.
+Per-artifact: none (`[]`). No artifacts to classify, validate against live attempts, or compare with the registry.
 
-**Pattern watch:** Static import reachability cannot distinguish runtime discovery from an outer-loop solution wired into the agent. Also, the [artifact scan](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_self_solve_audit.py:193) requires `offline_reproduced: true` and specific fields; zero matches does not establish zero solve claims.
-
-Credit `SELF_DISCOVERY_ADVANCE` only with live action/observation traces, evidence the model came from those attempts, and a registry novelty check. This empty sample neither demonstrates progress nor establishes outer-loop drift.
+**Pattern watch:** Import reachability can make a hand-built per-game solver reachable without making its discovery autonomous. The 99-module closure proves neither runtime use nor agent-originated learning. Credit future claims only with linked live observations/actions → runtime model discovery → executed level completion, plus registry evidence of novelty. Missing provenance warrants **UNCLEAR**; demonstrated source-derived or hand-built solutions warrant **OUTER_LOOP_RE**, even when reachable.
 

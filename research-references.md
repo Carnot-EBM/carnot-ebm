@@ -53444,3 +53444,88 @@ verified true. The follow-up must distinguish original blinded annotations,
 assisted adjudication and evidence availability; the selected subset cannot
 estimate deployment precision or natural prevalence. The inspected paper did
 not expose an obvious author data link. Release availability remains unverified.
+## 2026-10-17 — V739 planning scan: causal learning and transferable evidence
+
+Recorded before the V739 experiment design. The scan covered all eight requested
+arXiv topics and all six secondary channels. Findings below are external claims.
+They do not qualify a Carnot result or reopen an unchanged retired experiment.
+
+### Findings to ingest
+
+- **New release inspection:** [Trivia+, arXiv:2605.11330](https://arxiv.org/abs/2605.11330)
+  studies organic long-context hallucinations and annotation noise. The
+  [author repository](https://github.com/amazon-science/hallucination-benchmark-trivialplus)
+  exposes a Parquet release, official splits, annotation details and a consistency
+  checker. Its [data details](https://raw.githubusercontent.com/amazon-science/hallucination-benchmark-trivialplus/main/DATA_DETAILS.md)
+  distinguish source faithfulness from factual truth. Sentence votes use a strict
+  tie rule; one contradicted or unsupported sentence makes the answer unfaithful.
+  Noisy training labels and raw human votes are separate columns.
+  Proposed use: authenticate release bytes and annotation authority, then test
+  frozen verification only on eligible question groups. Never pass label, model,
+  split or annotator metadata into features. Inspect prior exposure before calling
+  a split independent. This release audit is new; the paper was already catalogued.
+- **Release limit:** the inspected [Trivia+ license](https://raw.githubusercontent.com/amazon-science/hallucination-benchmark-trivialplus/main/LICENSE)
+  is CC BY-NC-ND 4.0. Keep downloaded text and transformed examples in private
+  local storage. Plan only a bounded internal evaluation. Do not redistribute
+  examples, train a released product on this data, or imply commercial permission.
+  Record data-use scope explicitly in the release decision.
+- **Rechecked online methods:** [Calibeating Made Simple, 2603.22167](https://arxiv.org/abs/2603.22167)
+  motivates proper-loss comparisons against unmodified forecasts.
+  [Capacity-constrained delayed feedback, 2606.11711](https://arxiv.org/abs/2606.11711)
+  separates admission decisions from feedback that arrives too late or is lost.
+  Complete the existing sealed Brier experiment after its specific deadline-path
+  qualification changes. Preserve its original controls and numerical operands.
+  These theorems do not automatically cover Carnot's nonlinear delayed learner.
+- **Rechecked local learning:** [Online spline KAN, 2602.02056](https://arxiv.org/abs/2602.02056)
+  and its [full text](https://arxiv.org/html/2602.02056v1) motivate sparse updates.
+  [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306) motivates explicit retention
+  controls. Neither justifies another unchanged importance-anchor trial.
+  Measure the complete CPU service before a new hardware or spline-basis project.
+- **Verification lead:** [LLM-as-a-Verifier, 2607.05391](https://arxiv.org/abs/2607.05391),
+  found via [Hugging Face Papers](https://huggingface.co/papers/2607.05391), uses
+  scoring-token distributions and decomposed criteria. This is an optional future
+  comparator after local Qwen generation works. Its scores are not independent
+  truth. No new generator training or live judge benchmark is justified yet.
+
+### Topic coverage and decisions
+
+| Topic | Primary source checked | Use or deferral |
+|---|---|---|
+| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), [ARM–EBM v4, 2512.15605](https://arxiv.org/abs/2512.15605) | Preserve learned compatibility versus certified truth. No foundation-model training in this milestone. |
+| Neural constraints | [T-Oracle/FastCA, 2609.12267](https://arxiv.org/abs/2609.12267) | A learned oracle proposes constraints; it cannot replace independent acceptance evidence. Defer a new acquisition engine. |
+| Ising verification | [Log-PWL/Step-Env, 2603.00408v4](https://arxiv.org/abs/2603.00408v4) | Exactness requires the stated formulation and global optimization. A heuristic low-energy sample is not a proof. |
+| Hallucination mitigation | Trivia+ and LLM-as-a-Verifier above | Admit labels before evaluation. Keep faithfulness, factuality and confidence distinct. |
+| Constrained generation | [Reward-guided decoding, 2605.28020](https://arxiv.org/abs/2605.28020), [energy-guided object decoding, 2507.07731](https://arxiv.org/abs/2507.07731) | Defer decoding changes until runtime and verifier utility qualify. The object-hallucination study is outside the text-only product scope. |
+| FPGA sampling | [Million-p-bit computer, 2606.25313](https://arxiv.org/abs/2606.25313), [Ising algorithm review, 2610.03972](https://arxiv.org/abs/2610.03972) | Distinguish sampling quality, optimization and deterministic spline inference. Include transport and setup costs. |
+| KANs and continual constraints | Online KAN, KAN-CL and delayed-feedback sources above | Preserve sparse-update, retention and complete-cost measurements. Do not infer local device performance from paper ratios. |
+
+### Secondary channels and limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. The
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) and another indexed ICLR
+  PDF returned browser challenges. The [official ICLR proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html)
+  confirm the EBT conference paper. Unread reviews supply no method evidence.
+- **Semantic Scholar:** exact-ID searches and both citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  did not yield a readable citation inventory. Citation coverage remains incomplete.
+- **Hugging Face Papers:** checked verification results, including
+  [SURE-RAG](https://huggingface.co/papers/2605.03534) and LLM-as-a-Verifier.
+  Sufficiency under constructed evidence differs from natural hallucination detection.
+- **GitHub Trending:** inspected [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly). The returned pages
+  were month-old snapshots. No current rank or novel trending dependency is claimed.
+  The usable dataset repository came from its paper, not a trending-rank inference.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/), dated September 4. Its chip-efficiency
+  figures are projections and exclude the final dense logit layer. Preserve
+  inter-device movement costs and operation limits. No local TSU access follows.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and its home page. The inspected material describes an energy-based decision
+  layer but supplies no reproducible architecture change that closes current gaps.
+
+Planning inference: the qualified resident clocks identify process setup and
+shutdown as large costs. A smaller import path is a concrete new mechanism to
+test. Keep Python/native arithmetic controls separate from this service change.
+The current learning failure needs an exact deadline-edge test, not a new learner.
+Trivia+ provides a testable evidence lead; its eligibility remains to be measured.
