@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.737",
+  "generated_at": "2026-10-17T01:22:32Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 167.3,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete resident-session cost at matched Python and native decisions",
+      "duration_minutes": 50.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Train the small energy head through sealed delayed feedback and fixed controls",
+      "duration_minutes": 26.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify the repaired count validator under immutable current revision evidence",
+      "duration_minutes": 23.23,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify actual ARC publication closure before the reachable live panel",
+      "duration_minutes": 20.84,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify causal accounting against the explicitly qualified validator revision",
+      "duration_minutes": 13.82,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.737 executed 10 experiments across 167.3 total wall-time minutes (averaging 17 minutes per experiment) based on disk-mtime fallback reconstruction data. All 10 tasks were synthesis-only (0 compute-bound experiments), dominated by measuring complete resident-session cost at matched Python and native decisions (50.12 minutes), training the small energy head through sealed delayed feedback and fixed controls (26.28 minutes), qualifying the repaired count validator under immutable current revision evidence (23.23 minutes), qualifying actual ARC publication closure before the reachable live panel (20.84 minutes), and qualifying causal accounting against the explicitly qualified validator revision (13.82 minutes), which together constituted 134.29 minutes (~80.3% of milestone wall time). Zero compute-bound tasks were scheduled, resulting in gpu_idle_on_compute_bound_tasks being recorded as null, and point-in-time GPU monitor polling showing 0% utilization across both RTX 3090 GPUs, which represents expected behavior for non-GPU synthesis execution rather than an operational bottleneck.",
+  "bottlenecks_identified": [
+    "Synthesis-only task execution accounted for 100% of milestone duration (10 completed tasks totaling 167.3 wall-time minutes), with the longest single experiment ('Measure complete resident-session cost at matched Python and native decisions') taking 50.12 minutes (~30.0% of total wall time) and the top two experiments totaling 76.40 minutes (~45.7%).",
+    "End-to-end benchmarking of resident session costs and energy head training executed without incremental caching or intermediate evidence memoization, forcing full reruns of session workloads and feedback controls.",
+    "Recurring validator qualification checks (repaired count validator at 23.23 minutes, ARC publication closure at 20.84 minutes, and causal accounting at 13.82 minutes) ran as un-memoized full-suite passes despite operating on immutable revision evidence.",
+    "Timing data required disk-mtime fallback reconstruction due to the live git-log path discovering 0 commits in the milestone interval.",
+    "Lack of intra-task phase telemetry within synthesis experiment receipts, preventing precise breakdown of overhead across environment setup, subprocess invocation, verification assertions, and artifact serialization."
+  ],
+  "improvements_suggested": [
+    "Introduce incremental receipt caching and evidence memoization for recurring qualification tasks (count validator, ARC publication closure, and causal accounting) when underlying revisions and evidence are immutable.",
+    "Add phase-level timing telemetry within resident-session benchmarking and energy head training tasks to isolate execution phases (daemon spin-up, transaction measurement, gradient feedback, control validation).",
+    "Persist explicit synchronous start, finish, and elapsed execution timestamps in all experiment receipts to provide first-class timing data without relying on disk-mtime reconstruction.",
+    "Preserve DualGPURunner boundaries strictly for concurrent multi-model inference pipelines, avoiding unnecessary GPU allocation or runner overhead for single-model or CPU synthesis tasks.",
+    "Keep the failure_ledger pre-launch doomed-rerun check active to abort non-viable runs in <1s before incurring wall-time overhead."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement incremental evidence memoization for qualification suites (count validator, ARC publication closure, causal accounting) operating on immutable evidence.",
+    "Instrument resident-session cost benchmarks and energy head training with granular phase timers to identify internal latency drivers.",
+    "Record synchronous execution start and end timestamps directly into experiment result receipts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.737 concluded 10 synthesis-only experiments in 167.3 wall-time minutes with zero compute-bound tasks and gpu_idle_on_compute_bound_tasks recorded as null. The observed 0% GPU utilization across both RTX 3090 GPUs was appropriate for CPU-bound synthesis workloads, and no multi-model tasks were present to require DualGPURunner. Operational gains for subsequent milestones will stem from memoizing qualification evidence on immutable revisions and introducing phase-level receipt telemetry, with time savings estimated at 0% until measured."
+}
