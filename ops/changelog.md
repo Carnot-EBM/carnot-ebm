@@ -22470,3 +22470,4 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
 - 2026-10-17: Build a minimal resident import path with unchanged numerical decisions (⚠️ Research Finding) — honest_verdict=complete_null_v739_lean_resident_prototype; results/experiment_8608_v739_lean_resident_prototype.json
 - 2026-10-17: Qualify lean worker parity isolation and complete-operation custody (⚠️ Blocked) — honest_verdict=complete_blocked_v739_lean_resident_qualification; results/experiment_8609_v739_lean_resident_qualification.json
 - 2026-10-17: Map changed service and sparse-learning costs to supported hardware operations (⚠️ Blocked) — honest_verdict=complete_blocked_v739_hardware_operation_boundary; results/experiment_8613_v739_hardware_operation_boundary.json
+- 2026-10-17: Reconcile thirteen outcomes and close exact unchanged studies (⚠️ Blocked) — honest_verdict=complete_blocked_v739_capstone; results/experiment_8614_v739_capstone.json
