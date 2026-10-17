@@ -7,6 +7,7 @@ The public run must earn every scoped test, coverage and consumer receipt.
 from __future__ import annotations
 
 import argparse
+from collections.abc import Callable
 import json
 import os
 from pathlib import Path
@@ -25,6 +26,8 @@ from carnot.reporting.v709_execution import child
 from scripts.adversarial_verify import verify_artifact
 
 Json = dict[str, Any]
+# Deadline tests must not replace the process-wide clock used by numerical kernels.
+deadline_clock: Callable[[], float] = time.monotonic
 
 
 def validation_child(
@@ -68,7 +71,7 @@ def terminal(path: Path, raw: Path) -> Json:
 
 def run(output: Path, *, private: bool = False, measurement: Path | None = None) -> int:
     """Finish CPU measurements before validation and atomically publish only checked bytes."""
-    start = time.monotonic()
+    start = deadline_clock()
     raw = output.parent / "raw" / e.NAME / "invocations" / str(time.time_ns())
     with TemporaryDirectory(prefix="carnot-8582-", dir="/var/tmp") as directory:
         e.old.progress("preconditions_before_no_model_load_MODEL_SPECS=[]_current_llm_calls=0")
@@ -85,10 +88,10 @@ def run(output: Path, *, private: bool = False, measurement: Path | None = None)
             work.update(raw=str(raw), receipts=[], owned_ready=False)
         else:
             work = e.measure(e.ROOT, raw, Path(directory))
-        if time.monotonic() - start >= 3600:
+        if deadline_clock() - start >= 3600:
             work["failures"].append(
                 e.accounting.old.gate(
-                    raw, "measurement_deadline", "<3600", time.monotonic() - start
+                    raw, "measurement_deadline", "<3600", deadline_clock() - start
                 )
             )
         e.old.progress("measurement_sealed_before_validation", 20, 0)

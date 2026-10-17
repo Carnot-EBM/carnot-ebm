@@ -1,0 +1,54 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_production_dispatch_and_deadline _____________________
+
+measured = (PosixPath('/tmp/pytest-of-ianblenke/pytest-0/causal85820'), {'adversarial_findings': [{'detail': 'admission_events=24...ning_report_8434.py', 'sha256': 'sha256:132c9e3171f1369892a0ab7d23bc02cb87ff473aa3456c70128023a1fae9927e'}, ...], ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe117507950>
+tmp_path = PosixPath('/tmp/pytest-of-ianblenke/pytest-0/test_production_dispatch_and_d0')
+
+    def test_production_dispatch_and_deadline(measured, monkeypatch, tmp_path):
+        """REQ-VERIFY-8582: production validation and deadline failure are explicit."""
+        _, original = measured
+        work = deepcopy(original)
+        monkeypatch.setattr(e, "measure", lambda *a: work)
+        monkeypatch.setattr(e.validation, "validate", lambda w: None)
+        monkeypatch.setattr(r, "publish_primary", lambda *a: dict(sidecar_path="test"))
+        monkeypatch.setattr(r, "reader_receipt", lambda *a, **k: dict(passed=True))
+        clock = iter([0.0, 3601.0, 3602.0])
+        monkeypatch.setattr(r.time, "monotonic", lambda: next(clock))
+>       assert r.run(tmp_path / (e.NAME + ".json")) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/var/tmp/carnot-8592-start/test_original_8582.py:302: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/causal_brier_runner_8582.py:106: in run
+    atomic_json(candidate, e.build(work, output))
+                           ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/causal_brier_stream_8582.py:235: in build
+    events = counters(work)
+             ^^^^^^^^^^^^^^
+python/carnot/reporting/causal_brier_stream_8582.py:180: in counters
+    head, info = kernel(head, np.asarray(record["x"]), trace["target"], 0.01)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/verify/sparse_energy_7996.py:158: in update
+    began = time.monotonic()
+            ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   monkeypatch.setattr(r.time, "monotonic", lambda: next(clock))
+                                                     ^^^^^^^^^^^
+E   StopIteration
+
+/var/tmp/carnot-8592-start/test_original_8582.py:301: StopIteration
+----------------------------- Captured stdout call -----------------------------
+[exp8517] phase=preconditions_before_no_model_load_MODEL_SPECS=[]_current_llm_calls=0 completed=0 pending=0
+[exp8517] phase=measurement_sealed_before_validation completed=20 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../../var/tmp/carnot-8592-start/test_original_8582.py::test_production_dispatch_and_deadline
+1 failed, 1 warning in 2.78s

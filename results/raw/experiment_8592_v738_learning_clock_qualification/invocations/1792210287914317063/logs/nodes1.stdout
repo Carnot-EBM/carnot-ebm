@@ -1,0 +1,40 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_fixed_stream_restart_and_counters ____________________
+
+measured = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T041236-98146-76b9a1e7/causal85820'), {'adversarial_findings': [{...ning_report_8434.py', 'sha256': 'sha256:132c9e3171f1369892a0ab7d23bc02cb87ff473aa3456c70128023a1fae9927e'}, ...], ...})
+
+    def test_fixed_stream_restart_and_counters(measured):
+        """SCENARIO-REPORT-8582-STREAM: real updates affect later sealed decisions."""
+        root, work = measured
+        output = root / (e.NAME + ".json")
+        value = e.build(work, output)
+        assert value["completed_count"] == value["intended_count"] == 6000
+        assert len(value["retention_rows"]) == 15000
+        assert len(value["checkpoint_restart_rows"]) == 4
+        assert all(row["actual_exit"] == 73 and row["passed"] for row in work["restart_rows"])
+        assert len(value["canonical_counter_rows"]) == len(value["metrics"])
+        assert len(value["coefficient_transition_rows"]) == 2400
+        assert all("primitive" in row for row in value["coefficient_transition_rows"])
+        assert value["metrics"]["applied_update_events"] == 1800
+        assert value["metrics"]["admission_events"] == 2400
+        assert value["metrics"]["physical_coordinate_writes"] > 1800
+        assert value["complete_learning_cost"]["includes_final_feedback_drain"]
+        assert value["generalized_learning_benefit_score"] == 0
+        assert value["causal_learning_rows_ready_score"] == 0
+        atomic_json(output, value)
+>       assert e.replay(output)
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7fa35cfd6f20>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T041236-98146-76b9a1e7/causal85820/experiment_8582_v737_causal_brier_stream.json'))
+E        +    where <function replay at 0x7fa35cfd6f20> = e.replay
+
+tests/python/test_causal_brier_stream_8582.py:57: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_causal_brier_stream_8582.py::test_fixed_stream_restart_and_counters
+1 failed, 1 warning in 18.03s

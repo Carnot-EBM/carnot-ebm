@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="16.691" timestamp="2026-10-17T00:12:49.650752-04:00" hostname="icbfl1"><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_fixed_stream_restart_and_counters" time="12.754"><failure message="AssertionError: assert False&#10; +  where False = &lt;function replay at 0x7fa35cfd6f20&gt;(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T041236-98146-76b9a1e7/causal85820/experiment_8582_v737_causal_brier_stream.json'))&#10; +    where &lt;function replay at 0x7fa35cfd6f20&gt; = e.replay">measured = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T041236-98146-76b9a1e7/causal85820'), {'adversarial_findings': [{...ning_report_8434.py', 'sha256': 'sha256:132c9e3171f1369892a0ab7d23bc02cb87ff473aa3456c70128023a1fae9927e'}, ...], ...})
+
+    def test_fixed_stream_restart_and_counters(measured):
+        """SCENARIO-REPORT-8582-STREAM: real updates affect later sealed decisions."""
+        root, work = measured
+        output = root / (e.NAME + ".json")
+        value = e.build(work, output)
+        assert value["completed_count"] == value["intended_count"] == 6000
+        assert len(value["retention_rows"]) == 15000
+        assert len(value["checkpoint_restart_rows"]) == 4
+        assert all(row["actual_exit"] == 73 and row["passed"] for row in work["restart_rows"])
+        assert len(value["canonical_counter_rows"]) == len(value["metrics"])
+        assert len(value["coefficient_transition_rows"]) == 2400
+        assert all("primitive" in row for row in value["coefficient_transition_rows"])
+        assert value["metrics"]["applied_update_events"] == 1800
+        assert value["metrics"]["admission_events"] == 2400
+        assert value["metrics"]["physical_coordinate_writes"] &gt; 1800
+        assert value["complete_learning_cost"]["includes_final_feedback_drain"]
+        assert value["generalized_learning_benefit_score"] == 0
+        assert value["causal_learning_rows_ready_score"] == 0
+        atomic_json(output, value)
+&gt;       assert e.replay(output)
+E       AssertionError: assert False
+E        +  where False = &lt;function replay at 0x7fa35cfd6f20&gt;(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261017T041236-98146-76b9a1e7/causal85820/experiment_8582_v737_causal_brier_stream.json'))
+E        +    where &lt;function replay at 0x7fa35cfd6f20&gt; = e.replay
+
+tests/python/test_causal_brier_stream_8582.py:57: AssertionError</failure></testcase></testsuite></testsuites>

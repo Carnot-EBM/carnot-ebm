@@ -5,7 +5,6 @@ import json
 import os
 from pathlib import Path
 import sys
-from types import SimpleNamespace
 
 import pytest
 
@@ -298,13 +297,7 @@ def test_production_dispatch_and_deadline(measured, monkeypatch, tmp_path):
     monkeypatch.setattr(r, "publish_primary", lambda *a: dict(sidecar_path="test"))
     monkeypatch.setattr(r, "reader_receipt", lambda *a, **k: dict(passed=True))
     clock = iter([0.0, 3601.0, 3602.0])
-    monkeypatch.setattr(
-        r,
-        "time",
-        SimpleNamespace(
-            monotonic=lambda: next(clock), monotonic_ns=r.time.monotonic_ns, time_ns=r.time.time_ns
-        ),
-    )
+    monkeypatch.setattr(r, "deadline_clock", lambda: next(clock))
     monkeypatch.setattr(r, "verify_artifact", lambda path: dict(flags=[]))
     assert r.run(tmp_path / (e.NAME + ".json")) == 0
     assert work["failures"][-1]["field"] == "measurement_deadline"

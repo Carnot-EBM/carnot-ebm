@@ -1,0 +1,163 @@
+"""REQ-VERIFY-8592: collect once, then execute disjoint bounded current children."""
+
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+import sys
+import time
+from typing import Any
+from unittest.mock import patch
+
+from carnot.reporting import learning_clock_8592 as e
+from carnot.reporting.count_semantics_runner_8566 import terminal_nodes
+from carnot.reporting.current_work_receipt import atomic_json
+from carnot.reporting.v709_execution import child, progress
+
+Json = dict[str, Any]
+RUNNER = "python/carnot/reporting/causal_brier_runner_8582.py"
+clock = time.monotonic
+E2E = [
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_cli_private_success_failure_and_replay",
+    "tests/python/test_restricted_decision_audit_8210.py::test_private_cli_and_rehashed_mutations",
+]
+
+
+def execute(work: Json) -> None:
+    """Each heavy report node gets its own budget and reuses the pinned mechanics fixture."""
+    raw = Path(work["raw"])
+    started = clock()
+    if started > work["started_monotonic_ns"] / 1e9 + 3600:
+        raise TimeoutError("measurement deadline")
+    config = raw / "coverage.ini"
+    config.write_text(
+        "[run]\nparallel=true\npatch=subprocess,_exit\ndata_file="
+        + str(raw / ".coverage")
+        + "\ninclude=\n"
+        + "".join("    " + str(e.ROOT / p) + "\n" for p in [*e.OWNED, RUNNER])
+        + "[report]\nexclude_lines=\n"
+    )
+    options = ["-n", "0", "-o", "addopts=", "--no-cov", "-q"]
+    collection = child(
+        "collection",
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            *options,
+            "--collect-only",
+            *e.stream.TESTS,
+            *e.TESTS,
+            *E2E,
+        ],
+        raw / "logs",
+        deadline=90,
+    )
+    work["receipts"].append(collection)
+    nodes = [
+        line
+        for line in Path(collection["stdout_path"]).read_text().splitlines()
+        if line.startswith("tests/") and "::" in line
+    ]
+    atomic_json(
+        raw / "original_collection.json", dict(nodes=nodes, historical_owned=work["original_nodes"])
+    )
+    heavy = (
+        "fixed_stream",
+        "real_cli",
+        "rehashed_primitive",
+        "measurement_adapter",
+        "production_dispatch",
+        "owned_worker",
+        "owned_failures",
+    )
+    original = [n for n in nodes if n in work["original_nodes"]]
+    groups = [[n for n in original if not any(word in n for word in heavy)]]
+    groups += [[n] for n in original if any(word in n for word in heavy)]
+    groups += [[n for n in nodes if n not in work["original_nodes"]]]
+    outcomes = []
+    with patch.dict(os.environ, CARNOT_8582_MEASUREMENT=work["mechanics_fixture"]["path"]):
+        for index, group in enumerate(groups):
+            progress("owned_nodes", index, len(groups) - index)
+            junit = raw / f"nodes{index}.xml"
+            receipt = child(
+                f"nodes{index}",
+                [
+                    sys.executable,
+                    "-m",
+                    "coverage",
+                    "run",
+                    "--rcfile=" + str(config),
+                    "-m",
+                    "pytest",
+                    *options,
+                    "--junitxml=" + str(junit),
+                    *group,
+                ],
+                raw / "logs",
+                deadline=600,
+            )
+            work["receipts"].append(receipt)
+            if junit.is_file():
+                outcomes.extend(terminal_nodes(junit))
+    work["node_union"] = dict(
+        collected=nodes,
+        original_children=groups[:-1],
+        children=groups,
+        outcomes=outcomes,
+        original_authority=work["original_authority"],
+        expected_original_count=27,
+    )
+    commands = [
+        ("ruff_check", ["-m", "ruff", "check", *e.OWNED, RUNNER, *e.TESTS, e.stream.TESTS[0]]),
+        (
+            "ruff_format",
+            ["-m", "ruff", "format", "--check", *e.OWNED, RUNNER, *e.TESTS, e.stream.TESTS[0]],
+        ),
+        ("mypy", ["-m", "mypy", "--strict", "--follow-imports=silent", *e.OWNED, RUNNER]),
+        ("spec", ["scripts/check_spec_coverage.py", "--files", *e.TESTS, e.stream.TESTS[0]]),
+        ("combine", ["-m", "coverage", "combine", "--keep", "--rcfile=" + str(config), str(raw)]),
+        (
+            "coverage",
+            [
+                "-m",
+                "coverage",
+                "json",
+                "--rcfile=" + str(config),
+                "-o",
+                str(raw / "coverage_full.json"),
+            ],
+        ),
+    ]
+    for name, argv in commands:
+        work["receipts"].append(child(name, [sys.executable, *argv], raw / "logs", deadline=180))
+    full = json.loads((raw / "coverage_full.json").read_bytes())
+    owned = {p: full["files"][p] for p in e.OWNED if p in full["files"]}
+    changed = [
+        i
+        for i, line in enumerate((e.ROOT / RUNNER).read_text().splitlines(), 1)
+        if "deadline_clock" in line
+    ]
+    missing = sorted(set(changed) - set(full["files"][RUNNER]["executed_lines"]))
+    owned[RUNNER] = dict(
+        executed_lines=sorted(set(changed) & set(full["files"][RUNNER]["executed_lines"])),
+        missing_lines=missing,
+        summary=dict(
+            num_statements=len(changed),
+            missing_lines=len(missing),
+            covered_lines=len(changed) - len(missing),
+        ),
+    )
+    atomic_json(
+        raw / "coverage_owned.json",
+        dict(
+            files=owned,
+            ownership="all statements in new modules plus four changed runner clock statements",
+        ),
+    )
+    work["coverage_reference"] = e.ref(raw / "coverage_owned.json")
+    work["private_cli_receipts"] = [
+        r for r in work["receipts"] if r["name"] == f"nodes{len(groups) - 1}"
+    ]
+    atomic_json(raw / "work.json", work)

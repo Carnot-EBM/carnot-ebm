@@ -55996,3 +55996,25 @@ Implementation for REQ-VERIFY-8591: the thin Exp8591 runner uses supervised seri
 children, explicit private revision controls, original collected IDs, disjoint
 JUnit unions, scoped statement coverage and unchanged atomic publication readers.
 The terminal sidecar retains exact-byte consumer acceptance and command logs.
+
+## REQ-VERIFY-8592: Separate runner deadlines from numerical update clocks
+
+Write traced tests first. Reproduce the original process-wide clock patch failure
+privately. Inject a runner-owned deadline callable only into orchestration.
+Keep sparse derivatives, learner state, kernel timing and independent wall-clock
+child supervision unchanged. Preserve the deadline assertion. Test normal exit,
+timeout, kernel clock independence and child cleanup. Collect original node IDs
+before disjoint bounded children, preserve their exact union and original authority,
+and reuse only byte-authenticated immutable mechanics fixtures. Run scoped tests,
+Ruff check/format, strict mypy, spec tracing and private E2E-018/021. Require100
+percent newly owned statements including genuine CLI and rejection children.
+Never run the full suite or historical validation controllers. Retain commands,
+exits, durations and log hashes. Conductor owns ops and traceability reconciliation.
+
+### SCENARIO-VERIFY-8592-CLOCK
+
+The original finite iterator patch raises StopIteration in sparse_energy_7996.
+The isolated runner clock triggers the same measurement deadline gate while
+real kernel updates complete with real durations. Timed-out child groups are
+reaped and cannot qualify. Measurements stop by3600 seconds, reserve900 seconds
+for validation and remain within4800 seconds. Optional devices cannot gate CPU.

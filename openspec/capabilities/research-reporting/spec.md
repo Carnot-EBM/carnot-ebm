@@ -101984,3 +101984,24 @@ bind eleven full dictionaries and original independent family receipts. The
 sealed v738-methods-protocol.json and v738-contract-methods research note retain
 primary method hashes, adoption limits, new revision authority and old quarantines.
 The Exp8591 primary records the invocation's observed qualification and gates.
+
+## REQ-REPORT-8592: Qualify isolated runner clocks without a benefit claim
+
+Exp8592 SHALL bind this invocation to original Exp8582 authority, its exact
+27-node owned union, Exp8580 validator and Exp8581 accounting. Historical primary
+bytes, source and cold-cost nulls, label rejections and quarantines stay intact.
+The small 109-coefficient spline head and original checkpoint SHALL be named.
+No language model loads occur; MODEL_SPECS is empty and current LLM calls are zero.
+Readiness requires reproduced failure, a valid fixed path, rejected tampering,
+all required owned checks and full newly owned statement coverage. Both learning
+and independent generalization scores remain zero. Same-roadmap outputs remain
+future dependencies. Accept a valid runtime date without a planning-date lock.
+
+### SCENARIO-REPORT-8592-REPLAY
+
+Fresh bounded replay authenticates immutable primitive bytes and current source
+and test references. Missing inputs, owned failures and self-consistently rehashed
+summary or primitive tampering are rejected. Exact final bytes pass unchanged
+publication, adversarial and strict row consumers before atomic replacement.
+Qualification proves execution mechanics only; the imported fixture is no new
+six-thousand-row learning measurement.
