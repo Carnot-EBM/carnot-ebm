@@ -1,0 +1,740 @@
+{
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/medexpert_evidence_8597.py",
+      "sha256": "sha256:a63b729c3ed32af6806e2ef09b1661ce3f4dc98c4a44c8ca717e486dab6a609b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/medexpert_evidence_runner_8597.py",
+      "sha256": "sha256:8fd0ee964a8ce247f4a8aa3cc43bfdab5376bbce73671c375e7efa974b99ec07"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8597_v738_medexpert_evidence_audit.py",
+      "sha256": "sha256:4b0b9dca5868573d4e903d37fc3f9d9159cc3b01389c5bc49d0185dcd16cd904"
+    }
+  ],
+  "duration_s": 0.540182769,
+  "manifest": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/input_manifest.json",
+    "sha256": "sha256:bfbd85a0abf5c0e435a271a22bee4c526c40db16bbe9930fe39c40f375ff79b5"
+  },
+  "phase_spans": [
+    {
+      "ended_monotonic_ns": 540396495865681,
+      "phase": "authenticate_and_audit",
+      "started_monotonic_ns": 540395955682912
+    }
+  ],
+  "preconditions_checked": {
+    "disk_free_bytes": 273174355968,
+    "filesystem": "xfs",
+    "invocation_cap_s": 4800,
+    "measurement_deadline_s": 3600,
+    "memory": "MemAvailable:   118940628 kB",
+    "optional_board_required": false,
+    "optional_cuda_required": false,
+    "scratch": "/var/tmp/carnot8597-ahzgik6c",
+    "tools": {
+      "mypy": true,
+      "pytest": true,
+      "python": true,
+      "ruff": true
+    },
+    "validation_reserve_s": 900,
+    "writable_disk_backed": true
+  },
+  "reduction": {
+    "annotation_lineage_rows": [
+      {
+        "authority": "Yarmohammadi et al., PMLR 297",
+        "blinding_verified": false,
+        "clinician_count": 8,
+        "evidence_shown": "Generated response and clinician guidelines; original protocol.",
+        "per_row_authority_available": false,
+        "stage": "original_clinician_annotation",
+        "target_criterion": "Factual errors tied to clinical harm; omissions are separate.",
+        "unit": "highlighted span; omission and certainty at response level",
+        "unmarked_sentence_independently_correct": false
+      },
+      {
+        "authority": "2609.30467 Appendix A.2",
+        "blinding_verified": false,
+        "clinician_count": 5,
+        "evidence_shown": "Sentence-level claims, six verifier votes and their reasoning.",
+        "independent_of_verifier_outputs": false,
+        "per_row_authority_available": false,
+        "stage": "assisted_adjudication",
+        "target_criterion": "Any false associated claim marks the sentence has-error.",
+        "unit": "sentence and associated claims"
+      }
+    ],
+    "assisted_label_independence_score": 0,
+    "censored_count": 0,
+    "completed_count": 0,
+    "count_reconciliation": {
+      "observed_release_sentence_count": null,
+      "paper_appendix_selected_errors": 225,
+      "paper_original_table_errors": 224,
+      "paper_qa_pairs": 540,
+      "reason": "Table 1 and Appendix A.2 differ; missing rows forbid reconciliation.",
+      "resolved": false
+    },
+    "eligible_question_inventory": {
+      "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+      "question_hashes": [],
+      "sealed": false
+    },
+    "evaluation_eligible_score": 0,
+    "evidence_availability_rows": [
+      {
+        "available": false,
+        "kind": "sentence_labels",
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap."
+      },
+      {
+        "available": false,
+        "kind": "gold_evidence_passages",
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap."
+      },
+      {
+        "available": false,
+        "kind": "passage_relevance_labels",
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap."
+      },
+      {
+        "available": false,
+        "kind": "span_offsets",
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap."
+      },
+      {
+        "available": false,
+        "kind": "review_flags",
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap."
+      },
+      {
+        "available": false,
+        "kind": "error_types",
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap."
+      },
+      {
+        "available": false,
+        "kind": "row_generator_identity",
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap."
+      }
+    ],
+    "excluded_count": 0,
+    "failed_count": 0,
+    "future_protocol_conditions": [
+      "Acquire original and assisted release bytes under explicit terms, without credentials.",
+      "Enumerate at most15000 rows with stable IDs, unchanged spans and hashes; keep text private.",
+      "Reconcile224 versus225 and audit missing flags, error types, generators and label fields.",
+      "Normalize questions/sources with NFKC, casefold and whitespace collapse before hashing.",
+      "Compare every recorded exposure manifest, including LPHB, HalluTruthQA and the learning panel.",
+      "A negative match only addresses recorded exposure; generator training contamination remains unknown.",
+      "Seal a disjoint question inventory before any fitting or scoring; acquire blinded adjudication.",
+      "Prospectively sample responses for population estimates; selected gold cannot supply them."
+    ],
+    "gate_check_summary": [
+      {
+        "check": "assisted_release_http_status",
+        "expected": 200,
+        "field": "assisted_release_http_status",
+        "observed": 401,
+        "operator": "==",
+        "passed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.json",
+        "sha256": "sha256:e9635ca18a865befc8be46485fb75ee4a33030472a4baceda124dc0f4e3d67eb",
+        "upstream": "2609.30467 Appendix A.2"
+      },
+      {
+        "check": "original_sentence_bytes",
+        "expected": "authenticated sentence rows",
+        "field": "original_sentence_bytes",
+        "observed": null,
+        "operator": "==",
+        "passed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/hf_release.json",
+        "sha256": "sha256:4320c9c4b1ee4ae1a9f12bac3097d07269b93094081d2c39c76d3d06a9a32333",
+        "upstream": "sonal-ssj/MedExpert"
+      },
+      {
+        "check": "assisted_sentence_bytes",
+        "expected": "original adjudication rows",
+        "field": "assisted_sentence_bytes",
+        "observed": null,
+        "operator": "==",
+        "passed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.json",
+        "sha256": "sha256:e9635ca18a865befc8be46485fb75ee4a33030472a4baceda124dc0f4e3d67eb",
+        "upstream": "MedExpert-gold"
+      },
+      {
+        "check": "question_overlap_inventory",
+        "expected": "sealed normalized question/source hashes",
+        "field": "question_overlap_inventory",
+        "observed": null,
+        "operator": "==",
+        "passed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/hf_release.json",
+        "sha256": "sha256:4320c9c4b1ee4ae1a9f12bac3097d07269b93094081d2c39c76d3d06a9a32333",
+        "upstream": "sonal-ssj/MedExpert"
+      },
+      {
+        "check": "assisted_use_rights",
+        "expected": "explicit release terms",
+        "field": "assisted_use_rights",
+        "observed": null,
+        "operator": "==",
+        "passed": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.json",
+        "sha256": "sha256:e9635ca18a865befc8be46485fb75ee4a33030472a4baceda124dc0f4e3d67eb",
+        "upstream": "MedExpert-gold"
+      }
+    ],
+    "independent_count": 0,
+    "intended_count": null,
+    "original_annotation_authority_score": 1,
+    "overlap_rows": [
+      {
+        "corpus": "current_learning_panel_and_recorded_exposure_ledger",
+        "manifest": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8430_v726_criterion_feature_panel.json",
+          "sha256": "sha256:c5783590d946a9500c335a7d39e0fb154dd5943c0efc2c1355dde885c3712989"
+        },
+        "matched_count": null,
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+        "status": "not_computable",
+        "target_question_count": null
+      },
+      {
+        "corpus": "LPHB",
+        "manifest": {
+          "git_blob": "a5540b1121358aee3f26655a6275948408a5d4ac",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8389_v723_human_label_custody/invocations/1791665955261108285/release/data/human_judge_release_master.csv",
+          "sha256": "sha256:c754d9d66ccc5c53c55fb8c9156135a2ce2f93ce913a1bff0652d6647d27dc0a",
+          "url": "https://raw.githubusercontent.com/jova486/LPHB/c2cf053567d5ae458656ee0e420509e35d73406d/data/human_judge_release_master.csv"
+        },
+        "matched_count": null,
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+        "status": "not_computable",
+        "target_question_count": null
+      },
+      {
+        "corpus": "HalluTruthQA",
+        "manifest": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8585_v737_hallutruth_release_audit/release_manifest.json",
+          "sha256": "sha256:839a5e20a113b65db9d82db2dd372e5163f9bb9ef8821a8ff8a289a368549538"
+        },
+        "matched_count": null,
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+        "status": "not_computable",
+        "target_question_count": null
+      },
+      {
+        "corpus": "HALLMARK",
+        "manifest": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8553_v735_hallmark_release_admissibility.json",
+          "sha256": "sha256:582e1402c6ae68f2fae60dfc0e3564935facf5abc0bcadf76c43ffc164793230"
+        },
+        "matched_count": null,
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+        "status": "not_computable",
+        "target_question_count": null
+      },
+      {
+        "corpus": "exclusion_registry",
+        "manifest": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+          "sha256": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0"
+        },
+        "matched_count": null,
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+        "status": "not_computable",
+        "target_question_count": null
+      }
+    ],
+    "preserved_history": [
+      {
+        "honest_verdict": "complete_circular_positive_v726_criterion_feature_panel",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8430_v726_criterion_feature_panel.json",
+          "sha256": "sha256:c5783590d946a9500c335a7d39e0fb154dd5943c0efc2c1355dde885c3712989"
+        }
+      },
+      {
+        "honest_verdict": "complete_null_v733_incremental_source_audit",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8529_v733_incremental_source_audit.json",
+          "sha256": "sha256:14e26b0268b08c640909378420ee58d9d5c47c1ca91cad5c49a836c53c3de8a8"
+        }
+      },
+      {
+        "honest_verdict": "complete_null_hallmark_independent_label_rejection",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8553_v735_hallmark_release_admissibility.json",
+          "sha256": "sha256:582e1402c6ae68f2fae60dfc0e3564935facf5abc0bcadf76c43ffc164793230"
+        }
+      },
+      {
+        "honest_verdict": "complete_null_v737_current_validator_qualification",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8580_v737_current_validator_qualification.json",
+          "sha256": "sha256:7656f6f49b69237528263cd6dc38ac9503e853b1f53d1b5b1037f6510d2892f4"
+        }
+      },
+      {
+        "honest_verdict": "complete_null_v737_causal_accounting_qualification",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8581_v737_causal_accounting_qualification.json",
+          "sha256": "sha256:f60e202794f220440094c940ea5d5e84d3a70b7fc8ba840ecf09fb915bf1896c"
+        }
+      },
+      {
+        "honest_verdict": "complete_disqualified_v737_causal_brier_stream",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8582_v737_causal_brier_stream.json",
+          "sha256": "sha256:4f7ec92ec04fb3cecc16af7e4c8a87682c63c2e1d575bfbeccdc8b02f1470c78"
+        }
+      },
+      {
+        "honest_verdict": "complete_disqualified_v737_resident_complete_cost",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8584_v737_resident_complete_cost.json",
+          "sha256": "sha256:356aad75439ecaedbbe102e372dc28c2b92e15c848e0d6099165adb6a53995ed"
+        }
+      },
+      {
+        "honest_verdict": "complete_null_hallutruth_release_audit",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8585_v737_hallutruth_release_audit.json",
+          "sha256": "sha256:7ac56c0cb5d0eb3c67e3bb590fa2320c7c06138de53215a1aff5212ebbc1b758"
+        }
+      },
+      {
+        "honest_verdict": "complete_null_v737_arc_capability_panel",
+        "reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8588_v737_arc_capability_panel.json",
+          "sha256": "sha256:2624f20279c06245a393266f9ca793b3ed43ad889e422b64de44fd7688633dda"
+        }
+      }
+    ],
+    "question_disjoint_score": 0,
+    "release_audit_ready_score": 1,
+    "release_available_score": 0,
+    "release_reference": {
+      "assisted_commit_hash": null,
+      "assisted_repository": "https://anonymous.4open.science/r/Medical_RAG_eval-4AB5",
+      "dataset_commit": "1ada617c799237fa2c5d3e71e4d2c9b0a5857fb3",
+      "dataset_public": true,
+      "original_commit_hash": null,
+      "original_dataset": "sonal-ssj/MedExpert",
+      "original_files": [
+        ".gitattributes",
+        "README.md",
+        "medexpert-all.jsonl",
+        "medexpert-benchmark.jsonl"
+      ],
+      "original_git_tree_hash": "98d19d9ec7f0b03273b97a9d6bf5e71548c98ede",
+      "original_publication": "https://proceedings.mlr.press/v297/yarmohammadi26a.html",
+      "original_release_metadata_available": true,
+      "original_repository": "https://github.com/JHU-CLSP/MedExpert",
+      "release_rows_acquired": false,
+      "retrievals": {
+        "browser_reads": [
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/paper.html",
+              "sha256": "sha256:882e7b95a0fe08d50e5d11ca8ee91f9e5fa9a8e67c95c06f246f1f52ac0f8c69"
+            },
+            "mechanism": "web.open",
+            "retrieved_date": "2026-10-17",
+            "status": 200,
+            "url": "https://arxiv.org/html/2609.30467v1"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/paper.html",
+              "sha256": "sha256:882e7b95a0fe08d50e5d11ca8ee91f9e5fa9a8e67c95c06f246f1f52ac0f8c69"
+            },
+            "mechanism": "web.open",
+            "retrieved_date": "2026-10-17",
+            "status": 200,
+            "url": "https://arxiv.org/html/2609.30467v1"
+          }
+        ],
+        "max_bytes": 104857600,
+        "max_duration_s": 300,
+        "max_requests": 10,
+        "requests": [
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/paper.html",
+              "sha256": "sha256:882e7b95a0fe08d50e5d11ca8ee91f9e5fa9a8e67c95c06f246f1f52ac0f8c69"
+            },
+            "bytes": 216862,
+            "duration_s": 0.361687,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/paper.headers",
+              "sha256": "sha256:2d4764416adfccbe1379d7e71eae8e2575819436243152e6ca52c533265ada42"
+            },
+            "key": "paper",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 200,
+            "timeout_s": 30,
+            "url": "https://arxiv.org/html/2609.30467v1"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous.html",
+              "sha256": "sha256:40526efed4c72d4b6b4453465d14dbb9fe45c35b9550c3cfc7479190071857dc"
+            },
+            "bytes": 59,
+            "duration_s": 0.216838,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous.headers",
+              "sha256": "sha256:a2ab095039c5d357cbb83eec026855b8c7ec30adc86afadff7d7cbb5a4cff7e0"
+            },
+            "key": "anonymous",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 302,
+            "timeout_s": 30,
+            "url": "https://anonymous.4open.science/r/Medical_RAG_eval-4AB5"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.html",
+              "sha256": "sha256:2f40bd7a46f40762536c889c41cfc237eb84560295889569c29bc95cc47dd8e8"
+            },
+            "bytes": 16245,
+            "duration_s": 0.267709,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.headers",
+              "sha256": "sha256:0bbbdc18c4669fd0f09676da60079a217c534d20b2edc5d0315a807bce4498de"
+            },
+            "key": "original",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 200,
+            "timeout_s": 30,
+            "url": "https://proceedings.mlr.press/v297/yarmohammadi26a.html"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.json",
+              "sha256": "sha256:e9635ca18a865befc8be46485fb75ee4a33030472a4baceda124dc0f4e3d67eb"
+            },
+            "bytes": 25,
+            "duration_s": 0.18218,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.headers",
+              "sha256": "sha256:7ee8354e907f99311c1b41b48014dadedc55ee046714b38b5244c06d313b66d9"
+            },
+            "key": "anonymous_tree",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 401,
+            "timeout_s": 30,
+            "url": "https://anonymous.4open.science/api/repo/Medical_RAG_eval-4AB5/file/"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original_tree.json",
+              "sha256": "sha256:245e192bf8fca6c554c295859c40b6b709aa486a0338fd88d99c7faa83447273"
+            },
+            "bytes": 10704,
+            "duration_s": 0.278436,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original_tree.headers",
+              "sha256": "sha256:6ae783b4cd95bb9c2d60905db2d9263da50fc5237fd3c3a8eac9d77aea97ac43"
+            },
+            "key": "original_tree",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 200,
+            "timeout_s": 30,
+            "url": "https://api.github.com/repos/JHU-CLSP/MedExpert/git/trees/main?recursive=1"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.pdf",
+              "sha256": "sha256:9631795a8554cb1a3bec1ead4db4e452a04401bdf4fcf3a0568389b3a2194477"
+            },
+            "bytes": 1402747,
+            "duration_s": 0.342201,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original_pdf.headers",
+              "sha256": "sha256:717f3f079fd3ccb96b225e849bc641e738c6ae293c1a09eaa943ac63ef9adbc6"
+            },
+            "key": "original_pdf",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 200,
+            "timeout_s": 30,
+            "url": "https://raw.githubusercontent.com/mlresearch/v297/main/assets/yarmohammadi26a/yarmohammadi26a.pdf"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/README.md",
+              "sha256": "sha256:e4fd79a6c9d91d1761a5750aed0b1f38cb19edbb068693ae9da2acffa96c5f7c"
+            },
+            "bytes": 3847,
+            "duration_s": 0.167284,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/readme.headers",
+              "sha256": "sha256:94a13cb44afff456505b4e6429a872653a3dd82bbb726996df70c1889e23c198"
+            },
+            "key": "readme",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 200,
+            "timeout_s": 30,
+            "url": "https://raw.githubusercontent.com/JHU-CLSP/MedExpert/main/README.md"
+          },
+          {
+            "body": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/hf_release.json",
+              "sha256": "sha256:4320c9c4b1ee4ae1a9f12bac3097d07269b93094081d2c39c76d3d06a9a32333"
+            },
+            "bytes": 1706,
+            "duration_s": 0.166199,
+            "headers": {
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/hf_release.headers",
+              "sha256": "sha256:47716d534d1c4a985d71b5c386a69bc63a65ea0b30134ea647f6ae531548a561"
+            },
+            "key": "hf_release",
+            "retrieved_at": "2026-10-17T06:56:52Z",
+            "status": 200,
+            "timeout_s": 30,
+            "url": "https://huggingface.co/api/datasets/sonal-ssj/MedExpert"
+          }
+        ],
+        "total_requests": 10
+      }
+    },
+    "rights_eligible_score": 0,
+    "rights_reference": {
+      "assisted_license": null,
+      "intended_evaluation_rights_confirmed": false,
+      "original_license": "cc-by-4.0",
+      "original_license_scope": "Original release metadata only."
+    },
+    "rows": [
+      {
+        "completed_count": 0,
+        "intended_count": null,
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+        "sentence_labels_available": false,
+        "unit": "original_clinician_sentence_inventory"
+      },
+      {
+        "completed_count": 0,
+        "intended_count": null,
+        "missing_reason": "Assisted author repository HTTP 401; original public file metadata acquired, row bytes not acquired within ten-request cap.",
+        "sentence_labels_available": false,
+        "unit": "assisted_gold_sentence_inventory"
+      }
+    ],
+    "sample_size_budget": {
+      "actual_requests": 10,
+      "independent_evaluation_units": 0,
+      "inspected_sentence_rows": 0,
+      "max_download_bytes": 104857600,
+      "max_requests": 10,
+      "max_sentence_rows": 15000
+    },
+    "selection_rows": [
+      {
+        "conditional_inclusion_probability": 1,
+        "duplicate_question_count": null,
+        "general_domain_accuracy_identifiable": false,
+        "paper_reclassified_correct": 139,
+        "paper_retained_errors": 86,
+        "paper_selected_count": 225,
+        "population_precision_identifiable": false,
+        "population_sampling_probability": null,
+        "prevalence_identifiable": false,
+        "selection_rule": "All originally error-marked sentences only.",
+        "unmarked_inclusion_probability": 0,
+        "verifier_votes_shown": 6
+      }
+    ],
+    "source_artifact_hashes": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/retrievals.json",
+        "sha256": "sha256:bbe8a3f178d5d9b2573afd1af4910e648551ebf6aa8b25840f7436a45c75f3c1"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/paper.html",
+        "sha256": "sha256:882e7b95a0fe08d50e5d11ca8ee91f9e5fa9a8e67c95c06f246f1f52ac0f8c69"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous.html",
+        "sha256": "sha256:40526efed4c72d4b6b4453465d14dbb9fe45c35b9550c3cfc7479190071857dc"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.html",
+        "sha256": "sha256:2f40bd7a46f40762536c889c41cfc237eb84560295889569c29bc95cc47dd8e8"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.json",
+        "sha256": "sha256:e9635ca18a865befc8be46485fb75ee4a33030472a4baceda124dc0f4e3d67eb"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original_tree.json",
+        "sha256": "sha256:245e192bf8fca6c554c295859c40b6b709aa486a0338fd88d99c7faa83447273"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.pdf",
+        "sha256": "sha256:9631795a8554cb1a3bec1ead4db4e452a04401bdf4fcf3a0568389b3a2194477"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/README.md",
+        "sha256": "sha256:e4fd79a6c9d91d1761a5750aed0b1f38cb19edbb068693ae9da2acffa96c5f7c"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/hf_release.json",
+        "sha256": "sha256:4320c9c4b1ee4ae1a9f12bac3097d07269b93094081d2c39c76d3d06a9a32333"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8430_v726_criterion_feature_panel.json",
+        "sha256": "sha256:c5783590d946a9500c335a7d39e0fb154dd5943c0efc2c1355dde885c3712989"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8529_v733_incremental_source_audit.json",
+        "sha256": "sha256:14e26b0268b08c640909378420ee58d9d5c47c1ca91cad5c49a836c53c3de8a8"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8553_v735_hallmark_release_admissibility.json",
+        "sha256": "sha256:582e1402c6ae68f2fae60dfc0e3564935facf5abc0bcadf76c43ffc164793230"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8580_v737_current_validator_qualification.json",
+        "sha256": "sha256:7656f6f49b69237528263cd6dc38ac9503e853b1f53d1b5b1037f6510d2892f4"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8581_v737_causal_accounting_qualification.json",
+        "sha256": "sha256:f60e202794f220440094c940ea5d5e84d3a70b7fc8ba840ecf09fb915bf1896c"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8582_v737_causal_brier_stream.json",
+        "sha256": "sha256:4f7ec92ec04fb3cecc16af7e4c8a87682c63c2e1d575bfbeccdc8b02f1470c78"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8584_v737_resident_complete_cost.json",
+        "sha256": "sha256:356aad75439ecaedbbe102e372dc28c2b92e15c848e0d6099165adb6a53995ed"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8585_v737_hallutruth_release_audit.json",
+        "sha256": "sha256:7ac56c0cb5d0eb3c67e3bb590fa2320c7c06138de53215a1aff5212ebbc1b758"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8588_v737_arc_capability_panel.json",
+        "sha256": "sha256:2624f20279c06245a393266f9ca793b3ed43ad889e422b64de44fd7688633dda"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/paper.html",
+        "sha256": "sha256:882e7b95a0fe08d50e5d11ca8ee91f9e5fa9a8e67c95c06f246f1f52ac0f8c69"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/paper.headers",
+        "sha256": "sha256:2d4764416adfccbe1379d7e71eae8e2575819436243152e6ca52c533265ada42"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous.html",
+        "sha256": "sha256:40526efed4c72d4b6b4453465d14dbb9fe45c35b9550c3cfc7479190071857dc"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous.headers",
+        "sha256": "sha256:a2ab095039c5d357cbb83eec026855b8c7ec30adc86afadff7d7cbb5a4cff7e0"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.html",
+        "sha256": "sha256:2f40bd7a46f40762536c889c41cfc237eb84560295889569c29bc95cc47dd8e8"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.headers",
+        "sha256": "sha256:0bbbdc18c4669fd0f09676da60079a217c534d20b2edc5d0315a807bce4498de"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.json",
+        "sha256": "sha256:e9635ca18a865befc8be46485fb75ee4a33030472a4baceda124dc0f4e3d67eb"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/anonymous_tree.headers",
+        "sha256": "sha256:7ee8354e907f99311c1b41b48014dadedc55ee046714b38b5244c06d313b66d9"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original_tree.json",
+        "sha256": "sha256:245e192bf8fca6c554c295859c40b6b709aa486a0338fd88d99c7faa83447273"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original_tree.headers",
+        "sha256": "sha256:6ae783b4cd95bb9c2d60905db2d9263da50fc5237fd3c3a8eac9d77aea97ac43"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original.pdf",
+        "sha256": "sha256:9631795a8554cb1a3bec1ead4db4e452a04401bdf4fcf3a0568389b3a2194477"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/original_pdf.headers",
+        "sha256": "sha256:717f3f079fd3ccb96b225e849bc641e738c6ae293c1a09eaa943ac63ef9adbc6"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/README.md",
+        "sha256": "sha256:e4fd79a6c9d91d1761a5750aed0b1f38cb19edbb068693ae9da2acffa96c5f7c"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/readme.headers",
+        "sha256": "sha256:94a13cb44afff456505b4e6429a872653a3dd82bbb726996df70c1889e23c198"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/hf_release.json",
+        "sha256": "sha256:4320c9c4b1ee4ae1a9f12bac3097d07269b93094081d2c39c76d3d06a9a32333"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8597_v738_medexpert_evidence_audit/acquired/hf_release.headers",
+        "sha256": "sha256:47716d534d1c4a985d71b5c386a69bc63a65ea0b30134ea647f6ae531548a561"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8430_v726_criterion_feature_panel.json",
+        "sha256": "sha256:c5783590d946a9500c335a7d39e0fb154dd5943c0efc2c1355dde885c3712989"
+      },
+      {
+        "git_blob": "a5540b1121358aee3f26655a6275948408a5d4ac",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8389_v723_human_label_custody/invocations/1791665955261108285/release/data/human_judge_release_master.csv",
+        "sha256": "sha256:c754d9d66ccc5c53c55fb8c9156135a2ce2f93ce913a1bff0652d6647d27dc0a",
+        "url": "https://raw.githubusercontent.com/jova486/LPHB/c2cf053567d5ae458656ee0e420509e35d73406d/data/human_judge_release_master.csv"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8585_v737_hallutruth_release_audit/release_manifest.json",
+        "sha256": "sha256:839a5e20a113b65db9d82db2dd372e5163f9bb9ef8821a8ff8a289a368549538"
+      },
+      {
+        "bytes": 3200991,
+        "path": "/var/tmp/carnot-8585-fudn1yee/train.jsonl",
+        "sha256": "sha256:fba55409166302bc2a58df7ce70f2e2c43c64afea96d5d71b123ca9d0f2ed063",
+        "split": "train",
+        "url": "https://huggingface.co/datasets/Bekhouche/HalluTruthQA-4K/resolve/e6e2b14733effc8da7b87fa79230a20cc4b7336b/train.jsonl"
+      },
+      {
+        "bytes": 1674084,
+        "path": "/var/tmp/carnot-8585-fudn1yee/dev.jsonl",
+        "sha256": "sha256:588dc8f90654d765ca63a2ca5219818108dcc14361d0bff19ec4aeedfae323fa",
+        "split": "dev",
+        "url": "https://huggingface.co/datasets/Bekhouche/HalluTruthQA-4K/resolve/e6e2b14733effc8da7b87fa79230a20cc4b7336b/dev.jsonl"
+      },
+      {
+        "bytes": 2796171,
+        "path": "/var/tmp/carnot-8585-fudn1yee/test.jsonl",
+        "sha256": "sha256:b68f179e951af131132f713b8786712088d3d6fbfde3e05080b8765078e50d33",
+        "split": "test",
+        "url": "https://huggingface.co/datasets/Bekhouche/HalluTruthQA-4K/resolve/e6e2b14733effc8da7b87fa79230a20cc4b7336b/test.jsonl"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8553_v735_hallmark_release_admissibility.json",
+        "sha256": "sha256:582e1402c6ae68f2fae60dfc0e3564935facf5abc0bcadf76c43ffc164793230"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+        "sha256": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0"
+      }
+    ]
+  },
+  "run_date": "20261017",
+  "started_wall_ns": 1792220641275809433
+}

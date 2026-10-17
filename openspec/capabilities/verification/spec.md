@@ -56051,3 +56051,29 @@ Missing upstream bytes, changed seals, false readiness, wrong descriptors and
 self-consistently rehashed summaries fail authentication or replay. Preserve
 warning exits and actual downstream acceptance. Do not run historical validation
 controllers or the full repository suite.
+
+## REQ-VERIFY-8597: Replay bounded evidence and checked publication
+
+Write requirement-linked failing tests first. Authenticate original source bytes,
+validation streams and owned code. Cold replay recomputes conclusions and rejects
+missing inputs, owned errors and self-consistently rehashed tampering. Run real
+private CLI controls, scoped unit tests, Ruff, strict types and spec tracing.
+Collect original private E2E-018/021 node IDs before disjoint bounded children;
+retain exact unions, command exits, clocks and log hashes. Require100 percent
+newly owned statements, including real children and rejection routes. Preserve
+scanner warnings and actual downstream acceptance. Use atomic primary publication.
+Owned required-check failures disqualify; external absence blocks. Do not run the
+full repository suite or historical controllers. Conductor owns ops reconciliation.
+
+### SCENARIO-VERIFY-8597-REPLAY
+
+A fresh bounded CLI accepts unchanged private primitives. Changed conclusions,
+source hashes, receipt logs, missing manifests and deliberate owned failures fail.
+Valid calendar dates remain accepted after the planning date. Optional CUDA and
+board absence cannot disable CPU audit or validation branches.
+
+Implementation for REQ-VERIFY-8597: seven focused tests pass. Unit and genuine
+private CLI children cover160/160 newly owned statements. Cold replay rejects
+source drift, repaired summaries, missing bytes and changed validation streams.
+The immutable validation directory retains original node collection and bounded
+private E2E-018/021 consumer receipts. Conductor owns ops and traceability updates.

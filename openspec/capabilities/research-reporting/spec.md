@@ -102039,3 +102039,37 @@ Primary native effect compares resident_native with resident_python at length16
 and batch1. Python lifecycle benefit stays separate. A qualified null remains
 ready. Preserve the Exp8559 cold null and quarantined Exp8584 findings and bytes.
 Accept a valid runtime date without requiring the planning date.
+
+## REQ-REPORT-8597: Audit original and assisted MedExpert authority
+
+Authenticate bounded original publication and author-linked release metadata.
+Separate original clinician spans from Appendix A.2 assisted adjudication.
+Do not label unmarked sentences independently correct. Keep evidence availability,
+sentence factuality and passage relevance separate. Record paper counts as claims;
+missing released rows cannot verify counts or estimate population precision.
+Emit separate availability, authority, independence, overlap, rights and eligibility
+scores. Missing assisted release bytes block evaluation even after a complete audit.
+Seal only hash inventories; never publish patient text or fit a detector.
+Preserve all historical nulls, rejections and quarantines. Same-roadmap studies are
+future dependencies. Use no_model_load, MODEL_SPECS=[] and zero current LLM calls.
+
+### SCENARIO-REPORT-8597-LINEAGE
+
+The 225 originally error-marked sentences were selected for assisted review.
+Adjudicators saw six verifier votes and reasoning. Paper counts 139 and 86 are
+not measured release counts. Table 1's 224 original errors differs from 225 in
+Appendix A.2; leave the discrepancy unresolved without row bytes. Public release
+metadata does not supply an independently labelled sentence inventory.
+
+### SCENARIO-REPORT-8597-BLOCK
+
+An unavailable assisted repository and missing sentence bytes produce a terminal
+blocked artifact with explicit paths, hashes, expected values and observed absence.
+Audit readiness can equal one while evaluation eligibility remains zero.
+No target inventory means overlap is unknown, never a negative match.
+
+Implementation for REQ-REPORT-8597: the owned MedExpert adapter authenticates
+original publication and release metadata, separates annotation lineage and
+records unavailable sentence inventories. The bounded acquisition retains the
+assisted repository HTTP401 response. Counts and overlap remain unresolved.
+The research note preserves original source hashes and all historical quarantines.
