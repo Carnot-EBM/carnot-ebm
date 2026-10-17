@@ -102141,3 +102141,41 @@ Original G1 through G4 determine readiness without publication authorization.
 
 Recompute small learning losses, retention contrasts, resident session totals and
 ARC event reductions from immutable operands in fresh bounded processes.
+
+## REQ-REPORT-8602: Bind thirteen V739 tasks and register independent methods
+
+Exp8602 SHALL compare thirteen complete task objects, Exp8602–Exp8614, with
+staged or authentically activated V739 YAML, visible table, full embedded JSON,
+canonical digest and end marker. An older queue or unactivated planning script
+cannot establish current authority. Missing authority is blocked, with thirteen
+retained rows. Preserve V738 scientific operands by value and independent hash.
+Authenticate original learning and resident families separately. Register internal
+Trivia+ coverage with label-blind SHA256(seed7398607 || question_hash) selection,
+all siblings and complete source bytes; never invent missing Qwen probabilities.
+Register legacy/lean crossed with Python/native, original64 requests, L1/4/16,
+B1/8, ten paired repeats, primary L16/B1 and original statistical rules. Register
+observer horizon120 without policy refinement. Ingest five primary full methods,
+including assumptions, equations and explicit adoption limits. Preserve nulls,
+quarantines and old reader authority. Future task artifacts are not prerequisites.
+
+### SCENARIO-REPORT-8602-AUTHORITY
+
+Reject count/order/ID/title/phase/deliverable/model/substrate/gate/prompt/retirement,
+digest and end-marker mutations, including self-consistently rehashed envelopes.
+Qualified staging may precede activation; active V738 alone is never V739 authority.
+
+### SCENARIO-REPORT-8602-INPUTS
+
+Missing learning evidence cannot disable qualified resident inputs and conversely.
+Optional runtime evidence cannot disable CPU registration. A supplied causal repair
+receipt and current validator custody are necessary for runtime readiness. Use the
+existing metadata-only CUDA reader once; never open a device or model.
+
+Implementation for REQ-REPORT-8602: V739 methods/report/runner adapters, thin CLI,
+sealed protocol, primary full-method bytes and research note are implemented.
+The active thirteen-object YAML is preserved independently of the stale V738
+visible design. Original authority snapshots revalidate only affected scheduling
+dependencies. Independent learning/resident inputs and explicit V738 canary
+revision retain their own gates. Terminal receipts under Exp8602 raw primitives
+record actual scoped validation and any external authority blockage. The conductor
+owns ops/status/changelog and traceability reconciliation.

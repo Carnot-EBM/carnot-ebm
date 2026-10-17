@@ -56119,3 +56119,26 @@ and log hashes. Do not run historical validation controllers or the full suite.
 Fresh CLI replay accepts immutable primitives and rejects missing inputs, owned
 failures and self-consistently rehashed tampering. Preserve actual scanner exits
 and downstream acceptance. Validate final bytes before atomic publication.
+
+## REQ-VERIFY-8602: Validate bounded V739 registration and exact published bytes
+
+Require focused spec-linked tests, private CLI acceptance and rejection, private
+E2E-018/021 consumers, Ruff check/format, strict mypy, scoped spec coverage and
+100 percent newly owned statement coverage including real children. Preserve
+original collected node IDs and exact disjoint execution union. Supervise bounded
+children with durable commands, exits, durations and hashed logs. Do not run the
+whole repository suite or historical validation controllers.
+
+### SCENARIO-VERIFY-8602-REPLAY
+
+Fresh-process replay reconstructs immutable primitives and rejects missing inputs,
+owned failures and self-consistently rehashed summaries. Owned failure disqualifies;
+unchanged external absence blocks. Validate exact bytes with primary_publication,
+unchanged adversarial verification and strict row consistency before atomic
+publication. Retain real findings and downstream acceptance without benefit claims.
+
+Implementation for REQ-VERIFY-8602: focused mutation tests and actual private CLI
+controls exercise registration, original authority reuse, optional CUDA failure,
+owned failure and cold tamper rejection. The runner preserves collected node IDs,
+disjoint E2E consumers, coverage, actual scanner findings and atomic publication
+receipts. Terminal checks determine acceptance; no scientific benefit is claimed.

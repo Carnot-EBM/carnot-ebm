@@ -6621,3 +6621,14 @@ Reused original Exp8513 proper-loss/KAN method mappings and Exp8571 online KAN
 scope; no theorem or FPGA timing transfers. Preserve HALLMARK rejection and
 exposed-source findings. Future evaluation needs unexposed questions and a
 language-qualified feature pipeline. No multilingual protocol or corpus change.
+
+## 2026-10-17 — Exp8602 V739 primary-method ingestion
+
+Ingested the full primary method bytes for Trivia+2605.11330v1 (sections4,
+Appendix A.5–A.6), Calibeating2603.22167v1 (sections2–3), capacity-constrained
+delayed feedback2606.11711v1 (sections2–4), online KAN2602.02056v3 (sections3–4)
+and Ising algorithms2610.03972v1 (sections2–3). Exp8602 sealed primitives and
+v739-methods-protocol.json record exact hashes, assumptions, equations and
+use/defer decisions. Trivia+ is internal extractor coverage only. No theorem,
+local device speed, factual-truth result or learning benefit transfers from these
+sources. The V739 planning scan remains the dated discovery authority.
