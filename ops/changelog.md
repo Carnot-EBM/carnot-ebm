@@ -22437,3 +22437,4 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
   identified marker was deliberately removed before a quiet-tree rerun.
 - 2026-10-17: Bind eleven tasks and ingest causal learning and evidence criteria (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v738_contract_methods; results/experiment_8591_v738_contract_methods.json
 - 2026-10-17: Isolate runner deadlines from numerical update clocks and qualify the fixed stream (⚠️ Research Finding) — honest_verdict=complete_disqualified_v738_learning_clock_qualification; results/experiment_8592_v738_learning_clock_qualification.json
+- 2026-10-17: Qualify truthful small-head provenance through the unchanged resident validators (⚠️ Research Finding) — honest_verdict=complete_null_v738_resident_provenance_qualification; results/experiment_8593_v738_resident_provenance_qualification.json
