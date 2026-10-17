@@ -20488,3 +20488,4 @@ code |
 | 2026-10-17 22:12 UTC | Measure complete-source extraction and annotation  | OK | 94 passed, 1 warning in 35.17s |
 | 2026-10-17 23:13 UTC | Qualify lean workers under explicit current method | OK | 99 passed, 1 warning in 136.94s (0:02:16) |
 | 2026-10-17 23:46 UTC | Measure complete lean resident costs with matched  | OK | 97 passed, 1 warning in 45.91s |
+| 2026-10-17 23:52 UTC | Run bounded mandated-Qwen evidence views only afte | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8615-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
