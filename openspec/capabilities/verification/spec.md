@@ -55936,3 +55936,23 @@ disjoint37-node original E2E/publication-consumer union passed. Genuine unit
 and CLI child coverage measures99/99 newly owned statements. Scoped Ruff
 check/format, strict mypy and owned-test specification tracing passed. Terminal
 replay and publication receipts remain authoritative in the bound sidecar.
+
+## REQ-VERIFY-8589: Validate resident hardware accounting privately
+
+Collect original test node IDs before disjoint bounded serial children. Require
+100percent newly owned statement coverage, genuine CLI children and rejection
+paths, scoped Ruff check/format,strict mypy,spec tracing and private E2E-018/021
+with original authority. Retain argv,exits,clocks and log hashes. A killed child
+fails validation. Never run the full suite or historical validation controllers.
+
+### SCENARIO-VERIFY-8589-PUBLICATION
+
+Validate immutable final bytes through primary_publication,adversarial_verify
+and strict row lint before atomic replacement. Exercise real downstream readers.
+Owned failure disqualifies; external unchanged incompleteness blocks. CUDA and
+board absence cannot disable CPU work. Conductor owns ops and traceability upkeep.
+
+Implementation20261016 for REQ-VERIFY-8589: the thin CLI uses unchanged bounded
+child, publication and downstream reader helpers. Focused regressions cover
+original reference schemas, serialization partitioning, external absence, owned
+failure and repaired primitive/report hashes. Final receipts govern qualification.

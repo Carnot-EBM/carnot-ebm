@@ -101847,3 +101847,37 @@ complete wall cost increased72.013856832 to73.240272943 seconds. Efficiency
 therefore remains zero. All interventions stay unresolved; no refinement, new
 solve, generalization or learning credit follows. The primary and bound sidecar
 record terminal qualification. Ops/traceability reconciliation is conductor-owned.
+
+## REQ-REPORT-8589: Map resident operations to hardware boundaries
+
+Authenticate original Exp8563 board evidence once within60 seconds without device
+commands. Preserve its cold64-answer ceilings1.008746 and1.007981 without a
+resident acceleration claim. Admit Exp8584 costs only with complete qualified
+rows, full parity and bound publication; otherwise keep resident ceilings null.
+Map startup/imports, frame transport, text features, scaling, offset,109-term
+residual, normalization/fallback, typed policy, serialization and shutdown.
+Qualified disjoint clocks include fixed host work and separate lengths1/4/16
+and batches1/8. Ideal removal bounds below10 exclude NFR01 for that boundary;
+transfer, precision, update and sampling remain unknown. No measured speedup or
+durable learning follows. Keep both generalization scores and model calls zero.
+
+### SCENARIO-REPORT-8589-BOUNDARY
+
+KV260 retains only quadratic Ising k<=5; PolarFire Linux CPU evidence does not
+qualify fabric. GateMate requires changed cable/port/power evidence, expected
+ID0x20000001, source/build hashes,n16 flash and sample-hash smoke. NPU/TSU need
+compatible authenticated workloads. Compare sealed Z1T exclusions and pipelined
+p-computer scopes without importing efficiency ratios. Separate mapping readiness
+from physical readiness; unchanged absent costs or kernels yield blocked.
+
+### SCENARIO-REPORT-8589-REPLAY
+
+Fresh bounded replay rejects missing inputs, failed owned checks and summaries
+or primitives changed with repaired hashes. Preserve Exp8529 source null,
+Exp8553 label rejection,Exp8559 cold null and every old quarantine. Same-roadmap
+outputs remain future dependencies until independently qualified.
+
+Implementation20261016 for REQ-REPORT-8589: resident hardware adapters bind the
+original board report and qualified resident execution primitives independently
+of the unqualified complete-cost producer. The report maps fifty operation/board
+units; its primary and bound terminal sidecar determine current readiness.
