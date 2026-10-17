@@ -102313,3 +102313,21 @@ remain usable. Registration establishes no learning, detector or speed benefit.
 Require no model loads or current LLM calls, exact original evidence and cold
 reconstruction. Rehashed summary or primitive tampering must fail. Failed owned
 checks disqualify; unchanged external absence blocks. Preserve all historic nulls.
+
+## REQ-REPORT-8616: Qualify source-bound executable deadline statements
+
+V740 SHALL retain Exp8603 as disqualified and reproduce its immutable83/83
+raw runner coverage and missing projected anchor94. Bind literal anchors to the
+installed Coverage.py parser and exact source bytes. Keep raw94, normalized92
+and actual executed membership separate. Preserve deadlines and learner code.
+Readiness qualifies execution only; both generalization scores remain zero.
+
+### SCENARIO-REPORT-8616-MAPPING
+
+The adapter retains every anchor, authenticates source and bytecode line tables,
+and rejects changed source, unexecuted statements and absent coverage shards.
+Historical evidence and the original27-node authority remain unchanged.
+
+Implementation20261017 for REQ-REPORT-8616: the V740 adapter preserves sealed
+Exp8603 bytes, all literal anchors and source-bound parser/bytecode evidence.
+The producer stores current primitives and consumer receipts below its raw path.

@@ -56258,3 +56258,28 @@ controller or whole repository test run is authorized.
 Private CLI accepts valid immutable evidence and rejects missing inputs, owned
 failure and self-consistently rehashed tampering. Original blocked readiness stays
 zero. Optional runtime evidence never suppresses independent CPU registration.
+
+## REQ-VERIFY-8616: Require semantic deadlines and exact original test unions
+
+Collect the complete Exp8582/8592/8603 union before bounded disjoint children.
+Use the sealed mechanics fixture without historical validation controllers or
+training. Combine actual child coverage and require100 percent new statements.
+Run scoped lint, strict types, spec tracing and private E2E-018/021 readers.
+
+### SCENARIO-VERIFY-8616-CONTROLS
+
+Real runner cases3599/3600/3601 retain two/three/three reads and diagnostics
+None/3600.25/3601.25 with cleanup and independent kernel clocks. Reject omitted
+expired cases, changed diagnostics and removed third reads even when statement92
+executes. Fresh bounded replay rejects missing inputs, failed original assertions,
+missing shards and self-consistently rehashed tampering before atomic publication.
+
+Implementation20261017 for REQ-VERIFY-8616: focused mapper, semantic mutants,
+exact historical unions and raw-shard replay controls accompany the thin CLI.
+The invocation records the actual scoped checks and downstream acceptance.
+
+REQ-VERIFY-8616 validation reserve correction: the measurement window remains
+3600 seconds; bounded validation children can use the reserved900 seconds until
+4500 seconds. Initial killed reader children disqualify that attempt and remain
+in immutable diagnostics. A corrected revision must earn fresh passing reader
+and owned-control receipts without changing the learner deadline or assertions.
