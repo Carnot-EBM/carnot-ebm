@@ -6632,3 +6632,17 @@ v739-methods-protocol.json record exact hashes, assumptions, equations and
 use/defer decisions. Trivia+ is internal extractor coverage only. No theorem,
 local device speed, factual-truth result or learning benefit transfers from these
 sources. The V739 planning scan remains the dated discovery authority.
+
+## 2026-10-17 — V740 Exp8615 methods ingestion
+
+Ingested the dated V740 scan and primary Trivia+2605.11330v1,
+RT4CHART2603.27752v2, Calibeating2603.22167v1, delayed feedback2602.02634v1 /
+2606.11711v1 and online KAN2602.02056v3. Serial retrieval bytes, hashes,
+assumptions and use/defer decisions are sealed in
+`openspec/change-proposals/v740-methods-protocol.json` and
+`results/raw/experiment_8615_v740_contract_methods/sealed/`.
+Use complete-source coverage, human disagreement strata, proper-loss controls,
+lag/pending/lost accounting and original sparse-head operation boundaries.
+Defer transferred regret guarantees, invented p2 confidence, new learner/basis,
+external judge correctness and hardware speed claims. All studies remain
+unmeasured locally until their separate future producers qualify.

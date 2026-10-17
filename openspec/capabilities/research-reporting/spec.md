@@ -102282,3 +102282,34 @@ Trivia+ release and complete lean-cost evidence SHALL remain unavailable.
 Fresh bounded replay SHALL reconstruct task dispositions and numerical samples
 and validate original source, authority, code and receipt hashes before atomic
 primary publication. G1 through G4 SHALL retain their shipped definitions.
+
+## REQ-REPORT-8615: Bind twelve V740 tasks to independent branch methods
+
+Before measurement seal exactly Exp8615 through Exp8626 as complete dictionaries
+against staged or authentically activated YAML, visible table, embedded JSON,
+canonical task digest and end marker. Preserve V739 authority failure and Exp8603
+disqualification. Inherit authenticated V738 scientific operands by value and hash;
+register V740 producers separately. Missing optional CUDA evidence cannot block
+CPU learning, extraction or lean-service registration. Register label-blind Trivia+
+128-question cluster selection, four fixed lexical scores, descriptive annotation
+strata, lean imports crossed with Python/native arithmetic, and observer horizon120.
+Authenticate original head, validator, accounting and exact test union separately
+from resident provenance, cost, prototype and repaired-but-blocked owned evidence.
+
+### SCENARIO-REPORT-8615-AUTHORITY
+
+Staged V740 with active V739 and later activated V740 both qualify. Count, order,
+ID, title, phase, deliverable, models, substrate, gate, prompt, retirement, visible
+table, digest and marker mutations fail, including self-consistently rehashed ones.
+
+### SCENARIO-REPORT-8615-INPUTS
+
+Authenticate only branch dependencies through original readers and preserved
+historical bytes. Missing optional runtime keeps its gate zero while CPU methods
+remain usable. Registration establishes no learning, detector or speed benefit.
+
+## REQ-REPORT-8615-REPLAY: Publish immutable invocation evidence
+
+Require no model loads or current LLM calls, exact original evidence and cold
+reconstruction. Rehashed summary or primitive tampering must fail. Failed owned
+checks disqualify; unchanged external absence blocks. Preserve all historic nulls.

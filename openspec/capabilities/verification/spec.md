@@ -56242,3 +56242,19 @@ owned statement coverage. Killed or failed required children disqualify.
 Actual private CLI processes SHALL accept valid replay, reject missing inputs,
 owned failures and self-consistently rehashed tampering. Original authority
 failure blocks science without erasing completed administrative dispositions.
+
+## REQ-VERIFY-8615: Qualify V740 owned statements and exact child unions
+
+Collect original node IDs before bounded disjoint children; preserve commands,
+exits, durations and stream hashes. Require100 percent newly owned executable
+statements, including real CLI children and rejection paths, using Coverage.py
+statement normalization rather than demanding a continuation line. Run private
+E2E-018/021, Ruff, strict mypy, scoped spec tracing, fresh cold replay, adversarial
+verification and strict row consistency before atomic publication. No historical
+controller or whole repository test run is authorized.
+
+### SCENARIO-VERIFY-8615-REPLAY
+
+Private CLI accepts valid immutable evidence and rejects missing inputs, owned
+failure and self-consistently rehashed tampering. Original blocked readiness stays
+zero. Optional runtime evidence never suppresses independent CPU registration.
