@@ -539,3 +539,9 @@ Their concrete memory-saving stack is **4-bit QLoRA + FSDP2 + PLE CPU offload**,
 
 **POSSIBLE CARNOT LEVER:** For a Flash-Next generator deployment, native FP8 embedding loading could reduce startup I/O within Kaggle’s fixed runtime.
 
+## 2026-10-17 13:36 UTC -- NEW
+
+**復活の混テキスト — newly discovered historical code from member Tanaka Ai24.** The August 5 “Pathfinder v2” notebook implements a **Dijkstra transfer → beam search → IDA* → BFS → A* → MCTS** cascade, then injects solver-generated demonstrations into prioritized replay for CNN training. [Versioned notebook](https://www.kaggle.com/code/tanakaai24/arc-agi-3-pathfinder-v2?scriptVersionId=340313144)
+
+**Classification: (a), source-dependent exploit.** It locates and imports game `.py` files, clones the real engine for search, and probes hidden fields for state hashing. This path requires game internals unavailable through observation-only play. It is older experimental code; no evidence links it to the team’s current top-ten scoring submission. [Published source](https://www.kaggle.com/kernels/scriptcontent/340313144/download), [current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+

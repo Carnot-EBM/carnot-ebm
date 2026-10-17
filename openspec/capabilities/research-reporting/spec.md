@@ -102194,3 +102194,21 @@ diagnostic elapsed values, failure fields and cleanup. Original and executed nod
 IDs, measured anchors, kernel independence and current revision references bind
 the receipt to this invocation. A required owned failure is disqualified; an
 unchanged external failure is blocked. Neither outcome is positive.
+
+## REQ-REPORT-8608: Build an inference-only resident prototype
+
+Authenticate qualified Exp8593/8596 primitives and the original head descriptor.
+Preserve the shipped worker as the byte-identical counterfactual. Register the
+new import graph and retain bounded importtime/process diagnostics. The private
+Python/native workers SHALL share a framed lifecycle and recompute complete text
+features, scaling, raw-q offset, 109-coefficient spline residual, normalization,
+0.2/0.8 decisions, boundary fallback and serialization. No cache or speed claim
+is permitted. Zero language-model calls do not imply zero energy inference.
+
+### SCENARIO-REPORT-8608-PROTOTYPE
+
+Bounded fixture sessions exercise both actual arms and unchanged rejection paths.
+Cold replay rejects missing inputs, failed owned checks and rehashed semantic
+changes. Private publication readers and unchanged validators accept final bytes.
+Readiness denotes an executable prototype only; Exp8609 independently qualifies
+parity/isolation before Exp8610 measures cost. Generalization scores stay zero.

@@ -56166,3 +56166,17 @@ Fresh bounded replay authenticates original authority, immutable fixtures,
 current source/tests, exact node outcomes and coverage. Missing inputs, failed
 owned checks and rehashed tampering cannot earn readiness. Private E2E-018/021,
 strict row lint and unchanged adversarial verification precede atomic publication.
+
+## REQ-VERIFY-8608: Preserve resident numerical and protocol semantics
+
+The private serving import graph SHALL exclude experiment reporters, training,
+sklearn and historical authority readers. SciPy arithmetic remains permitted.
+Keep immutable configuration and extension hashes, duplicate-ID rejection,
+request/idle deadlines, malformed-frame rejection and clean shutdown unchanged.
+
+### SCENARIO-VERIFY-8608-PRIVATE
+
+Tests compare the complete shipped fixture responses with both lean arms,
+including threshold fallback and malformed inputs. Actual private child execution
+and rejection paths count toward 100 percent newly owned statement coverage.
+Timing diagnostics establish dependency location only and cannot establish speed.
