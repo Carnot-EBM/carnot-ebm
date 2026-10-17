@@ -20460,3 +20460,4 @@ code |
 | 2026-10-17 06:51 UTC | Measure complete resident cost with authenticated  | OK | 86 passed, 1 warning in 39.49s |
 | 2026-10-17 07:14 UTC | Audit original and assisted MedExpert labels befor | OK | 88 passed, 1 warning in 21.14s |
 | 2026-10-17 07:21 UTC | Run bounded Qwen evidence views only after changed | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8591-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-10-17 08:03 UTC | Measure cross-game support and censoring in the ne | OK | 104 passed, 1 warning in 142.66s (0:02:22) |
