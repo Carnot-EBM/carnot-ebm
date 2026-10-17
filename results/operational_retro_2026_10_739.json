@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.739",
+  "generated_at": "2026-10-17T17:01:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 71.1,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify the exact expired-deadline path under isolated clocks",
+      "duration_minutes": 51.76,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind thirteen tasks and ingest long-context evidence and serving methods",
+      "duration_minutes": 7.72,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map changed service and sparse-learning costs to supported hardware operations",
+      "duration_minutes": 5.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes and close exact unchanged studies",
+      "duration_minutes": 5.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify lean worker parity isolation and complete-operation custody",
+      "duration_minutes": 1.18,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.739 executed 6 experiments across 71.1 total wall-time minutes (averaging 12 minutes per experiment) based on disk-mtime fallback reconstruction data. All 6 completed experiments were synthesis-only (0 compute-bound tasks), with wall time led by 'Qualify the exact expired-deadline path under isolated clocks' (51.76 minutes, accounting for ~72.8% of milestone duration), 'Bind thirteen tasks and ingest long-context evidence and serving methods' (7.72 minutes), 'Map changed service and sparse-learning costs to supported hardware operations' (5.3 minutes), 'Reconcile thirteen outcomes and close exact unchanged studies' (5.09 minutes), and 'Qualify lean worker parity isolation and complete-operation custody' (1.18 minutes). Because zero compute-bound tasks were run, gpu_idle_on_compute_bound_tasks is recorded as null, and 0% utilization across both RTX 3090 GPUs at monitor snapshot represents expected idle behavior for non-GPU synthesis workloads rather than an operational bottleneck.",
+  "bottlenecks_identified": [
+    "Synthesis-only task execution accounted for 100% of milestone duration (6 completed tasks totaling 71.1 wall-time minutes), with the longest single experiment ('Qualify the exact expired-deadline path under isolated clocks') consuming 51.76 minutes (~72.8% of total wall time).",
+    "The expired-deadline clock qualification experiment ran as an unpartitioned monolithic execution under isolated clocks, lacking intermediate checkpoints or phase-level timeouts.",
+    "Recurring orchestration passes—including binding thirteen tasks and ingesting evidence (7.72 minutes), mapping changed service costs (5.3 minutes), and reconciling thirteen outcomes (5.09 minutes)—executed full sweeps without incremental caching or memoization on unchanged evidence.",
+    "Timing data required disk-mtime fallback reconstruction due to the live git-log path discovering 0 commits in the milestone interval.",
+    "Absence of granular intra-task phase telemetry in synthesis experiment receipts, preventing precise attribution of latency across clock isolation fixtures, subprocess execution, verifier assertions, and receipt serialization."
+  ],
+  "improvements_suggested": [
+    "Partition prolonged clock-isolation and expired-deadline qualification runs into granular sub-phases with early failure detection to prevent unmonitored multi-minute executions.",
+    "Introduce incremental receipt caching and evidence memoization for recurring task-binding, hardware-operation cost mapping, and outcome-reconciliation passes when upstream inputs remain unchanged.",
+    "Persist synchronous start, finish, and elapsed execution timestamps directly into experiment JSON receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Preserve DualGPURunner boundaries strictly for concurrent multi-model inference pipelines, avoiding unnecessary GPU allocation or runner overhead on CPU-bound synthesis workloads.",
+    "Maintain active failure_ledger pre-launch checks to ensure non-viable doomed reruns are aborted in <1s before consuming milestone wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Partition the expired-deadline clock qualification workflow into modular sub-checks instrumented with granular intra-task phase timers.",
+    "Implement incremental evidence memoization for recurring task binding, cost mapping, and outcome reconciliation synthesis tasks operating on immutable inputs.",
+    "Record explicit synchronous start and end lifecycle timestamps directly into experiment result receipts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.739 completed 6 synthesis-only experiments in 71.1 wall-time minutes with zero compute-bound tasks and gpu_idle_on_compute_bound_tasks recorded as null. Observed 0% GPU utilization across both RTX 3090 GPUs was appropriate for CPU synthesis workloads, and no multi-model tasks were present to require DualGPURunner. Future milestone throughput will benefit most from decomposing long-running clock qualification runs and establishing incremental memoization for unchanged task binding and outcome reconciliations."
+}
