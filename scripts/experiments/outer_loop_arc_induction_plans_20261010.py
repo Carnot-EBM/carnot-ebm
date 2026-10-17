@@ -128,7 +128,9 @@ def stop_port(port: int) -> list[int]:
     return killed
 
 
-def install_shipped_proposer(exp4605) -> None:
+def install_shipped_proposer(exp4605, arm: str = "llm_on") -> None:
+    """llm_on builds the shipped proposer. llm_off installs the no-op stub and nothing else
+    changes, which is how the July `firstwin.py` built its control arm."""
     from carnot.agentic.arc_competition_agent import E3AgentPolicy
 
     def _policy_for_mode(mode: str, game: str):
@@ -144,7 +146,7 @@ def install_shipped_proposer(exp4605) -> None:
             )
         pol = E3AgentPolicy(
             game,
-            proposer=None,
+            proposer=exp4605._NoOpProposer() if arm == "llm_off" else None,
             target_levels=exp4605._submitted_target_levels(),
             value_weight=exp4605._submitted_value_weight(),
         )
@@ -154,8 +156,8 @@ def install_shipped_proposer(exp4605) -> None:
     exp4605._policy_for_mode = _policy_for_mode
 
 
-def run_cell(exp4605, spec: dict, budget: int) -> dict:
-    cell = CELLS / f"llm_on__{spec['variant_signature'].replace('~', '_')}.json"
+def run_cell(exp4605, spec: dict, budget: int, arm: str = "llm_on") -> dict:
+    cell = CELLS / f"{arm}__{spec['variant_signature'].replace('~', '_')}.json"
     if cell.exists():
         return json.loads(cell.read_text())
     _LOCAL.policy = None
@@ -173,7 +175,7 @@ def run_cell(exp4605, spec: dict, budget: int) -> dict:
         except Exception as exc:
             witness = {"witness_error": repr(exc)[:200]}
     out = {
-        "arm": "llm_on",
+        "arm": arm,
         "game": str(spec["game"]),
         "variant": int(spec["variant"]),
         "variant_signature": spec["variant_signature"],
@@ -199,9 +201,15 @@ def main() -> int:
     ap.add_argument("--games", default="")
     ap.add_argument("--budget", type=int, default=200)
     ap.add_argument("--tag", default="")
+    ap.add_argument(
+        "--arm",
+        choices=("llm_on", "llm_off"),
+        default="llm_on",
+        help="llm_off installs the no-op proposer: no server, no GPU, same agent otherwise",
+    )
     args = ap.parse_args()
 
-    if not os.environ.get("CARNOT_LLAMA_SERVER"):
+    if args.arm == "llm_on" and not os.environ.get("CARNOT_LLAMA_SERVER"):
         print("BLOCKED: set CARNOT_LLAMA_SERVER to the CUDA llama-server binary", flush=True)
         return 2
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -241,29 +249,35 @@ def main() -> int:
             )
         },
     }
+    meta["arm"] = args.arm
     OUT.mkdir(parents=True, exist_ok=True)
-    prop, srv = start_server(exp4605, games[0])
-    meta["server"] = srv
-    if prop is None:
-        meta["blocked"] = "blocked_generator_server_launch_failed"
-        (OUT / f"run{args.tag}.json").write_text(json.dumps(meta, indent=1, default=str))
-        print("BLOCKED:", srv, flush=True)
-        return 2
-    meta["device"] = device_join(srv["pid"], args.gpu)
-    print(f"[server] {srv} device={meta['device']['verdict']}", flush=True)
-    if meta["device"]["verdict"] != "CONFIRMED_BY_PID_UUID_JOIN":
-        print("BLOCKED: server not confirmed on the intended card", flush=True)
-        stop_port(args.port)
-        meta["blocked"] = "blocked_wrong_or_unverified_device"
-        (OUT / f"run{args.tag}.json").write_text(json.dumps(meta, indent=1, default=str))
-        return 2
+    if args.arm == "llm_on":
+        prop, srv = start_server(exp4605, games[0])
+        meta["server"] = srv
+        if prop is None:
+            meta["blocked"] = "blocked_generator_server_launch_failed"
+            (OUT / f"run{args.tag}.json").write_text(json.dumps(meta, indent=1, default=str))
+            print("BLOCKED:", srv, flush=True)
+            return 2
+        meta["device"] = device_join(srv["pid"], args.gpu)
+        print(f"[server] {srv} device={meta['device']['verdict']}", flush=True)
+        if meta["device"]["verdict"] != "CONFIRMED_BY_PID_UUID_JOIN":
+            print("BLOCKED: server not confirmed on the intended card", flush=True)
+            stop_port(args.port)
+            meta["blocked"] = "blocked_wrong_or_unverified_device"
+            (OUT / f"run{args.tag}.json").write_text(json.dumps(meta, indent=1, default=str))
+            return 2
+    else:
+        srv = {"pid": None, "llm_off": True, "note": "no generator server in this arm"}
+        meta["server"] = srv
+        print("[arm] llm_off: no generator server", flush=True)
 
-    install_shipped_proposer(exp4605)
+    install_shipped_proposer(exp4605, args.arm)
     t0 = time.time()
     rows = []
     try:
         with ThreadPoolExecutor(max_workers=args.k) as ex:
-            futs = [ex.submit(run_cell, exp4605, s, args.budget) for s in specs]
+            futs = [ex.submit(run_cell, exp4605, s, args.budget, args.arm) for s in specs]
             for f in as_completed(futs):
                 rows.append(f.result())
                 w = rows[-1].get("liveness_witness") or {}
@@ -276,8 +290,9 @@ def main() -> int:
                 )
     finally:
         meta["wall_s"] = round(time.time() - t0, 1)
-        meta["device_after"] = device_join(srv["pid"], args.gpu)
-        meta["stopped_pids"] = stop_port(args.port)
+        if args.arm == "llm_on":
+            meta["device_after"] = device_join(srv["pid"], args.gpu)
+            meta["stopped_pids"] = stop_port(args.port)
         meta["finished_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         (OUT / f"run{args.tag}.json").write_text(json.dumps(meta, indent=1, default=str))
     return 0

@@ -292,3 +292,74 @@ The next limit is the quality of the induced model, not the generator timeout.
 
 **Cost.** The longer timeout cost 23.6 hours of GPU 1 for 7 attempts and no wins. The
 value 7200 s was my choice, not an operator decision.
+
+## Addendum 2026-10-17 (second): why the 7 rerun cells failed the held-out gate
+
+Read-only. Sources: the 7 cell files, `_induction_accept_threshold()` in
+`arc_competition_agent.py:33`, and the accept test at `arc_llm_reinduction.py:1885`.
+
+**The gate.** An attempt is accepted when `heldout_accuracy >= verifier_threshold`. The
+live default threshold is 1.0, set by `CARNOT_ARC_INDUCTION_ACCEPT_THRESHOLD` when
+present. Accuracy is an exact full-grid match. A code comment records that this gate was
+met in 0 of 6 rounds on g50t in an earlier real run.
+
+**What the 7 cells show.** The induced models are often close, not wrong.
+
+| Cell | Held-out accuracy | Change fidelity | Spurious changed cells |
+|---|---|---|---|
+| bp35 | 0.92 (verify accuracy) | 0.998 | 0 |
+| cd82 | 0.875 | 1.0 | 0 |
+| wa30 | 0.852 | 1.0 | 0 |
+| re86 | 0.630 | 0.992 | 9 |
+| cn04 | 0.444 | 0.997 | 11 |
+| tr87 | 0.88 (verify accuracy) | 0.907 | 7 |
+| r11l | 1.0 (verify accuracy) | 1.0 | 0 |
+
+Four cells (bp35, cd82, wa30, r11l) have change fidelity of 0.998 or higher and no
+spurious cell. A threshold of 1.0 rejects them. I did not measure whether a lower
+threshold would produce a plan that wins. That test is open.
+
+**Not explained.** r11l shows perfect scores on the printed diagnostic and still skipped
+with `heldout_transition_verification_failed`. The cell files do not store per-round
+rows, so I cannot say which round or which check failed. The attempt archives under
+`results/arc_e3/<game>/attempts/` hold the engines and may answer it. Not read.
+
+**Limits.** Seven cells, one sample each, chosen because they failed earlier. The
+diagnostic is the final round only. Two different metrics appear in the table
+(`heldout_accuracy` and `verify_accuracy`), so the rows are not one scale.
+
+## Addendum 2026-10-17 (third): matched llm_off arm on current code
+
+Question: does the LLM induction tier add first wins over the same agent with the LLM off?
+The July `llm_off` arm ran on July code, so no cell paired with the October run. This arm
+runs on the same commit as the rerun (`62548c73e0`), variant 1, all 25 public games, K=4.
+The driver gained `--arm llm_off`, which installs the no-op proposer and changes nothing
+else. No server and no generator. Wall time 247 s. Results are in
+`results/arc_induction_plans_20261017_llm_off/`.
+
+| Measure | llm_off | llm_on (Qwen3.8-27B) |
+|---|---|---|
+| Cells, with cell errors | 25, 0 | 25, 0 |
+| First wins | 1 (vc33) | 5 (ar25, lp85, sp80, su15, vc33) |
+
+Paired by game: 1 cell won in both arms (vc33), 4 won only with the LLM on, 0 won only
+with the LLM off. The four LLM-only wins are the four cells where an induced model passed
+the gate. The 5 wins in the first run equal the 5 attempts that were not skipped.
+
+**What this supports.** On these 25 games the LLM tier gave wins that the no-LLM agent did
+not find. In July, with the retired 9B generator, the LLM arm won no more cells than the
+no-LLM arm, so the generator change is a candidate cause. This run does not test that.
+
+**What it does not support.**
+
+- The sign test on 4 versus 0 discordant cells gives a two-sided p of 0.125. It is not
+  significant at 0.05.
+- One sample per game and one variant. The llm_off arm ran once, so run-to-run noise in
+  the no-LLM agent is unmeasured.
+- The `llm_on` column uses the 25-cell first run, with the 7 rerun cells swapped in. The
+  swap changes no win count: neither run won on those 7 cells.
+- This measures first wins on public games. It is a proxy for hidden-game performance,
+  not that measurement.
+
+**Next.** Variants 2 to 4 for both arms would give 100 paired cells. The llm_off side costs
+minutes. The llm_on side costs about 45 hours of GPU 1 at the first run's pace.
