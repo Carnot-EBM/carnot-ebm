@@ -20471,3 +20471,4 @@ code |
 | 2026-10-17 13:23 UTC | Train the small energy head through qualified dela | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8603-deadline-edge-qualification.learning_execution_ready_score (actual=0 == expected=1) |
 | 2026-10-17 13:25 UTC | Test later Brier benefit and simultaneous retentio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8605-causal-brier-stream) |
 | 2026-10-17 13:25 UTC | Measure complete-source extraction coverage on hum | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8604-triviaplus-release) |
+| 2026-10-17 13:48 UTC | Build a minimal resident import path with unchange | OK | 117 passed, 1 warning in 30.18s |
