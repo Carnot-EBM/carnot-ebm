@@ -1,0 +1,167 @@
+.......F..FF                                                             [100%]
+=================================== FAILURES ===================================
+_________________ test_original_history_and_rehashed_rejection _________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T205430-1272509-0927e394/test_original_history_and_reha0')
+
+    def test_original_history_and_rehashed_rejection(tmp_path):
+        """SCENARIO-VERIFY-8649-REPLAY: original public redirects retain their null."""
+>       source = e.authenticate(e.ROOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_reset_reporting_8649.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def authenticate(root: Path) -> Json:
+        """Independent original pins authenticate public evidence after live code changes."""
+        value = checked(root / UPSTREAM, UPSTREAM_PIN)
+        work = checked(Path(value["work_reference"]["path"]), value["work_reference"]["sha256"])
+        episodes = [
+            original_fields(
+                Path(r["path"]),
+                r["sha256"],
+                [
+                    "unit",
+                    "steps",
+                    "events",
+                    "observer_rows",
+                    "actions",
+                    "rng",
+                    "termination",
+                    "observations",
+                ],
+            )
+            for r in work["references"]
+        ]
+        assert len(episodes) == 16 and value["censored_count"] == 16
+        assert len(value["actual_redirect_rows"]) == 16 and value["verdict_class"] == "null"
+        assert all(r["horizon_status"] == "censored" for r in value["actual_redirect_rows"])
+        assert len(value["observer_action_parity_rows"]) == 8
+        assert all(r["passed"] for r in value["observer_action_parity_rows"])
+        for ep in episodes:
+            if ep["unit"]["observer"] == "on":
+>               assert replay_stream(ep["steps"], ep["events"], ep["end_reason"]) == ep["observer_rows"]
+                                                                ^^^^^^^^^^^^^^^^
+E               KeyError: 'end_reason'
+
+python/carnot/reporting/arc_reset_8649.py:70: KeyError
+___________________ test_positive_build_and_controller_paths ___________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T205430-1272509-0927e394/test_positive_build_and_contro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0d29383ef0>
+
+    def test_positive_build_and_controller_paths(tmp_path, monkeypatch):
+        """REQ-VERIFY-8649: execute orchestration without recursively running validation."""
+        from carnot.reporting import arc_reset_runner_8649 as runner
+    
+        pair = dict(mechanic="navigation", passed=True)
+        arm = dict(
+            actions=[],
+            rng=[],
+            termination=dict(error=None),
+            legacy={},
+            observations=[],
+            observer_rows=[],
+            sdk_calls=[],
+            recorder_errors=[],
+            llm_calls=0,
+            numerical_head_calls=1,
+            reset_provenance=dict(
+                reset_request_rows=[dict(action_index=1)],
+                requester_ownership_rows=[dict(status="unique")],
+                terminal_reason_rows=[],
+                missing_cause_rows=[],
+                issues=[],
+            ),
+        )
+        refs = []
+        for name in ["navigation", "toggle", "sequence"]:
+            path = tmp_path / (name + ".json")
+            atomic_json(path, dict(pair, mechanic=name, off=arm, on=arm))
+            refs.append(dict(path=str(path), sha256=sha256_file(path)))
+>       history = e.authenticate(e.ROOT)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_reset_reporting_8649.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+        "ruff_format",
+        "strict_mypy",
+        "spec_coverage",
+        "collect_0",
+        "collect_1",
+        "live_hook_tests",
+        "live_statement_coverage",
+    }
+    
+    
+    def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+        """Keep phase transitions visible while children retain their own measured clocks."""
+        print(f"[exp8649] phase={phase} completed={completed} pending={pending}", flush=True)
+    
+    
+    def public_episode(ref: Json) -> Json:
+        """Scan top-level fields once; hash the large legacy receipt without allocating it."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+            raise ValueError("original_hash:" + str(path))
+        result: Json = {}
+        wanted = {
+            "unit",
+            "steps",
+            "events",
+            "observer_rows",
+            "actions",
+            "rng",
+>           "termination",
+                           
+            "observations",
+            "end_reason",
+        }
+E       KeyError: 'end_reason'
+
+python/carnot/reporting/arc_reset_8649.py:70: KeyError
+____________ test_measure_current_closure_and_rejected_publication _____________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T205430-1272509-0927e394/test_measure_current_closure_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0d133321b0>
+
+        unit = tmp_path / "unit.json"
+        atomic_json(unit, dict(directory=str(tmp_path), mechanic="navigation"))
+        assert runner.main(["--fixture", str(unit)]) == 0
+    
+    
+    def test_measure_current_closure_and_rejected_publication(tmp_path, monkeypatch):
+        """REQ-VERIFY-8649: snapshot current sources before validation and retain rejection."""
+        from carnot.reporting import arc_reset_runner_8649 as runner
+    
+        raw = tmp_path / "raw"
+        raw.mkdir()
+    
+        def child(name, argv, logs, **kwargs):
+            if name.startswith("fixture_"):
+                unit = json.loads(Path(argv[-1]).read_bytes())
+>               atomic_json(Path(unit["directory"]) / "pair.json", dict(mechanic=unit["mechanic"]))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               assert 0 == 3
+E                +  where 0 = len([])
+
+tests/python/test_arc_reset_reporting_8649.py:189: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8649] phase=preconditions_before completed=0 pending=0
+[exp8649] phase=preconditions_after completed=12 pending=0
+=============================== warnings summary ===============================
+tests/python/test_arc_reset_reporting_8649.py::test_positive_build_and_controller_paths
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_reset_reporting_8649.py::test_original_history_and_rehashed_rejection
+FAILED tests/python/test_arc_reset_reporting_8649.py::test_positive_build_and_controller_paths
+FAILED tests/python/test_arc_reset_reporting_8649.py::test_measure_current_closure_and_rejected_publication
+3 failed, 9 passed, 1 warning in 302.63s (0:05:02)

@@ -102785,3 +102785,21 @@ Failed owned checks disqualify. Missing external inputs block with exact gates;
 missing differs from zero. Readiness requires both unions, new statement coverage
 and terminal readers. Repeated unchanged original failures close the attempt.
 The conductor owns ops, changelog and traceability reconciliation.
+# REQ-REPORT-8649: Passive reset ownership on the scored ARC path
+
+Exp8649 SHALL record reset_request_id, action index, actual origin and initiating
+branch at reachable request sites, with public pre/post hashes, remaining budgets
+and SDK terminal/reset status. Agent RESET, environment terminal, harness reset
+and unknown remain distinct. Missing causes and duplicate/conflicting requesters
+remain explicit; later counters or game IDs never supply intent. Instrumentation
+is opt-in, bounded and fail-open and changes no action, RNG, priority or horizon.
+
+### SCENARIO-REPORT-8649-PARITY
+
+Navigation, toggle and sequence fixtures SHALL traverse make_carnot_agent,
+E3AgentPolicy and SDK wrappers with recording off/on. Exact actions, RNG, SDK calls,
+termination and existing observer receipts SHALL match. Exercise repeated RESET,
+two requesters at one index, terminal without RESET, overlapping redirects,
+recorder exceptions, disabled instrumentation and missing request provenance.
+Only qualified recording plus cold replay permits reset_provenance_ready_score=1.
+Fixture outcomes give zero policy refinement, promotion and generalization credit.

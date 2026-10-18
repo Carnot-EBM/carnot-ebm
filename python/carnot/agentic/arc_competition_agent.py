@@ -4278,6 +4278,9 @@ class StepwiseExplorer:
         if self._go_explore_organic_visits and self._go_explore_replay_active:
             self._go_explore_replay_event = "reset" if item["kind"] == "RESET" else "replay"
         if item["kind"] == "RESET":
+            from carnot.agentic.arc_reset_provenance import request
+
+            request(self, "StepwiseExplorer._serve.queued_reset")
             self.awaiting = None  # RESET has no forward edge to attribute
             self._prov_serve_kind = "reset"  # provenance label; see arc_action_provenance
             return ("RESET", None)
@@ -4858,6 +4861,9 @@ class StepwiseExplorer:
         # kind from a previous action on a path where `_serve` was not reached at all.
         self._prov_serve_kind = None
         if self.root is None and latest is None:  # bootstrap: RESET to get the first frame
+            from carnot.agentic.arc_reset_provenance import request
+
+            request(self, "StepwiseExplorer.next_move.bootstrap")
             self._prov_branch = "bootstrap_reset"
             return ("RESET", None)
         self._ingest(latest)
@@ -5225,6 +5231,9 @@ class CarnotAgentPolicy:
         if self.explorer is not None:  # unknown game: generic solver
             return self.explorer.next_move(frames, latest_frame)
         if not self.reset_sent:  # known game: replay banked solution
+            from carnot.agentic.arc_reset_provenance import request
+
+            request(self, "CarnotAgentPolicy.next_move.initial_reset")
             self.reset_sent = True
             return ("RESET", None)
         if self.i < len(self.plan):
@@ -8053,6 +8062,9 @@ class E3AgentPolicy:
                     self._prov_top = "induce.plan_from_current"
                     return mv
                 self._prov_top = "induce.plan_needs_reset"
+                from carnot.agentic.arc_reset_provenance import request
+
+                request(self, "E3AgentPolicy.induce.plan_needs_reset")
                 return ("RESET", None)
             self._prov_top = "induce.no_plan.explorer"
             return self.explorer.next_move(frames, latest)
@@ -10484,6 +10496,9 @@ def make_carnot_agent(
         def choose_action(self, frames, latest_frame):
             from arcengine import GameAction
             from carnot.agentic.arc_outcome_observer import notify
+            from carnot.agentic import arc_reset_provenance as reset_provenance
+
+            reset_provenance.prepare(self._policy, latest_frame)
 
             notify(self._policy, "observation", latest_frame)
             kind, data = self._policy.next_move(frames, latest_frame)
@@ -10491,6 +10506,8 @@ def make_carnot_agent(
 
             bind_action(self._policy, kind, data)
             if kind == "RESET" or kind is None:
+                if kind is None:
+                    reset_provenance.request(self._policy, "CarnotAgent.choose_action.none_fallback")
                 act = GameAction.RESET
             else:
                 act = getattr(GameAction, f"ACTION{kind}")
@@ -10507,9 +10524,15 @@ def make_carnot_agent(
             if record_application is not None:
                 record_application(act)
             notify(self._policy, "application", act)
+            reset_provenance.notify(self._policy, "selected", act)
             return act
 
         def do_action_request(self, action):
+            from carnot.agentic.arc_reset_provenance import sdk_call
+
+            return sdk_call(self._policy, action, lambda: self._do_action_request_original(action))
+
+        def _do_action_request_original(self, action):
             """Join the adapter action to the exact canonical environment return.
 
             The framework normally converts ``FrameDataRaw`` before it returns.

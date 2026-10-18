@@ -56633,3 +56633,21 @@ rehashed tampering against an external authority. Retain actual commands, exits,
 durations and hashed logs. Check unchanged publication, adversarial and strict
 row readers before atomic publication. Stop measurement by 3600 seconds and
 reserve 900 seconds of the 4800-second cap. Emit flushed child heartbeats.
+# REQ-VERIFY-8649: Seal historical authority and replay reset primitives
+
+Seal original observer and producer source closures before changes. Current
+adapters SHALL bind current sources explicitly; original hashes remain unchanged.
+Authenticate Exp8637's sixteen censored redirects and exact action parity using
+public streams only. Collect original test nodes once and execute disjoint bounded
+children under original authority. Preserve original coverage before combining
+copies and require100 percent newly owned statements, including child/rejections.
+
+### SCENARIO-VERIFY-8649-REPLAY
+
+Fresh bounded replay SHALL reject missing inputs and self-consistently rehashed
+tampering against independent source pins. Qualify final bytes through unchanged
+publication readers, adversarial verification and strict row lint. Failed owned
+checks disqualify; missing external operands block. No models, game source,
+GameAdapters, stored routes or solve credit are permitted. Same-roadmap outputs
+remain future dependencies. Use private E2E-018/021 and record actual clocks,
+commands, exits and hashed logs.
