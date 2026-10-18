@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.740",
+  "generated_at": "2026-10-18T02:18:54Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 108.1,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify executable deadline statements with source-bound coverage and semantic c",
+      "duration_minutes": 71.62,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind twelve tasks and seal independent learning evidence and service methods",
+      "duration_minutes": 10.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map complete learning and lean-service operations to actual hardware support",
+      "duration_minutes": 9.61,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Harden live ARC horizon and censoring records without changing actions",
+      "duration_minutes": 5.46,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile twelve outcomes and close exact unchanged studies",
+      "duration_minutes": 5.19,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.740 executed 9 experiments across 108.1 total wall-time minutes (averaging 12 minutes per experiment) based on disk-mtime fallback reconstruction data. All 9 completed experiments were synthesis-only (0 compute-bound tasks), led by 'Qualify executable deadline statements with source-bound coverage and semantic c' (71.62 minutes, accounting for ~66.3% of total milestone duration), 'Bind twelve tasks and seal independent learning evidence and service methods' (10.09 minutes), 'Map complete learning and lean-service operations to actual hardware support' (9.61 minutes), 'Harden live ARC horizon and censoring records without changing actions' (5.46 minutes), and 'Reconcile twelve outcomes and close exact unchanged studies' (5.19 minutes). Because zero compute-bound tasks were executed, gpu_idle_on_compute_bound_tasks is recorded as null, and 0% utilization across both RTX 3090 GPUs at monitor snapshot represents expected idle behavior for non-GPU synthesis workloads.",
+  "bottlenecks_identified": [
+    "Synthesis-only task execution accounted for 100% of milestone duration (9 completed tasks totaling 108.1 wall-time minutes), with the longest single experiment ('Qualify executable deadline statements with source-bound coverage and semantic c') consuming 71.62 minutes (~66.3% of total wall time).",
+    "The executable deadline qualification run executed as an unpartitioned monolithic synthesis pass without intermediate checkpointing or granular intra-phase timeouts.",
+    "Recurring synthesis passes—including binding twelve tasks (10.09 minutes), mapping complete learning and lean-service operations to hardware support (9.61 minutes), hardening live ARC horizon records (5.46 minutes), and reconciling twelve outcomes (5.19 minutes)—executed full sweeps without incremental caching or memoization on unchanged evidence.",
+    "Timing data required disk-mtime fallback reconstruction due to the live git-log path discovering 0 commits in the milestone interval.",
+    "Absence of granular intra-task phase telemetry in synthesis experiment receipts, preventing precise attribution of latency across coverage checks, semantic verifiers, subprocess invocation, and receipt serialization."
+  ],
+  "improvements_suggested": [
+    "Partition prolonged deadline statement and semantic coverage qualification runs into granular sub-phases with early failure detection to avoid unmonitored multi-minute executions.",
+    "Introduce incremental receipt caching and evidence memoization for recurring task-binding, hardware-support mapping, ARC record hardening, and outcome-reconciliation passes when upstream inputs remain unchanged.",
+    "Persist synchronous start, finish, and elapsed execution timestamps directly into experiment JSON receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Preserve DualGPURunner boundaries strictly for concurrent multi-model inference pipelines, avoiding unnecessary GPU allocation or runner overhead on CPU-bound synthesis workloads.",
+    "Maintain active failure_ledger pre-launch checks to ensure non-viable doomed reruns are aborted in <1s before consuming milestone wall time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Partition the executable deadline statements qualification workflow into modular sub-checks instrumented with granular intra-task phase timers.",
+    "Implement incremental evidence memoization for recurring task binding, hardware mapping, ARC record hardening, and outcome reconciliation synthesis tasks operating on immutable inputs.",
+    "Record explicit synchronous start and end lifecycle timestamps directly into experiment result receipts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.740 completed 9 synthesis-only experiments in 108.1 wall-time minutes with zero compute-bound tasks and gpu_idle_on_compute_bound_tasks recorded as null. Observed 0% GPU utilization across both RTX 3090 GPUs was appropriate for CPU synthesis workloads, and no multi-model tasks were present to require DualGPURunner. Future milestone throughput will benefit most from decomposing long-running deadline statement qualification passes and establishing incremental memoization for unchanged task binding, hardware mapping, and outcome reconciliations."
+}

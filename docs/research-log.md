@@ -7520,3 +7520,10 @@ criteria. This operational record makes no scientific-result claim.
 - theme: Operational efficiency across 6 completed experiments (0 compute-bound, 6 synthesis-only) in 71 minutes of milestone wall time.
 - key result: honest operational negative — 6 synthesis-only experiments completed in 71.1 wall-time minutes (averaging 12 minutes per experiment) led by qualifying the exact expired-deadline path under isolated clocks (51.76 min), binding thirteen tasks and ingesting long-context evidence and serving methods (7.72 min), mapping changed service and sparse-learning costs to supported hardware operations (5.3 min), reconciling thirteen outcomes and closing exact unchanged studies (5.09 min), and qualifying lean worker parity isolation and complete-operation custody (1.18 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization across both RTX 3090 GPUs reflecting expected idle behavior for non-GPU synthesis workloads.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.740
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 9 completed experiments (0 compute-bound, 9 synthesis-only) in 108 minutes of milestone wall time.
+- key result: honest operational negative — 9 synthesis-only experiments completed in 108.1 wall-time minutes (averaging 12 minutes per experiment) led by qualifying executable deadline statements with source-bound coverage and semantic c (71.62 min), binding twelve tasks and sealing independent learning evidence and service methods (10.09 min), mapping complete learning and lean-service operations to actual hardware support (9.61 min), hardening live ARC horizon and censoring records without changing actions (5.46 min), and reconciling twelve outcomes and closing exact unchanged studies (5.19 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization across both RTX 3090 GPUs reflecting expected idle behavior for non-GPU synthesis workloads.
+- acceptance: no data available this milestone

@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-18 — Operational retrospective for milestone 2026.10.740
+
+- Wrote `results/operational_retro_2026_10_740.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.740`. Authoritative disk-mtime fallback data records 9 experiments completed (0 compute-bound, 9 synthesis-only) across 108.1 total wall-time minutes (average 12 minutes per experiment).
+- Execution wall time was led by: 'Qualify executable deadline statements with source-bound coverage and semantic c' (71.62 minutes, synthesis-only), 'Bind twelve tasks and seal independent learning evidence and service methods' (10.09 minutes, synthesis-only), 'Map complete learning and lean-service operations to actual hardware support' (9.61 minutes, synthesis-only), 'Harden live ARC horizon and censoring records without changing actions' (5.46 minutes, synthesis-only), and 'Reconcile twelve outcomes and close exact unchanged studies' (5.19 minutes, synthesis-only).
+- Point-in-time GPU monitor polling observed both NVIDIA GeForce RTX 3090 GPUs at 0% utilization (4MB allocated); `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and snapshot 0% GPU utilization reflects expected idle behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: decompose prolonged deadline statement and semantic coverage qualification runs into granular sub-phases with early failure detection; introduce incremental receipt caching and evidence memoization for recurring task-binding, hardware-support mapping, ARC record hardening, and outcome-reconciliation passes on unchanged evidence; and persist synchronous start and finish execution timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.
+
 ## 2026-10-17 — Operational retrospective for milestone 2026.10.739
 
 - Wrote `results/operational_retro_2026_10_739.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.739`. Authoritative disk-mtime fallback data records 6 experiments completed (0 compute-bound, 6 synthesis-only) across 71.1 total wall-time minutes (average 12 minutes per experiment).
