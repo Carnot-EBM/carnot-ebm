@@ -20528,3 +20528,4 @@ code |
 | 2026-10-18 04:05 UTC | Plan milestone 2026.10.741 | OK | 13 tasks proposed |
 | 2026-10-18 04:19 UTC | Milestone 2026.10.741 activated | OK | 13 tasks queued |
 | 2026-10-18 04:58 UTC | Bind thirteen tasks and seal changed execution and | OK | 135 passed, 1 warning in 109.96s (0:01:49) |
+| 2026-10-18 05:06 UTC | Retain original child coverage before qualifying c | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8627-contract-methods.learning_inputs_ready_score (actual=0 == expected=1) |
