@@ -22548,3 +22548,4 @@ Savings remain unmeasured; the artifact uses 0 as the required estimate placehol
 Experiment IDs and acceptance counts: no data available this milestone.
 
 Artifact: `results/operational_retro_2026_10_741.json`.
+- 2026-10-18: Bind thirteen tasks and separate research operands from execution qualification (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v742_contract_methods; results/experiment_8640_v742_contract_methods.json
