@@ -102803,3 +102803,24 @@ two requesters at one index, terminal without RESET, overlapping redirects,
 recorder exceptions, disabled instrumentation and missing request provenance.
 Only qualified recording plus cold replay permits reset_provenance_ready_score=1.
 Fixture outcomes give zero policy refinement, promotion and generalization credit.
+
+## REQ-REPORT-8650: Adapter-withheld reset-cause transfer
+
+Require authenticated Exp8640 arc_inputs_ready_score=1 and Exp8649
+reset_provenance_ready_score=1. Freeze the current adapter separately from the
+sealed original observer. Run four games ar25-0c556536, ft09-0d8bbf25,
+lf52-271a04aa and tn36-ef4dde99, seeds11/22, reset provenance off/on, with the
+existing horizon observer and capability mask always on. Retain sixteen fresh
+official SDK episodes,512 actions,120 seconds and horizon120. Withhold adapters,
+stored routes, induction and network. Record actual numerical head inference
+and its checkpoint separately from zero language-model calls.
+
+### SCENARIO-REPORT-8650-TRANSFER
+
+Require exact actions, Python/NumPy/Torch RNG, SDK calls, observations,
+termination and original observer receipts in all eight pairs. Join actual reset
+request IDs, executing call sites and public reset returns. Unknown or conflicting
+origins remain explicit. Count game/seed support once. Zero-reset games retain
+zero support and leave diagnostic transfer unestablished. Publish row readiness
+independently. Censored windows give no full-horizon efficacy, solve, policy
+refinement or promotion credit. A qualified null closes this exact panel.

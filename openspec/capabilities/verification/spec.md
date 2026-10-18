@@ -56651,3 +56651,21 @@ checks disqualify; missing external operands block. No models, game source,
 GameAdapters, stored routes or solve credit are permitted. Same-roadmap outputs
 remain future dependencies. Use private E2E-018/021 and record actual clocks,
 commands, exits and hashed logs.
+
+## REQ-VERIFY-8650: Invocation-bound reset transfer custody
+
+Seal current instrumentation, original observer authority, public episode
+primitives and actual child logs independently. Collect the original E2E-018/021
+node union once, execute bounded disjoint serial children and retain raw coverage
+before combining copies. Require100 percent newly owned statements, scoped
+tests, Ruff, strict mypy and specification tracing. Keep child heartbeats below
+60 seconds; stop measurement by3600 seconds and reserve900 for validation.
+
+### SCENARIO-VERIFY-8650-REPLAY
+
+Accept --date 20261018. Fresh bounded replay rejects missing primitives,
+rehashed substituted measurements and altered reductions. Validate exact final
+bytes through primary_publication, both readers, adversarial verification and
+strict row lint before atomic publication. Preserve actual findings and severity.
+Missing external inputs block; failed owned checks disqualify. Tests use private
+destinations and never modify historical primaries or quarantines.
