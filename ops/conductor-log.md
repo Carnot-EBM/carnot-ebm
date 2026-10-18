@@ -20554,3 +20554,4 @@ code |
 | 2026-10-18 19:24 UTC | Test future Brier benefit and simultaneous retenti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8643-causal-brier-stream) |
 | 2026-10-18 19:30 UTC | Measure complete streaming source coverage and mat | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8642-streaming-execution-custody.streaming_extractor_ready_score (actual=0 == expected=1) |
 | 2026-10-18 20:27 UTC | Qualify original import contracts and current inst | OK | 94 passed, 1 warning in 107.41s (0:01:47) |
+| 2026-10-18 20:35 UTC | Measure complete installed and private inference u | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8646-installed-compatibility.installed_measurement_ready_score (actual=0 == expected=1) |
