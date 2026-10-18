@@ -102441,3 +102441,24 @@ available observation sequences through the same helper. Retain every game, arm
 and window, including missing support. Preserve the closed ARC null and all old
 disqualifications. Readiness describes reachable instrumentation only. Refinement,
 promotion, generalization and headline solve credit remain zero.
+
+## REQ-REPORT-8625: Map complete operations to installed hardware
+
+Exp8625 SHALL authenticate original board evidence once within60 seconds without
+model or device commands. Admit Exp8622 complete clocks only with pinned producer
+bytes, publication binding and disjoint primitive partitions. Otherwise retain the
+qualified historical Exp8596 boundary. Exp8618 clocks require separate qualification;
+missing learning costs remain null. Keep inference and delayed-learning matrices
+separate. Charge lifecycle, full features, host transport and durable feedback.
+Conditional zero-cost ceilings remove arithmetic once and retain fixed host work.
+Mapping readiness and physical readiness are distinct numeric0/1 fields. Preserve
+KV260 k<=5 quadratic Ising support, PolarFire CPU scope, GateMate physical gates,
+all historical nulls and the original Exp8603 disqualification.
+
+### SCENARIO-REPORT-8625-BOUNDARY
+
+Qualified lean primitives supply their own boundary and arm. Missing lean evidence
+falls back to authenticated historical costs. Overlap, missing slots or changed
+original bytes reject cost admission. Sampling, argmin and deterministic spline
+workloads remain distinct. No compatible physical execution keeps physical readiness
+zero. No hardware purchase, board probe, flash or model load is authorized.

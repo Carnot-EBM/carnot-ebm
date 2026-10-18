@@ -56366,3 +56366,19 @@ outputs. Reject missing inputs, owned failures and self-consistently rehashed
 tampering. Verify final candidate bytes with primary_publication, adversarial
 verification and strict verdict-row lint before atomic publication. Use disk-backed
 scratch, no_model_load, empty MODEL_SPECS and zero current model calls.
+
+## REQ-VERIFY-8625: Preserve original authority through checked publication
+
+Collect original node IDs before bounded disjoint children. Use Coverage.py executable
+statements for100 percent newly owned coverage, including real CLI and rejection paths.
+Preserve commands, exits, durations and log hashes. Run private E2E-018/021, publication
+readers, Ruff, strict mypy and spec coverage without nested historical controllers.
+Cold replay SHALL authenticate original pinned operands before reducing immutable
+primitives. An owned failure disqualifies; unchanged external blockage is blocked.
+
+### SCENARIO-VERIFY-8625-REPLAY
+
+Fresh private CLI processes accept unchanged bytes and reject absent operands,
+owned-check failures and self-consistently rehashed summary or primitive tampering.
+Validate exact candidate bytes with both shared validators before atomic publication.
+Accept --date20261018. No current language-model or device calls occur.
