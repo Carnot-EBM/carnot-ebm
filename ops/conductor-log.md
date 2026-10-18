@@ -20516,3 +20516,8 @@ code |
 | 2026-10-18 01:58 UTC | Bind twelve tasks and seal independent learning ev | OK | Deliverable already exists in repo |
 | 2026-10-18 01:58 UTC | Qualify executable deadline statements with source | OK | Deliverable already exists in repo |
 | 2026-10-18 01:58 UTC | Authenticate Trivia+ human labels and private comp | OK | Deliverable already exists in repo |
+| 2026-10-18 02:03 UTC | Measure continuous Brier learning after qualified  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8616-deadline-statement-qualification.learning_execution_ready_score (actual=0 == expected=1) |
+| 2026-10-18 02:05 UTC | Test later proper-loss benefit and simultaneous re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8618-causal-brier-stream) |
+| 2026-10-18 02:05 UTC | Measure complete-source extraction and annotation | OK | Deliverable already exists in repo |
+| 2026-10-18 02:05 UTC | Qualify lean workers under explicit current method | OK | Deliverable already exists in repo |
+| 2026-10-18 02:05 UTC | Measure complete lean resident costs with matched | OK | Deliverable already exists in repo |
