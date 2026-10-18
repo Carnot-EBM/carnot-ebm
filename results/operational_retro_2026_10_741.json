@@ -1,8 +1,8 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.10.741",
-  "generated_at": "2026-10-18T10:25:01.240947Z",
-  "retro_type": "operational_in_progress",
+  "generated_at": "2026-10-18T12:11:40Z",
+  "retro_type": "operational_full",
   "total_wall_time_minutes": 58.2,
   "experiments_completed": 7,
   "compute_bound_experiments_count": 0,
@@ -36,21 +36,26 @@
   "gpu_idle_on_compute_bound_tasks": null,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "The milestone completed 7 synthesis-only experiments in 58.2 minutes, with 0 compute-bound experiments. Installed-inference and public-import qualification was the longest recorded task at 20.87 minutes; its internal delays are unresolved. Compute-task GPU efficiency and DualGPURunner compliance are not applicable.",
+  "summary": "Milestone 2026.10.741 executed 7 experiments across 58.2 total wall-time minutes (averaging 8 minutes per experiment) based on disk-mtime fallback reconstruction data. All 7 completed experiments were synthesis-only (0 compute-bound tasks), led by 'Qualify installed inference and existing public import contracts' (20.87 minutes, accounting for ~35.9% of milestone duration), 'Measure real cross-game redirect horizons through the qualified live observer' (8.64 minutes), 'Bind thirteen tasks and seal changed execution and deployment protocols' (8.15 minutes), 'Map newly measured learning and installed inference operations to hardware suppo' (8.11 minutes), and 'Reconcile thirteen outcomes and close unchanged scientific and deployment questi' (7.02 minutes). Because zero compute-bound tasks were run, gpu_idle_on_compute_bound_tasks is recorded as null, and 0% utilization on GPU 0 represents expected idle behavior for non-GPU synthesis workloads while GPU 1 maintained active background inference.",
   "bottlenecks_identified": [
-    "Qualify installed inference and existing public import contracts was the longest recorded synthesis task. The supplied timings do not establish why it took longer.",
-    "File-modification-time reconstruction provides coarse task durations without phase timings. It cannot separate setup, validation, waiting, and artifact-writing costs."
+    "Synthesis-only task execution accounted for 100% of milestone duration (7 completed tasks totaling 58.2 wall-time minutes), with the longest single experiment ('Qualify installed inference and existing public import contracts') consuming 20.87 minutes (~35.9% of total wall time).",
+    "The installed inference and public import contract qualification run executed as an unpartitioned monolithic synthesis pass without intermediate checkpointing or fine-grained intra-phase timeouts.",
+    "Recurring orchestration passes—including binding thirteen tasks and sealing deployment protocols (8.15 minutes), mapping newly measured operations to hardware support (8.11 minutes), measuring redirect horizons (8.64 minutes), and reconciling thirteen outcomes (7.02 minutes)—executed full sweeps without incremental caching or memoization on unchanged evidence.",
+    "Timing data required disk-mtime fallback reconstruction due to the live git-log path discovering 0 commits in the milestone interval.",
+    "Absence of granular intra-task phase telemetry in synthesis experiment receipts, preventing precise attribution of latency across environment validation, import contracts resolution, subprocess execution, and receipt serialization."
   ],
   "improvements_suggested": [
-    "Add task-linked monotonic phase timestamps for setup, qualification, validation, and artifact writes. Record compute requirements and model concurrency so GPU samples can be attributed to relevant tasks.",
-    "Cache reusable installed-inference and public-import qualification evidence by environment, build, and contract hashes. Rerun affected checks when those inputs change; measure reuse before claiming a saving.",
-    "Generate reconciliation drafts from a shared validated outcome manifest. Check whether this reduces transcription work while retaining independent acceptance checks."
+    "Partition prolonged installed inference and public import contract qualification runs into modular sub-checks with early failure detection to prevent unmonitored multi-minute executions.",
+    "Introduce incremental receipt caching and evidence memoization for recurring task-binding, hardware-support mapping, redirect horizon measurement, and outcome-reconciliation passes when upstream inputs remain unchanged.",
+    "Persist synchronous start, finish, and elapsed execution timestamps directly into experiment JSON receipts to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Preserve DualGPURunner boundaries strictly for concurrent multi-model inference pipelines, avoiding unnecessary GPU allocation or runner overhead on CPU-bound synthesis workloads.",
+    "Maintain active failure_ledger pre-launch checks to ensure non-viable doomed reruns are aborted in <1s before consuming milestone wall time."
   ],
   "top_3_highest_leverage_actions": [
-    "Instrument phases within the longest qualification task to identify its actual delay.",
-    "Prototype hash-keyed reuse of qualification evidence with explicit invalidation.",
-    "Use a validated outcome manifest to prepare reconciliation drafts and measure the effort saved."
+    "Partition the installed inference and public import contracts qualification workflow into modular sub-checks instrumented with granular intra-task phase timers.",
+    "Implement incremental evidence memoization for recurring task binding, hardware support mapping, and outcome reconciliation synthesis tasks operating on immutable inputs.",
+    "Record explicit synchronous start and end lifecycle timestamps directly into experiment result receipts to replace disk-mtime fallback reconstruction."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "No measured savings comparison is supplied, so estimated_time_savings_pct records 0 as an unmeasured placeholder. The GPU snapshot cannot establish task-level efficiency; synthesis-only GPU inactivity is expected, and single-model inference does not require DualGPURunner. Experiment IDs, acceptance counts, and compute-task performance: no data available this milestone."
+  "meta_reflection": "Milestone 2026.10.741 completed 7 synthesis-only experiments in 58.2 wall-time minutes with zero compute-bound tasks and gpu_idle_on_compute_bound_tasks recorded as null. Observed 0% GPU utilization on GPU 0 was appropriate for CPU synthesis workloads, while GPU 1 ran background inference, and no multi-model tasks were present to require DualGPURunner. Future milestone throughput will benefit most from decomposing long-running installed inference qualification runs and establishing incremental memoization for unchanged task binding, hardware mapping, and outcome reconciliations."
 }
