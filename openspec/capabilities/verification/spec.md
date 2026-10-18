@@ -56499,3 +56499,20 @@ Exercise real standalone CLI success, missing input, date rejection, intentional
 failure and tampered replay in fresh processes. Run private E2E-018/021 with
 original node identities and scoped tests; require100 percent new statements.
 The conductor owns status, changelog and traceability reconciliation.
+## REQ-VERIFY-8638: Preserve blocked hardware delta evidence
+
+Accept --date 20261018, flush progress, use disk-backed /var/tmp scratch and no
+model loads. Collect original node IDs once; run bounded disjoint serial children
+with original authority and retain original coverage shards, commands, durations,
+exit codes and hashed logs. Require 100% newly owned statement coverage, scoped
+Ruff/types/spec checks and private E2E-018/021 publication readers. No repository
+suite or nested historical controller is needed. The conductor reconciles ops
+and traceability. A failed owned check disqualifies; unchanged upstream failure blocks.
+
+### SCENARIO-VERIFY-8638-REPLAY
+
+Fresh standalone processes accept unchanged immutable inputs and reject missing
+operands, rehashed claims and rehashed source tampering. Authenticate the original
+small-head checkpoint without executing it. Check the final candidate with both
+shared validators and primary_publication before atomic publication. Private
+controls remain outside the checkout and exercise actual children and failures.

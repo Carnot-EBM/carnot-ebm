@@ -102652,3 +102652,25 @@ Exp8637 implementation: `arc_observer_transfer_8637.py`,
 The JSON and its hash-bound terminal sidecar carry qualification. The sixteen
 natural episodes yielded reset/terminal censoring, with no complete horizon.
 The conductor owns ops and traceability reconciliation.
+## REQ-REPORT-8638: Admit only new operation-compatible cost evidence
+
+Authenticate the pinned Exp8625 board ledger once within sixty seconds with zero
+model/device commands. Reuse its unchanged board facts. Exp8630 and Exp8635 are
+future dependencies until original qualified complete primitives are admitted.
+Missing or blocked producers SHALL yield one complete_blocked terminal record,
+empty new cost rows, null conditional ceilings and hardware_delta_ready_score=0.
+Keep full installed inference and delayed learning matrices separate. Include
+client/worker lifecycle, full text features, framing, numerical arithmetic, typed
+policy, shutdown, sparse updates, durable synchronization and feedback drain.
+Require disjoint complete spans before computing any arithmetic-removal ceiling.
+Physical readiness, NPU and TSU qualification remain numeric zero without execution.
+
+### SCENARIO-REPORT-8638-BLOCKED
+
+Absent learning and gate-blocked installed cost remain missing, never zero-cost
+measurements. Preserve the old ledger by reference, historical nulls and quarantines.
+KV260 quadratic Ising k<=5, PolarFire Linux CPU dispatch, deterministic spline
+inference, distribution sampling and argmin are distinct operations. Retain GateMate
+physical prerequisites without probing. Sparse CPU/Rust updates are the current
+learning path; 100x needs compatible dominant work and fixed host cost below 1%.
+Published online-KAN, Ising and Extropic ratios grant no local performance credit.
