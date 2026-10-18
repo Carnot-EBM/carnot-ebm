@@ -56530,3 +56530,20 @@ check cold replay, adversarial findings, strict rows and both existing readers.
 A private candidate passes replay and preserves thirteen dispositions. A failed
 child disqualifies. Invalid dates, missing operands, altered claims, altered
 samples and changed receipts fail. Optional GPU absence does not block CPU work.
+
+## REQ-VERIFY-8640: Qualify immutable V742 contract publication
+
+Tests precede implementation. Collect original node IDs once and run disjoint
+bounded serial children under original authority. Preserve raw child coverage
+before combining copies. Require100 percent new statements including real CLI
+and rejection paths, scoped Ruff, strict mypy, spec tracing and private E2E-018/021.
+Use disk-backed /var/tmp scratch, flushed boundaries and child heartbeats within
+60 seconds. End measurement by3600 seconds and reserve900 of4800 for validation.
+
+### SCENARIO-VERIFY-8640-REPLAY
+
+Cold replay in a fresh bounded process rejects missing operands and rehashed
+summary or primitive tampering. Preserve actual commands, clocks, exit codes and
+hashed logs. Check final bytes through primary_publication and unchanged scanners.
+Failed owned checks disqualify; unchanged external incompleteness blocks. Accept
+--date20261018. The conductor owns ops and traceability reconciliation.

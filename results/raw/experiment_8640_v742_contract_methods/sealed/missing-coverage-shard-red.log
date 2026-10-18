@@ -1,0 +1,322 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________________ test_replay_and_owned_failures ________________________
+
+authority = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T144943-1109060-47c8c8b0/test_replay_and_owned_failures0')
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T144943-1109060-47c8c8b0/test_replay_and_owned_failures0')
+
+    def test_replay_and_owned_failures(authority, tmp_path):
+        """SCENARIO-VERIFY-8640-REPLAY: repaired summaries and raw primitives must reject."""
+        from carnot.reporting import v742_contract_report as report
+    
+        raw, output = tmp_path / "raw", tmp_path / (e.NAME + ".json")
+        original = e.measure(authority, raw, "20261018")
+        checks = raw / "checks.json"
+        e.atomic_json(checks, dict(receipts=[]))
+    
+        def candidate(work):
+            e.atomic_json(raw / "measurement.json", work)
+            value = report.build(work, e.reference(checks), raw, output)
+            e.atomic_json(output, value)
+            return value
+    
+        value = candidate(original)
+        assert value["learning_operands_ready_score"] == 1
+        assert "learning_execution_ready_score" not in value
+        assert report.replay(output)
+        for mode in ["numerical", "history", "clock", "code", "runtime", "controls", "seal"]:
+            work = deepcopy(original)
+            if mode == "numerical":
+                work["numerical"]["probability"] = 0
+            if mode == "history":
+                work["history"]["learning_operands_ready_score"] = 0
+            if mode == "clock":
+                work["duration_s"] += 1
+            if mode == "code":
+                work["code_refs"][0]["sha256"] = "wrong"
+            if mode == "runtime":
+                work["runtime"]["ready"] = True
+            if mode == "controls":
+                work["authority_mutation_rows"][0]["passed"] = False
+            if mode == "seal":
+                work["end_ns"] += 1000000000
+                work["duration_s"] += 1
+            candidate(work)
+            assert not report.replay(output)
+        assert not report.replay(tmp_path / "missing")
+        shard = raw / "coverage.fixture"
+        shard.write_bytes(b"unit fixture for hash custody")
+        e.atomic_json(
+            checks,
+            dict(
+                receipts=[
+                    dict(
+                        name="original_coverage_retention",
+                        passed=True,
+                        original_references=[e.reference(shard)],
+                    )
+                ]
+            ),
+        )
+        candidate(original)
+        assert report.replay(output)
+        shard.unlink()
+>       assert not report.replay(output)
+E       AssertionError: assert not True
+E        +  where True = <function replay at 0x7f4cba107d80>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T144943-1109060-47c8c8b0/test_replay_and_owned_failures0/experiment_8640_v742_contract_methods.json'))
+E        +    where <function replay at 0x7f4cba107d80> = <module 'carnot.reporting.v742_contract_report' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v742_contract_report.py'>.replay
+
+tests/python/test_v742_contract_methods_8640.py:240: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8640] phase=preconditions_before completed=0 pending=13
+[exp8640] phase=authority_before completed=0 pending=13
+[exp8640] phase=authority_after completed=13 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8602] phase=optional_cuda_reader_before completed=0 pending=1
+[exp8602] phase=optional_cuda_reader_after completed=1 pending=0
+[exp8640] phase=measurement_frozen completed=13 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8640] phase=thirteen_task_measurement_frozen completed=13 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8640] phase=small_head_inference_before completed=0 pending=1
+[exp8640] phase=small_head_inference_after completed=1 pending=0
+[exp8640] phase=authority_control_staged completed=1 pending=17
+[exp8640] phase=authority_control_activated completed=2 pending=16
+[exp8640] phase=authority_control_count completed=3 pending=15
+[exp8640] phase=authority_control_order completed=4 pending=14
+[exp8640] phase=authority_control_id completed=5 pending=13
+[exp8640] phase=authority_control_title completed=6 pending=12
+[exp8640] phase=authority_control_phase completed=7 pending=11
+[exp8640] phase=authority_control_deliverable completed=8 pending=10
+[exp8640] phase=authority_control_MODEL_SPECS completed=9 pending=9
+[exp8640] phase=authority_control_model completed=10 pending=8
+[exp8640] phase=authority_control_inference_substrate_class completed=11 pending=7
+[exp8640] phase=authority_control_gate completed=12 pending=6
+[exp8640] phase=authority_control_prompt completed=13 pending=5
+[exp8640] phase=authority_control_retirement completed=14 pending=4
+[exp8640] phase=authority_control_marker completed=15 pending=3
+[exp8640] phase=authority_control_table completed=16 pending=2
+[exp8640] phase=authority_control_digest completed=17 pending=1
+[exp8640] phase=authority_control_rehashed completed=18 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+=============================== warnings summary ===============================
+tests/python/test_v742_contract_methods_8640.py::test_replay_and_owned_failures
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v742_contract_methods_8640.py::test_replay_and_owned_failures
+1 failed, 1 warning in 58.35s

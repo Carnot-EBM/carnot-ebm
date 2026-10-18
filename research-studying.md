@@ -6658,3 +6658,15 @@ semantic encoder. Proper losses and finite feedback accounting remain controls,
 not transferred nonlinear regret guarantees. Original spline arithmetic, complete
 installed operation costs and distinct sampling/optimization claims remain fixed.
 No new external performance result is a Carnot measurement.
+
+## 2026-10-18 — V742 Exp8640 methods ingestion
+
+Ingested the dated V742 scan and original2504.19457v1,2603.22167v1,
+2606.11711v1 and2602.02056v3 method mappings. Retrieved primary full text for
+CORTEX2606.31033v1 and Enoki2609.00581v1. Exact hashes and use/defer decisions
+are sealed in `openspec/change-proposals/v742-methods-protocol.json`.
+Use bounded decomposition, proper-loss controls, explicit delayed capacity,
+actual sparse writes and anchored offsets. Defer CORTEX until internal-state
+access and independent span labels qualify. Enoki's learned verifier does not
+supply independent truth. No paper establishes Carnot benefit or local speed.
+See `docs/research-notes/v742-contract-methods.md` for boundaries.

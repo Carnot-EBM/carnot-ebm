@@ -102690,3 +102690,32 @@ G1 through G4 SHALL use the unchanged script and grant no publication authority.
 Ten present upstream records and two authenticated cascade skips close twelve
 slots. The capstone closes slot thirteen. Blocked science remains blocked.
 Prototype compatibility SHALL NOT establish calibration or packaging cost benefit.
+
+## REQ-REPORT-8640: Bind V742 authority and independent research operands
+
+Bind exactly thirteen complete dictionaries Exp8640–Exp8652 to the visible table,
+JSON, fixed digest, end marker and staged or activated V742 YAML. Preserve the
+original V741 design and readers. Inherit objective_updates, objective_audit,
+streaming_extraction_protocol, installed_entry_2x2 and evidence_canary by value
+and hash before measurement. Register the dated scan and versioned use/defer rows.
+
+### SCENARIO-REPORT-8640-AUTHORITY
+
+Accept staged V742 with active V741 and genuinely activated V742. Reject count,
+order, ID, title, phase, deliverable, prompt, model, substrate, gate, retirement,
+visible table, end marker, digest and self-consistently rehashed mutations.
+
+### SCENARIO-REPORT-8640-OPERANDS
+
+Reproduce Exp8627 learning_inputs_ready_score=0 from failed Exp8616. A new adapter
+requires authenticated Exp8431 head/checkpoint, Exp8580 validator, Exp8581
+accounting, original data/labels, objective and original test-source inventory.
+It never requires failed historical execution or future qualification to pass.
+Exp8641 alone owns learning_execution_ready_score. Actual training requires both
+operand and execution gates. Missing head/data/hash blocks only affected branches.
+Authenticate release/190-response/128-question custody, installed prototype and
+baseline methods, real redirect ledger and observer independently. Preserve all
+nulls and quarantines. Emit numeric branch gates and zero language-model calls.
+Authenticate actual small-head inference separately. Optional runtime evidence
+cannot veto CPU branches. Register unchanged costs, seeds, resource limits and
+passive reset-provenance transfer; no scientific benefit follows from registration.
