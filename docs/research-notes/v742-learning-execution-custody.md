@@ -1,49 +1,69 @@
-# V742 learning execution custody — 2026-10-18
+# V742 learning execution custody
 
-This experiment qualifies a fresh execution of the original learning tests.
-It does not repair Exp8616 or qualify the retired Exp8628 scheduling record.
-The two required upstream values come from Exp8640: methods_ready_score and
-learning_operands_ready_score must each equal one.
+Exp8641 qualifies a new execution. It preserves the failed Exp8616 coverage
+qualification and the blocked, retired Exp8628 result. Neither historical
+readiness field is an input gate. Exp8640 supplies the separate numeric
+`methods_ready_score` and `learning_operands_ready_score` gates.
 
-Each child receives a separate COVERAGE_FILE and raw directory. After the child
-exits, the adapter opens every actual SQLite file with CoverageData. It records
-statements, contexts, command, PID, exit, node IDs and source hashes. It copies
-and hashes the bytes before another child starts. The separate exit-time receipt
-is read-only. Unsuffixed files receive the same checks as suffixed files.
+This invocation declares `no_model_load`, an empty `MODEL_SPECS` list and zero
+language-model calls. It separately authenticates the Exp8431 spline checkpoint
+and evaluates its 109-coefficient numerical head. Imported generator names
+remain historical provenance. Qualification does not establish learning benefit
+or independent generalization.
 
-Original and adapter suites have separate aggregate namespaces. Combines use
-copies of the sealed data. The controller repeats each combine and compares raw
-and aggregate hashes. Cold replay reconstructs both coverage unions from the
-retained children. A repaired summary hash cannot replace their source context,
-original source authority or exit-time receipt.
+The runner collects the original test union once. It partitions those nodes
+into disjoint serial children, reuses the measured mechanics fixture and retains
+each child's PID, command, actual exit, clocks, logs and JUnit. Five core test-source
+hashes and two private E2E source hashes pin the original assertion authority independently of failed readiness.
+The original 27 causal-runner nodes remain mandatory within the larger affected
+Exp8592/8603/8616 union. Private E2E-018 and E2E-021 nodes run in that union.
 
-Original test authority comes from the pinned test inventory and the immutable
-Exp8616 primary's source list. Its failed measurement bytes are never reused as
-original execution evidence. Original assertions and scientific thresholds stay
-unchanged. The original27-node family and affected8592/8603/8616 union run in
-bounded disjoint children. The sealed mechanics fixture avoids repeated training.
+Every child has its own coverage data path, context and raw namespace. Immediately
+after exit, the parent reads actual SQLite files with CoverageData and seals the
+bytes, source identities, statements and contexts. Unsuffixed and suffixed files
+are both retained. An auxiliary process can produce an empty shard when it runs
+no tracked source. Such a shard remains inventoried; a test child with zero real
+tracked statements cannot qualify. Repeated byte content in distinct actual
+helper shards is not an independent execution unit. Repeated manifest paths are
+rejected.
 
-The private failure fixture actually executes an assertion failure. A destructive
-combine removes its raw shard; a second combine replaces the aggregate. Controls
-also reject deleted, overwritten, empty, duplicate, foreign-source and rehashed
-substituted data. Deadline controls retain3599/3600/3601 predicates,2/3/3 clock
-reads, and null/3600.25/3601.25 diagnostics. Actual mutants remove the third read
-or change the diagnostic; a separate control removes the expired case.
+Original runner and adapter aggregates occupy different directories. Every
+combine reads disposable copies. Two consecutive combines must preserve the raw
+hashes and aggregate hash. Fresh-process replay reopens the retained files and
+recomputes both statement unions, the collected node assignments, JUnit outcomes
+and source mapping. The original runner requires 83 executable statements,
+no exclusions and the continuation94-to-statement92 mapping. Deadline evidence
+still requires 3599/3600/3601 controls, 2/3/3 clock reads and diagnostic elapsed
+values null/3600.25/3601.25. Original mutation tests preserve the third-read,
+expired-case and changed-diagnostic checks.
 
-Current language-model calls are zero. MODEL_SPECS is empty. Numerical small-head
-work and its checkpoint remain explicit. Imported generator names are historical
-provenance. Qualification cannot establish learning benefit or independent
-generalization. All historical scientific nulls and quarantines remain in force.
+Private mutation tests cover deleted, overwritten, empty, duplicate,
+foreign-source and self-consistently rehashed substituted data. A real SQLite
+fixture demonstrates destructive first-combine shard removal followed by a
+second-combine aggregate overwrite. Its two aggregate snapshots remain separate
+from original execution evidence. Stopped preliminary invocations record their
+abandonment and never supplies readiness evidence to the fresh invocation.
 
-The result JSON and its terminal sidecar record actual validation outcomes.
-Conductor reconciliation owns ops/status.md, ops/changelog.md and traceability.
-The required review agent could not start because its context loader failed.
+Validation uses bounded private subprocesses, Ruff check/format, strict mypy,
+spec-reference checks, unchanged adversarial verification, strict verdict-row
+lint and cold replay. Publication validates candidate bytes before the atomic
+replacement and records both live reader identities. Measurements stop by3600
+seconds; adapter validation has the separate reserve through4500 seconds within
+the4800-second process limit. No duration is padded. The conductor owns ops and
+traceability reconciliation.
 
-The initial adapter rejected two empty scanner/reader databases despite a passing
-runner child. A later checkpoint-only child passed six assertions but exposed an
-incomplete coverage include list. Both attempts remain in raw custody. The final
-scope includes authenticated test sources. It rejects a completely empty child
-union and retains empty auxiliary files as observed zeros. Passed children with
-genuine source statements are reused from their sealed bytes. The failed empty
-scope is rerun with the changed instrumentation. The original node collection is
-read once; its command, output and receipt remain unchanged.
+The authoritative terminal outcome, counts, coverage unions, gates and hashed
+receipts are in
+[`experiment_8641_v742_learning_execution_custody.json`](../../results/experiment_8641_v742_learning_execution_custody.json).
+Immutable child evidence is below
+`results/raw/experiment_8641_v742_learning_execution_custody/invocations/`.
+The single collection contains64 original affected/E2E nodes and22 adapter
+nodes, including the mandatory27 causal-runner nodes. The focused22-test
+adapter suite passed before this qualification. Its final instrumented child
+must independently pass and establish100 percent newly owned statements.
+
+Reproduce with:
+
+```sh
+JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8641_v742_learning_execution_custody.py --date 20261018
+```

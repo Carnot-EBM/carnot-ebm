@@ -102733,3 +102733,12 @@ must preserve sealed raw and aggregate hashes. Qualification grants no benefit.
 Reject deleted, overwritten, empty, duplicate, foreign-source and rehashed
 substituted coverage. Zero genuine child files or a killed child disqualifies.
 Retain the old lost-shard/second-combine failure as a private failing fixture.
+
+Exp8641 implementation: `learning_custody_8641.py`,
+`learning_execution_report_8641.py`, `learning_execution_8641.py` and the thin
+`scripts/experiments/experiment_8641_v742_learning_execution_custody.py` entry.
+`tests/python/test_learning_execution_custody_8641.py` covers actual child data,
+custody mutations, private publication and cold replay. Retain empty auxiliary
+shards, but never accept a test child with zero executed source statements.
+See `docs/research-notes/v742-learning-execution-custody.md` and the terminal
+artifact for invocation-specific validation; conductor owns ops reconciliation.

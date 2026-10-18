@@ -56568,3 +56568,11 @@ operands and rehashed tampering in a fresh bounded replay. Retain actual logs,
 clocks and exits for Ruff, strict mypy, spec tracing and private E2E-018/021.
 Validate final bytes atomically through publication and unchanged consumers.
 Accept --date20261018. Conductor owns ops and traceability reconciliation.
+
+Exp8641 verification implementation is bound to
+`tests/python/test_learning_execution_custody_8641.py`. Each original or adapter
+child retains its unique command/PID, data namespace, SQLite source inventory,
+contexts and JUnit. Fresh replay checks the independent invocation seal before
+recomputing both unions and the actual node assignments. Two combines operate
+on copies, while raw and aggregate hashes remain stable. Terminal receipts live
+beside the exact primary hash; no historical disqualification is upgraded.
