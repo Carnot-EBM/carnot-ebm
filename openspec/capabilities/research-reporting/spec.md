@@ -102562,3 +102562,25 @@ Exp8639 SHALL account for all thirteen outcomes and unchanged publication gates.
 Optional resource absence SHALL NOT block unrelated CPU branches. Unchanged
 external blockers SHALL use blocked, never retryable partial. Qualified nulls close
 their exact study. No plan or observer fixture grants solve, device or publication credit.
+
+## REQ-REPORT-8627: Bind thirteen V741 tasks and independent branch methods
+
+Authenticate all thirteen full task objects, visible table, canonical digest and
+end marker against staged V741 or genuinely active V741. Preserve V740 bytes.
+Inherit objective_updates, objective_audit and evidence_canary by value and hash
+from pinned V740 while preserving original V738 readers. Seal extraction limits,
+installed entry 2x2, action-preserving observer and six literature decisions before
+measurement. Independently report learning, extraction, deployment, ARC, canary
+and causal runtime readiness. Missing optional runtime evidence cannot block CPU.
+
+### SCENARIO-REPORT-8627-AUTHORITY
+
+Accept staged V741 with active V740 and genuinely active V741 separately. Reject
+count, order, ID, title, phase, deliverable, prompt, model, substrate, gate,
+retirement, marker, table, digest and self-consistently rehashed mutations.
+
+### SCENARIO-REPORT-8627-INPUTS
+
+Authenticate private190-row/128-question custody, original head and validator,
+complete costs and observer panel independently. Preserve Exp8582/8616 quarantine.
+Streaming lexical decomposition is an adaptation, not trained encoder replication.

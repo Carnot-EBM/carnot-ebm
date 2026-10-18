@@ -6646,3 +6646,15 @@ lag/pending/lost accounting and original sparse-head operation boundaries.
 Defer transferred regret guarantees, invented p2 confidence, new learner/basis,
 external judge correctness and hardware speed claims. All studies remain
 unmeasured locally until their separate future producers qualify.
+
+## 2026-10-18 — V741 Exp8627 methods ingestion
+
+Ingested the dated V741 reference scan and primary full text for2504.19457v1,
+2608.15804v1,2603.22167v1,2606.11711v1,2602.02056v3 and2610.03972v1.
+Exact source hashes, assumptions and use/defer decisions are registered in
+`openspec/change-proposals/v741-methods-protocol.json`. Decomposition motivates
+streaming lexical reduction with source offsets; it does not reproduce a trained
+semantic encoder. Proper losses and finite feedback accounting remain controls,
+not transferred nonlinear regret guarantees. Original spline arithmetic, complete
+installed operation costs and distinct sampling/optimization claims remain fixed.
+No new external performance result is a Carnot measurement.

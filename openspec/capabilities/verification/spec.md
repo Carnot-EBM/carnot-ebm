@@ -56396,3 +56396,18 @@ inputs, owned failures and self-consistently rehashed claim or primitive
 tampering. Required owned failures disqualify; unchanged external blocks remain
 blocked. Original publication readers and adversarial/strict row validators
 must inspect the exact candidate bytes before atomic replacement.
+
+## REQ-VERIFY-8627: Qualify bounded V741 execution and immutable replay
+
+Require scoped unit tests and100 percent newly owned statements, including real
+private CLI children and rejection paths. Collect original private E2E-018/021
+nodes once and execute disjoint bounded serial children. Retain command, duration,
+exit and hashed logs. Run Ruff check/format, strict mypy and owned spec tracing.
+Validate exact candidate bytes with unchanged publication and adversarial readers.
+Conductor owns ops and traceability reconciliation.
+
+### SCENARIO-VERIFY-8627-REPLAY
+
+Fresh bounded processes accept20261018 and reject missing inputs, owned failures
+and rehashed tampering. External blockers remain blocked; owned failures are
+disqualified. Freeze all operands before validation; no device or model is opened.

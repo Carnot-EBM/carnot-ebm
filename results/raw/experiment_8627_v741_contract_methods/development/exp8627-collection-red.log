@@ -1,0 +1,34 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________________ test_collection_receipt_replay ________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T043157-788450-6a61f3e3/test_collection_receipt_replay0')
+
+    """REQ-VERIFY-8627: verify the one original collection without collecting twice."""
+    out, err = tmp_path / "original.stdout", tmp_path / "original.stderr"
+    out.write_text("tests/python/test_original.py::test_a\n")
+    err.write_text("")
+    path = tmp_path / "collection.receipt.json"
+    e.atomic_json(
+        path,
+        dict(
+>           passed=True,
+            normal_exit=True,
+            stdout_path=str(out),
+            stdout_sha256=e.sha256_file(out),
+            stderr_path=str(err),
+            stderr_sha256=e.sha256_file(err),
+        ),
+    )
+E   AttributeError: module 'carnot.reporting.v741_contract_runner' has no attribute 'verify_collection'
+
+tests/python/test_v741_contract_runner_8627.py:161: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v741_contract_runner_8627.py::test_collection_receipt_replay
+1 failed, 1 warning in 3.50s
