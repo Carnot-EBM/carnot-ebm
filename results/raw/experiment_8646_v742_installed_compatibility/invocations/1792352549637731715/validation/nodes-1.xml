@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="2" failures="0" skipped="0" tests="8" time="68.070" timestamp="2026-10-18T15:50:03.383491-04:00" hostname="icbfl1"><testcase classname="tests.python.test_lean_runner_8609" name="test_standalone_cli_imports_without_pythonpath" time="3.644" /><testcase classname="tests.python.test_lean_runner_8609" name="test_private_cli_and_replay" time="58.789" /><testcase classname="tests.python.test_lean_runner_8609" name="test_validation_commands_and_union" time="0.032" /><testcase classname="tests.python.test_lean_runner_8609" name="test_cli_rejects_rehashed_owned_failure" time="0.013" /><testcase classname="tests.python.test_lean_runner_8609" name="test_original_authority_checkout" time="1.343"><error message="failed on teardown with &quot;carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence '../../../../home/ianblenke/github.com/ianblenke/carnot/results'. Experiment tests must redirect artifact output to a temporary root.&quot;">path = PosixPath('/var/tmp/carnot-8646-validation-irzsxofo/tests-1/test_original_authority_checko0')
+ignore_errors = True, onerror = None
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, onexc=None, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onexc or
+        onerror is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        the value of exc_info describes the exception. For onexc it is the
+        exception instance, and for onerror it is a tuple as returned by
+        sys.exc_info().  If ignore_errors is false and both onexc and
+        onerror are None, the exception is reraised.
+    
+        onerror is deprecated and only remains for backwards compatibility.
+        If both onerror and onexc are set, onerror is ignored and onexc is used.
+        """
+    
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onexc(*args):
+                pass
+        elif onerror is None and onexc is None:
+            def onexc(*args):
+                raise
+        elif onexc is None:
+            if onerror is None:
+                def onexc(*args):
+                    raise
+            else:
+                # delegate to onerror
+                def onexc(*args):
+                    func, path, exc = args
+                    if exc is None:
+                        exc_info = None, None, None
+                    else:
+                        exc_info = type(exc), exc, exc.__traceback__
+                    return onerror(func, path, exc_info)
+    
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            stack = [(os.lstat, dir_fd, path, None)]
+            try:
+                while stack:
+&gt;                   _rmtree_safe_fd(stack, onexc)
+
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:759: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:698: in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+python/carnot/testing/tracked_results_guard.py:249: in _audit_hook
+    _record_and_raise(hit, event.rpartition(".")[2])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resolved = '/home/ianblenke/github.com/ianblenke/carnot/results'
+event = 'remove'
+
+    def _record_and_raise(resolved: str, event: str) -&gt; None:
+        relative = os.path.relpath(resolved, str(_REPO_ROOT))
+        _violations.append(
+            {
+                "path": relative,
+                "event": event,
+                "stack": "".join(traceback.format_stack(limit=12)),
+            }
+        )
+&gt;       raise TrackedResultWriteError(
+            f"Test attempted to {event} tracked result evidence {relative!r}. "
+            "Experiment tests must redirect artifact output to a temporary root."
+        )
+E       carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence '../../../../home/ianblenke/github.com/ianblenke/carnot/results'. Experiment tests must redirect artifact output to a temporary root.
+
+python/carnot/testing/tracked_results_guard.py:221: TrackedResultWriteError</error></testcase><testcase classname="tests.python.test_lean_runner_8609" name="test_historical_copy_tampering" time="0.782"><error message="failed on teardown with &quot;carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence '../../../../home/ianblenke/github.com/ianblenke/carnot/results'. Experiment tests must redirect artifact output to a temporary root.&quot;">path = PosixPath('/var/tmp/carnot-8646-validation-irzsxofo/tests-1/test_historical_copy_tampering0')
+ignore_errors = True, onerror = None
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, onexc=None, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onexc or
+        onerror is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        the value of exc_info describes the exception. For onexc it is the
+        exception instance, and for onerror it is a tuple as returned by
+        sys.exc_info().  If ignore_errors is false and both onexc and
+        onerror are None, the exception is reraised.
+    
+        onerror is deprecated and only remains for backwards compatibility.
+        If both onerror and onexc are set, onerror is ignored and onexc is used.
+        """
+    
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onexc(*args):
+                pass
+        elif onerror is None and onexc is None:
+            def onexc(*args):
+                raise
+        elif onexc is None:
+            if onerror is None:
+                def onexc(*args):
+                    raise
+            else:
+                # delegate to onerror
+                def onexc(*args):
+                    func, path, exc = args
+                    if exc is None:
+                        exc_info = None, None, None
+                    else:
+                        exc_info = type(exc), exc, exc.__traceback__
+                    return onerror(func, path, exc_info)
+    
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            stack = [(os.lstat, dir_fd, path, None)]
+            try:
+                while stack:
+&gt;                   _rmtree_safe_fd(stack, onexc)
+
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:759: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:698: in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+python/carnot/testing/tracked_results_guard.py:249: in _audit_hook
+    _record_and_raise(hit, event.rpartition(".")[2])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resolved = '/home/ianblenke/github.com/ianblenke/carnot/results'
+event = 'remove'
+
+    def _record_and_raise(resolved: str, event: str) -&gt; None:
+        relative = os.path.relpath(resolved, str(_REPO_ROOT))
+        _violations.append(
+            {
+                "path": relative,
+                "event": event,
+                "stack": "".join(traceback.format_stack(limit=12)),
+            }
+        )
+&gt;       raise TrackedResultWriteError(
+            f"Test attempted to {event} tracked result evidence {relative!r}. "
+            "Experiment tests must redirect artifact output to a temporary root."
+        )
+E       carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence '../../../../home/ianblenke/github.com/ianblenke/carnot/results'. Experiment tests must redirect artifact output to a temporary root.
+
+python/carnot/testing/tracked_results_guard.py:221: TrackedResultWriteError</error></testcase></testsuite></testsuites>

@@ -56609,3 +56609,27 @@ thin CLI retain their original source hashes and assertions. Historical custody
 wrapper hash drift remains recorded with its old disqualification; it SHALL NOT
 veto an independently qualified new custody runner. The new runner requires its
 own complete checks, immutable source binding and 100 percent statements.
+
+## REQ-VERIFY-8646: Preserve separate source and child coverage custody
+
+Collect original node IDs once. Execute bounded disjoint serial children with
+-n 0 -o addopts= --no-cov. Authenticate resolved imports inside each child.
+Qualify the existing original_overlay before any private checkout fallback.
+Capture each genuine child shard before combining copies. Historical source
+coverage cannot fill current statement gaps. Require 100 percent new statements,
+scoped Ruff, strict mypy, spec tracing and private E2E-018/021 readers.
+
+### SCENARIO-VERIFY-8646-CUSTODY
+
+Reject missing, killed, duplicate, changed-source and mixed-authority children.
+Keep raw data stable through combines. Reuse needs exact source, config, node and
+operand identities. Preserve protocol rejection, deadline, stale configuration,
+child failure and forced cleanup checks without changing current protocol code.
+
+### SCENARIO-VERIFY-8646-REPLAY
+
+Accept --date 20261018. Cold replay rejects missing inputs and self-consistently
+rehashed tampering against an external authority. Retain actual commands, exits,
+durations and hashed logs. Check unchanged publication, adversarial and strict
+row readers before atomic publication. Stop measurement by 3600 seconds and
+reserve 900 seconds of the 4800-second cap. Emit flushed child heartbeats.

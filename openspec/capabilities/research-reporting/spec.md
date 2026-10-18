@@ -102759,3 +102759,29 @@ Private CLI accepts --date 20261018 and works outside the checkout. Missing
 external operands block; owned failures disqualify. Both original publication
 readers and unchanged adversarial/strict-row validators inspect the checked bytes.
 Historical publication files and quarantines SHALL never be rewritten by tests.
+
+## REQ-REPORT-8646: Separate original imports from current installed inference
+
+Authenticate historical resident_protocol.py from ae7e7115c6 with SHA256
+7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966.
+Reproduce input_hash privately before qualifying the existing mount overlay.
+Run all 122 original nodes under their original authority without changing pins.
+Build a fresh private current wheel. Run installed public and numerical checks
+outside the checkout with PYTHONPATH removed. Keep historical and current source
+coverage separate. Preserve Exp8634 disqualification, all nulls and quarantines.
+
+### SCENARIO-REPORT-8646-ISOLATION
+
+Reject mixed imports, checkout shadowing, duplicate or omitted nodes and changed
+operands. Record actual resolved module bytes, checkpoint, extension, wheel and
+dependencies. Require complete Python/native responses and public model, sampler,
+training, CLI, MCP, HTTP and optional dependency contracts. Zero language-model
+calls grants no factuality or independent generalization credit.
+
+### SCENARIO-REPORT-8646-PUBLICATION
+
+Publish one complete terminal record from immutable invocation primitives.
+Failed owned checks disqualify. Missing external inputs block with exact gates;
+missing differs from zero. Readiness requires both unions, new statement coverage
+and terminal readers. Repeated unchanged original failures close the attempt.
+The conductor owns ops, changelog and traceability reconciliation.
