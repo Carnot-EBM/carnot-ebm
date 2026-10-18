@@ -56444,3 +56444,27 @@ Conductor owns ops and traceability reconciliation.
 Fresh bounded processes accept20261018 and reject missing inputs, owned failures
 and rehashed tampering. External blockers remain blocked; owned failures are
 disqualified. Freeze all operands before validation; no device or model is opened.
+## REQ-VERIFY-8633: Lazy exports and installed worker compatibility
+
+Implementation: package initialization, the resident module CLI and three focused
+test files cover this scope. `installed_validation_8633.py` retains original child
+shards with `coverage combine --keep`. Exp8634 owns the wider surface qualification.
+
+Keep existing exports, from-import identities, version and optional JAX/Rust semantics.
+The installed inference entry SHALL import no training or research-reporting modules.
+Relative imports SHALL NOT modify global sys.path. Keep the private worker command.
+Reuse frame limits, deadlines, errors and cleanup without changing numerical features.
+
+### SCENARIO-VERIFY-8633-COMPATIBILITY
+
+Tests precede initialization changes. Cover new statements, real installed children,
+CLI argument rejection, stale configuration, malformed frames and public exports.
+Run scoped tests, Ruff, strict types, spec tracing and private E2E-018/021 readers.
+Retain original node identities and genuine child coverage. No speed claim follows.
+
+### SCENARIO-VERIFY-8633-STANDALONE-CLI
+
+Keep the original anchored-replay regression unchanged. Add fresh-process
+valid, missing and rehashed-candidate checks outside the checkout without
+PYTHONPATH. Measure the standalone CLI startup and replay rejection statements
+through genuine subprocess coverage; require 100 percent owned statements.

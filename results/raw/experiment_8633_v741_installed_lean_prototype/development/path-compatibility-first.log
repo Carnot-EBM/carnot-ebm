@@ -1,0 +1,74 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________________ test_original_export_contract _________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T060858-832467-9e647c13/test_original_export_contract0')
+
+    def test_original_export_contract(tmp_path):
+        """REQ-VERIFY-8633: all original from-import names resolve to original objects."""
+>       child(
+            """
+    import importlib
+    import carnot
+    assert carnot.JAX_AVAILABLE is True
+    assert carnot.Path is __import__('pathlib').Path
+    expected = {
+     'core': ['AutoGradMixin','EnergyFunction','ModelConfig','ModelState'],
+     'models': ['BoltzmannConfig','BoltzmannModel','EBTConfig','EBTransformer',
+                'GibbsConfig','GibbsModel','IsingConfig','IsingModel'],
+     'samplers': ['HMCSampler','LangevinSampler'],
+     'training': ['ReplayBuffer','dsm_loss','dsm_loss_stochastic','nce_loss',
+     'nce_loss_stochastic','nce_loss_with_replay','optimization_training_loss',
+     'snl_loss','snl_loss_stochastic']}
+    names = ['__version__','RUST_AVAILABLE','JAX_AVAILABLE']
+    for module, symbols in expected.items():
+     for symbol in symbols:
+      scope = {}
+      exec('from carnot import ' + symbol, scope)
+      assert scope[symbol] is getattr(importlib.import_module('carnot.' + module), symbol)
+     names.extend(symbols)
+    assert carnot.__all__ == names
+    from carnot._version import __version__
+    from carnot._rust_compat import RUST_AVAILABLE
+    assert carnot.__version__ == __version__
+    assert carnot.RUST_AVAILABLE is RUST_AVAILABLE
+    assert carnot.JAX_AVAILABLE is True
+    assert carnot.jax.__name__ == 'jax'
+    assert carnot.jnp.__name__ == 'jax.numpy'
+    try: carnot.unknown_export
+    except AttributeError: pass
+    else: raise AssertionError('unknown attribute accepted')
+    """,
+            tmp_path,
+        )
+
+tests/python/test_installed_lean_8633.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = "\nimport importlib\nimport carnot\nassert carnot.JAX_AVAILABLE is True\nassert carnot.Path is __import__('pathlib').P...'\ntry: carnot.unknown_export\nexcept AttributeError: pass\nelse: raise AssertionError('unknown attribute accepted')\n"
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T060858-832467-9e647c13/test_original_export_contract0')
+
+    def child(code, tmp_path):
+        """Fresh processes prevent earlier training imports from hiding eager loading."""
+        result = subprocess.run(
+            [sys.executable, "-c", code],
+            cwd=tmp_path,
+            env=dict(os.environ),
+            capture_output=True,
+            text=True,
+            timeout=45,
+        )
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 5, in <module>
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py", line 104, in __getattr__
+E             raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+E         AttributeError: module 'carnot' has no attribute 'Path'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-c', "\nimport importlib\nimpo...rror(f"module {__name__!r} has no attribute {name!r}")\nAttributeError: module \'carnot\' has no attribute \'Path\'\n').returncode
+
+tests/python/test_installed_lean_8633.py:25: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_installed_lean_8633.py::test_original_export_contract
+1 failed in 3.53s

@@ -16,7 +16,10 @@ import sys
 import time
 from typing import Any
 
-import resident_energy as numeric
+if __package__:
+    from . import resident_energy as numeric
+else:
+    import resident_energy as numeric
 
 Json = dict[str, Any]
 MAX_FRAME = 65536
@@ -186,3 +189,27 @@ def serve(path: Path, digest: str, arm: str, timeout: float = 15) -> int:
     except (OSError, ValueError, KeyError, TypeError, TimeoutError, ImportError) as error:
         print(f"[exp8608] phase=worker_error error={error}", file=sys.stderr, flush=True)
         return 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Start one explicit pipe session using caller-owned immutable head bytes.
+
+    This research entry exposes the existing policy without adding a listener.
+    A finite idle timeout keeps a disconnected caller from retaining a worker.
+    """
+    import argparse
+    import math
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("config", type=Path)
+    parser.add_argument("digest")
+    parser.add_argument("arm", choices=["python", "native"])
+    parser.add_argument("--idle-timeout", type=float, default=15)
+    args = parser.parse_args(argv)
+    if not math.isfinite(args.idle_timeout) or args.idle_timeout <= 0:
+        parser.error("idle timeout must be positive and finite")
+    return serve(args.config, args.digest, args.arm, args.idle_timeout)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

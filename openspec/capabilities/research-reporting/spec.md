@@ -102585,3 +102585,27 @@ retirement, marker, table, digest and self-consistently rehashed mutations.
 Authenticate private190-row/128-question custody, original head and validator,
 complete costs and observer panel independently. Preserve Exp8582/8616 quarantine.
 Streaming lexical decomposition is an adaptation, not trained encoder replication.
+## REQ-REPORT-8633: Installed lean prototype evidence
+
+Implementation: `installed_lean_8633.py`, `installed_runner_8633.py` and the thin
+experiment runner retain executable evidence. Qualification is recorded in the
+Exp8633 JSON and its hash-bound terminal sidecar. The conductor owns ops updates.
+
+Expose the bounded resident worker with `python -m carnot.inference.resident_protocol`.
+Build a private wheel offline. Execute outside the checkout without PYTHONPATH.
+Retain the original64 requests, immutable head, extension identity and typed responses.
+Readiness covers executable mechanics only. Exp8634 owns full surface qualification.
+
+### SCENARIO-REPORT-8633-INSTALL
+
+Retain wheel, import trace, export contracts and Python/native parity primitives.
+Reject missing operands and rehashed tampering against original authority.
+Preserve all historical nulls and quarantines. No language model is loaded.
+
+### SCENARIO-REPORT-8633-STANDALONE-CLI
+
+The direct experiment CLI SHALL resolve its own checkout before importing
+repository-local publication readers. From an unrelated directory with
+PYTHONPATH unset, a valid private authority and candidate SHALL replay
+successfully. Missing candidates and rehashed claim mutations SHALL exit one
+with their replay errors. Package inference imports SHALL remain lazy.

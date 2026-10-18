@@ -1,0 +1,16 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________________ test_validation_missing_reports_fail _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T055645-822848-ce8479d6/test_validation_missing_report0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5b7c741eb0>
+
+    def test_validation_missing_reports_fail(tmp_path, monkeypatch):
+        """REQ-VERIFY-8633: absent child identities or coverage cannot become readiness."""
+>       from carnot.reporting import installed_validation_8633 as validation
+E       ImportError: cannot import name 'installed_validation_8633' from 'carnot.reporting' (/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/__init__.py)
+
+tests/python/test_installed_runner_8633.py:62: ImportError
+=========================== short test summary info ============================
+FAILED tests/python/test_installed_runner_8633.py::test_validation_missing_reports_fail
+1 failed in 3.28s

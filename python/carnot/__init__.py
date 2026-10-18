@@ -23,100 +23,83 @@ All models share common core abstractions (EnergyFunction, ModelState, ModelConf
 and can be trained with the same set of loss functions (NCE, DSM, SNL).
 """
 
+from importlib import import_module
+from pathlib import Path as Path
 import sys
-from pathlib import Path
+from typing import Any
 
-try:
-    import jax
-    import jax.numpy as jnp
-    JAX_AVAILABLE = True
-except ImportError:
-    jax = None
-    JAX_AVAILABLE = False
-    # numpy fallback for riscv64 and other platforms without JAX
+from ._version import __version__
 
-# Direct repo-root imports such as ``from python.carnot...`` execute this file
-# before the top-level ``carnot`` package is importable.  Add ./python so the
-# absolute imports below work both in editable installs and raw checkouts.
-_PACKAGE_PARENT = Path(__file__).resolve().parents[1]
-if str(_PACKAGE_PARENT) not in sys.path:
-    sys.path.insert(0, str(_PACKAGE_PARENT))
+# Raw checkout imports use the same package identity without changing sys.path.
+sys.modules.setdefault("carnot", sys.modules[__name__])
+_EXPORTS = {
+    **dict.fromkeys(["AutoGradMixin", "EnergyFunction", "ModelConfig", "ModelState"], "core"),
+    **dict.fromkeys(
+        [
+            "BoltzmannConfig",
+            "BoltzmannModel",
+            "EBTConfig",
+            "EBTransformer",
+            "GibbsConfig",
+            "GibbsModel",
+            "IsingConfig",
+            "IsingModel",
+        ],
+        "models",
+    ),
+    **dict.fromkeys(["HMCSampler", "LangevinSampler"], "samplers"),
+    **dict.fromkeys(
+        [
+            "ReplayBuffer",
+            "dsm_loss",
+            "dsm_loss_stochastic",
+            "nce_loss",
+            "nce_loss_stochastic",
+            "nce_loss_with_replay",
+            "optimization_training_loss",
+            "snl_loss",
+            "snl_loss_stochastic",
+        ],
+        "training",
+    ),
+}
 
-try:
-    # Rust binding availability (optional — no Rust toolchain needed for pure-Python)
-    from carnot._rust_compat import RUST_AVAILABLE
-    from carnot._version import __version__
 
-    # Core abstractions
-    from carnot.core import AutoGradMixin, EnergyFunction, ModelConfig, ModelState
+def _optional_jax() -> bool:
+    """Check optional JAX only when its public API is requested.
 
-    # Models — three tiers
-    from carnot.models import (
-        BoltzmannConfig,
-        BoltzmannModel,
-        EBTConfig,
-        EBTransformer,
-        GibbsConfig,
-        GibbsModel,
-        IsingConfig,
-        IsingModel,
-    )
+    The resident worker needs NumPy arithmetic but does not need training.
+    Delaying this check keeps that explicit entry free of the training graph.
+    """
+    if "JAX_AVAILABLE" not in globals():
+        try:
+            jax_module = import_module("jax")
+            numpy_module = import_module("jax.numpy")
+        except ImportError:
+            globals().update(jax=None, JAX_AVAILABLE=False)
+        else:
+            globals().update(jax=jax_module, jnp=numpy_module, JAX_AVAILABLE=True)
+    return bool(globals()["JAX_AVAILABLE"])
 
-    # Samplers
-    from carnot.samplers import HMCSampler, LangevinSampler
 
-    # Training losses
-    from carnot.training import (
-        ReplayBuffer,
-        dsm_loss,
-        dsm_loss_stochastic,
-        nce_loss,
-        nce_loss_stochastic,
-        nce_loss_with_replay,
-        optimization_training_loss,
-        snl_loss,
-        snl_loss_stochastic,
-    )
-except ModuleNotFoundError as exc:
-    if exc.name != "jax":
-        raise
-    from carnot._version import __version__
-
-    RUST_AVAILABLE = False
-    __all__ = ["__version__", "RUST_AVAILABLE", "JAX_AVAILABLE"]
-else:
-    __all__ = [
-        # Version
-        "__version__",
-        # Rust bindings
-        "RUST_AVAILABLE",
-        # JAX
-        "JAX_AVAILABLE",
-        # Core
-        "AutoGradMixin",
-        "EnergyFunction",
-        "ModelConfig",
-        "ModelState",
-        # Models
-        "BoltzmannConfig",
-        "BoltzmannModel",
-        "EBTConfig",
-        "EBTransformer",
-        "GibbsConfig",
-        "GibbsModel",
-        "IsingConfig",
-        "IsingModel",
-        # Samplers
-        "HMCSampler",
-        "LangevinSampler",
-        # Training
-        "ReplayBuffer",
-        "dsm_loss",
-        "dsm_loss_stochastic",
-        "nce_loss",
-        "nce_loss_stochastic",
-        "nce_loss_with_replay",
-        "optimization_training_loss",
-        "snl_loss",
-        "snl_loss_stochastic",
-    ]
+def __getattr__(name: str) -> Any:
+    """Resolve original exports on demand so inference does not start training imports."""
+    if name in {"JAX_AVAILABLE", "jax", "jnp", "__all__", "RUST_AVAILABLE"}:
+        available = _optional_jax()
+        if name == "__all__":
+            value = ["__version__", "RUST_AVAILABLE", "JAX_AVAILABLE"]
+            if available:
+                value.extend(_EXPORTS)
+        elif name == "RUST_AVAILABLE":
+            value = import_module("._rust_compat", "carnot").RUST_AVAILABLE if available else False
+        elif name in globals():
+            return globals()[name]
+        else:
+            raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+        globals()[name] = value
+        return value
+    if name in _EXPORTS and _optional_jax():
+        value = getattr(import_module("." + _EXPORTS[name], "carnot"), name)
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

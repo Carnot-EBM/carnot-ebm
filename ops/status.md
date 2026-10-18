@@ -1,5 +1,26 @@
 # Carnot — Operational Status
 
+## 2026-10-18 — Exp8633 standalone replay import repair
+
+The direct experiment CLI now resolves its own checkout before importing the
+publication readers. This fixes `scripts.conductor_gates` import failures after
+the package initialization became lazy. Valid private replay works outside the
+checkout without `PYTHONPATH`; missing and rehashed candidates retain their
+normal rejection errors. The original failing test and the existing lazy
+initialization/resident-protocol changes remain intact. The conductor is unchanged.
+
+Validation: 243 distinct relevant tests passed: the exact 72-node qualification
+union (including private E2E-018/021 and publication readers) plus 171 public
+API regressions. Combined unit/subprocess coverage passed the 100% gate for
+all 463 statements in the six affected implementation files. Ruff check/format,
+strict mypy and scoped spec tracing passed. Qualification receipts are retained
+in `/tmp/carnot-8633-repair-validation/validation/`.
+
+The global spec audit retains 1,142 existing missing references. Documentation
+freshness passed; final reconciliation reports only that repository-wide
+traceability issue. This entry records code verification; historical research
+artifacts and scientific verdicts retain their existing authority.
+
 ## 2026-10-17 — Exp8609 private process import repair
 
 Legacy worker wrappers and the standalone qualification CLI now resolve the

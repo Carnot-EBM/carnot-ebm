@@ -1,0 +1,68 @@
+F..F.                                                                    [100%]
+=================================== FAILURES ===================================
+____________________ test_lean_import_and_no_path_mutation _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T055156-820199-1089e303/test_lean_import_and_no_path_m0')
+
+    def test_lean_import_and_no_path_mutation(tmp_path):
+        """REQ-VERIFY-8633: module imports leave the application search path alone."""
+>       child("""
+    import sys
+    before = list(sys.path)
+    from carnot.inference import resident_protocol
+    assert sys.path == before
+    assert not any(n.startswith(('carnot.training', 'carnot.reporting', 'jax')) for n in sys.modules)
+    assert resident_protocol.MAX_FRAME == 65536
+    assert resident_protocol.MAX_REQUESTS == 1025
+    """, tmp_path)
+
+tests/python/test_installed_lean_8633.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = "\nimport sys\nbefore = list(sys.path)\nfrom carnot.inference import resident_protocol\nassert sys.path == before\nass...)) for n in sys.modules)\nassert resident_protocol.MAX_FRAME == 65536\nassert resident_protocol.MAX_REQUESTS == 1025\n"
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T055156-820199-1089e303/test_lean_import_and_no_path_m0')
+
+    def child(code, tmp_path):
+        """Fresh processes prevent earlier training imports from hiding eager loading."""
+        result = subprocess.run(
+            [sys.executable, "-c", code], cwd=tmp_path, env=dict(os.environ),
+            capture_output=True, text=True, timeout=45,
+        )
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 4, in <module>
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py", line 19, in <module>
+E             import resident_energy as numeric
+E         ModuleNotFoundError: No module named 'resident_energy'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-c', "\nimport sys\nbefore = l...ne 19, in <module>\n    import resident_energy as numeric\nModuleNotFoundError: No module named \'resident_energy\'\n').returncode
+
+tests/python/test_installed_lean_8633.py:21: AssertionError
+______________________ test_module_cli_help_and_rejection ______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T055156-820199-1089e303/test_module_cli_help_and_rejec0')
+
+    def test_module_cli_help_and_rejection(tmp_path):
+        """REQ-VERIFY-8633: package CLI exists and rejects ambiguous configuration."""
+        for args, expected in [(['--help'], 0), ([], 2), (['x', 'hash', 'bad'], 2)]:
+            result = subprocess.run(
+                [sys.executable, '-m', 'carnot.inference.resident_protocol', *args],
+                cwd=tmp_path, capture_output=True, text=True, timeout=30,
+            )
+>           assert result.returncode == expected, result.stderr
+E           AssertionError: Traceback (most recent call last):
+E               File "<frozen runpy>", line 198, in _run_module_as_main
+E               File "<frozen runpy>", line 88, in _run_code
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py", line 19, in <module>
+E                 import resident_energy as numeric
+E             ModuleNotFoundError: No module named 'resident_energy'
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'carnot.inference.residen...ne 19, in <module>\n    import resident_energy as numeric\nModuleNotFoundError: No module named \'resident_energy\'\n').returncode
+
+tests/python/test_installed_lean_8633.py:98: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_installed_lean_8633.py::test_lean_import_and_no_path_mutation
+FAILED tests/python/test_installed_lean_8633.py::test_module_cli_help_and_rejection
+2 failed, 3 passed in 6.94s

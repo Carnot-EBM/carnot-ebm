@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-10-18 — Fix Exp8633 standalone replay imports
+
+- Anchor the experiment CLI's package and publication-reader imports to its
+  resolved checkout, fixing `ModuleNotFoundError: scripts.conductor_gates`
+  while preserving lazy package initialization and the installed resident entry.
+- Keep the original failing anchored-replay test unchanged. Add three real
+  subprocess regressions for valid, missing and rehashed private candidates
+  outside the checkout with `PYTHONPATH` removed.
+- Passed 243 distinct relevant tests, including private E2E-018/021 and
+  publication readers. All 463 statements across the six affected implementation
+  files have 100% combined unit/subprocess coverage. Ruff, formatting, strict
+  mypy and scoped spec tracing passed. The global spec audit retains 1,142
+  existing missing references. `scripts/research_conductor.py` is unchanged.
+
 ## 2026-10-18 — Operational retrospective for milestone 2026.10.740
 
 - Wrote `results/operational_retro_2026_10_740.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.740`. Authoritative disk-mtime fallback data records 9 experiments completed (0 compute-bound, 9 synthesis-only) across 108.1 total wall-time minutes (average 12 minutes per experiment).

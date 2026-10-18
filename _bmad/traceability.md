@@ -1,6 +1,17 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-17
+**Last Updated:** 2026-10-18
+
+## Exp8633 standalone replay imports — 2026-10-18
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8633 / SCENARIO-REPORT-8633-STANDALONE-CLI | Direct Exp8633 CLI resolves its own checkout before importing publication readers | Original anchored-replay regression preserved; three fresh-process cases verify valid, missing and rehashed candidates outside the checkout without `PYTHONPATH` |
+| REQ-VERIFY-8633 / SCENARIO-VERIFY-8633-STANDALONE-CLI | Existing lazy initialization, installed worker and immutable replay preserved | Exact 72-node qualification union and 171 public API tests passed; private E2E-018/021 and publication readers passed; all 463 affected implementation statements covered at 100%; Ruff, strict mypy and scoped spec tracing passed |
+
+Qualification receipts: `/tmp/carnot-8633-repair-validation/validation/`.
+The global spec audit retains 1,142 existing missing references. This repair
+does not replace historical research evidence or scientific verdicts.
 
 ## Exp8609 private process imports — 2026-10-17
 
