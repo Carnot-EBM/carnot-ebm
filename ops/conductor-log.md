@@ -20558,3 +20558,4 @@ code |
 | 2026-10-18 20:43 UTC | Run bounded mandated-Qwen evidence views after cau | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8640-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-10-18 21:23 UTC | Qualify passive reset provenance on the reachable  | OK | 117 passed, 1 warning in 77.99s (0:01:17) |
 | 2026-10-18 22:01 UTC | Measure reset-cause transfer across adapter-withhe | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 102 passed, 1 warning in 63.72s (0:01:03) |
+| 2026-10-18 22:39 UTC | Map qualified new operations while preserving abse | OK | 94 passed, 1 warning in 42.22s |
