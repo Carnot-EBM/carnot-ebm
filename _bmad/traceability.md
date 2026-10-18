@@ -4155,3 +4155,33 @@ Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Queue: `research-roadmap-next.yaml`. V740 design is preserved at
 `openspec/change-proposals/research-roadmap-v740-preserved-20261017.md`.
 The active V740 roadmap, conductor and exclusion manifest remain unchanged.
+| REQ-INFRA-072 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-INFRA-074 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-INFRA-075 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-INFRA-076 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-INFRA-077 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-INFRA-078 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-INFRA-1296 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-INFRA-1337 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-CARM-1772-1 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-CARM-1772-2 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-CARM-1773-1 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-EVAL-006 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-1911-E2E | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-1980-E2E-CASCADE | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-2012-E2E | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-PREM-001 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-PREM-002 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-PREM-003 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-PREM-004 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| REQ-PREM-005 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-CARM-1772-1 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-CARM-1773-1 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-EVAL-006 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-1911-E2E | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-1980-E2E-CASCADE | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-2012-E2E | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-PREM-001 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-PREM-002 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-PREM-003 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+| SCENARIO-PREM-004 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
