@@ -22522,3 +22522,4 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
   No experiment execution, activation, conductor change or push is part of this work.
 - 2026-10-18: Bind thirteen tasks and seal changed execution and deployment protocols (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v741_contract_methods; results/experiment_8627_v741_contract_methods.json
 - 2026-10-18: Build bounded streaming source features with exact capped-domain parity (⚠️ Research Finding) — honest_verdict=complete_disqualified_v741_streaming_source_prototype; results/experiment_8629_v741_streaming_source_prototype.json
+- 2026-10-18: Expose lean inference through an installed package entry point (⚠️ Research Finding) — honest_verdict=complete_circular_positive_installed_lean_mechanics; results/experiment_8633_v741_installed_lean_prototype.json
