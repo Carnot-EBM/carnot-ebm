@@ -56382,3 +56382,17 @@ Fresh private CLI processes accept unchanged bytes and reject absent operands,
 owned-check failures and self-consistently rehashed summary or primitive tampering.
 Validate exact candidate bytes with both shared validators before atomic publication.
 Accept --date20261018. No current language-model or device calls occur.
+## REQ-VERIFY-8626: Validate immutable capstone bytes before publication
+
+Collect original node IDs before bounded disjoint owned and private E2E-018/021
+children. Require100 percent newly owned executable statements, Ruff, strict
+mypy and spec tracing. Keep command, exit, duration and log hashes. Cold replay
+must reconstruct claims from original authority and immutable operands.
+
+### SCENARIO-VERIFY-8626-CONTROLS
+
+Real private CLI children accept20261018 and reject invalid dates, missing
+inputs, owned failures and self-consistently rehashed claim or primitive
+tampering. Required owned failures disqualify; unchanged external blocks remain
+blocked. Original publication readers and adversarial/strict row validators
+must inspect the exact candidate bytes before atomic replacement.

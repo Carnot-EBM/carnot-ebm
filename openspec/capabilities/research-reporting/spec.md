@@ -102462,3 +102462,20 @@ falls back to authenticated historical costs. Overlap, missing slots or changed
 original bytes reject cost admission. Sampling, argmin and deterministic spline
 workloads remain distinct. No compatible physical execution keeps physical readiness
 zero. No hardware purchase, board probe, flash or model load is authorized.
+## REQ-REPORT-8626: Reconcile twelve V740 dispositions from original evidence
+
+The capstone SHALL bind Exp8615 through Exp8626 to original producer bytes,
+terminal seals and conductor receipts. Scheduling completion is separate from
+executed science. Preserve V739 authority failure, Exp8603 disqualification,
+and the V733 source, V735 cold-cost and V737 ARC nulls. Recompute fixed causal,
+release, retention, Trivia+ coverage, complete-cost and horizon operands.
+Source normalization of continuation94 to statement92 cannot replace missing
+original execution shards. Separate lean lifecycle gains, native arithmetic,
+independent evaluation and NFR01. Use unchanged G1-G4 without publication.
+
+### SCENARIO-REPORT-8626-ACCOUNTING
+
+Missing producers and pre-gated tasks remain blocked. Qualified null studies
+close their exact scope. An observer fixture grants no live solve or priority
+credit. Unknown prior exposure stays unknown. New evidence requirements name
+the changed prerequisite needed before another run.
