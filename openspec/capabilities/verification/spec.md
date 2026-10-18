@@ -56669,3 +56669,23 @@ bytes through primary_publication, both readers, adversarial verification and
 strict row lint before atomic publication. Preserve actual findings and severity.
 Missing external inputs block; failed owned checks disqualify. Tests use private
 destinations and never modify historical primaries or quarantines.
+## REQ-VERIFY-8651: Validate immutable hardware evidence before publication
+
+Tests SHALL precede implementation and cite driving requirements.
+Accept --date 20261018. Flush phase and child progress. Use disk-backed /var/tmp.
+Declare no_model_load, empty MODEL_SPECS and zero current language-model calls.
+Authenticate the original numerical head checkpoint separately from execution.
+Collect original test nodes once. Run bounded disjoint serial children with original
+authority. Preserve each original coverage database before combining copies.
+Require 100 percent newly owned statements, scoped lint/types/spec checks and private
+E2E-018/021 authority and publication readers. A killed child fails qualification.
+Cold replay SHALL reject missing operands and self-consistently rehashed tampering.
+Preserve shared verifier severities and final-byte atomic publication receipts.
+Unchanged external incompleteness is blocked; failed owned checks are disqualified.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+### SCENARIO-VERIFY-8651-REPLAY
+
+Actual private children exercise successful publication, failed owned work, invalid
+dates and missing replay operands. Rehashed measurements and edited summaries fail
+cold replay. Final publication validates cold reconstruction and unchanged readers.

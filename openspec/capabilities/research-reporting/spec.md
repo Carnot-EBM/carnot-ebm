@@ -102824,3 +102824,29 @@ origins remain explicit. Count game/seed support once. Zero-reset games retain
 zero support and leave diagnostic transfer unestablished. Publish row readiness
 independently. Censored windows give no full-horizon efficacy, solve, policy
 refinement or promotion credit. A qualified null closes this exact panel.
+## REQ-REPORT-8651: Separate hardware mapping from missing cost and physical evidence
+
+Exp8651 SHALL authenticate the pinned Exp8625 ledger once within sixty seconds.
+It SHALL read Exp8643 learning and Exp8647 installed costs independently.
+Qualified Exp8645 extraction costs SHALL remain a separate workload.
+Admission requires the exact producer, numeric readiness one, passed owned checks,
+hash-bound publication and complete disjoint primitive spans from one cohort and arm.
+Missing files, missing fields and observed zeros SHALL retain distinct diagnostics.
+INFO findings SHALL remain INFO. Critical findings and failed owned checks disqualify.
+hardware_mapping_ready_score qualifies the report; physical_hardware_ready_score
+requires current compatible device execution. Report qualification grants no speed credit.
+Conditional arithmetic-removal bounds require complete spans. A zero denominator
+means an unbounded conditional limit, never an infinite measured speed.
+All historical nulls and quarantines, including Exp8638, SHALL remain unchanged.
+
+### SCENARIO-REPORT-8651-INDEPENDENT
+
+Missing-both, one-present, invalid-receipt and critical-finding controls SHALL run.
+Absent learning cannot veto an independently qualified installed boundary.
+Missing external costs yield complete_blocked with null new ceilings.
+KV260 k<=5 quadratic Ising, PolarFire Linux CPU dispatch, spline arithmetic,
+distribution sampling and optimization SHALL retain separate support dispositions.
+GateMate requires dated physical change, GM1Ax IDCODE0x20000001 and n16 sample/hash
+evidence. No probing is permitted. NPU and TSU remain unqualified.
+The 100x target needs compatible dominant work and unaccelerated share <=0.01.
+The report SHALL name remaining host operations and required architecture changes.
