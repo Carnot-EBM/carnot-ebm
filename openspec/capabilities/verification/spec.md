@@ -56397,6 +56397,39 @@ tampering. Required owned failures disqualify; unchanged external blocks remain
 blocked. Original publication readers and adversarial/strict row validators
 must inspect the exact candidate bytes before atomic replacement.
 
+## REQ-VERIFY-8629: Opt-in bounded lexical streaming
+
+Implementation: `python/carnot/verify/streaming_evidence.py`, the Exp8629 reporting
+module and thin runner. `tests/python/test_streaming_evidence_8629.py` checks
+independent eager parity, original byte custody, resource exits and real children.
+Qualification receipts remain with the invocation's raw primitives. Natural
+coverage and detector benefit remain outside this prototype's claim boundary.
+
+The new extractor SHALL preserve the exact public family/source/answer allowlist,
+UTF-8 sentence boundaries, sentence-then-triple order, exact stripped-byte
+deduplication, answer cap16 and ordered eight-feature reductions. Historical
+readers and prepare SHALL remain unchanged. Chunks1/32/128 change batches only.
+Limits are source512KiB, answer64KiB, response30s, extra working memory256MiB
+and disk deduplication32MiB. Resource exhaustion SHALL abstain without truncation.
+Each original window SHALL retain its full byte interval, stripped hash and all
+contributing answer-unit IDs in disk primitives, including duplicate occurrences.
+
+### SCENARIO-VERIFY-8629-PARITY
+
+Independent eager enumeration SHALL match complete window digests and exact
+features below and above128 windows. Legacy hashes SHALL agree within the old
+domain. Include multibyte text, whitespace, duplicates, punctuation, empty input,
+malformed UTF-8,128/129 windows, oversized answers and every resource exit.
+
+### SCENARIO-VERIFY-8629-REPLAY
+
+Fresh bounded children SHALL reject missing chunks, wrong offsets, feature drift,
+source swaps, label-bearing keys and rehashed tampering against immutable fixture
+authority. Readiness requires original node union,100percent owned statements,
+real CLI rejection paths, private E2E-018/021, lint, types and checked publication.
+Deterministic qualification and descriptive cost do not prove natural coverage,
+semantic entailment, generalization or learning benefit. No model load or fit occurs.
+
 ## REQ-VERIFY-8627: Qualify bounded V741 execution and immutable replay
 
 Require scoped unit tests and100 percent newly owned statements, including real

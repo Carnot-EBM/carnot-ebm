@@ -102516,7 +102516,8 @@ required owned-check failure is disqualified. Neither is a scientific null.
 
 ## REQ-REPORT-V741-SOURCE: Complete bounded source processing
 
-Status: planned. Exp8629 SHALL stream the existing lexical window reduction with
+Status: Exp8629 implementation and deterministic fixture tests are present;
+Exp8632 natural comparison remains planned. Exp8629 SHALL stream the existing lexical window reduction with
 exact old-domain features and source-byte offsets. It SHALL preserve original
 order, exact-byte deduplication and answer cap 16. Chunk sizes 1/32/128 SHALL agree.
 Exp8632 SHALL retain the exposed 190-response/128-question roster and all failures.
