@@ -1,0 +1,67 @@
+.F............                                                           [100%]
+=================================== FAILURES ===================================
+_______________________________ test_cli_errors ________________________________
+
+private = (PosixPath('/var/tmp/carnot8608-validation-zekjeqqg/suite-0/capstone0/experiment_8639_v741_capstone.json'), {'MODEL_SP...e, 'nfr01': False, 'original_authority': True, ...}, 'administrative_complete': True, 'adversarial_findings': [], ...})
+tmp_path = PosixPath('/var/tmp/carnot8608-validation-zekjeqqg/suite-0/test_cli_errors0')
+
+    
+    def test_cli_errors(private, tmp_path):
+        """REQ-VERIFY-8639: failed owned children disqualify and malformed calls reject."""
+        _, value = private
+        output = tmp_path / (e.NAME + ".json")
+        result = cli("--output", output, "--private-control", "--failed-child")
+>       assert result.returncode == 1, result.stdout + result.stderr
+                          ^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v741_capstone_8639.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/var/tmp/carnot8608-validation-zekjeqqg/suite-0/test_cli_errors0/experiment_8639_v741_capstone.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/carnot8608-validation-zekjeqqg/suite-0/test_cli_errors0/experiment_8639_v741_capstone.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v741_capstone_8639.py::test_cli_errors - FileNotFoun...
+1 failed, 13 passed, 1 warning in 169.27s (0:02:49)

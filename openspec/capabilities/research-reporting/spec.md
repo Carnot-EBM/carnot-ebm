@@ -102674,3 +102674,19 @@ inference, distribution sampling and argmin are distinct operations. Retain Gate
 physical prerequisites without probing. Sparse CPU/Rust updates are the current
 learning path; 100x needs compatible dominant work and fixed host cost below 1%.
 Published online-KAN, Ising and Extropic ratios grant no local performance credit.
+## REQ-REPORT-8639: Reconcile thirteen V741 terminal dispositions
+
+The capstone SHALL bind all thirteen full objects to original producer bytes and
+conductor receipts. Scheduling completion SHALL remain separate from execution.
+It SHALL retain every upstream acceptance gate, missing path, missing field and
+observed zero. It SHALL compare actual prior verdicts and normalized causes.
+Fixed reductions SHALL cover original coverage custody, causal loss, released
+feedback, simultaneous retention, streaming windows, installed clocks and ARC
+horizons. Historical nulls and quarantines SHALL remain unchanged. Publication
+G1 through G4 SHALL use the unchanged script and grant no publication authority.
+
+### SCENARIO-REPORT-8639-ACCOUNTING
+
+Ten present upstream records and two authenticated cascade skips close twelve
+slots. The capstone closes slot thirteen. Blocked science remains blocked.
+Prototype compatibility SHALL NOT establish calibration or packaging cost benefit.

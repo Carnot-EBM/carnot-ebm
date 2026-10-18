@@ -56516,3 +56516,17 @@ operands, rehashed claims and rehashed source tampering. Authenticate the origin
 small-head checkpoint without executing it. Check the final candidate with both
 shared validators and primary_publication before atomic publication. Private
 controls remain outside the checkout and exercise actual children and failures.
+## REQ-VERIFY-8639: Qualify exact capstone bytes with bounded original checks
+
+Tests SHALL precede implementation. Disjoint children SHALL preserve original
+node authority and cover every newly owned statement, including real CLI errors.
+Cold replay SHALL reconstruct claims from original immutable operands and reject
+missing inputs and self-consistently rehashed changes. Failed owned checks SHALL
+disqualify; unchanged external failures SHALL block. Atomic publication SHALL
+check cold replay, adversarial findings, strict rows and both existing readers.
+
+### SCENARIO-VERIFY-8639-CONTROLS
+
+A private candidate passes replay and preserves thirteen dispositions. A failed
+child disqualifies. Invalid dates, missing operands, altered claims, altered
+samples and changed receipts fail. Optional GPU absence does not block CPU work.
