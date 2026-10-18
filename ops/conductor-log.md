@@ -20536,3 +20536,4 @@ code |
 | 2026-10-18 06:44 UTC | Expose lean inference through an installed package | OK | 97 passed, 1 warning in 47.44s |
 | 2026-10-18 07:42 UTC | Qualify installed inference and existing public im | OK | 105 passed, 1 warning in 90.68s (0:01:30) |
 | 2026-10-18 07:50 UTC | Measure complete installed inference against the q | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8634-installed-compatibility.installed_measurement_ready_score (actual=0 == expected=1) |
+| 2026-10-18 07:58 UTC | Run bounded mandated-Qwen evidence calls only afte | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8627-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
