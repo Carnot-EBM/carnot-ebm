@@ -53707,3 +53707,94 @@ the workspace date, October 17 in America/New_York.
 Planning inference: repair the specific lost-shard mechanism once; finish the
 fixed learning study. Test streaming evidence processing and integrate the lean
 service gain. Preserve qualified nulls and require new receipts before device work.
+
+
+## 2026-10-18 — V742 planning scan: executable learning and complete evidence
+
+Recorded before V742 experiment design. Searches covered all eight requested
+arXiv topics and six secondary channels. Revisited work remains labeled as such.
+No external paper establishes Carnot benefit, hardware access or label independence.
+
+### Selected methods and promising leads
+
+- **Revisited decomposition:** [Towards Long Context Hallucination Detection,
+  2504.19457](https://arxiv.org/abs/2504.19457), April 2025, motivates bounded
+  context decomposition and aggregation. Carnot's streaming lexical reducer is
+  an adaptation, not this trained encoder. V741 passed parity fixtures but lost
+  required original coverage evidence. Complete-source coverage and matched costs
+  remain unmeasured on the 190-response, 128-question exposed Trivia+ roster.
+  Finish that comparison after immutable child evidence qualifies. Full input
+  processing does not establish entailment or calibration.
+- **Revisited proper-loss and delay methods:** [Calibeating Made Simple,
+  2603.22167](https://arxiv.org/abs/2603.22167) and
+  [Capacity-Constrained Online Convex Optimization with Delayed Feedback,
+  2606.11711](https://arxiv.org/abs/2606.11711) motivate unchanged forecasts as
+  controls and explicit delay, pending-capacity and lost-feedback accounting.
+  Finish the fixed Brier-update experiment with prediction-before-feedback and
+  simultaneous retention. These guarantees do not transfer to a nonlinear head.
+- **Revisited sparse learning:** [Ultrafast On-Chip Online Learning via Spline
+  Locality in KANs, 2602.02056](https://arxiv.org/abs/2602.02056), February 2026,
+  studies sparse local updates and fixed-point FPGA training. Keep Carnot's
+  existing basis. Measure actual coordinate writes and complete request cost.
+  [Sample-Efficiency of KANs, 2610.10627](https://arxiv.org/abs/2610.10627),
+  October 7, is a recent budget-control lead, already filed in this repository.
+  Its control/RL results do not justify post-test tuning or infer Carnot benefit.
+- **Newly checked in this pass, deferred:** [CORTEX,
+  2606.31033](https://arxiv.org/abs/2606.31033), June 30, compares internal
+  representations with and without documents and includes preceding-token
+  grounding plus span smoothing. This is a candidate mechanism beyond lexical
+  overlap. It requires authenticated internal-state access and independent
+  span labels. Do not substitute text/logprob reranking or repeat retired PHASE D.
+- **Revisited anchored facts:** [Enoki v2,
+  2609.00581](https://arxiv.org/abs/2609.00581), September 4, and its
+  [method text](https://arxiv.org/html/2609.00581v1) tie facts to answer spans.
+  Keep explicit offsets in the complete-source study. Its NLI verifier remains
+  learned; max-over-chunks entailment is not a proof of multi-hop sufficiency.
+  The repository already investigated EnokiQA custody. Do not propose another
+  unchanged release audit or treat generated annotations as independent truth.
+
+### Coverage of primary research topics
+
+| Topic | Primary source checked | Planning decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, 2512.15605](https://arxiv.org/abs/2512.15605) | Compatibility energies and probability identities do not guarantee correct extracted constraints. Preserve exact evidence boundaries. |
+| Neural constraint satisfaction | [Efficient Constraint Handling in Neural Solvers for Routing, 2602.16012](https://arxiv.org/abs/2602.16012) | Structured feasibility is distinct from language extraction. Defer new routing solver work. |
+| Ising applications in ML | [Probabilistic Algorithms for Ising Machines, 2610.03972](https://arxiv.org/abs/2610.03972), October 2 | Separate deterministic evaluation, optimization and distribution sampling in the hardware mapping. |
+| Hallucination detection/mitigation | Long-context decomposition, CORTEX and Enoki above | Complete evidence processing first; internal-state discrimination remains a future mechanism. |
+| Kolmogorov–Arnold networks | Online spline KAN and sample-efficiency papers above | Preserve fixed training budgets, actual sparse writes and retention checks. |
+| Energy-guided/constrained generation | [Reward-Guided Decoding, 2605.28020](https://arxiv.org/abs/2605.28020) | Defer decoding changes until runtime and verifier utility qualify; a canary is only bounded generation. |
+| Hardware-accelerated sampling | [FPGA–ASIC Co-Design, 2602.15985](https://arxiv.org/abs/2602.15985) | Capacity decomposition does not remove preprocessing, transfer or host costs. No device speed claim from a paper. |
+| Continual/online constraints | Calibeating, delayed capacity and sparse KAN above | Actual causal learning plus separate future-loss/retention evaluation. |
+
+### Secondary sources checked and retrieval limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verifier work; indexed
+  EBT and [VerifierQ](https://openreview.net/forum?id=qhOT0MisId) material
+  appeared. Opening that forum and the
+  [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned browser
+  challenges. No unread review outcome or acceptance claim is adopted.
+- **Semantic Scholar:** attempted citation inventories for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both requests failed. Exact-ID site searches did not produce a dependable
+  inventory. Citation-following coverage is incomplete, not zero citations.
+- **Hugging Face Papers:** inspected [Enoki](https://huggingface.co/papers/2609.00581),
+  [SURE-RAG](https://huggingface.co/papers/2605.03534) and
+  [RT4CHART](https://huggingface.co/papers/2603.27752). Use primary methods
+  above for the selected work. Feed dates are not paper submission dates.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were marked last month. No current ranking or new dependency is claimed.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). Keep projected efficiency separate
+  from measured workloads, final vocabulary operations and transfer costs.
+  Nothing inspected supplies local TSU execution authority.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  Product positioning remains relevant; the inspected page supplies no
+  reproducible architecture update that qualifies Carnot's current studies.
+
+Planning inference: distinguish research inputs from execution qualification so
+repair tasks can run. Preserve historical failure bytes. Complete fixed learning,
+source coverage and installed-cost measurements only after their owned checks
+pass. Use fresh ARC reset-cause evidence to explain observed censoring without
+promoting a supervisor arm from incomplete horizons.

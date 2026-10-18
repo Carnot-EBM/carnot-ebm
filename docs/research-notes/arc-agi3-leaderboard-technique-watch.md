@@ -545,3 +545,5 @@ Their concrete memory-saving stack is **4-bit QLoRA + FSDP2 + PLE CPU offload**,
 
 **Classification: (a), source-dependent exploit.** It locates and imports game `.py` files, clones the real engine for search, and probes hidden fields for state hashing. This path requires game internals unavailable through observation-only play. It is older experimental code; no evidence links it to the team’s current top-ten scoring submission. [Published source](https://www.kaggle.com/kernels/scriptcontent/340313144/download), [current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-10-18 13:32 UTC -- checked, nothing new
+

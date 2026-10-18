@@ -3,74 +3,46 @@
 
 # qa_layer_authenticity_audit_report — 2026-10-18
 
-Scanned 10 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 10 of 20 unit(s); rotation advances by 10 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 1 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 9 |
+| `SILENT_NON_FIRING` | 8 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_check_terminal_prefix_vs_partial_class` — json { "honest_verdict": "completed_successfully", "verdict_class": "partial" } ``` Observed: no flags. The verdict string already occurs in `results/experiment_1773_latent_benchmark.json`; the contradictory class is added here, not attributed to that historical artifact. Also verified: `" complete_v563_independent_exact_root: immutable rows verified"` with class `"partial"` produces no flags; rem
-- `adversarial_verify.py::_arc_claimed_level` — "reproduced_levels": {"bp35": 2}
-- `adversarial_verify.py::_is_arc_solve_claim` — levels_reproduced`: an existing corpus field spelling for the numeric level count, omitted by the delegated recognizer.
-- `adversarial_verify.py::_arc_registry_level` — json {"game": "tu93", "levels_reproduced": {"principle": "Only independently reproduced levels count.", "value": 9}}
-- `adversarial_verify.py::_is_arc_artifact` — This genuine ARC game artifact returns false. Replacing the wrapped game field with the bare string `"ft09"` changes the result to true. ```json { "experiment": "experiment_9000", "game": { "principle": "Record the evaluated game identifier.", "value": "ft09" }, "honest_verdict": "live_agent_first_win", "mode": "evaluation" } ``` This artifact also returns false despite its explicit ARC schema: ``
-- `adversarial_verify.py::_arc_live_claim_text` — json { "game": "ar25", "honest_verdict": "complete: offline detector evaluation", "headline_result": "success: live_agent_first_win_efficiency_up_from_value_head", "offline_loo_auroc": 0.725 } ``` False negative: the positive headline is discarded and the offline-for-live warning does not fire. Putting the same string in headline triggers it.
-- `adversarial_verify.py::_claims_arc_live_search_win` — Verified false negative that also suppresses the caller’s evidence warning: ```json { "game": "lp85", "honest_verdict": "live_agent_first_win_rate_increased_from_0.20_to_0.35_on_lp85", "offline_loo_auroc": 0.725 } ``` Other positive headlines missed with the same game: ```text scored_agent_first_win_rate_up_on_lp85 live_agent_win_rate_up_on_lp85 Live agent solved lp85 with fewer actions; rejected 
-- `adversarial_verify.py::_has_measured_arc_live_metric` — "live_evidence": []` accompanying a positive live-win claim and offline AUROC evidence: the verifier misses the absence of measured live evidence and suppresses its warning.
-- `adversarial_verify.py::_has_offline_auroc_metric` — json { "inference_substrate": "cached_gap_arc_pool_oof_vstar_agglm_selector", "oracle_distinct_auroc": 0.778980279 } ``` These fields occur in results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json. The helper fails to recognize their offline AUROC; that historical artifact itself makes an honest offline claim.
+- `adversarial_verify.py::_claims_intrinsic_reward_exploration_win` — json { "game": "ar25", "honest_verdict": "success: curiosity exploration win versus null baseline", "intrinsic_bonus_delta": 0.37 } ``` No downstream delta is supplied. Expected: recognize the win claim and warn. Actual: predicate false; zero intrinsic-reward warnings. Verified through the artifact verification entry point.
+- `adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key` — "target_solve_rate_delta": 0.12` in the bonus-only curiosity-win fragment above: a target substitutes for a measurement, silently bypassing the warning.
+- `adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta` — json {"first_win_rate_delta_vs_bare": 0.08} ``` Returns False. The field spelling already exists in results/experiment_4621_integration_gate.json. This nested principle-wrapped measurement also returns False and causes a false warning when attached to an otherwise qualifying exploration-win artifact: ```json { "per_game": [ { "solve_rate_delta": { "principle": "Measured difference versus the match
+- `adversarial_verify.py::_has_rising_intrinsic_reward_magnitude` — json {"exploration_reward_delta": 0.37} ``` A plausible intrinsic exploration-bonus measurement returns false. In an ARC curiosity-win artifact without downstream deltas, this spelling suppresses the warning.
+- `adversarial_verify.py::_goal_energy_claim_text` — json { "experiment": "experiment_4647_goal_energy_audit", "game": "ar25", "honest_verdict": "complete: live experiment finished", "interpretation": "success: goal_energy_live_generation_firstwin_up_4", "solve_rate_delta": 0.08 } ``` Confirmed: the positive claim is absent from the extracted text, and the missing-ablation warning does not fire.
+- `adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence` — This plausible positive artifact uses existing project metric names. The helper returns False, and the file-level verifier emits no goal-energy ablation warning: ```json { "game": "ar25", "headline": "energy-driven generation win: graded goal-energy raised live first-win", "honest_verdict": "success: goal_energy_live_generation_firstwin_up_4", "winner_generated_rate_with_energy": 0.12, "winner_gen
+- `adversarial_verify.py::_claims_goal_energy_generation_win` — json { "game": "ar25", "honest_verdict": "success: goal_energy_live_generation_first_win_rate_improved", "goal_energy_vs_baseline_delta": 0.08 } ``` Observed: predicate False; zero goal-energy ablation warnings. The metric name is present in the real experiment 4737 artifact; the positive value above constructs the missed winning case.
+- `adversarial_verify.py::_has_uniform_energy_ablation_evidence` — "uniform_energy_ablation_not_run": true` accompanying the positive goal-energy claim above. The missing-control warning does not fire.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_check_terminal_prefix_vs_partial_class` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_arc_claimed_level` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_arc_solve_claim` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_arc_registry_level` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_arc_artifact` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_arc_live_claim_text` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_claims_arc_live_search_win` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_measured_arc_live_metric` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_offline_auroc_metric` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_intrinsic_reward_exploration_win` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_rising_intrinsic_reward_magnitude` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_goal_energy_claim_text` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claims_goal_energy_generation_win` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_uniform_energy_ablation_evidence` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_verdict_text
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-Return honest_verdict as a string, reading through a principle wrapper.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-`v = v.get("value") if isinstance(v, dict) else v` explicitly handles wrapper dictionaries; the final string check safely returns None for lists, missing fields, and other non-string values, consistent with the declared contract. There are no substring checks, thresholds, paths, writes, or measurements to audit here. Test coverage cannot be determined from the supplied snippet.
-
-
-## adversarial_verify.py::_check_terminal_prefix_vs_partial_class
+## adversarial_verify.py::_claims_intrinsic_reward_exploration_win
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -80,455 +52,313 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-Warn about “A success-shaped verdict string that declares itself partial.”
+`True when an ARC headline claims an intrinsic-reward exploration win.`
 
 ## FINDINGS
 
-1. **A/B/F — Success vocabulary is narrower than the concept.** `_TERMINAL_SUCCESS_PREFIXES` recognizes four status words with three separators. It omits an unambiguous completion label already present in experiment 1773; the missed input below produces no flags. `if hit is None:` followed by `return` makes unsupported success wording indistinguishable from a noncontradictory verdict.
+1. **A/F — Silent suppression:** `if any(marker in text for marker in _INTRINSIC_REWARD_DIAGNOSTIC_OR_NULL_MARKERS):` gives any matching phrase an unconditional veto. The null-baseline comparison below returns `False`, and the caller emits no intrinsic-reward warning despite a positive win claim supported only by bonus magnitude. An unrelated diagnostic statement elsewhere in the combined text also suppresses the claim.
 
-2. **2/3/5 — Anchoring does not prevent context blindness.** `low.startswith(p)` treats a leading success word as an assertion of successful completion, even when that word introduces an explicitly negative explanation. The counterexample below triggers a warning despite agreeing with the partial class. This disproves the docstring’s claim that an “anchored prefix cannot drift into unrelated prose.”
+2. **Substring boundaries:** All three `marker in text` scans lack boundaries. The examples below demonstrate a positive match inside an unrelated longer word and a veto inside a word whose meaning reverses the veto.
 
-3. **A/F — Leading whitespace suppresses detection.** `low = verdict.lower()` preserves whitespace. Adding one leading space to an otherwise detected completion verdict produces no flags, although its meaning and contradictory class remain identical.
+3. **Negation blindness:** `return any(marker in text for marker in _INTRINSIC_REWARD_WIN_MARKERS)` detects positive-looking fragments without establishing an affirmative claim. The explicitly failed-improvement verdict below returns true and produces a false warning.
 
-4. **C — Ten prefix deletions survive the focused tests.** The prefix test generates its cases from `_TERMINAL_SUCCESS_PREFIXES`; deleting a production entry also deletes its corresponding test case. Baseline: 37 tests passed. Ten individual prefix deletions each left 36 passing tests; only the underscore completion prefix and colon success prefix were independently protected. This was verified against the two relevant test modules, not the entire repository suite.
+4. **B — Vocabulary is narrower than its concepts:**
+   - `_INTRINSIC_REWARD_CONTEXT_MARKERS` represents intrinsic-reward exploration terminology but omits the hyphenated spelling used by the docstring itself.
+   - `_INTRINSIC_REWARD_WIN_MARKERS` represents positive improvement claims but omits the outperforming wording below.
+   - `_INTRINSIC_REWARD_DIAGNOSTIC_OR_NULL_MARKERS` represents diagnostic reporting and explicit non-wins but omits the failed-improvement wording below.
 
-5. **Other requested classes:** The supplied body contains no direct dictionary-field reads; the repository helper behind `_verdict_text(d)` handles the documented wrapper and skips lists, numbers, and None. The actual prefixes include separators, so no interior-word collision was established. No numeric thresholds, hardcoded absolute paths, filesystem writes, or measurements occur in this function; the focused test bodies do not write historical artifacts.
+5. **C — Mutation survivors:** Removing the ARC guard, context guard, or final win requirement individually preserved all 10 focused test functions. Every one of the 37 individual marker deletions also survived those tests. The wins, solved, and honest_null markers are strictly redundant with shorter neighbouring markers; deleting the entire diagnostic/null guard did fail tests.
 
-## COUNTEREXAMPLE
+6. **Field extraction:** The supplied function contains no direct dictionary-field reads. `text = _arc_live_claim_text(d)` delegates extraction; the repository’s verification pipeline normalizes top-level principle wrappers before calling this predicate. No pipeline wrapper defect was established.
 
-```json
-{
-  "honest_verdict": "success rate remains unmeasured: stopped after 5 of 20 seeds",
-  "verdict_class": "partial"
-}
-```
-
-Observed: VERDICT_PREFIX_CLASS_CONTRADICTION, severity warn. Both fields honestly describe unfinished work.
-
-## MISSED INPUT
-
-```json
-{
-  "honest_verdict": "completed_successfully",
-  "verdict_class": "partial"
-}
-```
-
-Observed: no flags. The verdict string already occurs in `results/experiment_1773_latent_benchmark.json`; the contradictory class is added here, not attributed to that historical artifact.
-
-Also verified: `" complete_v563_independent_exact_root: immutable rows verified"` with class `"partial"` produces no flags; removing the leading space triggers the warning.
-
-## RECOMMENDATION
-
-NEEDS_REDESIGN
-
-## RATIONALE
-
-The recognizer silently misses plausible completion claims while warning on honest negative prose. Define completion labels and their normalization explicitly, distinguish unsupported wording from verified consistency, and test the accepted vocabulary independently of the production tuple.
-
-
-## adversarial_verify.py::_arc_claimed_level
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The name `_arc_claimed_level` implies extraction of an artifact’s claimed ARC level; there is no docstring defining accepted representations.
-
-## FINDINGS
-1. **A/F — Silent non-firing:** `v = d.get(k)` followed by `if isinstance(v, (int, float)) and not isinstance(v, bool):` silently ignores per-game level dictionaries. The counterexample claims level 2 but produces None, indistinguishable from no level field. The repository’s upstream annotation normalization does not convert per-game dictionaries into numbers.
-
-2. **Field extraction:** The same branch ignores principle-wrapped values, lists, numeric strings, and None for all three keys. Wrapped numeric counts are valid under the stated convention. The main verifier normalizes annotation wrappers beforehand, so wrapper rejection alone does **not** establish an end-to-end bypass.
-
-3. **B — Vocabulary narrower than concept:** `("reproduced_levels", "reached_level", "levels_completed")` represents ARC level-claim fields but omits the corpus-used spelling levels_reproduced. Exact lookup provides no warning when a level claim uses another spelling.
-
-4. **Numeric conversion failure:** `int(v)` accepts floats into the branch without checking finiteness. NaN raises ValueError; infinity raises OverflowError. These are uncaught exceptions, not useful lint determinations.
-
-5. **C — Demonstrated coverage gaps:** Removing `"reached_level"` or `"levels_completed"` individually left all 14 tests in the repository’s ARC self-solve test module passing. Removing `"reproduced_levels"` failed five. This establishes missing independent coverage in that module; whole-suite mutation survival was not tested.
-
-6. **Boundaries and claim fidelity:** There are no explicit threshold comparisons or documented equality requirements. However, `int(v)` truncates fractional claims, and `best = max(best if best is not None else 0, int(v))` converts negative-only inputs to zero. No docstring establishes whether those coercions are intended.
-
-7. **Remaining classes:** No free-text matching, substring-boundary issue, negation issue, absolute path, filesystem write, or measurement timing exists in this function. Its tuple iteration performs exact key lookup.
-
-## COUNTEREXAMPLE
-```json
-{
-  "game": "bp35",
-  "offline_reproduced": true,
-  "reproduced_levels": {"bp35": 2}
-}
-```
-Actual return: None. The per-game mapping is a representation used by project fixtures; the claimed level disappears.
-
-## MISSED INPUT
-`"reproduced_levels": {"bp35": 2}`
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-`return best` collapses missing data and unsupported claim representations into the same result, allowing a substantive level claim to disappear silently. Extraction needs an explicit representation contract and a distinguishable invalid or unrecognized outcome; adding another field spelling alone leaves the structural defect intact.
-
-
-## adversarial_verify.py::_is_arc_solve_claim
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Recognize hidden-game solve claims requiring true offline reproduction and `a numeric level >= 1 AND a game id`.
-
-## FINDINGS
-1. **A/B/F — Silent bypass through an omitted level spelling.** Repository inspection shows `_arc_claimed_level(d)` recognizes reproduced_levels, reached_level, and levels_completed, but omits levels_reproduced—a real field in results/experiment_program_gen_tu93.json. These names represent completed/reproduced level counts. The counterexample below returns False, and the caller silently skips provenance enforcement despite explicitly declared outer-loop solving.
-
-2. **Field extraction assumptions.** `if d.get("offline_reproduced") is not True or not isinstance(d.get("game"), str):` requires a literal boolean and bare string. Principle-wrapped values, lists, and None return False. However, the normal verification entry point unwraps principle annotations before calling this function; wrapping alone is therefore a direct-call limitation, not a demonstrated pipeline bypass.
-
-3. **Game ID validation contradicts the claim.** `isinstance(d.get("game"), str)` accepts empty and whitespace-only strings. Those contain no game ID, yet otherwise qualifying artifacts are classified as solve claims and can receive provenance warnings.
-
-4. **C — Four independently removable conditions lack regression protection.** I executed all 14 existing self-solve tests against the original and four separate in-memory mutations. Deleting the offline-reproduction guard, game-type guard, `lvl is not None`, or `lvl >= 1` individually left all 14 passing. Full-suite mutation survival was not tested.
-
-5. **Other requested classes.** `lvl >= 1` correctly includes exactly one. The supplied function contains no substring matching, negation-sensitive text scanning, hardcoded paths, writes, or measured-operation timing. The inspected self-solve tests do not write historical artifacts.
-
-## COUNTEREXAMPLE
-```json
-{
-  "offline_reproduced": true,
-  "game": "tu93",
-  "levels_reproduced": 1,
-  "solve_provenance": "outer_loop_re"
-}
-```
-False negative: the predicate returns False and the caller produces no outer-loop-solve flag. Changing only levels_reproduced to reproduced_levels makes the predicate return True and triggers critical flags.
-
-## MISSED INPUT
-`levels_reproduced`: an existing corpus field spelling for the numeric level count, omitted by the delegated recognizer.
-
-## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
-
-## RATIONALE
-The level recognizer mistakes an unfamiliar spelling of an existing measurement for absence of a solve claim, silently disabling enforcement. Recognize the established level-count representations and add independent regressions for omitted spellings, missing IDs, missing levels, and the exact threshold.
-
-
-## adversarial_verify.py::_arc_registry_level
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-
-SILENT_NON_FIRING
-
-## CLAIM
-
-Return the registry’s recorded reproduced-level count for a game, or None when unknown.
-
-## FINDINGS
-
-1. **A — Confirmed silent bypass.** A principle-wrapped recorded level fails `if isinstance(lv, (int, float)) and not isinstance(lv, bool):`, leaving `return best` to return None. Reproduced against the caller: an already-recorded level-2 solve produces no duplicate flag with the wrapped registry value; the equivalent bare value produces a critical flag.
-
-2. **Field extraction assumptions.** Every dictionary read assumes an unwrapped representation:
-   - `reg.get("games")` requires a bare list; an annotated collection reaches `if not isinstance(entries, list):` and returns None.
-   - `e.get("game") == game` requires the bare identifier; a wrapped identifier, list, or None silently fails equality.
-   - `lv = e.get("levels_reproduced")` requires a bare integer or float; wrappers, numeric strings, lists, and None are silently ignored. Boolean exclusion is correct. Unsupported shapes receive no diagnostic.
-
-3. **F / docstring mismatch — Registry failure becomes missing knowledge.** `except Exception:` followed by `return None` suppresses missing dependencies, unreadable files, and malformed YAML. These states are indistinguishable from an unknown game, and the caller skips duplicate enforcement. The documented `None if unknown` therefore also means verification unavailable, without reporting that distinction.
-
-4. **C — The enforcement lookup can disappear while its focused tests remain green.** All 14 tests in tests/python/test_adversarial_verify_arc_self_solve.py passed normally and again with this helper replaced by an unconditional None result. The duplicate regression test explicitly accepts a missing lookup. This proves the focused suite does not require successful registry lookup; it does not establish coverage elsewhere.
-
-5. **Numeric validation — Accepted floats can escape the exception handler.** YAML non-finite numbers pass the numeric type guard, but `int(lv)` raises ValueError for NaN or OverflowError for infinity. Conversion occurs outside the protected block, violating best-effort behavior. Nonintegral floats also undergo silent truncation.
-
-6. **Remaining classes:** No free-text matching or negation checks occur here; no substring-boundary issue exists. There is no threshold comparison with an identifiable equality error, and no evidenced omitted vocabulary member. `Path(__file__).resolve().parents[1]` derives the path correctly; the helper only reads, writes no tracked state, and computes no operation-duration metric.
+7. **Other requested classes:** No numeric thresholds, absolute write targets, tracked-state writes, or measurements occur in this function. The inspected focused tests write temporary artifacts. Its docstring is contradicted in both directions: affirmative wins are missed, and non-winning activity is classified as a win.
 
 ## COUNTEREXAMPLE
 
-Registry fragment:
+For each verdict below, use this artifact fragment, substituting the verdict:
 
-```yaml
-games:
-  - game: tu93
-    levels_reproduced:
-      principle: Only independently reproduced levels count.
-      value: 9
-```
-
-Artifact fragment:
-
-```json
-{
-  "offline_reproduced": true,
-  "game": "tu93",
-  "reproduced_levels": 2,
-  "solve_provenance": "live_agent_self_discovery"
-}
-```
-
-The helper returns None instead of 9, and the caller emits no duplicate-solve flag.
-
-## MISSED INPUT
-
-```json
-{"game": "tu93", "levels_reproduced": {"principle": "Only independently reproduced levels count.", "value": 9}}
-```
-
-## RECOMMENDATION
-
-NEEDS_REDESIGN
-
-## RATIONALE
-
-Unknown games, unreadable registries, and unhandled annotations collapse into the same result, silently disabling enforcement. Unwrap supported annotations, distinguish unavailable verification from absent records, validate integer counts, and require tests that fail when successful lookup is removed.
-
-
-## adversarial_verify.py::_is_arc_artifact
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-By its name, `_is_arc_artifact` claims to identify ARC artifacts; it has no docstring.
-
-## FINDINGS
-
-1. **A / silent non-firing:** `isinstance(d.get("game"), str)` rejects the principle-wrapped game identifier in MISSED INPUT. Isolated execution returned false for that artifact and true when the same identifier was a bare string. Neither subsequent branch examines the wrapped game value.
-
-2. **Field extraction, line 2:** `text = f"{d.get('experiment', '')} {d.get('honest_verdict', '')} {d.get('mode', '')}".lower()` formats all three fields without unwrapping or validating them. Dictionaries contribute annotation prose and dictionary keys alongside their values; lists contribute their representations; explicit nulls become inert text. Wrapping a textual marker does not necessarily hide it, but annotation prose can introduce an unrelated marker and cause a false positive.
-
-3. **Substring boundaries, line 3:** `"arc" in text` matches inside ordinary words, including the search example in COUNTEREXAMPLE. `any(g in text for g in _ARC_GAME_IDS)` likewise permits game identifiers inside longer identifiers. Neither check enforces token boundaries; underscore-delimited tokens need boundaries that explicitly accommodate underscores.
-
-4. **Unvalidated game identity, line 3:** `isinstance(d.get("game"), str)` accepts every string, including an empty string or the name of an unrelated game. It checks representation type rather than ARC membership. This makes the implementation broader than its name claims.
-
-5. **Negation/context blindness:** `"arc" in text` treats an explicit statement excluding ARC experiments as evidence that the artifact belongs to ARC. It also treats ARC mentioned only in annotation prose as identity evidence. Both behaviors were reproduced with isolated inputs.
-
-6. **B / patterns narrower than their concept:** The three fields read into `text` stand for ARC-identifying metadata, but omit schema metadata and non-string game values. The additional schema example in MISSED INPUT demonstrates that omission. `_ARC_GAME_IDS` stands for recognized ARC game identifiers; its definition is absent from the supplied snippet, and no specific missing identifier is established here.
-
-7. **C / mutation coverage:** No repository-suite mutation run was performed, so no rule can honestly be declared deletable with the suite still green. The three alternatives are not inherently redundant: a game field, ARC text, and game-ID-only text can each provide independent recognition.
-
-8. **Remaining classes:** There are no numeric thresholds, absolute paths, writes, or measurements in this function, so no boundary, D, E, or G defect is present here. For F, unmatched inputs return false without distinguishing unrecognized ARC evidence from genuinely unrelated artifacts; the wrapped-game example demonstrates a real silent exclusion. A natural regression test can use in-memory dictionaries without writing historical artifacts.
-
-## COUNTEREXAMPLE
-
-False positive: this unrelated search experiment returns true.
-
-```json
-{
-  "experiment": "experiment_9000_search_ablation",
-  "honest_verdict": "measured_improvement",
-  "mode": "evaluation"
-}
-```
-
-Additional reproduced false positives:
-
-```json
-{"game": ""}
-```
-
-```json
-{"game": "chess"}
-```
-
-```json
-{"honest_verdict": "language_model_only; no ARC experiments were performed"}
-```
-
-## MISSED INPUT
-
-This genuine ARC game artifact returns false. Replacing the wrapped game field with the bare string `"ft09"` changes the result to true.
-
-```json
-{
-  "experiment": "experiment_9000",
-  "game": {
-    "principle": "Record the evaluated game identifier.",
-    "value": "ft09"
-  },
-  "honest_verdict": "live_agent_first_win",
-  "mode": "evaluation"
-}
-```
-
-This artifact also returns false despite its explicit ARC schema:
-
-```json
-{
-  "experiment": "experiment_9000",
-  "schema": "carnot.arc.value_routing.v1",
-  "honest_verdict": "live_agent_first_win",
-  "mode": "evaluation"
-}
-```
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Isolated execution reproduced silent exclusion of a wrapped ARC game and false recognition of unrelated search artifacts. Unwrap field values, validate game identity, recognize explicit schema metadata, and apply token-aware matching to actual values rather than annotation prose.
-
-
-## adversarial_verify.py::_arc_live_claim_text
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The name implies extracting an artifact’s ARC live-claim text; the function has no docstring and performs no detection itself.
-
-## FINDINGS
-1. **A/B/F — Fixed field selection silently drops claims.** `_ARC_LIVE_CLAIM_TEXT_KEYS` selects six fields in the repository but omits headline_result, an actual artifact field used by experiments 439–441. In a reproduced ARC fixture, moving the identical positive claim from headline to headline_result makes the offline-for-live warning disappear. An omitted claim produces the same output as no claim.
-
-2. **Field extraction/context — Structured values contaminate claim text.** The line `return " ".join(str(d.get(key, "")) for key in _ARC_LIVE_CLAIM_TEXT_KEYS).lower()` serializes entire objects, including annotation principles and dictionary keys. A summary containing a list of annotated values therefore treats explanatory metadata as an experimental assertion. I reproduced an honest offline-only artifact receiving the offline-for-live warning solely because its principle describes when a live-win claim would be justified. Conversely, adding a principle mentioning a null result suppresses a genuine positive claim. Top-level wrappers are normalized upstream; annotations inside lists survive.
-
-3. **Other classes and coverage limits.** The only `in` iterates field names; this helper contains no substring recognizer, numeric threshold, absolute path, write, or timing measurement. It has no terminal skip branch, although omitted fields silently disappear through selection. Full-suite mutation coverage was not tested, so no individual field selection is established as deletable.
-
-## COUNTEREXAMPLE
 ```json
 {
   "game": "ar25",
-  "honest_verdict": "complete: offline detector evaluation",
-  "offline_loo_auroc": 0.725,
-  "summary": [
+  "honest_verdict": "complete: curiosity exploration failed to improve",
+  "intrinsic_bonus_delta": 0.37
+}
+```
+
+| Verdict | Expected predicate | Actual predicate |
+|---|---:|---:|
+| `complete: curiosity exploration failed to improve` | false | true |
+| `complete: curiosity_exploration_window_profiled` | false | true |
+| `success: curiosity exploration win after environment unblocked` | true | false |
+| `success: intrinsic-reward strategy outperforms baseline` | true | false |
+| `complete: curiosity exploration outperforms baseline` | true | false |
+
+The first two produce false intrinsic-reward overclaim warnings. The remaining three silently bypass that check.
+
+## MISSED INPUT
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "success: curiosity exploration win versus null baseline",
+  "intrinsic_bonus_delta": 0.37
+}
+```
+
+No downstream delta is supplied. Expected: recognize the win claim and warn. Actual: predicate false; zero intrinsic-reward warnings. Verified through the artifact verification entry point.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+Substring co-occurrence and an unconditional diagnostic veto do not establish whether a headline asserts a win. Temporary-artifact verification reproduced silent misses and false warnings despite 10 passing focused tests; lint passed, while repository-wide spec coverage reported 1,142 missing references. Claim recognition needs boundaries, clause-specific negation handling, broader terminology coverage, and independently exercised rules.
+
+
+## adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_is_intrinsic_reward_downstream_delta_key` claims to recognize intrinsic-reward downstream delta keys; the function has no docstring.
+
+## FINDINGS
+
+1. **A — Silent non-firing:** `kl.endswith(f"_{wanted}")` accepts arbitrary prefixes, including prefixes identifying targets or predictions. In the repository caller, a numeric target therefore counts as measured downstream evidence and suppresses the intrinsic-reward overclaim warning. The counterexample below produced zero such warnings despite containing no measured downstream delta.
+
+2. **B / 5 — Recognition is narrower than its concept:** `_INTRINSIC_REWARD_DOWNSTREAM_DELTA_KEYS` represents downstream performance changes. A real omitted member is first_win_rate_delta_vs_bare, present in results/experiment_4621_integration_gate.json. `kl == wanted or kl.endswith(f"_{wanted}")` rejects comparison-qualified names because the comparison follows the metric suffix. A positive curiosity claim using that measured delta receives a false warning. The list also omits the corpus’s coverage_delta alias.
+
+3. **C — Acceptance behavior is untested by the relevant suite:** All 10 tests in tests/python/test_adversarial_verify_hardening_4635.py passed normally. Replacing this entire recognizer in memory with an always-false function still passed all 10 tests; the replacement was called 30 times. Consequently, that suite does not enforce either the exact-match or suffix-match acceptance behavior. This does not establish that the entire repository suite would remain green.
+
+4. **Scope checks:** `kl.endswith(f"_{wanted}")` requires an underscore boundary; no accidental match inside an unrelated longer word was demonstrated. There are no dictionary-field reads, free-text negation scans, numeric thresholds, filesystem writes, absolute paths, or measurements in this helper. Principle wrappers apply to field values, not JSON object keys. An unrecognized key returns false, so the default does not itself grant permission to skip the caller’s warning.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "success: curiosity_exploration_win",
+  "intrinsic_bonus_delta": 0.37,
+  "target_solve_rate_delta": 0.12
+}
+```
+
+False negative: the helper recognizes the target as downstream evidence, and the caller emits no intrinsic-reward overclaim warning.
+
+## MISSED INPUT
+`"target_solve_rate_delta": 0.12` in the bonus-only curiosity-win fragment above: a target substitutes for a measurement, silently bypassing the warning.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The predicate accepts misleading qualifiers while rejecting legitimate comparison-qualified measurements. Recognition must distinguish measured evidence from targets and predictions, support established metric naming conventions, and have acceptance tests that fail when recognition is disabled.
+
+
+## adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Find real downstream delta fields outside metadata principle prose.`
+
+## FINDINGS
+
+1. **A/B — Existing measurement spelling silently missed.** The control-qualified first-win delta field in MISSED INPUT exists in results/experiment_4621_integration_gate.json. `_is_intrinsic_reward_downstream_delta_key(key)` rejects that spelling, so a finite downstream measurement returns False solely because its field name identifies the comparison control. The recognizer’s vocabulary is narrower than downstream deltas.
+
+2. **Field extraction — Wrapped measurements lose their metric name.** The line `if _is_intrinsic_reward_downstream_delta_key(key) and _is_finite_number(nested):` requires the metric’s immediate value to be numeric. When that value is a principle wrapper, recursion enters the wrapper without retaining the metric key; its numeric payload is then unrecognized. Top-level preprocessing repairs ordinary top-level wrappers, but nested wrappers still fail through the full verifier. A numeric list beneath a recognized metric key similarly loses its association. None is safely rejected.
+
+3. **B/context/docstring mismatch — Metadata numbers masquerade as measurements.** `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` represents “exclude metadata” using three exact names. It omits acceptance thresholds, schema examples, and test-fixture containers. Unrestricted recursion accepts matching numeric fields inside all three, despite no downstream measurement existing. The COUNTEREXAMPLE returns True and suppresses the intrinsic-reward warning through the full verifier. This directly contradicts the claim to find real measurements outside metadata.
+
+4. **C — The focused tests tolerate deleting the detector.** All 10 tests in tests/python/test_adversarial_verify_hardening_4635.py passed unchanged, then passed with each of these independent in-memory mutations: removing the metadata exclusion, removing dictionary recursion, removing list traversal, and replacing the entire helper with `return False`. Those regressions do not establish that any measured-evidence recognition works. Full repository mutation survival was not tested.
+
+5. **Remaining classes — No additional demonstrated defect.** The supplied body performs no free-text substring or negation matching and contains no numeric threshold, absolute path, write operation, or measurement calculation. Inspected fixture writes use temporary paths. Its terminal `return False` means evidence was not found; the inspected caller continues toward a warning, so that default is not itself the fail-open pattern described in F.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "game": "ar25",
+  "honest_verdict": "success: dense_curiosity_exploration_win_intrinsic_reward_up",
+  "intrinsic_bonus_delta": 0.37,
+  "acceptance_thresholds": {
+    "solve_rate_delta": 0.08
+  }
+}
+```
+
+False negative in the fabrication guard: the threshold is accepted as measured downstream evidence, suppressing the warning despite no downstream measurement.
+
+## MISSED INPUT
+
+```json
+{"first_win_rate_delta_vs_bare": 0.08}
+```
+
+Returns False. The field spelling already exists in results/experiment_4621_integration_gate.json.
+
+This nested principle-wrapped measurement also returns False and causes a false warning when attached to an otherwise qualifying exploration-win artifact:
+
+```json
+{
+  "per_game": [
     {
-      "principle": "Only measured live agent solved outcomes justify a success: claim.",
-      "value": "Offline detector evaluated; no live agent run was attempted."
+      "solve_rate_delta": {
+        "principle": "Measured difference versus the matched bare explorer.",
+        "value": 0.08
+      }
     }
   ]
 }
 ```
-False positive: the caller emits OFFLINE_SUBSTITUTED_FOR_LIVE. Removing the annotation prose eliminates that warning.
-
-## MISSED INPUT
-```json
-{
-  "game": "ar25",
-  "honest_verdict": "complete: offline detector evaluation",
-  "headline_result": "success: live_agent_first_win_efficiency_up_from_value_head",
-  "offline_loo_auroc": 0.725
-}
-```
-False negative: the positive headline is discarded and the offline-for-live warning does not fire. Putting the same string in headline triggers it.
 
 ## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
+NEEDS_REDESIGN
 
 ## RATIONALE
-The extraction both loses claim-bearing fields and admits explanatory metadata as claims. Read-only execution of the repository helper and its caller reproduced both failures. Define which fields carry assertions and extract their semantic values without treating annotation prose as results.
+Recognition discards the metric’s identity across wrappers while trusting matching numbers in arbitrary metadata containers. Preserve field identity during normalization, distinguish measured evidence from targets and examples, and add regressions that fail when those recognition branches are removed.
 
 
-## adversarial_verify.py::_claims_arc_live_search_win
+## adversarial_verify.py::_has_rising_intrinsic_reward_magnitude
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
+
 SILENT_NON_FIRING
 
 ## CLAIM
-`True if the artifact headlines a positive live-agent ARC search win.`
+
+“Find numeric intrinsic reward / curiosity bonus magnitude evidence.”
 
 ## FINDINGS
 
-1. **A/F — Positive claims silently bypass recognition.** The first artifact under MISSED INPUT explicitly claims an increased live-agent first-win rate, but `_ARC_POSITIVE_LIVE_CLAIM_MARKERS` recognizes none of its positive wording. Verified result: False; the caller consequently skips its offline-versus-live evidence check without reporting that recognition failed.
+1. **A / extraction / F — wrapped measurements silently disappear.** `and _is_finite_number(nested)` requires a bare number. Recursing through `if _has_rising_intrinsic_reward_magnitude(nested):` loses the original metric key: the wrapper’s numeric value is no longer associated with intrinsic reward. Confirmed that nested wrapped measurements suppress the caller’s warning. Top-level wrappers are repaired upstream; nested wrappers remain vulnerable.
 
-2. **Field extraction assumes an unwrapped string.** `d.get("solve_provenance") == "live_agent_self_discovery"` rejects a principle-wrapped provenance value that is semantically identical to the accepted bare string. Lists and None also fail this comparison without distinguishing malformed or unsupported input from absent live context. In the inspected helpers, wrapping the game identifier can independently defeat `_is_arc_artifact(d)`, while `_arc_live_claim_text(d)` stringifies wrapped fields and includes their principle annotations in the claim.
+2. **Extraction — numeric lists lose their meaning.** `return any(_has_rising_intrinsic_reward_magnitude(item) for item in value)` visits numeric elements without retaining their parent key, and scalar inputs reach `return False`. Consequently, an explicitly named intrinsic-reward series containing increasing measurements is missed. Nested dictionaries separating reward context from numeric measurement names suffer the same defect. None is safely rejected; dictionary and list traversal alone does not establish correct extraction.
 
-3. **Every marker scan lacks boundaries.** Both context/win scans and the positive/null assignments use `marker in text`. The offline-update counterexample below passes all three affirmative scans through substrings inside unrelated words. Conversely, the blocked marker matches inside an affirmative description of unblocked exploration and suppresses a real improvement claim.
+3. **B — spelling substitutes for the concept.** `_INTRINSIC_REWARD_MAGNITUDE_KEY_MARKERS` represents intrinsic-reward measurements but omits exploration-reward terminology; a concrete omitted field appears below. Conversely, matching a marker does not establish that the number measures reward magnitude. `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` represents metadata excluded from measurements; no concrete additional omitted metadata key was established.
 
-4. **Negation and scope are ignored.** `positive = any(marker in text for marker in _ARC_POSITIVE_LIVE_CLAIM_MARKERS)` recognizes a negated solved claim as positive. Conversely, `return positive and not null` lets any null marker veto the entire headline, including a statement that the statistical null hypothesis was rejected. These are verified false positives and false negatives.
+4. **Substring / negation / context — unrelated numbers become evidence.** `any(marker in kl for marker in _INTRINSIC_REWARD_MAGNITUDE_KEY_MARKERS)` applies unrestricted substring matching to keys. It accepts a negated reward name, a disabled-event counter, and a curiosity configuration weight. No free-text forbidden-phrase scan exists here, but key negation and measurement context are ignored.
 
-5. **B — All four marker lists underdefine their concepts.** `_ARC_LIVE_CONTEXT_MARKERS` represents live/scored-agent execution but omits the underscore-separated scored-agent form. `_ARC_LIVE_WIN_MARKERS` represents search performance but omits ordinary win-rate wording. `_ARC_POSITIVE_LIVE_CLAIM_MARKERS` represents improvement but omits increased-rate wording. `_ARC_NULL_LIVE_CLAIM_MARKERS` represents nonpositive outcomes but omits explicitly negated improvement. Concrete examples appear below.
+5. **Name / thresholds — positive does not mean rising.** `_has_rising_intrinsic_reward_magnitude` never compares observations: `and float(nested) > 0.0` accepts positive measurements even when the reward decreased. Its docstring’s magnitude-evidence claim is also broader than the implementation’s strictly positive scalar recognition. Exactly zero returns false; no independent off-by-one defect is established.
 
-6. **C — Several named patterns are behaviorally redundant.** Two longer live-context entries are subsumed by the shorter live entry; the solved win entry is subsumed by solve; the honest-null entry is subsumed by null. Each can be deleted from this function’s matching logic without changing its outputs, so behavioral tests cannot establish independent coverage. Read-only deletion probes confirmed this redundancy; full-suite mutation testing was not run.
+6. **C — demonstrated mutation gaps.** All 10 tests in the focused regression file passed after individually deleting each magnitude marker. They also passed after separately deleting `and float(nested) > 0.0`, the metadata-skip branch, or the list branch. These are verified gaps in that test file; the full suite was not mutation-tested.
 
-7. **The implementation is both narrower and broader than its claim.** It misses straightforward positive headlines while accepting negated outcomes, incidental substrings, and explanatory principle prose as affirmative claims.
-
-8. **Numeric boundaries and D/E/G:** No numeric threshold, absolute write target, tracked-state write, or measured operation occurs in this function. Those defect classes are not demonstrated here.
+7. **D / E / G — no defects established.** The supplied helper computes no filesystem paths, performs no writes, and measures no duration or counter. The inspected regression tests write their artifact fixtures to temporary directories.
 
 ## COUNTEREXAMPLE
 
-Verified false positive:
-
 ```json
 {
-  "game": "lp85",
-  "honest_verdict": "complete: offline ARC solver update delivered",
-  "offline_loo_auroc": 0.725
-}
-```
-
-Expected recognition: False. Actual: True, causing the caller to emit an offline-substituted-for-live warning. Context matches inside “delivered”; the win marker matches inside “solver”; positivity matches the beginning of “ update”.
-
-With the same game and offline metric, these honest negative verdicts also return True:
-
-```text
-Live agent has not solved lp85.
-live_agent_first_win_efficiency_not_improved
-```
-
-A wrapped field can manufacture a positive claim from its principle alone:
-
-```json
-{
-  "game": "lp85",
-  "honest_verdict": {
-    "principle": "Report live first_win improvements honestly.",
-    "value": "complete: offline detector calibration"
+  "game": "ar25",
+  "honest_verdict": "success: dense_curiosity_exploration_win_intrinsic_reward_up",
+  "reward_metrics": {
+    "intrinsic_bonus_delta": {
+      "principle": "Measured intrinsic-bonus increase versus the previous checkpoint.",
+      "value": 0.37
+    }
   }
 }
 ```
 
-Expected: False. Verified actual: True.
+The helper returns false despite explicit positive intrinsic-bonus evidence. Confirmed through the complete verifier: the intrinsic-reward-without-downstream-gain warning is absent.
+
+Additional confirmed helper misclassifications:
+
+- `{"intrinsic_reward": [0.11, 0.48]}` → false.
+- `{"loop_config": {"dense_curiosity_weight": 0.15}}` → true, despite containing only configuration.
+- `{"nonintrinsic_reward_mean": 0.37}` → true.
+- `{"intrinsic_reward_disabled_count": 12}` → true.
+- `{"mean_intrinsic_reward_before": 0.48, "mean_intrinsic_reward_after": 0.11}` → true, despite decreasing reward.
 
 ## MISSED INPUT
 
-Verified false negative that also suppresses the caller’s evidence warning:
+```json
+{"exploration_reward_delta": 0.37}
+```
+
+A plausible intrinsic exploration-bonus measurement returns false. In an ARC curiosity-win artifact without downstream deltas, this spelling suppresses the warning.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+Confirmed inputs silence the warning merely by changing measurement representation, while configuration values can masquerade as reward evidence. Preserve metric context through recursion, unwrap annotated measurements, and distinguish reward observations from configuration, counters, and direction of change.
+
+
+## adversarial_verify.py::_goal_energy_claim_text
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+The name `_goal_energy_claim_text` implies extracting artifact claim text for goal-energy checks; it has no docstring.
+
+## FINDINGS
+
+1. **A — Confirmed silent miss:** `str(d.get(key, ""))` includes nested annotation prose in claim text. The counterexample’s principle mentions honest_null, which makes the caller suppress its missing-ablation warning despite an unchanged positive claim. Removing only the summary restores the warning.
+2. **Field extraction/context:** The same expression serializes dicts and lists instead of extracting their substantive values; None becomes textual none. The main verifier unwraps top-level principle fields, so a simple wrapped verdict is protected there, but nested annotations remain exposed.
+3. **B — Incomplete field selection:** `_GOAL_ENERGY_CLAIM_TEXT_KEYS` represents claim-bearing artifact text, but its repository definition omits interpretation, a field present in actual goal-energy artifacts. Moving the same positive claim into that field makes the warning disappear.
+4. **C — Demonstrated test gap:** An in-memory mutation retaining only honest_verdict extraction removed headline, headline_outcome, title, claim, summary, goal_energy_source, and chosen_submitted_config. All 21 focused hardening/wrapper tests still passed. Full-suite mutation survival was not established.
+5. **Other classes:** This helper contains no free-text matching predicate, numeric threshold, absolute path, write operation, recognizer fallback, or measurement. No independent boundary, off-by-one, or D–G defect is established here.
+
+## COUNTEREXAMPLE
 
 ```json
 {
-  "game": "lp85",
-  "honest_verdict": "live_agent_first_win_rate_increased_from_0.20_to_0.35_on_lp85",
-  "offline_loo_auroc": 0.725
-}
-```
-
-Other positive headlines missed with the same game:
-
-```text
-scored_agent_first_win_rate_up_on_lp85
-live_agent_win_rate_up_on_lp85
-Live agent solved lp85 with fewer actions; rejected the null hypothesis.
-live_agent_first_win_efficiency_improved_with_unblocked_exploration
-```
-
-Verified wrapper-dependent false negative:
-
-```json
-{
-  "game": "lp85",
-  "honest_verdict": "first_win_rate_up",
-  "solve_provenance": {
-    "principle": "Attribute progress to the actual execution source.",
-    "value": "live_agent_self_discovery"
+  "experiment": "experiment_4647_goal_energy_audit",
+  "game": "ar25",
+  "honest_verdict": "success: goal_energy_live_generation_firstwin_up_4",
+  "solve_rate_delta": 0.08,
+  "summary": {
+    "solve_rate_delta": {
+      "principle": "A positive measured gain rules out an honest_null.",
+      "value": 0.08
+    }
   }
 }
 ```
 
-The bare provenance string returns True; its permitted wrapped equivalent returns False.
+Confirmed through the real verifier: no goal-energy-without-ablation warning. Removing summary produces that warning.
+
+## MISSED INPUT
+
+```json
+{
+  "experiment": "experiment_4647_goal_energy_audit",
+  "game": "ar25",
+  "honest_verdict": "complete: live experiment finished",
+  "interpretation": "success: goal_energy_live_generation_firstwin_up_4",
+  "solve_rate_delta": 0.08
+}
+```
+
+Confirmed: the positive claim is absent from the extracted text, and the missing-ablation warning does not fire.
 
 ## RECOMMENDATION
+
 NEEDS_REDESIGN
 
 ## RATIONALE
-Recognition conflates unsupported wording with a genuine negative result, allowing positive claims to bypass the evidence check silently. Normalize wrapped values, exclude principle prose, and distinguish affirmative claims, negated claims, and unrecognized inputs explicitly; adding individual tokens will preserve the underlying failure.
+
+Claim extraction must preserve substantive values while excluding annotation prose, including nested annotations. Its field selection must cover actual claim-bearing artifact fields, with independent tests proving each supported extraction route matters. The current tests remain green when seven extraction routes are deleted.
 
 
-## adversarial_verify.py::_has_measured_arc_live_metric
+## adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -536,58 +366,94 @@ Recognition conflates unsupported wording with a genuine negative result, allowi
 SILENT_NON_FIRING
 
 ## CLAIM
-“Return true for real metric fields, not prose-only field principles.”
+The name `_has_positive_goal_energy_baseline_win_evidence` claims to recognize positive evidence that goal energy beats a baseline; the function has no docstring.
 
 ## FINDINGS
-1. **A — confirmed silent bypass.** `isinstance(value, (dict, list, bool))` accepts empty containers and status booleans as measured evidence. The COUNTEREXAMPLE returns true and suppresses the caller’s offline/live warning despite containing no measured live result. Verified through the actual verifier.
 
-2. **Field extraction validates container type, not contents.** `if value is None:` rejects only bare nulls. Both recognition branches accept dictionaries without checking whether they contain measurements, explanatory prose, or a wrapped null. Proper principle/value wrappers are normalized upstream in the main verifier, so their direct-helper failure must not be confused with an end-to-end bypass; principle-only dictionaries and empty containers survive that normalization and still bypass the warning.
+1. **A/B/F — Existing metric vocabulary silently misses the check.** `_GOAL_ENERGY_POSITIVE_DELTA_KEYS` represents positive improvements, and `_GOAL_ENERGY_BASELINE_PAIRS` represents goal-energy versus baseline comparisons. Both omit the winner-generation metrics shown in MISSED INPUT, whose field names already appear in experiment 4594. Reproduction through the file-level verifier produced no goal-energy ablation warning despite a positive generation claim, positive comparative measurements, and no ablation evidence. `return False` conflates unsupported vocabulary with absent positive evidence; the caller consequently skips the warning.
 
-3. **Matching ignores measurement context and negation.** `kl.startswith("live_")` accepts configuration and status fields. `any(marker in kl for marker in _ARC_LIVE_METRIC_KEY_MARKERS)` also accepts names describing targets, thresholds, or explicitly unmeasured metrics. Verified examples appear below. There are no free-text verdict scans in this helper; the blindness concerns field names.
+2. **B — The Boolean vocabulary also underdefines its concept.** `_GOAL_ENERGY_BEATS_BASELINE_KEY_MARKERS` represents affirmative declarations that goal energy outperformed a baseline. The alternate declaration in MISSED INPUT returns False. Conversely, `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` represents descriptive metadata to exclude, but requirement declarations outside its enumerated names can count as evidence, as COUNTEREXAMPLE demonstrates.
 
-4. **B — the exclusions enumerate metadata names instead of recognizing metadata.** `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` represents the concept “descriptive metadata is not measurement evidence.” Its three entries omit plausible metadata containers carrying a live prefix; the principle container below returns true even through the main verifier’s normalization.
+3. **2/3 — Substring matching accepts negation and requirements as measured wins.** `any(marker in kl for marker in _GOAL_ENERGY_BEATS_BASELINE_KEY_MARKERS)` combined with `value is True` accepts matching text anywhere in a field name. A negated assertion or a declaration that a comparison is required therefore returns True. These are key-name matches; the function scans no verdict prose and performs no contextual interpretation.
 
-5. **B — metric recognition is narrower than live measurement.** `_ARC_LIVE_METRIC_KEY_MARKERS` represents quantitative live ARC outcomes, but omits completed-level counts, a field already present in repository ARC artifacts. The corresponding fragment below returns false. Conversely, `"_offline" in kl` rejects an entire mixed live/offline comparison container even when it contains a measured live result.
+4. **2/5 — Suffix matching admits the wrong comparison.** `kl == wanted or kl.endswith(f"_{wanted}")` has an underscore boundary, but imposes no restriction on the preceding scope. An offline improvement returns True even when the explicit live goal-energy/baseline pair records a regression. The early `return True` prevents the contradictory pair from being examined.
 
-6. **C — the positive regression test does not exercise this protection.** Independently deleting either recognition branch, the metadata exclusion, the offline exclusion, boolean acceptance, or any of the six metric markers left all three existing offline/live guard tests passing in direct execution. The supposedly positive live-metric exemplar makes no positive live-win claim, so its caller exits before consulting this helper. Full-repository mutation survival was not established. Separately, `if value is None:` is redundant because the later predicates already reject bare nulls.
+5. **1 — Scalar extraction depends on normalization outside this function.** `_is_finite_number(value)` and `value is True` reject principle-wrapped scalars. The paired reads, `goal = _finite_float(d, goal_key)` and `baseline = _finite_float(d, baseline_key)`, likewise reject wrappers because that helper does not unwrap them. Lists and None produce no evidence. Direct wrapped calls demonstrably return False; the file-level verifier already normalizes wrappers, so that entry point does not exhibit this particular bypass.
 
-7. **Other requested classes:** No numeric thresholds or off-by-one comparisons occur here. No absolute paths, filesystem writes, or prematurely evaluated measurements occur here. `return False` reports absent recognized evidence; it is not itself a permissive unknown-input default. The related tests inspected write temporary artifacts and read the historical exemplar.
+6. **1/A — Nested measurements are invisible to the helper.** `for key, value in d.items():` examines only immediate fields, and the paired lookups also address only that dictionary. The nested comparison in MISSED INPUT returns False. The file-level verifier also missed this container; its preprocessing does not flatten every possible measurement container.
+
+7. **C — Two complete evidence routes lack independent regression protection.** Deleting the entire numeric-delta branch left all 11 focused tests passing. Deleting the entire Boolean branch also left all 11 passing. Their fixtures supply overlapping paired-metric evidence. Deleting the paired-metric branch failed one test, confirming that route has independent coverage. This establishes surviving mutations in the focused suite, not the entire repository suite.
+
+The strict comparisons `float(value) > 0.0` and `goal > baseline` correctly exclude zero improvement and ties; no off-by-one defect was found. The supplied function contains no absolute paths, writes, tracked-state mutation, or duration/counter measurement: D, E, and G have no finding.
 
 ## COUNTEREXAMPLE
+
+Each independent fragment returns True.
+
+A negated win assertion:
+
+```json
+{"no_goal_energy_beats_baseline": true}
+```
+
+A requirement declaration rather than an observed result:
+
+```json
+{"goal_energy_beats_baseline_check_required": true}
+```
+
+An offline improvement despite a live regression:
+
 ```json
 {
-  "experiment": "experiment_4623_arc_live_overclaim_fixture",
-  "game": "ar25",
-  "honest_verdict": "success: live_agent_first_win_efficiency_up_from_value_head",
-  "offline_loo_auroc": 0.725,
-  "live_evidence": []
+  "offline_solve_rate_delta": 0.08,
+  "live_solve_rate_goal_energy": 0.04,
+  "live_solve_rate_baseline": 0.12
 }
 ```
 
-The helper returns **true**, causing the offline/live overclaim warning to be omitted. An empty list establishes no measurement.
-
-Additional verified helper inputs:
-
-| Input | Actual | Required by claimed distinction |
-|---|---:|---:|
-| `{"live_attempted": false}` | true | false |
-| `{"target_solve_rate": 0.8}` | true | false |
-| `{"solve_rate_not_measured": {"reason": "Live environment unavailable"}}` | true | false |
-| `{"live_metric_principles": {"first_win_rate": "Report measured live wins."}}` | true | false |
-| `{"levels_completed": 2}` | false | true for a measured live result |
-| `{"live_vs_offline": {"live": {"first_win_rate": 0.25}, "offline": {"first_win_rate": 0.75}}}` | false | true |
+These falsely satisfy the helper’s positive-evidence predicate.
 
 ## MISSED INPUT
-`"live_evidence": []` accompanying a positive live-win claim and offline AUROC evidence: the verifier misses the absence of measured live evidence and suppresses its warning.
+
+This plausible positive artifact uses existing project metric names. The helper returns False, and the file-level verifier emits no goal-energy ablation warning:
+
+```json
+{
+  "game": "ar25",
+  "headline": "energy-driven generation win: graded goal-energy raised live first-win",
+  "honest_verdict": "success: goal_energy_live_generation_firstwin_up_4",
+  "winner_generated_rate_with_energy": 0.12,
+  "winner_generated_rate_no_energy": 0.04,
+  "winner_generated_delta": 0.08
+}
+```
+
+An alternate affirmative declaration also returns False:
+
+```json
+{"goal_energy_outperforms_baseline": true}
+```
+
+A nested comparison also returns False and misses the warning when attached to the positive claim above:
+
+```json
+{
+  "generation_comparison": {
+    "live_solve_rate_goal_energy": 0.12,
+    "live_solve_rate_baseline": 0.04
+  }
+}
+```
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A matching field name and an accepted container type are treated as proof that measurement happened. Validate the underlying measured contents, distinguish outcomes from metadata and targets, and add positive-claim regressions that actually reach this helper.
+The predicate accepts negated or unrelated evidence while silently rejecting legitimate comparison schemas, and its caller turns rejection into a skipped check. Normalize supported measurement structures, require attributable affirmative comparisons, and distinguish unrecognized evidence from a measured non-win. Add independent tests for each evidence route, including mutations that remove competing routes.
 
 
-## adversarial_verify.py::_has_offline_auroc_metric
+## adversarial_verify.py::_claims_goal_energy_generation_win
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -595,49 +461,164 @@ A matching field name and an accepted container type are treated as proof that m
 SILENT_NON_FIRING
 
 ## CLAIM
-The name `_has_offline_auroc_metric` claims to identify whether an artifact contains an offline AUROC metric; the function has no docstring.
+`True when an ARC headline claims goal-energy drove live generation.`
 
 ## FINDINGS
-1. **A/F — Real offline evidence silently disappears.** The actual corpus field shown below reports offline AUROC on a cached-candidate substrate, but the helper returns false because the metric key lacks a recognized context substring. I reproduced a live-win claim using those fields through the normal verifier: the offline/live overclaim warning does not fire. The terminal `return False` makes unrecognized evidence indistinguishable from absent evidence.
 
-2. **Field shapes — Numeric scalars only.** The line `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS or not _is_finite_number(value):` skips dictionaries and lists without examining their contents. Direct principle-wrapped scalar calls fail, although normal preprocessing repairs ordinary top-level wrappers. Nested offline metrics and principle-wrapped metric containers still fail after normal preprocessing; both bypasses were reproduced.
+1. **A/F — A claim must already have recognized evidence before it receives scrutiny.** The final line, `return _has_positive_goal_energy_baseline_win_evidence(d)`, rejects explicit positive headlines when their measurements are missing, wrapped, nested, or recorded under an unrecognized name. The inspected caller then skips the ablation check without reporting that recognition failed. The MISSED INPUT below uses a metric name actually emitted by experiment 4737; it returns False and produces no goal-energy ablation warning.
 
-3. **B — The marker lists approximate concepts incompletely.** `_ARC_OFFLINE_AUROC_KEY_MARKERS` represents AUROC naming conventions, but omits the expanded name offline_area_under_roc_curve. `_ARC_OFFLINE_AUROC_CONTEXT_MARKERS` represents offline evaluation, but omits ordinary off_fold, oof, and heldout terminology and ignores context declared in other fields. Conversely, the metric marker “auc” accepts precision-recall AUC as AUROC.
+2. **Negation and unrelated context can disable detection.** `if any(marker in text for marker in _GOAL_ENERGY_DIAGNOSTIC_OR_NULL_MARKERS):` vetoes the entire artifact. Confirmed examples include a positive headline accompanied by a separate diagnostic sentence, a statement that the improvement is *not* a null result, and a reference to a nullspace projection. All suppress the warning. None retracts the positive headline.
 
-4. **Substring boundaries — Unrelated words establish offline context.** The line `if any(marker in kl for marker in _ARC_OFFLINE_AUROC_CONTEXT_MARKERS):` matches “loo” inside “lookahead”. An online metric named lookahead_auroc therefore returns true; I reproduced that result and the resulting offline/live warning. Both marker scans use unrestricted substring matching.
+3. **All four text tests use unrestricted substring matching.** The context, diagnostic/null, generation, and win branches each use `marker in text`. In the inspected marker definitions, generate matches inside degenerate, win matches inside window, and null matches inside nullspace. The counterexamples below demonstrate both false positives and false negatives. Context matching also accepts an explicit non-goal-energy attribution.
 
-5. **Context and metadata — A named quantity is treated as a measurement.** Numeric AUROC targets and sample counts return true even when no AUROC was computed. `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` represents nonmeasurement metadata through three exact names; it does not exclude ancillary fields such as offline_auroc_target. No verdict prose is scanned here, so free-text negation detection is inapplicable; the demonstrated defect is failure to distinguish a measurement from its supporting metadata.
+4. **Field wrappers contaminate text and disable numerical recognition.** There are no direct dictionary reads in the supplied body; extraction occurs through `text = _goal_energy_claim_text(d)` and the final evidence helper. The inspected extraction line is:
 
-6. **C — Individual patterns lack independent regression protection.** In-memory deletion checks executing all eight existing test functions in tests/python/test_adversarial_verify_hardening_4623.py directly remained 8/8 green after individually removing “auc”, any of the five context markers, or any of the three metadata exclusions. Removing “auroc” failed two tests. This establishes mutation survivors in that module; the full suite was not run. The metadata exclusions are also redundant with the remaining filters for their current names.
+   > return " ".join(str(d.get(key, "")) for key in _GOAL_ENERGY_CLAIM_TEXT_KEYS).lower()
 
-7. **Thresholds / D / E / G — No findings.** This function contains no numeric threshold, absolute filesystem target, write operation, or timing measurement. The inspected focused tests write their payloads to temporary paths.
+   This stringifies honest_verdict, headline, headline_outcome, title, claim, summary, goal_energy_source, and chosen_submitted_config. Wrapped dictionaries contribute their principle prose alongside their values; lists become representations, and None becomes text. Confirmed: a principle mentioning honest_null suppresses a positive wrapped verdict, while a principle describing a possible success creates a claim absent from its value. The evidence helper likewise rejects a wrapped positive delta and a wrapped True baseline-win flag.
+
+5. **B — The marker lists sample their concepts rather than define them.** `_GOAL_ENERGY_CONTEXT_MARKERS` represents goal-energy terminology but misses energy-guided wording; `_GOAL_ENERGY_GENERATION_MARKERS` represents generation activity but misses online candidate sampling; `_GOAL_ENERGY_WIN_MARKERS` represents improvement claims but misses outperformed; `_GOAL_ENERGY_DIAGNOSTIC_OR_NULL_MARKERS` represents non-positive claims but misses an explicit denial that goal-energy drove generation. The tested omissions appear below. The evidence helper additionally enumerates metric names while omitting the real corpus field shown under MISSED INPUT.
+
+6. **C — The focused tests leave major branches and every individual marker unprotected.** The existing 11-test file passed under pytest unchanged, after deleting the ARC-classification branch, and after deleting the entire diagnostic/null branch. Its diagnostic regression remains green because other prerequisites already reject that fixture. Separately deleting each of the 57 individual marker entries left all 11 tests’ assertions passing. Some entries are also logically redundant under substring matching: wins is covered by win, generated by generate, and honest_null by null. This establishes gaps in the focused suite; the repository-wide suite was not run.
+
+7. **The implementation is both narrower and broader than its claim.** It is narrower because an explicit headline alone cannot satisfy `return _has_positive_goal_energy_baseline_win_evidence(d)`. It is broader because matching generation terminology does not establish live execution, and co-occurring improvement terminology does not establish causal attribution to goal-energy. A tested offline-only generation headline returns True; an explicit denial of goal-energy causation also returns True.
+
+8. **Thresholds, paths, writes, and measurement timing:** The supplied body contains no numerical thresholds, absolute paths, writes, or measurements. The inspected evidence helper’s strict-positive comparisons correctly reject exact ties; no off-by-one defect was found. The focused tests write fixtures to temporary directories, so no fixed historical-artifact overwrite was found in this test path.
 
 ## COUNTEREXAMPLE
+
+This explicit positive generation claim lacks an ablation and should trigger the warning:
+
 ```json
 {
-  "experiment": "arc_live_value_head_eval",
   "game": "ar25",
-  "honest_verdict": "success: live_agent_first_win_efficiency_up_from_value_head",
-  "inference_substrate": "cached_gap_arc_pool_oof_vstar_agglm_selector",
-  "oracle_distinct_auroc": 0.778980279
+  "honest_verdict": "success: goal_energy_live_generation_first_win_rate_improved",
+  "solve_rate_delta": 0.08,
+  "summary": "Additional diagnostic: mean goal-energy 0.31; live generation gain remains positive."
 }
 ```
 
-False negative: the helper returns false, and normal verification emits no offline/live overclaim warning despite the live-win claim being supported only by offline AUROC.
+Observed: predicate False; zero goal-energy ablation warnings. Removing only summary changes the predicate to True and produces the warning.
+
+With the same game and positive delta, these verdict replacements were also tested:
+
+| honest_verdict | Observed | Expected |
+|---|---|---|
+| `success: non-goal-energy live generation improved` | True | False |
+| `complete: goal_energy_degenerate_controls_improved` | True | False |
+| `complete: goal_energy_live_generation_window_profile_recorded` | True | False |
+| `complete: goal_energy_did_not_drive_live_generation; observed first_win_rate_improvement came from the search-budget change` | True | False |
+| `success: energy_guided_live_generation_improved` | False | True |
+| `success: goal_energy_guided_online_sampling_improved` | False | True |
+| `complete: goal_energy_live_generation_outperformed_baseline` | False | True |
 
 ## MISSED INPUT
+
 ```json
 {
-  "inference_substrate": "cached_gap_arc_pool_oof_vstar_agglm_selector",
-  "oracle_distinct_auroc": 0.778980279
+  "game": "ar25",
+  "honest_verdict": "success: goal_energy_live_generation_first_win_rate_improved",
+  "goal_energy_vs_baseline_delta": 0.08
 }
 ```
 
-These fields occur in results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json. The helper fails to recognize their offline AUROC; that historical artifact itself makes an honest offline claim.
+Observed: predicate False; zero goal-energy ablation warnings. The metric name is present in the real experiment 4737 artifact; the positive value above constructs the missed winning case.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Recognition depends on field spelling and scalar placement rather than the metric’s meaning and evaluation provenance. Normal verifier calls reproduce silent misses, while deletion checks show that the focused tests do not independently protect most recognizers.
+Claim recognition depends on recognized supporting evidence, while unrelated negative terminology can veto an otherwise explicit positive claim. Separate claim detection from evidence validation, unwrap annotated values, and distinguish an unrecognized claim from a verified absence of one; substring additions alone cannot repair these failures.
+
+
+## adversarial_verify.py::_has_uniform_energy_ablation_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Find real uniform/random-energy ablation fields outside principle prose.`
+
+## FINDINGS
+
+1. **A — Explicit non-performance silently passes.** `any(marker in kl for marker in _GOAL_ENERGY_ABLATION_KEY_MARKERS)` combined with `and nested is not None` accepts the not-run artifact below as evidence. Reproduced: the helper returns True and the caller emits no ablation warning despite no control having run. Empty measurement dictionaries and wrapped null measurements also pass.
+
+2. **Field extraction assumes bare arm-name strings.** `and isinstance(nested, str)` rejects a principle/value-wrapped arm name. Recursion reaches its string value without preserving the enclosing arm-name context, so valid measured evidence disappears. Lists of records work through `elif isinstance(value, list):`; a list-valued arm name does not. No direct dictionary-get calls occur here.
+
+3. **Both substring searches lack boundaries and context.** `marker in kl` and `marker in nested.lower()` recognize uniform-energy markers inside nonuniform-energy identifiers. They also accept arm names explicitly stating that the control was not attempted. Exact collection membership checks have no substring-boundary defect.
+
+4. **B — All four collections approximate broader concepts.**
+   - `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` represents metadata excluded from evidence. It omits the documented provenance container shown below, allowing principle-only entries to count as measurements.
+   - `_GOAL_ENERGY_ABLATION_KEY_MARKERS` represents fields describing uniform/random-energy controls. It misses the space-separated field spelling below.
+   - `_GOAL_ENERGY_ABLATION_ARM_NAME_KEYS` represents fields identifying experimental arms. It omits the conventional arm-name alias below.
+   - `_GOAL_ENERGY_ABLATION_ARM_VALUE_MARKERS` represents uniform/random-energy arm identities. It misses the short uniform label even inside an explicitly identified energy-ablation block.
+
+5. **C — Substantial pattern coverage is decorative or absent.** All 11 dedicated tests passed. Individual in-memory deletions were detected only for key markers uniform_measurement and uniform_energy, arm-value marker uniform_energy, arm-name key name, and metadata key field_principles; every other collection-member deletion survived. Several longer key markers are inherently shadowed by shorter substrings. Removing `nested is not None` or either lowercase normalization also preserved all 11 tests. Removing either acceptance branch, dictionary recursion, list recursion, or the metadata-skip branch did fail dedicated tests. The full repository suite was not evaluated.
+
+6. **The docstring overstates the implementation.** “Real” evidence is reduced to matching names and non-null containers; principle metadata can satisfy it. Conversely, supported wrapped names on measured arms are rejected. The implementation is simultaneously broader and narrower than its claim.
+
+7. **Remaining classes:** There are no numeric thresholds or equality boundaries to audit. No absolute paths, writes, or measurements occur in this helper; the dedicated tests write fixtures into temporary directories. For F, terminal `return False` correctly communicates missing evidence and causes the caller to warn; the unsafe bypasses arise from erroneous positive recognition.
+
+## COUNTEREXAMPLE
+
+**Silent false negative:** this artifact claims a measured improvement while explicitly reporting that the required control was not run:
+
+```json
+{
+  "game": "ar25",
+  "headline": "energy-driven generation win: graded goal-energy raised live first-win",
+  "honest_verdict": "success: goal_energy_live_generation_firstwin_up_4",
+  "solve_rate_delta": 0.08,
+  "uniform_energy_ablation_not_run": true
+}
+```
+
+Observed: helper returns `True`; caller produces no ablation warning.
+
+Independent fragments demonstrating the other failures:
+
+- **False positive against honest measured work:**
+
+  ```json
+  {"arms":[{"name":{"principle":"Identifies the matched control","value":"uniform_energy"},"solve_rate":0.04,"n_trials":100}]}
+  ```
+
+  Helper returns `False`; the same positive claim receives an ablation warning.
+
+- **Missing data accepted:** `{"uniform_measurement":{}}` and `{"uniform_measurement":{"principle":"Matched control measurement","value":null}}` both return `True`.
+
+- **Boundary/context failures:** `{"nonuniform_energy":{"solve_rate":0.12}}`, `{"arms":[{"name":"nonuniform_energy"}]}`, and `{"arms":[{"name":"uniform_energy_not_attempted"}]}` all return `True`.
+
+- **Principle prose accepted as evidence:**
+
+  ```json
+  {"field_provenance":{"uniform_energy_ablation_passed":{"principle":"Requires a measured uniform-energy control"}}}
+  ```
+
+  Returns `True` without any measurement.
+
+- **Omitted representations:** each returns `False` despite supplying measured control evidence:
+
+  ```json
+  {"uniform energy ablation":{"solve_rate":0.04,"n_trials":100}}
+  ```
+
+  ```json
+  {"arms":[{"arm_name":"uniform_energy","solve_rate":0.04,"n_trials":100}]}
+  ```
+
+  ```json
+  {"energy_ablation":{"arms":[{"name":"uniform","solve_rate":0.04,"n_trials":100}]}}
+  ```
+
+## MISSED INPUT
+`"uniform_energy_ablation_not_run": true` accompanying the positive goal-energy claim above. The missing-control warning does not fire.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The helper equates recognizable names and non-null containers with executed controls. That permits unsupported wins to pass silently while measured controls using allowed wrappers receive false warnings. Recognition needs preserved field context, metadata exclusion, explicit execution evidence, and regression tests for both directions.
 

@@ -9,8 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| CANNOT_DETERMINE | 4 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
 ## experiment_8632_complete_source_comparison.json
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream "streaming_extractor_ready_score" was 0, while the gate required 1, as recorded in "gates_evaluated" and "gate_check_summary".
+The experiment was blocked because upstream `streaming_extractor_ready_score` was 0, failing the required value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -36,29 +36,33 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The installed prototype meets its readiness gate, including compatibility checks for 64 requests in each arithmetic arm.
+The installed prototype met its mechanical readiness gate, including compatibility checks on 128 responses.
 
 ## WHAT IS MISSING
-The supplied artifact cuts off inside "historical_model_provenance". "installed_prototype_ready_score" is 1 and "completed_count" is 128, but "prototype_parity_rows" and "rows" appear only as descriptions in "field_principles"; their actual contents are not supplied.
+The supplied artifact cuts off inside "historical_model_provenance". "installed_prototype_ready_score" is 1, but actual "prototype_parity_rows" and "rows" are only named in "field_principles"; their contents are unavailable, so aggregate-only reporting cannot be established.
 
 ## THE CHECK A READER CANNOT DO
-Did each request in each arithmetic arm match its original-worker response?
+Did each of the 128 installed responses match its original-worker counterpart?
 
 ## experiment_8634_v741_installed_compatibility.json
 
 **CANNOT_DETERMINE**
 
 ## VERDICT
+
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion reports failed installed-compatibility gates, but the current invocation’s headline verdict is not shown.
+
+The visible portion reports failed “exact_node_union” and “installed_compatibility” gates, but the headline verdict is unavailable.
 
 ## WHAT IS MISSING
-The current invocation’s actual "honest_verdict" and "verdict_class" values: their names appear in "field_principles", but the artifact truncates inside "historical_model_provenance". "acceptance_gates" identifies failures, and "historical_8609.gate_check_summary" supplies a historical blocker diagnostic, so an unexplained blockage is not established.
+
+The artifact cuts off inside “historical_model_provenance”, before the current “honest_verdict”, “verdict_class”, and remaining results. “acceptance_gates” identifies failed checks, and “historical_8609.gate_check_summary” supplies a historical blocker diagnostic.
 
 ## THE CHECK A READER CANNOT DO
-Does the current invocation’s final claim require comparative evidence beyond the compatibility checks shown?
+
+Does the current invocation’s final verdict have supporting per-unit results or a recorded blocker diagnostic?
 
 ## experiment_8635_installed_complete_cost.json
 
@@ -68,7 +72,7 @@ Does the current invocation’s final claim require comparative evidence beyond 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `installed_measurement_ready_score` was 0, failing the required value of 1.
+The experiment was blocked because the upstream `installed_measurement_ready_score` was 0, failing the required value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -84,7 +88,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked because `runtime_repair_ready_score` was 0 while the gate required 1.
+The experiment was blocked because `runtime_repair_ready_score` was 0, failing the required equality to 1.
 
 ## WHAT IS MISSING
 nothing
@@ -100,13 +104,13 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible "acceptance_gates" entries all report success, but the headline research conclusion is not visible.
+The headline claim cannot be identified from the truncated artifact.
 
 ## WHAT IS MISSING
-The remaining artifact: "actual_redirect_rows" cuts off inside the fourth row’s "sequence", preventing inspection of any subsequent claim, verdict, or comparison results.
+The artifact ends inside "actual_redirect_rows"; the remaining content and any headline claim or final verdict are unavailable. "acceptance_gates" records pass flags.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact supply per-unit evidence or a blocker diagnosis supporting its headline verdict?
+Does the artifact’s headline conclusion follow from its per-unit results?
 
 ## experiment_8638_v741_hardware_operation_delta.json
 
@@ -116,7 +120,7 @@ Does the complete artifact supply per-unit evidence or a blocker diagnosis suppo
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-No new hardware operation cost boundary is admitted because required execution and cost-evidence gates failed.
+Hardware admission remains gated because compatible physical execution and a new complete-cost boundary have not been established.
 
 ## WHAT IS MISSING
 nothing
@@ -126,16 +130,16 @@ none
 
 ## experiment_8639_v741_capstone.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
 ## VERDICT
-CANNOT_DETERMINE
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The visible “branch_outcomes” reports an ARC null and several blocked or disqualified branches, but the overall headline verdict is not shown.
+The capstone reports administrative completion while substantive acceptance gates remain unmet, with blocked tasks explained by failed readiness checks or missing producer artifacts.
 
 ## WHAT IS MISSING
-The artifact’s remainder: it cuts off mid-“sha256” inside “continuation_decisions”, so any later verdict or per-unit measurements cannot be assessed. “blocked_inputs” already records diagnostic “checks” with “observed”, “expected”, and “passed” values.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Does the ARC “qualified_recording_null_no_policy_benefit” result have per-game comparative metrics supporting it?
+none
