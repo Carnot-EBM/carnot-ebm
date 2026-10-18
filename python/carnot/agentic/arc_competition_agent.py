@@ -6110,6 +6110,7 @@ class E3AgentPolicy:
 
         effect_token = arc_effect_receipts.begin(self, latest)
         snapshot, predicates, redirect, effect_error = None, [], None, None
+        applied = False
         try:
             from carnot.agentic.arc_arm_eligibility import diversity_in_effect
             from carnot.agentic.arc_trajectory_supervisor import TrajectorySnapshot
@@ -6210,6 +6211,19 @@ class E3AgentPolicy:
         arc_effect_receipts.finish(
             self, effect_token, snapshot, predicates, redirect, mode, action_id, effect_error
         )
+        if redirect is not None and getattr(self, "_arc_outcome_observer", None) is not None:
+            from carnot.agentic.arc_outcome_observer import notify
+
+            notify(
+                self,
+                "redirect",
+                dict(
+                    event_id=f"{self.short}:{action_id}",
+                    arm=redirect.arm,
+                    level=level,
+                    applied=bool(applied and effect_error is None),
+                ),
+            )
 
     def _apply_trajectory_redirect(self, redirect: Any) -> None:
         """REQ-ARC-WMTE-6600 rule 5: apply an arm ONLY through existing seams.
@@ -7367,6 +7381,10 @@ class E3AgentPolicy:
 
         self._outcome_transport = transport
 
+    def install_arc_outcome_observer(self, observer: Any) -> None:
+        """Opt in to separate horizon records without changing supervisor credit."""
+        self._arc_outcome_observer = observer
+
     def outcome_transport(self) -> Any:
         """Return the installed transport without constructing one implicitly."""
 
@@ -8063,6 +8081,9 @@ class E3AgentPolicy:
 
     def observe_action_outcome(self, frame: Any) -> None:
         """SCENARIO-ARC-WMTE-10016-PROVENANCE: attach the resulting real level."""
+        from carnot.agentic.arc_outcome_observer import notify
+
+        notify(self, "observation", frame)
         recorder = getattr(self, "_provenance", None)
         if recorder is None or frame is None:
             return
@@ -10379,6 +10400,9 @@ def make_carnot_agent(
             # the one from the game's own thread (Agent.main), which is the only call whose
             # /health probe is contemporaneous with that game ending. getattr-with-default so a
             # subclass that skips __init__ cannot turn a missing attribute into a crash here.
+            from carnot.agentic.arc_outcome_observer import notify
+
+            notify(self._policy, "finish", "cleanup")
             if not getattr(self, "_witness_emitted", False):
                 self._witness_emitted = True
                 try:
@@ -10459,7 +10483,9 @@ def make_carnot_agent(
 
         def choose_action(self, frames, latest_frame):
             from arcengine import GameAction
+            from carnot.agentic.arc_outcome_observer import notify
 
+            notify(self._policy, "observation", latest_frame)
             kind, data = self._policy.next_move(frames, latest_frame)
             from carnot.agentic.arc_effect_receipts import bind_action
 
@@ -10480,6 +10506,7 @@ def make_carnot_agent(
             record_application = getattr(self._policy, "record_outcome_transport_application", None)
             if record_application is not None:
                 record_application(act)
+            notify(self._policy, "application", act)
             return act
 
         def do_action_request(self, action):

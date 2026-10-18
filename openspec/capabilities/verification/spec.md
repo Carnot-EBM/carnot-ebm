@@ -56351,3 +56351,18 @@ Implementation20261017 for REQ-VERIFY-8622: private original-reader tests,
 subprocess Coverage.py shards and fresh replay receipts accompany the canonical
 result. Separate finalization directories preserve failed reporting attempts;
 reduction corrections do not alter measurement clocks or historical producers.
+## REQ-VERIFY-8624: Bind observer qualification to immutable evidence
+
+Require tests first, full newly owned statement coverage, scoped private CLI and
+authority/publication E2E checks, Ruff, strict typing and spec references. Preserve
+collected original node IDs before disjoint bounded children. Record commands,
+clocks, exits and log hashes. Missing upstream support blocks; owned failures
+disqualify. Do not change shared validators or the active roadmap.
+
+### SCENARIO-VERIFY-8624-REPLAY
+
+A fresh bounded process replays immutable input records and recomputes observer
+outputs. Reject missing inputs, owned failures and self-consistently rehashed
+tampering. Verify final candidate bytes with primary_publication, adversarial
+verification and strict verdict-row lint before atomic publication. Use disk-backed
+scratch, no_model_load, empty MODEL_SPECS and zero current model calls.

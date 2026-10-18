@@ -102416,3 +102416,28 @@ session/worker modules and thin experiment CLI retain all240 registered cells.
 Completed request counters are reconstructed from immutable frames, including
 when provisional measurement counters differ. Reporting corrections preserve
 all original clocks and source snapshots and use separate validation receipts.
+## REQ-REPORT-8624: Observe redirect horizons without changing actions
+
+Install an explicit, default-off observer at the E3 policy and live choose_action
+boundary. Record application actions, redirect identities and subsequent public
+observations for a horizon of120 actions. A complete horizon without level progress
+is no_progress_within_horizon. Missing observations, reset, terminal, cutoff and
+incomplete horizons are censored. Level progress is an association without causal
+arm credit. Preserve legacy resolved_by_levelup and actions_to_levelup exactly.
+Track overlapping redirects independently. Neither new status opens refinement.
+
+### SCENARIO-REPORT-8624-PARITY
+
+Use deterministic streams for navigation, toggle and sequence mechanics with
+models and game adapters disabled. Exercise full horizons, progress, reset,
+terminal, cutoff, duplicate and missing observations, and overlaps through the
+actual live wrapper. Observer off/on actions, RNG state, termination and original
+receipts must agree. Scripted level progress is development_proxy evidence only.
+
+### SCENARIO-REPORT-8624-HISTORY
+
+Authenticate original V737 panel and Exp8599 reductions before replay. Reduce only
+available observation sequences through the same helper. Retain every game, arm
+and window, including missing support. Preserve the closed ARC null and all old
+disqualifications. Readiness describes reachable instrumentation only. Refinement,
+promotion, generalization and headline solve credit remain zero.
