@@ -102628,3 +102628,27 @@ final bytes using original readers, adversarial verification and strict row lint
 External unchanged failures are blocked. Owned-check failures are disqualified.
 Declare no_model_load, empty MODEL_SPECS and zero language-model calls. Identify
 small-head arithmetic separately. The conductor owns ops and traceability updates.
+
+## REQ-REPORT-8637: Real observer transfer horizons
+
+Run only the Exp8627 registered four-game/two-seed observer off/on panel using
+fresh official SDK environments. Keep capability masking on, supervisor priorities,
+512-action/120-second budgets and horizon120 unchanged. Authenticate Exp8624,
+its observer tests and the registered panel before execution. Disable language
+models, adapters, stored routes and game-source inspection. Count numerical head
+inference separately. Preserve all sixteen episode slots and public observations.
+
+### SCENARIO-REPORT-8637-PANEL
+
+Require exact paired actions, RNG state, termination and legacy receipts. Replay
+actual redirects and public observations independently. Classify progress,
+full120-action no-progress and censoring; retain overlaps and zero firing cells.
+Descriptive support requires three shared games and five firings per shared arm
+cell. Readiness grants no refinement, promotion, solve or causal benefit credit.
+Close the exact scope as a qualified null when real full horizons are absent.
+
+Exp8637 implementation: `arc_observer_transfer_8637.py`,
+`arc_observer_live_8637.py`, `arc_observer_runner_8637.py` and the thin CLI.
+The JSON and its hash-bound terminal sidecar carry qualification. The sixteen
+natural episodes yielded reset/terminal censoring, with no complete horizon.
+The conductor owns ops and traceability reconciliation.

@@ -1,0 +1,108 @@
+.......F....F.......                                                     [100%]
+=================================== FAILURES ===================================
+___________ test_cli_actual_private_children_and_rehashed_rejection ____________
+
+tmp_path = PosixPath('/var/tmp/carnot8637-pycqhutc/checks/owned/test_cli_actual_private_childr0')
+
+    def test_cli_actual_private_children_and_rehashed_rejection(tmp_path):
+        """SCENARIO-VERIFY-8637-REPLAY: fresh CLI exercises actual publication readers."""
+        import os
+        import subprocess
+        import sys
+    
+        script = e.ROOT / e.CLI
+        env = dict(os.environ, PYTHONUNBUFFERED="1")
+        env.pop("PYTHONPATH", None)
+    
+        def run(*args):
+            return subprocess.run(
+                [sys.executable, str(script), *map(str, args)],
+                cwd=tmp_path,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+    
+        assert run("--date", "invalid").returncode == 2
+        assert run("--deliberate-error").returncode == 7
+        assert run("--cold-replay", tmp_path / "missing.json").returncode == 1
+        for owned in [False, True]:
+            output = tmp_path / str(owned) / (e.NAME + ".json")
+            args = [
+                "--date",
+                "20261018",
+                "--root",
+                tmp_path / "absent",
+                "--output",
+                output,
+                "--private-control",
+            ]
+            if owned:
+                args.append("--owned-failure")
+            result = run(*args)
+            assert result.returncode == 0, result.stdout + result.stderr
+            value = json.loads(output.read_bytes())
+            assert value["verdict_class"] == ("disqualified" if owned else "blocked")
+>           assert run("--cold-replay", output).returncode == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...S_empty_LLM_calls_zero completed=0 pending=0\n[exp8637] phase=cold_replay_complete completed=0 pending=0\n', stderr='').returncode
+E            +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...S_empty_LLM_calls_zero completed=0 pending=0\n[exp8637] phase=cold_replay_complete completed=0 pending=0\n', stderr='') = <function test_cli_actual_private_children_and_rehashed_rejection.<locals>.run at 0x7fb5a7b10720>('--cold-replay', PosixPath('/var/tmp/carnot8637-pycqhutc/checks/owned/test_cli_actual_private_childr0/False/experiment_8637_v741_arc_observer_transfer.json'))
+
+tests/python/test_arc_observer_transfer_8637.py:200: AssertionError
+___________ test_controller_orchestration_and_private_root_rejection ___________
+
+tmp_path = PosixPath('/var/tmp/carnot8637-pycqhutc/checks/owned/test_controller_orchestration_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb5ad4ec050>
+
+    def test_controller_orchestration_and_private_root_rejection(tmp_path, monkeypatch):
+        """REQ-VERIFY-8637: exercise controller without recursively running validators."""
+        from carnot.reporting import arc_observer_runner_8637 as runner
+        from carnot.reporting.current_work_receipt import atomic_json
+    
+        with pytest.raises(SystemExit):
+            runner.main(["--private-control", "--root", str(tmp_path)])
+        monkeypatch.setattr(runner, "measure", lambda *args: dict(measurement_receipts=[]))
+        monkeypatch.setattr(runner.validation, "validate_checks", lambda *args: [dict(passed=True)])
+        monkeypatch.setattr(e, "build", lambda *args: dict(completed_count=16))
+        monkeypatch.setattr(runner, "publish", lambda *args: dict(passed=True))
+        output = tmp_path / (e.NAME + ".json")
+>       assert runner.main(["--date", "20261018", "--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_observer_transfer_8637.py:261: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_observer_runner_8637.py:290: in main
+    path = validation_bundle(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/var/tmp/carnot8637-pycqhutc/checks/owned/test_controller_orchestration_0/raw/experiment_8637_v741_arc_observer_transfer/invocations/1792311381611750358/work.json')
+
+    def validation_bundle(path: Path) -> Path:
+        """Keep measurement immutable while binding the completed validation package."""
+        work = json.loads(path.read_bytes())
+>       originals = dict(work["source_artifact_hashes"])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'source_artifact_hashes'
+
+python/carnot/reporting/arc_observer_runner_8637.py:205: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8637] phase=start_no_model_load_MODEL_SPECS_empty_LLM_calls_zero completed=0 pending=0
+[exp8637] phase=start_no_model_load_MODEL_SPECS_empty_LLM_calls_zero completed=0 pending=0
+[exp8637] phase=measurement_after_validation_before completed=0 pending=0
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] [--date DATE] [--root ROOT] [--output OUTPUT]
+                   [--episode EPISODE] [--cold-replay COLD_REPLAY]
+                   [--deliberate-error] [--private-control] [--owned-failure]
+__main__.py: error: private controls require an absent input root
+=============================== warnings summary ===============================
+tests/python/test_arc_observer_transfer_8637.py::test_controller_orchestration_and_private_root_rejection
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_observer_transfer_8637.py::test_cli_actual_private_children_and_rehashed_rejection
+FAILED tests/python/test_arc_observer_transfer_8637.py::test_controller_orchestration_and_private_root_rejection
+2 failed, 18 passed, 1 warning in 45.48s

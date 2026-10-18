@@ -56484,3 +56484,18 @@ Keep the original anchored-replay regression unchanged. Add fresh-process
 valid, missing and rehashed-candidate checks outside the checkout without
 PYTHONPATH. Measure the standalone CLI startup and replay rejection statements
 through genuine subprocess coverage; require 100 percent owned statements.
+
+## REQ-VERIFY-8637: Immutable observer panel publication
+
+Freeze original input and code hashes before measurement. Retain real bounded
+children, logs, commands, exit codes and newly owned statement coverage. Accept
+20261018. Cold replay rejects missing operands and self-consistently rehashed
+claims. Check final bytes with primary_publication and unchanged adversarial and
+row validators. External failures are blocked; owned failures disqualify.
+
+### SCENARIO-VERIFY-8637-REPLAY
+
+Exercise real standalone CLI success, missing input, date rejection, intentional
+failure and tampered replay in fresh processes. Run private E2E-018/021 with
+original node identities and scoped tests; require100 percent new statements.
+The conductor owns status, changelog and traceability reconciliation.
