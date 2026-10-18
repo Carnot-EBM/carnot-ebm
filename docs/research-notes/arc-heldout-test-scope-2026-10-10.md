@@ -363,3 +363,27 @@ no-LLM arm, so the generator change is a candidate cause. This run does not test
 
 **Next.** Variants 2 to 4 for both arms would give 100 paired cells. The llm_off side costs
 minutes. The llm_on side costs about 45 hours of GPU 1 at the first run's pace.
+
+## Addendum 2026-10-17 (fourth): the llm_off arm is deterministic
+
+Two more llm_off runs on commit `62548c73e0`, CPU only: a repeat of variant 1, and variants
+2 to 4 for all 25 games. Results are in `results/arc_induction_plans_20261017_llm_off_repeat1/`
+and `results/arc_induction_plans_20261017_llm_off_v234/`. No cell errors.
+
+- **Repeat of variant 1:** identical to the first run in win, reached level and action count
+  on all 25 cells. The no-LLM agent shows no run-to-run noise here.
+- **Variants 2 to 4:** 6 first wins in 75 cells (lp85~color02, sp80~color02, sp80~color03,
+  vc33~color02, vc33~color03, vc33~color04). With variant 1's 1 win, the arm has 7 wins in 100.
+- **Against July:** the July llm_off arm gave the same win or no win on all 100 cells. The
+  agent code changed a great deal between July and now. None of it changed the no-LLM result
+  on these cells.
+
+**What this changes.** The 4-versus-0 comparison of the earlier addendum no longer has an
+unmeasured no-LLM noise term. The baseline is fixed at 1 of 25 on variant 1 and 7 of 100
+overall. The `llm_on` side is still one stochastic run per cell, so its noise is unmeasured.
+The sign test result (p = 0.125) still stands.
+
+**What it does not change.** The comparison still covers only variant 1 for `llm_on`.
+Variants 2 to 4 with the 27B generator have not run. They cost about 45 hours of GPU 1 per
+25 cells at the first run's pace. The six variant 2 to 4 cells that llm_off wins would
+show whether the LLM tier keeps or loses wins the baseline already has.
