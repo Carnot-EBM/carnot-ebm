@@ -20550,3 +20550,5 @@ code |
 | 2026-10-18 18:11 UTC | Qualify original learning execution with immutable | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ecar", lambda |
 | 2026-10-18 18:31 UTC | Qualify original learning execution with immutable | OK | cache hit: 103 passed, 1 warning in 35.24s |
 | 2026-10-18 19:14 UTC | Qualify streaming extraction with immutable measur | OK | 100 passed, 1 warning in 45.60s |
+| 2026-10-18 19:22 UTC | Measure continuous small-head learning with sealed | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8641-learning-execution-custody.learning_execution_ready_score (actual=0 == expected=1) |
+| 2026-10-18 19:24 UTC | Test future Brier benefit and simultaneous retenti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8643-causal-brier-stream) |
