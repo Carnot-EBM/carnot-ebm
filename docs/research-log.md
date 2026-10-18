@@ -7542,3 +7542,10 @@ criteria. This operational record makes no scientific-result claim.
 - theme: Operational efficiency of synthesis-only execution and qualification.
 - key result: Qualification was the longest recorded synthesis task; compute-task GPU efficiency and DualGPURunner compliance were not applicable. Phase timing and reusable qualification evidence are proposed; savings remain unmeasured.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.742
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 8 completed experiments (0 compute-bound, 8 synthesis-only) in 137 minutes of milestone wall time.
+- key result: honest operational negative — 8 synthesis-only experiments completed in 136.6 wall-time minutes (averaging 17 minutes per experiment) led by qualifying original learning execution with immutable per-child coverage (61.19 min), qualifying original import contracts and current installed inference in separate ro (29.6 min), mapping qualified new operations while preserving absent cost and physical evidence (11.4 min), measuring reset-cause transfer across adapter-withheld live games (9.54 min), and binding thirteen tasks and separating research operands from execution qualification (9.43 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null, with GPU 0 at 0% utilization reflecting expected idle behavior for non-GPU synthesis workloads and GPU 1 active at 96% utilization on background inference processes.
+- acceptance: no data available this milestone

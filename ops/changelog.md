@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-18 — Operational retrospective for milestone 2026.10.742
+
+- Wrote `results/operational_retro_2026_10_742.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.742`. Authoritative disk-mtime fallback data records 8 experiments completed (0 compute-bound, 8 synthesis-only) across 136.6 total wall-time minutes (average 17 minutes per experiment).
+- Execution wall time was led by: 'Qualify original learning execution with immutable per-child coverage' (61.19 minutes, synthesis-only), 'Qualify original import contracts and current installed inference in separate ro' (29.6 minutes, synthesis-only), 'Map qualified new operations while preserving absent cost and physical evidence' (11.4 minutes, synthesis-only), 'Measure reset-cause transfer across adapter-withheld live games' (9.54 minutes, synthesis-only), and 'Bind thirteen tasks and separate research operands from execution qualification' (9.43 minutes, synthesis-only).
+- Point-in-time GPU monitor polling observed GPU 0 at 0% utilization (4MB allocated) and GPU 1 at 96% utilization (22363MB allocated) servicing background inference processes; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and snapshot 0% GPU utilization on GPU 0 reflects expected idle behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: decompose prolonged learning execution and separate-root import contract qualification runs into modular sub-checks with early failure detection; introduce incremental receipt caching and evidence memoization for recurring operation-mapping, reset-cause measurement, and task-binding passes on unchanged evidence; and persist synchronous start and finish execution timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.
+
 ## 2026-10-18 — Operational retrospective for milestone 2026.10.741
 
 - Wrote `results/operational_retro_2026_10_741.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.741`. Authoritative disk-mtime fallback data records 7 experiments completed (0 compute-bound, 7 synthesis-only) across 58.2 total wall-time minutes (average 8 minutes per experiment).
