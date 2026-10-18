@@ -1,0 +1,58 @@
+[exp8641] resume sealed_original_children=4
+[exp8641] reuse authenticated original collection; no second collection
+[exp8205] phase=8641_original_children completed=0 pending=31
+[exp8205] phase=before_subprocess_original0 completed=0 pending=1
+[exp8205] phase=waiting_original0 completed=0 pending=1
+[exp8205] phase=waiting_original0 completed=0 pending=1
+[exp8205] phase=after_subprocess_original0 completed=1 pending=0
+[exp8205] phase=8641_original_children completed=1 pending=30
+[exp8205] phase=before_subprocess_original1 completed=0 pending=1
+[exp8205] phase=waiting_original1 completed=0 pending=1
+[exp8205] phase=waiting_original1 completed=0 pending=1
+[exp8205] phase=waiting_original1 completed=0 pending=1
+[exp8205] phase=waiting_original1 completed=0 pending=1
+[exp8205] phase=waiting_original1 completed=0 pending=1
+[exp8205] phase=waiting_original1 completed=0 pending=1
+[exp8205] phase=waiting_original1 completed=0 pending=1
+[exp8205] phase=after_subprocess_original1 completed=1 pending=0
+[exp8205] phase=8641_original_children completed=2 pending=29
+[exp8205] phase=before_subprocess_original2 completed=0 pending=1
+[exp8205] phase=waiting_original2 completed=0 pending=1
+[exp8205] phase=after_subprocess_original2 completed=1 pending=0
+[exp8205] phase=8641_original_children completed=3 pending=28
+[exp8205] phase=before_subprocess_original3 completed=0 pending=1
+[exp8205] phase=waiting_original3 completed=0 pending=1
+[exp8205] phase=waiting_original3 completed=0 pending=1
+[exp8205] phase=after_subprocess_original3 completed=1 pending=0
+[exp8205] phase=8641_original_children completed=4 pending=27
+[exp8205] phase=before_subprocess_original4 completed=0 pending=1
+[exp8205] phase=after_subprocess_original4 completed=1 pending=0
+[exp8205] phase=8641_original_children completed=5 pending=26
+[exp8205] phase=before_subprocess_original5 completed=0 pending=1
+[exp8205] phase=waiting_original5 completed=0 pending=1
+[exp8205] phase=after_subprocess_original5 completed=1 pending=0
+[exp8205] phase=8641_original_children completed=6 pending=25
+[exp8205] phase=before_subprocess_original6 completed=0 pending=1
+[exp8205] phase=waiting_original6 completed=0 pending=1
+[exp8205] phase=after_subprocess_original6 completed=1 pending=0
+[exp8205] phase=8641_original_children completed=7 pending=24
+[exp8205] phase=before_subprocess_original7 completed=0 pending=1
+[exp8205] phase=waiting_original7 completed=0 pending=1
+[exp8205] phase=waiting_original7 completed=0 pending=1
+[exp8205] phase=after_subprocess_original7 completed=1 pending=0
+[exp8641] actual execution failure: custody_invalid_child
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_rows completed=1 pending=0
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+Traceback (most recent call last):
+  File "/var/tmp/8641_resume.py", line 74, in <module>
+    e.run(e.ROOT / 'results' / (e.NAME + '.json'), '20261018', work_path=raw / 'work.json')
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/learning_execution_custody_8641.py", line 343, in run
+    publication = publish_primary(output, value, lambda p: terminal(p, raw))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+    raise ValueError("candidate_rejected")
+ValueError: candidate_rejected

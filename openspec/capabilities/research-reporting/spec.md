@@ -102719,3 +102719,17 @@ nulls and quarantines. Emit numeric branch gates and zero language-model calls.
 Authenticate actual small-head inference separately. Optional runtime evidence
 cannot veto CPU branches. Register unchanged costs, seeds, resource limits and
 passive reset-provenance transfer; no scientific benefit follows from registration.
+## REQ-REPORT-8641: Qualify fresh learning execution with immutable child custody
+
+Require Exp8640 methods_ready_score=1 and learning_operands_ready_score=1.
+Historical Exp8616 failure and retired Exp8628 cannot gate this qualification.
+Preserve historical verdicts. Retain each actual child's command, PID, exit,
+node IDs, contexts, source identities and SQLite bytes immediately after exit.
+Separate original and adapter coverage. Combine copies only. A second combine
+must preserve sealed raw and aggregate hashes. Qualification grants no benefit.
+
+### SCENARIO-REPORT-8641-CUSTODY
+
+Reject deleted, overwritten, empty, duplicate, foreign-source and rehashed
+substituted coverage. Zero genuine child files or a killed child disqualifies.
+Retain the old lost-shard/second-combine failure as a private failing fixture.

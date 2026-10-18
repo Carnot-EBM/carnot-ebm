@@ -56547,3 +56547,24 @@ summary or primitive tampering. Preserve actual commands, clocks, exit codes and
 hashed logs. Check final bytes through primary_publication and unchanged scanners.
 Failed owned checks disqualify; unchanged external incompleteness blocks. Accept
 --date20261018. The conductor owns ops and traceability reconciliation.
+## REQ-VERIFY-8641: Recompute original and adapter execution from sealed primitives
+
+Stop original execution by3600 seconds. Adapter-only checks use the validation
+reserve through4500 seconds. Finish atomic publication within4800 seconds.
+These supervision budgets SHALL NOT change the learner's deadline clock.
+If execution stops, report authenticated terminal node outcomes and pending IDs.
+
+Collect once and execute the original27 nodes and complete affected8592/8603/
+8616 union in bounded disjoint serial children under independently pinned
+original test authority. Reuse sealed mechanics without retraining per test.
+Require83/83 original runner statements, no exclusions, source-bound94-to92
+mapping, and100 percent new statements. Preserve3599/3600/3601 deadline cases
+with2/3/3 clock reads and elapsed null/3600.25/3601.25. Check cleanup paths.
+
+### SCENARIO-VERIFY-8641-REPLAY
+
+Reject removed third read, absent expired case, changed diagnostic, missing
+operands and rehashed tampering in a fresh bounded replay. Retain actual logs,
+clocks and exits for Ruff, strict mypy, spec tracing and private E2E-018/021.
+Validate final bytes atomically through publication and unchanged consumers.
+Accept --date20261018. Conductor owns ops and traceability reconciliation.
