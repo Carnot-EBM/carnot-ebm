@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="18" time="63.484" timestamp="2026-10-18T14:56:08.762533-04:00" hostname="icbfl1"><testcase classname="tests.python.test_streaming_custody_8642" name="test_direct_unsuffixed_capture_and_repeated_combine" time="0.018" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_capture_rejects_invalid_custody[missing]" time="0.001" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_capture_rejects_invalid_custody[foreign]" time="0.002" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_capture_rejects_invalid_custody[rehashed]" time="0.003" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_capture_rejects_invalid_custody[alias]" time="0.002" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_capture_rejects_invalid_custody[empty]" time="0.001" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_real_old_hook_failure_and_new_capture" time="1.481" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_freeze_rejects_changed_content_address" time="0.002" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_measure_build_and_cold_replay" time="1.877"><failure message="assert 0 == 1">tmp_path = PosixPath('/var/tmp/exp8642-checks-hzap65ds/test_streaming_custody_8642_0/temp/test_measure_build_and_cold_re0')
+
+    def test_measure_build_and_cold_replay(tmp_path):
+        """SCENARIO-REPORT-8642-PUBLICATION: immutable measurements survive repeated readers."""
+        from carnot.reporting import streaming_execution_8642 as e
+    
+        work = e.measure(e.ROOT, tmp_path / "raw", "20261018")
+        work["validation"] = dict(
+            receipts=[dict(name="fixture", passed=True)],
+            child_shard_manifest=[],
+            original_node_union=dict(passed=True),
+            coverage=dict(passed=True),
+        )
+        ref = e.seal(work)
+        output = tmp_path / (e.NAME + ".json")
+        value = e.build(ref, [], {}, output)
+        e.atomic_json(output, value)
+        assert e.replay(output) and e.replay(output)
+&gt;       assert value["streaming_extractor_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_streaming_custody_8642.py:107: AssertionError</failure></testcase><testcase classname="tests.python.test_streaming_custody_8642" name="test_missing_external_is_blocked" time="0.612" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_private_cli_modes_and_publication" time="30.270"><failure message="AssertionError: assert (True and 'disqualified' == 'null'&#10; +  where True = &lt;function replay at 0x7fd312ebb420&gt;(PosixPath('/var/tmp/exp8642-checks-hzap65ds/test_streaming_custody_8642_0/temp/test_private_cli_modes_and_pub0/experiment_8642_v742_streaming_execution_custody.json'))&#10; +    where &lt;function replay at 0x7fd312ebb420&gt; = &lt;module 'carnot.reporting.streaming_execution_8642' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/streaming_execution_8642.py'&gt;.replay&#10;  &#10;  - null&#10;  + disqualified)">tmp_path = PosixPath('/var/tmp/exp8642-checks-hzap65ds/test_streaming_custody_8642_0/temp/test_private_cli_modes_and_pub0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7fd312dd11f0&gt;
+
+    def test_private_cli_modes_and_publication(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8642-PUBLICATION: real standalone children and checked readers."""
+        import os
+        import subprocess
+        import sys
+        from carnot.reporting import streaming_execution_8642 as e
+        from carnot.reporting import streaming_execution_runner_8642 as runner
+    
+        cli = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        work_path = tmp_path / "private.json"
+        result = subprocess.run(
+            cli + ["--date", "20261018", "--measure-only", str(work_path)],
+            cwd="/var/tmp",
+            env=env,
+            capture_output=True,
+            timeout=60,
+        )
+        assert result.returncode == 0, result.stderr.decode()
+        assert subprocess.run(cli + ["--date", "20261399"], capture_output=True).returncode == 2
+        assert (
+            subprocess.run(
+                cli + ["--cold-replay", str(tmp_path / "absent")], capture_output=True
+            ).returncode
+            == 1
+        )
+        monkeypatch.setattr(
+            runner,
+            "run_checks",
+            lambda _: dict(
+                receipts=[dict(name="outer", passed=True)],
+                child_shard_manifest=[],
+                original_node_union=dict(passed=True),
+                coverage=dict(passed=True),
+            ),
+        )
+        output = tmp_path / (e.NAME + ".json")
+        assert runner.main(["--date", "20261018", "--output", str(output)]) == 0
+        value = json.loads(output.read_bytes())
+&gt;       assert e.replay(output) and value["verdict_class"] == "null"
+E       AssertionError: assert (True and 'disqualified' == 'null'
+E        +  where True = &lt;function replay at 0x7fd312ebb420&gt;(PosixPath('/var/tmp/exp8642-checks-hzap65ds/test_streaming_custody_8642_0/temp/test_private_cli_modes_and_pub0/experiment_8642_v742_streaming_execution_custody.json'))
+E        +    where &lt;function replay at 0x7fd312ebb420&gt; = &lt;module 'carnot.reporting.streaming_execution_8642' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/streaming_execution_8642.py'&gt;.replay
+E         
+E         - null
+E         + disqualified)
+
+tests/python/test_streaming_custody_8642.py:195: AssertionError</failure></testcase><testcase classname="tests.python.test_streaming_custody_8642" name="test_validation_driver_boundaries[False]" time="0.017" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_validation_driver_boundaries[True]" time="0.011" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_combine_rejects_lost_or_changed_inventory" time="0.003" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_replay_authenticates_primitives_and_original_semantics" time="1.350" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_private_disqualification_and_real_rehashed_child" time="22.517" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_missing_coverage_is_owned_failure" time="0.268" /><testcase classname="tests.python.test_streaming_custody_8642" name="test_fully_rehashed_measurement_replacement_is_rejected" time="1.331" /></testsuite></testsuites>

@@ -102742,3 +102742,20 @@ custody mutations, private publication and cold replay. Retain empty auxiliary
 shards, but never accept a test child with zero executed source statements.
 See `docs/research-notes/v742-learning-execution-custody.md` and the terminal
 artifact for invocation-specific validation; conductor owns ops reconciliation.
+
+## REQ-REPORT-8642: Invocation-bound streaming execution qualification
+
+Exp8642 SHALL publish one checked terminal artifact with immutable measurements,
+actual child shard manifests, original node union, eager/chunk/offset parity,
+resource refusal and real cleanup evidence. Readiness requires exact original
+semantics, stable cold replay, complete node union and 100 percent newly owned
+statements. Keep source512KiB, answer64KiB, response30s, memory256MiB and answer
+cap16. Zero current language model calls does not erase numerical-work accounting.
+Fixture qualification is a scientific null; natural coverage belongs to Exp8645.
+
+### SCENARIO-REPORT-8642-PUBLICATION
+
+Private CLI accepts --date 20261018 and works outside the checkout. Missing
+external operands block; owned failures disqualify. Both original publication
+readers and unchanged adversarial/strict-row validators inspect the checked bytes.
+Historical publication files and quarantines SHALL never be rewritten by tests.

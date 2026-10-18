@@ -56576,3 +56576,36 @@ contexts and JUnit. Fresh replay checks the independent invocation seal before
 recomputing both unions and the actual node assignments. Two combines operate
 on copies, while raw and aggregate hashes remain stable. Terminal receipts live
 beside the exact primary hash; no historical disqualification is upgraded.
+
+## REQ-VERIFY-8642: Immediate streaming child evidence custody
+
+Exp8642 SHALL retain actual CoverageData immediately after each bounded child,
+including unsuffixed files, before any later test or combine. Each child SHALL
+have a distinct data path, exact original node IDs, command, normal exit, hashed
+logs, measured source statements and source hashes. A killed child, missing shard,
+foreign measured source or changed original source SHALL fail qualification.
+Original Exp8629 assertions, extractor semantics and historical verdicts remain.
+
+### SCENARIO-VERIFY-8642-CAPTURE
+
+A real small coverage child SHALL reproduce original_coverage_retention=false
+with the old late suffix-only hook. Direct capture SHALL preserve its actual
+unsuffixed SQLite data. Combining copies twice SHALL preserve all original hashes.
+Run the complete original streaming family and private E2E-018/021 readers in
+bounded disjoint children; verify their original collected node union exactly.
+Require 100 percent statements in newly owned code, including child/rejection paths.
+
+### SCENARIO-VERIFY-8642-IMMUTABLE
+
+Freeze fixture measurements, original authority, child SQLite bytes and inventories
+before candidate construction. Cold replay SHALL reject missing/deleted shards,
+stale aliases, foreign source data and self-consistently rehashed replacements.
+Repeated validators SHALL leave every immutable operand hash unchanged. Preserve
+Exp8639's observed Exp8629 measurement drift without replacing historical bytes.
+
+Exp8642 SHALL distinguish semantic source authority from the historical custody
+wrapper being replaced. The extractor, eager measurement authority and original
+thin CLI retain their original source hashes and assertions. Historical custody
+wrapper hash drift remains recorded with its old disqualification; it SHALL NOT
+veto an independently qualified new custody runner. The new runner requires its
+own complete checks, immutable source binding and 100 percent statements.
