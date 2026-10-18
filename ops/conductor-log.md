@@ -20532,3 +20532,4 @@ code |
 | 2026-10-18 05:40 UTC | Build bounded streaming source features with exact | OK | 129 passed, 1 warning in 34.81s |
 | 2026-10-18 05:42 UTC | Measure continuous small-head learning with retain | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8628-learning-shard-custody) |
 | 2026-10-18 05:42 UTC | Test later proper-loss benefit and simultaneous re | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8630-causal-brier-stream) |
+| 2026-10-18 05:47 UTC | Measure streaming source coverage and cost on the  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8629-streaming-source-prototype.streaming_extractor_ready_score (actual=0 == expected=1) |
