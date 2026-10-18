@@ -20510,3 +20510,4 @@ code |
 | 2026-10-18 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8409_v724_retrospective_label_criterion.json age-week 1: OPEN 7 days: |
 | 2026-10-18 00:21 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_cheap_learned_value_marker age-week 0: OPEN 1 days: REAL |
 | 2026-10-18 00:33 UTC | Harden live ARC horizon and censoring records with | OK | 133 passed, 1 warning in 63.19s (0:01:03) |
+| 2026-10-18 01:09 UTC | Map complete learning and lean-service operations  | OK | 89 passed, 1 warning in 96.24s (0:01:36) |
