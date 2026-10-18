@@ -56430,6 +56430,22 @@ real CLI rejection paths, private E2E-018/021, lint, types and checked publicati
 Deterministic qualification and descriptive cost do not prove natural coverage,
 semantic entailment, generalization or learning benefit. No model load or fit occurs.
 
+## REQ-VERIFY-8634: Installed exports, workers and existing public surfaces
+
+Test explicit imports, import-star, repeated lazy access, absent optional JAX
+and propagated import errors in fresh processes. Test existing Python, CLI,
+MCP and HTTP verification contracts. Do not invent an inference endpoint.
+Retain the original122-node union with immutable historical authority. Add
+installed worker parity, threshold fallback, unknown and duplicate identifiers,
+malformed and oversized frames, partial reads, deadlines, death and cleanup.
+
+### SCENARIO-VERIFY-8634-INSTALLED
+
+Checkout shadowing fails qualification. Require100percent new statements and
+affected initialization and worker statements, including real subprocess shards
+retained before combine. Scoped tests, Ruff, strict mypy, spec coverage and private
+E2E-018/021 SHALL pass. Failed owned checks forbid readiness. No public default changes.
+
 ## REQ-VERIFY-8627: Qualify bounded V741 execution and immutable replay
 
 Require scoped unit tests and100 percent newly owned statements, including real

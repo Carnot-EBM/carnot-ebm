@@ -1,0 +1,3819 @@
+# KAN Distillation Capability Specification
+
+**Capability:** kan
+**Version:** 0.1.0
+**Status:** Draft
+**Traces to:** FR-KAN-001, FR-KAN-002, FR-KAN-003, FR-KAN-004
+
+## Overview
+
+Defines how Carnot distills a large teacher safety model (gpt-oss-safeguard-20b)
+into a compact KAN (Kolmogorov-Arnold Network) classifier for real-time prompt
+injection detection.  KAN spline activations are interpretable: each control
+point maps directly to a named injection pattern feature, so a human auditor
+can read the spline to understand why a prompt was flagged.
+
+The distillation pipeline trains the KAN on teacher-labeled examples, measures
+AUROC on a held-out split, and gates deployment on reaching a minimum quality
+threshold (REQ-KAN-003/004).
+
+## Requirements
+
+### REQ-KAN-003: Distillation Training Dataset >= 3000 Examples
+
+The KAN distillation training dataset MUST contain at least 3000 labeled
+examples with a balanced positive/negative ratio (1500 injection + 1500 benign).
+
+**Rationale:**
+    Exp 710 trained on 1091 examples and achieved AUROC=0.8747, just below the
+    0.90 Tier 0b deployment gate.  Variance analysis shows the gap is driven by
+    dataset size: with fewer than 1500 examples per class the contrastive loss
+    surface is noisy and the optimizer settles in a shallow basin.  3000 balanced
+    examples provide enough signal for the 16-knot splines to fit the teacher's
+    classification boundary.
+
+**Acceptance criteria:**
+    - `len(dataset) >= 3000`
+    - `count(label="injection") == count(label="benign")` (within ±1)
+    - Dataset persisted at `results/kan_distill_v3_dataset.json` with schema field.
+
+### SCENARIO-KAN-003: Dataset balance check
+
+Given a generated dataset,
+When the loader reads `results/kan_distill_v3_dataset.json`,
+Then `len(examples) >= 3000` AND `abs(n_positive - n_negative) <= 1`.
+
+### REQ-KAN-004: KAN Architecture >= 16 Knots Per Activation
+
+The KAN distillation model used for Tier 0b quality gating MUST use at least
+16 spline knots per activation.
+
+**Rationale:**
+    8 knots (v2) could not capture the fine decision boundary near the teacher's
+    0.90 AUROC threshold.  16 knots double the spline resolution, allowing the
+    energy landscape to model sharper transitions between benign and injection
+    regions.  The interpretability property is preserved: each knot corresponds
+    to a piecewise-linear segment of the activation, readable as a breakpoint
+    in the injection-feature sensitivity curve.
+
+    Parameter count with 16 knots, n_hidden=8, n_features=32, degree=3:
+        edge_params  = 8 * 32 * (16+3) = 8 * 32 * 19 = 4864
+        output_params = 8 * 19          = 152
+        total         = 5016
+
+**Acceptance criteria:**
+    - `PromptInjectionEnergyCheckerV3._N_KNOTS == 16`
+    - `checker.n_params() == 5016` with default constructor arguments.
+    - Training for 100 epochs on 3000 examples completes without error.
+
+### SCENARIO-KAN-004: 16-knot architecture sanity check
+
+Given `PromptInjectionEnergyCheckerV3()`,
+When we call `checker.n_params()`,
+Then the result is 5016 (= 8 * 32 * 19 + 8 * 19).
+
+## REQ-KAN-VERIFY-001: KAEM/KAN PWA And MILP Property Verification
+
+The repository shall provide CPU-only KAN formal-verification helpers for small
+KAEM/KAN energy layers. The helpers shall:
+
+- split spline control points into piecewise-affine segments;
+- verify monotonicity by direct knot inspection;
+- verify output range and boundary-condition properties;
+- perform a MILP or equivalent linear counterexample search for monotonicity;
+  and
+- return structured result dictionaries with a `verified` boolean and violation
+  detail fields.
+
+The verification helpers shall make no hardware correctness claim. They are
+software property checks used to audit KAN energy functions before deployment
+or repair.
+
+### SCENARIO-KAN-VERIFY-001: Small KAN Properties Are Audited
+
+Given a small KAN layer with flat, monotone, and intentionally non-monotone
+control points,
+When the PWA, monotonicity, range, boundary, and MILP helpers run,
+Then flat and monotone layers are verified, non-monotone or inverted layers
+report violations, and every result exposes deterministic keys suitable for a
+terminal experiment artifact.
+
+## REQ-KAN-2871: Tiny KAN PWA/MILP Verifier Prototype With Honest Solver Boundary
+
+The KAN verification tier SHALL provide a tiny CPU-only prototype that replaces
+one bounded KAN-style univariate unit with an explicit piecewise-affine
+abstraction, records local and global abstraction error bounds, and checks one
+output property through either a local MILP solver or an exact finite
+enumeration fallback when no MILP solver is available.
+
+The prototype MUST write `results/experiment_2871_kan_pwa_milp_tiny_verifier_v1.json`
+with explicit solver/proof boundaries. It MUST NOT claim a general KAN verifier,
+trained-network soundness, or MILP readiness when the run used only the exact
+fallback.
+
+### SCENARIO-KAN-2871: Tiny PWA Property Artifact
+
+Given the deterministic fixture `phi(x) = x^2` on `x in [-1, 1]` with a bounded
+property domain `x in [-0.5, 0.5]`,
+When the verifier builds knot-aligned PWA chord envelopes and checks
+`phi(x) <= 0.25`,
+Then the artifact reports the exact local/global error bounds, records whether
+a MILP solver or exact fallback was used, verifies the property only when the
+certified upper bound is within the threshold, and includes all required Exp
+2871 schema fields.
+
+## REQ-KAN-2876: KAN PWA/MILP Corrigendum With Non-Tautological Bounds
+
+The KAN verification tier SHALL provide a narrow Exp 2876 corrigendum for the
+Exp 2871 tiny PWA/MILP prototype. The corrigendum MUST compute the local
+abstraction error bound and the global output error bound through distinct
+procedures, and the result artifact MUST record whether the two bounds are
+distinct by construction.
+
+The corrigendum MUST attempt a real local mixed integer linear backend before
+using exact PWA vertex enumeration. If no supported solver dependency is
+available, the artifact MUST report `blocked_solver_dependency` and may include
+exact enumeration only as fallback evidence. The artifact MUST NOT claim MILP
+readiness when solver dependencies are absent.
+
+### SCENARIO-KAN-2876: Corrigendum Clears Exp 2871 Tautology Flag
+
+Given a deterministic two-unit KAN-style PWA fixture with positive output
+weights,
+When the verifier computes per-segment local residual bounds, propagates a
+global output error bound through the weighted output graph, and maximizes the
+PWA upper envelope through a local solver when available,
+Then `local_error_bound` and `global_error_bound` are not mechanically equal,
+`bounds_distinct_by_construction` is true, solver availability and status are
+reported, exact enumeration is marked fallback-only, and
+`results/experiment_2876_kan_pwa_milp_corrigendum_v2.json` includes every
+required schema field.
+
+## REQ-KAN-2893: Tiny KAN PWA/MILP Hardware-Oriented Complexity Accounting
+
+The KAN verification tier SHALL provide a no-hardware-claim complexity
+accounting pass for the clean Exp 2876 tiny KAN PWA/MILP fixture. The accounting
+MUST load the Exp 2876 artifact, derive the two-unit PWA structure from the
+artifact or deterministic fixture, and report platform-independent operation and
+structural counts inspired by arXiv:2604.03345: real multiplications, bit
+operations, additions and bit-shifts, memory table entries, PWA regions, and
+MILP branch/constraint counts.
+
+The artifact MUST be written to
+`results/experiment_2893_kan_hardware_complexity_accounting_v1.json`, MUST
+compare against local KANELE/QuantKAN/KAEM accounting helper conventions where
+applicable, and MUST explicitly state that no FPGA, analog KAN, board, synthesis,
+or hardware execution claim is made.
+
+### SCENARIO-KAN-2893: Tiny PWA Complexity Artifact Is Deterministic
+
+Given the completed Exp 2876 two-unit KAN PWA/MILP corrigendum artifact,
+When the hardware-oriented accounting helper runs,
+Then the Exp 2893 artifact records deterministic RM/BOP/NABS, memory-table,
+PWA-region, MILP constraint, and branch counts; includes source artifacts,
+field-principle notes, local and global error bounds inherited from Exp 2876;
+sets `hardware_execution_claim_made=false` and `analog_kan_claim_made=false`;
+and contains every required schema field.
+
+## REQ-KAN-2904: KV260-Anchored KAN Hardware Complexity Accounting V2
+
+The KAN verification tier SHALL provide an Exp 2904 accounting pass that
+aggregates completed upstream artifacts instead of running new synthesis or
+board commands. The pass MUST read the tiny KAN node count from the Exp 2893 KAN
+PWA/MILP accounting artifact and the KV260 LUT, BRAM, and DSP utilization counts
+from the Exp 2898 bitstream/report evidence. It MUST write
+`results/experiment_2904_kan_hardware_complexity_accounting_v2.json` with:
+`honest_verdict`, `inference_substrate`, `kan_node_count`, `kv260_lut_used`,
+`kv260_bram_used`, `kv260_dsp_used`, `scaling_estimate_to_next_size`,
+`cited_upstream_artifacts`, and `duration_s`.
+
+The artifact MUST set
+`inference_substrate="aggregation_from_upstream_artifacts"` and MUST explicitly
+state that the scaling estimate is a conservative proxy derived from upstream
+KV260 bitstream utilization, not a KAN synthesis, timing-closure, or new board
+execution claim.
+
+### SCENARIO-KAN-2904: KV260 Utilization Refines KAN Scaling Estimate
+
+Given the completed Exp 2893 KAN accounting artifact and the Exp 2898 KV260
+bitstream/utilization evidence,
+When the Exp 2904 aggregation helper runs,
+Then the artifact records the Exp 2893 KAN node count, the Exp 2898 KV260 LUT,
+BRAM, and DSP counts, a deterministic next-size scaling estimate, the cited
+upstream artifact paths and checksums, and every required schema field.
+
+## REQ-KAN-3131: KAN PWA/MILP Verifier Abstraction Audit V1
+
+The KAN verification tier SHALL provide a bounded Exp 3131 audit that inspects
+whether local KAN/KAEM verifier code exists, builds a tiny piecewise-affine
+abstraction from the existing CPU-only fixture when it does, and records local
+and global error-bound accounting plus a MILP-compatible property check.
+
+The audit MUST write
+`results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json` with
+the following schema fields: `kan_pwa_milp_audit_v1_ready`,
+`kan_code_present`, `abstraction_count`, `local_error_bound_summary`,
+`global_error_bound_summary`, `milp_property_check_count`,
+`milp_property_pass_count`, `implementation_blockers`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+If local KAN/PWA verifier code is missing, the artifact MUST fail closed with a
+deterministic implementation-boundary contract that names the exact missing
+modules, schemas, and tests required before implementation. If local code is
+present, the audit MUST keep claims bounded to abstraction accounting and MUST
+NOT claim deployed verifier improvement, trained-network soundness, hardware
+execution, model-weight updates, or live LLM inference.
+
+### SCENARIO-KAN-3131: Existing Tiny KAN PWA/MILP Fixture Produces Bounded Audit
+
+Given the existing Exp 2876 two-unit KAN-style PWA/MILP fixture and the local
+OpenSpec KAN capability,
+When the Exp 3131 audit runs on CPU,
+Then the artifact reports KAN code presence, abstraction count, explicit
+per-unit local error bounds, propagated global output bounds, MILP-compatible
+property-check pass/fail counts, source artifact provenance, no live inference
+substrate, no implementation blockers, and an honest terminal verdict with no
+deployed verifier improvement claim.
+
+## REQ-KAN-3145: KAN Proof-Carrying Monitor Boundary V2
+
+The KAN verification tier SHALL provide a bounded Exp 3145 proof-carrying
+monitor boundary that attaches replayable KAN PWA/MILP proof records to a tiny
+subset of existing fragment-time monitor fixtures. The boundary MUST reuse the
+local Exp 3131 KAN abstraction evidence when code is present and MUST keep
+`deployed_verifier_claim=false`.
+
+The artifact MUST be written to
+`results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json` with
+the following schema fields: `kan_proof_carrying_monitor_v2_ready`,
+`kan_code_present`, `monitor_record_schema`, `attached_monitor_record_count`,
+`local_error_bound_summary`, `global_error_bound_summary`,
+`milp_property_check_count`, `false_accept_relevance`,
+`deployed_verifier_claim`, `implementation_blockers`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+Each attached monitor record MUST carry the exact monitor fixture link,
+piecewise-affine abstraction parameters, local and global error-bound
+summaries, one MILP-compatible property result, and a deterministic checksum.
+If KAN/PWA code or monitor fixture evidence is missing, the artifact MUST fail
+closed with exact missing modules, schemas, tests, or source artifacts. The
+artifact MUST NOT claim trained-network soundness, generation-path integration,
+hardware execution, live LLM inference, model-weight mutation, or deployed
+verifier improvement.
+
+### SCENARIO-KAN-3145: Tiny Proof-Carrying Monitor Records Are Attached
+
+Given the completed Exp 3131 KAN PWA/MILP abstraction audit and the Exp 3126
+fragment-time monitor artifact,
+When the Exp 3145 boundary builder runs on CPU,
+Then it attaches proof-carrying KAN monitor records to the known `.291`
+false-accept fixture subset when those fixtures are available, validates that
+each record contains a fixture link, PWA abstraction parameters, local/global
+error bounds, a MILP property result, and a checksum, reports whether the
+records would have prevented or only audited the `.291` false-accept families,
+and writes every required schema field with `deployed_verifier_claim=false`.
+
+## REQ-KAN-3159: KAN Proof-Carrying Monitor Expansion V1
+
+The KAN verification tier SHALL provide a bounded Exp 3159 expansion that
+loads the prior Exp 3145 proof-carrying monitor records, the Exp 3131 KAN
+PWA/MILP abstraction evidence, and the Exp 3136 exact false-accept/clean row
+sets, then attaches proof-carrying metadata to a small number of additional
+exact monitor rows when local code and artifacts support it.
+
+The expansion MUST write
+`results/experiment_3159_kan_proof_carrying_monitor_expansion_v1.json` with
+the following schema fields: `kan_proof_carrying_monitor_expansion_v1_ready`,
+`monitor_record_count`, `new_monitor_record_count`,
+`exact_row_coverage_count`, `pwa_milp_bound_records`,
+`deployed_verifier_claim_allowed`, `residual_blockers`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+Each `pwa_milp_bound_records` entry MUST expose a fixture ID, an exact-label
+link, domain bounds, local and global PWA error-bound summaries, MILP/PWA
+solver status, residual risk, and a deterministic checksum. The artifact MUST
+set `deployed_verifier_claim_allowed=false` unless a real deployed verifier has
+been implemented and tested. Bounded monitor-record expansion MUST NOT claim
+trained-network soundness, live LLM inference, generation-path integration,
+hardware execution, model-weight mutation, or deployment.
+
+### SCENARIO-KAN-3159: Exact Clean Rows Extend Prior Monitor Records
+
+Given the completed Exp 3145 boundary artifact and the Exp 3136 autopsy row
+sets,
+When the Exp 3159 expansion builder runs on CPU,
+Then it carries forward the prior false-accept proof records, attaches new
+records to additional clean exact rows, reports explicit total/new/exact-row
+coverage counts, preserves inspectable PWA/MILP bound records, records residual
+deployment blockers, and writes every required schema field with
+`deployed_verifier_claim_allowed=false`.
+
+## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
+
+The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
+warm-starts from a compatible local KAN checkpoint, trains for a fixed 20-epoch
+budget with EBM-CoT's contrastive hinge objective, and reports held-out AUROC
+before and after calibration.
+
+The training objective MUST use low-energy-correct / high-energy-incorrect
+semantics:
+
+```
+L = max(0, margin - (E_negative - E_positive))
+    + lambda_consistency * |E_positive - E_positive_paraphrase|
+```
+
+**Acceptance criteria:**
+    - The probe uses existing FoVer labeled step pairs and does not run fresh LLM inference.
+    - The artifact includes `baseline_auroc`, `ebm_cot_auroc`,
+      `calibration_auroc_delta`, `consistency_regularization_effect`, and
+      `implicit_cot_energy_viable`.
+    - `implicit_cot_energy_viable` is true iff `calibration_auroc_delta > 0`.
+    - The probe records an honest verdict when no compatible checkpoint is available.
+
+### SCENARIO-KAN-1384: FoVer hinge calibration artifact
+
+Given a balanced FoVer split with correct and incorrect step labels,
+When the EBM-CoT KAN calibration probe trains for 20 CPU epochs,
+Then the output artifact contains the required calibration fields and computes
+`calibration_auroc_delta = ebm_cot_auroc - baseline_auroc`.
+
+## REQ-KAN-1401: EBM-CoT V2 Hinge-Only Calibration Probe
+
+The KAN energy tier SHALL support an EBM-CoT v2 CPU-only calibration probe that
+reuses the Exp1384 FoVer split and compatible KAN checkpoint while disabling
+positive paraphrase consistency regularization.
+
+The training objective MUST be hinge-only:
+
+```
+L = max(0, margin - (E_negative - E_positive))
+```
+
+The probe MUST write `results/experiment_1401_ebm_cot_v2_hinge_only.json` with
+`consistency_regularization_weight=0.0`, `ebm_cot_v2_auroc`,
+`calibration_auroc_delta`, `paraphrase_energy_variance_before`,
+`paraphrase_energy_variance_after`, `variance_worsened`, and
+`implicit_cot_energy_viable`.
+
+**Acceptance criteria:**
+    - The probe loads `baseline_auroc` from the Exp1384 artifact so the v2 delta
+      is anchored to the prior result.
+    - `variance_worsened` is true iff paraphrase energy variance after
+      hinge-only training is greater than before.
+    - `implicit_cot_energy_viable` is true iff `calibration_auroc_delta > 0`.
+    - The artifact records an honest verdict describing whether hinge-only
+      training confirms the positive calibration signal without consistency
+      regularization.
+
+### SCENARIO-KAN-1401: Hinge-only artifact gates v2 viability
+
+Given the Exp1384 baseline artifact and the same FoVer train/test split,
+When the EBM-CoT v2 probe trains with `consistency_regularization_weight=0.0`,
+Then the output artifact uses `ebm_cot_v2_auroc` for the post-training score,
+computes `calibration_auroc_delta = ebm_cot_v2_auroc - baseline_auroc`, and
+sets `variance_worsened` from the measured paraphrase variance comparison.
+
+## REQ-KAN-1819: KAN Verifier Latency Benchmark
+
+The KAN model tier MUST provide a latency benchmark to measure the performance overhead of the CIKAN verifier against a baseline language model (e.g., `unsloth/gemma-4-31B-it-GGUF`).
+
+**Rationale:**
+    To deploy KAN verifiers in a production pipeline, we must verify that the latency overhead per token is within acceptable limits compared to the base model.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1819_kan_latency.py` writes `results/experiment_1819_kan_latency.json`.
+    - The JSON contains `baseline_tps`, `cikan_tps`, and `latency_overhead_percent`.
+    - Tests verify the benchmark generation.
+
+### SCENARIO-KAN-1819: Measure KAN Verifier Latency
+
+Given a CIKAN verifier and a mock language model pipeline,
+When the benchmark script is run,
+Then it outputs the token-per-second (TPS) for both baseline and CIKAN, and `results/experiment_1819_kan_latency.json` is generated.
+
+## REQ-KAN-5080: Tiny KAEM PWA/MILP Bridge Experiment
+
+The KAN verification tier SHALL provide an Exp 5080 CPU-only diagnostic bridge
+from an existing `UnivariateKAEMLayer` energy head to a piecewise-affine (PWA)
+abstraction and a bounded mixed-integer linear property check. The experiment
+MUST build the PWA abstraction from the KAEM layer's real knot/control-point
+structure, record the abstraction error bound, and use an available local
+linear-integer solver before claiming the property was checked.
+
+The experiment MUST write
+`results/experiment_5080_kan_pwa_milp_bridge_v466.json` with these top-level
+fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`kan_component_path`, `pwa_abstraction_built`, `milp_solver_available`,
+`property_checked`, `property_holds`, `error_bound`, `binary_variable_count`,
+`blocked_reason`, and `flagged_adversarial`. The artifact MUST set
+`inference_substrate="deterministic_formal_check"` and MUST use a terminal
+verdict prefix such as `success_kan_pwa_milp_property_verified_tiny` when a
+solver proves the property or `blocked_kan_pwa_milp_solver_unavailable` when no
+solver dependency is available.
+
+The experiment MUST NOT claim a production KAN verifier, trained-network
+soundness, hardware execution, or general MILP scalability. If the solver is
+unavailable, it MUST emit the blocked artifact instead of silently substituting
+an enumeration-only proof.
+
+### SCENARIO-KAN-5080: Tiny KAEM Bound Property Uses Solver Or Blocks
+
+Given a deterministic one-variable `UnivariateKAEMLayer` with monotone control
+points on `[-1, 1]`,
+When the Exp 5080 bridge builds the exact PWA segment representation and checks
+the bound property `energy(x) <= 1.0`,
+Then the artifact records the KAEM component path, a built PWA abstraction, the
+solver availability decision, the binary variable count for segment selection,
+the zero exact-PWA error bound with methodology note, and either a successful
+solver certificate or a blocked solver-dependency reason.
+
+## REQ-KAN-5091: Small Multi-Unit KAEM PWA/MILP Scale Telemetry
+
+The KAN verification tier SHALL extend the Exp 5080 KAEM/PWA/MILP bridge to a
+small two-input additive KAEM property without invoking an LLM. The experiment
+MUST build piecewise-affine abstractions from real `UnivariateKAEMLayer`
+control points, declare local and global abstraction error budgets, encode the
+property through a deterministic local MILP/Z3 solver path when available, and
+make solver complexity visible.
+
+The experiment MUST write
+`results/experiment_5091_kan_pwa_milp_scale_v467.json` with these top-level
+fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`abstraction_built`, `solver_available`, `property_statement`,
+`property_status`, `property_holds`, `binary_variable_count`,
+`constraint_count`, `pwa_piece_count`, `local_error_bound`,
+`global_error_bound`, `solve_time_s`, `scale_blocker`, and
+`flagged_adversarial`. The artifact MUST set
+`inference_substrate="deterministic_formal_solver"` and MUST use a terminal
+verdict such as `success_kan_pwa_milp_scale_property_verified_small` when the
+small scale-up is proved, or
+`complete_kan_pwa_milp_scale_blocked_by_solver_complexity` when solver
+complexity prevents the proof.
+
+The artifact MUST also report bound tightness and enough PWA/MILP structure to
+distinguish this from the one-variable Exp 5080 diagnostic. It MUST NOT claim a
+production KAN verifier, trained-network soundness, hardware execution, live
+LLM inference, or broad MILP scalability.
+
+### SCENARIO-KAN-5091: Two-Input KAEM Scale Property Reports Solver Counts
+
+Given a deterministic two-variable `UnivariateKAEMLayer` with monotone control
+points on `[-1, 1]^2`,
+When the Exp 5091 bridge builds exact PWA segment representations for both
+variables and checks the bound property for their additive KAEM energy,
+Then the artifact records local/global error budgets, a two-input property
+statement, PWA piece count, binary variable count, constraint count, solve time,
+bound tightness, solver availability, property status, and a success or blocked
+terminal verdict without any live LLM inference claim.
+
+## REQ-KAN-5098: Bounded KAEM PWA/MILP Property Suite With False Controls
+
+The KAN verification tier SHALL extend the clean Exp 5091 KAEM/PWA/MILP path
+into a bounded multi-property proof suite without invoking an LLM or hardware.
+The suite MUST reproduce or load the Exp 5091 two-unit property as a baseline,
+include at least three bounded properties over small KAEM units or additive
+compositions, include at least one expected-true property, include at least one
+adversarial expected-false property, and include at least one property whose
+certification depends on the declared approximation-error budget.
+
+Every property MUST be encoded through the PWA/MILP bridge and report solver
+status, binary variable count, constraint count, solve time, certified objective
+bound, property threshold, approximation-error budget, and counterexample or
+certificate detail. Expected-false controls MUST fail or produce
+counterexamples; they MUST NOT be counted as proved. Approximation-sensitive
+properties MUST remain unproved when the solver-certified PWA bound is within
+the threshold but the declared error budget erases the certification margin.
+
+The experiment MUST write
+`results/experiment_5098_kan_pwa_milp_scale_v2.json` with these top-level
+fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`property_suite`, `properties_proved`, `false_property_controls_passed`,
+`solver_statuses`, `binary_variable_counts`, `constraint_counts`,
+`solve_times_s`, `approximation_error_budget`, `counterexamples`,
+`max_scale_reached`, `scale_blocker`, and `flagged_adversarial`. The artifact
+MUST set `inference_substrate="exact_milp_solver_cpu"` unless another substrate
+is actually used and proven. It MUST use a terminal verdict such as
+`success_kan_pwa_milp_scale_v2_property_suite_clean` when the bounded suite
+passes all honest controls or
+`complete_kan_pwa_milp_scale_v2_blocked_by_solver_growth` when solver
+dependency or growth prevents a clean suite.
+
+The artifact MUST include principle annotations for every required top-level
+field. It MUST NOT claim hardware execution, trained-network soundness, broad
+KAN verifier readiness, live LLM inference, or global optimality beyond the
+bounded PWA/MILP properties actually submitted to the exact CPU solver.
+
+### SCENARIO-KAN-5098: Property Suite Scales Without Proving False Controls
+
+Given the Exp 5091 two-unit baseline fixture and additional deterministic small
+KAEM additive compositions,
+When the Exp 5098 suite encodes expected-true, expected-false, and
+approximation-budget-sensitive properties through the exact CPU PWA/MILP solver,
+Then the artifact proves only the expected-true bounded properties, records a
+counterexample for the false-property control, leaves the approximation-sensitive
+case unproved when its error budget erases the margin, reports scaling telemetry
+for every property, sets `false_property_controls_passed=true`, and avoids any
+hardware, live-LLM, or broad global-optimality claim.
+
+## REQ-KAN-5108: KAEM PWA/MILP Scale Stress Test With Honest Wall-Clock Ceiling
+
+The KAN verification tier SHALL determine, empirically, whether the Exp
+5091/5098 KAEM/PWA/MILP exact-verification approach scales toward the
+production KAEM cutover (`n_vars<=100`, `carnot.pipeline.verify_repair`
+`_build_kan_fast_path_model`, REQ-SAMPLE-029) or hits a wall well before it —
+a question no prior KAN-PWA/MILP experiment (Exp 2051 through Exp 5098) ever
+tested empirically at more than 2-3 units.
+
+The experiment MUST sweep additive KEAM unit count N across an ascending
+sequence including at least one value at or beyond the production reference
+(100), bound EVERY solve attempt with an explicit wall-clock solver timeout
+(not an unbounded call), and STOP the sweep at the first timeout rather than
+continuing to larger N. At every N that solves to optimal status, the suite
+MUST re-verify BOTH an adversarial expected-false property (must be
+counterexampled) and an approximation-budget-sensitive property (must remain
+honestly unproved) — not just at the smallest N — so a solver that behaves
+correctly at toy scale and incorrectly at larger scale is caught, not assumed
+away.
+
+The experiment MUST write
+`results/experiment_5108_kan_pwa_milp_scale_stress_test.json` with these
+top-level fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`unit_counts_tested`, `solve_times_s_by_n`, `solver_timeout_hit`,
+`largest_n_reached`, `realistic_kan_unit_count_reference`,
+`adversarial_rigor_preserved_at_scale`, `per_n_results`, `random_seed`,
+`reproducibility_checksum`, and `flagged_adversarial`. It MUST NOT claim to
+have reached the production reference unless `largest_n_reached` actually
+meets or exceeds it, and MUST NOT silently omit an N that timed out from the
+reported sweep.
+
+### SCENARIO-KAN-5108: Scale Sweep Finds Or Clears The Production Reference
+
+Given the Exp 5091/5098 additive KEAM PWA/MILP encoding and a wall-clock
+solver timeout,
+When the suite sweeps unit count N upward from a small baseline toward the
+production reference (100),
+Then the artifact reports solve time and solver status at every N attempted,
+stops the sweep at the first timeout, re-verifies the false-property control
+and approximation-budget abstention at every N that solved, and honestly
+reports either `largest_n_reached >= 100` (scales to production) or the exact
+N at which the wall-clock budget was exceeded (does not scale) — without
+extrapolating beyond what was actually measured.
+
+## REQ-KAN-5114: KAN Abstraction-Refinement Post-Wall Diagnostic
+
+The KAN verification tier SHALL provide an Exp 5114 CPU-only post-wall
+diagnostic that changes technique after the Exp 5108 exact-MILP scale wall.
+The diagnostic MUST load the Exp 5108 wall artifact, reuse the Exp 5098 true,
+false-control, and near-margin property pattern, and avoid repeating the same
+exact-MILP scale sweep. It MUST instead use a conservative local/global
+abstraction-refinement certificate over additive KAEM units: bound each unit
+locally, allocate a bounded piece budget by refining the largest local error
+contributors, sum the global conservative bound, and abstain rather than prove
+near-margin properties when the residual abstraction bound consumes the margin.
+
+The diagnostic MUST attempt at least one N larger than Exp 5108's solved ceiling
+and SHOULD include the documented N=100 production reference. It MUST test at
+least three property classes: an expected-true safe property, an expected-false
+property with a counterexample, and a near-margin property that safely abstains.
+It MUST write
+`results/experiment_5114_kan_abstraction_refinement_post_wall_v469.json` with
+these top-level fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `preconditions_checked`,
+`technique_changed_from_exp5108`, `exp5108_baseline_loaded`, `solved_n`,
+`attempted_n`, `certificate_soundness`, `false_property_detected`,
+`near_margin_abstained`, `abstraction_error_bounds`, `post_wall_progress`,
+`seeds_or_checksums`, `flagged_adversarial`, and `tests_run`.
+
+The artifact MUST also report `abstain_rate`, `piece_budget`, `binary_vars`,
+`constraints`, and runtime telemetry. `post_wall_progress` may be true only
+when the method proves or safely abstains at a larger or more realistic N than
+Exp 5108 without unsoundly proving any false-property control. The artifact
+MUST set `inference_substrate="kan_abstraction_refinement_cpu"` and MUST NOT
+claim trained-network soundness, hardware execution, live LLM inference,
+general KAN verifier readiness, or exact-MILP scalability.
+
+### SCENARIO-KAN-5114: Post-Wall Certificate Progress Without False Positives
+
+Given the Exp 5098 property-control pattern and the Exp 5108 wall artifact
+showing N=10 solved and N=20 timed out,
+When the Exp 5114 abstraction-refinement diagnostic runs on CPU,
+Then it loads the Exp 5108 baseline, attempts a larger N using local/global
+error-bounded decomposition rather than exact MILP, verifies only properties
+whose conservative bound is below threshold, emits a counterexample for the
+false-property control, abstains on near-margin cases whose residual
+abstraction bound consumes the margin, reports piece budget, binary-variable,
+constraint, runtime, and checksum telemetry, and sets `post_wall_progress=true`
+only if those controls remain sound at the larger attempted scale.
+
+## REQ-KAN-5128: KAN Certificate Breadth And Cycle-Consistent Explanation Audit
+
+The KAN verification tier SHALL provide an Exp 5128 CPU-only audit that extends
+the Exp 5114 post-wall abstraction-refinement certificate across at least three
+independent property families. The suite MUST load both the Exp 5108 exact-MILP
+wall artifact and the Exp 5114 post-wall baseline artifact, and MUST preserve
+their measured boundary: Exp 5128 is not another exact-MILP timing sweep.
+
+The audit MUST include at least one expected-true property family, one
+false-property control family that is detected by a counterexample, and one
+near-margin family that abstains rather than overclaiming when the residual
+abstraction error consumes the certification margin. For every property family
+it MUST emit a machine-readable certificate containing `property`, `verdict`,
+`margin`, `abstraction_error`, and `proof_status`.
+
+The audit MUST generate deterministic explanations from the certificates,
+reconstruct the certificate metadata from each explanation, and check the
+reconstruction with a symbolic validator. The deliverable MUST be written to
+`results/experiment_5128_kan_certificate_explanation_v470.json` with these
+top-level fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `exp5108_wall_loaded`,
+`exp5114_baseline_loaded`, `property_families`, `certificates_emitted`,
+`certificate_soundness`, `false_property_detected`, `near_margin_abstained`,
+`explanation_records`, `explanation_cycle_soundness`,
+`kan_certificate_breadth_ready`, `flagged_adversarial`, `conductor_modified`,
+and `tests_run`.
+
+The artifact MUST set
+`experiment_id="exp5128-kan-certificate-explanation-v470"`,
+`milestone="2026.07.470"`, and
+`inference_substrate="cpu_kan_abstraction_and_symbolic_certificate_check"`.
+It MUST NOT claim trained-network soundness, hardware execution, live LLM
+inference, general KAN verifier readiness, or exact-MILP scalability.
+
+### SCENARIO-KAN-5128: Explanations Reconstruct And Validate Certificates
+
+Given the Exp 5108 exact-MILP wall artifact and the Exp 5114 post-wall
+abstraction-refinement baseline,
+When the Exp 5128 audit evaluates independent property families on CPU,
+Then it emits one certificate per family, detects the false-property control,
+abstains on the near-margin family, generates deterministic explanations,
+reconstructs each certificate's property, verdict, margin, abstraction error,
+and proof status from its explanation, validates those reconstructions with a
+symbolic checker, reports certificate breadth and cycle soundness, and sets
+`kan_certificate_breadth_ready=true` only when all controls and explanation
+cycles are sound.
+
+## REQ-KAN-5140: Symbolic-KAN Certificate Distillation Cycle Check
+
+The KAN verification tier SHALL provide an Exp 5140 CPU-only experiment that
+loads the Exp 5128 KAN certificate/explanation artifact and distills its
+residual/certificate behavior into an explicit finite primitive rule set. The
+primitive set MUST include monotone segments, threshold clauses, affine
+intervals, and bounded residual rules, and the experiment MUST use exact code
+checks rather than an LLM judge.
+
+The experiment MUST reconstruct each distilled explanation's property metadata,
+verdict, margin, and abstention condition from the symbolic rules and compare
+them with the original Exp 5128 certificate/explanation records. It MUST include
+false-property, label-shuffle, near-margin, and family-holdout controls. If the
+Exp 5128 upstream artifact or its certificate/explanation records are missing,
+the experiment MUST write a blocked terminal artifact rather than fabricating
+rules or metrics.
+
+The deliverable MUST be written to
+`results/experiment_5140_symbolic_kan_certificate_distillation_v471.json` with
+these top-level fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `exp5128_loaded`,
+`symbolic_primitives`, `distilled_rules_path`, `symbolic_equivalence_rate`,
+`certificate_soundness`, `cycle_reconstruction_rate`,
+`false_property_detected`, `near_margin_abstention_rate`,
+`family_holdout_results`, `symbolic_kan_ready`, `conductor_modified`, and
+`tests_run`.
+
+The artifact MUST set
+`experiment_id="exp5140-symbolic-kan-certificate-distillation-v471"`,
+`milestone="2026.07.471"`, and
+`inference_substrate="exact_checked_symbolic_kan_distillation"`.
+`symbolic_kan_ready` MUST be true only when certificate soundness is preserved,
+the cycle reconstruction is exact, the false-property and label-shuffle
+controls pass, and near-margin behavior abstains instead of overclaiming.
+
+### SCENARIO-KAN-5140: Symbolic Rules Reconstruct Certificate Verdicts
+
+Given the complete Exp 5128 KAN certificate/explanation artifact,
+When Exp 5140 distills certificate residual behavior into symbolic primitive
+rules,
+Then exact reconstruction of property metadata, verdict, margin, and
+abstention condition matches the original certificates, false-property and
+label-shuffle controls are detected, near-margin controls abstain, family
+holdout checks report their rates, and `symbolic_kan_ready=true` only when all
+soundness and control gates pass.
+
+## REQ-KAN-5230: V478 KAEM PWA/MILP Verifier Certificate Pilot
+
+The KAN verification tier SHALL provide an Exp 5230 CPU-only certificate pilot
+that ties an existing KAEM/KAN-style module to deterministic PWA/MILP property
+checks without claiming broad KAN verification. The pilot MUST target
+`python/carnot/models/kaem_energy.py::UnivariateKAEMLayer`, reuse the existing
+Exp 5080/5091 KAEM PWA helpers where possible, and check only a tiny bounded
+input box.
+
+The pilot MUST check at least two bounded properties, including monotonicity of
+the exported KAEM PWA energy over the tiny input box and a no-unsafe-decision
+bound for a fixed decision threshold. If a supported MILP/Z3 backend is
+missing, it MUST write an honest blocked artifact with the missing prerequisite
+rather than an enumeration-only certificate.
+
+The deliverable MUST be written to
+`results/experiment_5230_kan_milp_verifier_certificate_v478.json` with
+principle-wrapped fields for `kan_certificate_produced`,
+`certificate_path`, `target_module`, `properties_checked`,
+`bound_tightness`, `reused_existing_helpers`, `tests_run`,
+`inference_substrate`, and `honest_verdict`.
+`inference_substrate` MUST be
+`deterministic_pwa_milp_certificate`. `honest_verdict` MUST start with
+`complete:`, `complete_`, `success:`, or `success_` and state whether a
+certificate was produced.
+
+The artifact MUST NOT claim trained-network soundness, deployed verifier
+improvement, hardware execution, live LLM inference, GRS-KAN implementation, or
+general KAN verifier readiness.
+
+### SCENARIO-KAN-5230: Tiny KAEM Certificate Checks Monotonicity And Unsafe Bound
+
+Given a deterministic two-variable `UnivariateKAEMLayer` fixture with exact
+linear-interpolation control points and a tiny input box,
+When Exp 5230 exports the fixture through the existing PWA helpers and submits
+monotonicity plus no-unsafe-decision checks to the deterministic solver,
+Then the artifact produces a certificate only when both properties are
+verified, records bound tightness and helper provenance, and otherwise blocks
+with the exact missing solver prerequisite.
+
+## REQ-KAN-5242: V479 KAEM Certificate Abstraction Scale Boundary
+
+The KAN verification tier SHALL extend the Exp 5230 tiny KAEM PWA/MILP
+certificate into a bounded abstraction stress test without claiming hardware
+hardware readiness, live LLM inference, analog KAN execution, trained-network soundness,
+or broad KAN verification. The experiment MUST reproduce the Exp 5230
+certificate path first and record the exact baseline dimensions before trying
+any stress case.
+
+The stress test MUST include one or two bounded stress axes selected from
+additional PWA segments, wider input bounds, more constraints, and a deliberate
+false property. If a deliberate false property is included, the verifier MUST
+reject it rather than counting it as a successful certificate. Every stress row
+MUST record certificate success or failure, solver status, solve time,
+slack/margin when applicable, and any detected numerical instability.
+
+The deliverable MUST be written to
+`results/experiment_5242_kan_certificate_abstraction_scale_v479.json` with
+principle-wrapped fields for `kan_certificate_baseline_reproduced`,
+`kan_certificate_extended`, `stress_axes`, `max_pwa_segments_verified`,
+`false_property_rejected`, `certificate_slack_min`, `solve_time_s`,
+`tests_run`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` MUST be
+`deterministic_kan_pwa_milp_certificate`. `honest_verdict` MUST start with
+`complete:`, `complete_`, `success:`, or `success_` and state the bounded
+certificate scale achieved or blocked.
+
+### SCENARIO-KAN-5242: Bounded Certificate Stress Reports Scale Boundary
+
+Given the committed Exp 5230 KAEM PWA/MILP certificate artifact,
+When Exp 5242 reproduces the baseline dimensions and runs bounded stress cases
+with more PWA pieces, wider input bounds, or a deliberate false property,
+Then the artifact reports the maximum PWA segment count verified, whether the
+false property was rejected, minimum certificate slack, solver timing, and an
+honest verdict scoped only to the bounded deterministic KAEM certificate.
+
+## REQ-KAN-5254: V480 Bounded KAN Convex-Envelope Certificate Stress Test
+
+The KAN verification tier SHALL provide an Exp 5254 CPU-only convex-envelope or
+convex-relaxation stress test for a small additive KAEM/KAN-style fixture. The
+stress test MUST compare against the committed Exp 5242 PWA baseline on a
+bounded input property, certify at least one expected-true property, reject at
+least one deliberate expected-false property, and state the certificate scope
+explicitly.
+
+The implementation MAY be a deterministic prototype when the full arXiv
+2604.03871 method is too large for the current codebase, but it MUST keep the
+claim narrow: bounded polynomial univariate components, offline deterministic
+certificate arithmetic, no broad KAN verification, no nonlinear global proof
+coverage, no hardware execution, and no hardware speedup claim.
+
+The deliverable MUST be written to
+`results/experiment_5254_kan_convex_envelope_certificate_v480.json` with
+principle-wrapped fields for `honest_verdict`, `inference_substrate`,
+`certificate_method`, `variables_verified`, `max_segments_or_envelopes_verified`,
+`input_box`, `true_property_certified`, `false_property_rejected`,
+`certificate_slack_min`, `solve_time_s`, and `no_hardware_speedup_claim`.
+`inference_substrate` MUST be `offline_deterministic_certificate_no_llm`.
+`honest_verdict` MUST start with `complete:` or `blocked_` and state the bounded
+certificate scope.
+
+### SCENARIO-KAN-5254: Convex Envelope Certificate Certifies True Bound And Rejects False Bound
+
+Given the committed Exp 5242 bounded KAEM PWA/MILP baseline artifact,
+When Exp 5254 builds a deterministic two-variable convex-envelope relaxation
+over the same bounded input box,
+Then the artifact records the baseline PWA segment count, convex envelope count,
+variable count, input box, solve time, minimum slack, true-property
+certification, false-property rejection, explicit certificate method, and no
+hardware speedup claim without claiming broad KAN verification.
+
+## REQ-KAN-5265: V481 KAN Certificate Explanation And Refinement Layer
+
+The KAN verification tier SHALL extend the Exp 5254 bounded convex-envelope
+certificate with an explanation/refinement layer that remains scoped to the
+same deterministic two-variable additive quadratic fixture. The layer MUST load
+or reproduce the Exp 5254 certificate, identify which univariate component and
+which envelope interval contribute most to the certified upper bound, and
+attempt a local abstraction refinement when the envelope has nonzero interior
+gap.
+
+The refinement MUST preserve the certified true upper-bound property, MUST keep
+a near-threshold expected-false property rejected by a deterministic witness,
+and MUST report explicit slack before and after refinement. If endpoint
+monotonicity prevents the certified output upper bound from tightening, the
+artifact MUST say so directly while still reporting any tighter pointwise
+envelope-gap bound from the refined abstraction. The layer MUST avoid broad KAN
+verification, trained-network soundness, hardware execution, hardware speedup,
+or live LLM claims.
+
+The deliverable MUST be written to
+`results/experiment_5265_kan_certificate_explanation_refinement_v481.json` with
+the required fields `honest_verdict`, `inference_substrate`,
+`certificate_refinement_ready`, `certificate_refinement_ready_principle`,
+`true_property_certified`, `false_property_rejected`, `slack_before_after`,
+`explanation_artifact_path`, `spec_updated`, and `tests_run`.
+`inference_substrate` MUST be `offline_deterministic_certificate_no_llm`.
+`honest_verdict.value` MUST start with `complete:` or `blocked_` and state
+whether the refinement added certificate value.
+
+### SCENARIO-KAN-5265: Explanation Identifies Bound Drivers And Refines Envelope Gap
+
+Given the committed Exp 5254 bounded convex-envelope certificate artifact,
+When Exp 5265 builds the explanation/refinement layer on CPU,
+Then the artifact identifies the largest bound-contributing univariate
+component and interval, compares no-refinement and refinement summaries,
+preserves true-property certification, rejects a near-threshold false property,
+reports before/after slack and envelope-gap numbers, and writes an explanation
+artifact path without claiming broad KAN verification.
+
+## REQ-KAN-5277: V482 KAN PWA/MILP Certificate Scale And False-Property Rejection
+
+The KAN verification tier SHALL extend the bounded certificate path to one
+small multi-component PWA/MILP property without claiming broad KAN
+verification. The experiment MUST build a deterministic CPU-only fixture with
+multiple univariate convex components, replace each component with explicit
+piecewise-affine upper envelopes, and submit the bounded property to a local
+MILP-compatible solver. The certificate MUST record the total PWA piece count,
+per-component local error bounds, the propagated global error bound, solve
+time, approximation slack, and property-level witness data.
+
+The experiment MUST check one expected-true property and one nearby
+expected-false property over the same certified region. The expected-true
+property MUST be accepted only when the PWA/MILP certified upper bound plus the
+declared approximation accounting stays within the threshold. The
+expected-false property MUST be rejected by a deterministic witness rather than
+counted as a successful certificate. The experiment MUST also run a deterministic
+dynamic spot-check or sampled falsification pass over the certified region to
+catch implementation mistakes before writing the terminal artifact.
+
+The deliverable MUST be written to
+`results/experiment_5277_kan_milp_certificate_scale_v482.json` with the
+required fields `honest_verdict`, `inference_substrate`,
+`certificate_scaled`, `false_property_rejected`, `approximation_slack`,
+`piece_count`, `solve_time_s`, `dynamic_spot_check_passed`, and `tests_run`.
+Each required scalar field except `tests_run` MUST be principle-wrapped with
+`value` and `principle`. `inference_substrate.value` MUST be
+`offline_deterministic_certificate_no_llm`. `honest_verdict.value` MUST start
+with `complete:` or `blocked_` and state whether the scaled certificate is
+positive, null, blocked, or too loose. The artifact MUST NOT claim trained
+network soundness, hardware execution, hardware speedup, live LLM inference, or
+general KAN verifier readiness.
+
+### SCENARIO-KAN-5277: Multi-Component PWA/MILP Certificate Reports Slack And Rejects False Bound
+
+Given the committed Exp 5265 explanation/refinement artifact and a deterministic
+three-component bounded convex fixture,
+When Exp 5277 builds piecewise-affine upper envelopes, solves the expected-true
+and expected-false bounded properties through the local MILP-compatible path,
+and runs deterministic dynamic spot checks over the certified region,
+Then the artifact reports positive certificate scaling, false-property
+rejection, numeric approximation slack, integer piece count, solve time,
+local/global error bounds, dynamic spot-check success, and required tests
+without claiming broad KAN verification.
+
+## REQ-KAN-5291: V483 Low-Order Factor Certificate Curriculum
+
+The KAN verification tier SHALL provide an Exp 5291 CPU-only curriculum that
+measures bounded low-order-first certificate behavior over the existing KAN
+PWA/MILP and factor-graph fixtures. The experiment MUST reuse the Exp 5277
+three-component PWA/MILP certificate fixture and the Exp 5278 solver-to-factor
+boundary metadata; it MUST NOT create an unrelated benchmark or modify
+`scripts/research_conductor.py`.
+
+The curriculum MUST define explicit low-order, medium-order, and higher-order
+factor stages with property targets. Each stage MUST run a deterministic
+certificate check that records factor order, solve time, certificate slack,
+PWA/factor piece count, false-property rejection, and a failure class. The
+low-order-first order MUST be compared with a deterministic shuffled or
+unstructured ordering when feasible. The comparison MUST state whether the
+low-order curriculum helped certificate success, was null, blocked, or only
+provided measurement value.
+
+The deliverable MUST be written to
+`results/experiment_5291_low_order_factor_certificate_curriculum_v483.json`
+with the required fields `honest_verdict`, `inference_substrate`,
+`low_order_curriculum_ready`, `low_order_curriculum_ready_principle`,
+`factor_order_metrics`, `certificate_success_by_order`,
+`false_property_rejected`, `slack_metrics`, `solve_time_metrics`,
+`piece_count_metrics`, and `tests_run`. Every required field except
+`low_order_curriculum_ready`, `low_order_curriculum_ready_principle`, and
+`tests_run` MUST be principle-wrapped with `value` and `principle`.
+`inference_substrate.value` MUST be `offline_deterministic_certificate_no_llm`.
+`honest_verdict.value` MUST start with `complete:`, `null:`, or `blocked_` and
+state whether the low-order curriculum helped. The artifact MUST NOT claim
+trained-network soundness, broad KAN verification, hardware execution, hardware
+speedup, live LLM inference, or a causal EBM training-dynamics result.
+
+### SCENARIO-KAN-5291: Low-Order Curriculum Reports Order, Slack, And False Controls
+
+Given the committed Exp 5277 KAN PWA/MILP certificate fixture and Exp 5278
+factor-graph boundary fixture,
+When Exp 5291 evaluates low-order, medium-order, and higher-order certificate
+stages in low-order-first order and compares them with a deterministic shuffled
+ordering,
+Then the artifact reports factor-order metrics, certificate success by order,
+false-property rejection, slack accounting, solve-time metrics, piece-count
+metrics, failure classes, source fixture provenance, and required tests without
+claiming broad KAN verification or modifying the conductor.
+
+## REQ-KAN-5304: V484 Dynamic Abstraction And Spot-Check Certificate Diagnostic
+
+The KAN verification tier SHALL replace the null low-order curriculum finding
+with a bounded dynamic-abstraction diagnostic over the existing Exp 5277
+KAN PWA/MILP fixture and Exp 5278 Ising-style factor boundary. The experiment
+MUST reuse those committed fixtures, compare static abstraction, Exp 5291
+low-order ordering, and dynamic spot-check/refinement, and MUST NOT modify
+`scripts/research_conductor.py`.
+
+The dynamic method MUST select refinement or spot-check points from measurable
+certificate signals such as slack, local envelope error, boundary proximity, or
+near-violated constraints. It MUST preserve declarative constraint-group
+metadata and validate final property witnesses and factor assignments with a
+symbolic checker rather than trusting telemetry alone. It MUST preserve
+expected-true property acceptance, expected-false property rejection, and honest
+solver/fallback reporting. It MUST fail closed outside the certified bounded
+region; this bounded region is the only scope of the diagnostic. It MUST NOT
+claim global KAN robustness, trained-network soundness,
+hardware execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5304_kan_dynamic_abstraction_spotcheck_v484.json` with the
+required fields `honest_verdict`, `inference_substrate`,
+`dynamic_abstraction_helped`, `certificate_success_by_method`,
+`false_property_rejected`, `slack_metrics`, `spotcheck_metrics`,
+`bounded_scope_only`, and `tests_run`. Every required field except `tests_run`
+MUST be principle-wrapped with `value` and `principle`.
+`inference_substrate.value` MUST be
+`offline_deterministic_certificate_no_llm`. `bounded_scope_only.value` MUST be
+true. `honest_verdict.value` MUST start with `complete:`, `null:`, or
+`blocked_` and state whether dynamic abstraction helped.
+
+### SCENARIO-KAN-5304: Dynamic Refinement Tightens Diagnostics Without Overclaiming Scope
+
+Given the committed Exp 5277 KAN PWA/MILP certificate fixture, Exp 5278
+factor-graph boundary fixture, and Exp 5291 low-order curriculum artifact,
+When Exp 5304 compares static abstraction, low-order ordering, and a dynamic
+slack/error/boundary-driven refinement plus spot-check diagnostic,
+Then the artifact reports piece counts, solve time, slack, false-property
+rejection, spot-check hit rate, declarative constraint groups, symbolic-checker
+validation, solver/fallback status, and bounded-scope limits without claiming
+global robustness beyond the certified input box.
+
+## REQ-KAN-5316: V485 Optimal Abstraction Budget For Bounded KAN Certificates
+
+The KAN verification tier SHALL add an Exp 5316 CPU-only bounded abstraction
+budget experiment over the existing Exp 5277 KAN PWA/MILP fixture and Exp 5304
+dynamic-abstraction diagnostic. The experiment MUST reuse those committed
+fixtures, compare static allocation, `.484` dynamic spot-check allocation, and
+an optimal-budget allocation, and MUST NOT modify `scripts/research_conductor.py`.
+
+The optimal-budget method MUST use a deterministic DP/knapsack-style allocation
+or equivalent exhaustive dynamic program suitable for the three-unit bounded
+fixture. It MUST allocate PWA pieces across KAN units under an explicit
+global error budget and piece budget, then run the same bounded
+MILP-compatible certificate path used by the existing KAN certificate experiments. The
+comparison MUST report envelope gap, MILP solve time, certificate success,
+false-property rejection, and piece count for every method. The artifact MUST
+state directly that any measured tightening is limited to the bounded fixture
+and MUST NOT claim general KAN verification improvement, trained-network
+soundness, hardware execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5316_kan_optimal_abstraction_budget_v485.json` with the
+required fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `kan_optimal_abstraction_ready`, `allocation_strategy`,
+`piece_budget`, `envelope_gap_delta`, `certificate_success_delta`,
+`false_property_rejection_rate`, `milp_solve_time_delta_s`,
+`bounded_fixture_only`, and `tests_run`. The fields `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`allocation_strategy`, and `tests_run` MUST be principle-wrapped with `value`
+and `principle`; `kan_optimal_abstraction_ready`, `bounded_fixture_only`,
+`piece_budget`, `envelope_gap_delta`, `certificate_success_delta`,
+`false_property_rejection_rate`, and `milp_solve_time_delta_s` MUST be bare
+scalar values. `inference_substrate.value` MUST be
+`bounded_kan_pwa_milp_certificate`. `bounded_fixture_only` MUST be true.
+`honest_verdict.value` MUST start with `complete:`, `null:`, or `blocked_` and
+state whether optimal-budget allocation improved bounded diagnostic tightness.
+
+Required field principles:
+- `experiment_id`: Traceable Exp 5316 identifier for the bounded KAN abstraction budget run.
+- `milestone`: Milestone accountability for the V485 bounded certificate allocation task.
+- `status`: Terminal status for downstream readers; complete means the bounded static, dynamic, and optimal-budget allocations were all compared.
+- `honest_verdict`: Terminal Exp 5316 verdict; starts with complete:, null:, or blocked_ and states whether optimal-budget allocation tightened only the bounded fixture.
+- `inference_substrate`: Declares a bounded KAN PWA/MILP certificate substrate with no LLM inference, hardware execution, or broad KAN verification claim.
+- `allocation_strategy`: Records the deterministic DP/knapsack-style objective, selected PWA piece counts, global error budget, and static/dynamic comparators.
+- `tests_run`: Commands run to validate the allocation logic, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks.
+
+### SCENARIO-KAN-5316: Budgeted Allocation Tightens The Bounded Fixture Only
+
+Given the committed Exp 5277 bounded KAN PWA/MILP certificate fixture and Exp
+5304 static/dynamic abstraction comparison,
+When Exp 5316 allocates PWA pieces across the three KAN units with a
+DP/knapsack-style budget policy and compares it with static and `.484` dynamic
+allocations,
+Then the artifact reports allocation strategy, piece budget, per-method piece
+counts, envelope gaps, MILP solve times, certificate success, false-property
+rejection, and required tests while keeping `bounded_fixture_only=true` and
+avoiding any claim of general KAN verification improvement.
+
+## REQ-KAN-5332: V486 Counterexample Localization Diagnostic For Bounded KAN Abstractions
+
+The KAN verification tier SHALL add an Exp 5332 CPU-only bounded diagnostic
+over the existing Exp 5277 KAN PWA/MILP fixture and Exp 5316 optimal-budget
+outputs. The experiment MUST reuse the committed abstraction/certificate
+fixtures where possible, define deterministic false-property perturbations for
+the tiny three-unit fixture, and measure whether the abstraction localizes the
+violating unit and PWA region for each expected counterexample while preserving
+paired true-property certificates. The diagnostic MUST NOT modify
+`scripts/research_conductor.py`.
+
+The diagnostic MUST record solve time, piece budget, envelope gap,
+false-property rejection, true-property preservation, and counterexample
+localization accuracy. It MUST report `certificate_success_delta` separately
+from localization so a tighter or more localized diagnostic is not presented as
+a broad certificate-success improvement. The artifact MUST state directly that
+the result is limited to the deterministic fixture and MUST NOT claim broad KAN
+verification success, trained-network soundness, hardware execution, hardware
+speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5332_kan_counterexample_localization_v486.json` with the
+required fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `fixture_count`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `counterexample_localization_accuracy`,
+`envelope_gap_delta`, `certificate_success_delta`,
+`counterexample_localization_ready`, `no_broad_certificate_claim`, and
+`tests_run`. The fields `experiment_id`, `milestone`, `status`,
+`honest_verdict`, `inference_substrate`, and `tests_run` MUST be
+principle-wrapped with `value` and `principle`; `fixture_count`,
+`false_property_rejection_rate`, `true_property_preservation_rate`,
+`counterexample_localization_accuracy`, `envelope_gap_delta`,
+`certificate_success_delta`, `counterexample_localization_ready`, and
+`no_broad_certificate_claim` MUST be bare scalar values.
+`inference_substrate.value` MUST be
+`deterministic_kan_abstraction_diagnostic`. `honest_verdict.value` MUST start
+with `complete:` or `blocked_`. `no_broad_certificate_claim` MUST be true.
+
+Required field principles:
+- `experiment_id`: Traceable Exp 5332 identifier for the bounded KAN counterexample-localization diagnostic.
+- `milestone`: Milestone accountability for the V486 bounded counterexample-localization task.
+- `status`: Terminal status for downstream readers; complete means all deterministic false-property perturbations were evaluated.
+- `honest_verdict`: Terminal Exp 5332 verdict; starts with complete: or blocked_ and states whether the bounded diagnostic localized counterexamples without broad certificate claims.
+- `inference_substrate`: Declares the deterministic KAN abstraction diagnostic substrate with no LLM inference, hardware execution, or broad KAN verification claim.
+- `tests_run`: Commands run to validate the localization diagnostic, artifact schema, new-code coverage, and repository tests.
+
+### SCENARIO-KAN-5332: False-Property Counterexamples Localize To Expected Units And Regions
+
+Given the committed Exp 5277 bounded KAN PWA/MILP fixture and the Exp 5316
+optimal-budget allocation,
+When Exp 5332 applies one deterministic false-property perturbation per KAN
+unit and runs the bounded certificate diagnostic,
+Then the artifact reports the expected and predicted violating unit/region,
+solve time, piece budget, envelope gap, false-property rejection rate,
+true-property preservation rate, localization accuracy, envelope-gap delta, and
+neutral certificate-success delta while keeping `no_broad_certificate_claim=true`.
+
+## REQ-KAN-5346: V487 KAN/Ising Counterexample Constraint Bridge
+
+The KAN verification tier SHALL add an Exp 5346 CPU-only bounded bridge that
+converts the localized Exp 5332 false-property counterexample cells into
+explicit downstream cut constraints and equivalent tiny Ising penalty records.
+The bridge MUST reuse the Exp 5332 localization output and MAY reuse the Exp
+5343 deterministic QSTR fixture for true/false property labels. It MUST define
+false-property regions, localized counterexample cells, generated cut
+constraints, and Ising penalty terms on the tiny deterministic fixture. It MUST
+NOT modify `scripts/research_conductor.py`.
+
+The bridge MUST run deterministic true/false property checks before and after
+injecting the generated constraints. It MUST report false-property rejection
+delta, true-property preservation, solve-time delta, cut count, unsafe false
+accepts, and certificate-success delta. `constraint_bridge_ready` MUST be true
+only when injected constraints preserve true properties, reduce at least one
+false-property failure, introduce no unsafe false accepts, and avoid broad
+certificate claims. `certificate_success_delta` MUST remain separate from
+constraint rejection so the artifact does not imply broad KAN certificate
+success. `constraint_bridge_ready` MUST be true only under that bounded
+preserve-and-reject condition.
+
+The deliverable MUST be written to
+`results/experiment_5346_kan_ising_counterexample_constraint_bridge_v487.json`
+with the required fields `experiment_id`, `milestone`, `status`,
+`honest_verdict`, `inference_substrate`, `fixture_count`,
+`counterexample_cut_count`, `false_property_rejection_delta`,
+`true_property_preservation_rate`, `solve_time_delta_s`,
+`unsafe_false_accepts`, `certificate_success_delta`,
+`no_broad_certificate_claim`, `constraint_bridge_ready`, and `tests_run`. The
+fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, and `tests_run` MUST be principle-wrapped with `value`
+and `principle`; `fixture_count`, `counterexample_cut_count`,
+`false_property_rejection_delta`, `true_property_preservation_rate`,
+`solve_time_delta_s`, `unsafe_false_accepts`, `certificate_success_delta`,
+`no_broad_certificate_claim`, and `constraint_bridge_ready` MUST be bare scalar
+values. `inference_substrate.value` MUST be
+`deterministic_kan_ising_constraint_bridge`. `honest_verdict.value` MUST start
+with `complete:` or `blocked_`. `no_broad_certificate_claim` MUST be true.
+
+Required field principles:
+- `experiment_id`: Traceable Exp 5346 identifier for the bounded KAN/Ising counterexample-to-constraint bridge.
+- `milestone`: Milestone accountability for the V487 bounded constraint-bridge task.
+- `status`: Terminal status for downstream readers; complete means localized counterexample cells were converted to constraints and checked with and without injection.
+- `honest_verdict`: Terminal Exp 5346 verdict; starts with complete: or blocked_ and states whether explicit cuts preserved true properties without broad certificate claims.
+- `inference_substrate`: Declares the deterministic KAN/Ising constraint-bridge substrate with no LLM inference, hardware execution, or broad KAN certificate claim.
+- `tests_run`: Commands run to validate the bridge logic, artifact schema, new-code coverage, and repository tests.
+
+### SCENARIO-KAN-5346: Localized Counterexamples Become Downstream Cuts
+
+Given the committed Exp 5332 bounded KAN counterexample-localization artifact
+and the Exp 5343 deterministic QSTR fixture,
+When Exp 5346 converts localized false-property cells into explicit cut
+constraints and Ising penalties, then reruns deterministic property checks with
+and without those injected constraints,
+Then the artifact reports the false-property regions, localized cells,
+generated cut/penalty records, before/after rejection rates, true-property
+preservation rate, solve-time delta, cut count, unsafe false accepts, neutral
+certificate-success delta, and `constraint_bridge_ready` without claiming a
+broad certificate improvement.
+
+## REQ-KAN-5399: V491 Bounded Dynamic Counterexample Certificate For Verifier-Routing Drift
+
+The KAN verification tier SHALL add an Exp 5399 CPU-only bounded diagnostic
+that uses a compact KAN/KANDy-style lifted-feature model to explain verifier
+routing drift or constraint-drift traces. The experiment MUST use the committed
+Exp 5395 influence-share verifier-budget routing artifact at
+`results/experiment_5395_influence_share_verifier_budget_router_v491.json` when
+it is available, and MUST fall back only to a deterministic synthetic
+verifier-drift fixture with an explicit fallback reason when Exp 5395 is
+unavailable. It MUST NOT modify `scripts/research_conductor.py`.
+
+The diagnostic MUST keep the claim narrow: it MAY fit or emulate a small
+piecewise-linear lifted-feature dynamics model over bounded trace features such
+as stale risk, poison risk, constraint risk, novelty, uncertainty, verifier-cost
+pressure, user impact, previous tier state, and transition velocity. It MUST
+extract interpretable candidate dynamics or monotonicity constraints, evaluate
+held-out true properties and held-out false-property perturbations, and emit
+localized counterexample regions or certificate cells for rejected false
+properties. It MUST state directly that the result is limited to the bounded
+trace fixture and MUST NOT claim broad KAN verification, trained-network
+soundness, hardware execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5399_kan_dynamic_counterexample_certificate_v491.json` with
+the required top-level fields `status`, `milestone`, `trace_source`,
+`sample_count`, `lifted_feature_count`, `true_property_count`,
+`false_property_count`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `counterexample_region_count`,
+`broad_kan_verification_claim`,
+`dynamic_counterexample_certificate_ready`, and `honest_verdict`. `status` MUST
+be `complete` only when bounded certificate cells are emitted. `milestone` MUST
+equal `2026.07.491`. `trace_source` MUST identify the Exp 5395 path or the
+synthetic fallback plus reason. `broad_kan_verification_claim` MUST be false.
+`dynamic_counterexample_certificate_ready` MUST be true only when false
+properties are deterministically rejected, true properties are preserved, and
+claim limits are explicit. `honest_verdict` MUST start with `complete:` or
+`blocked:`.
+
+Required field principles:
+- `status`: complete if bounded certificate emitted or blocked if required traces are missing.
+- `milestone`: must equal 2026.07.491.
+- `trace_source`: Exp5395 path or synthetic fallback with reason.
+- `sample_count`: number of trace samples.
+- `lifted_feature_count`: number of KAN/KANDy-style lifted features.
+- `true_property_count`: number of true properties tested.
+- `false_property_count`: number of false properties tested.
+- `false_property_rejection_rate`: deterministic false-property rejection rate.
+- `true_property_preservation_rate`: deterministic true-property preservation rate.
+- `counterexample_region_count`: number of localized dynamic regions.
+- `broad_kan_verification_claim`: must be false.
+- `dynamic_counterexample_certificate_ready`: true only if false properties are rejected and limits are explicit.
+- `honest_verdict`: one-line summary starting with complete: or blocked:.
+
+### SCENARIO-KAN-5399: False Routing-Dynamics Properties Produce Certificate Cells
+
+Given the committed Exp 5395 routing trace family or the deterministic fallback
+fixture,
+When Exp 5399 builds the bounded lifted-feature dynamics model and evaluates
+held-out true routing properties plus held-out false-property perturbations,
+Then the artifact reports the trace source, sample count, lifted feature count,
+true and false property counts, preservation and rejection rates, localized
+counterexample regions, explicit claim limits,
+`broad_kan_verification_claim=false`, and
+`dynamic_counterexample_certificate_ready=true` only for the bounded fixture.
+
+## REQ-KAN-5412: V492 Bounded Active-Constraint KAN/KANDy Certificate
+
+The KAN verification tier SHALL add an Exp 5412 CPU-only bounded diagnostic that
+connects the Exp 5399 KAN/KANDy-style counterexample certificate shape to the
+Exp 5406 active-constraint warm-start guidance lane. The experiment MUST read
+or replay the committed Exp 5406 active-constraint rows, derive a compact
+lifted-feature certificate over hint precision, recall, structural validity,
+conflict-front agreement, overwrite pressure, fallback pressure, and solver
+authority, and emit explicit counterexample regions for false active-constraint
+or routing properties. It MUST NOT modify `scripts/research_conductor.py`.
+
+The false-property family MUST be bounded to active-constraint hint routing:
+stale partial active-set hints and adversarial contradictory active-set hints
+MUST NOT be accepted as candidate warm-start routes. The matching true-property
+controls MUST preserve exact candidate active-set hints, no-hint solver
+baselines, final sequence validity, and solver authority so the certificate
+does not over-reject useful hints. The deterministic verifier MUST check every
+counterexample region against the Exp 5406 row records. The experiment MUST
+state directly that the result is a bounded active-constraint certificate only
+and MUST NOT claim broad KAN verification, trained-network soundness, hardware
+execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5412_kan_active_constraint_certificate_v492.json` with the
+required top-level fields `certificate_family`,
+`counterexample_region_count`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `certificate_size_bytes`,
+`broad_kan_verification_claim`, `deterministic_verifier_passed`,
+`kan_active_constraint_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `certificate_family` MUST name a bounded claim scope.
+`broad_kan_verification_claim` MUST be false.
+`inference_substrate` MUST equal
+`verifier_ensemble_against_cached_candidates`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_active_constraint_certificate_ready` MUST be
+true only when false active-constraint properties are deterministically
+rejected, true-property controls are preserved, the certificate is compactly
+serialized, and claim limits are explicit.
+
+Required field principles:
+- `certificate_family`: bounded claim scope.
+- `counterexample_region_count`: falsification evidence.
+- `false_property_rejection_rate`: certificate utility.
+- `true_property_preservation_rate`: no over-rejection.
+- `certificate_size_bytes`: compactness.
+- `broad_kan_verification_claim`: no overclaim.
+- `deterministic_verifier_passed`: final authority.
+- `kan_active_constraint_certificate_ready`: downstream evidence.
+- `inference_substrate`: deterministic certificate checks.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5412: Active-Constraint False Properties Produce Certificate Regions
+
+Given the committed Exp 5406 active-constraint warm-start rows,
+When Exp 5412 builds the bounded KAN/KANDy-style active-constraint certificate,
+Then stale partial active-set hints and adversarial contradictory active-set
+hints produce explicit counterexample regions, exact candidate hints and
+no-hint solver baselines remain valid true-property controls,
+`false_property_rejection_rate=1.0`,
+`true_property_preservation_rate=1.0`,
+`broad_kan_verification_claim=false`,
+`deterministic_verifier_passed=true`, and
+`kan_active_constraint_certificate_ready=true` only for the bounded
+active-constraint fixture.
+
+## REQ-KAN-5425: V493 Measurement-Access KAN/KANDy Certificate Boundary
+
+The KAN verification tier SHALL add an Exp 5425 CPU-only deterministic
+certificate experiment that extends the Exp 5412 bounded KAN/KANDy
+active-constraint certificate family to measurement-access boundaries. The
+experiment MUST reuse the Exp 5412/Exp 5406 active-constraint row evidence and
+define a bounded property family that distinguishes properties supported by
+measured rows from properties that are unsupported because required evidence is
+missing. It MUST NOT modify `scripts/research_conductor.py`.
+
+The false-property controls MUST include active-constraint hint controls with
+measured row counterexamples, measurement-access gap controls, and unsupported board, token, and internal-state claims. The unsupported board, token, and internal-state claims MUST be classified
+as missing evidence rather than silently accepted or treated as broad KAN
+verification. The true-property controls MUST preserve exact candidate hints,
+no-hint solver baselines, solver authority, and final validity under the same
+bounded certificate. Every certificate or counterexample record MUST carry
+row-level provenance and stable checksums. The experiment MUST state directly
+that it is a bounded measurement-access certificate only and MUST NOT claim
+broad KAN verification, trained-network soundness, hardware execution, hardware
+speedup, token-level access, or hidden/internal-state access.
+
+The deliverable MUST be written to
+`results/experiment_5425_kan_measurement_access_certificate_v493.json` with the
+required top-level fields `certificate_count`, `property_family`,
+`measurement_access_controls`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `row_checksums`,
+`missing_evidence_detected`, `broad_kan_verification_claim`,
+`kan_measurement_access_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `certificate_count` MUST be an integer count of bounded
+certificate controls. `property_family` MUST name a bounded claim scope.
+`measurement_access_controls` MUST classify each checked property as supported,
+observable-false, or missing-evidence unsupported. `row_checksums` MUST contain
+stable row-level provenance checksums. `missing_evidence_detected` MUST be true
+when any false property requires evidence unavailable to the bounded fixture.
+`broad_kan_verification_claim` MUST be false. `inference_substrate` MUST equal
+`deterministic_certificate_experiment`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_measurement_access_certificate_ready` MUST be
+true only when false properties are rejected, true properties are preserved,
+missing-evidence controls are detected, row checksums are present, and claim
+limits are explicit.
+
+Required field principles:
+- `certificate_count`: coverage.
+- `property_family`: bounded claim scope.
+- `measurement_access_controls`: observable-vs-missing evidence.
+- `false_property_rejection_rate`: counterexample strength.
+- `true_property_preservation_rate`: no over-rejection.
+- `row_checksums`: provenance.
+- `missing_evidence_detected`: measurement-access boundary.
+- `broad_kan_verification_claim`: bounded claim.
+- `kan_measurement_access_certificate_ready`: capstone evidence.
+- `inference_substrate`: no hidden live model inference.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5425: Measurement-Access Gaps Do Not Become Verification Claims
+
+Given the committed Exp 5412 bounded active-constraint certificate pattern and
+the replayed Exp 5406 row evidence,
+When Exp 5425 evaluates measured active-constraint false controls, missing
+board/token/internal evidence controls, and true active-constraint preservation
+controls,
+Then measured stale and adversarial hint claims produce row-backed
+counterexamples, unsupported board/token/internal claims are classified as
+missing-evidence unsupported, true exact-hint and solver-baseline controls stay
+provable, `false_property_rejection_rate=1.0`,
+`true_property_preservation_rate=1.0`,
+`missing_evidence_detected=true`,
+`broad_kan_verification_claim=false`,
+`inference_substrate=deterministic_certificate_experiment`, and
+`kan_measurement_access_certificate_ready=true` only for the bounded
+measurement-access fixture.
+
+## REQ-KAN-5438: V494 Ontology And Workflow-Memory Measurement-Access Certificate
+
+The KAN verification tier SHALL add an Exp 5438 CPU-only deterministic
+certificate experiment that extends the Exp 5425 bounded measurement-access
+certificate family to ontology, triple, and workflow-memory claims after
+Exp5432 reports `ontology_constraint_memory_ready=true`. The experiment MUST
+read or replay the Exp5432 finite ontology workflow rows and MUST distinguish
+properties supported by measured rows, properties contradicted by measured
+rows, and unsupported properties whose required evidence is missing. It MUST
+NOT modify `scripts/research_conductor.py`.
+
+The false-property controls MUST include invalid triples, unsupported graph updates,
+stale relation updates, infeasible retrieval traps, missing
+kernel/planner evidence, and unsupported board, token, and internal-state
+claims. Unsupported graph, kernel, board, token, and internal-state claims MUST
+be classified as missing-evidence unsupported when the Exp5432 rows do not
+contain the required receipt. The true-property controls MUST preserve valid
+triple updates, valid workflow retrieval order, deterministic solver
+authority, and accepted tool-evidence-backed memory writes under the same
+bounded certificate. Every certificate or counterexample record MUST carry
+row-level provenance and stable checksums. The experiment MUST state directly
+that it is a bounded ontology/workflow-memory measurement-access certificate
+only and MUST NOT claim broad KAN verification, trained-network soundness,
+hardware execution, hardware speedup, token-level access, or hidden/internal
+state access.
+
+The deliverable MUST be written to
+`results/experiment_5438_kan_ontology_measurement_certificate_v494.json` with
+the required top-level fields `certificate_count`, `property_family`,
+`ontology_property_count`, `workflow_memory_property_count`,
+`measurement_access_controls`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `row_checksums`,
+`missing_evidence_detected`, `broad_kan_verification_claim`,
+`kan_ontology_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `certificate_count` MUST be an integer count of bounded
+certificate controls. `property_family` MUST name a bounded claim scope.
+`ontology_property_count` MUST count ontology/triple controls.
+`workflow_memory_property_count` MUST count workflow-memory controls.
+`measurement_access_controls` MUST classify each checked property as supported,
+observable-false, or missing-evidence unsupported. `row_checksums` MUST contain
+stable row-level provenance checksums. `missing_evidence_detected` MUST be true
+when any false property requires evidence unavailable to the bounded fixture.
+`broad_kan_verification_claim` MUST be false. `inference_substrate` MUST equal
+`deterministic_certificate_experiment`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_ontology_certificate_ready` MUST be true only
+when Exp5432 readiness is true, false properties are rejected, true properties
+are preserved, missing-evidence controls are detected, row checksums are
+present, and claim limits are explicit.
+
+Required field principles:
+- `certificate_count`: coverage.
+- `property_family`: bounded claim scope.
+- `ontology_property_count`: graph-memory coverage.
+- `workflow_memory_property_count`: CSL coverage.
+- `measurement_access_controls`: observable-vs-missing evidence.
+- `false_property_rejection_rate`: counterexample strength.
+- `true_property_preservation_rate`: no over-rejection.
+- `row_checksums`: provenance.
+- `missing_evidence_detected`: measurement-access boundary.
+- `broad_kan_verification_claim`: bounded claim.
+- `kan_ontology_certificate_ready`: capstone evidence.
+- `inference_substrate`: no hidden live model inference.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5438: Ontology Measurement-Access Gaps Do Not Become KAN Claims
+
+Given the completed Exp5432 ontology-backed constraint-memory fixture with
+valid triples, invalid triples, unsupported graph writes, stale relation
+updates, and infeasible retrieval rows,
+When Exp5438 evaluates bounded ontology/triple and workflow-memory
+measurement-access controls,
+Then measured invalid triples and retrieval traps produce row-backed
+counterexamples, unsupported graph/kernel/board/token/internal claims are
+classified as missing-evidence unsupported, valid triple updates and valid
+workflow retrieval controls stay provable, `false_property_rejection_rate=1.0`,
+`true_property_preservation_rate=1.0`,
+`missing_evidence_detected=true`,
+`broad_kan_verification_claim=false`,
+`inference_substrate=deterministic_certificate_experiment`, and
+`kan_ontology_certificate_ready=true` only for the bounded
+ontology/workflow-memory fixture.
+
+## REQ-KAN-5451: V495 Verifier-Potential And Governed-Memory Measurement-Access Certificate
+
+The KAN verification tier SHALL add an Exp 5451 CPU-only deterministic
+certificate experiment that extends the bounded measurement-access certificate
+family to the V495 verifier-potential generation fixture and governed-memory
+CSL loop after Exp5443 reports `verifier_potential_fixture_ready=true` and
+Exp5446 reports `governed_csl_loop_ready=true`. The experiment MUST read only
+the committed Exp5443 and Exp5446 artifacts and MUST distinguish claims
+supported by measured artifact fields, false claims contradicted by measured
+artifact fields, and unsupported claims whose required measurement fields are
+absent. It MUST NOT modify `scripts/research_conductor.py`.
+
+The claim set MUST include true artifact-measured properties, false
+verifier-potential properties, false memory/provenance properties, unsupported hardware speedup claims,
+unsupported token or internal-state claims, and broad KAN soundness claims. Claims whose required measurement fields are absent MUST
+be rejected as unsupported rather than accepted or converted into broad KAN
+verification. False claims over verifier-potential and governed-memory fields
+MUST be rejected by measured counterexamples. True measured claims MUST be
+preserved under the same bounded certificate. The experiment MUST state
+directly that it is a bounded measurement-access certificate only and MUST NOT
+claim KAN soundness, trained-network soundness, hardware execution, hardware
+speedup, token-level access, hidden/internal-state access, or general LLM
+truth.
+
+The deliverable MUST be written to
+`results/experiment_5451_kan_verifier_potential_memory_certificate_v495.json`
+with the required top-level fields `gated_upstreams_ready`, `claim_count`,
+`true_measured_claim_preservation_rate`, `false_property_rejection_rate`,
+`unsupported_claim_rejection_rate`, `verifier_potential_claims_checked`,
+`governed_memory_claims_checked`, `hardware_speedup_claim_rejected`,
+`token_internal_claim_rejected`, `broad_kan_claim_made`,
+`certificate_checksum`, `kan_certificate_ready`, `inference_substrate`, and
+`honest_verdict`. `gated_upstreams_ready` MUST be true only when both upstream
+ready gates are true. `claim_count` MUST be the integer count of evaluated
+claims. `verifier_potential_claims_checked` and
+`governed_memory_claims_checked` MUST count claims that depend on Exp5443 and
+Exp5446 evidence respectively. `hardware_speedup_claim_rejected` MUST be true
+only when the unsupported hardware speedup claim is rejected.
+`token_internal_claim_rejected` MUST be true only when token-level and
+hidden/internal-state claims are rejected. `broad_kan_claim_made` MUST be
+false. `certificate_checksum` MUST be a stable checksum of the certificate
+records. `inference_substrate` MUST equal
+`bounded_measurement_access_certificate`. `honest_verdict` MUST start with
+`complete:` or `blocked:`. `kan_certificate_ready` MUST be true only when both
+upstreams are gated ready, true measured claims are preserved, all false and
+unsupported claims are rejected, no broad KAN claim is made, the checksum is
+present, and claim limits are explicit.
+
+Required field principles:
+- `gated_upstreams_ready`: structured gate provenance.
+- `claim_count`: certificate coverage.
+- `true_measured_claim_preservation_rate`: useful certificate.
+- `false_property_rejection_rate`: soundness guard.
+- `unsupported_claim_rejection_rate`: measurement-access boundary.
+- `verifier_potential_claims_checked`: V495 claim coverage.
+- `governed_memory_claims_checked`: CSL claim coverage.
+- `hardware_speedup_claim_rejected`: hardware honesty.
+- `token_internal_claim_rejected`: closed-lane enforcement.
+- `broad_kan_claim_made`: no overclaim.
+- `certificate_checksum`: reproducibility.
+- `kan_certificate_ready`: capstone evidence.
+- `inference_substrate`: explicit certificate substrate.
+- `honest_verdict`: terminal status; start with complete: or blocked:.
+
+### SCENARIO-KAN-5451: Missing Verifier And Memory Evidence Does Not Become KAN Soundness
+
+Given the completed Exp5443 verifier-potential fixture and Exp5446 governed
+memory CSL artifact,
+When Exp5451 evaluates true measured artifact claims, false
+verifier-potential claims, false memory/provenance claims, unsupported hardware
+speedup claims, unsupported token/internal-state claims, and broad KAN
+soundness claims,
+Then true measured claims remain preserved, verifier-potential and
+governed-memory false claims are rejected from measured artifact fields,
+unsupported hardware/token/internal claims are rejected because required
+measurement fields are absent, `broad_kan_claim_made=false`,
+`inference_substrate=bounded_measurement_access_certificate`, and
+`kan_certificate_ready=true` only for the bounded measurement-access
+certificate over Exp5443 and Exp5446 artifacts.
+
+## Implementation Status
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| REQ-KAN-003 | Proposed | Exp 724 target: 3000-example balanced dataset |
+| REQ-KAN-004 | Proposed | Exp 724 target: 16 knots/spline in v3 KAN |
+| REQ-KAN-VERIFY-001 | Implemented | Exp 972 KAN MILP formal verification helpers; Exp 992 violation fix reuses the same checks. |
+| REQ-KAN-020 | Implemented | Exp 866: LUT analysis complete. N=8 MLP-bound=14400 > 7680 (over budget). ISING_PRIORITY. |
+| REQ-MODEL-SOS-001 | Implemented | Exp 1047: SOSKANEnergy confirmed 0 violations on 16000 test points. |
+| REQ-KAN-1148 | Proposed | Exp 1148 target: MetaCluster-style centroid compression for SOSKANEnergyV3 with AUROC drop <= 0.02 and >=5x shrink. |
+| REQ-KAN-1162 | Implemented | Exp 1162: KANELE-style Q8 LUT blueprint and hardware-complexity artifact generated for the compressed SOSKANEnergyV3 shape. |
+| REQ-KAN-1174 | Proposed | Exp 1174 target: BiKA multiply-free complexity analysis for SOSKANEnergyV3, MetaCluster, and AMD XDNA NPU feasibility. |
+| REQ-KAN-1199 | Proposed | Exp 1199 target: KANtize-style 8-bit/4-bit SOSKANEnergyV3 spline quantization with endpoint-sensitive precision and safetensors export. |
+| REQ-KAN-1266 | Proposed | Exp 1266 target: deterministic QuantKAN-style 3-bit PTQ simulation plus LUT-KAN latency comparison for SOSKANEnergyV3. |
+| REQ-KAN-1319 | Proposed | Exp 1319 target: hardware-portability audit only for local KAN verifier/repair candidates with no FPGA or analog execution claim. |
+| REQ-KAN-1502 | Proposed | Exp 1502 target: no-synthesis KAN hardware accounting comparing naive, QuantKAN-like, and KAEM-style variants for current verifier components. |
+| REQ-KAN-1516 | Implemented | Exp 1516 normalized KAN/KAEM proxy and model shapes into an explicit provenance manifest before any future synthesis claim. |
+| REQ-KAN-1602 | Implemented | Exp 1602 exact-rational KAN forward pass uses Python `fractions.Fraction` for bit-identical formal-verification arithmetic. |
+| REQ-KAN-1671 | Proposed | Exp 1671 target: no-synthesis Hybrid Zeckendorf rational CPU simulation and complexity/bounding certificate artifact for RKAN tiers. |
+| REQ-KAN-1604 | Implemented | Exp 1604 Sparse KAN clustering records Global Group Lasso, spectral regularization, sparsity, and memory-compression metrics. |
+| REQ-KAN-1648 | Implemented | Exp 1648 spectral constraint grouping layers Laplacian row groups on Sparse KAN centroid compression and records direct `compression_ratio`. |
+| REQ-KAN-1618 | Proposed | Exp 1618 target: model-level PWA KAN wrapper for logical affine activation bounds over arbitrary 1D spline callables. |
+| REQ-KAN-1623 | Implemented | Exp 1623 no-synthesis LUT and logic-depth accounting compares KANELÉ LUT mapping with KV260 Ising v3. |
+| REQ-KAN-1384 | Proposed | Exp 1384 target: EBM-CoT contrastive hinge calibration on FoVer verified pairs. |
+| REQ-KAN-1401 | Proposed | Exp 1401 target: EBM-CoT v2 hinge-only calibration on the Exp1384 FoVer split with consistency weight 0.0. |
+| REQ-KAN-1690 | Proposed | Exp 1690 target: GloroKAN-style local Lipschitz forward-pass bounds for rational KArAt attention. |
+| REQ-KAN-1723 | Implemented | Exp 1723: FourierCSP constraints compile into fixed CIKAN architectural boundaries with toy artifact evidence. |
+| REQ-KAN-1749 | Implemented | Exp 1749: Symbolic-KAN routing layer embeds discrete primitive choices as tensor gates over learned scalar projections. |
+| REQ-KAN-2005 | Proposed | Exp 2005 target: adaptive KAEM/KAN spline mesh refinement emits structural-change metrics and a completed artifact. |
+| REQ-KAN-2876 | Implemented | Exp 2876 corrigendum separates local/global bounds and reports the local Z3 solver path or blocked-solver fallback. |
+| REQ-KAN-2893 | Proposed | Exp 2893 target: no-hardware-claim RM/BOP/NABS accounting for the clean Exp 2876 tiny PWA/MILP fixture. |
+| REQ-KAN-5080 | Proposed | Exp 5080 target: tiny KAEM PWA/MILP bridge artifact with success-or-blocked solver boundary. |
+| REQ-KAN-5091 | Proposed | Exp 5091 target: two-input KAEM PWA/MILP scale telemetry with solver counts, error budgets, and bound tightness. |
+| REQ-KAN-5098 | Proposed | Exp 5098 target: bounded multi-property KAEM PWA/MILP suite with false controls and scale telemetry. |
+| REQ-KAN-5108 | Implemented | Exp 5108: swept N=5/10/20 (300s/solve budget). Wall found between N=10 (solved, 120.9s) and N=20 (timed out, 300s) -- an order of magnitude below the N=100 production reference. Solve time: 0.15s (N=5) -> 120.9s (N=10), a ~800x jump for 2x the units -- combinatorial, not polynomial. Adversarial rigor (false-control + margin-abstention) held at every solved N. Honest answer: this exact-MILP approach does NOT currently scale to the deployed KAEM cutover. |
+| REQ-KAN-5114 | Proposed | Exp 5114 target: post-wall CPU abstraction-refinement/decomposition diagnostic that compares against Exp 5108, preserves false-property and near-margin controls, and reports progress only when conservative certificates avoid unsound false positives beyond the exact-MILP wall. |
+| REQ-KAN-5128 | Proposed | Exp 5128 target: V470 certificate-breadth audit across independent property families with deterministic explanation reconstruction and symbolic cycle-consistency checks over Exp 5114 certificates. |
+| REQ-KAN-5140 | Proposed | Exp 5140 target: V471 symbolic distillation of Exp 5128 residual/certificate behavior with exact cycle reconstruction and adversarial controls. |
+| REQ-KAN-5230 | Planned | Exp 5230 target: V478 tiny KAEM PWA/MILP certificate pilot tied to `UnivariateKAEMLayer`, with monotonicity and no-unsafe-decision checks only. |
+| REQ-KAN-5242 | Planned | Exp 5242 target: V479 bounded abstraction stress test that reproduces Exp 5230, adds limited segment/domain/false-property pressure, and reports the achieved certificate boundary without hardware or broad KAN claims. |
+| REQ-KAN-5254 | Planned | Exp 5254 target: V480 bounded convex-envelope certificate prototype compared against Exp 5242, with true-property certification, false-property rejection, and no hardware or broad KAN claims. |
+| REQ-KAN-5265 | Planned | Exp 5265 target: V481 explanation/refinement layer over the V480 bounded convex-envelope certificate, with bound-contributor reporting, envelope-gap tightening, before/after slack, and near-threshold false-property rejection. |
+| REQ-KAN-5277 | Planned | Exp 5277 target: V482 bounded multi-component PWA/MILP certificate scale check, with explicit approximation slack, solve time, false-property rejection, and dynamic spot-check evidence. |
+| REQ-KAN-5291 | Planned | Exp 5291 target: V483 low-order, medium-order, and higher-order certificate curriculum over the existing Exp 5277 KAN PWA/MILP and Exp 5278 factor-boundary fixtures, with false-property rejection, slack, solve-time, piece-count, and ordering telemetry. |
+| REQ-KAN-5304 | Planned | Exp 5304 target: V484 dynamic abstraction refinement and spot-check diagnostic over Exp 5277/5278/5291 bounded fixtures, with symbolic validation, method comparison, and bounded-scope-only claims. |
+| REQ-KAN-5316 | Planned | Exp 5316 target: V485 bounded DP/knapsack-style PWA piece allocation under global error and piece budgets, compared with static and `.484` dynamic abstraction without broad KAN claims. |
+| REQ-KAN-5332 | Planned | Exp 5332 target: V486 bounded false-property sensitivity and counterexample-localization diagnostic over Exp 5277/5316 fixtures, with per-unit perturbations and no broad certificate claim. |
+| REQ-KAN-5346 | Planned | Exp 5346 target: V487 bounded bridge from Exp 5332 localized counterexample cells to explicit downstream KAN cuts / Ising penalties, with before/after false-property rejection and true-property preservation checks. |
+| REQ-KAN-5399 | Planned | Exp 5399 target: V491 bounded KAN/KANDy-style dynamic counterexample certificate over Exp 5395 verifier-routing drift traces or an explicit synthetic fallback, with held-out true/false checks and no broad KAN verification claim. |
+| REQ-KAN-5412 | Planned | Exp 5412 target: V492 bounded KAN/KANDy-style active-constraint hint-routing certificate over Exp 5406 rows, with stale/adversarial false-property counterexamples, true-property preservation, and no broad KAN verification claim. |
+| REQ-KAN-5451 | Planned | Exp 5451 target: V495 bounded verifier-potential/governed-memory measurement-access certificate over Exp 5443 and Exp 5446 artifacts, rejecting missing-evidence hardware, token/internal, and broad KAN soundness claims. |
+
+## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
+
+KAEMEnergy MUST be analyzable for FPGA LUT budget using arXiv 2604.03345
+per-knot estimates. Target: N=8, within iCE40 HX8K 7680 LUT budget.
+
+**Rationale:**
+    The iCE40 HX8K has 7,680 LUTs.  Before committing synthesis effort, a
+    conservative LUT estimate is required.  arXiv 2604.03345
+    (Hardware-Oriented KAN Inference Complexity) provides the formula:
+        LUTs = fan_in * fan_out * n_knots * luts_per_segment
+    where luts_per_segment = 8–12 (we use 10 as conservative midpoint).
+
+    Exp 866 result (2026-04-25):
+      - KAN N=8 MLP upper bound: 14,400 LUTs (over 7,680 budget)
+      - Ising N=8 actual (Exp 859): 134 LUTs
+      - Synthesis priority: ISING_PRIORITY
+      - Note: actual KAEMEnergy is sparse graph-based (edge_density=0.1),
+        so the real LUT cost is ~10% of the MLP estimate (~1,440 LUTs),
+        which would fit within budget.  A sparse-aware analysis is needed
+        to confirm feasibility definitively.
+
+**Acceptance criteria:**
+    - `KANHardwareAnalyzer` in `python/carnot/analysis/kan_hw_analysis.py`
+      implements `lut_estimate_layer()`, `total_lut_estimate()`,
+      `synthesis_priority()`, and `sensitivity_analysis()`.
+    - `total_lut_estimate()` returns dict with keys:
+      layer1_luts, layer2_luts, total_luts, ice40_hx8k_budget, within_budget.
+    - `synthesis_priority()` correctly returns one of:
+      KAN_PRIORITY / ISING_PRIORITY / BOTH_FEASIBLE.
+
+### SCENARIO-KAN-030: LUT estimate for N=8 KAEMEnergy on iCE40 HX8K
+
+Given KANHardwareAnalyzer(n_inputs=8, n_hidden=16, n_knots=10, luts_per_segment=10),
+When total_lut_estimate() is called,
+Then layer1_luts=12800, layer2_luts=1600, total_luts=14400,
+     within_budget=False (14400 > 7680).
+
+## REQ-MODEL-SOS-001: SOSKANEnergy MUST guarantee ψ'(x) >= 0 as a type-level property
+
+SOSKANEnergy MUST guarantee ψ'(x) >= 0 (monotonicity) as a type-level property,
+with zero violations possible regardless of parameter values V and c.
+
+**Rationale:**
+    KAEMEnergy's post-hoc isotonic projection (enforce_monotonicity) fixes violations
+    AFTER they occur during training. This is the wrong framing: violations can
+    accumulate within an epoch, the MILP verifier must re-run after each epoch, and
+    the projection changes the energy landscape in a non-gradient direction.
+
+    SOSKANEnergy uses the SOS (Sum-of-Squares) parameterization:
+        ψ'(x) = ||V^T B(x)||² = B(x)^T (V V^T) B(x) >= 0
+    for any unconstrained V. No projection, no constraint, no post-hoc repair.
+    The verifier can be run ONCE and the invariant holds forever.
+
+    Exp 1047 confirmed: 0 monotonicity violations on 16,000 random test points
+    (1,000 × 16 features) with adversarially large random V matrices.
+
+**Acceptance criteria:**
+    - `SOSKANEnergy(n_sos_basis=2, ...)` instantiates without error.
+    - `verify_invariants(n_samples=1000)` returns `n_monotone_violations == 0`
+      for any V (including V set to large random values post-construction).
+    - `forward(x) >= 0` for any x in [-1, 1]^n_features.
+    - AUROC >= 0.50 on FoVer corpus (no regression from KAEMEnergy baseline).
+    - Training is 5x faster than KAEMEnergy (no projection overhead).
+
+### SCENARIO-MODEL-SOS-001: zero violations on adversarial V
+
+Given SOSKANEnergy with V overwritten to random N(0, 10) values,
+When verify_invariants(n_samples=1000) is called,
+Then n_monotone_violations == 0 and invariants_hold == True.
+
+## REQ-KAN-1671: Hybrid Zeckendorf Exact-Rational RKAN Audit
+
+The repository SHALL provide a CPU-only, no-synthesis audit script for
+Exact-Rational KAN tiers that replaces mock floating-point KAN arithmetic with
+Hybrid Zeckendorf rational arithmetic. The audit MUST:
+
+- define `scripts/experiment_1671_rkan_audit.py`;
+- evaluate a deterministic mock KAN using exact rational arithmetic, rejecting
+  implicit Python floats at the audit boundary;
+- expose Hybrid Zeckendorf certificates for rational numerators and
+  denominators so every reported value has an integer-decomposition witness;
+- report operation-count complexity for edge, bias, interpolation, addition,
+  and multiplication work;
+- report deterministic bounding certificates for spline outputs and simulated
+  sample energies; and
+- write `results/experiment_1671_rkan.json` with terminal `status="complete"`
+  only when the no-synthesis, exact-arithmetic, and certificate gates pass.
+
+The script MUST NOT claim FPGA, ASIC, analog, or other hardware synthesis
+validation. The output is an accounting pass and CPU simulation artifact only.
+
+### SCENARIO-KAN-1671: Exact-rational audit emits bounded certificate artifact
+
+Given the deterministic mock RKAN tier fixture,
+When `scripts/experiment_1671_rkan_audit.py` runs on CPU,
+Then `results/experiment_1671_rkan.json` records `float_operations_used=false`,
+`hardware_synthesis_claimed=false`, operation complexity counts, Hybrid
+Zeckendorf witness decompositions, and bounding certificates whose exact
+sample-energy bounds contain every simulated exact energy.
+
+## REQ-KAN-1148: SOSKANEnergyV3 centroid codebook compression
+
+SOSKANEnergyV3 compression MUST replace repeated learned coefficient vectors
+with a K=32 centroid codebook plus per-vector centroid indices, then reconstruct
+a numerically usable SOSKANEnergyV3 instance from that compressed payload.
+
+**Rationale:**
+    Exp 1128 fixed the SOSKANEnergyV3 training/inference normalization path and
+    reported individual AUROC=0.9902 on the 500-example FoVer benchmark.  That
+    verifier is now accurate enough to matter, but its neural-Gram coefficient
+    head is larger than ideal for cheap-tier routing and NPU/FPGA deployment.
+    MetaCluster-style centroid codebooks test whether the repeated KAN
+    coefficient vectors can be stored compactly while preserving the energy
+    ordering that drives AUROC.
+
+**Acceptance criteria:**
+    - `compress_sos_kan_v3(..., n_centroids=32)` stores float centroid arrays
+      and integer index arrays instead of dense coefficient vectors.
+    - `reconstruct_sos_kan_v3()` returns an SOSKANEnergyV3 with the same
+      architecture fields and finite energies.
+    - The exp1148 artifact records `auroc_original=0.9902`,
+      `auroc_compressed`, `auroc_drop`, `energy_correlation`,
+      `size_original_bytes`, `size_compressed_bytes`, and
+      `size_reduction_factor`.
+    - `auroc_drop_within_02` is true iff `auroc_original - auroc_compressed <= 0.02`.
+    - The success verdict requires both `auroc_drop <= 0.02` and
+      `size_reduction_factor >= 5.0`.
+
+### SCENARIO-KAN-1148: reconstruct SOSKANEnergyV3 from centroid codebook
+
+Given a trained SOSKANEnergyV3 and its learned coefficient vectors,
+When the vectors are clustered into 32 centroids and reconstructed by expanding
+indices back to centroid vectors,
+Then the reconstructed model has the original parameter shapes, finite energies
+on FoVer features, and an exp1148 artifact with the required verdict fields.
+
+## REQ-KAN-1162: SOSKANEnergyV3 KANELE FPGA LUT blueprint
+
+Experiment 1162 MUST generate a KANELE-style FPGA blueprint for the compressed
+SOSKANEnergyV3 energy function shape from Exp 1148 without requiring RTL
+synthesis.  The blueprint MUST identify the SOS-KAN input count, spline-basis
+count, knot-grid size, Q8 LUT storage, hardware-oriented complexity metrics
+(`RM`, `BOP`, `NABS`), KV260 latency estimate, CPU-baseline comparison, and the
+compressed AUROC inherited from Exp 1148.
+
+**Rationale:**
+    Exp 1148 showed that the fixed Exp 1128 SOSKANEnergyV3 shape can be reduced
+    by a K=32 centroid codebook while keeping AUROC within 0.02 of the original
+    model.  KANELE-style FPGA work maps KAN univariate spline basis functions to
+    LUTs.  Before RTL exists, Carnot needs a deterministic table specification
+    and platform-independent complexity report that can be reviewed without
+    Vivado.
+
+**Acceptance criteria:**
+    - The runner derives `sos_kan_n_inputs`, `sos_kan_k_splines`, and
+      `sos_kan_n_knots` from SOSKANEnergyV3/Exp 1148 structure rather than
+      hard-coding an unrelated architecture.
+    - The Q8 table specification samples every hat basis function at
+      `n_lut_points=256` uniformly over `[-1, 1]` and reports
+      `lut_storage_bytes = n_inputs * k_splines * n_lut_points`.
+    - The artifact reports `rm_per_inference`, `bop_per_inference`,
+      `nabs_per_inference`, `estimated_fpga_latency_us`,
+      `cpu_baseline_latency_ms=289.0`, `estimated_speedup_factor`,
+      `blueprint_written`, `blueprint_path`, `auroc_compressed`,
+      `kanele_fpga_blueprint_generated`, and an approved honest verdict.
+    - `hardware/kv260/sos_kan_lut_blueprint.md` documents the LUT index formula,
+      Q8 interpolation datapath, accumulation schedule, and no-Vivado status.
+
+### SCENARIO-KAN-1162: write compressed SOS-KAN Q8 LUT blueprint
+
+Given the Exp 1148 compressed SOSKANEnergyV3 result with K=32 centroids,
+When `scripts/experiment_1162_kanele_sos_kan_fpga_blueprint.py` runs,
+Then `results/experiment_1162_kanele_sos_kan_fpga_blueprint.json` is written
+with the required schema fields and
+`hardware/kv260/sos_kan_lut_blueprint.md` contains the deterministic Q8 LUT
+blueprint for the SOS-KAN basis structure.
+
+## REQ-KAN-1174: BiKA multiply-free SOS-KAN hardware analysis
+
+Experiment 1174 MUST analyze whether the Exp 1148/1162 SOSKANEnergyV3 shape can
+be mapped to a BiKA-style multiply-free datapath by replacing floating-point
+multiplications with precomputed-log2 bit-shift approximations.  The analysis
+MUST report platform-independent `RM`, `BOP`, and `NABS` metrics for the
+standard SOSKANEnergyV3, the MetaCluster-compressed SOS-KAN, and the
+8-bit BiKA approximation, then classify AMD XDNA NPU feasibility.
+
+**Rationale:**
+    Exp 1162 proved that the compressed SOS-KAN spline structure can be described
+    as Q8 LUT tables for KV260.  BiKA is the arithmetic layer below that
+    blueprint: replacing learned-coefficient multiplies with shifts/adds can
+    remove the float32 multiplier requirement for AMD XDNA NPUs and reduce FPGA
+    resource pressure before RTL synthesis.
+
+**Acceptance criteria:**
+    - `BiKAComplexityAnalyzer.analyze_standard_kan(model)` returns a
+      `HardwareMetrics` object with integer `RM`, `BOP`, `NABS`, and
+      `estimated_lut_count` values derived from SOSKANEnergyV3 architecture.
+    - `BiKAComplexityAnalyzer.analyze_bika_kan(model, precision_bits=8)` returns
+      zero real multiplications and models BOP as `standard_RM * 16` for the
+      8-bit shift-plus-comparison approximation.
+    - `BiKAComplexityAnalyzer.compare(standard_metrics, bika_metrics)` reports a
+      resource-reduction percentage in the 27.73% to 51.54% BiKA paper band and
+      an NPU feasibility verdict in the approved vocabulary.
+    - `scripts/experiment_1174_bika_hardware_analysis.py` writes
+      `results/experiment_1174_bika_hardware_analysis.json` with
+      `standard_kan_rm`, `standard_kan_bop`, `compressed_kan_rm`,
+      `compressed_kan_bop`, `bika_kan_nabs`, `bika_resource_reduction_pct`,
+      `npu_feasibility_verdict`, `estimated_npu_inference_us`,
+      `bika_hardware_analysis_complete`, and an approved honest verdict.
+
+### SCENARIO-KAN-1174: write BiKA hardware analysis artifact
+
+Given the Exp 1148 MetaCluster compression artifact and Exp 1162 KANELE LUT
+blueprint,
+When `scripts/experiment_1174_bika_hardware_analysis.py` runs,
+Then `results/experiment_1174_bika_hardware_analysis.json` is written with the
+required schema fields, the SOS-KAN architecture values, multiply-free BiKA
+metrics, and an honest AMD XDNA NPU feasibility verdict.
+
+## REQ-KAN-1199: KANtize-style SOSKANEnergyV3 spline quantization
+
+Experiment 1199 MUST quantize SOSKANEnergyV3 spline-control parameters at 8-bit
+and 4-bit precision while assigning endpoint spline control points twice the
+interior bit width, then evaluate AUROC, memory size, latency, and deployment
+readiness on the FoVer holdout.
+
+**Rationale:**
+    Exp 1128 established a full-precision SOSKANEnergyV3 AUROC reference of
+    0.9902 on the 500-example FoVer benchmark.  KANtize-style low-bit spline
+    quantization tests whether the same verifier can be represented cheaply
+    enough for consumer edge hardware.  Endpoint spline values are quantized
+    with higher precision because endpoint perturbations are more sensitive
+    than interior perturbations in spline functions.
+
+**Acceptance criteria:**
+    - Interior SOSKANEnergyV3 spline rows SHALL be rounded to the nearest
+      `1/(2^bits - 1)` interval for `bits in {8, 4}`.
+    - First and last spline-control rows SHALL be rounded separately with
+      `2 * bits` precision.
+    - Non-spline head parameters SHALL remain exact in the quantized model.
+    - `scripts/experiment_1199_kantize_soskan_4bit_quantization.py` SHALL write
+      `results/experiment_1199_kantize_soskan_4bit_quantization.json` with
+      full-precision, 8-bit, and 4-bit AUROC and size fields, 4-bit latency,
+      safetensors checkpoint path, threshold booleans, and an honest verdict.
+    - The 4-bit safetensors export SHALL contain a quantized SOSKANEnergyV3
+      checkpoint with architecture and quantization metadata.
+
+### SCENARIO-KAN-1199: evaluate and export quantized SOSKANEnergyV3
+
+Given the Exp 1128 SOSKANEnergyV3 FoVer setup,
+When `scripts/experiment_1199_kantize_soskan_4bit_quantization.py` runs,
+Then it evaluates 32-bit, 8-bit, and 4-bit AUROC, measures packed model sizes
+and 4-bit per-sample latency, exports the 4-bit quantized checkpoint as
+safetensors, and reports whether `soskan_4bit_auroc >= 0.97`.
+
+## REQ-KAN-1266: QuantKAN 3-bit PTQ and LUT-KAN simulation
+
+Experiment 1266 MUST extend the Exp 1199 SOSKANEnergyV3 quantization report with
+a deterministic QuantKAN-style 3-bit post-training-quantization simulation and
+a LUT-KAN inference-latency comparison. The artifact MUST be derived from the
+FoVer v5 evaluation corpus and the Exp 1199 4-bit baseline when available, while
+falling back to the documented SOS-KAN references when a legacy field is absent.
+
+**Rationale:**
+    Exp 1199 established the 4-bit KANtize reference for SOSKANEnergyV3 edge
+    deployment. Ultra-edge NPU planning needs a 3-bit estimate and a separate
+    lookup-table inference comparison before spending hardware effort. This is
+    explicitly a simulation: the 3-bit AUROC is a deterministic GPTQ-style drop
+    from the loaded 4-bit AUROC, and LUT-KAN latency is an analytical comparison
+    of direct spline evaluation against a 256-point INT8 lookup table.
+
+**Acceptance criteria:**
+    - The runner SHALL read `results/fover_corpus_v5.json` and evaluate the
+      first 200 pairs for artifact provenance.
+    - The runner SHALL read the Exp 1199 artifact, accepting both legacy
+      `quantized_auroc`/`model_size_mb` aliases and current
+      `soskan_4bit_auroc`/`soskan_4bit_size_mb` fields.
+    - The artifact SHALL include `auroc_curve` with
+      `full_precision`, `8bit_ptq`, `4bit_ptq`, `3bit_ptq`, and `3bit_lut`.
+    - The artifact SHALL include `quantkan_3bit_auroc`, `lut_kan_speedup`, and
+      an `honest_verdict` formatted as
+      `quantkan_3bit_auroc_X.XXXX_lut_speedup_X.Xx`.
+    - The 3-bit model size SHALL be 75% of the loaded 4-bit model size, and the
+      LUT overhead SHALL equal `n_vars * n_grid_points` INT8 bytes.
+    - `scripts/experiment_1266_quantkan_3bit_lut_kan.py` SHALL write
+      `results/experiment_1266_quantkan_3bit_lut_kan.json` with the required
+      schema fields.
+
+### SCENARIO-KAN-1266: write QuantKAN 3-bit plus LUT-KAN artifact
+
+Given the FoVer v5 corpus and the Exp 1199 SOSKANEnergyV3 4-bit result,
+When `scripts/experiment_1266_quantkan_3bit_lut_kan.py` runs,
+Then `results/experiment_1266_quantkan_3bit_lut_kan.json` is written with the
+AUROC curve, 3-bit AUROC, LUT-KAN speedup, model-size comparison, and honest
+verdict required by REQ-KAN-1266.
+
+## REQ-KAN-1319: KAN hardware portability audit artifact
+
+Experiment 1319 MUST audit at least one local KAN verifier or repair-adjacent
+candidate for hardware portability without claiming real FPGA, NPU, or analog
+execution unless local hardware execution actually occurred during the task.
+
+**Rationale:**
+    The KAN hardware and analog literature motivates more portable KAN
+    representations, but Carnot needs a conservative local accounting step
+    before any deployment claim. The audit should connect the active local
+    SOS-KAN/QuantKAN/KANELE/BiKA evidence to transparent estimates for read
+    memory, bit operations, nonlinear activation budget, lookup-table memory,
+    and near-term target platform.
+
+**Acceptance criteria:**
+    - `results/experiment_1319_kan_hardware_complexity_audit.json` is written
+      with `run_date="20260505"`.
+    - The artifact includes the fields `status`, `rm_per_inference`,
+      `bop_per_inference`, `nabs_per_inference`, `lookup_table_bytes`,
+      `analog_kan_candidate`, `npu_or_fpga_best_target`,
+      `hardware_claim_allowed`, and `honest_verdict`.
+    - The audit names the local KAN or repair-adjacent modules it considered.
+    - `hardware_claim_allowed` is false unless real local hardware execution
+      occurred during the experiment.
+    - The honest verdict MUST state that the result is a hardware-portability
+      audit, not FPGA, NPU, or analog execution, when no hardware execution
+      occurred.
+
+### SCENARIO-KAN-1319: write conservative KAN hardware complexity audit
+
+Given the local Exp 1148/1162/1174 SOSKANEnergyV3 compression and complexity
+artifacts,
+When `scripts/experiment_1319_kan_hardware_complexity_audit.py` runs,
+Then `results/experiment_1319_kan_hardware_complexity_audit.json` is written
+with deterministic RM/BOP/NABS/LUT-memory estimates, platform classification,
+`hardware_claim_allowed=false`, and an honest non-execution verdict.
+
+## REQ-KAN-1502: no-synthesis KAN hardware accounting for verifier components
+
+Experiment 1502 MUST produce a no-synthesis hardware-accounting artifact for
+Carnot-relevant KAN verifier components. The artifact MUST compare a naive
+full-precision KAN/SOS-KAN path, a QuantKAN-like quantized lookup-table path,
+and a KAEM-style univariate approximation path using only accounting evidence
+from local source files and prior artifacts.
+
+**Rationale:**
+    Post-.114 research references added KAN hardware-complexity and ultra-light
+    accelerator signals, but Exp 1460 narrowed the active hardware portfolio and
+    forbids new KAN accelerator claims without synthesis, board, or measured
+    hardware evidence. Carnot still needs transparent operation, memory, LUT,
+    BRAM, and accuracy-risk estimates so future hardware work can stay scoped.
+
+**Acceptance criteria:**
+    - `results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json` is
+      written with `run_date="20260507"` and `status="complete"`.
+    - The artifact includes `status`, `kan_hardware_accounting_ready`,
+      `accounting_only_no_synthesis_claim`, `kan_components_audited`,
+      `quantkan_proxy_estimates`, `kaem_proxy_estimates`,
+      `lut_proxy_estimate`, `bram_proxy_estimate`, `accuracy_risk_notes`,
+      `hardware_claim_allowed`, `blockers`, and `honest_verdict`.
+    - `hardware_claim_allowed` is false and
+      `accounting_only_no_synthesis_claim` is true unless actual synthesis or
+      board measurement evidence is present.
+    - The accounting table reports operation counts, memory footprints,
+      rough LUT/BRAM proxy pressure, and accuracy-risk boundaries for naive,
+      QuantKAN-like, and KAEM-style variants.
+    - `honest_verdict` starts with one of the conductor terminal prefixes:
+      `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+      `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-KAN-1502: write conservative QuantKAN/KAEM accounting artifact
+
+Given the local Exp 1148/1162/1174/1199/1266/1319/1372 KAN artifacts and the
+current KAN verifier modules,
+When the Exp 1502 accounting helper runs,
+Then `results/experiment_1502_kan_hardware_accounting_quantkan_kaem.json`
+contains the required fields, compares naive/QuantKAN-like/KAEM-style variants,
+sets `hardware_claim_allowed=false`, and records a terminal no-synthesis honest
+verdict.
+
+## REQ-KAN-1516: KAN/KAEM shape normalization preflight
+
+Experiment 1516 MUST normalize KAN/KAEM model and proxy dimensions into a
+separate shape manifest before future hardware synthesis work can cite Exp 1502
+accounting. The preflight MUST read the Exp 1502 hardware-accounting artifact,
+verify the Exp 1506 prior blocker, map model/proxy dimensions to
+hardware-accounting dimensions with explicit provenance, and record excluded
+shape assumptions.
+
+**Rationale:**
+    Exp 1502 intentionally avoided Vivado, bitstreams, board execution, and
+    timing closure. It also recorded that QuantKAN and KAEM proxy shapes must be
+    normalized before future synthesis. That hygiene gate prevents later work
+    from treating proxy read-memory, bit-operation, LUT, or BRAM counts as
+    synthesis-ready shapes unless the exact source fields and exclusions are
+    visible.
+
+**Acceptance criteria:**
+    - `results/experiment_1516_kan_shape_normalization_preflight.json` is
+      written with `run_date="20260508"` and the required terminal fields:
+      `status`, `kan_shape_manifest_ready`, `gated_inputs_present`,
+      `no_synthesis_claim`, `no_board_claim`, `proxy_shapes_loaded`,
+      `normalized_shapes_written`, `excluded_shape_assumptions`,
+      `hardware_accounting_shape_fields`, `shape_manifest_path`, `blockers`,
+      and `honest_verdict`.
+    - The preflight verifies
+      `results/experiment_1506_115_completion_archive_116_activation.json`
+      has `prior_kan_shape_blocker_recorded=true`; otherwise it writes a
+      terminal gated artifact and does not mark the manifest ready.
+    - The normalized manifest records proxy dimensions, batch/sequence
+      assumptions, quantization assumptions, and hardware-accounting dimensions
+      with explicit artifact-field provenance for each mapped variant.
+    - The terminal artifact sets `no_synthesis_claim=true` and
+      `no_board_claim=true`; `kan_shape_manifest_ready` is true only when the
+      normalized manifest and excluded assumptions are written.
+    - `honest_verdict` starts with one of the conductor terminal prefixes:
+      `complete:`, `complete_`, `success:`, `success_`, `passed:`,
+      `passed_`, `shipped:`, or `shipped_`.
+
+### SCENARIO-KAN-1516: write normalized KAN shape manifest
+
+Given the completed Exp 1502 KAN hardware-accounting artifact and the Exp 1506
+prior blocker record,
+When the Exp 1516 shape-normalization preflight runs,
+Then `results/kan_shape_normalization_manifest_1516.json` maps at least the
+naive SOS-KAN, QuantKAN LUT, and KAEM univariate variants to normalized
+hardware-accounting shapes, records all excluded shape assumptions, blocks
+synthesis and board claims, and writes a complete Exp 1516 artifact.
+
+## REQ-KAN-1599: KANELÉ hardware LUT-complexity accounting
+
+Experiment 1599 MUST perform a no-synthesis hardware accounting pass for KANs.
+It MUST estimate RM, BOP, and NABS for KANs and write the artifact
+`results/experiment_1599_kanele_audit.json` without claiming any actual
+hardware synthesis or board execution.
+
+**Rationale:**
+    We need to track KANELÉ LUT complexity (Resource Metrics, Bit Operations,
+    Number of Additions/Subtractions) for the current milestone without
+    actually running Vivado or claiming board execution.
+
+**Acceptance criteria:**
+    - Calculates RM, BOP, and NABS based on some existing KAN architecture or artifact.
+    - Writes `results/experiment_1599_kanele_audit.json` with fields `rm_per_inference`, `bop_per_inference`, and `nabs_per_inference`.
+    - Makes absolutely no claims of synthesis or execution (`hardware_execution_confirmed: False`).
+    - Contains an approved `honest_verdict`.
+
+### SCENARIO-KAN-1599: write no-synthesis KAN accounting artifact
+
+Given a KAN architecture or prior artifact,
+When the Exp 1599 audit runs,
+Then `results/experiment_1599_kanele_audit.json` is created with RM, BOP,
+and NABS estimates, and `hardware_execution_confirmed: False`.
+
+## REQ-KAN-1602: Exact-Rational KAN Forward Pass
+
+The KAN model tier MUST provide an exact-rational CPU forward pass for formal
+verification. The implementation MUST evaluate edge and bias spline
+contributions entirely with Python `fractions.Fraction` values so repeated
+passes over equivalent rational inputs produce identical numerator/denominator
+results without floating-point rounding or JAX tracing.
+
+**Rationale:**
+    Formal verification needs arithmetic whose semantics are explicit and
+    replayable. The JAX KAN path is appropriate for training and differentiable
+    inference, but binary floating-point evaluation can obscure whether two
+    proof runs differ because of model semantics or because of backend numeric
+    details. A small exact-rational RKAN forward pass gives property tests and
+    formal auditors a deterministic reference for KAN energy evaluation.
+
+**Acceptance criteria:**
+    - `python/carnot/models/rkan.py` exposes `RationalLinearSpline` and
+      `RationalKANEnergyFunction`.
+    - The RKAN forward pass accepts integers, strings, and `Fraction` inputs,
+      converts them to `Fraction`, validates input shape and edge indices, and
+      returns a `Fraction`.
+    - Edge products, piecewise-linear interpolation, bias terms, and total
+      energy accumulation use exact rational operations only.
+    - Repeated forward passes over equivalent rational inputs produce identical
+      `Fraction` outputs.
+    - The experiment artifact `results/experiment_1602_rkan.json` is written
+      with `schema`, `status`, `experiment_id`, `spec`,
+      `exact_rational_forward_pass_ready`, `float_operations_used`,
+      `repeated_forward_outputs_identical`, `sample_outputs`, and a terminal
+      `honest_verdict`.
+
+### SCENARIO-KAN-1602: exact-rational RKAN artifact and deterministic energy
+
+Given a small RKAN with rational edge and bias spline control points,
+When the exact-rational forward pass evaluates rational input vectors twice,
+Then every intermediate contribution and output remains a `Fraction`, the
+second pass is bit-identical to the first, and
+`results/experiment_1602_rkan.json` records the completed deterministic
+reference artifact.
+
+## REQ-KAN-1604: Sparse KAN Clustering With Global Group Lasso
+
+The KAN model tier MUST provide a CPU-only Sparse KAN clustering helper that
+compresses constraint-memory rows by learning a small centroid codebook while
+penalizing whole inactive groups with a Global Group Lasso term and preserving
+cluster geometry with a spectral constraint regularizer.
+
+The regularized loss MUST expose separate components:
+
+```
+L = reconstruction_loss
+    + lambda_group_lasso * sum_g ||C_g||_2
+    + lambda_spectral * trace(Z^T L Z)
+```
+
+where `C_g` is one centroid/control-vector group, `Z` is the row-to-cluster
+assignment matrix, and `L` is a graph Laplacian derived from constraint-row
+affinity.  The helper MUST report a deterministic sparsity ratio from the
+number of zeroed centroid groups divided by the total group count.
+
+**Acceptance criteria:**
+    - `SparseKANClusterer.regularized_loss_components()` returns
+      `reconstruction_loss`, `global_group_lasso_penalty`,
+      `spectral_constraint_regularization`, and `total_loss`.
+    - Applying the sparsifier with a deterministic threshold zeroes low-norm
+      centroid groups and the result `sparsity_ratio` returns
+      `zero_group_count / n_clusters`.
+    - `fit()` produces finite centroids, deterministic assignments, and a
+      compressed-memory estimate smaller than the dense constraint matrix.
+    - `write_experiment_1604_artifact()` writes
+      `results/experiment_1604_sparse_kan.json` with `schema`, `status`,
+      `experiment_id`, `spec`, `sparse_kan_clustering_ready`,
+      `global_group_lasso_penalty`, `spectral_constraint_regularization`,
+      `sparsity_ratio`, `memory_compression_ratio`, and a terminal
+      `honest_verdict`.
+
+### SCENARIO-KAN-1604: sparse KAN clustering artifact records compression
+
+Given a deterministic synthetic constraint-memory matrix with repeated
+structure,
+When Sparse KAN clustering fits a small centroid codebook with Global Group
+Lasso and spectral regularization enabled,
+Then the low-norm groups are pruned, the sparsity ratio is measured from the
+active centroid codebook, the compressed-memory estimate is smaller than the
+dense matrix, and `results/experiment_1604_sparse_kan.json` records the
+completed compression artifact.
+
+## REQ-KAN-1648: Spectral Constraint Grouping for Tier 4 Sparse KAN Landscapes
+
+The KAN model tier MUST provide a CPU-only Exp 1648 probe that layers spectral
+constraint grouping on top of the existing Sparse KAN centroid compressor for
+Tier 4 adaptive landscapes.  The probe MUST derive a deterministic row-affinity
+graph from adaptive-landscape observations, group rows in spectral embedding
+space, compress each group through Sparse KAN centroids, and report both the
+spectral grouping quality and memory compression.
+
+The artifact MUST record the direct field `compression_ratio` in addition to
+the inherited Sparse KAN memory accounting so the conductor can compare Exp
+1648 against prior sparse-compression experiments without schema-specific
+field names.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1648_sparse_kan.py` exposes deterministic helpers for
+      building a Tier 4 adaptive-landscape matrix, spectral grouping rows, and
+      computing grouped Sparse KAN compression metrics.
+    - Spectral grouping uses a graph Laplacian embedding or equivalent
+      eigenvector-derived ordering before assigning rows to groups.
+    - The artifact includes `schema`, `status`, `experiment_id`, `spec_traces`,
+      `n_constraint_rows`, `n_spectral_groups`, `spectral_gap`,
+      `spectral_grouping_penalty`, `dense_memory_bytes`,
+      `compressed_memory_bytes`, `compression_ratio`, and `honest_verdict`.
+    - `compression_ratio` is exactly
+      `dense_memory_bytes / max(compressed_memory_bytes, 1)`.
+    - A completed result is written to
+      `results/experiment_1648_sparse_kan.json` with a terminal
+      `honest_verdict`.
+
+### SCENARIO-KAN-1648: spectral grouping records compression ratio
+
+Given a deterministic adaptive-landscape matrix with repeated local structures,
+When Exp 1648 builds spectral groups and compresses them with Sparse KAN
+centroids,
+Then high-affinity rows remain grouped, the spectral grouping penalty is finite,
+the compressed-memory estimate is smaller than the dense matrix, and
+`results/experiment_1648_sparse_kan.json` records the direct
+`compression_ratio` field.
+
+## REQ-KAN-1618: PWA KAN Wrapper for Logical Spline Activation Bounds
+
+The KAN model tier MUST provide a CPU-only Piecewise Affine (PWA) wrapper for
+one-dimensional KAN spline activations. The wrapper MUST support arbitrary 1D
+spline callables by sampling them at declared breakpoints, computing affine
+center lines, and deriving conservative affine lower and upper activation
+boundaries for each segment.
+
+**Rationale:**
+    Formal verification workflows need KAN activations to be expressible as
+    local linear implications: if an input lies in one segment, the activation
+    lies between two affine boundary functions. Exact knot-aligned linear KAN
+    splines should have zero envelope error, while nonlinear or externally
+    supplied spline callables still need deterministic sampled envelopes that
+    are safe for logical downstream checks.
+
+**Acceptance criteria:**
+    - `python/carnot/models/pwa_kan.py` exposes a PWA spline wrapper for
+      arbitrary 1D callables and existing `BSpline` KAN units.
+    - Each segment records `slope`, `intercept`, affine lower/upper boundaries,
+      residual bounds, and `max_abs_error`.
+    - Interval activation-bound queries check every overlapping segment and
+      return deterministic lower/upper values with witness inputs.
+    - The wrapper can emit JSON-safe logical constraints of the form
+      `x in [lo, hi] => lower_affine(x) <= y <= upper_affine(x)`.
+    - The experiment artifact `results/experiment_1618_pwa_kan.json` is written
+      with `schema`, `status`, `experiment_id`, `spec`, logical-bound metrics,
+      and a terminal `honest_verdict`.
+
+### SCENARIO-KAN-1618: PWA wrapper bounds exact and nonlinear spline units
+
+Given an exact piecewise-linear KAN spline and a nonlinear 1D spline callable,
+When the PWA wrapper builds affine segment boundaries and evaluates interval
+activation bounds,
+Then the exact KAN spline has zero sampled envelope error, nonlinear samples are
+contained inside their segment lower/upper affine envelopes, and
+`results/experiment_1618_pwa_kan.json` records the completed model-level PWA
+KAN abstraction artifact.
+
+## REQ-KAN-1621: KANELE Python-to-Verilog 6-input LUT synthesis
+
+The KAN capability MUST include a Python-to-Verilog compiler that translates 1D
+edge functions directly into configuration bits for 6-input LUTs.
+
+**Rationale:**
+    To synthesize KAN edges into FPGA fabric, we need to map generic 1D
+    functions directly to 6-input LUT initializations (INIT parameters) rather
+    than relying on Vivado to infer tables.
+
+**Acceptance criteria:**
+    - A Python script `python/carnot/hardware/kan_lut_compiler.py` (or similar)
+      can take a generic 1D Python function `f(x)` over 6-bit input and produce
+      a 64-bit Verilog LUT INIT string.
+    - The compiler generates `hardware/kv260/kan_lut_block.v` containing
+      instantiated `LUT6` primitives.
+    - The experiment artifact `results/experiment_1621_kanele_mapping.json` is
+      written with `schema`, `status`, `experiment_id`, `spec`,
+      `kan_lut_verilog_ready`, `lut_config_bits_generated`,
+      `kan_lut_block_written`, and a terminal `honest_verdict`.
+
+### SCENARIO-KAN-1621: Generates KAN LUT Verilog module
+
+Given a simple 1D KAN edge function,
+When the LUT compiler translates it into 6-input LUT configuration bits,
+Then `hardware/kv260/kan_lut_block.v` is generated with the correct INIT values,
+and `results/experiment_1621_kanele_mapping.json` records the completion.
+
+## REQ-KAN-1623: KANELÉ vs Ising v3 LUT and Logic-Depth Accounting
+
+Experiment 1623 MUST produce a no-synthesis KV260 hardware-bounds accounting
+artifact comparing the KANELÉ LUT-mapped edge datapath from Exp 1621 with the
+existing `hardware/kv260/ising_sampler_v3.v` formulation. The accounting MUST
+calculate per-node LUT consumption, estimate maximum clock frequency from
+logic-depth assumptions, and keep synthesis and board-execution claims false.
+
+**Rationale:**
+    Exp 1621 generated direct LUT6 Verilog for a KANELÉ-style 1D edge block.
+    Before requesting Vivado synthesis or KV260 board time, Carnot needs a
+    transparent resource and critical-path estimate against the Ising v3 RTL
+    baseline already present under `hardware/kv260/`.
+
+**Acceptance criteria:**
+    - `results/experiment_1623_kanele_accounting.json` is written with
+      `schema`, `status`, `experiment_id`, `spec`, `per_node_lut_consumption`,
+      `logic_depth_estimate`, `max_clock_frequency_estimate_mhz`,
+      `kv260_budget`, `hardware_claim_allowed`, and `honest_verdict`.
+    - The KANELÉ per-node LUT count is derived from the number of `LUT6`
+      primitives in `hardware/kv260/kan_lut_block.v` plus explicit control and
+      accumulation assumptions.
+    - The Ising v3 per-node LUT count is derived from the documented KV260
+      utilization comment in `hardware/kv260/ising_sampler_v3.v` and the
+      XCK26 LUT budget used by the existing FPGA spec.
+    - The maximum clock-frequency estimates use stated LUT-delay and
+      register-overhead assumptions and do not claim timing closure.
+    - `hardware_claim_allowed=false`, `synthesis_performed=false`, and
+      `board_execution_performed=false` unless the current run records actual
+      synthesis or KV260 board evidence.
+
+### SCENARIO-KAN-1623: write KANELÉ vs Ising accounting artifact
+
+Given `hardware/kv260/kan_lut_block.v`, the Exp 1621 mapping artifact, and
+`hardware/kv260/ising_sampler_v3.v`,
+When the Exp 1623 accounting helper runs,
+Then `results/experiment_1623_kanele_accounting.json` records deterministic
+per-node LUT, logic-depth, and maximum-clock estimates for KANELÉ and Ising v3
+while preserving the no-synthesis/no-board hardware-claim boundary.
+
+## REQ-KAN-1637: KANELÉ RTL Vivado Linting Preflight
+
+The KAN capability MUST perform a preflight check for Vivado installation and attempt linting on KANELÉ RTL (`hardware/kv260/kan_lut_block.v`).
+
+**Rationale:**
+    RTL linting was blocked due to missing Vivado paths. We need to explicitly check if Vivado is available in the environment before attempting to run `xvlog` or `vivado`, and output the results to a structured artifact.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1637_lint.py` is written and executable.
+    - `results/experiment_1637_vivado_lint.json` contains `vivado_installed` and `lint_passed`.
+    - Unit tests exist for the preflight script logic and reference `REQ-KAN-1637`.
+
+### SCENARIO-KAN-1637: KANELÉ RTL Vivado Linting Preflight
+
+Given the `hardware/kv260/` directory,
+When `scripts/experiment_1637_lint.py` is executed,
+Then it checks for Vivado, attempts linting if possible, and outputs `vivado_installed` and `lint_passed` to the JSON artifact.
+
+## REQ-KAN-1688: CIKAN Regularizer for Monotonic B-splines
+
+The KAN model tier MUST provide a CIKAN regularizer that enforces monotonic behavior on B-spline coefficients directly, without requiring post-hoc projection.
+
+**Rationale:**
+    B-spline monotonicity can be enforced by constraining differences between adjacent coefficients. A regularizer that penalizes non-monotonic coefficient sequences allows continuous gradient-based optimization while encouraging the spline to become monotonically increasing or decreasing.
+
+**Acceptance criteria:**
+    - `python/carnot/models/cikan_reg.py` implements `CIKANRegularizer`.
+    - Tests verify that the regularizer computes the correct penalty for non-monotonic coefficients.
+    - A test spline's non-monotonic behavior is penalized correctly.
+    - `results/experiment_1688_cikan.json` is written with the appropriate results.
+
+### SCENARIO-KAN-1688: CIKAN Regularizer penalizes non-monotonicity
+
+Given a set of B-spline coefficients,
+When `CIKANRegularizer` is applied,
+Then it computes a penalty proportional to the non-monotonic adjacent differences, and `results/experiment_1688_cikan.json` records the success.
+
+## REQ-KAN-1723: FourierCSP-Boundary CIKAN Verifier
+
+The KAN model tier MUST provide a `CIKAN` verifier that accepts constraints
+emitted by `FourierCSPExtractor` and compiles them into fixed architectural
+boundary units before any residual KAN training occurs.
+
+The boundary units SHALL:
+
+- preserve the FourierCSP variable names, expression text, and polynomial text;
+- evaluate the supported Boolean operators `AND`, `OR`, `NOT`, and `XOR` over
+  thresholded feature values;
+- contribute a fixed violation penalty to the verifier energy/logit path; and
+- remain immutable across `fit()` calls so gradient updates cannot move or
+  remove physical/logical constraint boundaries.
+
+The verifier MAY train a small residual KAN head on top of those fixed
+boundaries, but a violated FourierCSP constraint MUST retain higher energy than
+an otherwise matching satisfying assignment after training.
+
+**Acceptance criteria:**
+    - `python/carnot/models/cikan_verifier.py` exposes `CIKAN` and
+      `CIKANBoundary`.
+    - Tests show FourierCSP constraints compile into fixed architectural
+      boundaries and remain unchanged after training.
+    - Tests show a violating assignment has higher CIKAN energy than a
+      satisfying assignment for the same FourierCSP constraint.
+    - `scripts/experiment_1723_cikan.py` trains on a deterministic toy dataset
+      and writes `results/experiment_1723_cikan.json` with artifact schema,
+      constraint, training, metric, and verdict fields.
+
+### SCENARIO-KAN-1723: FourierCSP constraints remain fixed during CIKAN training
+
+Given a FourierCSP multilinear polynomial for `X AND Y`,
+When the CIKAN verifier compiles it and trains on a toy dataset,
+Then its boundary snapshot before and after training is identical, the violated
+assignment has higher energy than the satisfying assignment, and the Exp 1723
+artifact reports `fixed_boundaries_preserved=true`.
+
+## REQ-KAN-1749: Symbolic-KAN Primitive Routing Tensor Embedding
+
+The KAN model tier MUST provide a CPU/JAX prototype of the arXiv:2603.23854
+Symbolic-KAN mapping in which each route learns a scalar projection of the
+input tensor, evaluates a finite library of analytic primitives on that
+projection, and embeds the route's discrete symbolic structure as a gate tensor
+over the primitive library.
+
+The prototype SHALL:
+
+- keep the symbolic primitive set finite, named, and deterministic;
+- compute soft primitive gates from route logits and temperature;
+- support hard one-hot gate extraction for discretized symbolic structures;
+- return a structured forward-pass report with projections, primitive values,
+  gates, route values, and energies; and
+- expose a symbolic regularization value that decreases as gates sharpen toward
+  one-hot selections.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/symbolic_kan.py` exposes
+      `SymbolicRoutingLayer`, `SymbolicKANConfig`, `SymbolicKANParams`,
+      `build_experiment_1749_artifact`, and `write_experiment_1749_artifact`.
+    - Unit tests verify soft routing, hard one-hot routing, batch/vector
+      forward-pass shapes, selected primitive names, entropy-style symbolic
+      regularization, validation failures, and stable artifact schema fields.
+    - `results/experiment_1749_symbolic_kan.json` is written with the required
+      schema fields and an honest verdict.
+
+### SCENARIO-KAN-1749: Symbolic primitive routing maps to tensor space
+
+Given a `SymbolicRoutingLayer` with two scalar projection routes and a finite
+primitive library,
+When the layer evaluates vector and batch inputs with soft and hard routing,
+Then its gate tensor has shape `(n_routes, n_primitives)`, hard gates are
+one-hot, selected primitive names match the maximum route logits, and the Exp
+1749 artifact reports a complete Symbolic-KAN tensor-space prototype.
+
+## REQ-KAN-1679: Miniature KArAt Attention Block
+
+The KAN capability MUST provide a miniature KArAt attention block (Kolmogorov-Arnold Attention) that replaces Softmax with learnable spline/rational bases. The implementation MUST be designed for energy calculation, and its parameter counts and bounding bounds MUST be verified using rational abstractions.
+
+**Rationale:**
+    Moving beyond standard MLP and attention to fully learnable, verifiable bases (arXiv:2503.10632). Replacing Softmax with rational bases allows for exact verification and bounding, which is critical for formal property checks and deterministic energy calculations.
+
+**Acceptance criteria:**
+    - `python/carnot/models/karat_attention.py` exposes a single KArAt layer designed for energy calculation.
+    - Parameter counts and bounding bounds are verified using rational abstractions.
+    - Tests verify the model logic and achieve 100% test coverage.
+    - `results/experiment_1679_karat.json` is written with the required schema fields, parameter counts, bounding bounds validation, and an honest verdict.
+
+### SCENARIO-KAN-1679: KArAt attention block artifact
+
+Given the `karat_attention.py` module,
+When the parameter counts and bounding bounds are verified,
+Then the tests pass, coverage is 100%, and `results/experiment_1679_karat.json` is written.
+
+## REQ-KAN-1689: Certified KArAt Model Evaluation
+
+The KAN capability MUST provide a script to evaluate the predictive performance of the MILP-certified KArAt model against an uncertified baseline on a synthetic reasoning dataset.
+
+**Rationale:**
+    To ensure the MILP-certified KArAt model maintains or improves accuracy and output bounds compared to the uncertified baseline.
+
+**Acceptance criteria:**
+    - `python/carnot/models/certified_karat.py` implements the certified KArAt wrapper and benchmark logic.
+    - Tests verify the model logic and achieve 100% test coverage.
+    - `results/experiment_1689_certified_karat.json` is written with the required schema fields, comparing accuracy and output bounds, and an honest verdict.
+
+### SCENARIO-KAN-1689: Certified KArAt Evaluation
+
+Given the `certified_karat.py` module,
+When the benchmark script is run on the synthetic reasoning dataset,
+Then accuracy and output bounds are compared, tests pass, coverage is 100%, and `results/experiment_1689_certified_karat.json` is written.
+
+## REQ-KAN-1690: GloroKAN-style Local Lipschitz Bounds for KArAt
+
+The KAN capability MUST provide a CPU-only GloroKAN-style forward-pass local
+Lipschitz bound calculator for the miniature rational KArAt attention model.
+The calculator MUST use spline control-point slopes, dot-product interval
+bounds, and norm-bounded query/key magnitudes to return a deterministic upper
+bound on how much the KArAt energy can change under a local input perturbation.
+
+**Rationale:**
+    GloroKAN-style robustness relies on a spline-specific observation: a
+    forward pass does not need a black-box global neural-network Lipschitz
+    estimate when each one-dimensional activation exposes knot-aligned local
+    slopes. For KArAt, each attention term is
+    `spline(q_i dot k_j)`, so the local bound can combine the maximum spline
+    slope on the reachable dot-product interval with a conservative chain-rule
+    bound for the local query and key vector norms.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/glorokan_robustness.py` exposes
+      `GloroKANBounder`.
+    - The bounder accepts a `RationalKArAtLayer` and exact rational query/key
+      inputs.
+    - It returns a structured bound report with schema-safe fields including
+      `local_lipschitz_bound`, `radius`, `norm`, per-term dot intervals, and
+      per-term spline slope bounds.
+    - The reported local Lipschitz bound is deterministic and is at least as
+      large as a finite-difference energy-change witness inside the requested
+      local radius.
+    - `results/experiment_1690_glorokan_robustness.json` is written with the
+      required schema fields and an honest verdict.
+
+### SCENARIO-KAN-1690: KArAt local robustness report bounds a perturbation
+
+Given a `RationalKArAtLayer` with rational spline control points and rational
+query/key matrices,
+When `GloroKANBounder.bound_forward()` is called with a positive local radius,
+Then the report includes deterministic per-term dot intervals and a nonnegative
+local Lipschitz bound that upper-bounds the observed KArAt energy change for a
+same-radius perturbation.
+
+## REQ-KAN-1729: KANELÉ CIKAN to FPGA LUT Mapping Pipeline
+
+The KAN capability MUST provide an RTL generation pipeline that maps Continuous Interpretable Kolmogorov-Arnold Networks (CIKAN) to FPGA Lookup Tables (LUTs), creating a top-level Verilog wrapper and a Python-to-Verilog mapper.
+
+**Rationale:**
+To accelerate CIKANs on FPGA hardware (Phase 3), the trained Python model weights must be compiled directly into Verilog LUT definitions. This requires a dedicated mapper script and a top-level module to orchestrate the LUT blocks for deployment on the KV260 board.
+
+**Acceptance criteria:**
+- `hardware/kv260/kanele_lut_mapper.py` implements the CIKAN to FPGA LUT mapping logic.
+- `hardware/kv260/kanele_top.v` provides the top-level Verilog wrapper.
+- `scripts/experiment_1729_kanele.py` executes a simulation check and writes `results/experiment_1729_kanele.json`.
+- Tests verify the generation pipeline logic.
+
+### SCENARIO-KAN-1729: CIKAN to FPGA LUT Mapping
+
+Given a CIKAN model,
+When the LUT mapper and RTL generation pipeline run,
+Then the correct Verilog files are generated, the simulation check passes, and `results/experiment_1729_kanele.json` records the success.
+
+## REQ-KAN-1808: Symbolic Regression via CIKAN
+
+The KAN capability MUST support extracting exact logical/algebraic formulas from a trained CIKAN layer.
+By feeding a dataset (e.g., modeling Z = X + Y), the CIKAN layer must discover the correct symbolic operations
+and allow comparison against the ground truth equation.
+
+**Acceptance criteria:**
+    - `python/carnot/models/carnot_kan/cikan_layer.py` exposes a `CIKANLayer` capable of symbolic extraction.
+    - `scripts/experiment_1808_cikan_symbolic.py` fits a known dataset, extracts the symbolic equation, and logs `equation_match_accuracy`.
+    - Unit tests cover the CIKAN layer.
+    - `results/experiment_1808_symbolic.json` contains `equation_match_accuracy`.
+
+### SCENARIO-KAN-1808: Extract symbolic equation correctly
+
+Given a dataset matching an exact arithmetic rule (e.g., Z = X + Y),
+When CIKANLayer is fitted to this dataset,
+Then it extracts the correct symbolic equation, achieving high equation_match_accuracy,
+and `results/experiment_1808_symbolic.json` is logged.
+
+## REQ-KAN-1840: PWA KAN Abstraction
+
+The KAN capability MUST implement Piecewise Affine (PWA) abstractions for nonlinear KAN units to support MILP verification (arXiv:2602.06737).
+
+**Rationale:**
+    Formal verification of KAN units requires converting continuous, nonlinear spline functions into piecewise-linear components that can be encoded in an MILP solver. The abstraction must compute affine bounds (lower and upper) for each linear segment.
+
+**Acceptance criteria:**
+    - `python/carnot/verify/pwa_kan.py` exposes a PWA abstraction function that converts 1D splines to piecewise-linear segments with bounds.
+    - Each segment contains bounds information.
+    - `results/experiment_1840_pwa_kan.json` is generated correctly.
+    - Tests verify the logic and achieve 100% coverage, referencing `REQ-KAN-1840`.
+
+### SCENARIO-KAN-1840: Spline to PWA conversion
+
+Given a nonlinear KAN unit (e.g. spline callable),
+When the PWA abstraction is applied,
+Then it computes piecewise-linear approximations with affine bounds for each segment, tests pass with 100% coverage, and `results/experiment_1840_pwa_kan.json` is written.
+
+## REQ-KAN-1826: KAN-CL Per-Knot Importance Regularization
+
+The KAN capability MUST implement the KAN-CL algorithm (arXiv:2605.11181) for continual learning. This requires per-knot importance regularization to prevent catastrophic forgetting.
+
+**Rationale:**
+    Continuous self-learning suffers from catastrophic forgetting in KAN energy tiers.
+    By tracking the importance weight of each B-spline knot during training,
+    subsequent learning phases can apply a regularization penalty that anchors
+    important knots while allowing unimportant knots to adapt to new tasks.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan_cl.py` implements the KAN-CL importance tracker and regularization penalty.
+    - It tracks importance weights for B-spline knots during training.
+    - It computes a penalty term for subsequent learning phases based on the deviation from anchored control points, weighted by the tracked importance.
+    - `python/carnot/learning/kan_cl.py` exposes `KanClLearner.fit(X, y, task_id)` and `KanClLearner.predict(X)` for n=256 constraint learning.
+    - The learner records per-knot importance as the activation frequency of each of the 256 spline coefficients for every task.
+    - The split-task benchmark writes `results/experiment_2356_kancl_n256.json` and validates KAN-CL when catastrophic-forgetting reduction is at least 50%.
+    - Tests verify that the penalty is computed correctly and achieve 100% test coverage for the new module.
+
+### SCENARIO-KAN-1826: KAN-CL Penalty Computation
+
+Given an initial set of B-spline control points and their corresponding importance weights,
+When a subsequent learning phase proposes updated control points,
+Then the KAN-CL regularization term correctly computes a penalty proportional to the importance-weighted deviation, and tests pass with 100% coverage.
+
+### SCENARIO-KAN-1826-N256: KAN-CL Split-Task Constraint Learning
+
+Given three 50-example constraint-learning tasks over arithmetic, code, and logic domains with `n_params=256`,
+When `KanClLearner` trains sequentially on the tasks,
+Then per-knot importance is computed from task activation frequencies, prior-task coefficients are protected by importance-weighted L2 updates, and the artifact reports `forgetting_reduction_pct >= 50`.
+
+
+## REQ-KAN-1857: Softly Symbolified KANs (S2KAN) with Differentiable Gating
+
+The KAN capability MUST implement Softly Symbolified KANs (S2KAN) that introduce symbolic primitives with differentiable gating.
+
+**Rationale:**
+    To enable verifiable KANs, the network needs to use primitive functions (e.g., sin, exp, step) combined using differentiable gates. This allows the network to learn which symbolic function best fits the data while remaining differentiable for training.
+
+**Acceptance criteria:**
+    - `python/carnot/models/s2kan.py` implements the primitive functions (sin, exp, step) and differentiable gating logic.
+    - Tests verify the differentiable gating and primitive evaluations.
+    - Test coverage for `s2kan.py` is 100%.
+    - `results/experiment_1857_s2kan.json` is generated upon success.
+
+### SCENARIO-KAN-1857: S2KAN primitives and differentiable gates
+
+Given the `s2kan.py` module,
+When the differentiable gates and primitives (sin, exp, step) are evaluated and tested,
+Then the tests pass with 100% coverage, and `results/experiment_1857_s2kan.json` is written.
+
+## REQ-KAN-1858: GloroKAN Lipschitz Bounds in S2KAN
+
+The KAN capability MUST implement a Lipschitz approximation pass for the Softly Symbolified KANs (S2KAN).
+
+**Rationale:**
+    Robustness verification for KANs requires Lipschitz bounds (GloroKAN). Extending the KAN model forward pass to output local Lipschitz bounds enables formal property checks.
+
+**Acceptance criteria:**
+    - `python/carnot/models/s2kan.py` extends the model forward pass to output local Lipschitz bounds.
+    - Tests verify the bounds hold mathematically.
+    - Test coverage for the new code in `s2kan.py` is 100%.
+    - `results/experiment_1858_glorokan.json` is generated upon success.
+
+### SCENARIO-KAN-1858: S2KAN Lipschitz bounds
+
+Given the `s2kan.py` module,
+When the forward pass returns Lipschitz bounds and tests mathematically verify the bounds,
+Then the tests pass with 100% coverage, and `results/experiment_1858_glorokan.json` is written.
+
+## REQ-KAN-1859: S2KAN Z3 Verification
+
+The KAN capability MUST connect S2KAN symbolic primitives to Z3 for formal verification.
+
+**Rationale:**
+    Verification tiers must be formally proven via Z3/MILP. A transpiler script must convert S2KAN primitives to Z3 constraints to verify consistency over a bounded input domain.
+
+**Acceptance criteria:**
+    - A script transpiles S2KAN layer into Z3 constraints.
+    - Consistency over a bounded input domain is formally proven using Z3.
+    - Test coverage for the new code is 100%.
+    - `results/experiment_1859_z3_verify.json` is generated upon success.
+
+### SCENARIO-KAN-1859: Z3 Transpilation and Verification
+
+Given the `s2kan.py` primitives and a Z3 transpilation script,
+When S2KAN operations are converted to Z3 constraints and verified for a bounded domain,
+Then the proof completes successfully, tests pass with 100% coverage, and `results/experiment_1859_z3_verify.json` is written.
+
+## REQ-KAN-1862: E2E Test Verifying S2KAN Constraints using Flagship MoE
+
+The KAN capability MUST run an E2E test verifying S2KAN constraints using the mandated SOTA model (`unsloth/Qwen3.6-35B-A3B-GGUF`).
+
+**Rationale:**
+    S2KAN constraints must be verified in an end-to-end pipeline using the flagship MoE model to ensure the integration between the SOTA model and S2KAN verifier functions correctly.
+
+**Acceptance criteria:**
+    - `python/carnot/pipeline/experiment_1862.py` (or similar script) loads `unsloth/Qwen3.6-35B-A3B-GGUF`.
+    - The script passes output to the S2KAN verifier to verify constraints.
+    - Test coverage is 100%.
+    - `results/experiment_1862_e2e.json` is written upon success containing the model ID.
+
+### SCENARIO-KAN-1862: S2KAN constraints verified end-to-end with Qwen3.6-35B
+
+Given the S2KAN layer and the mandated flagship MoE,
+When the end-to-end test runs,
+Then it loads the Qwen3.6-35B model, verifies the constraints using S2KAN, and writes the `results/experiment_1862_e2e.json` artifact.
+
+## REQ-KAN-1926: S2KAN Symbolic Primitives Dictionary
+
+The KAN capability MUST implement an extensible dictionary of symbolic primitives and learnable gates for S2KAN.
+
+**Rationale:**
+    To support arbitrary functional forms during symbolic discovery, S2KAN needs a dictionary of primitives (e.g. sin, exp) and learnable gates that enforce symbolic constraints.
+
+**Acceptance criteria:**
+    - Code implements a dictionary of symbolic primitives and learnable gates.
+    - Code validates the model against a known functional form.
+    - Tests verify the logic and achieve 100% test coverage.
+    - `results/experiment_1926_s2kan_symbolic.json` is generated upon success.
+
+### SCENARIO-KAN-1926: S2KAN Dictionary and Learnable Gates
+
+Given the S2KAN primitives dictionary and learnable gates,
+When validated against a known functional form,
+Then the tests pass with 100% coverage, and `results/experiment_1926_s2kan_symbolic.json` is written.
+
+## REQ-KAN-2005: Adaptive Energy Landscape KAN Topology Updates
+
+The KAEM/KAN energy model tier MUST expose a deterministic adaptive mesh
+refinement pass for one-dimensional energy splines.  The pass MUST measure
+local landscape complexity from spline slope changes, insert knots into
+under-resolved complex intervals, remove interior knots from smooth intervals,
+preserve boundary knots, and keep the spline evaluable after the topology
+change.  It MUST emit JSON-safe structural-change metrics including the knot
+counts before and after refinement, counts of added and removed knots,
+complexity thresholds, and changed interval positions.
+
+The experiment MUST write
+`results/experiment_2005_adaptive_energy_landscapes_kan.json` with `schema`,
+`status`, `experiment_id`, `spec_traces`, `run_date`,
+`structural_change_metrics`, `energy_probe`, `adaptive_mesh_refinement_ready`,
+`tests_run`, and a terminal `honest_verdict`.
+
+**Rationale:**
+    Tier 4 learning needs the energy function's function space to change when
+    the observed landscape changes.  Adding knots around high-curvature regions
+    gives later fitting steps more local capacity, while removing smooth
+    interior knots keeps dormant structure from growing without evidence.
+
+**Acceptance criteria:**
+    - `UnivariateKAEMLayer.adaptive_mesh_refine()` updates knot positions and
+      control points deterministically from local complexity scores.
+    - Complex landscapes add at least one knot when below the configured maximum.
+    - Smooth landscapes remove interior knots when above the configured minimum.
+    - Structural-change metrics are serializable and preserve the before/after
+      topology evidence needed by the conductor.
+    - `write_adaptive_energy_landscape_kan_artifact()` writes a complete Exp
+      2005 JSON artifact with `REQ-KAN-2005` and `SCENARIO-KAN-2005` traces.
+
+### SCENARIO-KAN-2005: Adaptive KAEM spline topology artifact
+
+Given a deterministic KAEM layer containing both complex and smooth marginal
+energy splines,
+When adaptive mesh refinement is applied and the Exp 2005 artifact is written,
+Then complex regions gain knots, smooth regions lose knots where allowed,
+the refined energy remains finite on probe inputs, structural-change metrics
+record the topology delta, and
+`results/experiment_2005_adaptive_energy_landscapes_kan.json` is complete.
+
+## REQ-KAN-2070: GloroKAN Robustness Verification for CarnotKAN
+
+The KAN capability MUST implement local Lipschitz constant approximation via B-splines
+to verify the robustness of `CarnotKAN`. It MUST record verification bounds to JSON.
+
+**Rationale:**
+    GloroKAN leverages algebraic geometry of B-splines to verify KAN robustness.
+    By finding the local Lipschitz constant, we can ensure the network's behavior
+    is bounded under small perturbations.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/glorokan.py` implements the GloroKAN robustness verifier and `CarnotKAN`.
+    - Tests verify the robustness of a small synthetic constraint system.
+    - `results/experiment_2070_glorokan.json` is written with bounds and status.
+
+### SCENARIO-KAN-2070: Verify CarnotKAN robustness
+
+Given a trained or initialized CarnotKAN,
+When GloroKAN robustness verification is applied via B-splines algebraic geometry,
+Then it computes the local Lipschitz bounds, records them, and outputs to
+`results/experiment_2070_glorokan.json`.
+
+## REQ-KAN-2071: Discrete Symbolic Embedding in CarnotKAN
+
+The KAN capability MUST add discrete symbolic embedding capabilities to `CarnotKAN`.
+It MUST implement hierarchical gating for symbolic primitive discovery and be able to
+train on a simple logic task (e.g., AND/XOR constraints) to measure the accuracy of
+discovered symbols.
+
+**Rationale:**
+    To support interpretable symbolic primitives, `CarnotKAN` needs hierarchical
+    gating that can discover correct symbolic operations from data.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/glorokan.py` (or appropriate module) implements
+      hierarchical gating in `CarnotKAN`.
+    - Tests verify the logic on a simple logic task and achieve 100% test coverage.
+    - `results/experiment_2071_symbolic_kan.json` is generated correctly.
+
+### SCENARIO-KAN-2071: Symbolic primitive discovery via hierarchical gating
+
+Given `CarnotKAN` with discrete symbolic embeddings,
+When trained on a simple logic task (e.g., AND/XOR constraints),
+Then it discovers the correct symbols with measurable accuracy, tests pass,
+and `results/experiment_2071_symbolic_kan.json` is written.
+
+## REQ-KAN-2060: KAN Symbolizer for exact symbolic formulas
+
+The KAN capability MUST provide a way to extract exact symbolic formulas from trained KAN energy functions.
+
+**Rationale:**
+    KAN4CBC relies on symbolization of 1D splines to generate SMT-verifiable expressions. The symbolizer converts the piecewise representations into algebraic AST strings that can be evaluated or verified externally.
+
+**Acceptance criteria:**
+    - `python/carnot/verify/kan_symbolizer.py` implements `KANSymbolizer`.
+    - It extracts knot points and polynomial coefficients from `UnivariateKAEMLayer`.
+    - It generates a symbolic AST string representing the constraints.
+    - Test coverage is 100% in `tests/python/verify/test_kan_symbolizer.py`.
+    - Results are logged to `results/experiment_2060_kan_symbolizer.json`.
+
+### SCENARIO-KAN-2060: Extract symbolic piecewise expressions
+
+Given a trained `UnivariateKAEMLayer`,
+When `KANSymbolizer` is used to extract polynomials and an AST string,
+Then the correct piecewise linear intercepts and slopes are retrieved,
+and an SMT-verifiable AST string is returned.
+
+## REQ-KAN-2083: KAN4CBC MILP Z3 Verification
+
+The KAN capability MUST implement formal verification properties for the MILP KAN using the Z3 SMT solver.
+
+**Rationale:**
+    Using techniques from KAN4CBC, we can use SMT solvers to verify the safety and correctness of the KAN.
+    Connecting the MILP representation to the Z3 solver allows asserting robustness properties.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan/kan4cbc.py` connects a MILP representation to the `z3-solver`.
+    - It asserts a simple robustness property and attempts to verify it.
+    - SMT solver execution time and result are logged to `results/experiment_2083_kan4cbc.json`.
+    - Test coverage is 100%.
+
+### SCENARIO-KAN-2083: Verify KAN MILP robustness using Z3
+
+Given a MILP KAN representation,
+When a simple robustness property is asserted and verified via Z3,
+Then the solver execution time and boolean result are logged to `results/experiment_2083_kan4cbc.json`.
+
+## REQ-KAN-1781: KANelE Look-Up Table (LUT) evaluations
+
+The KAN capability MUST implement KANelE Look-Up Table evaluations in Python.
+
+**Rationale:**
+    Transforming a small KAN tier to LUT format is essential for KANelE hardware accounting and FPGA deployment blueprints without requiring immediate hardware synthesis.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1781_kan_lut.py` implements the conversion of a small KAN tier to LUT format.
+    - `results/experiment_1781_kan_lut.json` is generated with `schema: "carnot.kan.lut.v1"` and `lut_conversion_success: true`.
+    - Tests verify the conversion logic and achieve 100% test coverage for the new code.
+
+### SCENARIO-KAN-1781: Transform a small KAN tier to LUT format
+
+Given a small mock KAN tier,
+When the LUT transformation logic runs,
+Then it outputs the LUT evaluation formats and `results/experiment_1781_kan_lut.json` is written with `lut_conversion_success: true`.
+
+## REQ-KAN-1782: Benchmark hardware accounting for KAN LUTs
+
+The KAN capability MUST implement a benchmark for hardware accounting of KAN LUTs. It MUST measure Bit Operations (BOPs) and Number of Additions and Bit-Shifts (NABS) and explicitly claim no hardware execution.
+
+**Rationale:**
+    To ensure we have hardware accounting benchmarks before attempting hardware synthesis or execution.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1782_kan_benchmark.py` implements the hardware accounting logic.
+    - `results/experiment_1782_kan_benchmark.json` is generated with `schema: "carnot.kan.benchmark.v1"`, `bops`, `nabs`, and `hardware_execution_claim: false`.
+    - Tests verify the benchmark logic and achieve 100% test coverage for the new code.
+
+### SCENARIO-KAN-1782: Measure BOPs and NABS for KAN LUTs
+
+Given a mock KAN tier or LUT,
+When the benchmark logic runs,
+Then it outputs BOPs and NABS, and `results/experiment_1782_kan_benchmark.json` is written with `hardware_execution_claim: false`.
+
+## REQ-KAN-1803: KAEM Energy Function and Inverse Transform Sampling
+
+The KAN capability MUST implement a Kolmogorov-Arnold Energy Model (KAEM) structure
+using 1D B-splines instead of dense layers for its energy function. It MUST also
+implement an inverse transform sampling method allowed by the univariate splines
+to bypass MCMC.
+
+**Rationale:**
+    Replacing MLP-based energy functions with KAEM univariate splines (KART) allows
+    for exact inference and interpretability without relying on MCMC sampling.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kaem.py` exposes the `KAEMEnergy` model.
+    - The model uses 1D B-splines for energy evaluation.
+    - The model provides an `inverse_transform_sample` method that bypasses MCMC.
+    - Tests verify the energy function and inverse transform sampling, referencing `REQ-KAN-1803` and `SCENARIO-KAN-1803`.
+    - `results/experiment_1803_kaem_proto.json` is generated upon success.
+
+### SCENARIO-KAN-1803: KAEM exact inference via inverse transform sampling
+
+Given an initialized KAEM model using 1D B-splines,
+When inverse transform sampling is invoked to draw samples,
+Then it generates samples analytically without MCMC, tests pass with 100% coverage,
+and `results/experiment_1803_kaem_proto.json` is written.
+
+## REQ-KAN-1909: Wahkon RKHS Architecture
+
+The KAN capability MUST implement the Wahkon architecture (arXiv:2605.14041),
+which uses a Reproducing Kernel Hilbert Space (RKHS) alternative to standard
+KANs to provide finite-sample guarantees.
+
+**Rationale:**
+Standard KANs lack finite-sample guarantees. Wahkon introduces an RKHS
+formulation that offers bounds on finite-sample convergence while retaining
+the KAN-like additive structure.
+
+**Acceptance criteria:**
+- `python/carnot/pipeline/wahkon_rkhs.py` exposes a Wahkon RKHS model.
+- Tests verify the model's initialization and forward pass, referencing
+  `REQ-KAN-1909` and `SCENARIO-KAN-1909`.
+- Tests achieve 100% test coverage.
+- `results/experiment_1909_wahkon.json` is generated upon success.
+
+### SCENARIO-KAN-1909: Wahkon RKHS Model Initialization and Forward Pass
+
+Given a Wahkon RKHS model,
+When initialized and a forward pass is executed,
+Then it computes the correct output shape and `results/experiment_1909_wahkon.json` is written.
+
+## REQ-KAN-2034: KAGNN Verifier for Graph Coloring
+
+The KAN capability MUST implement a Kolmogorov-Arnold Graph Neural Network (KAGNN) verifier for Graph Coloring constraints.
+
+**Rationale:**
+    Graph constraints like Graph Coloring require relational verification between adjacent nodes. Standard linear GNNs are opaque. By using a Symbolic-KAN routing layer instead of linear weights on the edges, we can explicitly learn and extract the constraint (e.g., equality or inequality) driving the graph coloring verification.
+
+**Acceptance criteria:**
+    - `python/carnot/models/ising/kagnn.py` exposes a `KAGNNLayer` or `KAGNNVerifier` that uses Symbolic-KAN routing logic to evaluate edge constraints.
+    - Tests verify that it correctly assigns lower energy to valid graph colorings and higher energy to invalid ones.
+    - Test coverage for the new module is 100%.
+    - `results/experiment_2034_kagnn.json` is generated upon success.
+
+### SCENARIO-KAN-2034: KAGNN Verifier Evaluates Graph Coloring
+
+Given a KAGNN verifier using Symbolic-KAN splines,
+When evaluated on valid and invalid graph coloring instances,
+Then it outputs lower energy for valid colorings and higher energy for invalid ones, tests pass with 100% coverage, and `results/experiment_2034_kagnn.json` is written.
+
+
+
+## REQ-KAN-2035: Comparative Evaluation of KAGNN vs MLP
+
+The KAN capability MUST evaluate the tangible efficiency or accuracy benefit of KAGNN against an MLP baseline.
+
+**Rationale:**
+    To validate that KAGNN provides a tangible efficiency or accuracy benefit over a standard MLP for constraint verification on graph coloring.
+
+**Acceptance criteria:**
+    - `scripts/eval_kagnn_vs_mlp.py` generates a synthetic dataset of constraint graphs and runs a comparative evaluation between KAGNN and an MLP baseline.
+    - Tests verify the evaluation script or the underlying logic.
+    - `results/exp2035_kagnn_eval.json` is generated upon success containing the evaluation results.
+
+### SCENARIO-KAN-2035: KAGNN vs MLP Comparative Evaluation
+
+Given a synthetic dataset of constraint graphs,
+When the comparative evaluation is run,
+Then it outputs the results comparing KAGNN and MLP, and `results/exp2035_kagnn_eval.json` is written.
+
+
+## REQ-KAN-2104: Alignment-Symmetry Quantization for KAN Tiers
+
+The KAN capability MUST implement ASP-KAN-HAQ (arXiv:2509.07xxx) grid-alignment and symmetry sharing for B-splines.
+
+**Rationale:**
+    Aligning spline knots with quantization grids and using symmetry sharing massively reduces KAN hardware area.
+
+**Acceptance criteria:**
+    - `python/carnot/hardware/asp_kan_quant.py` implements the ASP-KAN-HAQ alignment and symmetry sharing algorithm for B-splines.
+    - Tests verify that the quantized forward pass matches the expected logic compared to the full FP32 pass.
+    - `results/experiment_2104_asp_kan.json` is written with `asp_kan_ready=true`.
+    - Tests pass with 100% coverage.
+
+### SCENARIO-KAN-2104: ASP-KAN-HAQ Grid Alignment
+
+Given a set of B-spline knots and control points,
+When ASP-KAN-HAQ grid alignment and symmetry sharing are applied,
+Then the knots align to the quantization grid, symmetry is enforced, and the quantized forward pass is evaluated, successfully logging to `results/experiment_2104_asp_kan.json`.
+
+## REQ-KAN-3374: EBT Sidecar Scoring with KAN Energy
+
+The sidecar scoring pipeline MUST support a KAN energy formulation that computes
+an additional energy term for candidate scoring.
+
+### SCENARIO-KAN-3374: Integrate KAN energy formulation
+
+Given a sidecar record with KAN energy features,
+When the sidecar replay scorer evaluates the candidate,
+Then the KAN energy formulation is correctly integrated, and the test succeeds, logging to `results/experiment_3374_ebt_kan_integration.json`.
+
+## REQ-KAN-5617: Active-Spline KAN Critical Task Duration Map
+
+The KAN capability SHALL measure the active-spline retention/adaptation boundary
+on the exact Exp5616 nonstationary constraint-stream fixture without fitting an
+LLM, causal memory, PACE, LLM weights, external teachers, or any non-KAN
+adaptation component. The workflow MUST freeze the Exp5616 split definitions,
+duration cells, metric definitions, and promotion rules before loading fixture
+outcomes, then write
+`results/experiment_5617_kan_critical_task_duration_map.json`.
+
+The experiment MUST compare at least these arms: `frozen_no_update`,
+`retain_exact_replay`, `reset_adapt`, and `loss_smoothed_adaptation`. It MUST
+also run `update_substitution_control` and `frozen_spline_control` so bypassed
+or disabled learners receive no adaptation credit. Mutable KAN arms MUST reuse
+the Exp5570/Exp5608 active-spline update path and exact gate semantics, with
+matched sample order, optimization budgets, calibration calls, and held-out
+evaluation calls across arms.
+
+The experiment MUST run at least five learner seeds and must expose at least 32
+held-out stream-instance replicates per crossed space-shift, temporal-drift,
+and duration condition after seed replication. Metrics SHALL be disaggregated by
+space shift, temporal drift, conflict class, and duration, including Average
+Lifelong Error, inherited instability, transient relearning error, backward
+retention, forward transfer, time-to-valid-adaptation, update and rollback
+counts, and unsafe false accepts. Empirical arm crossings and confidence
+intervals MUST be computed without selecting on future held-out labels. A
+Critical Task Duration may be declared only when the fit score is numeric and at
+least two nondegenerate switch cases are present; otherwise the artifact MUST
+report a bounded no-crossing/null verdict.
+
+The terminal artifact MUST include `field_principles`, `fixture_hash`,
+`models_tested`, `duration_cells`, `seeds`, `instances_per_condition`,
+`ale_by_arm_and_cell`, `instability_by_arm_and_cell`,
+`transient_error_by_arm_and_cell`, `backward_retention_by_arm`,
+`forward_transfer_by_arm`, `unsafe_false_accept_count`,
+`empirical_switch_durations`, `critical_duration_fit_r2`,
+`nondegenerate_switch_cases`, `lazy_identity_guard_passed`,
+`inference_substrate`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`. The required inference substrate is
+`exact_constraint_stream_active_spline_kan_no_llm`.
+
+### SCENARIO-KAN-5617: Exact Fixture Boundary Map
+
+Given the completed Exp5616 fixture and Exp5608/Exp5570 active-spline KAN update
+prerequisite,
+When the Exp5617 runner freezes gates, loads exact rows, evaluates every arm on
+matched seeds and held-out condition cells, and writes the terminal artifact,
+Then the artifact names every KAN/control arm, reports all required
+disaggregated metrics, preserves immutable per-update ledger/checkpoint
+receipts, reports at least two nondegenerate switch cases before declaring a
+critical duration or emits a bounded no-crossing null, records zero exact-gate
+unsafe false accepts, sets `lazy_identity_guard_passed=true`, and uses
+`inference_substrate="exact_constraint_stream_active_spline_kan_no_llm"`.
+
+## REQ-KAN-7425: Additive Cubic-Spline Energy Prototype
+
+The KAN capability MUST provide a reusable six-input additive cubic B-spline
+classifier. Each input MUST have eight coefficients and the classifier MUST
+have one bias, for 49 trainable parameters. The conditional energy MUST be
+`E(x, 0) = 0` and `E(x, 1) = -f(x)`. Its exact two-state normalizer MUST give
+`p(y=1|x) = sigmoid(f(x))`. This construction is logistic regression on a
+fixed spline basis. The prototype MUST make that equivalence explicit and MUST
+not claim real-data efficacy from analytic fixtures.
+
+The knot vectors MUST come only from training-feature quantiles. Repeated
+quantiles MUST receive a deterministic repair. Prediction MUST clamp values
+outside the training support and count each clamped feature. Inputs, labels,
+knots, coefficients, and checkpoints MUST reject nonfinite values.
+
+One Bernoulli-log-loss SGD update MUST use learning rate `0.01`, no global
+weight decay, and a gradient-norm cap of `1.0`. A sparse update MUST touch no
+more than four coefficients per input plus the bias. A dense fixed-basis
+logistic reference MUST use identical weights, loss, clipping, and float64
+arithmetic. Probability and parameter disagreement MUST be at most `1e-10`.
+A disagreement is a defect and MUST NOT count as a learning benefit.
+
+Feedback MUST have an immutable event ID, source version, and reveal time.
+Prediction reads MUST remain separate from committed writes. Duplicate,
+early, malformed, and revoked feedback MUST not silently change weights.
+Numeric checkpoints MUST be atomic, cold-restartable, hash-bound, and no more
+than 64 KiB for this prototype. An interrupted replacement MUST leave the last
+committed checkpoint readable.
+
+The experiment MUST declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class="no_model_load"`,
+and `execution_venue="host"`. Tiny spline-head fitting MUST appear only in an
+explicit `small_ebm_training` receipt. The artifact MUST measure active
+coefficient count, coefficient write bytes, and bounded arithmetic. It MAY
+describe local coefficient storage as a hardware route. It MUST NOT claim a
+100x speedup.
+
+The experiment MUST write
+`results/experiment_7425_v651_spline_prototype.json` only after scoped
+validation, a fresh-process cold replay, independent raw-row reduction,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency checks all
+pass. Analytic examples MUST be labeled as fixtures, not corpus rows.
+`spline_prototype_ready_score` MAY equal one only when basis, gradient, sparse
+support, feedback, checkpoint, and dense-reference parity checks pass.
+`promotion_score` MUST remain zero.
+
+### SCENARIO-KAN-7425-01: Quantile Basis Is Local And Normalized
+
+Given finite six-column training fixtures, including duplicate quantiles,
+when the prototype freezes cubic knot vectors and evaluates endpoints and
+out-of-range inputs, then every basis sums to one, no input activates more
+than four coefficients, repeated knots are deterministic, and clamp counts
+are explicit.
+
+### SCENARIO-KAN-7425-02: Energy Is Fixed-Basis Logistic Regression
+
+Given any finite fixture and coefficient state, when both conditional energies
+are normalized, then `E(x,0)=0`, `E(x,1)=-f(x)`, and the class-one probability
+equals the fixed-basis logistic probability in float64 arithmetic.
+
+### SCENARIO-KAN-7425-03: Sparse And Dense Updates Agree
+
+Given identical spline and dense-reference states, when one visible binary
+feedback event is committed, then both paths use the same log loss and clipped
+gradient, sparse writes touch at most 25 float64 parameters, and probability
+and parameter disagreement are at most `1e-10`.
+
+### SCENARIO-KAN-7425-04: Gradients Match Finite Differences
+
+Given an interior analytic fixture, when coefficient and bias derivatives are
+checked by centered finite differences, then the analytic Bernoulli-log-loss
+gradient matches within the registered tolerance.
+
+### SCENARIO-KAN-7425-05: Feedback Admission Is Immutable
+
+Given a feedback event with an ID, source version, reveal time, feature vector,
+and label, when it is early, duplicated, revoked, or changed under the same ID,
+then no inadmissible write changes the committed predictor state.
+
+### SCENARIO-KAN-7425-06: Checkpoints Survive Cold And Interrupted Restart
+
+Given a committed numeric checkpoint, when a fresh reader restores it or an
+interrupted temporary replacement remains beside it, then the committed hash
+and predictions are unchanged and the checkpoint stays below 64 KiB.
+
+### SCENARIO-KAN-7425-07: Artifact Reduction Fails Closed
+
+Given analytic parity rows and validation receipts, when a fresh process
+recomputes readiness, then it derives the score only from raw checks. Changed
+rows, hashes, invocation claims, or readiness scores make validation fail.
+
+### SCENARIO-KAN-7425-08: Scoped Execution Publishes Terminal Evidence
+
+Given the frozen affected-file manifest, when the thin entrypoint runs for
+`20260919`, then it streams scoped checks and terminal readers, records actual
+UTC and monotonic durations, and atomically publishes a complete artifact with
+no model load, no promotion, and no real-data efficacy claim.
+
+## REQ-KAN-7432: Sparse Online Update Placement And Persistence
+
+Exp7432 MUST authenticate the Exp7425 spline prototype and the numeric
+checkpoints and complete online journal from Exp7426 and Exp7427. Missing
+numeric inputs MUST block only the numeric branch. Board accounting MUST stay
+present. The experiment MUST use host arithmetic only. It MUST declare
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM invocation counts,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Small coefficient updates MUST appear only in `small_ebm_training` receipts.
+
+The experiment MUST freeze a float64 dense reference. It MUST compare float32
+dense, float32 sparse, and signed 16-bit fixed-point sparse updates. Fixed-point
+scale MUST use training-only coefficient and feature bounds. Multiplication and
+addition MUST use explicit signed 32-bit accumulation with overflow detection.
+The implementation MUST not tune scales or policy thresholds on test outcomes.
+It MUST report saturation and MUST require zero unsafe wraparound.
+
+The complete eligible Exp7427 journal MUST be replayed in its recorded order.
+The experiment MUST not change feedback masks. Each update row MUST retain the
+event identity, precision arm, action, coefficient error, probability error,
+Brier change, log-loss change, touched coefficient bytes, saturation count,
+overflow status, and timing components. Development fixtures MUST cover values
+near both action thresholds, spline-knot boundaries, overflow, delayed event
+order, and restart from a durable checkpoint. Any fixed-point action flip is an
+honest numeric null.
+
+The timing protocol MUST use 30 paired rotated-order blocks at batch sizes 1,
+32, and 128. Complete-service time MUST include feature evaluation, coefficient
+update, journal write, `fsync`, and checkpoint cost. Cold setup MUST remain
+separate. A host speed-value claim requires action parity, Brier increase no
+more than `0.001`, and a paired whole-service time-ratio 95% confidence upper
+bound below one against float32 dense for every batch size. The artifact MUST
+report locality and bytes even when no speed benefit exists.
+
+The experiment MUST preserve separate authenticated KV260, GateMate, and
+PolarFire rows. KV260 access MUST remain SSH-only with `k_max<=5`. GateMate MUST
+remain blocked unless an operator-authored cable, port, power, or JTAG change
+follows its recorded block. PolarFire MUST preserve the hash-verified CPU
+dispatch disposition. The artifact MUST map touched coefficient bytes,
+precision, and transfer frequency to an explicit future KV260 budget. It MUST
+report the CPU update target below one microsecond and lookup target below one
+millisecond as met or unmet. It MUST report that 100x service acceleration
+requires an unaccelerated fraction no greater than one percent. Host results
+MUST NOT qualify Extropic Z1, NPU, FPGA, TSU, power, latency, or purchase claims.
+
+The experiment MUST publish
+`results/experiment_7432_v651_update_placement.json` only after the frozen
+affected validation plan, the declared entrypoint, a fresh-process cold replay,
+independent raw-row reduction, `scripts/adversarial_verify.py`, and strict
+verdict-row consistency checks pass. `update_placement_complete_score` MAY equal
+one only for independently valid numeric placement evidence.
+`update_placement_value_score` MAY equal one only when every registered parity,
+quality, and complete-service timing gate passes. `promotion_score`,
+`hardware_ready_score`, and `hardware_value_score` MUST remain zero.
+
+### SCENARIO-KAN-7432-01: Numeric Inputs Fail Closed By Branch
+
+Given the dated upstream artifacts, checkpoints, journal shards, and board
+records, when exact paths, hashes, schemas, and terminal fields are checked,
+then missing numeric evidence blocks only numeric placement and all three board
+rows remain explicit.
+
+### SCENARIO-KAN-7432-02: Fixed-Point Bounds Precede Replay
+
+Given training-only spline support and coefficient bounds, when the signed
+16-bit scale is frozen, then every accumulator uses checked signed 32-bit
+arithmetic and no held-out label or action outcome changes that scale.
+
+### SCENARIO-KAN-7432-03: Replay Preserves Order And Actions
+
+Given the complete eligible online journal, when all four arithmetic arms replay
+the unchanged feedback masks, then prediction precedes each delayed update and
+every coefficient error, probability error, score change, saturation, overflow,
+and action flip is retained.
+
+### SCENARIO-KAN-7432-04: Boundary And Restart Controls Fail Closed
+
+Given near-threshold values, spline-knot boundaries, an overflow fixture, a
+delayed event, and a committed midpoint checkpoint, when controls and restart
+run, then boundary behavior is explicit, overflow cannot wrap, event order is
+unchanged, and restarted state equals uninterrupted state.
+
+### SCENARIO-KAN-7432-05: Complete-Service Timing Uses Paired Rotation
+
+Given batch sizes 1, 32, and 128, when 30 paired rotated-order blocks run, then
+each arm includes feature evaluation, update, journal write, `fsync`, and
+checkpoint cost, while cold setup remains separate and confidence intervals use
+paired blocks.
+
+### SCENARIO-KAN-7432-06: Value Is Stricter Than Completion
+
+Given valid raw placement rows, when any action flips, unsafe wraparound occurs,
+Brier increase exceeds `0.001`, or a timing-ratio upper bound is not below one,
+then completion can remain one but value MUST equal zero and the verdict MUST be
+a complete null.
+
+### SCENARIO-KAN-7432-07: Board Accounting Does Not Become Execution
+
+Given authenticated historical board records, when host placement results are
+assembled, then KV260, GateMate, and PolarFire keep separate dispositions and
+all fresh hardware readiness, value, power, latency, and purchase claims remain
+zero or false.
+
+### SCENARIO-KAN-7432-08: Independent Readers Bind Terminal Evidence
+
+Given the raw replay and timing rows plus the frozen validation manifest, when
+fresh processes reduce and lint the candidate, then changed rows, hashes, gates,
+scores, or invocation claims make publication fail closed.
+
+## REQ-KAN-7468: Delayed-Feedback Local Residual Energy Learner
+
+The KAN capability MUST provide one bounded local residual energy head on top of
+a frozen readout. The energy difference MUST be
+`E_bad - E_good = frozen_readout_log_odds + bounded_local_residual`. The
+implementation MUST test the sign against analytic probabilities. It MUST use
+at most four scalar features, eight fixed cubic B-spline coefficients per
+feature, and one shared bias. Knots and the learning rate MUST use training or
+calibration inputs only. The implementation MUST reuse the Exp7425 sparse cubic
+basis and MUST NOT use fixed-share weights, a mixture of experts, or generator
+weight updates.
+
+A prediction event MUST become immutable before its label is visible. It MUST
+contain the feature vector, active spline support, frozen prediction, residual
+prediction, and predictor state hash. Feedback MUST admit at most one clipped
+gradient update. Duplicate, reordered, missing, and rejected feedback MUST not
+silently change state. The learner MUST qualify delays zero and eight, atomic
+checkpoint restart, and rollback after a rejected update. Sparse and
+independently dense gradients MUST agree within `1e-10`.
+
+The learner MUST compare the local residual arm with a matched linear residual
+updater, a frozen residual arm, and a no-feedback arm. A bounded training-only
+replay guard MUST reject and roll back an update when replay loss exceeds its
+preregistered tolerance. The artifact MUST report rejection frequency and all
+guard computation costs. Distant probes with disjoint spline support MUST
+separate local coefficient retention from the shared-bias change. Analytic
+fixtures MAY provide `circular_positive` implementation evidence, but MUST NOT
+claim real source-support benefit.
+
+The experiment MUST freeze the Exp7469 protocol before online outcomes exist.
+It MUST register five seeds, two label-blind group orders, delays zero and eight,
+the frozen and matched-linear controls, audit probability `0.5`, a separate
+full-feedback diagnostic, inverse-propensity clipping, moving-block lengths 16
+and 32, 10000 resamples, and no state carry between replicates. No test or
+online outcome MAY tune the learner.
+
+The current run MUST declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current LLM calls,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Numeric head fitting MUST have a separate `small_ebm_training` receipt.
+Historical model-shaped evidence MUST remain hash-bound sidecars. The terminal
+artifact MUST publish only after frozen affected-file validation, fresh-process
+cold replay, independent raw-row reduction, adversarial verification, and the
+strict verdict-row consistency reader pass.
+
+### SCENARIO-KAN-7468-01: Energy Sign Matches Analytic Probability
+
+Given a frozen class-good probability and one bounded local residual, when the
+two-state energy difference is evaluated, then a positive `E_bad-E_good`
+produces the matching class-good sigmoid probability and the analytic sign
+cases pass.
+
+### SCENARIO-KAN-7468-02: Prediction Precedes Delayed Feedback
+
+Given delays zero and eight, when predictions and feedback are processed, then
+each immutable prediction hash exists before label reveal and each admitted
+event changes state at most once.
+
+### SCENARIO-KAN-7468-03: Feedback Admission Fails Closed
+
+Given duplicate, reordered, missing, or changed feedback, when the learner
+checks the immutable prediction ledger, then the event is rejected and the
+committed state does not change.
+
+### SCENARIO-KAN-7468-04: Sparse Gradient And Dense Reference Agree
+
+Given identical spline states and one analytic label, when sparse and dense
+gradients are computed independently, then their maximum absolute disagreement
+is at most `1e-10` and the update touches only active support plus the bias.
+
+### SCENARIO-KAN-7468-05: Replay Guard Rolls Back Unsafe Updates
+
+Given a bounded training-only replay set and a preregistered loss tolerance,
+when a candidate update exceeds the tolerance, then coefficients and bias roll
+back exactly and the guard receipt reports rejection and computation cost.
+
+### SCENARIO-KAN-7468-06: Local Retention Excludes Shared Bias
+
+Given two distant probes with disjoint spline support, when one probe updates,
+then coefficients active only at the distant probe stay byte-identical. Any
+prediction change caused by the shared bias is reported separately and does not
+count as local-weight retention.
+
+### SCENARIO-KAN-7468-07: Restart And Controls Preserve Chronology
+
+Given a committed checkpoint between delayed events, when a fresh process
+continues the stream, then terminal state equals uninterrupted replay. The
+matched linear, frozen residual, and no-feedback controls keep their registered
+update laws and receive no unregistered outcome information.
+
+### SCENARIO-KAN-7468-08: Exp7469 Protocol Is Frozen Before Outcomes
+
+Given the protocol record, when it is independently read, then all seeds,
+orders, delays, controls, audit and diagnostic policies, clipping, block lengths,
+resample count, and replicate reset rule match REQ-KAN-7468 exactly.
+
+### SCENARIO-KAN-7468-09: Terminal Artifact Fails Closed
+
+Given raw analytic rows and exact validation receipts, when a fresh process
+recomputes readiness, then altered rows, state hashes, invocation declarations,
+source hashes, gates, or scores invalidate the candidate. Readiness can produce
+only `circular_positive` implementation evidence because the verifier uses
+analytic fixtures as its oracle.
+
+## REQ-KAN-7482: Prequential Per-Knot Importance Anchor
+
+The KAN capability MUST add an importance-weighted diagonal anchor to the
+Exp7468 local residual head. The head MUST keep at most 256 spline
+coefficients. It MUST keep the Qwen features and generator weights frozen.
+The anchor loss MUST be
+`lambda * sum_i importance_i * (coefficient_i - reference_i)^2`.
+Its gradient MUST cover the complete coefficient vector, including a
+previously changed coefficient that is inactive for the current example.
+
+The importance estimate MUST be bounded to `[0, 1]`. It MUST use only labels
+that the prediction ledger has already revealed. The reference vector MUST
+come from an explicit consolidation boundary. Each prediction record MUST
+retain its prediction-time feature vector and pre-update probability.
+Duplicate, delayed, reordered, and restarted feedback MUST preserve the
+Exp7468 admission rules and acknowledged state exactly.
+
+The analytic trial MUST compare an unanchored arm, a uniform diagonal anchor,
+an importance-weighted anchor, an excessive-anchor control, and a zero-rate
+control. The main three arms MUST have the same parameter count, replay
+buffer, learning-rate search budget, and update opportunities. Hyperparameter
+candidates MUST be frozen before trial outcomes and selected only with
+training or calibration fixtures. The trial MUST include overlapping and
+disjoint spline support plus deliberately conflicting labels. It MUST report
+active data-gradient work separately from complete anchor work.
+
+The experiment MUST document its departures from KAN-CL
+(arXiv:2605.12306v1): it uses no CNN, no backbone EWC, no gradient mask, and a
+prequential feedback stream. Analytic benefit evidence MAY produce only
+`circular_positive`. `importance_anchor_ready_score` MUST depend only on loss
+and gradient correctness, feedback chronology, complete-vector anchor work,
+and exact restart. It MUST NOT depend on fixture benefit.
+
+The current run MUST declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current LLM calls,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Numeric fitting MUST have a separate `small_ebm_training` receipt. The
+terminal artifact MUST publish only after the frozen affected checks, a fresh
+process cold replay, independent raw-row reduction, adversarial verification,
+and strict verdict-row consistency checks pass.
+
+### SCENARIO-KAN-7482-01: Complete Anchor Gradient Matches Finite Differences
+
+Given a consolidated residual head with a nonzero diagonal importance vector,
+when the anchored Bernoulli loss is differentiated, then its complete analytic
+gradient matches centered finite differences within `1e-8`.
+
+### SCENARIO-KAN-7482-02: Inactive Changed Coefficients Remain Anchored
+
+Given a coefficient that moved after consolidation and is inactive for the
+current example, when another anchored update runs, then that coefficient
+moves toward its reference. The receipt MUST report active data-gradient
+coefficients and all anchored coefficients as separate work counts.
+
+### SCENARIO-KAN-7482-03: Importance Uses Revealed Labels Only
+
+Given sealed predictions with delayed labels, when feedback is early,
+duplicated, or reordered, then the importance estimate does not change. An
+admitted label MAY affect later anchor penalties but MUST NOT affect its own
+pre-update anchor gradient.
+
+### SCENARIO-KAN-7482-04: Anchor Arms Use A Fair Frozen Protocol
+
+Given the frozen analytic protocol, when the five arms run, then the main
+three arms use equal parameter counts, replay rows, learning-rate candidates,
+selected learning rate, and update opportunities. The zero-rate and excessive
+anchor controls differ only in their declared control parameter.
+
+### SCENARIO-KAN-7482-05: Overlap, Disjoint Support, And Excessive Strength
+
+Given deliberately conflicting labels on overlapping and disjoint support,
+when per-seed rows are reduced, then retained-support drift, adaptation loss,
+uniform-anchor behavior, excessive-anchor blocking, and zero-rate immobility
+remain explicit. Any fixture benefit is circular evidence only.
+
+### SCENARIO-KAN-7482-06: Restart Replays Acknowledged State Exactly
+
+Given a checkpoint between delayed events, when a fresh head restores and
+continues the ledger, then its coefficients, bias, importance statistics,
+reference vector, prediction records, feedback acknowledgements, and terminal
+state hash equal uninterrupted replay.
+
+### SCENARIO-KAN-7482-07: Readiness And Benefit Stay Independent
+
+Given valid implementation and lifecycle checks, when fixture benefit fails,
+then `importance_anchor_ready_score` MAY remain one and the honest verdict is
+a complete null. A fixture benefit pass MAY produce only
+`circular_positive` because the verifier is the oracle.
+
+### SCENARIO-KAN-7482-08: Terminal Evidence Fails Closed
+
+Given the raw fixture rows and exact validation receipts, when a fresh process
+changes a row, source hash, invocation declaration, gate, score, or state
+replay result, then validation fails and terminal publication is refused.
+
+## REQ-KAN-7483: Controlled Prequential Continuous Learning Replay
+
+The KAN capability MUST replay the sealed V655 online panel as a controlled
+prequential experiment. It MUST use the temperature-calibrated native readout
+as the canonical frozen baseline. It MUST load its initial state from Exp7481
+when that valid artifact exists. If Exp7481 is absent, it MUST fit the same
+temperature baseline from training and calibration roles only. The artifact
+MUST name which branch supplied the state. The experiment MUST keep generator
+weights and Qwen feature values frozen.
+
+Selection MUST use only training and calibration pseudo-streams. It MUST freeze
+the learning rate, anchor strength, replay size, feature view, five order seeds,
+delays zero and eight, audit probability `0.5`, block construction, bootstrap
+seeds, and 10000-resample inference before online or internal-test labels open.
+Each online order MUST use label-independent source-family blocks and a fixed
+label-independent order inside each block. The five order replicates MUST reset
+state. They MUST NOT count as independent groups.
+
+The replay MUST compare a frozen baseline, online affine calibration, the
+historical unanchored residual with replay, uniform anchoring with replay,
+importance anchoring with the identical replay, a shuffled-feedback control,
+and a zero-rate control. Every adaptive arm MUST receive the same randomized
+audit opportunities. Only labels revealed by that audit MAY enter updates.
+Predictions MUST be sealed before label release. Each event row MUST record
+event time, propensity, feedback time, accepted or rejected update status, and
+the predictor state hashes before and after processing.
+
+The primary gate MUST use at least 120 eligible independent online groups. For
+each delay separately, it MUST first average the five order replicates within
+each group. Importance anchoring MUST improve binary Brier score by at least
+`0.01` against the frozen baseline. Its paired group and source-family block
+bootstrap upper delta MUST be below zero against frozen, affine, and
+unanchored residual controls after Holm correction across the three tests.
+Both delay gates MUST pass for a positive headline.
+
+The internal-test retention panel MUST remain unavailable to selection and
+update acceptance. Each stream MUST score that panel before and after replay.
+The importance arm's one-sided retention Brier upper delta MUST be at most
+`0.01`. The experiment MUST also require zero feedback chronology violations
+and exact fresh-process replay of acknowledged updates. Uniform and importance
+anchoring MUST remain separate arms. A valid benefit or retention failure MUST
+produce a complete null, not a blocked or partial result.
+
+The experiment MUST measure prediction, feedback processing, update, replay
+guard, serialization, `fsync`, restart, and no-op costs on a common event
+denominator. It MUST save hash-bound event shards and state checkpoints. Numeric
+work MUST stop before 1500 seconds. The artifact MUST declare
+`MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, zero current LLM
+calls, `inference_substrate_class="no_model_load"`, and
+`execution_venue="host"`. Archived model events MUST remain hash-bound sidecars.
+
+The terminal artifact MUST publish atomically only after the frozen affected
+checks, changed-module coverage, a fresh-process cold replay, independent raw
+row reduction, adversarial verification, and strict verdict-row consistency
+checks pass. Required validity, measurement readiness, and scientific benefit
+MUST remain separate. Each gate MUST include its failure-prevention principle.
+
+### SCENARIO-KAN-7483-01: Selection Cannot Read Held-Out Labels
+
+Given training, calibration, online, and internal-test roles, when the protocol
+selects its numeric settings, then only training and calibration rows enter the
+selection hash. Opening online or internal-test labels does not change any
+selected setting or initial state.
+
+### SCENARIO-KAN-7483-02: Orders And Audit Masks Are Label Independent
+
+Given the five registered order seeds and audit seeds, when streams are built,
+then source-family blocks and within-block positions depend only on sealed row
+identity. Every compared arm receives the same audit mask, delay, and feedback
+opportunity for a stream.
+
+### SCENARIO-KAN-7483-03: Prediction Precedes Randomized Feedback
+
+Given delay zero or eight, when one stream replays, then every prediction hash
+exists before its label release. Unrevealed labels do not enter state. Early,
+duplicate, reordered, or unaudited feedback changes no acknowledged state.
+
+### SCENARIO-KAN-7483-04: Controls Keep Their Registered Update Laws
+
+Given identical sealed events, when all seven arms replay, then the frozen and
+zero-rate arms do not move, affine calibration stays affine, residual arms use
+the Exp7468 update path, and shuffled feedback changes only label assignment.
+No arm receives more feedback or oracle labels.
+
+### SCENARIO-KAN-7483-05: Group Aggregation Precedes Multiplicity Tests
+
+Given five order replicates of one online group, when Brier deltas are reduced,
+then those values are averaged into one group value before paired source-family
+block bootstrap. Holm correction covers the frozen, affine, and unanchored
+comparisons separately for each delay.
+
+### SCENARIO-KAN-7483-06: Retention Never Becomes An Update Oracle
+
+Given the frozen internal-test panel, when each stream begins and ends, then
+the panel supplies only before-and-after scores. Its labels never enter update
+acceptance, hyperparameter choice, replay rows, or the audit mask.
+
+### SCENARIO-KAN-7483-07: Crash Replay And Service Costs Share Evidence
+
+Given an acknowledged midpoint checkpoint, when a fresh process continues the
+same delayed stream, then terminal state hashes and acknowledgement hashes equal
+uninterrupted replay. Prediction, feedback, update, guard, serialization,
+`fsync`, restart, and no-op costs use the same event denominator.
+
+### SCENARIO-KAN-7483-08: Completion Does Not Depend On Benefit
+
+Given valid prequential evidence on at least 120 groups, when an effect,
+retention, or Holm gate fails, then `online_complete_score` remains one,
+`online_benefit_score` is zero, and the verdict is a complete null.
+
+### SCENARIO-KAN-7483-09: Terminal Readers Fail Closed
+
+Given the event shards, retention rows, service costs, checkpoints, source
+hashes, and frozen validation manifest, when a fresh reader changes any row,
+hash, gate, invocation declaration, or verdict operand, then terminal
+validation fails and publication is refused.
+
+## REQ-KAN-7487: Retained-State Learning Placement Measurement
+
+Exp7487 MUST authenticate the Exp7482 importance learner before numeric work.
+Missing or invalid learner evidence MUST block only the numeric branch. The
+board evidence branch MUST always run. It MUST preserve the latest authenticated
+KV260 and PolarFire graduation dates and scopes. It MUST preserve GateMate as
+blocked when no dated operator-authored cable, port, power, board, JTAG, or
+DirtyJTAG change exists after the last physical failure. That state MUST issue
+zero new detect, flash, power, or remote commands. Future KV260 access MUST use
+`ssh kria` only and MUST retain `k_max<=5`.
+
+The numeric branch MUST measure a retained-state anchor at 32, 64, 128, and 256
+coefficients. It MUST use 1000 updates and three frozen seeds. Each size and seed
+MUST compare float64, float32, and an explicit signed fixed-point emulation. The
+fixed-point scale, clipping range, and nearest-even rounding rule MUST freeze
+before outcomes. Each arm MUST report prediction, active data-gradient, complete
+diagonal penalty, importance update, coefficient update, serialization, durable
+write, `fsync`, and recovery costs. Each arm MUST also run an identical durable
+no-update control. `numeric_cost_rows` MUST contain one update row and one
+no-update row for every size, seed, and arithmetic arm. Dense anchor work MUST
+remain separate from active data work.
+
+The float64 arm MUST define numeric correctness. Float32 and fixed-point replay
+MUST use the same fixtures and update order. Every arm MUST report maximum
+probability error, decision flips, terminal coefficient error, exact recovered
+state, and unchanged acknowledgement order. Fixed-point emulation MAY be called
+deployable only when decision flips equal zero and maximum probability error is
+at most `1e-4` on the fixed fixture. Numeric fitting MUST appear only in a
+separate `small_ebm_training` receipt. These measurements run on the host CPU;
+they are not FPGA execution or observed accelerator performance.
+
+A measured end-to-end service denominator MUST include compatible tokenization,
+prefill, verifier work, feedback processing, every update, serialization,
+durable writes, and `fsync`. Missing any component MUST leave the service
+envelope conditional. The experiment MUST not add incompatible medians, archived
+active-basis estimates, or simulated chip latencies. For accelerated fraction
+`f` and kernel speed `r`, it MUST report
+`S = 1 / ((1 - f) + f / r)`, including `r` approaching infinity. A 100x path
+requires an unaccelerated fraction below one percent. Sparse arithmetic targets
+MUST stay separate from observed service performance.
+
+The placement map MUST distinguish CPU counters and durable state, GPU batches,
+and future FPGA or TSU support. It MUST not authorize a purchase, installation,
+vendor call, board flash, or prefix-cache implementation. The current run MUST
+declare `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, zero current
+LLM calls, `inference_substrate_class="no_model_load"`, and
+`execution_venue="host"`. Archived model-shaped evidence MUST remain hash-bound
+and MUST not count as current inference.
+
+The experiment MUST publish
+`results/experiment_7487_v655_learning_placement.json` atomically only after a
+frozen affected-file validation plan, 100 percent changed-module coverage, a
+fresh-process cold replay, independent row reduction, adversarial verification,
+and strict verdict-row consistency checks pass. Required validity, placement
+completion, and scientific benefit MUST remain separate. Every gate MUST carry
+one failure-prevention principle. `placement_complete_score` MAY equal one when
+the measured numeric branch and conditional service and board branches reconcile.
+It MUST NOT imply hardware speed or a 100x service result. A valid failed speed
+gate MUST produce a complete null.
+
+### SCENARIO-KAN-7487-01: Learner Evidence Gates Only Numeric Work
+
+Given the exact Exp7482 artifact bytes, when its schema, experiment identity,
+ready score, verdict class, adversarial flag, and model-call declarations pass,
+then numeric work can run. A missing or changed learner blocks numeric rows but
+does not remove any board row.
+
+### SCENARIO-KAN-7487-02: Full Anchor Cost Uses Frozen Arithmetic Arms
+
+Given one size and seed fixture, when float64, float32, and fixed-point arms run
+1000 updates, then they share the same active indices, labels, update order, and
+initial state. Their rows report each required timing component and keep active
+data-gradient work separate from all retained anchor coefficients.
+
+### SCENARIO-KAN-7487-03: Durable No-Update Controls Do Not Move State
+
+Given the same serialized state as an update arm, when the no-update control
+writes, synchronizes, and recovers it 1000 times, then the acknowledgement count,
+state hash, and predictions remain unchanged while serialization, durable-write,
+`fsync`, and recovery costs remain measured.
+
+### SCENARIO-KAN-7487-04: Replay Parity Precedes Cost Interpretation
+
+Given the float64 reference replay, when another arithmetic arm changes a
+decision, exceeds `1e-4` probability error for fixed-point, changes event order,
+or fails exact recovery, then that arm is not deployable and no lower numeric
+cost can override the failure.
+
+### SCENARIO-KAN-7487-05: Incomplete Service Accounting Stays Conditional
+
+Given compatible raw-capture and online-service sources, when tokenization,
+prefill, verifier work, feedback, updates, serialization, durable writes, or
+`fsync` lacks a compatible measured row, then no measured end-to-end speedup is
+reported. The artifact reports the missing components and symbolic Amdahl bounds.
+
+### SCENARIO-KAN-7487-06: Amdahl Bounds Expose The 100x Limit
+
+Given any accelerated fraction `f` and kernel speed `r`, when the service bound
+is reduced, then speedup equals `1/((1-f)+f/r)`. Infinite kernel speed still
+fails the 100x target unless the unaccelerated fraction is below one percent.
+
+### SCENARIO-KAN-7487-07: Board Continuity Issues No Hardware Operation
+
+Given authenticated KV260, PolarFire, and GateMate history with no new GateMate
+physical receipt, when the board branch reduces, then KV260 and PolarFire retain
+their exact historical dates and scopes, GateMate is terminally blocked, and
+`hardware_operations_issued` is an empty list.
+
+### SCENARIO-KAN-7487-08: Placement Completion Is Not A Speed Claim
+
+Given valid numeric rows, conditional service bounds, and all three board rows,
+when the 100x benefit gate fails, then `placement_complete_score` remains one,
+the verdict is a complete null, and no hardware-ready or hardware-value claim is
+made.
+
+### SCENARIO-KAN-7487-09: Terminal Evidence Fails Closed
+
+Given the raw per-unit rows and frozen validation receipts, when a fresh process
+changes a row, source hash, current-inference declaration, board date, gate,
+score, or checksum, then validation fails and terminal publication is refused.
+
+## REQ-KAN-7496: Bounded Brier Residual And Causal Release-Batch Control
+
+Exp7496 MUST qualify a local spline residual head with binary Brier loss. The
+coefficient gradient MUST equal
+`2 * (p - y) * p * (1 - p) * residual_derivative * basis`. The head MUST use
+the current learner state when feedback arrives. It MUST retain the sealed
+prediction-time probability and features as evidence. The existing Bernoulli
+log-loss head MUST remain an unchanged control. The protocol MUST use no
+importance penalty and MUST not change the four-expert mixture.
+
+Training and calibration fixtures MUST select from learning rates `0.001`,
+`0.01`, and `0.03` and residual bounds `0.5` and `1.0`. The selection MUST
+finish before online fixture labels open. The head MUST contain no more than
+256 coefficients. Receipts MUST report gradient clipping and no-op rates.
+Finite-difference checks MUST cover an interior point, a point close to the
+residual boundary, and a clipped point.
+
+Source groups MUST arrive in fixed blocks of eight. A seeded audit mask MUST
+select each event with probability `0.25` without using predictions or labels.
+Selected labels MUST become available only after their block ends and after a
+delay of zero or eight arrivals. The real and shuffled arms MUST receive the
+same selected batch at the same release time. The shuffled arm MUST permute
+only labels from that released batch. It MUST use a seeded derangement when
+the batch permits one. Singleton and identical-label batches MUST remain
+explicit no-op controls. No future-batch label MAY enter either learner state.
+
+Event identities MUST remain unique when source IDs repeat. Early,
+out-of-order, duplicate, and conflicting deliveries MUST not create an
+unregistered update. Checkpoints MUST restore predictions, acknowledgements,
+numeric state, and idempotent replay exactly. A training-only replay guard MAY
+reject and roll back an update. Retention labels MUST NOT select, reject, or
+veto an update.
+
+The fixture MUST export its sealed update and control configuration and raw
+per-event traces. `causal_update_ready_score` MUST depend only on gradient,
+lifecycle, causal-access, and replay checks. It MUST not depend on analytic
+fixture benefit. Analytic evidence MAY produce only `circular_positive`.
+The current run MUST declare `MODEL_SPECS=[]`, `model_specs=[]`,
+`model_invoked=false`, zero current model calls,
+`inference_substrate_class="no_model_load"`, and `execution_venue="host"`.
+Actual numeric fitting MUST have a `small_ebm_training` receipt. The terminal
+artifact MUST publish atomically only after scoped validation, 100 percent
+changed-module coverage, fresh-process replay, independent reduction,
+adversarial verification, and strict row-consistency checks pass. Each field
+and acceptance gate MUST state the failure that its evidence prevents.
+
+### SCENARIO-KAN-7496-01: Brier Gradient Matches Finite Differences
+
+Given an interior, near-boundary, or clipped residual, when Brier loss is
+differentiated, then the analytic gradient matches centered finite differences
+where differentiable and is zero beyond the clipping boundary.
+
+### SCENARIO-KAN-7496-02: Feedback Uses Current State
+
+Given two sealed predictions, when the first feedback changes the head before
+the second label arrives, then the second update uses its sealed features and
+frozen probability with the current coefficients. It MUST not use the old
+prediction-time gradient.
+
+### SCENARIO-KAN-7496-03: Release Batches Are Causal And Shared
+
+Given fixed blocks of eight and a seeded 25 percent audit mask, when a block is
+released at block end plus delay zero or eight, then both adaptive arms receive
+the same event identities at that time. The shuffled labels originate only
+from that batch.
+
+### SCENARIO-KAN-7496-04: Degenerate Batches Stay Explicit No-Ops
+
+Given a singleton or identical-label release batch, when the shuffled control
+runs, then its permutation is marked as a no-op. Given a nondegenerate batch,
+the protocol uses a seeded index derangement and records effective label
+changes.
+
+### SCENARIO-KAN-7496-05: Future Labels Cannot Change Earlier State
+
+Given two streams that differ only in labels from an unreleased future batch,
+when replay stops before that batch release, then all prior prediction rows,
+update receipts, acknowledgement hashes, and learner state hashes are equal.
+
+### SCENARIO-KAN-7496-06: Lifecycle Attacks Fail Closed
+
+Given no-feedback gaps, repeated source IDs, early or out-of-order feedback,
+duplicate delivery, and conflicting replay, when the ledger processes each
+case, then only one chronological matching delivery can update the state.
+
+### SCENARIO-KAN-7496-07: Rollback And Restart Preserve State
+
+Given a training-only guard rejection and a checkpoint between releases, when
+the stream resumes, then rejected state is byte-equivalent to its prior state
+and restarted replay matches uninterrupted acknowledgements and numeric state.
+
+### SCENARIO-KAN-7496-08: Selection And Retention Cannot Read Online Labels
+
+Given training, calibration, online, and retention roles, when settings and
+update admission are computed, then only training and calibration choose the
+settings. Retention labels only score before-and-after predictions.
+
+### SCENARIO-KAN-7496-09: Readiness Is Not Held-Out Benefit
+
+Given valid gradient, lifecycle, causal-access, and replay evidence, when an
+analytic loss comparison is favorable or unfavorable, then readiness remains
+an implementation result. The verifier is an oracle, so positive is forbidden.
+
+### SCENARIO-KAN-7496-10: Terminal Readers Fail Closed
+
+Given raw event traces, source hashes, model-call declarations, gates, and
+validation receipts, when a fresh reader changes any operand, then independent
+reduction or validation fails and terminal publication is refused.
+
+## REQ-KAN-7506: Smooth Brier Residual And Causal Fixture Machine
+
+Exp7506 MUST implement `r = b * tanh(u / b)` above the frozen Exp7505
+temperature probability. It MUST compute
+`p = sigmoid(logit(p_base) + r)`. Its local Brier gradient MUST equal
+`2 * (p - y) * p * (1 - p) * (1 - tanh(u / b)^2) * basis`. The same bounded
+parameterization MUST support a matched local log-loss control. Affine and
+intercept Brier controls MUST be present. The spline arm MUST use no more than
+256 coefficients.
+
+Only training and calibration fixtures MAY select the learning rate and bound.
+The candidate sets MUST be `{0.001, 0.01, 0.03}` and `{0.5, 1.0}`. Online
+fixture labels MUST not change this choice. Retention labels MUST not control
+updates or rollback. No importance anchor, expert ensemble, model load, or
+generator-weight update is permitted.
+
+The independent event machine MUST predict before update. It MUST persist each
+original feature vector and probability. A label-independent audit generator
+MUST select feedback. Block-eight labels MUST release only at block end plus
+delay eight or zero. The shuffled control MUST use only its current release
+batch. It MUST preserve reveal times, update counts, and feature order. Each
+label origin MUST remain explicit. Frozen and zero-step controls MUST not move.
+
+The checkpoint MUST include the model, pending queue, audit random state, and
+order cursor. It MUST restore byte-equivalent replay. The terminal artifact
+MUST use `MODEL_SPECS=[]`, `model_specs=[]`, `model_invoked=false`, zero current
+model calls, `inference_substrate_class="no_model_load"`, and host CPU venue.
+The artifact MUST publish only after scoped validation and strict fresh readers
+pass.
+
+### SCENARIO-KAN-7506-01: Smooth Residual Gradients Match Differences
+
+Given all smooth residual branches and both labels, analytic and finite-
+difference Brier gradients agree. At least one derivative is nonzero.
+
+### SCENARIO-KAN-7506-02: Prediction Always Precedes Available Feedback
+
+Given delay zero or eight, every prediction is immutable before any due batch
+updates. Early and unavailable labels cause no state change.
+
+### SCENARIO-KAN-7506-03: Shuffling Is Release-Local
+
+Given a mixed release batch, the shuffle uses a seeded derangement when one
+exists. A singleton or identical-label batch is an explicit no-op. A future-
+origin assignment that the historical control allowed is rejected.
+
+### SCENARIO-KAN-7506-04: Checkpoints Bind The Whole Machine
+
+Given a checkpoint between releases, model state, pending queue, audit random
+state, and order cursor restore together. Resumed and uninterrupted replay
+produce byte-equivalent stable evidence.
+
+### SCENARIO-KAN-7506-05: Fixture Readiness Has A Limited Claim
+
+Given valid structural fixture evidence, `causal_update_ready_score` can equal
+one. The verifier remains an oracle, so the verdict cannot exceed
+`circular_positive` and real learning remains unmeasured.
+
+## Implementation Status (REQ-KAN-7506)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-KAN-7506 and SCENARIO-KAN-7506-* | Implemented in `python/carnot/experiment_7506_v657_causal_prototype.py` with a thin script entrypoint. | Focused tests cover the smooth Brier derivative, matched controls, release-local shuffle, unavailable-label rejection, counterexample, and byte-equivalent restart. The terminal producer runs scoped validation and strict fresh readers. |
+
+## REQ-KAN-8306: Exact four-input spline isolation
+
+Exp8306 SHALL reuse the tested cubic basis with knots
+[0,0,0,0,.2,.4,.6,.8,1,1,1,1], natural [0,1] bounds and 34 ordered parameters
+[holistic slope, intercept, four groups of eight coefficients]. Static fixture
+fitting trains the slope; online local updates freeze slope, knots and intercept,
+use rate .01, one scalar norm cap1, coordinate projection [-4,4] and no decay.
+Dense and sparse logits and effective coefficients SHALL agree within1e-10.
+Intercept-changing stress events SHALL retain full cache invalidation costs.
+
+### SCENARIO-KAN-8306-NUMERIC
+
+An independent scalar basis and finite differences verify gradients at endpoints,
+interior knots and overlapping supports. Probability ties .25/.75 escalate.
+Projection and zero-step events retain exact changed-coordinate accounting.
+## REQ-KAN-8334: Frozen static sentence heads
+
+Fit spline34, RBF34, linear6 and scalar2 with seed7178308, 400 full-batch
+logistic steps, rate .01 and L2 .001 on local coefficients and (a-1).
+Exclude the intercept from L2. Project slope to [0,2] and others to [-4,4].
+Use the direct local_update_isolation_8306 cubic kernel. Qualify against SciPy
+and finite differences. Select 32 label-blind RBF centers by farthest distance,
+starting at smallest source ID; ties use ID. Insufficient geometry blocks.
+Calibrate on first32 tune slots and select controls on next32, preserving missing
+slots as cost .5 escalations. Export a feature-only API and byte-bound checkpoint.
+
+### SCENARIO-KAN-8334-FIT
+
+Independent basis and objective derivatives agree. Exact-budget constructed
+controls decrease loss and change an action before natural fitting. Prediction
+rejects identity and label injection. Sigmoid34 exactly re-expresses spline34.

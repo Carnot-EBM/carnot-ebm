@@ -1,0 +1,992 @@
+"""Additive constraint generation from mature recurring failure families in case memory.
+
+**Researcher summary:**
+    Turns persistent, high-confidence failure patterns that case memory has
+    accumulated into lightweight constraint templates.  These templates are
+    then loaded into a ``ConstraintAdditionRegistry`` that the
+    ``VerifyRepairPipeline`` can query at inference time — entirely on CPU,
+    with no matrix operations.
+
+**Key design principle — additive, not replacement:**
+    This module produces ``ConstraintTemplate`` objects.  It does NOT emit
+    ``ThresholdOverride``, ``RoutingHint``, or any other ``SelfLearningPolicy``
+    artifact.  Both compilation paths can run independently and their outputs
+    can be used together.
+
+**Template kinds:**
+
+``text_pattern_guard``
+    A set of short substring patterns (e.g. ``"answer_target_mismatch"``)
+    compiled from the violation-type labels of the recurring failure family.
+    The registry's ``apply()`` method checks whether any pattern appears in
+    the response text and, if so, returns the template as a guard signal.
+    No regex — just ``pattern in response_text.lower()`` comparisons.
+
+``budget_addition``
+    Tells the verifier to run ``budget_delta`` additional check passes for
+    this failure family.  Always returned by ``apply()`` when the violation
+    type matches.  No text scanning needed.
+
+``verifier_guard_clause``
+    A named gate that the pipeline can recognise by ``guard_name`` before
+    invoking the more expensive verifier path.  Always returned by ``apply()``
+    when violation type matches.
+
+**CPU cost:**
+    Compilation is O(N) where N = number of case memory entries.
+    Registry lookup is O(T) where T = number of compiled templates.
+    ``apply()`` adds an O(T * P) text scan where P = max patterns per template.
+    All operations are pure Python string comparisons — safe at inference speed.
+
+Spec: REQ-VERIFY-060,
+SCENARIO-VERIFY-070, SCENARIO-VERIFY-071, SCENARIO-VERIFY-072,
+SCENARIO-VERIFY-073, SCENARIO-VERIFY-074
+"""
+
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from carnot.pipeline.case_memory import CaseEntry, CaseMemory
+
+# Fixed compile date for all artifacts produced by this module.
+RUN_DATE: str = "20260413"
+
+# Format version for the serialized ConstraintAdditionResult.
+VERSION: int = 1
+
+# Defaults for the compiler qualification thresholds.
+_DEFAULT_MIN_SUPPORT: int = 3
+_DEFAULT_MIN_CONFIDENCE: float = 0.85
+
+# Maximum number of patterns to embed in a text_pattern_guard template.
+# Keeps the guard set small for fast substring scanning.
+_MAX_GUARD_PATTERNS: int = 6
+
+
+# ---------------------------------------------------------------------------
+# Provenance record
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ConstraintProvenance:
+    """Explains why a ConstraintTemplate was created.
+
+    Every template must carry at least one of these so that offline replay
+    and live pipeline diagnostics can explain where the constraint came from.
+
+    Fields
+    ------
+    source_type
+        Always ``"case_memory"`` for templates compiled by this module.
+    source_case_ids
+        The ``case_id`` strings of the ``CaseProvenance`` records inside the
+        originating ``CaseEntry``.  Preserved verbatim from case memory so
+        users can cross-reference the original benchmark traces.
+    source_experiment
+        The experiment number from the first case provenance record, or
+        ``None`` if the entry had no experiment tag.
+    failure_family
+        The primary violation family that qualified this entry (e.g.
+        ``"semantic"``, ``"question_grounding_failures"``).
+    support
+        The ``CaseEntry.support`` count at compile time.
+    confidence
+        The ``CaseEntry.confidence`` score at compile time (0.0 – 1.0).
+    compiled_date
+        Fixed string ``"20260413"`` for traceability across serialized runs.
+    """
+
+    source_type: str
+    source_case_ids: tuple[str, ...]
+    source_experiment: int | None
+    failure_family: str
+    support: int
+    confidence: float
+    compiled_date: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "source_type": self.source_type,
+            "source_case_ids": list(self.source_case_ids),
+            "source_experiment": self.source_experiment,
+            "failure_family": self.failure_family,
+            "support": self.support,
+            "confidence": self.confidence,
+            "compiled_date": self.compiled_date,
+        }
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> ConstraintProvenance:
+        source_experiment = payload.get("source_experiment")
+        return cls(
+            source_type=str(payload.get("source_type") or "case_memory"),
+            source_case_ids=tuple(str(s) for s in payload.get("source_case_ids", [])),
+            source_experiment=int(source_experiment) if source_experiment is not None else None,
+            failure_family=str(payload.get("failure_family") or ""),
+            support=int(payload.get("support") or 0),
+            confidence=float(payload.get("confidence") or 0.0),
+            compiled_date=str(payload.get("compiled_date") or RUN_DATE),
+        )
+
+
+# ---------------------------------------------------------------------------
+# Constraint template
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ConstraintTemplate:
+    """One lightweight constraint guard compiled from a recurring failure family.
+
+    A ``ConstraintTemplate`` is intentionally cheap to store and evaluate.
+    No matrix operations, no numerical models — just string checks and counters.
+
+    Fields
+    ------
+    template_id
+        Deterministic identifier of the form
+        ``"<kind>:<model_name>:<benchmark_slice>:<failure_family>"``.
+    kind
+        One of ``"text_pattern_guard"``, ``"budget_addition"``, or
+        ``"verifier_guard_clause"``.
+    model_name
+        The model whose failure patterns drove this template.
+    benchmark_slice
+        The ``benchmark/domain`` slice this template applies to.
+    failure_family
+        The primary violation family (first token of the violation type label).
+    guard_patterns
+        Substrings to search for in response text.  Non-empty only when
+        ``kind == "text_pattern_guard"``.  Patterns are lowercased so the
+        ``apply()`` comparison can use ``pattern in response_text.lower()``.
+    budget_delta
+        Number of additional verifier passes to add.  Positive only when
+        ``kind == "budget_addition"``.
+    guard_name
+        Short identifier for the guard clause hook.  Non-empty only when
+        ``kind == "verifier_guard_clause"``.
+    guard_reason
+        Human-readable explanation of why this guard clause was added.
+    support
+        Aggregate support count from the qualifying case entry.
+    confidence
+        Aggregate confidence score from the qualifying case entry.
+    provenance
+        One or more ``ConstraintProvenance`` records tracing this template
+        back to the originating case memory entries.
+    """
+
+    template_id: str
+    kind: str
+    model_name: str
+    benchmark_slice: str
+    failure_family: str
+    guard_patterns: tuple[str, ...]
+    budget_delta: int
+    guard_name: str
+    guard_reason: str
+    support: int
+    confidence: float
+    provenance: tuple[ConstraintProvenance, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "template_id": self.template_id,
+            "kind": self.kind,
+            "model_name": self.model_name,
+            "benchmark_slice": self.benchmark_slice,
+            "failure_family": self.failure_family,
+            "guard_patterns": list(self.guard_patterns),
+            "budget_delta": self.budget_delta,
+            "guard_name": self.guard_name,
+            "guard_reason": self.guard_reason,
+            "support": self.support,
+            "confidence": self.confidence,
+            "provenance": [p.to_dict() for p in self.provenance],
+        }
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> ConstraintTemplate:
+        return cls(
+            template_id=str(payload.get("template_id") or ""),
+            kind=str(payload.get("kind") or ""),
+            model_name=str(payload.get("model_name") or ""),
+            benchmark_slice=str(payload.get("benchmark_slice") or ""),
+            failure_family=str(payload.get("failure_family") or ""),
+            guard_patterns=tuple(str(p) for p in payload.get("guard_patterns", [])),
+            budget_delta=int(payload.get("budget_delta") or 0),
+            guard_name=str(payload.get("guard_name") or ""),
+            guard_reason=str(payload.get("guard_reason") or ""),
+            support=int(payload.get("support") or 0),
+            confidence=float(payload.get("confidence") or 0.0),
+            provenance=tuple(
+                ConstraintProvenance.from_dict(item)
+                for item in payload.get("provenance", [])
+                if isinstance(item, dict)
+            ),
+        )
+
+
+# ---------------------------------------------------------------------------
+# Compilation result
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ConstraintAdditionResult:
+    """Compiled set of constraint templates derived from a CaseMemory snapshot.
+
+    This is the output artifact of ``ConstraintAdditionCompiler.compile()``.
+    It serializes deterministically: ``to_dict()`` uses only list/dict/str/int/
+    float/None — stable types for ``json.dumps(..., sort_keys=True)``.
+
+    Fields
+    ------
+    run_date
+        Fixed compile date ``"20260413"`` embedded for traceability.
+    templates
+        Sorted tuple of ``ConstraintTemplate`` objects ordered by
+        ``template_id`` for deterministic serialization.
+    """
+
+    run_date: str = RUN_DATE
+    templates: tuple[ConstraintTemplate, ...] = ()
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "version": VERSION,
+            "run_date": self.run_date,
+            "summary": {"n_templates": len(self.templates)},
+            "templates": [t.to_dict() for t in self.templates],
+        }
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> ConstraintAdditionResult:
+        version = payload.get("version")
+        if version is not None and int(version) != VERSION:
+            raise ValueError(
+                f"Unsupported ConstraintAdditionResult format (expected version={VERSION})"
+            )
+        return cls(
+            run_date=str(payload.get("run_date") or RUN_DATE),
+            templates=tuple(
+                ConstraintTemplate.from_dict(item)
+                for item in payload.get("templates", [])
+                if isinstance(item, dict)
+            ),
+        )
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), indent=2, sort_keys=True) + "\n"
+
+    @classmethod
+    def from_json(cls, payload: str) -> ConstraintAdditionResult:
+        raw = json.loads(payload)
+        if not isinstance(raw, dict):
+            raise ValueError("ConstraintAdditionResult payload must be a JSON object")
+        return cls.from_dict(raw)
+
+
+# ---------------------------------------------------------------------------
+# Compiler
+# ---------------------------------------------------------------------------
+
+
+class ConstraintAdditionCompiler:
+    """Compile lightweight constraint templates from mature case memory entries.
+
+    Usage
+    -----
+    ::
+
+        memory = CaseMemory.load("results/case_memory.json")
+        result = ConstraintAdditionCompiler().compile(memory)
+        # result is a ConstraintAdditionResult — serializable, additive
+
+    Qualification thresholds
+    ------------------------
+    Only ``CaseEntry`` objects satisfying both ``entry.support >= min_support``
+    and ``entry.confidence >= min_confidence`` produce templates.  The defaults
+    (3 / 0.85) are tuned so that a family must appear in at least three
+    distinct traces with high average confidence before it influences the
+    constraint set.
+
+    Compile cost
+    ------------
+    O(N) where N = number of entries in the case memory.  No numerical ops.
+    """
+
+    def __init__(
+        self,
+        *,
+        min_support: int = _DEFAULT_MIN_SUPPORT,
+        min_confidence: float = _DEFAULT_MIN_CONFIDENCE,
+    ) -> None:
+        self._min_support = min_support
+        self._min_confidence = min_confidence
+
+    def compile(self, case_memory: CaseMemory) -> ConstraintAdditionResult:
+        """Produce a ``ConstraintAdditionResult`` from *case_memory*.
+
+        The result is additive — it does not mutate ``case_memory`` and it
+        does not contain ``ThresholdOverride`` or ``RoutingHint`` objects.
+        """
+        entries = case_memory.entries()
+        qualifying = [
+            entry
+            for entry in entries
+            if entry.support >= self._min_support and entry.confidence >= self._min_confidence
+        ]
+
+        templates: list[ConstraintTemplate] = []
+        for entry in qualifying:
+            templates.extend(self._templates_for_entry(entry))
+
+        # Sort by template_id for deterministic output
+        templates.sort(key=lambda t: t.template_id)
+
+        return ConstraintAdditionResult(
+            run_date=RUN_DATE,
+            templates=tuple(templates),
+        )
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+
+    def _templates_for_entry(self, entry: CaseEntry) -> list[ConstraintTemplate]:
+        """Return up to three templates (one per kind) for *entry*."""
+        failure_family = self._primary_family(entry)
+        if not failure_family:
+            return []
+
+        provenance = (self._provenance_from_entry(entry, failure_family),)
+
+        return [
+            self._make_text_pattern_guard(entry, failure_family, provenance),
+            self._make_budget_addition(entry, failure_family, provenance),
+            self._make_verifier_guard_clause(entry, failure_family, provenance),
+        ]
+
+    @staticmethod
+    def _primary_family(entry: CaseEntry) -> str:
+        """Return the first non-empty violation family for *entry*, or ''."""
+        if entry.key.violation_families:
+            return entry.key.violation_families[0]
+        if entry.violation_types:
+            return entry.violation_types[0].split(":", 1)[0]
+        return ""
+
+    def _make_text_pattern_guard(
+        self,
+        entry: CaseEntry,
+        family: str,
+        provenance: tuple[ConstraintProvenance, ...],
+    ) -> ConstraintTemplate:
+        """Build a text_pattern_guard from violation type labels.
+
+        Patterns are derived from the human-readable parts of violation type
+        strings.  Each token after a colon separator becomes a searchable
+        pattern (lowercased).  Limited to ``_MAX_GUARD_PATTERNS`` items so
+        the substring scan stays cheap.
+
+        Example: violation_type ``"semantic:answer_target_mismatch"`` →
+        patterns ``["semantic", "answer_target_mismatch"]``.
+        """
+        patterns: list[str] = []
+        seen: set[str] = set()
+        for vtype in entry.violation_types:
+            for part in vtype.lower().split(":"):
+                token = part.strip()
+                if token and token not in seen:
+                    seen.add(token)
+                    patterns.append(token)
+                    if len(patterns) >= _MAX_GUARD_PATTERNS:
+                        break
+            if len(patterns) >= _MAX_GUARD_PATTERNS:
+                break
+
+        template_id = (
+            f"text_pattern_guard:{entry.key.model_name}:{entry.key.benchmark_slice}:{family}"
+        )
+        return ConstraintTemplate(
+            template_id=template_id,
+            kind="text_pattern_guard",
+            model_name=entry.key.model_name,
+            benchmark_slice=entry.key.benchmark_slice,
+            failure_family=family,
+            guard_patterns=tuple(patterns),
+            budget_delta=0,
+            guard_name="",
+            guard_reason="",
+            support=entry.support,
+            confidence=entry.confidence,
+            provenance=provenance,
+        )
+
+    def _make_budget_addition(
+        self,
+        entry: CaseEntry,
+        family: str,
+        provenance: tuple[ConstraintProvenance, ...],
+    ) -> ConstraintTemplate:
+        """Build a budget_addition template.
+
+        ``budget_delta`` scales with support up to a maximum of 3 so the
+        verifier never runs an unbounded number of extra passes from a single
+        template.
+        """
+        budget_delta = min(3, max(1, entry.support // self._min_support))
+        template_id = f"budget_addition:{entry.key.model_name}:{entry.key.benchmark_slice}:{family}"
+        return ConstraintTemplate(
+            template_id=template_id,
+            kind="budget_addition",
+            model_name=entry.key.model_name,
+            benchmark_slice=entry.key.benchmark_slice,
+            failure_family=family,
+            guard_patterns=(),
+            budget_delta=budget_delta,
+            guard_name="",
+            guard_reason="",
+            support=entry.support,
+            confidence=entry.confidence,
+            provenance=provenance,
+        )
+
+    def _make_verifier_guard_clause(
+        self,
+        entry: CaseEntry,
+        family: str,
+        provenance: tuple[ConstraintProvenance, ...],
+    ) -> ConstraintTemplate:
+        """Build a verifier_guard_clause that names a pre-check gate.
+
+        The ``guard_name`` follows the pattern
+        ``"guard:<failure_family>:<benchmark_slice>"`` so pipeline code can
+        register handlers by name without needing to parse violation types.
+        """
+        guard_name = f"guard:{family}:{entry.key.benchmark_slice}"
+        guard_reason = (
+            f"Recurring {family} failures (support={entry.support}, "
+            f"confidence={entry.confidence:.2f}) compiled from case memory "
+            f"on {RUN_DATE}"
+        )
+        template_id = (
+            f"verifier_guard_clause:{entry.key.model_name}:{entry.key.benchmark_slice}:{family}"
+        )
+        return ConstraintTemplate(
+            template_id=template_id,
+            kind="verifier_guard_clause",
+            model_name=entry.key.model_name,
+            benchmark_slice=entry.key.benchmark_slice,
+            failure_family=family,
+            guard_patterns=(),
+            budget_delta=0,
+            guard_name=guard_name,
+            guard_reason=guard_reason,
+            support=entry.support,
+            confidence=entry.confidence,
+            provenance=provenance,
+        )
+
+    @staticmethod
+    def _provenance_from_entry(
+        entry: CaseEntry,
+        failure_family: str,
+    ) -> ConstraintProvenance:
+        """Build a ``ConstraintProvenance`` from a ``CaseEntry``.
+
+        Collects all ``case_id`` values from the entry's provenance records
+        into ``source_case_ids`` and takes the experiment number from the
+        first record that has one.
+        """
+        source_case_ids: list[str] = []
+        source_experiment: int | None = None
+        for cp in entry.provenance:
+            if cp.case_id and cp.case_id not in source_case_ids:
+                source_case_ids.append(cp.case_id)
+            if source_experiment is None and cp.source_experiment is not None:
+                source_experiment = cp.source_experiment
+
+        return ConstraintProvenance(
+            source_type="case_memory",
+            source_case_ids=tuple(source_case_ids),
+            source_experiment=source_experiment,
+            failure_family=failure_family,
+            support=entry.support,
+            confidence=entry.confidence,
+            compiled_date=RUN_DATE,
+        )
+
+
+# ---------------------------------------------------------------------------
+# Runtime registry
+# ---------------------------------------------------------------------------
+
+
+class ConstraintAdditionRegistry:
+    """Runtime lookup facade over a compiled ``ConstraintAdditionResult``.
+
+    Usage
+    -----
+    ::
+
+        result = ConstraintAdditionCompiler().compile(memory)
+        registry = ConstraintAdditionRegistry(result)
+
+        # Retrieve templates for a specific failure family:
+        templates = registry.lookup(model_name, benchmark_slice, "semantic")
+
+        # During verification — filter to templates that fire for this response:
+        active = registry.apply(model_name, benchmark_slice, violation_types, response_text)
+
+    Lookup cost
+    -----------
+    O(T) where T = total number of compiled templates.  All comparisons are
+    string equality or ``in`` substring checks — safe at inference speed.
+    """
+
+    def __init__(self, result: ConstraintAdditionResult) -> None:
+        self._templates: tuple[ConstraintTemplate, ...] = result.templates
+
+    def lookup(
+        self,
+        model_name: str,
+        benchmark_slice: str,
+        failure_family: str,
+    ) -> tuple[ConstraintTemplate, ...]:
+        """Return templates matching *model_name*, *benchmark_slice*, and *failure_family*.
+
+        Results are sorted by ``template_id`` for deterministic ordering.
+        Returns an empty tuple when no templates match.
+        """
+        matches = [
+            t
+            for t in self._templates
+            if t.failure_family == failure_family
+            and t.model_name == model_name
+            and t.benchmark_slice == benchmark_slice
+        ]
+        return tuple(sorted(matches, key=lambda t: t.template_id))
+
+    def apply(
+        self,
+        model_name: str,
+        benchmark_slice: str,
+        violation_types: tuple[str, ...],
+        response_text: str,
+    ) -> tuple[ConstraintTemplate, ...]:
+        """Return templates that are active for this verification context.
+
+        Activation rules by kind:
+
+        ``text_pattern_guard``
+            Active when at least one of the template's ``guard_patterns`` is
+            found as a substring of ``response_text.lower()``.  A template
+            with no guard patterns is never activated.
+
+        ``budget_addition`` / ``verifier_guard_clause``
+            Active when at least one of the template's ``failure_family``
+            values appears as a prefix of any ``violation_types`` element
+            (i.e. ``violation_type.startswith(failure_family)``).
+
+        All matching templates are returned sorted by ``template_id``.
+        """
+        lowered_response = response_text.lower()
+        violation_prefixes = tuple(vt.split(":", 1)[0] for vt in violation_types)
+
+        active: list[ConstraintTemplate] = []
+        for template in self._templates:
+            if template.model_name != model_name:
+                continue
+            if template.benchmark_slice != benchmark_slice:
+                continue
+
+            if template.kind == "text_pattern_guard":
+                if not template.guard_patterns:
+                    continue
+                if any(pattern in lowered_response for pattern in template.guard_patterns):
+                    active.append(template)
+
+            elif template.kind in {"budget_addition", "verifier_guard_clause"}:
+                if template.failure_family in violation_prefixes:
+                    active.append(template)
+
+        return tuple(sorted(active, key=lambda t: t.template_id))
+
+
+# ---------------------------------------------------------------------------
+# ViolationPattern + ConstraintAdditionFromMemory (Exp 456, REQ-SELFLEARN-010)
+# ---------------------------------------------------------------------------
+
+import os as _os
+
+
+@dataclass
+class ViolationPattern:
+    """A recurring violation type observed in pipeline responses.
+
+    **Why this exists (research context):**
+        Exp 134 proved that REWEIGHTING existing constraints is ineffective —
+        fixed and adaptive strategies performed identically on 500 arithmetic
+        questions.  The correct approach is ADDITION: when a violation type
+        appears repeatedly, generate a new constraint that specifically checks
+        for that error class.
+
+        This dataclass is the unit of evidence fed to
+        ``ConstraintAdditionFromMemory``.  Each ``ViolationPattern`` records
+        HOW MANY times a specific violation type was seen and a sample of the
+        step texts that exhibited it.
+
+    Fields
+    ------
+    type
+        Short identifier for the violation class (e.g. ``'carry'``, ``'sign'``,
+        ``'unit'``, ``'comparison'``).
+    count
+        Total number of observations accumulated for this violation type.
+    example_steps
+        Up to 5 representative step texts that triggered this violation.  Used
+        for diagnostics and offline replay.
+
+    Spec: REQ-SELFLEARN-010, SCENARIO-SELFLEARN-010
+    """
+
+    type: str
+    count: int
+    example_steps: list[str]
+
+
+# Mapping from violation type prefix → canonical constraint name.
+# WHY a fixed mapping rather than a dynamic one: the Eidoku taxonomy (arXiv
+# 2512.20664) defines four arithmetic error families (carry, sign, unit,
+# comparison_direction).  A fixed mapping makes the contract explicit and
+# testable; dynamic naming would require model-specific heuristics.
+_VIOLATION_TYPE_TO_CONSTRAINT: dict[str, str] = {
+    "carry": "carry_check_constraint",
+    "sign": "sign_check_constraint",
+    "unit": "unit_check_constraint",
+    "comparison": "comparison_direction_constraint",
+}
+
+# How many examples to retain per violation type.  Capped at 5 to keep memory
+# overhead bounded even when an experiment processes thousands of steps.
+_MAX_EXAMPLES: int = 5
+
+# Environment variable that overrides the default threshold.
+# WHY 5 as the default: balances early detection (fewer examples needed to
+# signal a pattern) against noise (avoids adding constraints from one-off
+# flukes).  See research-program.md Goal #1 for the rationale.
+_THRESHOLD_ENV_VAR = "CARNOT_ADDITION_THRESHOLD"
+_DEFAULT_THRESHOLD = 5
+
+
+class ConstraintAdditionFromMemory:
+    """Monitor observed violations and add new ConstraintTerms when a pattern matures.
+
+    **Researcher summary (REQ-SELFLEARN-010, research-program.md Goal #1):**
+        Exp 134 demonstrated that reweighting existing constraints does NOT
+        improve accuracy — the fixed and adaptive strategies produced identical
+        F1 scores across 500 arithmetic questions.  The root cause: if the
+        pipeline's constraint vocabulary does not COVER the real error type,
+        upweighting existing constraints just amplifies irrelevant noise.
+
+        The correct fix is ADDITION.  When enough observations of the same
+        violation type accumulate in CaseMemory, this class generates a new
+        named constraint and (optionally) registers it with the active pipeline.
+        Session 2 of the cross-session relay then operates with the new
+        constraint active, reducing the false-positive rate for that error
+        class.
+
+    **Why threshold=5 (REQ-SELFLEARN-011):**
+        Five observations means the pattern has appeared across multiple
+        distinct responses.  One or two could be noise; five provides high
+        confidence that the error class is genuinely recurring.  The threshold
+        is configurable via ``CARNOT_ADDITION_THRESHOLD`` so researchers can
+        tune it without code changes.
+
+    **Cross-session relay design (REQ-SELFLEARN-012):**
+        Session 1 runs without the constraint and records violation observations.
+        After Session 1, ``check_and_add()`` is called; any matured patterns
+        produce new constraint names.  Session 2 then activates those
+        constraints.  The FP rate (fraction of carry errors missed) should
+        decrease between sessions.
+
+    Parameters
+    ----------
+    threshold
+        Minimum observation count before a violation pattern qualifies for
+        constraint addition.  Reads ``CARNOT_ADDITION_THRESHOLD`` from the
+        environment; falls back to 5.
+    pipeline
+        Optional ``VerifyRepairPipeline``-like object.  When provided,
+        ``check_and_add()`` calls ``pipeline.template_library.observe_pattern()``
+        so the new constraint is immediately active in the pipeline.  When
+        ``None``, the method still returns the list of constraint names but
+        does not mutate any pipeline state.
+
+    Spec: REQ-SELFLEARN-010, REQ-SELFLEARN-011, REQ-SELFLEARN-012,
+    SCENARIO-SELFLEARN-010, SCENARIO-SELFLEARN-011, SCENARIO-SELFLEARN-012
+    """
+
+    def __init__(
+        self,
+        threshold: int | None = None,
+        pipeline: Any = None,
+    ) -> None:
+        if threshold is None:
+            env_val = _os.environ.get(_THRESHOLD_ENV_VAR)
+            threshold = int(env_val) if env_val is not None else _DEFAULT_THRESHOLD
+        self._threshold: int = threshold
+        self._pipeline = pipeline
+        # violation_type → observation count
+        self._pattern_counts: dict[str, int] = {}
+        # violation_type → example step texts (capped at _MAX_EXAMPLES)
+        self._examples: dict[str, list[str]] = {}
+        # set of constraint names already added (ensures idempotency)
+        self._added: set[str] = set()
+
+    # ------------------------------------------------------------------
+    # Observation
+    # ------------------------------------------------------------------
+
+    def observe(self, violation_type: str, step_text: str) -> None:
+        """Record a single violation observation.
+
+        Accumulates the count for *violation_type* and stores *step_text* as
+        an example (up to ``_MAX_EXAMPLES`` per type).
+
+        Parameters
+        ----------
+        violation_type
+            The primary error class (e.g. ``'carry'``, ``'sign'``,
+            ``'unit'``, ``'comparison'``).  Should be the prefix before any
+            colon separator in a full violation label.
+        step_text
+            The response or reasoning step that exhibited the violation.
+
+        Spec: REQ-SELFLEARN-010, SCENARIO-SELFLEARN-010
+        """
+        self._pattern_counts[violation_type] = self._pattern_counts.get(violation_type, 0) + 1
+        examples = self._examples.setdefault(violation_type, [])
+        if len(examples) < _MAX_EXAMPLES:
+            examples.append(step_text)
+
+    # ------------------------------------------------------------------
+    # Constraint addition
+    # ------------------------------------------------------------------
+
+    def check_and_add(self, pipeline: Any = None) -> list[str]:
+        """Add new constraints for any violation type that has met the threshold.
+
+        Iterates over all observed violation types.  For each type whose
+        observation count is >= ``self._threshold``, looks up the canonical
+        constraint name from ``_VIOLATION_TYPE_TO_CONSTRAINT``.  If a match
+        is found AND the constraint has not already been added, the constraint
+        name is emitted and (if a pipeline with a ``template_library`` is
+        available) the corresponding pattern is registered with the library.
+
+        Idempotent: calling this method multiple times will not add the same
+        constraint twice.
+
+        Parameters
+        ----------
+        pipeline
+            Optional pipeline override; takes precedence over the pipeline
+            passed to the constructor.  Accepts any object with a
+            ``template_library`` attribute that has an ``observe_pattern``
+            method.
+
+        Returns
+        -------
+        list[str]
+            Names of constraints added in THIS call (not previously added).
+            Returns ``[]`` when no violation type has crossed the threshold or
+            all qualifying constraints were already added.
+
+        Spec: REQ-SELFLEARN-010, REQ-SELFLEARN-011, REQ-SELFLEARN-012,
+        SCENARIO-SELFLEARN-010, SCENARIO-SELFLEARN-011
+        """
+        active_pipeline = pipeline if pipeline is not None else self._pipeline
+        added_this_call: list[str] = []
+
+        for vtype, count in self._pattern_counts.items():
+            if count < self._threshold:
+                continue
+            constraint_name = _VIOLATION_TYPE_TO_CONSTRAINT.get(vtype)
+            if constraint_name is None:
+                continue
+            if constraint_name in self._added:
+                continue
+            self._added.add(constraint_name)
+            added_this_call.append(constraint_name)
+            # Notify the pipeline's template_library if available.
+            # WHY: the ConstraintTemplateLibrary.observe_pattern() method
+            # promotes a pattern_key from "observed" to "active" once the
+            # cumulative count crosses min_frequency.  Calling it here bridges
+            # the gap between cross-session memory and the live pipeline.
+            if active_pipeline is not None and hasattr(active_pipeline, "template_library"):
+                lib = active_pipeline.template_library
+                if lib is not None and hasattr(lib, "observe_pattern"):
+                    # Force activation by setting count above min_frequency.
+                    # WHY _threshold: we use our own threshold as a proxy for
+                    # the library's min_frequency so the constraint fires on
+                    # the very next pipeline call.
+                    lib.observe_pattern(vtype, "exp456_session2", count=self._threshold)
+
+        return sorted(added_this_call)
+
+    # ------------------------------------------------------------------
+    # HISR-weighted addition
+    # ------------------------------------------------------------------
+
+    def hisr_weighted_add(
+        self,
+        violations: list[ViolationPattern],
+        final_correct: bool,
+    ) -> list[str]:
+        """Add constraints using HISR credit assignment to filter low-signal violations.
+
+        **Detailed explanation for engineers (HISR — arXiv 2603.18683):**
+            Standard constraint addition treats every observed violation equally.
+            HISR (Hindsight Importance Score Reweighting) corrects this by looking
+            BACKWARD from the outcome: violations that immediately preceded a wrong
+            final answer receive high scores (up to 1.0); violations early in the
+            chain that the model self-corrected receive low scores (toward 0.0).
+            Violations in chains that ended CORRECTLY receive score 0.0 — they were
+            false alarms and should not pollute the constraint-addition signal.
+
+            This method:
+            1. Calls ``HISRWeighter.compute_hindsight_score(violations, final_correct)``
+               to assign each violation a hindsight score in [0, 1].
+            2. Filters to violations whose score >= 0.5 (i.e., in the second half
+               of the error chain).
+            3. Observes only those high-signal violations before calling
+               ``check_and_add()``.
+
+            The threshold of 0.5 retains the last two violations in a 3-step chain
+            and the last three in a 5-step chain — a balance between signal quality
+            and coverage validated in Exp 598.
+
+        Args:
+            violations: Ordered sequence of ``ViolationPattern`` objects from one
+                verify-repair chain.  Order must match temporal occurrence — index 0
+                is the earliest, index N-1 is the latest.
+            final_correct: True when the pipeline's final answer was correct (all
+                violations are false positives and get score 0.0).
+
+        Returns:
+            List of constraint names added in this call (same contract as
+            ``check_and_add()``).
+
+        Spec: REQ-LEARN-075, SCENARIO-LEARN-110, SCENARIO-LEARN-111
+        """
+        from carnot.pipeline.hisr_weights import HISRWeighter
+
+        weighter = HISRWeighter()
+        weights = weighter.compute_hindsight_score(violations, final_correct)
+        high_signal = weighter.weighted_violations(weights, threshold=0.5)
+
+        for v in high_signal:
+            # Observe once per high-signal violation.  Example text is minimal
+            # because HISR already filtered the signal; we don't have the
+            # original step text here, just the type.
+            self.observe(v.type, "hisr_filtered")
+
+        return self.check_and_add()
+
+    def add_from_memory(
+        self,
+        violations: list[ViolationPattern],
+        final_correct: bool = False,
+        use_hisr: bool = False,
+    ) -> list[str]:
+        """Observe a batch of violations and add matured constraints.
+
+        **Detailed explanation for engineers:**
+            This is a higher-level convenience method that takes a list of
+            ``ViolationPattern`` objects (e.g. collected over one verify-repair
+            chain) and either:
+
+            - Uniformly observes all violations and calls ``check_and_add()``
+              (when ``use_hisr=False``), or
+            - Applies HISR credit assignment first, observing only high-signal
+              violations, then calls ``check_and_add()`` (when ``use_hisr=True``).
+
+            Each ``ViolationPattern.count`` is respected: the same violation type
+            is observed ``count`` times so that the maturation threshold tracks
+            cumulative occurrences, not just distinct violation types.
+
+        Args:
+            violations: List of ``ViolationPattern`` objects from one chain.
+            final_correct: Whether the final answer was correct.  Only used
+                when ``use_hisr=True`` (passed through to ``hisr_weighted_add``).
+            use_hisr: When True, use HISR-weighted observation instead of
+                uniform counting.  Recommended for production use.
+
+        Returns:
+            List of constraint names added in this call.
+
+        Spec: REQ-LEARN-075
+        """
+        if use_hisr:
+            return self.hisr_weighted_add(violations, final_correct)
+
+        # Uniform path: observe each violation ``count`` times.
+        for v in violations:
+            for _ in range(max(1, v.count)):
+                step = v.example_steps[0] if v.example_steps else ""
+                self.observe(v.type, step)
+
+        return self.check_and_add()
+
+    # ------------------------------------------------------------------
+    # Inspection
+    # ------------------------------------------------------------------
+
+    def get_pattern_counts(self) -> dict[str, int]:
+        """Return a snapshot of current observation counts per violation type.
+
+        Returns a copy so callers cannot mutate internal state.
+
+        Spec: REQ-SELFLEARN-010
+        """
+        return dict(self._pattern_counts)
+
+    def get_patterns(self) -> list[ViolationPattern]:
+        """Return a list of ViolationPattern objects for all observed types.
+
+        Useful for serialization and offline analysis.
+
+        Spec: REQ-SELFLEARN-010
+        """
+        return [
+            ViolationPattern(
+                type=vtype,
+                count=self._pattern_counts[vtype],
+                example_steps=list(self._examples.get(vtype, [])),
+            )
+            for vtype in sorted(self._pattern_counts)
+        ]
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+__all__ = [
+    "RUN_DATE",
+    "VERSION",
+    "ConstraintProvenance",
+    "ConstraintTemplate",
+    "ConstraintAdditionResult",
+    "ConstraintAdditionCompiler",
+    "ConstraintAdditionRegistry",
+    "ViolationPattern",
+    "ConstraintAdditionFromMemory",
+]

@@ -102609,3 +102609,22 @@ repository-local publication readers. From an unrelated directory with
 PYTHONPATH unset, a valid private authority and candidate SHALL replay
 successfully. Missing candidates and rehashed claim mutations SHALL exit one
 with their replay errors. Package inference imports SHALL remain lazy.
+
+## REQ-REPORT-8634: Independent installed compatibility qualification
+
+Exp8634 SHALL install the authenticated Exp8633 wheel in private disk-backed
+scratch. Installed and private workers SHALL run outside the checkout without
+PYTHONPATH. Preserve original64 requests, numerical controls, thresholds and
+rejection families. Copy and authenticate the native extension inside that
+environment. Retain module paths, hashes, public exports and real child shards.
+The installed_measurement_ready_score gate establishes deployment compatibility
+only. Preserve historical Exp8609 methods blockage, nulls and quarantines.
+
+### SCENARIO-REPORT-8634-REPLAY
+
+Cold replay SHALL bind primitives to an external immutable authority. Missing
+inputs and self-consistently rehashed claims SHALL fail. Publication SHALL check
+final bytes using original readers, adversarial verification and strict row lint.
+External unchanged failures are blocked. Owned-check failures are disqualified.
+Declare no_model_load, empty MODEL_SPECS and zero language-model calls. Identify
+small-head arithmetic separately. The conductor owns ops and traceability updates.

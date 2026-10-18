@@ -1,0 +1,572 @@
+# Rust/Python Boundary Capability Specification
+
+**Capability:** rust-python-boundary
+**Status:** Draft
+
+## Requirements
+
+### REQ-RUSTPY-6194: Mode-Jump PyO3 Boundary Contract
+
+Carnot MUST expose the Exp6194 fixed mode-jump sampler through PyO3 without
+silent fallback. The boundary SHALL preserve Rust sampler semantics exactly:
+typed construction, energy/proposal queries, one-step, multi-step, state
+snapshot, state restore, serialization, deserialization, deterministic seed
+replay, and explicit invalid-input errors.
+
+Sub-requirements:
+- REQ-RUSTPY-6194-TYPED-CONSTRUCTION: PyO3 SHALL expose typed configuration,
+  state, and core classes for the mode-jump sampler.
+- REQ-RUSTPY-6194-STEP-TRACE: A one-step PyO3 call SHALL return the same trace
+  fields as the Rust kernel: proposal uniform, proposed label, acceptance
+  uniform, current/proposed energies, proposal log probabilities, log
+  acceptance, acceptance probability, accept decision, counters, RNG state, and
+  after-state snapshot.
+- REQ-RUSTPY-6194-MULTI-STEP: A multi-step PyO3 call SHALL return deterministic
+  frequencies, acceptance counts, final state, and sample count for a bounded
+  positive step budget.
+- REQ-RUSTPY-6194-SERIALIZATION: Snapshot/restore and serialization/
+  deserialization SHALL round-trip exactly and reject corrupt labels, counters,
+  schemas, and strings with explicit `ValueError` exceptions.
+- REQ-RUSTPY-6194-NO-FALLBACK: The binding SHALL not silently route to a
+  Python implementation when Rust construction, stepping, or serialization
+  fails.
+- REQ-RUSTPY-6194-NO-HARDWARE: The boundary SHALL not create or imply any FPGA,
+  TSU, CUDA, THRML scaling, latency, power, energy, or speedup claim.
+
+### SCENARIO-RUSTPY-6194-BOUNDARY-PARITY: Python Calls Rust And Replays The Fixture
+
+**Given** the frozen Exp6194 Python transition fixture and Rust/PyO3 classes
+**When** Python constructs the Rust configuration and state, runs exact steps,
+serializes/restores state, and runs a long chain
+**Then** the returned traces and diagnostics match the Python fixture and
+invalid inputs raise explicit errors instead of falling back.
+
+## Implementation Status (REQ-RUSTPY-6194)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-6194 | Planned (`crates/carnot-python/src/mode_jump.rs`, `crates/carnot-python/src/lib.rs`, `python/carnot/_rust_compat.py`) | Planned (`tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py`) |
+
+### REQ-RUSTPY-6550: Safety-Net Router ABI Parity Contract
+
+Carnot MUST expose the compact Safety-Net request and routing decision contract
+through PyO3. The ABI SHALL use only safe structural fields: schema version,
+request ID, candidate hashes, split name, seed, frozen feature values, router
+contract hash, exception-table hashes, and explicit forced fallback flags. It
+SHALL NOT load models, parse natural language, inspect hidden states, use labels,
+or claim release authority.
+
+Sub-requirements:
+- REQ-RUSTPY-6550-SCHEMA: The request and decision SHALL carry an explicit
+  `carnot.safety_net.router_abi.v1` schema. Missing or stale schema values SHALL
+  fail closed to native fallback with an explicit schema error.
+- REQ-RUSTPY-6550-NUMERIC: Integer-like structural feature values SHALL
+  normalize identically across Python and Rust. NaN, infinity, non-integer
+  floats, and out-of-range integers SHALL fail closed to native fallback.
+- REQ-RUSTPY-6550-SERIALIZATION: Python and Rust decisions SHALL serialize to
+  identical canonical JSON bytes for the same input bytes.
+- REQ-RUSTPY-6550-ERRORS: Malformed, null, unsupported, extra-key, forbidden,
+  Unicode-candidate, and version-skew requests SHALL return the same error type
+  and fallback reason in Python and Rust.
+- REQ-RUSTPY-6550-PARITY: Supported requests SHALL match exactly for route,
+  abstain, uncertainty bucket, exception hit, fallback reason, chosen order,
+  request hash, and schema version.
+- REQ-RUSTPY-6550-FALLBACK: Unsupported requests SHALL route to
+  `native_exact_fallback` and keep fallback reachability true.
+- REQ-RUSTPY-6550-ROLLBACK: The Python production adapter rollback path SHALL
+  remain exact and independent of the Rust ABI.
+- REQ-RUSTPY-6550-NO-AUTHORITY: The ABI SHALL not change accepted exact
+  downstream results. Native exact verification remains release authority.
+
+### SCENARIO-RUSTPY-6550-BOUNDARY-PARITY: Python And Rust Replay Identical Safety-Net Bytes
+
+**Given** a frozen set of supported, boundary, exception, malformed, null,
+extreme numeric, version-skew, unknown-feature, field-order, Unicode, and NaN
+Safety-Net request bytes
+**When** Python and PyO3 route each request through the compact ABI
+**Then** supported rows are decision-equal and byte-equal, unsupported rows fail
+closed to fallback with equal error semantics, exact downstream results remain
+unchanged, and Python-only rollback disables routing exactly.
+
+## Implementation Status (REQ-RUSTPY-6550)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-6550 | Implemented (`python/carnot/pipeline/safety_net_abi.py`, `crates/carnot-python/src/safety_net.rs`, `python/carnot/experiment_6550_rust_pyo3_safety_net_parity.py`) | Implemented (`tests/python/test_safety_net_rust_pyo3_parity.py`, `tests/python/test_experiment_6550_rust_pyo3_safety_net_parity.py`) |
+
+### REQ-RUSTPY-6564: Safety-Net Batch Router ABI Throughput Contract
+
+Carnot MUST expose the Safety-Net compact router through a versioned PyO3
+batch boundary. The batch boundary SHALL accept an ordered sequence of the same
+raw request bytes used by the scalar ABI. It SHALL return one decision per
+input in the same order. It SHALL preserve the V567 scalar ABI, schema version,
+canonical decision bytes, fallback reasons, error classes, and exact downstream
+result for every request.
+
+Sub-requirements:
+- REQ-RUSTPY-6564-BATCH-SCHEMA: The batch ABI SHALL use
+  `carnot.safety_net.router_batch_abi.v1` as its batch contract and SHALL route
+  each item through the unchanged scalar `carnot.safety_net.router_abi.v1`
+  request contract.
+- REQ-RUSTPY-6564-BATCH-PARITY: Python scalar, PyO3 scalar, and PyO3 batch
+  decisions SHALL be byte-identical for supported, abstain, fallback,
+  exception, malformed, and unsupported requests.
+- REQ-RUSTPY-6564-BATCH-ERRORS: Malformed items SHALL fail closed per item
+  without dropping later items or changing order.
+- REQ-RUSTPY-6564-NO-SCOPE-CREEP: The batch boundary SHALL NOT move Z3, LLM
+  inference, exact verification, natural-language extraction, or policy
+  authority into Rust.
+
+### SCENARIO-RUSTPY-6564-BATCH-ORDERED-PARITY: Batch Routing Preserves Scalar Bytes
+
+**Given** the Exp6563 frozen production Safety-Net workload request bytes plus
+malformed and unsupported ABI requests
+**When** Python scalar, PyO3 scalar, and PyO3 batch routing process the same
+ordered bytes
+**Then** every decision, error type, fallback reason, request hash, downstream
+result, and output byte string matches exactly, and the batch result order
+matches the request order.
+
+## Implementation Status (REQ-RUSTPY-6564)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-6564 | Planned (`crates/carnot-python/src/safety_net.rs`, `python/carnot/experiment_6564_rust_pyo3_safety_net_nfr01.py`) | Planned (`tests/python/test_safety_net_rust_pyo3_parity.py`, `tests/python/test_experiment_6564_rust_pyo3_safety_net_nfr01.py`) |
+
+### REQ-RUSTPY-6612: Spectral k-Block Ising PyO3 Parity Contract
+
+Carnot MUST expose the reusable bounded block heat-bath kernel from
+`carnot-samplers` through PyO3. Python and Rust SHALL accept the same coupling
+matrix, fields, temperature, block membership, initial state, seed, burn-in,
+and retained count. Both paths SHALL use the documented 64-bit LCG random
+stream and return identical retained spins for matched descriptors.
+
+The boundary SHALL reject non-square, asymmetric, non-finite, empty-block,
+duplicate-spin, missing-spin, invalid-state, nonpositive-temperature, zero
+retention, and count-overflow inputs. It SHALL not silently use a Python
+fallback when the Rust module is absent or rejects an input. The boundary is a
+CPU software interface. It SHALL make no attached-hardware performance claim.
+
+### SCENARIO-RUSTPY-6612-MATCHED-CHAIN-PARITY
+
+**Given** a frozen frustrated Ising fixture and one validated spin partition
+**When** Python and PyO3 run the same seeded descriptor
+**Then** retained samples, final state, RNG state, transitions, and spins
+updated match exactly
+**And** malformed descriptors raise explicit errors without fallback.
+
+## Implementation Status (REQ-RUSTPY-6612)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-6612 | Implemented (`crates/carnot-samplers/src/spectral_k_block.rs`, `crates/carnot-python/src/spectral_k_block.rs`) | Implemented (`crates/carnot-samplers/tests/spectral_k_block.rs`, `tests/python/samplers/test_spectral_k_block.py`) |
+
+### REQ-RUSTPY-7201: Persistent Fixed-Cardinality Sampler Boundary
+
+Carnot MUST expose the shipped fixed-cardinality pair-swap kernel through a
+persistent PyO3 object. The object SHALL accept caller-owned proposal-index and
+uniform tapes for exact replay. It SHALL also run independent seeded Rust
+streams. One batch method SHALL handle both batch size one and larger batches.
+
+The boundary SHALL keep reusable Rust tape storage across calls. It SHALL copy
+all returned data into Python-owned objects. It SHALL reject mismatched batch,
+state, tape, and seed shapes with explicit `ValueError` exceptions. It SHALL
+preserve the sampler law, energy deltas, magnetization, transition counters,
+and restartable seeded state from `carnot-samplers`.
+
+Sub-requirements:
+- REQ-RUSTPY-7201-REPLAY: Explicit proposal and uniform tapes SHALL produce the
+  same accept decisions, states, and energy deltas as the independent Python
+  replay, within `1e-12` for energy deltas.
+- REQ-RUSTPY-7201-BATCH: The replay and seeded methods SHALL make batching
+  explicit and SHALL retain a batch-size-one path.
+- REQ-RUSTPY-7201-BUFFER: Repeated calls SHALL reuse persistent Rust tape
+  capacity. Results SHALL remain valid after caller input buffers are released
+  or changed.
+- REQ-RUSTPY-7201-SERIALIZATION: Seeded state SHALL serialize and deserialize
+  across the language boundary without changing spins, RNG state, or the
+  transition count.
+- REQ-RUSTPY-7201-NO-FALLBACK: Compiled readiness SHALL require the loaded
+  `carnot._rust` extension and SHALL never count a Python fallback.
+- REQ-RUSTPY-7201-NO-SPEED-GATE: The prototype SHALL retain the subprocess
+  baseline and report measured phase costs. It SHALL not create a new 10x gate
+  or make a speed claim.
+
+### SCENARIO-RUSTPY-7201-PERSISTENT-PARITY
+
+**Given** the shipped Exp7189 fixed-cardinality workload, explicit replay tapes,
+independent seeds, and reusable NumPy input buffers
+**When** Python calls one persistent compiled sampler for scalar and batched work
+**Then** every transition matches the Python control, magnetization is preserved,
+state serialization round-trips, invalid shapes fail closed, and phase timings
+retain setup, serialization, process launch, kernel, and parsing costs.
+
+## Implementation Status (REQ-RUSTPY-7201)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7201 | Implemented (`crates/carnot-python/src/fixed_cardinality.rs`, `crates/carnot-python/src/lib.rs`, `python/carnot/experiment_7201_v634_slice_pyo3.py`) | Implemented (`tests/python/test_experiment_7201_v634_slice_pyo3.py`) |
+
+### REQ-RUSTPY-7202: Fixed-Cardinality Boundary Cost And Quality Comparison
+
+Carnot SHALL compare the Python, subprocess Rust, and persistent PyO3 sampler
+boundaries with the same fixed-cardinality pair-swap work. The executable SHALL
+be `scripts/experiments/experiment_7202_v634_slice_cost_quality.py`. The study
+SHALL charge data transfer, synchronization, process launch, serialization, and
+parsing to the arm that causes each cost. Cold initialization SHALL remain
+separate from warm repeated calls.
+
+Sub-requirements:
+- REQ-RUSTPY-7202-ROSTER: Equal-work and 50 ms equal-wall measurements SHALL
+  cover `n` in `{32, 64, 128}`, `k` in `{2, 4}`, batch size in `{1, 16, 64}`,
+  ten fixed seeds, and all three arms. Equal-work chains SHALL use 160
+  proposals. Arm order SHALL alternate by independent unit. Equal-wall rows
+  SHALL retain measured deadline overshoot.
+- REQ-RUSTPY-7202-LAW: Independent exact laws at `n=8` and `n=12`, with `k=2`,
+  SHALL precede a speed claim. Larger cells SHALL report energy and occupation
+  ESS, declared lag correlations, and sector violations. They SHALL make no
+  exact-law claim. A constant-chain control SHALL reject invented ESS. A biased
+  transition control SHALL reject wrong-target speed.
+- REQ-RUSTPY-7202-QUALITY: A separate quality panel SHALL run 1,024 burn-in and
+  8,192 retained proposals for every larger size, cardinality, seed, and arm.
+  Each required row SHALL retain at least 4,096 draws. Energy ESS and one
+  occupation ESS SHALL each be at least 100 per seed and cell. Mean energy
+  SHALL agree within a preregistered standardized tolerance of `0.02`. The
+  paired ESS-rate ratio confidence-interval lower bound SHALL be at least
+  `0.90`. Any missing quality condition SHALL set
+  `sample_quality_sufficient=false` and `boundary_value_score=0`.
+- REQ-RUSTPY-7202-PRIMARY: The fixed primary deployment cell SHALL be `n=64`,
+  `k=4`, batch size one, under equal work. `boundary_value_score` SHALL equal
+  one only after replay parity, zero sector violations, a paired persistent-to-
+  subprocess latency speedup CI95 lower bound above one, and sufficient sample
+  quality. Python speedup SHALL be separate. Batch amortization SHALL not count
+  as single-query speed.
+- REQ-RUSTPY-7202-NFR: NFR-01 SHALL remain a 10x threshold.
+  `nfr_01_10x_met` SHALL report that threshold separately from the local
+  boundary gate. A complete null SHALL set `slice_comparison_complete_score=1`
+  when every required measurement and control is present.
+- REQ-RUSTPY-7202-PREFLIGHT: Before computation, the executable SHALL print a
+  flushed progress line and record source bytes, hashes, tools, writable output
+  directories, the exact roadmap gate, and upstream quarantine flags. It SHALL
+  reject a quarantined or failed upstream artifact before consuming its gate.
+  An external failure SHALL produce one terminal blocked artifact with an exact
+  `gate_check_summary`. Checkpoints SHALL use `results/checkpoints/` only.
+- REQ-RUSTPY-7202-ARTIFACT: The executable SHALL atomically write
+  `results/experiment_7202_v634_slice_cost_quality.json`. The artifact SHALL
+  retain all required field principles, raw throughput rows, distribution rows,
+  quality rows, controls, budgets, source hashes, real duration, verdict, and a
+  reproducibility checksum. It SHALL set `MODEL_SPECS=[]` and
+  `model_invoked=false`. CPU execution SHALL use the
+  `cpu_exact_solver_or_simulator` substrate class.
+
+### SCENARIO-RUSTPY-7202-MATCHED-BOUNDARIES
+
+**Given** the shipped Python, subprocess Rust, and persistent PyO3 samplers
+**When** all frozen cells run equal-work and equal-wall protocols
+**Then** every raw row retains unit, arm, seed, latency, work, error, abstention,
+sector, lag, and ESS evidence
+**And** cold setup is not hidden in warm repeated-call latency
+**And** batch results do not replace the primary batch-size-one result.
+
+### SCENARIO-RUSTPY-7202-QUALITY-GATES-SPEED
+
+**Given** exact small-slice laws, long independent quality panels, and negative
+controls
+**When** the validator recomputes parity, quality, boundary value, NFR-01, row
+coverage, and the checksum
+**Then** insufficient ESS, a biased target, a constant trace, deleted rows,
+quarantined input, or an inflated speed claim fails closed
+**And** a fully measured null remains a complete terminal finding.
+
+## Implementation Status (REQ-RUSTPY-7202)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7202 and SCENARIO-RUSTPY-7202-* | Implemented (`python/carnot/experiment_7202_v634_slice_cost_quality.py`, `scripts/experiments/experiment_7202_v634_slice_cost_quality.py`, `results/experiment_7202_v634_slice_cost_quality.json`) | Implemented (`tests/python/test_experiment_7202_v634_slice_cost_quality.py`; frozen roster, exact law, controls, real boundaries, quality insufficiency, gate recomputation, artifact attacks, and blocked paths) |
+
+### REQ-RUSTPY-7230: Persistent Packed-Belief PyO3 Boundary
+
+Carnot SHALL expose the REQ-CL-7230 packed survivor and vote core through the
+existing `carnot-python` PyO3 crate. The boundary SHALL use a persistent native
+object. Query and update methods SHALL consume contiguous NumPy arrays in
+batches. The implementation SHALL stay scoped to packed state operations and
+SHALL not port the experiment harness.
+
+The executable SHALL build only `carnot-python` in a task-specific target. It
+SHALL bind PyO3 to the executing interpreter with the Exp7217 recipe. It SHALL
+load the copied extension by its complete interpreter suffix. The identity
+receipt SHALL include the interpreter, Python ABI, build flags, loaded path,
+binary hash, linker view, and native class and method names. A Python fallback
+or an unverified stale binary SHALL not count as native evidence.
+
+After separated warmup, the study SHALL measure batches one, 32, and 256 on
+identical sealed operation traces. Each cell SHALL have ten paired repetitions.
+A fixed seed SHALL randomize arm order. End-to-end time SHALL include input
+marshaling, queries, update, vote refresh, commit or checkpoint, and output
+consumption. Native kernel time MAY appear only as a secondary metric. The
+measurement SHALL stop after 300 seconds instead of adding repetitions.
+
+`native_belief_ready_score` SHALL equal one only after zero parity mismatch and
+cross-process restore. `native_cost_value_score` SHALL equal one only when
+parity error is zero and every batch cell's paired speed-ratio lower CI95 is
+above one. `nfr_01_10x_met` SHALL separately require every lower bound to be at
+least ten. The result SHALL preserve the prior failed sampler NFR-01 history.
+It SHALL state that performance alone does not inherit scientific learning
+value.
+
+The task SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, both substrate
+fields to `cpu_exact_solver_or_simulator`, and `execution_venue=host` after
+native execution. A missing unchanged external prerequisite SHALL instead use
+`blocked_no_run`, a row-free blocked artifact, and an exact failed gate row.
+The terminal artifact SHALL contain all Exp7230 required fields, full parity
+and cost rows, sample counts, source hashes, fixed seeds, measured duration,
+and a reproducibility checksum. It SHALL be written atomically only after cold
+validation.
+
+### SCENARIO-RUSTPY-7230-BINDING: The Selected Binary Is Actual Evidence
+
+**Given** the executing interpreter and changed packed-belief Rust source
+**When** the task-specific build and fresh import complete
+**Then** the receipt identifies the exact loaded extension and its hash
+**And** the native class executes without a Python fallback.
+
+### SCENARIO-RUSTPY-7230-COST: Paired End-To-End Cost Gates Value
+
+**Given** identical sealed traces for batches one, 32, and 256
+**When** both arms run ten times in fixed randomized order after warmup
+**Then** every boundary cost and full denominator remains in `cost_rows`
+**And** speed value and NFR-01 derive only from paired lower confidence bounds.
+
+## Implementation Status (REQ-RUSTPY-7230)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7230 and SCENARIO-RUSTPY-7230-* | Planned: persistent packed-belief Rust core, PyO3 batch boundary, interpreter-bound build, and measured artifact. | Planned: RED-first compiled identity, exhaustive parity, fixed sequence, cross-process restore, cost-gate, validator, and command tests. |
+
+### REQ-RUSTPY-7243: Existing Packed Kernel In Archive Workload
+
+Carnot SHALL reuse the shipped `RustPackedBeliefController` for Exp7243. The
+archive policy SHALL stay in the same Python controller for both measurement
+arms. Only active packed prediction, energy, update, and state conversion MAY
+cross the PyO3 boundary. A fallback object that imitates the native module
+SHALL fail provenance validation.
+
+The interpreter-bound build SHALL use the current interpreter and the Exp7217
+recipe. The receipt SHALL bind the command, Python ABI, module path, extension
+origin, binary hash, linker view, and native methods. Fresh-process restore and
+delayed-update continuation SHALL load those same bytes.
+
+The paired benchmark SHALL include every host and binding operation needed by
+one archive-controller event. It SHALL retain per-component timing, total
+timing, arm order, batch size, archive capacity, block number, trace hash, and
+state hash. The native kernel timer SHALL be secondary and SHALL not replace
+total event cost.
+
+### SCENARIO-RUSTPY-7243-BINDING: Native Identity Is Executed Evidence
+
+**Given** the current interpreter and the existing packed-belief source
+**When** the task-specific extension loads in the parent and fresh process
+**Then** both receipts identify the exact binary and public native API
+**And** no Python fallback can satisfy native readiness.
+
+### SCENARIO-RUSTPY-7243-PAIRED-COST: Full Boundary Cost Sets The Gate
+
+**Given** matched archive traces and interleaved arm order
+**When** all 30 paired blocks run for each capacity and batch cell
+**Then** total event cost includes dispatch through restore
+**And** batch-one lower CI95 alone gates native archive cost value.
+
+## Implementation Status (REQ-RUSTPY-7243)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7243 and SCENARIO-RUSTPY-7243-* | Implemented: Exp7243 reuses `RustPackedBeliefController` for active packed operations inside the unchanged Python archive policy and binds parent/fresh-process receipts to the selected extension bytes. | `tests/python/test_experiment_7243_v637_native_memory.py` exercises compiled identity, no-fallback parity, fresh continuation, full-boundary paired costs, cold validation, and native-install failure cleanup with 754/754 scoped statements. |
+
+### REQ-RUSTPY-7256: Persistent FIFO Archive Controller Boundary
+
+Carnot SHALL expose an Exp7256 PyO3 controller that owns the complete Exp7240
+FIFO archive state across calls. The Rust object SHALL keep active survivor
+masks, archive masks, the released-witness window, nomination receipts,
+release identities, version, and rollback parent. Typed prediction, energy,
+query-selection, and release operations SHALL not reconstruct a Python active
+controller or parse a JSON snapshot on their hot path.
+
+The controller SHALL expose validated snapshot and restore operations. It
+SHALL reject unknown or malformed fields, invalid masks, invalid archive
+hashes, duplicate releases, stale parents, corrupt durable parents, and stale
+rollback. A rejected operation SHALL preserve the prior live bytes. The Python
+orchestrator MAY perform canonical file writes, but it SHALL admit a new native
+state only after the write succeeds.
+
+The extension SHALL build in an isolated target and load path bound to the
+running virtual-environment interpreter. The receipt SHALL include the
+compiler, binary hash, actual import path, Python ABI, build command, and
+native method inventory. The shared installed extension SHALL remain unchanged.
+
+### SCENARIO-RUSTPY-7256-TYPED: Typed Calls Keep State Native
+
+**Given** one restored Exp7256 native controller
+**When** Python sends typed event fields for prediction, query, and release
+**Then** the same Rust object supplies each result and retains the next state
+**And** its counters report zero hot-path JSON parses and active reconstructions.
+
+### SCENARIO-RUSTPY-7256-SNAPSHOT: Snapshot Validation Is Transactional
+
+**Given** valid native state and its exact parent hash
+**When** snapshot restore, commit, durable write, or rollback is attempted
+**Then** only a fully validated child becomes live
+**And** every rejected or interrupted operation preserves the exact parent.
+
+### SCENARIO-RUSTPY-7256-RESTART: Isolated Bytes Continue In A New Process
+
+**Given** the selected isolated extension and one validated snapshot
+**When** a fresh interpreter imports those exact bytes and processes later events
+**Then** state, decisions, archive selections, and lineage match the first process
+**And** the child receipt names the same binary hash.
+
+## Implementation Status (REQ-RUSTPY-7256)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7256 and SCENARIO-RUSTPY-7256-* | Implemented: persistent native FIFO controller with typed operations, transactional snapshots, counters, and isolated interpreter binding. | Verified: RED-first native API, parity, malformed state, stale transaction, interrupted write, fresh-process, and conversion-counter tests. |
+
+### REQ-RUSTPY-7257: Complete Native Archive Event Cost
+
+Carnot SHALL compare the shipped Python archive controller, the former native
+active-state wrapper, and the persistent Exp7256 native controller. The fixed
+roster SHALL use archive capacities 1 and 4, batch sizes 1, 16, and 128, and 30
+interleaved paired blocks per cell. Every arm SHALL use the same trace, seed,
+CPU affinity, thread limits, storage location, and durable commit cadence.
+
+Each timed block SHALL include lookup, query selection, delayed release and
+update, validation, snapshot serialization, a flushed file replacement, and
+restore. Rows SHALL retain each component, the complete block and event cost,
+the residual cost, decision and state hashes, durability observations, errors,
+abstentions, and censoring. Warmup SHALL remain outside steady-state rows.
+Build, import, initial state transfer, and break-even costs SHALL remain in
+separate amortization rows.
+
+The result SHALL compute paired 95 percent bootstrap intervals from the 30
+blocks in each arm comparison. `native_event_cost_value_score` SHALL equal one
+only when the Python-over-persistent-native lower interval is above one at
+batch size one for both capacities, exact three-arm parity has no failure, and
+all arms use equal durability. Larger batch results SHALL remain separate.
+NFR-01 SHALL require a measured 10x lower bound. The program's hardware
+aspiration SHALL require a measured 100x lower bound. A repeated cost null
+SHALL retire this boundary optimization only.
+
+The executable SHALL authenticate the complete Exp7256 artifact, its
+`native_controller_ready_score`, its checksum, its quarantine state, and the
+exact imported binary before measurement. An absent or changed external
+prerequisite SHALL produce a row-free `blocked_*` terminal artifact. The task
+SHALL invoke no model and SHALL use the CPU exact-solver substrate literals.
+The terminal artifact SHALL retain all 540 cost rows and every required
+provenance field. It SHALL pass cold validation before an atomic write.
+
+### SCENARIO-RUSTPY-7257-COST: Full Events Use Equal Durability
+
+**Given** one sealed trace and one isolated native binary
+**When** all three arms run one interleaved timing block
+**Then** each arm performs the same validation, serialization, fsync, rename,
+and restore policy
+**And** decision and state hashes expose any omitted operation.
+
+### SCENARIO-RUSTPY-7257-GATE: Interactive Cells Gate Native Value
+
+**Given** 30 paired blocks for every frozen capacity and batch cell
+**When** the independent reducer computes Python-over-persistent-native ratios
+**Then** both capacity-specific batch-one lower CI95 values must exceed one
+**And** batch 16 and batch 128 results cannot replace interactive evidence.
+
+### SCENARIO-RUSTPY-7257-RESTART: Timed Bytes Replay In A Fresh Process
+
+**Given** the extension and snapshot bytes used by the cost benchmark
+**When** a fresh interpreter imports those exact extension bytes and restores
+the snapshot from a private path
+**Then** its next decisions and state match the Python reference
+**And** its receipt binds the interpreter, import path, and binary hash.
+
+### SCENARIO-RUSTPY-7257-TERMINAL: Oracle And Cost Claims Stay Separate
+
+**Given** exact-oracle parity and an independently reduced cost result
+**When** the terminal verdict is classified
+**Then** oracle use forbids the `positive` class
+**And** a failed scientific cost gate requires `null`, not a success class.
+
+## Implementation Status (REQ-RUSTPY-7257)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7257 and SCENARIO-RUSTPY-7257-* | Planned: thin Exp7257 runner over the shipped Exp7243 and Exp7256 controllers. | Planned: RED-first roster, equal durability, reducer, restart, blocked artifact, validator, and entrypoint tests. |
+
+### REQ-RUSTPY-7270: Durable Archive Event Cost Profile
+
+Carnot SHALL diagnose the failed Exp7257 capacity-four interactive cost gate
+from the saved raw rows before it proposes another native optimization. The
+cold reducer SHALL retain every capacity, batch, arm, and block. It SHALL
+report component fractions, unaccounted time, censored blocks, arm order,
+storage device, and p50/p95 durations. Matched seed and block pairs SHALL
+recompute the existing arithmetic mean of ratios as the primary diagnostic.
+The ratio of total time and paired mean log-ratio SHALL be explicit secondary
+diagnostics. Durable outliers SHALL remain in all estimates.
+
+When the saved rows do not separate durability operations, the experiment MAY
+run at most twelve fixed capacity-four, batch-one blocks with the shipped
+Exp7256 persistent controller. Each row SHALL split snapshot construction,
+parent reload, encoding, data write, file sync, rename, directory sync, and
+restore. The split SHALL preserve the Exp7257 durability guarantee, include
+instrumentation overhead, stop after 300 seconds, and make no model call.
+Parity and durable-byte checks SHALL fail closed.
+
+The profile SHALL count comparisons, bit operations, and transferred bytes.
+The counts are accounting measures, not KAN evidence. Its acceleration
+envelope SHALL hold validation and synchronization costs fixed and report the
+best possible speedup plus the replaceable speed needed for 10x and 100x. A
+delta-log prototype is warranted only when replaceable full-snapshot
+construction, parent reload, encoding, and metadata work are at least 50
+percent of matched capacity-four event time and a conservative model that
+includes synchronization, compaction, and worst-case replay permits at least
+1.5x. Sync dominance SHALL keep the warrant score at zero.
+
+The executable SHALL be a thin wrapper around a reusable module. It SHALL
+authenticate the Exp7257 and Exp7256 artifacts, their checksums, exact hashes,
+quarantine state, the driving requirement, and owned output paths before work.
+An absent, changed, or quarantined external prerequisite SHALL yield one
+row-free terminal blocked artifact with an exact gate summary. Provisional
+work SHALL use `results/checkpoints/`. Raw evidence SHALL use `results/raw/`.
+Only a cold-validated complete or blocked candidate MAY move atomically to
+`results/experiment_7270_v639_durable_profile.json`.
+
+### SCENARIO-RUSTPY-7270-COLD-REDUCTION: Saved Blocks Determine The Headline
+
+**Given** the complete Exp7257 raw block rows and their authenticated artifact
+**When** an independent reducer groups every capacity, batch, arm, seed, and block
+**Then** no durable outlier is removed and every component sum is checked
+**And** the primary and secondary paired ratio diagnostics are named separately.
+
+### SCENARIO-RUSTPY-7270-BOUNDED-REPLAY: Durability Operations Stay Visible
+
+**Given** the shipped Exp7256 controller and capacity-four batch-one fixture
+**When** at most twelve fixed blocks run for at most 300 seconds
+**Then** snapshot, reload, encoding, write, both syncs, rename, and restore are timed
+**And** final bytes, state hash, decisions, and the durability receipt retain parity.
+
+### SCENARIO-RUSTPY-7270-BOUND: Fixed Costs Limit Acceleration
+
+**Given** the independently reduced and instrumented component rows
+**When** validation and sync costs are held fixed in an Amdahl calculation
+**Then** 10x and 100x feasibility and required replaceable speedups are explicit
+**And** journal warrant remains zero unless both frozen cost conditions pass.
+
+### SCENARIO-RUSTPY-7270-E2E: Raw Evidence Reaches One Honest Finding
+
+**Given** authenticated saved timings and one bounded instrumented replay
+**When** component sums, parity, durability, acceleration, and replacement costs are checked
+**Then** the artifact declares the measured bottleneck and feasible upper bound
+**And** it makes no device-speed claim or claim for the retired ownership optimization.
+
+## Implementation Status (REQ-RUSTPY-7270)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7270 and SCENARIO-RUSTPY-7270-* | Implemented: cold raw-row reducer and bounded durable operation profiler over shipped Exp7256/7257 code. | Verified: RED-first authentication, reduction, outlier retention, bounded replay, Amdahl, warrant, blocked path, cold validator, and thin-entrypoint tests. |

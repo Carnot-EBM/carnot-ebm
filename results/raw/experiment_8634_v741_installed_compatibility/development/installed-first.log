@@ -1,0 +1,37 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_actual_wheel_and_public_contracts ____________________
+
+work = {'bundle': {'extension': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8545_v734_nine_i... 0\n           ^^^^^^^^^^^^^\nAttributeError: \'VerificationResult\' object has no attribute \'energy\'\n', ...}], ...}
+
+    def test_actual_wheel_and_public_contracts(work):
+        """REQ-VERIFY-8634: wheel imports and numerical results retain original contracts."""
+>       assert not work["gate_check_summary"]
+E       AssertionError: assert not [{'check': 'installed_compatibility_inputs_or_execution', 'expected': 1, 'field': 'installed_prototype_ready_score_and...rgy == 0\n           ^^^^^^^^^^^^^\nAttributeError: \'VerificationResult\' object has no attribute \'energy\'\n', ...}]
+
+tests/python/test_installed_compatibility_8634.py:24: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8205] phase=8634_preconditions_no_model_load_MODEL_SPECS=[]_current_language_model_calls=0 completed=0 pending=0
+[exp8205] phase=8634_inputs_authenticated completed=0 pending=0
+[exp8205] phase=before_subprocess_private_venv completed=0 pending=1
+[exp8205] phase=after_subprocess_private_venv completed=1 pending=0
+[exp8205] phase=before_subprocess_install_exact_wheel completed=0 pending=1
+[exp8205] phase=after_subprocess_install_exact_wheel completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_exports completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_exports completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_absent completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_absent completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_errors completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_errors completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_public completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_public completed=1 pending=0
+[exp8205] phase=8634_measurement_complete completed=0 pending=0
+=============================== warnings summary ===============================
+tests/python/test_installed_compatibility_8634.py::test_actual_wheel_and_public_contracts
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_installed_compatibility_8634.py::test_actual_wheel_and_public_contracts
+1 failed, 1 warning in 27.01s

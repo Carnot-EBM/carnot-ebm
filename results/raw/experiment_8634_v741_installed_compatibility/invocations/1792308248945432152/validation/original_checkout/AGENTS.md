@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md

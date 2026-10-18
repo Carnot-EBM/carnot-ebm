@@ -1,0 +1,145 @@
+.......F.F............                                                   [100%]
+=================================== FAILURES ===================================
+________________________ test_artifact_and_cold_replay _________________________
+
+work = {'bundle': {'extension': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8545_v734_nine_i...ccead2b6975a80a88ced7756b8c14890'}], 'passed': True, 'prefix': '/var/tmp/carnot-8634-dqrentxa/environment', ...}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T065715-921493-1a69b036/test_artifact_and_cold_replay0')
+
+    def test_artifact_and_cold_replay(work, tmp_path):
+        """SCENARIO-REPORT-8634-REPLAY: external authority rejects rehashed claim edits."""
+        from carnot.reporting import installed_runner_8634 as r
+    
+        authority_path = tmp_path / "authority.json"
+        receipts = [dict(name=n, passed=True) for n in r.REQUIRED]
+        frozen = dict(
+            work, validation_receipts=receipts, original_node_union={}, child_shard_manifest=[]
+        )
+        atomic_json(authority_path, frozen)
+        authority = e.reference(authority_path)
+        value = r.artifact(authority)
+        output = tmp_path / (e.NAME + ".json")
+        atomic_json(output, value)
+        r.replay(output, authority)
+        assert value["installed_measurement_ready_score"] == 1
+        assert value["verdict_class"] == "circular_positive"
+        changed = dict(value, completed_count=value["completed_count"] + 1)
+        changed["reproducibility_checksum"] = canonical_hash(changed)
+        atomic_json(output, changed)
+        with pytest.raises(ValueError, match="immutable_reduction_drift"):
+            r.replay(output, authority)
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        atomic_json(output, value)
+        for candidate, code in [(output, 0), (tmp_path / "missing", 1)]:
+            process = subprocess.run(
+                [
+                    sys.executable,
+                    "-u",
+                    str(e.ROOT / e.CLI),
+                    "--cold-replay",
+                    str(candidate),
+                    "--authority",
+                    authority["path"],
+                    authority["sha256"],
+                ],
+                cwd=tmp_path,
+                env=env,
+                capture_output=True,
+                timeout=60,
+            )
+>           assert process.returncode == code, process.stderr
+E           AssertionError: b'[8634] error=immutable_reduction_drift
+E             '
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...L_SPECS=[]_current_language_model_calls=0 completed=0 pending=0\n', stderr=b'[8634] error=immutable_reduction_drift\n').returncode
+
+tests/python/test_installed_compatibility_8634.py:112: AssertionError
+_____________________ test_private_publication_and_reader ______________________
+
+work = {'bundle': {'extension': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8545_v734_nine_i...ccead2b6975a80a88ced7756b8c14890'}], 'passed': True, 'prefix': '/var/tmp/carnot-8634-dqrentxa/environment', ...}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T065715-921493-1a69b036/test_private_publication_and_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa3b7005e80>
+
+    def test_private_publication_and_reader(work, tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8634-REPLAY: actual private publication runs cold and hostile readers."""
+        from carnot.reporting import installed_runner_8634 as r
+        from carnot.reporting import installed_validation_8634 as v
+    
+        def measured(raw, *args):
+            raw.mkdir(parents=True)
+            return dict(deepcopy(work), raw=str(raw))
+    
+        def validated(value, raw):
+            value.update(original_node_union={}, child_shard_manifest=[])
+            return [dict(name=n, passed=True) for n in r.REQUIRED]
+    
+        monkeypatch.setattr(e, "measure", measured)
+        monkeypatch.setattr(v, "validate", validated)
+        output = tmp_path / (e.NAME + ".json")
+>       assert r.run(output, "20261018", e.ROOT) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_compatibility_8634.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_runner_8634.py:249: in run
+    result = publish_primary(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T065715-921493-1a69b036/test_private_publication_and_r0/experiment_8634_v741_installed_compatibility.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': [{'name': 'e2e018', 'passed': True}, {'name': 'e2e021', 'passed': True}, {'nam...27070582424/authority.json', 'sha256': 'sha256:76e77cf21f2b991d2cb3a112bc2265865c1658963a301fe0eb543005d7e942b2'}, ...}
+validator = <function run.<locals>.<lambda> at 0x7fa43d596160>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_rehashed_tamper completed=0 pending=1
+[exp8205] phase=after_subprocess_rehashed_tamper completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_installed_compatibility_8634.py::test_artifact_and_cold_replay
+FAILED tests/python/test_installed_compatibility_8634.py::test_private_publication_and_reader
+2 failed, 20 passed, 1 warning in 88.55s (0:01:28)

@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+"""REQ-REPORT-8348: direct entry works independently of the caller's directory."""
+
+import os
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+os.environ["PYTHONUNBUFFERED"] = "1"
+sys.path[:0] = [str(ROOT / "python"), str(ROOT)]
+
+from carnot.reporting.continuous_local_execution_8348 import main  # noqa: E402
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,36 @@
+[8634] start retained-evidence qualification
+[exp8205] phase=8634_disjoint_tests completed=0 pending=16
+[exp8205] phase=8634_disjoint_tests completed=1 pending=15
+[exp8205] phase=8634_disjoint_tests completed=2 pending=14
+[exp8205] phase=8634_disjoint_tests completed=3 pending=13
+[exp8205] phase=8634_disjoint_tests completed=4 pending=12
+[exp8205] phase=8634_disjoint_tests completed=5 pending=11
+[exp8205] phase=8634_disjoint_tests completed=6 pending=10
+[exp8205] phase=8634_disjoint_tests completed=7 pending=9
+[exp8205] phase=8634_disjoint_tests completed=8 pending=8
+[exp8205] phase=8634_disjoint_tests completed=9 pending=7
+[exp8205] phase=before_subprocess_nodes_9 completed=0 pending=1
+[exp8205] phase=after_subprocess_nodes_9 completed=1 pending=0
+[exp8205] phase=8634_disjoint_tests completed=10 pending=6
+[exp8205] phase=8634_disjoint_tests completed=11 pending=5
+[exp8205] phase=8634_disjoint_tests completed=12 pending=4
+[exp8205] phase=8634_disjoint_tests completed=13 pending=3
+[exp8205] phase=8634_disjoint_tests completed=14 pending=2
+[exp8205] phase=8634_disjoint_tests completed=15 pending=1
+[exp8205] phase=before_subprocess_coverage_combine completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_combine completed=1 pending=0
+[exp8205] phase=before_subprocess_coverage_json completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_json completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_check completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_check completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_format completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_format completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_mypy completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_mypy completed=1 pending=0
+[exp8205] phase=before_subprocess_spec_coverage completed=0 pending=1
+[exp8205] phase=after_subprocess_spec_coverage completed=1 pending=0
+Traceback (most recent call last):
+  File "/var/tmp/carnot-8634-requalify.py", line 50, in <module>
+    assert value['installed_measurement_ready_score'] == 1, [(x['name'], x['passed']) for x in work['validation_receipts'] if not x['passed']]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [('owned_coverage', False)]

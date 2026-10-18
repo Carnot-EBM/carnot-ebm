@@ -1,0 +1,253 @@
+"""
+Milestone .154 retrospective generator.
+
+Scans experiment artifacts from exp1969-exp1980 (the .154 task range, excluding the
+retro itself at exp1981) and produces a structured retro JSON using the
+`carnot.milestone_retro.v1` schema.
+
+WHY: The conductor runs this at milestone boundary to aggregate verdicts, surface
+gate-contract gaps, and produce actionable recommendations for the next planner run.
+The .154 milestone focused on Energy-Based Continuous Reasoning (DeepSaDe, EORM, EBT)
+and Neural Constraint Solvers (RUN-CSP, DOMINO, COLD decoding).
+"""
+
+import json
+import glob
+import os
+from datetime import datetime, timezone
+
+# Experiment ID range for milestone .154 (retro exp1981 is not counted against itself)
+_MILESTONE_154_START = 1969
+_MILESTONE_154_END = 1980
+
+
+def _classify_artifact(data: dict) -> str:
+    """Return 'completed', 'blocked', or 'failed' for a single artifact dict.
+
+    WHY: Multiple fields can indicate status depending on which agent wrote the artifact.
+    We check in priority order: `honest_verdict` > `status` > `result`.
+    Blocked verdicts (gate-check failures or rerun-discipline blocks) are distinguished
+    from hard failures so planners know whether to retry with fixes vs retire the task.
+    """
+    combined = ""
+    for key in ("honest_verdict", "status", "result"):
+        val = data.get(key)
+        if val:
+            combined += " " + str(val).lower()
+    combined = combined.strip()
+
+    if "blocked" in combined:
+        return "blocked"
+    if "fail" in combined or "error" in combined:
+        return "failed"
+    return "completed"
+
+
+def generate_retro(output_path: str, results_dir: str = "results") -> dict:
+    """Generate the milestone .154 retrospective artifact and write it to `output_path`.
+
+    Scans experiment JSON files in `results_dir` whose numeric ID falls in
+    [_MILESTONE_154_START, _MILESTONE_154_END], classifies each as completed /
+    blocked / failed, collects honest_verdicts, and writes a `carnot.milestone_retro.v1`
+    artifact.
+
+    Returns the artifact dict for testing without requiring disk I/O assertions.
+
+    WHY return the dict: tests can validate fields without needing to parse the output
+    file, keeping the test isolated from path concerns.
+    """
+    pattern = os.path.join(results_dir, "experiment_*.json")
+    all_files = glob.glob(pattern)
+
+    valid_files: list[tuple[int, str]] = []
+    for f in all_files:
+        basename = os.path.basename(f)
+        parts = basename.split("_")
+        if len(parts) > 1 and parts[1].isdigit():
+            exp_num = int(parts[1])
+            if _MILESTONE_154_START <= exp_num <= _MILESTONE_154_END:
+                valid_files.append((exp_num, f))
+
+    valid_files.sort(key=lambda t: t[0])
+
+    completed_ids: list[int] = []
+    blocked_ids: list[int] = []
+    failed_ids: list[int] = []
+    honest_verdicts: dict[str, str] = {}
+
+    for exp_num, filepath in valid_files:
+        try:
+            with open(filepath, "r") as fh:
+                data = json.load(fh)
+        except (OSError, json.JSONDecodeError):
+            failed_ids.append(exp_num)
+            honest_verdicts[f"exp{exp_num}"] = "UNREADABLE"
+            continue
+
+        classification = _classify_artifact(data)
+        verdict = data.get("honest_verdict") or data.get("status") or "unspecified"
+
+        if classification == "completed":
+            completed_ids.append(exp_num)
+        elif classification == "blocked":
+            blocked_ids.append(exp_num)
+        else:
+            failed_ids.append(exp_num)
+
+        honest_verdicts[f"exp{exp_num}"] = str(verdict)
+
+    # Missing experiments: tasks in the roadmap that produced no artifact
+    # exp1971 (gated on exp1969 which was blocked) and exp1979 (gated on exp1977)
+    missing_exp_ids = [1971, 1979]
+    for mid in missing_exp_ids:
+        if mid not in completed_ids and mid not in blocked_ids and mid not in failed_ids:
+            failed_ids.append(mid)
+            honest_verdicts[f"exp{mid}"] = "MISSING"
+
+    notable_successes = [
+        (
+            "DOMINO fast constrained generation (exp1970): exact_acceptance_equivalence=True "
+            "vs legacy trie path; non-invasive subword-aligned masking ships."
+        ),
+        (
+            "RUN-CSP unsupervised neural solver (exp1972): satisfaction_rate=1.0 on both "
+            "40-variable and 1000-variable planted CSPs; generalizes 25x without GPU."
+        ),
+        (
+            "DeepSaDe hybrid MaxSMT guarantees (exp1973): zero_false_accept_strictly_guaranteed=True, "
+            "training overhead only 15% above SGD baseline."
+        ),
+        (
+            "EORM CoT verification layer (exp1975): accuracy lifts 0.65 -> 0.82 on logic-heavy "
+            "subsets; constraint_preservation_rate=0.98."
+        ),
+        (
+            "EBT compatibility prototype (exp1976): energy_descent_observed=True; "
+            "scalar compatibility energy architecture prototype operational."
+        ),
+    ]
+
+    bottlenecks = [
+        (
+            "Gate-contract gap REPEATED from .153: exp1974 (RUN-CSP Hardware Accounting) "
+            "blocked because exp1972 artifact lacks explicit `success: true` boolean. "
+            "exp1977 (Tri-SOTA EORM/EBT) blocked because exp1975 lacks `success: true`. "
+            "This was flagged MANDATORY in the .153 retro and was not fixed."
+        ),
+        (
+            "COLD Decoding (exp1969) blocked by rerun-discipline: exp533-cold-decoding-energy-guidance "
+            "prior failure not acknowledged in `prior_failures` field. Block is correct; "
+            "re-proposal MUST include prior_failures entry for exp533."
+        ),
+        (
+            "DeepSaDe Continuous Learning (exp1978) blocked by rerun-discipline: 3 prior "
+            "self-learning failures (exp1795, exp1807, exp1963) not acknowledged. Block correct; "
+            "re-proposal must include prior_failures entries for all three."
+        ),
+        (
+            "Tri-SOTA COLD vs DOMINO benchmark (exp1971) never executed because exp1969 was blocked."
+        ),
+        (
+            "Tri-SOTA E2E Integration v9 (exp1979) never executed because exp1977 was blocked "
+            "by the gate-contract gap on exp1975."
+        ),
+    ]
+
+    # The pre-retro audit (exp1980) is counted as "ran" if its artifact exists, even when the
+    # audit verdict is "Audit failed" (which contains the word "failed" and gets classified as
+    # failed by _classify_artifact). Running and finding violations is a successful run.
+    pre_retro_ran = 1980 in completed_ids or 1980 in failed_ids
+
+    criteria_results = {
+        "domino_non_invasive_shipped": 1970 in completed_ids,
+        "run_csp_prototype_shipped": 1972 in completed_ids,
+        "deepsade_zero_false_accept_guaranteed": 1973 in completed_ids,
+        "eorm_accuracy_lift_demonstrated": 1975 in completed_ids,
+        "ebt_prototype_shipped": 1976 in completed_ids,
+        "cold_decoding_blocked_correctly_by_discipline": 1969 in blocked_ids,
+        "deepsade_continuous_blocked_correctly_by_discipline": 1978 in blocked_ids,
+        "pre_retro_audit_ran": pre_retro_ran,
+        "gate_contract_gap_repeated_surfaced": True,
+    }
+
+    criteria_met = sum(1 for v in criteria_results.values() if v)
+    criteria_total = len(criteria_results)
+
+    recommendations = [
+        (
+            "MANDATORY .155: Add explicit `success: true` boolean field to EVERY upstream "
+            "artifact that a downstream task gates on. The .153 retro issued this as MANDATORY "
+            "and it was still not done in .154. Specifically fix exp1972 (RUN-CSP) and exp1975 "
+            "(EORM) artifacts retroactively, then re-gate exp1974 and exp1977."
+        ),
+        (
+            "MANDATORY .155: Re-propose COLD Decoding (exp1969) with `prior_failures` entry "
+            "for exp533-cold-decoding-energy-guidance. Root cause: task scope matches prior "
+            "failure and prior_failures field was absent."
+        ),
+        (
+            "MANDATORY .155: Re-propose DeepSaDe Continuous Learning (exp1978) with "
+            "`prior_failures` entries for exp1795, exp1807, and exp1963. Three distinct "
+            "self-learning lineage failures must be named and root-caused before re-run."
+        ),
+        (
+            "MANDATORY .155: Run Tri-SOTA COLD vs DOMINO benchmark (exp1971) once exp1969 "
+            "is unblocked. Gated downstream; no new prior_failures needed."
+        ),
+        (
+            "Run Tri-SOTA E2E Integration v9 (exp1979) once exp1977 is unblocked "
+            "(which requires exp1975 gate-field fix first)."
+        ),
+        (
+            "Run RUN-CSP Hardware Accounting (exp1974) once exp1972 gate-field fix is applied."
+        ),
+        (
+            "Planner discipline: enforce `success: true` as a required field in the REQUIRED "
+            "ARTIFACT FIELDS section of every task whose deliverable is gated-on by a downstream "
+            "task. This eliminates the repeat gate-contract gap."
+        ),
+    ]
+
+    artifact = {
+        "experiment_id": 1981,
+        "schema": "carnot.milestone_retro.v1",
+        "milestone": "2026.05.154",
+        "run_date": datetime.now(timezone.utc).strftime("%Y%m%d"),
+        "status": "complete",
+        "completed_task_count": len(completed_ids),
+        "blocked_task_count": len(blocked_ids),
+        "failed_task_count": len(failed_ids),
+        "completed_experiments": sorted(completed_ids),
+        "blocked_experiments": sorted(blocked_ids),
+        "failed_experiments": sorted(failed_ids),
+        "criteria_met": criteria_met,
+        "criteria_total": criteria_total,
+        "criteria_results": criteria_results,
+        "experiment_honest_verdicts": honest_verdicts,
+        "notable_successes": notable_successes,
+        "bottlenecks_identified": bottlenecks,
+        "gate_contract_gap_note": (
+            "Gate-contract gap repeated from .153: downstream tasks gating on `artifact_field: success` "
+            "blocked when upstream artifacts (exp1972 RUN-CSP, exp1975 EORM) do not emit `success: true`. "
+            "The .153 retro marked this MANDATORY to fix; it was not fixed in .154. "
+            "Future roadmap tasks MUST pair `gated_on: artifact_field: success` with upstream task "
+            "prompt specs that explicitly require writing `success: true` in the JSON artifact."
+        ),
+        "recommendations": recommendations,
+        "retro_complete": True,
+        "honest_verdict": (
+            f"complete: milestone_154_retro_filed_{len(completed_ids)}_completed_"
+            f"{len(blocked_ids)}_blocked_{len(failed_ids)}_failed_"
+            "gate_contract_gap_repeated_deepsade_and_run_csp_ship"
+        ),
+    }
+
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    with open(output_path, "w") as fh:
+        json.dump(artifact, fh, indent=2)
+
+    return artifact
+
+
+if __name__ == "__main__":  # pragma: no cover
+    generate_retro("results/experiment_1981_milestone_154_retro.json")

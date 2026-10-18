@@ -1,0 +1,5035 @@
+# LLM-EBM Inference Capability Specification
+
+**Capability:** llm-ebm-inference
+**Version:** 0.1.0
+**Status:** Draft
+**Traces to:** FR-11, FR-12
+
+## Overview
+
+Defines the first concrete "anti-hallucination" pipeline: an LLM proposes a solution to a constraint satisfaction problem (SAT, graph coloring), and the EBM verifies it, repairs violations via gradient descent, and issues a verification certificate. This bridges Carnot's verifiable reasoning (FR-12) with LLM output, demonstrating that energy-based verification can catch and fix hallucinated reasoning.
+
+The pipeline reuses existing primitives (BaseConstraint, ComposedEnergy, repair(), VerificationResult) and adds domain-specific constraint encoders plus an LLM output parser.
+
+## Requirements
+
+### REQ-INFER-001: SAT Constraint Encoding
+
+The system shall encode CNF SAT clauses as differentiable energy terms:
+- Variables x_i represented as continuous values in [0, 1] (0 = False, 1 = True)
+- Each clause uses product relaxation: E = prod(1 - literal_value) for each literal
+  - Energy = 0 when any literal is true (clause satisfied)
+  - Energy = 1 when all literals are false (clause violated)
+- A binary penalty constraint pushes variables toward {0, 1}: E = sum(x_i * (1 - x_i))
+- The system shall support DIMACS CNF format parsing
+- `build_sat_energy()` shall produce a ComposedEnergy with one constraint per clause plus binary penalty
+
+### REQ-INFER-002: Graph Coloring Constraint Encoding
+
+The system shall encode graph coloring as differentiable energy terms:
+- Each node's color is a continuous value in [0, n_colors - 1]
+- Adjacent nodes must have different colors: E = max(0, 1 - |x_a - x_b|)^2
+- A range penalty keeps values in bounds: E = sum(max(0, -x_i)^2 + max(0, x_i - (n_colors-1))^2)
+- `build_coloring_energy()` shall produce a ComposedEnergy with one constraint per edge plus range penalty
+
+### REQ-INFER-003: LLM Output Parsing
+
+The system shall parse LLM text output into JAX arrays for verification:
+- SAT: supports "1 0 1 0", "x1=True, x2=False", "T F T F" formats
+- Graph coloring: supports "0 1 2 0 1" and "node 0: red, node 1: blue" formats
+- Raises ValueError on unparseable input or wrong variable count
+
+### REQ-INFER-004: Verify-and-Repair Pipeline
+
+The system shall provide a complete verify-and-repair pipeline:
+1. Score the LLM's assignment against the energy function
+2. If constraints are violated, run gradient repair (reusing existing `repair()`)
+3. Round the repaired continuous assignment to discrete values
+4. Re-verify the rounded result
+5. Return a VerifyRepairResult containing initial, repaired, and rounded verifications plus the repair trajectory
+
+### REQ-INFER-005: Benchmark Harness
+
+The system shall provide a benchmark harness that:
+- Generates random SAT instances (configurable n_vars, n_clauses, clause_size)
+- Generates random graph coloring instances (configurable n_nodes, n_colors, edge probability)
+- Generates random assignments (simulating LLM output)
+- Runs the verify-and-repair pipeline on each instance
+- Reports aggregated statistics (initial violations, repaired violations, success rate, energy reduction)
+
+## Scenarios
+
+### SCENARIO-INFER-001: SAT Clause Verification
+
+**Given** a 3-SAT clause (x1 OR NOT x2 OR x3)
+**And** assignment x1=True, x2=True, x3=False
+**When** the clause constraint energy is computed
+**Then** energy is approximately 0 (clause satisfied by x1=True)
+
+**Given** the same clause with assignment x1=False, x2=False, x3=False
+**When** energy is computed
+**Then** energy is approximately 1 (clause violated: x1=F, NOT x2=T but x3=F... wait, NOT x2=True so clause IS satisfied)
+**Corrected**: assignment x1=False, x2=True, x3=False → NOT x2=False, all literals false → energy ≈ 1
+
+### SCENARIO-INFER-002: DIMACS Parsing
+
+**Given** a DIMACS CNF string with header "p cnf 3 2" and clauses "1 -2 3 0" and "-1 2 0"
+**When** parsed
+**Then** produces 2 SATClause objects with correct variable indices and negation flags
+**And** n_vars = 3
+
+### SCENARIO-INFER-003: Graph Coloring Verification
+
+**Given** a triangle graph (3 nodes, all pairs connected)
+**And** coloring [0, 1, 2] (all different)
+**When** coloring energy is computed
+**Then** energy is approximately 0 (no adjacent same-color)
+
+**Given** coloring [0, 0, 1] (nodes 0 and 1 share color)
+**When** energy is computed
+**Then** energy > 0 (edge 0-1 violated)
+
+### SCENARIO-INFER-004: Gradient Repair Reduces Violations
+
+**Given** a random 3-SAT instance with 20 variables and 60 clauses
+**And** a random assignment violating multiple clauses
+**When** gradient repair runs for up to 200 steps
+**Then** the number of violated clauses decreases
+**And** total energy decreases monotonically (or at least overall)
+
+### SCENARIO-INFER-005: Full Pipeline
+
+**Given** a SAT instance with a known satisfying assignment
+**And** a deliberately wrong assignment (simulating LLM hallucination)
+**When** verify_and_repair() is called
+**Then** initial_verification shows violations
+**And** repaired_verification shows fewer violations
+**And** the result contains a repair trajectory
+
+### SCENARIO-INFER-006: Binary Penalty
+
+**Given** SAT variables at x_i = 0.5 (maximally ambiguous)
+**When** binary penalty energy is computed
+**Then** energy is maximal
+**Given** variables at x_i ∈ {0, 1}
+**Then** binary penalty energy is 0
+
+### REQ-INFER-006: LLM Solver Integration
+
+The system shall provide functions to send constraint problems to an LLM and parse the responses:
+- `solve_sat_with_llm()`: builds SAT prompt, calls OpenAI-compatible API, returns raw text
+- `solve_coloring_with_llm()`: builds coloring prompt, calls API
+- `run_llm_sat_experiment()`: full pipeline — LLM solve → parse → verify → repair → certify
+- `run_llm_coloring_experiment()`: full pipeline for coloring
+- Graceful degradation when openai package is not installed or API fails
+
+### SCENARIO-INFER-007: Full LLM Pipeline
+
+**Given** a SAT instance sent to an LLM via the solver
+**When** the LLM returns a (possibly incorrect) assignment
+**Then** the assignment is parsed and verified against the energy function
+**And** if violated, gradient repair improves the assignment
+**And** the full VerifyRepairResult contains initial, repaired, and rounded verifications
+
+### REQ-INFER-007: Learned Energy Functions
+
+The system shall support training EBMs to learn verification criteria from (correct, incorrect) example pairs:
+- Generate training data via rejection sampling (satisfying assignments = data, random = noise)
+- Train using NCE loss from `carnot.training.nce`
+- Wrap the trained model as a `BaseConstraint` for use in the verify-and-repair pipeline
+- Provide comparison tools to measure learned verifier accuracy against hand-coded ground truth
+
+### SCENARIO-INFER-008: Learned SAT Verifier
+
+**Given** a random 3-SAT instance with 5 variables and 15 clauses
+**And** a Gibbs model trained on satisfying vs random assignments via NCE
+**When** the trained model scores a new satisfying assignment
+**Then** its energy is lower than for a violating assignment
+**And** the learned verifier classifies at least 70% of test assignments correctly
+**And** verify-and-repair using the learned energy improves random assignments
+
+### REQ-INFER-014: Hallucination Direction Detection
+
+The system shall detect hallucination by finding the principal direction in activation space that separates correct from hallucinated LLM outputs:
+- Compute mean-difference direction between correct and hallucinated activation clusters
+- Optional SVD refinement for top-k distinguishing directions
+- Hallucination energy: projection of activation onto the direction (high = likely hallucination)
+- HallucinationDirectionConstraint wraps the energy for ComposedEnergy integration
+- One-sided (ReLU) penalty: only penalizes projections toward hallucination, not away
+
+### SCENARIO-INFER-014-001: Hallucination Direction Discovery
+
+**Given** per-layer activations from 50 correct and 50 hallucinated outputs
+**When** `find_hallucination_direction()` is called
+**Then** the discovered direction aligns (cosine similarity > 0.8) with the true separation axis
+**And** hallucinated activations get higher energy than correct ones
+**And** the direction is unit-normalized by default
+
+### REQ-INFER-015: EBM-Guided Rejection Sampling
+
+The system shall combine per-token activation energy (from a trained Gibbs EBM) with logprob scores for candidate selection:
+- Generate N candidates with sampling
+- Extract per-token hidden states from a configurable transformer layer
+- Score each token through the trained EBM (low energy = likely correct)
+- Combine as composite: ebm_weight * mean_ebm_energy - logprob_weight * mean_logprob
+- Select candidate with lowest composite energy
+- Configurable weights allow pure EBM, pure logprob, or weighted combination
+
+### SCENARIO-INFER-015-001: EBM Scoring Correctness
+
+**Given** a Gibbs EBM trained on correct vs wrong activations
+**And** per-token activations from a generated response
+**When** `score_activations_with_ebm()` is called
+**Then** the mean energy is finite and reflects the EBM's learned distinction
+**And** activations from the trained distribution get lower energy than out-of-distribution
+
+### REQ-INFER-016: Multi-Layer Hallucination Probing
+
+The system shall probe each transformer layer independently to find where hallucination signal is strongest:
+- Train a small Gibbs EBM probe at each layer using NCE loss
+- Report per-layer train/test accuracy and energy gap
+- Identify the layer with highest test accuracy as the best probe layer
+- Support probing a subset of layers for efficiency
+
+### SCENARIO-INFER-016-001: Best Layer Identification
+
+**Given** per-layer activations from correct and wrong model outputs with varying separability
+**When** `probe_all_layers()` is called
+**Then** the layer with highest separation is identified as best_layer
+**And** the best layer's test accuracy exceeds layers with lower separation
+**And** results include per-layer accuracy, gap, and train/test counts
+
+### REQ-INFER-017: Diffusion-of-Thought Text Refinement
+
+The system SHALL expose `DiffusionOfThought` as an inference-time refinement
+mode over an existing verifier ensemble energy.  The refinement SHALL split a
+response into whitespace tokens, estimate each token's violation contribution
+by comparing the original response energy against the energy after masking that
+token, propose deterministic replacement candidates when no inpainter LLM is
+available, and iteratively select the replacement that minimises composite
+energy.
+
+The refinement SHALL support timestep counts `T in {1, 5, 25, 125}` for
+compute/accuracy trade-off reporting.  Each call SHALL return the refined text
+and an energy trace that includes the initial energy and one entry per
+refinement step.
+
+### SCENARIO-INFER-017-001: DoT Masks And Repairs High-Energy Tokens
+
+**Given** a verifier ensemble that assigns higher energy to an arithmetic
+violation token
+**When** `DiffusionOfThought.refine()` runs for one or more steps
+**Then** the highest-energy token is selected for candidate replacement
+**And** the returned energy trace is non-increasing
+**And** the refined response has no higher composite energy than the baseline
+
+### REQ-INFER-SOTA-004: SOTA GGUF Cache Provenance Preflight
+
+The system SHALL provide a local-only cache/provenance preflight artifact before
+mandated SOTA GGUF headline inference.  The preflight SHALL inspect the three
+mandated model IDs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, record each model's cached status,
+`model_path`, expected quantization, and observed quantization suffix, and call
+`cached_sota_pair(gpu_indices=(0, 1))` only through the existing safe local
+cache resolver.
+
+The artifact SHALL expose `status`, `cached_sota_ready`,
+`headline_result_possible`, `models_used`, `missing_models`,
+`model_specs_preview`, `provenance_ok`, and `honest_verdict`.  It SHALL set
+`cached_sota_ready=true` only when at least one mandated SOTA GGUF is cached and
+`cached_sota_pair()` returns two loadable `MODEL_SPECS` entries with
+`model_path` values.  Otherwise it SHALL set `cached_sota_ready=false`, record
+`missing_models`, carry Exp 1296 prior-failure coverage into the artifact, and
+emit an honest blocked/not-ready verdict without downloading models.
+
+### SCENARIO-INFER-SOTA-004-001: Cached Pair Allows Headline Work
+
+**Given** local cache hits for the mandated Qwen and Gemma 26B GGUF models
+**And** Exp 1296 prior-failure coverage passed
+**When** the SOTA GGUF preflight runs
+**Then** `cached_sota_ready` is true
+**And** `headline_result_possible` is true
+**And** `models_used` names the two `cached_sota_pair()` entries
+**And** every model preview row records cache and quantization provenance.
+
+### SCENARIO-INFER-SOTA-004-002: Missing Cache Blocks Headline Work
+
+**Given** no mandated SOTA GGUF file can be resolved from local cache
+**When** the SOTA GGUF preflight runs
+**Then** `cached_sota_ready` is false
+**And** `headline_result_possible` is false
+**And** `missing_models` names the uncached mandated model IDs
+**And** `honest_verdict` does not claim a headline result is possible.
+
+### SCENARIO-INFER-SOTA-004-003: Prior-Failure Coverage Gates Provenance
+
+**Given** Exp 1296 prior-failure coverage is missing or failed
+**And** the local cache resolver can still inspect GGUF files
+**When** the SOTA GGUF preflight runs
+**Then** `provenance_ok` is false
+**And** `headline_result_possible` is false
+**And** the artifact preserves the Exp 1296 coverage fields that caused the
+provenance block.
+
+### REQ-INFER-SOTA-005: Cached Pair Resolver Uses Any Two Mandated Local GGUFs
+
+`cached_sota_pair()` SHALL inspect the three mandated SOTA GGUF model IDs through
+the safe local resolver and SHALL return exactly two loadable `MODEL_SPECS`
+entries when at least two mandated models are cached locally.  The pair SHALL be
+deterministic: cached models are selected in registry order and assigned to the
+provided `gpu_indices` order.  Missing third mandated models are optional for
+pair readiness and SHALL be recorded by resolver-repair artifacts as
+`missing_optional_models`; the helper SHALL NOT download models while resolving
+the pair.
+
+If fewer than two mandated SOTA GGUFs are cached locally, `cached_sota_pair()`
+SHALL return `None` so callers can block or fall back honestly instead of
+attempting a partial headline pair.
+
+### SCENARIO-INFER-SOTA-005-001: Two Cached Mandated Models Return Pair
+
+**Given** local cache hits for two mandated SOTA GGUF models
+**And** a cache miss for the remaining mandated model
+**When** `cached_sota_pair(gpu_indices=(0, 1))` is called
+**Then** it returns two `MODEL_SPECS` entries with `model_path` values
+**And** the missing third model is treated as optional for pair readiness.
+
+### SCENARIO-INFER-SOTA-005-002: One Cached Mandated Model Blocks Pair
+
+**Given** exactly one mandated SOTA GGUF model resolves from local cache
+**When** `cached_sota_pair()` is called
+**Then** it returns `None`.
+
+### SCENARIO-INFER-SOTA-005-003: No Cached Mandated Models Block Pair
+
+**Given** no mandated SOTA GGUF model resolves from local cache
+**When** `cached_sota_pair()` is called
+**Then** it returns `None`.
+
+### REQ-INFER-SOTA-006: Cached SOTA GGUF llama.cpp Smoke-Load Probe
+
+The system SHALL provide a minimal local smoke-load artifact for the cached SOTA
+GGUF pair before downstream certificate runs use those models.  The probe SHALL
+write `results/experiment_1310_sota_gguf_llamacpp_smoke_load.json` with
+`status="in_progress"` before live checks, SHALL read Exp 1309, and SHALL abort
+to an honest terminal blocker when `sota_pair_ready` is not true.
+
+When Exp 1309 is ready, the probe SHALL resolve the pair via
+`cached_sota_pair(gpu_indices=(0, 1))` and record each resolved model's exact
+`hf_id`, `name`, `model_path`, observed quantization suffix, and GPU assignment.
+The model IDs SHALL be drawn only from the mandated headline set
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The probe SHALL import the project-local llama.cpp runtime (`from llama_cpp
+import Llama`) before generation.  If the import fails, it SHALL record
+`llama_cpp_import_ok=false` with the exact exception string and SHALL NOT fake
+generation.  If the import succeeds, the probe SHALL attempt one deterministic,
+tiny-token generation per resolved model and record per-model load success,
+token count, elapsed seconds, tokens per second, and GPU memory when available.
+
+The final artifact SHALL expose `status`, `models_loaded`,
+`llama_cpp_import_ok`, `tokens_per_second`, `gpu_memory_gb`,
+`model_specs_count`, `models_used`, `headline_result_possible`, and
+`honest_verdict`.  `headline_result_possible` SHALL be true only when two
+mandated headline GGUFs were resolved and both smoke generations completed with
+at least one emitted token.
+
+### SCENARIO-INFER-SOTA-006-001: Ready Pair Smoke-Loads
+
+**Given** Exp 1309 reports `sota_pair_ready=true`
+**And** `cached_sota_pair(gpu_indices=(0, 1))` returns two mandated GGUF specs
+**And** the llama.cpp import succeeds
+**When** the smoke-load probe runs with a tiny deterministic prompt
+**Then** the artifact records both model identities, paths, quantization suffixes,
+GPU assignments, per-model throughput, aggregate throughput, and
+`headline_result_possible=true`.
+
+### SCENARIO-INFER-SOTA-006-002: Missing llama.cpp Blocks Without Fake Generation
+
+**Given** Exp 1309 reports `sota_pair_ready=true`
+**And** the cached pair resolves
+**When** importing `llama_cpp.Llama` raises an exception
+**Then** the artifact records `llama_cpp_import_ok=false`
+**And** every resolved model remains ungenerated
+**And** `headline_result_possible=false`.
+
+### SCENARIO-INFER-SOTA-006-003: Exp 1309 Not Ready Blocks Probe
+
+**Given** Exp 1309 does not report `sota_pair_ready=true`
+**When** the smoke-load probe runs
+**Then** it writes a complete terminal blocker artifact
+**And** it does not import llama.cpp or attempt generation.
+
+### REQ-INFER-SOTA-007: Live SOTA Repair Runtime Gate
+
+The system SHALL provide a fail-fast local runtime gate for the mandated SOTA
+GGUF repair models before downstream repair experiments report headline claims.
+The gate SHALL inspect only local cache state for
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, SHALL probe GPU availability, and SHALL
+attempt one tiny repair-style live inference request on at least one mandated
+model that is locally available.
+
+The artifact SHALL expose `status`, `model_specs`, `local_sota_runtime_ready`,
+`live_sota_model_inference_used`, `models_found_in_cache`,
+`models_missing_from_cache`, `gpu_probe`, `smoke_inference_results`,
+`blockers`, and `honest_verdict`.  Each smoke result SHALL record the exact
+command, runtime mode, stdout and stderr summaries, and whether the response was
+truly live.  `local_sota_runtime_ready` SHALL be true only when at least one
+mandated local SOTA GGUF model completes live inference and emits a usable
+response; otherwise the artifact SHALL remain an honest terminal blocker without
+downloading model files.
+
+### SCENARIO-INFER-SOTA-007-001: Live Local Inference Opens Gate
+
+**Given** at least one mandated SOTA GGUF model is present in local cache
+**And** the llama.cpp runtime can load it
+**When** the live SOTA repair runtime preflight runs
+**Then** the artifact records the model as found
+**And** records a smoke inference result with `truly_live=true`
+**And** sets `local_sota_runtime_ready=true` and
+`live_sota_model_inference_used=true`.
+
+### SCENARIO-INFER-SOTA-007-002: Missing Or Failed Runtime Blocks Gate
+
+**Given** no mandated SOTA GGUF model can complete live inference locally
+**When** the live SOTA repair runtime preflight runs
+**Then** the artifact records missing models or runtime failures in `blockers`
+**And** sets `local_sota_runtime_ready=false`
+**And** does not claim live SOTA model inference was used.
+
+### REQ-INFER-SOTA-008: Local SOTA GGUF Runtime Repair Artifact
+
+The system SHALL provide an Exp 1463 runtime-repair artifact for the mandated
+local SOTA GGUF path.  The repair SHALL write
+`results/experiment_1463_local_sota_gguf_runtime_repair.json` with
+`status="in_progress"` before runtime probes, SHALL reproduce the prior Exp
+1442 runtime gate verdict before applying any path repair, SHALL inspect CUDA
+runtime discovery evidence from `ldconfig`, `nvidia-smi`, Python package
+metadata, environment variables, and local library files, and SHALL attempt the
+minimum safe llama.cpp runtime-library path repair when the project-local venv
+contains CUDA runtime libraries that the dynamic loader cannot currently see.
+
+The artifact SHALL expose `status`, `model_specs`, `gpu_probe`,
+`libcudart_resolution_attempted`, `missing_cache_resolution_attempted`,
+`models_found_in_cache`, `models_missing_from_cache`,
+`smoke_inference_results`, `live_sota_model_inference_used`,
+`local_sota_runtime_ready`, `persistent_blockers`, and `honest_verdict`.
+`live_sota_model_inference_used` and `local_sota_runtime_ready` SHALL be true
+only when at least one mandated SOTA GGUF model produces a non-empty response
+from the local llama.cpp runtime.  Otherwise the artifact SHALL remain a
+complete terminal blocker with exact persistent blockers and SHALL NOT treat
+legacy small models as headline evidence.
+
+### SCENARIO-INFER-SOTA-008-001: Runtime Path Repair Enables Live SOTA
+
+**Given** at least one mandated SOTA GGUF model is present in local cache
+**And** the reproduced Exp 1442 probe failed because `libcudart.so.12` was not
+visible to the loader
+**When** Exp 1463 discovers project-local CUDA runtime libraries and reruns the
+probe with the repaired library path
+**Then** the artifact records the resolution attempt
+**And** records a smoke inference result with `truly_live=true`
+**And** sets `local_sota_runtime_ready=true` and
+`live_sota_model_inference_used=true`.
+
+### SCENARIO-INFER-SOTA-008-002: Persistent Blockers Stay Terminal
+
+**Given** the cache, CUDA runtime, or llama.cpp path cannot produce any usable
+mandated SOTA response
+**When** Exp 1463 completes
+**Then** the artifact records the exact cache or runtime blockers in
+`persistent_blockers`
+**And** sets `local_sota_runtime_ready=false`
+**And** does not claim live SOTA model inference was used.
+
+### REQ-INFER-SOTA-009: Live SOTA Logprob Telemetry Preflight
+
+The system SHALL provide an Exp 1468 local telemetry preflight that verifies
+whether the repaired local SOTA GGUF runtime can expose generation telemetry for
+downstream HALT, Spilled Energy, and BEAVER-lite bound features.  The preflight
+SHALL write `results/experiment_1468_live_sota_logprob_telemetry_preflight.json`
+with `status="in_progress"` before runtime work, SHALL resolve headline models
+through `cached_sota_pair()` or the Exp 1463 mandated GGUF paths, and SHALL NOT
+use legacy small models as headline telemetry evidence.
+
+The preflight SHALL request 10-20 bounded FoVer/GSM8K-style prompts from at
+least one mandated SOTA GGUF model and write one JSONL row per requested case to
+`results/live_sota_telemetry_manifest_1468.jsonl`.  Each row SHALL record model
+identity, prompt identity, prompt text, response text, token text when exposed,
+token logprob availability, top-k alternative availability, logits
+availability, generation source, and exact blocker text for failures.
+
+The artifact SHALL expose `status`, `model_specs`,
+`live_sota_model_inference_used`, `telemetry_cases_requested`,
+`telemetry_cases_completed`, `topk_logprobs_available`, `logits_available`,
+`telemetry_manifest_path`, `models_used`, `gpu_probe`, `blockers`, and
+`honest_verdict`.  `topk_logprobs_available` SHALL be true only when enough
+per-token top-k alternatives exist for downstream HALT/Spilled Energy features;
+runtime failures or missing llama.cpp telemetry SHALL be recorded as blockers
+without running repair experiments.
+
+### SCENARIO-INFER-SOTA-009-001: Live Top-K Telemetry Opens Downstream Path
+
+**Given** `cached_sota_pair()` resolves at least one mandated SOTA GGUF model
+**And** the llama.cpp runtime returns non-empty text with token logprobs and
+top-k alternatives for bounded FoVer/GSM8K-style prompts
+**When** Exp 1468 runs
+**Then** the artifact records live SOTA inference as used
+**And** `telemetry_cases_completed` counts the completed live generations
+**And** `topk_logprobs_available=true`
+**And** the JSONL manifest contains one row per generated case with response
+text and per-token top-k evidence.
+
+### SCENARIO-INFER-SOTA-009-002: Missing Runtime Telemetry Blocks Honestly
+
+**Given** a mandated SOTA GGUF model can generate text but llama.cpp does not
+return enough token logprobs, top-k alternatives, or logits
+**When** Exp 1468 runs
+**Then** the artifact still records the live response text and completed cases
+**And** sets unavailable telemetry booleans to false
+**And** preserves precise blockers for missing telemetry without claiming
+headline top-k readiness.
+
+### REQ-INFER-SOTA-010: Balanced Live SOTA Telemetry V2 Manifest
+
+The system SHALL provide an Exp 1480 balanced telemetry manifest builder that
+turns the Exp 1468 live SOTA telemetry path into an adversarially balanced
+dataset for downstream validity audits.  The experiment SHALL write
+`results/experiment_1480_live_sota_balanced_telemetry_v2.json` with
+`status="in_progress"` before any model runtime or manifest work begins, SHALL
+resolve headline models through `cached_sota_pair()` or equivalent mandated
+GGUF cache paths, and SHALL NOT use legacy small models for headline telemetry
+rows.
+
+The builder SHALL request 30-40 bounded arithmetic/FoVer-style cases with known
+verifier labels and a deliberate mix of correct, incorrect, format-valid, and
+format-invalid expected outcomes.  It SHALL write one JSONL row per case to
+`results/live_sota_balanced_telemetry_manifest_1480.jsonl`.  Each row SHALL
+preserve prompt identity, prompt family, expected answer, live model identity,
+response text, correctness label, format-validity label, token text when
+available, token logprobs when available, top-k alternatives when available,
+logits availability, exact blockers, and the generation source.
+
+Before any telemetry diagnostic is scored, each row SHALL record superficial
+baseline fields: response length, token count, JSON/schema validity, prompt
+family, answer lexical overlap, and model family.  The terminal artifact SHALL
+expose `status`, `model_specs`, `live_sota_model_inference_used`,
+`telemetry_cases_requested`, `telemetry_cases_completed`,
+`balanced_label_counts`, `topk_logprobs_available`, `logits_available`,
+`superficial_baselines_recorded`, `telemetry_manifest_path`, `models_used`,
+`gpu_probe`, `blockers`, `claim_allowed`, and `honest_verdict`.
+`claim_allowed` SHALL default to false and SHALL become true only when the
+manifest contains balanced labels, at least one real mandated local SOTA model
+row, and enough telemetry for downstream adversarial audits.
+
+### SCENARIO-INFER-SOTA-010-001: Balanced Live Rows Allow Downstream Audit
+
+**Given** `cached_sota_pair()` resolves at least one mandated SOTA GGUF model
+**And** the runtime or injected live generation path returns non-empty response
+text with token telemetry for a 30-40 case balanced set
+**When** Exp 1480 runs
+**Then** the artifact records live SOTA inference as used
+**And** `balanced_label_counts` reports both correctness labels and both format
+validity labels
+**And** every manifest row records the required superficial baselines before
+claim gating
+**And** `claim_allowed=true` only when top-k/logit evidence is available enough
+for downstream adversarial audits.
+
+### SCENARIO-INFER-SOTA-010-002: Missing Balance Or Telemetry Blocks Honestly
+
+**Given** a mandated local SOTA model can generate text but the manifest is not
+label-balanced or the runtime cannot expose enough token telemetry
+**When** Exp 1480 completes
+**Then** the JSONL manifest still records every completed row and all
+superficial baselines
+**And** unavailable telemetry booleans or balance gaps are recorded as explicit
+blockers
+**And** `claim_allowed=false` without falling back to legacy small model
+headline rows.
+
+### REQ-INFER-SOTA-011: Exp 1891 SOTA GGUF Cache And Runtime Preflight
+
+The system SHALL provide an Exp 1891 local cache/runtime preflight that separates
+mandated SOTA GGUF cache readiness from runtime smoke readiness before any
+downstream evaluation spends a synthesis or generation call.  The preflight
+SHALL define `MODEL_SPECS` for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; SHALL inspect local cache state through the
+same safe resolver/cached-pair pattern used by `cached_sota_pair()`; SHALL
+attempt bounded materialization only when an explicit safe local configuration
+enables it; and SHALL NOT substitute legacy small models as evidence of
+headline readiness.
+
+The artifact SHALL be written to
+`results/experiment_1891_sota_gguf_cache_runtime_preflight.json` and SHALL
+expose `status`, `honest_verdict`, `MODEL_SPECS`, `cache_all_available`,
+`cache_any_available`, `missing_models`, `runtime_smoke_ready`,
+`runtime_backend`, `models_used`, `gpu_telemetry_available`, `model_count`,
+`parallel_model_count`, `fallback_runtime_candidates`, and `tests_run`.
+Fallback runtimes such as llama.cpp with llguidance, vLLM.rs, and llgtrt SHALL
+be recorded as candidates only unless a mandated cached GGUF completes the
+runtime smoke.
+
+### SCENARIO-INFER-SOTA-011-001: Cache And Runtime Readiness Are Separated
+
+**Given** only a subset of mandated SOTA GGUF models is present in the local
+cache
+**When** Exp 1891 runs
+**Then** `cache_any_available` reflects the cache hit, `cache_all_available`
+remains false, and `missing_models` lists every absent mandated model
+**And** runtime smoke readiness is true only when an available mandated model
+completes a bounded local smoke through the selected runtime backend
+**And** fallback runtime candidates are not counted as fulfilled mandated-model
+evidence.
+
+### REQ-INFER-SOTA-012: Exp 2836 SOTA Runtime And Cache Manifest
+
+The system SHALL provide a fail-fast Exp 2836 runtime/cache manifest for the
+mandated SOTA GGUF path before downstream corpus evaluations run.  The manifest
+SHALL be written to `results/experiment_2836_sota_runtime_preflight.json` and
+SHALL NOT run corpus evaluation.  It SHALL measure `.venv/bin/python` torch/CUDA
+availability and system `python3` torch/CUDA availability separately; record
+disk space, GPU memory, HuggingFace cache location, local `models/` location,
+and local llama.cpp loader availability; import `scripts/experiment_template.py`
+when safe and exercise `cached_sota_pair()`; inspect the mandated primary model
+IDs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; and record legacy CPU smoke-only model IDs
+only as non-headline context.
+
+For every locally available mandated SOTA GGUF selected for inspection, the
+manifest SHALL record the exact path, resolved path, size in bytes, SHA256,
+model family, expected quantization, observed quantization, and load-smoke
+result.  If no mandated model is cached, the manifest SHALL make only a
+controlled metadata-only or resumable cache attempt when local HuggingFace
+tooling and credentials are already configured; otherwise it SHALL write a
+`blocked_model_cache` verdict without starting a blind large download.
+
+The artifact SHALL expose `honest_verdict`, `sota_runtime_ready`,
+`selected_python`, `venv_torch_cuda_available`,
+`system_python_torch_cuda_available`, `sota_models_cached`,
+`cached_sota_pair_result`, `model_specs`, `preconditions_checked`, and
+`duration_s`.  `sota_runtime_ready` SHALL be true only when the selected
+`.venv/bin/python` reports CUDA-capable torch and at least one mandated primary
+SOTA GGUF completes the bounded loader smoke as a headline model.
+
+### SCENARIO-INFER-SOTA-012-001: Cached Mandated Model Opens Runtime Gate
+
+**Given** `.venv/bin/python` reports `torch.cuda.is_available() == true`
+**And** at least one mandated primary SOTA GGUF exists in local cache
+**And** the bounded loader smoke succeeds for that file
+**When** Exp 2836 builds the runtime/cache manifest
+**Then** `sota_runtime_ready` is true
+**And** `honest_verdict` starts with `success:`
+**And** the manifest records the selected Python, model cache provenance,
+`cached_sota_pair()` result, and all required precondition checks.
+
+### SCENARIO-INFER-SOTA-012-002: Missing Cache Blocks Without Blind Download
+
+**Given** `.venv/bin/python` reports CUDA-capable torch
+**And** no mandated primary SOTA GGUF exists in local cache
+**And** local HuggingFace credentials are not configured
+**When** Exp 2836 builds the runtime/cache manifest
+**Then** `sota_runtime_ready` is false
+**And** `honest_verdict` starts with `blocked_model_cache`
+**And** the manifest records the skipped cache-fill reason without attempting a
+large blind download.
+
+### SCENARIO-INFER-SOTA-012-003: System Python Mismatch Is Preserved
+
+**Given** `.venv/bin/python` reports CUDA-capable torch
+**And** system `python3` cannot import torch or reports no CUDA
+**When** Exp 2836 builds the runtime/cache manifest
+**Then** `venv_torch_cuda_available` and
+`system_python_torch_cuda_available` preserve the mismatch as separate
+booleans
+**And** the manifest still gates readiness on the selected `.venv/bin/python`
+rather than system `python3`.
+
+### REQ-INFER-SOTA-013: Exp 2862 SOTA Runtime Cache/Offload Resolver V3
+
+The system SHALL provide an Exp 2862 replacement runtime resolver artifact that
+gates downstream live-model work through `sota_runtime_ready_v3`.  The artifact
+SHALL be written to
+`results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json`; SHALL
+measure `.venv/bin/python` torch/CUDA availability, NVIDIA GPU inventory,
+`llama_cpp` import/version/origin, `llama_cpp.llama_cpp.llama_supports_gpu_offload()`,
+and `cached_sota_pair(gpu_indices=(0, 1))`; SHALL inspect both the local
+HuggingFace cache and project `models/` layout for the mandated GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The artifact SHALL expose `honest_verdict`, `sota_runtime_ready_v3`,
+`model_specs`, `selected_model_hf_id`, `selected_model_path`,
+`cached_sota_pair_returned_two_loadable_specs`,
+`llama_cpp_gpu_offload_verified`, `preconditions_checked`,
+`usable_response_count`, `total_tokens_generated`, `tokens_per_second`,
+`legacy_small_models_used_only_for_smoke`, `random_seed`,
+`reproducibility_checksum`, `tests_run`, `field_principles`, `run_date`, and
+`duration_s`.  `sota_runtime_ready_v3` SHALL be true only when the selected
+`.venv/bin/python` sees CUDA, `llama_cpp` reports GPU offload support, and at
+least one mandated local SOTA GGUF emits a non-empty bounded prompt response
+with one or more generated tokens.  Legacy small models MAY be named only as
+CPU-smoke context and SHALL never set `sota_runtime_ready_v3=true`.
+
+When `llama_cpp` imports but lacks GPU offload support, the artifact SHALL keep
+`llama_cpp_gpu_offload_verified=false`, SHALL NOT fake readiness, and SHALL
+record the exact reinstall command/environment needed to rebuild
+`llama-cpp-python` with CUDA support.  When fewer than two mandated models are
+cached, `cached_sota_pair_returned_two_loadable_specs` SHALL remain false even
+if a single mandated model is sufficient for the v3 runtime gate.
+
+### SCENARIO-INFER-SOTA-013-001: Single Mandated GPU Response Opens V3 Gate
+
+**Given** `.venv/bin/python` reports CUDA-capable torch
+**And** `llama_cpp` reports GPU offload support
+**And** at least one mandated SOTA GGUF exists locally
+**When** Exp 2862 runs one bounded prompt on that GGUF
+**Then** `sota_runtime_ready_v3` is true only if the response is non-empty and
+the artifact records the selected model path, generated token count,
+tokens-per-second, GPU memory evidence, and real wall-clock duration.
+
+### SCENARIO-INFER-SOTA-013-002: CPU-Only llama.cpp Blocks V3 Gate
+
+**Given** CUDA-capable torch and a mandated GGUF are available
+**But** `llama_cpp.llama_cpp.llama_supports_gpu_offload()` is false
+**When** Exp 2862 runs
+**Then** `sota_runtime_ready_v3` is false
+**And** the artifact documents the CUDA rebuild command instead of treating a
+CPU-only load as headline runtime evidence.
+
+### SCENARIO-INFER-SOTA-013-003: Missing Pair Is Recorded Separately
+
+**Given** exactly one mandated SOTA GGUF exists locally
+**When** `cached_sota_pair(gpu_indices=(0, 1))` returns `None`
+**Then** `cached_sota_pair_returned_two_loadable_specs` is false
+**And** the artifact still records the exact missing mandated model IDs and
+does not use legacy small models to satisfy the pair or runtime gate.
+
+### REQ-INFER-SOTA-3338: Exp 3338 SOTA GGUF Tokenizer Runtime Receipt
+
+The system SHALL provide a standalone Exp 3338 preflight receipt before energy
+descent reruns spend local SOTA inference. The receipt SHALL write
+`results/experiment_3338_sota_gguf_tokenizer_runtime_receipt_v1.json`; SHALL
+define `MODEL_SPECS` through `cached_sota_pair(gpu_indices=(0, 1))` when that
+resolver can produce a pair; SHALL still include all three mandated model IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The receipt SHALL inspect local cache paths, file sizes, and checksum evidence
+when files are present; SHALL record tokenizer dependency availability,
+`llama_cpp` loader import metadata, and GPU visibility through the selected
+Python's `torch.cuda` rather than relying only on `nvidia-smi`; and SHALL
+attempt the smallest practical load/tokenize/generate smoke for each locally
+available mandated GGUF. If a model cannot load, tokenize, or generate, the
+receipt SHALL record the exact exception and continue to the next available
+mandated model.
+
+The artifact SHALL expose `honest_verdict`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, `files_updated`,
+`model_specs`, `cache_status`, `tokenizer_status`, `loader_status`,
+`gpu_status`, `smoke_generation_status`, `runtime_receipt_clean`, and
+`blocked_reasons`. `runtime_receipt_clean` SHALL be true only when at least one
+mandated local SOTA GGUF completes a non-empty local load/tokenize/generate
+smoke. Legacy small models MAY be used only as CPU loader controls, SHALL be
+labeled non-headline, and SHALL never set `runtime_receipt_clean=true`.
+
+### SCENARIO-INFER-SOTA-3338-001: Mandated Runtime Receipt Opens Gate
+
+**Given** at least one mandated SOTA GGUF resolves from local cache
+**And** the selected Python can import `llama_cpp` and sees CUDA through
+`torch.cuda`
+**When** Exp 3338 runs a bounded load/tokenize/generate smoke
+**Then** `runtime_receipt_clean` is true only if a mandated model emits a
+non-empty response
+**And** the artifact records cache, tokenizer, loader, GPU, checksum, and
+per-model smoke evidence for all mandated IDs.
+
+### SCENARIO-INFER-SOTA-3338-002: Runtime Failures Block Precisely
+
+**Given** mandated GGUF cache paths may exist locally
+**But** every available mandated model fails tokenizer, loader, or generation
+smoke
+**When** Exp 3338 runs
+**Then** `runtime_receipt_clean` is false
+**And** `blocked_reasons` preserves the exact failure for each attempted
+mandated model
+**And** any legacy CPU smoke control remains non-headline.
+
+### REQ-INFER-SOTA-3344: Exp 3344 Constrained Output Extractor llguidance Smoke
+
+The system SHALL provide an Exp 3344 constrained structured-output extraction smoke for local SOTA GGUF outputs.
+The artifact SHALL write `results/experiment_3344_constrained_output_extractor_llguidance_smoke_v1.json`.
+The runner SHALL use `cached_sota_pair(gpu_indices=(0, 1))` to define `MODEL_SPECS`, requiring at least one mandated model.
+It SHALL check for `llguidance` or `xgrammar` and implement a blocked artifact with exact missing dependency information if neither is available.
+If available, it SHALL run a live extraction smoke on prompts requiring structured claims/constraints, comparing unconstrained to constrained output.
+It SHALL measure `parse_failure_rate`, `schema_valid_rate`, `exact_verifier_accept_rate`, and `semantic_false_accept_count`.
+Formatting success alone SHALL NOT be counted as correctness.
+The artifact SHALL expose `honest_verdict`, `inference_substrate`, `random_seed`, `reproducibility_checksum`, `duration_s`, `files_updated`, `model_specs`, `constrained_tool`, `n_cases`, `parse_failure_rate_unconstrained`, `parse_failure_rate_constrained`, `exact_verifier_accept_rate_unconstrained`, `exact_verifier_accept_rate_constrained`, `semantic_false_accept_count`, `constrained_extractor_ready`, and `blocked_reasons`.
+
+### SCENARIO-INFER-SOTA-3344-001: Missing Dependencies Block Precisely
+
+**Given** neither llguidance nor xgrammar is installed
+**When** the smoke test is run
+**Then** it writes a blocked artifact rather than silently falling back to ad hoc parsing
+**And** the output includes missing dependency reasons in `blocked_reasons`
+**And** `constrained_extractor_ready` is false.
+
+### REQ-INFER-SOTA-014: Exp 2870 SOTA Energy Baseline Micro-Panel
+
+The system SHALL provide an Exp 2870 live SOTA GGUF micro-panel artifact that
+runs only after
+`results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json` reports
+`sota_runtime_ready_v3=true`.  The runner SHALL call
+`cached_sota_pair(gpu_indices=(0, 1))` first, SHALL use no legacy small model
+for headline evidence, SHALL include at least one mandated SOTA GGUF from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` in the live `model_specs`, and SHALL select a
+deterministic 10-20 row local micro-panel from `data/eval_manifests/` or FoVer
+data.  It SHALL generate bounded greedy responses, capture first-token
+logprob/top-k telemetry when the runtime exposes it, compute first-token
+confidence and spilled/marginalized-energy-style logit baselines only from real
+telemetry, and SHALL record `blocked_logprobs_unavailable` instead of
+fabricating metrics when logits/logprobs are unavailable.
+
+The artifact SHALL be written to
+`results/experiment_2870_sota_energy_baseline_micro_panel_v1.json`; SHALL make
+no full-benchmark claim; and SHALL expose `honest_verdict`,
+`micro_panel_ready`, `live_model_invoked`, `model_specs`, `models_used`,
+`n_examples`, `first_token_confidence_available`, `spilled_energy_available`,
+`first_token_confidence_auroc`, `spilled_energy_auroc`,
+`usable_response_count`, `blocked_metrics`, `sample_rows`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `field_principles`,
+`run_date`, and `duration_s`.
+
+### SCENARIO-INFER-SOTA-014-001: Live Micro-Panel Reports Cheap Logit Signals
+
+**Given** Exp 2862 reports `sota_runtime_ready_v3=true`
+**And** a mandated local SOTA GGUF model is resolved from `cached_sota_pair()`
+or from the Exp 2862 selected model evidence
+**When** Exp 2870 runs a deterministic 10-20 example micro-panel with bounded
+greedy decoding
+**Then** the artifact records live model invocation, model provenance, sample
+rows, response correctness labels, first-token confidence availability, spilled
+energy availability, AUROC values when both labels and telemetry are usable,
+and explicit blocked metrics for unsupported telemetry or undefined AUROC.
+
+### REQ-INFER-SOTA-015: Exp 2874 SOTA Runtime Clean Corrigendum V4
+
+The system SHALL provide an Exp 2874 clean runtime corrigendum artifact that
+records citation-grade local SOTA GGUF runtime state before downstream live
+model tasks resume.  The artifact SHALL be written to
+`results/experiment_2874_sota_runtime_clean_corrigendum_v4.json`; SHALL inspect
+`.venv/bin/python` torch/CUDA availability, NVIDIA GPU inventory,
+`llama_cpp` import/version/origin, `llama_cpp.llama_cpp.llama_supports_gpu_offload()`,
+local cache resolution for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and
+`cached_sota_pair(gpu_indices=(0, 1))`; SHALL run a bounded fixed-seed prompt
+suite only when at least one mandated local GGUF, CUDA, and llama.cpp GPU
+offload are all available; and SHALL NOT modify `scripts/research_conductor.py`
+or `research-roadmap.yaml`.
+
+The artifact SHALL expose `honest_verdict`, `sota_runtime_clean`,
+`sota_runtime_ready_v4`, `model_specs`, `selected_model_hf_id`,
+`selected_model_path`, `selected_model_checksum_or_fingerprint`,
+`cached_sota_pair_returned_two_loadable_specs`,
+`llama_cpp_gpu_offload_verified`, `preconditions_checked`, `prompt_suite`,
+`usable_response_count`, `nonempty_response_count`, `total_tokens_generated`,
+`tokens_per_second`, `gpu_memory_evidence`,
+`legacy_small_models_used_only_for_smoke`, `random_seed`,
+`reproducibility_checksum`, `tests_run`, `field_principles`, `run_date`, and
+`duration_s`.  `sota_runtime_clean` and `sota_runtime_ready_v4` SHALL be true
+only when at least one mandated SOTA GGUF generated a non-empty usable response
+through GPU-backed llama.cpp with complete model fingerprint, prompt text,
+timing, token, and GPU-memory provenance.  Legacy Qwen3.5-0.8B and Gemma4-E4B
+models MAY appear only as CPU-smoke context and SHALL never set
+`sota_runtime_clean=true`.
+
+Pair readiness SHALL remain separate from single-model runtime readiness:
+`cached_sota_pair_returned_two_loadable_specs` SHALL be true only when two
+mandated local GGUF specs are actually loadable, but it SHALL NOT be required
+for `sota_runtime_clean=true` when one mandated model has clean GPU-backed
+runtime provenance.
+
+### SCENARIO-INFER-SOTA-015-001: One Mandated Clean GPU Response Opens V4
+
+**Given** CUDA-capable torch, NVIDIA GPUs, and llama.cpp GPU offload are
+available
+**And** exactly one mandated local SOTA GGUF resolves from cache
+**When** Exp 2874 runs its fixed-seed prompt suite on that model
+**Then** `sota_runtime_clean` and `sota_runtime_ready_v4` are true only if the
+artifact records non-empty usable output text, generated-token count,
+wall-clock timing, model fingerprint, GPU memory before/after evidence, and the
+exact prompt text for at least one suite row.
+
+### SCENARIO-INFER-SOTA-015-002: Missing Runtime Preconditions Block V4
+
+**Given** any required single-model runtime precondition is unavailable
+**When** Exp 2874 runs
+**Then** it writes a blocked artifact with `sota_runtime_clean=false`,
+`sota_runtime_ready_v4=false`, a populated `preconditions_checked` list, and no
+legacy small-model promotion.
+
+### SCENARIO-INFER-SOTA-015-003: Pair Readiness Is Not Single-Model Readiness
+
+**Given** exactly one mandated local SOTA GGUF is cached and
+`cached_sota_pair(gpu_indices=(0, 1))` returns `None`
+**When** Exp 2874 records a clean single-model GPU runtime
+**Then** `cached_sota_pair_returned_two_loadable_specs` remains false while
+`sota_runtime_clean` may be true.
+
+### REQ-INFER-SOTA-016: Exp 2875 SOTA Energy/Logprob Micro-Panel Corrigendum V2
+
+The system SHALL provide an Exp 2875 corrigendum artifact for the Exp 2870
+SOTA energy micro-panel telemetry gap.  The artifact SHALL be written to
+`results/experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.json`;
+SHALL first confirm that Exp 2874 reports `sota_runtime_clean=true`, the
+selected model is one of the mandated headline GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`, the selected GGUF path exists, and
+llama.cpp GPU offload is visible; and SHALL then verify that the live llama.cpp
+path exposes token logprobs or a documented substitute telemetry path before
+running the tiny prompt panel.
+
+The runner SHALL use only mandated headline GGUFs in headline prompt rows.
+Legacy Qwen3.5-0.8B and Gemma4-E4B models MAY appear only as CPU-smoke context
+and SHALL never set `micro_panel_clean=true`.  The prompt panel SHALL use fixed
+seeded, bounded prompts with existing FEVER/FoVer/HaluEval-style labels only;
+it SHALL record raw outputs, non-empty response status, first-token confidence
+when token logprobs are present, spilled-energy-style score from token
+logprobs, or a documented substitute score when substitute telemetry is used.
+
+The artifact SHALL expose `honest_verdict`, `micro_panel_clean`,
+`blocked_reason`, `model_specs`, `selected_model_hf_id`,
+`selected_model_path`, `preconditions_checked`, `n_prompts`,
+`n_nonempty_responses`, `logprobs_available`, `substitute_telemetry_used`,
+`prompt_rows`, `auroc_if_computable`, `benchmark_claim_made`, `random_seed`,
+`tests_run`, `field_principles`, `run_date`, and `duration_s`.
+`micro_panel_clean` SHALL be true only when every prompt row has a non-empty
+response and every prompt row has sufficient real token-logprob or documented
+substitute telemetry for the stated diagnostic analysis.  If telemetry is
+unavailable, the artifact SHALL set `blocked_reason` to
+`blocked_logprobs_unavailable` or the exact `blocked_*` precondition verdict and
+SHALL make no benchmark claim.
+
+### SCENARIO-INFER-SOTA-016-001: Clean Telemetry Allows Diagnostic Panel
+
+**Given** Exp 2874 is clean, the selected mandated GGUF path exists, GPU offload
+is visible, and llama.cpp exposes token logprobs or documented substitute
+telemetry
+**When** Exp 2875 runs the fixed tiny micro-panel
+**Then** the artifact records all prompt rows with non-empty responses, model
+provenance, telemetry-derived scores, AUROC only when label variance makes it
+computable, `micro_panel_clean=true`, and `benchmark_claim_made=false`.
+
+### SCENARIO-INFER-SOTA-016-002: Missing Telemetry Blocks Corrigendum
+
+**Given** Exp 2874 is clean and the selected mandated GGUF can generate text
+**But** llama.cpp exposes neither token logprobs nor documented substitute
+telemetry
+**When** Exp 2875 runs
+**Then** it writes a complete blocked artifact with
+`blocked_reason=blocked_logprobs_unavailable`, preserves the exact precondition
+evidence, keeps `prompt_rows` diagnostic-only, sets `micro_panel_clean=false`,
+and makes no benchmark claim.
+
+### REQ-INFER-SOTA-017: Exp 2886 SOTA Micro-Panel Clean Telemetry V3
+
+The system SHALL provide an Exp 2886 corrigendum that clears the .272 capstone's
+adversarial flag on the Exp 2875 micro-panel.  The artifact SHALL be written to
+`results/experiment_2886_sota_micro_panel_clean_telemetry_v3.json`; SHALL reuse
+the REQ-INFER-SOTA-016 preconditions; and SHALL additionally expose a
+`reproducibility_checksum`, an `selected_model_fingerprint`, a
+`cached_sota_pair_returned_two_loadable_specs` flag read from Exp 2874, a
+`gpu_memory_evidence` object with nvidia-smi snapshots taken before and after the
+panel runs, a `micro_panel_downgraded_to_non_benchmark` boolean, and an
+`adversarial_verify_invoked` boolean.  The artifact SHALL re-load itself through
+`scripts.adversarial_verify.verify_artifact` and embed the result under
+`adversarial_verify_result`.  The artifact's wall-clock `duration_s` SHALL be the
+genuine measured duration of the panel run, not a sleep-padded value.
+`micro_panel_clean` SHALL be true only when every row has non-empty text and real
+token-logprob or documented substitute telemetry; otherwise the artifact SHALL
+set `micro_panel_downgraded_to_non_benchmark=true` and `benchmark_claim_made=false`.
+
+### SCENARIO-INFER-SOTA-017-001: Clean Telemetry Survives Adversarial Verify
+
+**Given** Exp 2874 reports `sota_runtime_clean=true`, llama.cpp exposes token
+logprobs, and the panel runner returns non-empty rows with finite logprobs
+**When** Exp 2886 v3 builds the artifact
+**Then** the artifact records `micro_panel_clean=true`,
+`micro_panel_downgraded_to_non_benchmark=false`, a non-null
+`reproducibility_checksum`, a populated `gpu_memory_evidence`, and an embedded
+`adversarial_verify_result`.
+
+### SCENARIO-INFER-SOTA-017-002: Missing Telemetry Triggers Downgrade
+
+**Given** the panel rows lack token logprobs and lack documented substitute
+telemetry
+**When** Exp 2886 v3 runs
+**Then** the artifact records `micro_panel_clean=false`,
+`micro_panel_downgraded_to_non_benchmark=true`, an honest_verdict starting with
+`complete:`, and makes no benchmark claim.
+
+### SCENARIO-INFER-SOTA-017-003: Precondition Failure Blocks Before Panel
+
+**Given** Exp 2874 reports `sota_runtime_clean=false`
+**When** Exp 2886 v3 runs
+**Then** the artifact records a precondition-derived `blocked_reason`, leaves
+the panel rows empty, populates the reproducibility checksum from the empty
+panel inputs, and still embeds the adversarial verify result.
+
+### REQ-INFER-SOTA-018: Exp 2917 Spilled-Energy Logit Detector Micro-Panel
+
+The system SHALL provide an Exp 2917 diagnostic micro-panel runner that writes
+`results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json`.
+The runner SHALL call `cached_sota_pair(gpu_indices=(0, 1))` before any fallback
+model resolution, SHALL use only locally cached mandated SOTA GGUF model specs
+for live llama.cpp inference, and SHALL include at least one of
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` in the live path.  If the runtime returns no
+token logprobs, top-k logprobs, or final-token logits, the runner SHALL write a
+complete artifact with `blocked_reason=blocked_logprob_runtime_unavailable`,
+`spilled_energy_micro_panel_ready=false`, `logprob_or_logits_available=false`,
+and no benchmark claim.
+
+When telemetry is available, the runner SHALL build a bounded 24-40 example
+panel from local verified/failing code-generation outputs and local factuality
+examples.  Every example row SHALL include source provenance, prompt hash, raw
+LLM response, model id, token count, logprob/logit availability, verification
+label, final-token spilled-energy score, final-token marginal-energy score, and
+sequence-level spilled/marginal energy summaries when token logprobs are
+present.  The runner SHALL compute only simple diagnostic separation summaries
+(for example group means, deltas, and tie-aware AUROC over fixed features) and
+SHALL NOT train a detector or promote any benchmark/matrix-row claim.
+
+The artifact SHALL expose `honest_verdict`,
+`spilled_energy_micro_panel_ready`, `benchmark_claim_made`, `claim_boundary`,
+`model_specs`, `models_used`, `cached_sota_pair_used`, `examples`,
+`random_seed`, `logprob_or_logits_available`, `spilled_energy_features`,
+`separation_summary`, `inference_substrate`, `duration_s`, and `run_date`.
+`claim_boundary` SHALL equal `diagnostic_only_no_benchmark_claim`;
+`benchmark_claim_made` SHALL always be false; `random_seed` SHALL equal 2917;
+`inference_substrate` SHALL equal `live_llm_inference`; and `run_date` SHALL
+equal `20260523`.
+
+### SCENARIO-INFER-SOTA-018-001: Logprob Runtime Writes Diagnostic Micro-Panel
+
+**Given** at least one mandated SOTA GGUF can be resolved after
+`cached_sota_pair(gpu_indices=(0, 1))` is attempted
+**And** the live inference runtime returns token logprobs, top-k logprobs, or
+final-token logits for panel prompts
+**When** Exp 2917 runs
+**Then** it writes a 24-40 row diagnostic artifact with raw responses,
+prompt hashes, model provenance, verification labels, spilled/marginal energy
+features, simple separation metrics, `claim_boundary` set to
+`diagnostic_only_no_benchmark_claim`, and `benchmark_claim_made=false`.
+
+### SCENARIO-INFER-SOTA-018-002: Missing Logprob Runtime Blocks Cleanly
+
+**Given** at least one mandated SOTA GGUF can generate text
+**But** the runtime returns neither token logprobs, top-k logprobs, nor
+final-token logits
+**When** Exp 2917 runs
+**Then** it writes `blocked_reason=blocked_logprob_runtime_unavailable`,
+`spilled_energy_micro_panel_ready=false`, `logprob_or_logits_available=false`,
+and exits without fabricating spilled-energy metrics or benchmark claims.
+
+### REQ-INFER-SOTA-019: Exp 2989 SOTA GGUF Cache Provenance Preflight
+
+The system SHALL provide an Exp 2989 bounded SOTA GGUF cache/provenance
+preflight that gates downstream headline live-LLM claims before Exp 2977-style
+repair evidence is reused.  The preflight SHALL be written to
+`results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json`; SHALL
+record CUDA/GPU availability, free VRAM when available, the repository commit,
+the Python environment, and local cache-root existence before any model load;
+SHALL inspect the mandated headline GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through the shared `cached_sota_pair()` /
+local-cache resolver pattern; and SHALL attempt a bounded conservative
+llama.cpp prompt only for locally available headline GGUF files.
+
+For every headline model inspected, the artifact SHALL record the exact model
+ID, local cache path when present, file-size/checksum evidence when feasible,
+load status, generation status, duration, and transcript path/hash when live
+generation succeeds.  Legacy small models `Qwen/Qwen3.5-0.8B` and
+`unsloth/gemma-4-E4B-it-GGUF` MAY appear only as smoke-only context and SHALL
+never set `sota_headline_ready=true`.
+
+The artifact SHALL expose `sota_headline_ready`, `preconditions_checked`,
+`model_specs`, `sota_models_attempted`, `sota_models_available`, `cache_paths`,
+`model_checksums`, `live_transcript_paths`, `legacy_smoke_only_used`,
+`inference_substrate`, `duration_seconds`, and `honest_verdict`.
+`sota_headline_ready` SHALL be true only when at least one mandated headline
+GGUF produces a real non-empty transcript with cache/provenance fields.
+
+### SCENARIO-INFER-SOTA-019-001: Available Headline GGUF Produces Transcript Evidence
+
+**Given** preconditions have been recorded before model loading
+**And** at least one mandated headline GGUF resolves to a local file
+**When** Exp 2989 runs a bounded conservative prompt on that headline model
+**Then** `sota_headline_ready=true` only if the model produces a non-empty
+transcript
+**And** the artifact records the transcript path/hash, model ID, cache path,
+checksum evidence, load status, generation status, measured duration, and
+`honest_verdict` starting with `success:`.
+
+### SCENARIO-INFER-SOTA-019-002: Missing Headline Cache Blocks Without Small-Model Promotion
+
+**Given** no mandated headline GGUF resolves to a local file
+**When** Exp 2989 runs
+**Then** it writes a terminal blocked artifact with `sota_headline_ready=false`
+**And** all mandated headline IDs appear in `sota_models_attempted` with
+missing-cache status
+**And** any legacy small-model smoke context is labeled `smoke_only` and never
+contributes to headline readiness.
+
+### REQ-INFER-SOTA-020: Exp 3001 SOTA GGUF Cache Carry-Forward Checksum Refresh
+
+The system SHALL provide an Exp 3001 local-only cache/provenance refresh that
+gates milestone `.282` headline live-LLM claims on fresh SOTA GGUF evidence
+rather than reused Exp 2989 state.  The refresh SHALL be written to
+`results/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.json`;
+SHALL record CUDA/GPU availability, free VRAM when available, repository
+commit, Python environment, cache roots, and checksum feasibility before any
+model load; SHALL inspect the mandated headline GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through the shared `cached_sota_pair()` /
+local-cache resolver pattern; and SHALL attempt bounded conservative
+llama.cpp generation only for locally available headline GGUF files.
+
+For every headline model inspected, the artifact SHALL record exact model ID,
+local cache path when present, file-size/checksum evidence when feasible, load
+status, generation status, measured duration, and transcript path/hash when
+live generation succeeds.  Legacy small models `Qwen/Qwen3.5-0.8B` and
+`unsloth/gemma-4-E4B-it-GGUF` MAY appear only as smoke-only context and SHALL
+never set `sota_headline_ready=true`.
+
+The artifact SHALL expose `sota_headline_ready`, `preconditions_checked`,
+`model_specs`, `sota_models_attempted`, `sota_models_available`, `cache_paths`,
+`model_checksums`, `live_transcript_paths`, `legacy_smoke_only_used`,
+`inference_substrate`, `duration_seconds`, and `honest_verdict`.
+`sota_headline_ready` SHALL be true only when at least one mandated headline
+GGUF produces a real non-empty transcript with cache/provenance fields.
+
+### SCENARIO-INFER-SOTA-020-001: Fresh Headline GGUF Transcript Opens The .282 Gate
+
+**Given** Exp 3001 has recorded preconditions before model loading
+**And** at least one mandated headline GGUF resolves to a local file
+**When** Exp 3001 runs a bounded conservative prompt on that headline model
+**Then** `sota_headline_ready=true` only if the model produces a non-empty
+transcript
+**And** the artifact records transcript path/hash, model ID, cache path,
+checksum evidence, load status, generation status, measured duration, and an
+`honest_verdict` starting with `success:`.
+
+### SCENARIO-INFER-SOTA-020-002: No Headline Run Emits Terminal Blocked Artifact
+
+**Given** no mandated headline GGUF can complete live generation locally
+**When** Exp 3001 runs
+**Then** it writes a terminal blocked artifact with `sota_headline_ready=false`
+**And** all mandated headline IDs appear in `sota_models_attempted` with
+auditable missing-cache, precondition-failure, or generation-failure status
+**And** any legacy small-model smoke context is labeled smoke-only and never
+contributes to headline readiness.
+
+### REQ-INFER-SOTA-021: Exp 3013 SOTA GGUF Logprob Telemetry Preflight
+
+The system SHALL provide an Exp 3013 local-only SOTA GGUF readiness refresh
+that determines both whether at least one mandated headline GGUF can produce a
+live transcript and whether the current local loader exposes token logprob and
+top-k telemetry suitable for Cactus-style constrained acceptance.  The
+preflight SHALL be written to
+`results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json`;
+SHALL record CUDA/GPU availability, free VRAM when available, repository
+commit, Python environment, cache roots, and checksum feasibility before any
+model load; SHALL inspect the mandated headline GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through the shared `cached_sota_pair()` /
+local-cache resolver pattern; and SHALL attempt bounded conservative
+llama.cpp generation only for locally available headline GGUF files.
+
+For every headline model inspected, the artifact SHALL record exact model ID,
+local cache path when present, file-size/checksum evidence when feasible, load
+status, generation status, measured duration, transcript path/hash when live
+generation succeeds, and observed loader telemetry capability booleans for
+token logprobs, top-k alternatives, and logits.  Legacy small models
+`Qwen/Qwen3.5-0.8B` and `unsloth/gemma-4-E4B-it-GGUF` MAY appear only as
+smoke-only context and SHALL never set `sota_headline_ready=true`.
+
+The artifact SHALL expose `sota_headline_ready`, `sota_logprob_ready`,
+`preconditions_checked`, `model_specs`, `headline_models_attempted`,
+`headline_models_available`, `telemetry_capabilities`, `cache_paths`,
+`model_checksums`, `live_transcript_paths`, `legacy_smoke_only_used`,
+`inference_substrate`, `duration_s`, and `honest_verdict`.
+`sota_headline_ready` SHALL be true only when at least one mandated headline
+GGUF produces a real non-empty transcript with cache/provenance fields.
+`sota_logprob_ready` SHALL be true only when observed live loader output
+contains token logprob and top-k alternative data; live transcript generation
+without telemetry SHALL leave `sota_logprob_ready=false` without fabricating
+telemetry.
+
+The Exp 3013 runner SHALL also support the v466 runtime-truth artifact shape
+used by downstream uPRM/VPR/DCCD/D6 gates.  The artifact SHALL resolve all
+three mandated GGUFs through the local cache or shared `cached_sota_pair()` /
+resolver pattern, SHALL NOT call `AutoTokenizer` on a `*-GGUF` repo ID, SHALL
+probe configured llama.cpp-compatible endpoints such as
+`http://127.0.0.1:8080` for completion plus top-logprob or confidence
+telemetry, and SHALL expose `usable_sota_models`, `sota_models_ready`,
+`completion_endpoint_ready`, `logprob_endpoint_ready`,
+`top_logprob_or_confidence_ready`, `tool_first_verifier_ready`,
+`live_completion_invoked`, `skip_reasons`, and `flagged_adversarial`.
+When no endpoint returns a non-empty completion, the artifact SHALL set
+`live_completion_invoked=false`, SHALL avoid the `live_llm_inference`
+substrate declaration, and SHALL use a terminal-prefix verdict such as
+`complete_gguf_logprob_preflight_partial_ready` or
+`blocked_gguf_logprob_preflight_no_ready_paths`.  When a live endpoint
+completion is invoked, the artifact SHALL record endpoint timing and enough
+probe detail to distinguish a real endpoint call from a cache-only preflight.
+For the v467 endpoint bring-up repair, the artifact SHALL also record
+`server_command`, `endpoint_url`, `sample_completion`,
+`sample_logprob_evidence`, and `blocker_root_cause`; SHALL attempt to start a
+local llama.cpp-compatible `llama-server` on a free port when no configured
+endpoint is already usable; SHALL prefer the smallest locally available
+mandated GGUF for that bring-up while keeping all three mandated IDs in
+`model_specs`; and SHALL emit a terminal-prefix verdict such as
+`success_llamacpp_logprob_endpoint_ready` or
+`blocked_llamacpp_logprob_endpoint_bringup_no_binary_or_runtime` without
+claiming live inference when no completion was actually invoked.
+
+### SCENARIO-INFER-SOTA-021-001: Live Transcript With Telemetry Opens Both Gates
+
+**Given** Exp 3013 has recorded preconditions before model loading
+**And** at least one mandated headline GGUF resolves to a local file
+**When** Exp 3013 runs a bounded conservative prompt and the loader returns
+non-empty text with token logprob and top-k alternative fields
+**Then** `sota_headline_ready=true`
+**And** `sota_logprob_ready=true`
+**And** the artifact records transcript path/hash, model ID, cache path,
+checksum evidence, load status, generation status, measured duration, and
+observed telemetry capability fields.
+
+### SCENARIO-INFER-SOTA-021-002: Live Transcript Without Telemetry Does Not Fake Logprobs
+
+**Given** a mandated headline GGUF produces non-empty text locally
+**But** the loader output lacks token logprobs or top-k alternatives
+**When** Exp 3013 completes
+**Then** `sota_headline_ready=true`
+**And** `sota_logprob_ready=false`
+**And** `telemetry_capabilities` records the missing telemetry blockers without
+fabricating logprob, top-k, or logits evidence.
+
+### SCENARIO-INFER-SOTA-021-003: No Headline Run Emits Blocked SOTA Artifact
+
+**Given** no mandated headline GGUF can complete live generation locally
+**When** Exp 3013 runs
+**Then** it writes a terminal blocked artifact with
+`honest_verdict=blocked_sota_headline_model_unavailable`
+**And** all mandated headline IDs appear in `headline_models_attempted` with
+auditable missing-cache, precondition-failure, or generation-failure status
+**And** any legacy small-model smoke context is labeled smoke-only and never
+contributes to headline readiness or logprob readiness.
+
+### SCENARIO-INFER-SOTA-021-004: Endpoint Runtime Truth Is Split From Cache Readiness
+
+**Given** all three mandated GGUFs resolve to local `.gguf` files
+**And** no configured llama.cpp endpoint returns a completion
+**When** Exp 3013 writes the v466 runtime-truth artifact
+**Then** `sota_models_ready=true`
+**And** `completion_endpoint_ready=false`
+**And** `live_completion_invoked=false`
+**And** `inference_substrate` does not claim `live_llm_inference`
+**And** `skip_reasons` records the missing endpoint and telemetry lanes.
+
+**Given** a configured llama.cpp endpoint returns a non-empty completion with
+top-logprob telemetry
+**When** Exp 3013 writes the v466 runtime-truth artifact
+**Then** `completion_endpoint_ready=true`
+**And** `logprob_endpoint_ready=true`
+**And** `top_logprob_or_confidence_ready=true`
+**And** the artifact records endpoint timing and a terminal
+`complete_gguf_logprob_preflight_ready` verdict.
+
+### SCENARIO-INFER-SOTA-021-005: Llama.cpp Endpoint Bring-Up Emits Runtime Evidence
+
+**Given** all three mandated GGUFs resolve to local `.gguf` files
+**And** no configured llama.cpp-compatible endpoint returns a completion
+**When** Exp 3013 writes the v467 endpoint bring-up artifact
+**Then** it records CUDA/GPU visibility, llama.cpp Python and server-binary
+availability, local GGUF paths, a free-port probe, and relevant environment
+variables in `preconditions_checked`
+**And** it either starts `llama-server` with the smallest operational mandated
+GGUF and records `server_command`, PID, endpoint URL, server logs, cleanup
+behavior, sample completion, and token/top-logprob evidence
+**Or** it records `live_completion_invoked=false`, null sample telemetry, and
+`blocker_root_cause` with exact missing binary, runtime, port, or server-log
+evidence
+**And** the terminal verdict starts with
+`success_llamacpp_logprob_endpoint_ready` only when completion plus logprob or
+top-logprob telemetry were observed, otherwise with
+`blocked_llamacpp_logprob_endpoint_bringup_`.
+
+### REQ-INFER-SOTA-022: Exp 3043 Transcript Fingerprint Replay Preflight
+
+The system SHALL provide an Exp 3043 local-only transcript fingerprint
+preflight for deterministic repair-inference replay.  The preflight SHALL write
+`results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json`;
+SHALL resolve mandated local SOTA GGUFs through `cached_sota_pair()` or the
+shared SOTA local-cache resolver pattern; SHALL NOT use legacy small models as
+headline evidence; and SHALL attempt live llama.cpp generation on at least one
+available mandated GGUF from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+Before model loading, the preflight SHALL record CUDA availability, GPU free
+memory when available, repository commit, Python executable/version, cache
+resolution for every mandated GGUF, selected model path, model checksum
+feasibility, seed, batch size, decoding parameters, and wall-clock duration.
+If no mandated GGUF is locally loadable, the artifact SHALL set
+`fingerprint_live_ready=false`, preserve the precondition evidence, and emit a
+`blocked_sota_gguf_unavailable` verdict without falling back to legacy models.
+
+For a tiny fixed repair-style prompt set, the preflight SHALL record
+`prompt_hash`, `model_hash_or_cache_path`, `decode_config`, `seed`,
+`raw_output_hash`, `normalized_output_hash`, and `batch_context_hash` for each
+transcript.  It SHALL rerun the same prompt/config at least once and set
+`deterministic_replay_passed` only when the raw and normalized output hashes
+match across runs.  Runtime nondeterminism SHALL be recorded as explicit replay
+divergence rather than hidden.
+
+The artifact SHALL expose `fingerprint_live_ready`, `models_used`,
+`model_specs`, `legacy_smoke_only_used`, `n_prompts`,
+`deterministic_replay_passed`, `prompt_hashes`, `output_hashes`,
+`decode_config`, `batch_context_hash`, `reproducibility_checksum`,
+`inference_substrate`, and `honest_verdict`.  It SHALL make no repair
+pass-rate, performance, or promotion claim.
+
+### SCENARIO-INFER-SOTA-022-001: Deterministic Transcript Replay Opens Fingerprint Gate
+
+**Given** at least one mandated SOTA GGUF resolves locally
+**And** the local runtime returns identical text hashes for repeated bounded
+repair-style prompts under the same seed and decode config
+**When** Exp 3043 runs
+**Then** `fingerprint_live_ready=true`
+**And** `deterministic_replay_passed=true`
+**And** the artifact records prompt hashes, output hashes, model/cache
+identity, decode config, batch context hash, reproducibility checksum, and
+pre-load inference substrate metadata.
+
+### SCENARIO-INFER-SOTA-022-002: Replay Divergence Is Preserved
+
+**Given** a mandated SOTA GGUF resolves locally and generates text
+**But** repeated runs under the same prompt, seed, and decode config produce
+different raw or normalized output hashes
+**When** Exp 3043 completes
+**Then** `deterministic_replay_passed=false`
+**And** `fingerprint_live_ready=false`
+
+### REQ-INFER-SOTA-023: Robust Reusable GGUF Generator Harness
+
+The system SHALL expose `python/carnot/verify/gguf_inference.py` as the shared
+live GGUF generation entrypoint for verifier self-check experiments.  The
+entrypoint SHALL provide `load_gguf_generator(prefer_order=None, n_ctx=1024,
+max_n_gpu_layers=-1)` and `generate(generator, prompt, max_tokens)`.
+
+`load_gguf_generator` SHALL resolve only locally cached headline GGUF files for
+`unsloth/gemma-4-26B-A4B-it-GGUF`,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, and
+`unsloth/gemma-4-31B-it-GGUF`, in that default order unless an explicit
+`prefer_order` is supplied.  For each candidate, it SHALL try llama.cpp loading
+with `n_gpu_layers` values `[max_n_gpu_layers, 20, 0]`, catching and recording
+every load or generation exception before moving to the next fallback.
+
+After each successful load, the harness SHALL run a bounded one-token
+generation smoke prompt and require at least one emitted output token before it
+returns readiness.  The returned metadata SHALL include `model_used`,
+`gguf_path`, `n_gpu_layers_used`, `load_s`, `smoke_s`, `smoke_tokens`, and
+`fallback_index`.  If every candidate/offload combination fails, the harness
+SHALL raise a clear `RuntimeError` that names the failed model/offload attempts
+so callers can emit an honest `blocked_all_gguf_inference_failed` verdict.
+
+### SCENARIO-INFER-SOTA-023-001: Cached Headline GGUF Loads And Smokes
+
+**Given** CUDA, llama.cpp, and at least one mandated headline GGUF are available
+locally
+**When** `load_gguf_generator()` is called
+**Then** it returns a llama.cpp-backed generator plus metadata naming the
+selected model, GGUF path, offload level, fallback index, and positive smoke
+token count
+**And** a second `generate(...)` call returns non-empty text.
+
+### SCENARIO-INFER-SOTA-023-002: Exhausted Fallbacks Report Honest Failure
+
+**Given** every candidate model/offload attempt fails to load or emit a smoke
+token
+**When** `load_gguf_generator()` exhausts its fallback chain
+**Then** it raises `RuntimeError` with one failure entry per attempted
+model/offload combination instead of returning a fabricated generator.
+**And** the artifact records replay divergence rows instead of claiming
+deterministic readiness.
+
+### SCENARIO-INFER-SOTA-022-003: Missing SOTA GGUF Blocks Without Legacy Evidence
+
+**Given** no mandated SOTA GGUF resolves from local cache
+**When** Exp 3043 runs
+**Then** it writes a terminal artifact with `fingerprint_live_ready=false`
+**And** `legacy_smoke_only_used=false`
+**And** `honest_verdict` starts with `blocked_sota_gguf_unavailable`.
+
+### REQ-INFER-SOTA-023: Exp 3123 SOTA Cache Preconditions Manifest v2
+
+The system SHALL provide an Exp 3123 local-only SOTA cache/precondition
+manifest that downstream live-LLM headline tasks can consume before invoking
+verifiers, repair loops, self-learning loops, energy sidecars, or any other
+compute-bound live model path.  The manifest SHALL probe only local filesystem,
+cache, GPU-preflight, and checked-in artifact state; it SHALL NOT download
+models and SHALL NOT run live model inference.
+
+The manifest SHALL write
+`results/experiment_3123_sota_cache_preconditions_manifest_v2.json` and SHALL
+make the mandated headline policy explicit for:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.  It SHALL record nonzero local GGUF
+availability separately from HuggingFace `.no_exist` sentinels and zero-byte
+markers, and it SHALL preserve whether `cached_sota_pair()` can resolve two
+loadable mandated specs separately from whether at least one mandated SOTA
+model is available for a bounded single-model live attempt.
+
+The artifact SHALL include `sota_cache_manifest_v2_ready`,
+`mandatory_headline_model_ids`, `present_model_ids`, `missing_model_ids`,
+`selected_headline_model_ids`, `cached_sota_pair_available`,
+`any_single_sota_available`, `headline_claim_allowed`, `gpu_preflight`,
+`downstream_usage`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`.  `headline_claim_allowed` SHALL be true only for downstream
+work that attempts at least one locally present mandated model and records live
+model evidence; pair/comparative headline claims SHALL additionally require
+`cached_sota_pair_available=true`.
+
+### SCENARIO-INFER-SOTA-023-001: Single Cached Mandated Model Opens Bounded Attempts Only
+
+**Given** exactly one mandated SOTA GGUF resolves from local cache
+**And** `cached_sota_pair()` does not return two loadable specs
+**When** Exp 3123 builds the precondition manifest
+**Then** `any_single_sota_available=true`
+**And** `cached_sota_pair_available=false`
+**And** `selected_headline_model_ids` contains only the present mandated model
+**And** downstream live-LLM rules require a bounded attempt on that present
+model or a blocked/diagnostic artifact before any headline claim.
+
+### SCENARIO-INFER-SOTA-023-002: Missing Mandated Cache Blocks Live Claims Without Solver Work
+
+**Given** no mandated SOTA GGUF resolves from local cache
+**When** Exp 3123 builds the precondition manifest
+**Then** `present_model_ids=[]`
+**And** `missing_model_ids` lists all mandated headline model IDs
+**And** `headline_claim_allowed=false`
+**And** solver-only downstream rules remain allowed without model availability
+while live-LLM downstream rules require a blocked/diagnostic artifact.
+
+### SCENARIO-INFER-SOTA-023-003: Legacy Small Models Are Smoke-Only
+
+**Given** legacy small model cache entries exist
+**When** Exp 3123 builds the precondition manifest
+**Then** legacy small model IDs may appear only in `smoke_test_model_ids`
+**And** they SHALL NOT appear in `present_model_ids`,
+`selected_headline_model_ids`, or any headline-claim allowance rule.
+
+### REQ-INFER-SOTA-024: Exp 3206 CUDA Environment Forensics Ledger
+
+The system SHALL provide an Exp 3206 CUDA environment ledger before any
+downstream llama.cpp rebuild or full local SOTA receipt rerun.  The ledger
+SHALL run clean subprocess probes with the selected Python interpreter, SHALL
+import `torch` before any project imports in one clean subprocess, SHALL import
+`llama_cpp` in a separate clean subprocess, and SHALL avoid loading a large
+GGUF model while probing llama.cpp GPU-offload support.
+
+The artifact SHALL be written to
+`results/experiment_3206_cuda_env_forensics_ledger_v1.json` and SHALL record
+`nvidia-smi`, `nvcc --version` when present, NVIDIA driver/device/memory
+state, selected Python executable, virtualenv, selected interpreter `sys.path`,
+`pip show torch`, `pip show llama-cpp-python`, `llama_cpp` filesystem origin,
+`CUDA_VISIBLE_DEVICES`, `LD_LIBRARY_PATH`, `PATH`, `CMAKE_ARGS`,
+`FORCE_CMAKE`, and llama.cpp/ggml/CUDA-related environment variables.
+
+The artifact SHALL expose at least `schema_version`, `experiment_id`,
+`milestone`, `selected_python`, `virtualenv`, `nvidia_smi_available`,
+`gpu_count_nvidia_smi`, `torch_version`, `torch_cuda_version`,
+`torch_cuda_available_clean_subprocess`,
+`torch_cuda_device_count_clean_subprocess`, `llama_cpp_version`,
+`llama_cpp_origin`, `llama_cpp_cuda_build_detected`,
+`clean_subprocess_stderr_tail`, `cuda_env_vars`, `cuda_env_diagnosed`,
+`cuda_init_clean`, `recommended_next_action`, `conductor_file_modified`,
+`active_roadmap_modified`, and `honest_verdict`.  `cuda_init_clean` SHALL be
+true only when the selected Python can initialize torch CUDA, sees at least one
+CUDA device, llama_cpp imports, llama.cpp reports GPU offload support, and the
+clean subprocess stderr does not report a CUDA initialization failure.
+
+### SCENARIO-INFER-SOTA-024-001: Clean CUDA Stack Allows Receipt Rerun
+
+**Given** `nvidia-smi` reports at least one NVIDIA GPU
+**And** the selected Python clean torch subprocess reports CUDA available and a
+nonzero device count
+**And** the clean llama_cpp subprocess imports and reports GPU offload support
+without CUDA initialization errors
+**When** Exp 3206 builds the CUDA environment ledger
+**Then** `cuda_env_diagnosed=true`
+**And** `cuda_init_clean=true`
+**And** `recommended_next_action` allows a full local SOTA receipt rerun.
+
+### SCENARIO-INFER-SOTA-024-002: Torch CUDA Failure Blocks Full Receipt
+
+**Given** `nvidia-smi` reports at least one NVIDIA GPU
+**But** the selected Python clean torch subprocess reports
+`torch.cuda.is_available() == false`
+**When** Exp 3206 builds the CUDA environment ledger
+**Then** `cuda_env_diagnosed=true`
+**And** `cuda_init_clean=false`
+**And** `recommended_next_action` keeps the next step on selected-Python CUDA
+repair rather than a full receipt rerun.
+
+### SCENARIO-INFER-SOTA-024-003: llama.cpp CUDA Init Failure Is Preserved
+
+**Given** the clean llama_cpp subprocess emits
+`ggml_cuda_init: failed to initialize CUDA`
+**When** Exp 3206 builds the CUDA environment ledger
+**Then** `llama_cpp_cuda_build_detected=true`
+**And** `clean_subprocess_stderr_tail` preserves the stderr line
+**And** `cuda_init_clean=false`.
+
+### REQ-INFER-SOTA-025: Exp 3207 llama.cpp CUDA Rebuild Clean Subprocess Gate
+
+The system SHALL provide an Exp 3207 runtime gate that reads the Exp 3206 CUDA
+environment ledger before attempting any llama.cpp rebuild.  The gate SHALL
+write `results/experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess_v1.json`,
+SHALL preserve Exp 3206's `recommended_next_action`, and SHALL NOT modify
+`scripts/research_conductor.py` or `research-roadmap.yaml`.
+
+If the selected Python clean subprocess still cannot initialize torch CUDA or
+reports zero CUDA devices, Exp 3207 SHALL NOT rebuild llama.cpp blindly.  It
+SHALL record `rebuild_attempted=false`, `torch_cuda_available_after=false`, a
+human-readable blocker containing the torch/CUDA stderr, and SHALL keep
+`cpu_fallback_only=true`, `cuda_receipt_ready=false`, and
+`clean_rerun_allowed_candidate=false`.
+
+If torch CUDA is available and the ledger indicates that llama.cpp CUDA support
+or initialization is the remaining blocker, Exp 3207 MAY attempt the minimum
+safe project-local rebuild or alternate binary path.  The rebuild command SHALL
+use the selected interpreter's dependency-management path and the llama.cpp CUDA
+configuration (`CMAKE_ARGS=-DGGML_CUDA=ON` with `FORCE_CMAKE=1`, or an
+equivalent CUDA-enabled llama-cpp-python install path).  The artifact SHALL
+record a bounded command summary and rebuild log tail.
+
+After any justified rebuild or alternate binary selection, Exp 3207 SHALL run a
+clean subprocess smoke probe that imports `llama_cpp`, detects CUDA-capable
+llama.cpp build evidence, and verifies that GPU offload support can be queried
+without an immediate `ggml_cuda_init` failure.  CPU fallback SHALL never count
+as success.
+
+The artifact SHALL expose `schema_version`, `experiment_id`, `milestone`,
+`env_ledger_artifact`, `rebuild_attempted`, `rebuild_command_summary`,
+`rebuild_log_tail`, `torch_cuda_available_after`,
+`llama_cpp_cuda_build_detected_after`,
+`clean_subprocess_gpu_offload_probe_passed`, `cpu_fallback_only`,
+`cuda_receipt_ready`, `clean_rerun_allowed_candidate`, `blocker`,
+`conductor_file_modified`, `active_roadmap_modified`, and `honest_verdict`.
+
+### SCENARIO-INFER-SOTA-025-001: Torch CUDA Blocker Stops Blind Rebuild
+
+**Given** the Exp 3206 ledger recommends selected-Python torch CUDA repair
+**And** the current clean torch subprocess still reports
+`torch.cuda.is_available() == false`
+**When** Exp 3207 runs
+**Then** it does not invoke a llama.cpp rebuild command
+**And** the artifact records the exact torch/CUDA blocker
+**And** `cuda_receipt_ready=false`.
+
+### SCENARIO-INFER-SOTA-025-002: Rebuild Is Justified Only After Torch CUDA Works
+
+**Given** the current clean torch subprocess reports CUDA available with at
+least one device
+**And** llama.cpp imports but lacks GPU offload support or emits a CUDA init
+blocker
+**When** Exp 3207 runs
+**Then** it records a CUDA-enabled llama-cpp-python rebuild or alternate binary
+command summary
+**And** preserves the rebuild log tail.
+
+### SCENARIO-INFER-SOTA-025-003: Clean GPU Offload Probe Opens Receipt Candidate
+
+**Given** torch CUDA is available after the rebuild decision
+**And** the clean llama.cpp subprocess detects CUDA build evidence and no
+`ggml_cuda_init` failure
+**When** Exp 3207 completes
+**Then** `clean_subprocess_gpu_offload_probe_passed=true`
+**And** `cpu_fallback_only=false`
+**And** `cuda_receipt_ready=true`
+**And** `clean_rerun_allowed_candidate=true`.
+
+### REQ-INFER-SOTA-026: Exp 3220 Hermetic CUDA Runtime Repair Ledger
+
+The system SHALL provide an Exp 3220 hermetic CUDA runtime repair ledger that
+writes `results/experiment_3220_hermetic_cuda_runtime_repair_ledger_v1.json`
+without loading a SOTA GGUF model or claiming model receipt.  The ledger SHALL
+probe the selected repository Python in clean subprocesses with
+`CUDA_VISIBLE_DEVICES=0`, SHALL record PyTorch CUDA availability, device count,
+stderr, and import order, and SHALL rerun the selected-Python probe under a
+sanitized CUDA environment that strips ROCm/XDNA path pollution without
+mutating the parent process.
+
+The ledger SHALL record `nvidia-smi` availability, NVIDIA driver version, CUDA
+version, visible devices, and GPU memory state.  It SHALL record the tracked
+environment variables `PATH`, `LD_LIBRARY_PATH`, `CUDA_HOME`,
+`CUDA_VISIBLE_DEVICES`, `PYTHONPATH`, `CMAKE_ARGS`, and `FORCE_CMAKE`, and
+SHALL summarize ROCm, XDNA/Vitis/Xilinx, CUDA, Python path, and CMake pollution
+findings as machine-readable entries.
+
+When safe under the repository dependency workflow, Exp 3220 SHALL compare the
+selected `.venv` against a temporary CUDA-only Python environment outside
+protected source paths.  If the temporary environment is created, the artifact
+SHALL record the exact creation/install/probe commands and CUDA package
+versions.  If it is not created or cannot be created, the artifact SHALL record
+the skip/failure as a repair-action entry instead of silently treating the
+comparison as successful.
+
+The artifact SHALL expose at least `schema_version`, `experiment_id`,
+`milestone`, `selected_python`, `selected_python_cuda_ok_before`,
+`selected_python_cuda_ok_after`, `isolated_cuda_venv_created`,
+`isolated_cuda_venv_cuda_ok`, `cuda_visible_devices`,
+`nvidia_smi_available`, `gpu_count_nvidia_smi`, `driver_version`,
+`torch_version_selected`, `torch_cuda_version_selected`,
+`environment_pollution_findings`, `repair_actions_attempted`,
+`cuda_receipt_ready_candidate`, `recommended_next_action`,
+`inference_substrate`, `conductor_file_modified`, `active_roadmap_modified`,
+and `honest_verdict`.  `cuda_receipt_ready_candidate` SHALL be true only when a
+clean selected-Python subprocess can initialize CUDA and identify at least one
+GPU through PyTorch or an equivalent CUDA runtime probe.
+
+### SCENARIO-INFER-SOTA-026-001: Sanitized Selected Python Identifies CUDA
+
+**Given** `nvidia-smi` reports at least one NVIDIA GPU
+**And** the selected Python probe with `CUDA_VISIBLE_DEVICES=0` reports
+PyTorch CUDA available or an equivalent CUDA runtime device count greater than
+zero after environment sanitization
+**When** Exp 3220 builds the repair ledger
+**Then** `selected_python_cuda_ok_after=true`
+**And** `cuda_receipt_ready_candidate=true`
+**And** the artifact keeps `inference_substrate` on a no-model CUDA-runtime
+forensics value.
+
+### SCENARIO-INFER-SOTA-026-002: Isolated CUDA Venv Separates Venv From System Boundary
+
+**Given** the selected Python probe still cannot initialize CUDA
+**And** a temporary CUDA-only Python environment is safely created outside the
+repository source tree
+**When** the isolated CUDA runtime probe identifies a GPU
+**Then** `isolated_cuda_venv_created=true`
+**And** `isolated_cuda_venv_cuda_ok=true`
+**And** `recommended_next_action` identifies selected-venv CUDA repair rather
+than system driver repair.
+
+### SCENARIO-INFER-SOTA-026-003: Environment Pollution Is Explicit And Non-Successful
+
+**Given** the tracked environment contains ROCm, XDNA/Vitis/Xilinx, Python path,
+or CMake CUDA build variables
+**When** Exp 3220 builds the repair ledger
+**Then** `environment_pollution_findings` records each polluted variable class
+**And** a successful `nvidia-smi` result alone does not set
+`cuda_receipt_ready_candidate=true`
+**And** the artifact never claims SOTA model receipt.
+
+### REQ-INFER-SOTA-027: Exp 5097 Clean SOTA Endpoint Logprob Cache Runtime Provenance
+
+The system SHALL provide an Exp 5097 runtime-provenance repair artifact at
+`results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json` and, only
+when real token logprob or top-logprob evidence is observed from a local
+llama.cpp/OpenAI-compatible endpoint, a smoke cache at
+`results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.jsonl`.
+
+Exp 5097 SHALL inspect the three mandated GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through the shared local GGUF resolver /
+`cached_sota_pair()` pattern and SHALL NOT call `AutoTokenizer` on a `*-GGUF`
+repository ID.  Before endpoint inference or server bring-up, the artifact
+SHALL record `preconditions_checked` with CUDA/GPU visibility, free VRAM when
+available, llama.cpp Python/server availability, resolved local `.gguf` paths,
+a free-port probe, cache path/disk-space evidence, and the runtime environment
+variables used.
+
+The artifact SHALL either probe an already-running endpoint or start a bounded
+local `llama-server` process for one resolved mandated GGUF.  It SHALL record
+server command/PID when a process is started, endpoint URL, start/end timing,
+endpoint lifetime, server logs, cleanup behavior, deterministic completion
+proof, token logprob or top-logprob proof, cache row count/path, and an
+adversarial verification result before declaring readiness.  Exp 5097 SHALL
+write at least ten smoke cache rows only when real token logprob or top-logprob
+evidence is present; otherwise it SHALL set `cache_rows_written=0` and record
+`blocker_root_cause`.
+
+The artifact SHALL expose these required fields with matching entries in
+`field_principles`: `honest_verdict`, `duration_s`, `inference_substrate`,
+`preconditions_checked`, `model_specs`, `usable_sota_models`, `server_command`,
+`endpoint_url`, `endpoint_lifetime_s`, `completion_endpoint_ready`,
+`logprob_endpoint_ready`, `top_logprob_or_confidence_ready`,
+`sample_completion`, `sample_logprob_evidence`, `cache_rows_written`,
+`cache_path`, `logprob_endpoint_clean`, `live_llm_invoked`,
+`adversarial_verify_passed`, `blocker_root_cause`, and
+`flagged_adversarial`.  `honest_verdict` SHALL use an honest terminal-prefix
+form such as `success_clean_sota_endpoint_logprob_cache_ready` for a clean
+endpoint/cache artifact or
+`blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs` when local
+logprob evidence is unavailable.
+
+The required `field_principles` SHALL include these principle texts:
+`terminal-prefix verdict separates a clean endpoint/cache result from an honest blocked runtime-precondition result.`;
+`wall-clock duration catches live-substrate claims that are too short to be credible.`;
+`declares live_llm_inference only when a local endpoint actually returned completion/logprob evidence.`;
+`records CUDA/GPU, VRAM, llama.cpp, GGUF cache, free-port, cache-path, disk, and env evidence before inference.`;
+`names all three mandated SOTA GGUF IDs with resolved local .gguf paths or missing diagnostics.`;
+`the exact mandated local GGUF files that can be handed to llama.cpp.`;
+`exact command proves whether a local server was started instead of silently assuming one existed.`;
+`concrete endpoint URL makes the completion/logprob proof replayable.`;
+`measured endpoint lifetime prevents a too-short live-substrate readiness claim.`;
+`true only when a local endpoint returned non-empty deterministic completion text.`;
+`true only when real token logprob or top-logprob evidence was observed.`;
+`true only when top-logprob alternatives or structured confidence evidence are present.`;
+`stores the deterministic completion proof used for readiness.`;
+`stores observed token/top-logprob counts and examples without fabricating absent telemetry.`;
+`cache rows are counted only when real endpoint telemetry backs them.`;
+`stable JSONL path for the smoke cache or blocked no-row evidence.`;
+`true only after endpoint, cache, and adversarial provenance checks all pass.`;
+`true only when the local LLM endpoint returned completion/logprob evidence during this run.`;
+`records the repository adversarial verifier outcome before readiness is declared.`;
+`machine-readable missing endpoint, server, runtime, cache, or telemetry evidence for blocked runs.`;
+and `true if the artifact's own provenance or adversarial verifier detects an inconsistent claim.`
+
+### SCENARIO-INFER-SOTA-027-SUCCESS: Live Logprobs Produce Clean Cache
+
+**Given** at least one mandated GGUF resolves to a local `.gguf` file
+**And** a local endpoint returns deterministic completion text plus token
+logprob or top-logprob evidence
+**When** Exp 5097 clears the live-substrate duration/provenance checks
+**Then** `completion_endpoint_ready=true`
+**And** `logprob_endpoint_ready=true`
+**And** `top_logprob_or_confidence_ready=true`
+**And** `cache_rows_written>=10`
+**And** `adversarial_verify_passed=true`
+**And** `flagged_adversarial=false`
+**And** the verdict is
+`success_clean_sota_endpoint_logprob_cache_ready`.
+
+### SCENARIO-INFER-SOTA-027-BLOCKED: Missing Live Logprobs Writes Clean Blocked Artifact
+
+**Given** the mandated GGUF cache and endpoint preconditions are recorded
+**But** no local endpoint returns real token logprob or top-logprob evidence
+**When** Exp 5097 completes
+**Then** `live_llm_invoked=false`
+**And** `cache_rows_written=0`
+**And** `inference_substrate=precondition_check_only`
+**And** `blocker_root_cause` names the missing endpoint, server, runtime, or
+telemetry evidence
+**And** the artifact does not claim uPRM, process-verifier, or hallucination
+detection wins.
+
+### REQ-INFER-SOTA-028: Exp 5119 SOTA Endpoint Root-Cause Artifact
+
+The system SHALL provide an Exp 5119 local SOTA endpoint root-cause artifact at
+`results/experiment_5119_sota_endpoint_rootcause_v469.json`.  The artifact SHALL
+diagnose local GGUF completion/logprob readiness before any downstream
+benchmark, and SHALL use only `cached_sota_pair()` / `resolve_cached_gguf()` for
+`*-GGUF` model resolution.  It SHALL NOT call `AutoTokenizer` on a GGUF
+repository ID.
+
+Exp 5119 SHALL name the three mandated `MODEL_SPECS` entries
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, recording exact local `.gguf` paths or
+machine-readable blockers.  Before endpoint inference or server launch, it
+SHALL record CUDA/GPU visibility, llama.cpp / llama-cpp-python availability,
+disk/RAM, model cache evidence, and port availability.
+
+If a local server is launched, Exp 5119 SHALL record the command, PID, port,
+startup log, request/response transcript, endpoint lifetime, shutdown behavior,
+and errors.  It SHALL attempt a minimal completion smoke and a logprob or
+top-logprob smoke through the intended local backend.  Cache readiness SHALL be
+true only when real token logprob or top-logprob evidence is observed; otherwise
+`cache_ready=false` and no cache rows are promoted.
+
+The artifact SHALL include at least these fields: `experiment_id`,
+`milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
+`preconditions_checked`, `MODEL_SPECS`, `cached_sota_pair_attempted`,
+`gguf_paths`, `cuda_status`, `server_command`, `endpoint_lifetime_s`,
+`completion_proof`, `logprob_proof`, `cache_ready`, `root_cause_tree`,
+`flagged_adversarial`, and `tests_run`.  `experiment_id` SHALL equal
+`exp5119-sota-endpoint-rootcause-v469`, and `milestone` SHALL equal
+`2026.07.469`.
+
+The `root_cause_tree` SHALL distinguish exact blocker keys
+`missing_binary`, `wrong_model_path`, `unsupported_logprob_api`,
+`cuda_failure`, `oom`, `timeout`, and `cache_schema_mismatch`.
+The artifact SHALL run repository adversarial verification after writing its
+JSON and SHALL mark `flagged_adversarial=true` if a critical verifier finding or
+too-short live-model claim is detected.
+
+### SCENARIO-INFER-SOTA-028-SUCCESS: Live Completion And Logprobs Prove Readiness
+
+**Given** at least one mandated GGUF resolves to a local `.gguf` file
+**And** the intended local backend returns deterministic completion text plus
+token logprob or top-logprob evidence
+**When** Exp 5119 clears adversarial verification and the live-model duration
+floor
+**Then** `cache_ready=true`
+**And** `completion_proof.ready=true`
+**And** `logprob_proof.ready=true`
+**And** `flagged_adversarial=false`
+**And** the verdict begins with `success_` or `complete_`.
+
+### SCENARIO-INFER-SOTA-028-BLOCKED: Missing Live Logprobs Produces Root Cause
+
+**Given** the mandated GGUF cache and compute preconditions are recorded
+**But** no local backend returns real token logprob or top-logprob evidence
+**When** Exp 5119 completes
+**Then** `cache_ready=false`
+**And** `inference_substrate` does not claim clean live logprob readiness
+**And** `root_cause_tree` records the applicable blocker class
+**And** the verdict begins with `blocked_`.
+
+### REQ-INFER-SOTA-029: Exp 5124 Clean SOTA Runtime Provenance Gate
+
+The system SHALL provide an Exp 5124 runtime-provenance artifact at
+`results/experiment_5124_clean_sota_runtime_provenance_v470.json` that proves
+or blocks the local endpoint/cache/logprob substrate before downstream LLM
+experiments run.  Exp 5124 SHALL resolve `MODEL_SPECS` by calling
+`cached_sota_pair()` first, SHALL record the exact `model_path` values returned
+for the mandated local GGUFs, and SHALL use only llama.cpp / GGUF paths for
+runtime checks.  It SHALL NOT call `AutoTokenizer` on `*-GGUF` repositories.
+
+Exp 5124 SHALL attempt a real nontrivial local completion through an
+already-running llama.cpp-compatible endpoint or by starting a bounded local
+`llama-server` for one resolved mandated GGUF.  The artifact SHALL record
+`completion_proof`, `logprob_proof`, `endpoint_lifetime_s`,
+`request_response_transcript`, `cache_receipts`, and cache write/read evidence.
+It SHALL record real wall-clock `duration_s`; it SHALL NOT mock or pad timing.
+For clean live claims it SHALL include `duration_floor_evidence` explaining why
+repository adversarial verification should not raise `DURATION_TOO_SHORT`.
+
+The artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `MODEL_SPECS`,
+`cached_sota_pair_attempted`, `gguf_paths`, `completion_proof`,
+`logprob_proof`, `cache_ready`, `cache_receipts`, `endpoint_lifetime_s`,
+`request_response_transcript`, `duration_floor_evidence`,
+`adversarial_verify_passed`, `sota_runtime_clean`, `conductor_modified`, and
+`tests_run`.  `experiment_id` SHALL equal
+`exp5124-clean-sota-runtime-provenance-v470`, `milestone` SHALL equal
+`2026.07.470`, `inference_substrate` SHALL equal
+`local_sota_gguf_llamacpp_runtime_or_blocked`, and `conductor_modified` SHALL
+be false.
+
+`sota_runtime_clean` SHALL be true only when completion evidence, logprob
+evidence, cache write/read evidence, and adversarial verification all pass.  If
+any precondition fails, Exp 5124 SHALL write a terminal blocked artifact with
+`sota_runtime_clean=false`, `cache_ready=false`, an honest `blocked_` verdict,
+and a machine-readable `root_cause_tree`.
+
+### SCENARIO-INFER-SOTA-029-CLEAN: Live Completion Logprobs Cache And Verifier Pass
+
+**Given** `cached_sota_pair()` returns two mandated local GGUF model specs with
+`model_path` values
+**And** the intended local llama.cpp-compatible backend returns non-empty
+completion text plus token logprob or top-logprob evidence
+**And** the smoke cache writes and reads back at least one row
+**When** Exp 5124 records real wall-clock duration and adversarial verification
+returns no critical flags
+**Then** `completion_proof.ready=true`
+**And** `logprob_proof.ready=true`
+**And** `cache_ready=true`
+**And** `adversarial_verify_passed=true`
+**And** `sota_runtime_clean=true`
+**And** the verdict begins with `success_` or `complete_`.
+
+### SCENARIO-INFER-SOTA-029-BLOCKED: Missing Runtime Evidence Blocks Downstream Gate
+
+**Given** the mandated GGUF cache resolution attempt is recorded
+**But** completion, logprob, cache, or adversarial verification evidence is
+missing or failed
+**When** Exp 5124 completes
+**Then** `sota_runtime_clean=false`
+**And** `cache_ready=false`
+**And** `root_cause_tree` records the failed precondition
+**And** the verdict begins with `blocked_`
+**And** downstream verifier experiments are not run by this task.
+
+### REQ-INFER-SOTA-030: Exp 5125 Structured Reasoning Candidate Pool
+
+The system SHALL provide an Exp 5125 non-FoVer structured-reasoning candidate
+pool at `results/experiment_5125_structured_reasoning_pool_v470.json` with pool
+rows written to `results/experiment_5125_structured_reasoning_pool_v470.jsonl`.
+Exp 5125 SHALL load
+`results/experiment_5124_clean_sota_runtime_provenance_v470.json` and SHALL
+hard-block when `sota_runtime_clean` is not true.  When the gate is open, the
+experiment SHALL build 80-150 exact-checkable tasks across at least three
+families, such as small constraint-satisfaction tasks, Knights-and-Knaves logic,
+travel/budget constraints, and code/property checks.
+
+Exp 5125 SHALL define `MODEL_SPECS` through `cached_sota_pair()` when possible,
+SHALL include at least one mandated local GGUF model path, and SHALL record
+`model_path` provenance for any candidate generation attributed to an LLM.  It
+SHALL NOT use FoVer data or a FoVer selector scope.  Candidate ground truth SHALL
+come only from deterministic validators; no LLM judge SHALL be treated as the
+oracle.  The experiment SHALL compute `oracle_at_k`, `cheap_baseline_at_1`,
+per-family headroom, `parse_coverage`, `duplicate_rate`, and copy-rate evidence.
+
+The terminal artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `MODEL_SPECS`,
+`task_families`, `pool_path`, `pool_sha256`, `pool_n`, `candidates_per_item`,
+`exact_validators_used`, `oracle_at_k`, `cheap_baseline_at_1`,
+`parse_coverage`, `duplicate_rate`, `structured_pool_ready`,
+`verifier_is_oracle`, `fover_scope_used`, `conductor_modified`, and
+`tests_run`.  `experiment_id` SHALL equal
+`exp5125-structured-reasoning-pool-v470`, `milestone` SHALL equal
+`2026.07.470`, `inference_substrate` SHALL equal
+`local_sota_gguf_generation_with_exact_validators`, `verifier_is_oracle` SHALL
+be false, `fover_scope_used` SHALL be false, and `conductor_modified` SHALL be
+false.
+
+`structured_pool_ready` SHALL be true only when `pool_n` is between 80 and 150,
+`parse_coverage` clears the declared usability gate, and
+`oracle_at_k - cheap_baseline_at_1` clears the declared headroom gate.  If the
+Exp 5124 gate is closed or no mandated local GGUF path can be recorded, Exp 5125
+SHALL write a terminal blocked artifact with `structured_pool_ready=false` and
+SHALL NOT fabricate candidate rows.
+
+### SCENARIO-INFER-SOTA-030-POOL: Exact Validators Produce Headroom
+
+**Given** Exp 5124 reports `sota_runtime_clean=true`
+**And** at least one mandated local GGUF model path is resolved
+**When** Exp 5125 builds the structured reasoning pool
+**Then** the pool contains 80-150 non-FoVer tasks across at least three
+families
+**And** deterministic validators score every parseable candidate
+**And** `oracle_at_k` exceeds `cheap_baseline_at_1`
+**And** `structured_pool_ready=true` only when the pool-size, parse-coverage,
+and headroom gates all pass.
+
+### SCENARIO-INFER-SOTA-030-BLOCKED: Dirty Runtime Gate Blocks Candidate Rows
+
+**Given** Exp 5124 is missing or reports `sota_runtime_clean=false`
+**When** Exp 5125 runs
+**Then** it writes a terminal blocked artifact
+**And** `structured_pool_ready=false`
+**And** `pool_n=0`
+**And** no FoVer scope or LLM judge is used as ground truth.
+
+### REQ-INFER-SOTA-033: Exp 5137 Solver-Verified Formulation Selector
+
+The system SHALL provide an Exp 5137 non-FoVer solver-verified formulation
+generation and selection evaluation at
+`results/experiment_5137_solver_verified_formulation_selector_v471.json`, with
+problem-model-code records written to
+`results/experiment_5137_solver_verified_formulation_selector_v471_pmc.jsonl`.
+Exp 5137 SHALL load
+`results/experiment_5136_receipt_structured_pool_v2_v471.json`, SHALL hard-block
+unless `structured_pool_v2_clean=true`, and SHALL use the Exp 5136 pool rows
+only as non-FoVer exact-checkable OR/CSP task provenance.
+
+When the upstream gate is open, Exp 5137 SHALL evaluate a bounded subset of
+small exact-checkable OR/CSP tasks where multiple mathematical formulations are
+plausible. It SHALL generate structured problem-model-code records for the
+mandated local GGUF model IDs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; SHALL verify each formulation through a
+solver backend plus exact post-checks; and SHALL report feasibility restoration
+separately from original model formulation quality.
+
+Exp 5137 SHALL compare the exact-feedback formulation selector against static
+hand formulation, seeded random valid formulation, cheapest-feasible repair,
+and direct-answer baselines. It SHALL report selector delta versus the strongest
+static or cheap baseline, CI95, feasibility rate, wrong-label count, solve
+effort delta, and family-holdout behavior. `formulation_selector_ready` SHALL be
+true only when the selector improves over the strongest static or cheap baseline
+with zero wrong labels and passing controls.
+
+The terminal artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `MODEL_SPECS`,
+`upstream_pool_artifact`, `formulation_families`, `pmc_records_path`,
+`solver_backend`, `feasibility_restoration_used`,
+`selector_delta_vs_best_static`, `delta_ci95`, `wrong_label_count`,
+`solve_effort_delta`, `formulation_selector_ready`, `fover_scope_used`,
+`conductor_modified`, and `tests_run`. `experiment_id` SHALL equal
+`exp5137-solver-verified-formulation-selector-v471`, `milestone` SHALL equal
+`2026.07.471`, and `inference_substrate` SHALL equal
+`local_sota_gguf_formulation_generation_with_solver_verification`.
+
+### SCENARIO-INFER-SOTA-033-SELECTOR: Solver Feedback Selects Verified Formulations
+
+**Given** Exp 5136 reports `structured_pool_v2_clean=true`
+**And** the Exp 5136 pool JSONL is loadable
+**When** Exp 5137 evaluates solver-verified formulation records
+**Then** every selected formulation passes an exact post-check
+**And** feasibility restoration is reported separately from original
+formulation quality
+**And** selector utility is compared against static hand, random-valid,
+cheapest-feasible repair, and direct-answer baselines
+**And** `formulation_selector_ready=true` only if the selector beats the
+strongest static or cheap baseline with zero wrong labels and passing controls.
+
+### SCENARIO-INFER-SOTA-033-BLOCKED: Dirty Structured Pool Gate Fails Closed
+
+**Given** Exp 5136 is missing or reports `structured_pool_v2_clean=false`
+**When** Exp 5137 runs
+**Then** it writes a terminal blocked artifact
+**And** `formulation_selector_ready=false`
+**And** `pmc_records_path` is null
+**And** no solver-verified formulation records are fabricated.
+
+### REQ-INFER-SOTA-032: Exp 5136 Receipt-Backed Structured Reasoning Pool V2
+
+The system SHALL provide an Exp 5136 receipt-backed non-FoVer
+structured-reasoning pool v2 at
+`results/experiment_5136_receipt_structured_pool_v2_v471.json` with pool rows
+written to `results/experiment_5136_receipt_structured_pool_v2_v471.jsonl`.
+Exp 5136 SHALL load both
+`results/experiment_5124_clean_sota_runtime_provenance_v470.json` and
+`results/experiment_5125_structured_reasoning_pool_v470.json`, SHALL
+hard-block when Exp 5124 does not report clean local SOTA runtime provenance,
+and SHALL hard-block any attempted path that depends on FoVer data, FoVer
+selector scope, or an LLM judge as ground truth.
+
+When the gates are open, Exp 5136 SHALL build 100-160 exact-checkable
+structured tasks across at least three non-FoVer families, SHALL define
+`MODEL_SPECS` with all three mandated local GGUF model IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL prefer `cached_sota_pair()` while
+recording exact model paths for all three mandated models. Candidate correctness
+SHALL be scored only by deterministic exact validators.
+
+For every generated candidate batch, Exp 5136 SHALL emit a receipt record with
+the prompt hash, model specification, endpoint or command provenance,
+wall-clock start and stop timestamps, raw response hash, parsed candidate hash,
+validator output hash, and candidate correctness result. The terminal artifact
+SHALL expose these fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `MODEL_SPECS`, `preconditions_checked`,
+`receipt_records`, `duration_floor_evidence`, `task_families`, `pool_path`,
+`pool_sha256`, `pool_n`, `candidates_per_item`, `exact_validators_used`,
+`oracle_at_k`, `cheap_baseline_at_1`, `parse_coverage`, `duplicate_rate`,
+`family_headroom`, `structured_pool_v2_clean`, `adversarial_verify_passed`,
+`verifier_is_oracle`, `fover_scope_used`, `conductor_modified`, and
+`tests_run`. `experiment_id` SHALL equal
+`exp5136-receipt-structured-pool-v2-v471`, `milestone` SHALL equal
+`2026.07.471`, and `inference_substrate` SHALL equal
+`local_sota_gguf_generation_with_receipts_and_exact_validators`.
+
+`structured_pool_v2_clean` SHALL be true only when the pool size, parse
+coverage, oracle headroom, mandated-model provenance, receipt completeness,
+duration-floor evidence, and adversarial verification gates all pass.
+
+### SCENARIO-INFER-SOTA-032-POOL: Receipts Back Every Exact Candidate
+
+**Given** Exp 5124 reports clean local SOTA GGUF runtime provenance
+**And** no upstream or current path uses FoVer scope
+**When** Exp 5136 builds the structured pool v2
+**Then** the pool contains 100-160 exact-checkable tasks across at least three
+families
+**And** `MODEL_SPECS` records all three mandated local GGUF model IDs with
+model paths
+**And** every candidate has a matching receipt record containing prompt,
+response, parsed-candidate, validator-output, model, command or endpoint, and
+wall-clock provenance hashes
+**And** `oracle_at_k` exceeds `cheap_baseline_at_1`
+**And** deterministic exact validators are the only ground truth.
+
+### SCENARIO-INFER-SOTA-032-BLOCKED: Dirty Or FoVer Preconditions Fail Closed
+
+**Given** Exp 5124 is missing or not clean
+**Or** Exp 5125 or the current run declares FoVer scope
+**When** Exp 5136 runs
+**Then** it writes a terminal blocked artifact
+**And** `structured_pool_v2_clean=false`
+**And** `pool_n=0`
+**And** no candidate rows are fabricated.
+
+### REQ-INFER-SOTA-031: Exp 5126 Distributional Energy Ranker
+
+The system SHALL provide an Exp 5126 CPU ranker/abstainer over the Exp 5125
+structured-reasoning pool at
+`results/experiment_5126_distributional_energy_ranker_v470.json`.  Exp 5126
+SHALL load `results/experiment_5125_structured_reasoning_pool_v470.json`, SHALL
+hard-block when `structured_pool_ready` is not true, and SHALL use
+`results/experiment_5125_structured_reasoning_pool_v470.jsonl` as the only
+candidate pool.
+
+The ranker SHALL decompose energy into deterministic exact-checkable constraint
+penalties, a learned or calibrated quality score, and an ensemble uncertainty
+term used for abstention.  Deterministic validators SHALL remain the ground
+truth; FoVer data and LLM judges SHALL NOT be used as correctness oracles.  The
+train/calibration/test split SHALL keep all candidates for a task item in the
+same split and SHALL stratify by task family so duplicate item leakage cannot
+inflate headline metrics.
+
+Exp 5126 SHALL compare the distributional-energy ranker against cheap
+non-learned baselines, including length/features, parse validity,
+constraint-count-only, and seeded random among parse-valid candidates.  It SHALL
+report accuracy@1, violation rate, abstention rate, AUROC or ranking metrics
+where applicable, CI95 for the paired delta versus the strongest cheap baseline,
+family-holdout results, label-shuffle, duplicate, and model-identity shortcut
+controls.  `ranker_ready_for_audit` SHALL be true only when the headline CI95
+excludes zero and the controls pass.
+
+The terminal artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `source_pool_path`,
+`MODEL_SPECS`, `deterministic_constraint_penalties`,
+`learned_quality_score_description`, `uncertainty_abstention_rule`,
+`strongest_cheap_baseline`, `distributional_energy_delta`, `delta_ci95`,
+`family_holdout_results`, `label_shuffle_result`,
+`model_identity_shortcut_check`, `ranker_ready_for_audit`,
+`verifier_is_oracle`, `conductor_modified`, and `tests_run`.
+`experiment_id` SHALL equal `exp5126-distributional-energy-ranker-v470`,
+`milestone` SHALL equal `2026.07.470`, `inference_substrate` SHALL equal
+`cpu_ranker_over_exact_validated_sota_candidates`, `verifier_is_oracle` SHALL be
+false, and `conductor_modified` SHALL be false.
+
+### SCENARIO-INFER-SOTA-031-RANKER: Decomposed Ranker Reports Honest Gate
+
+**Given** Exp 5125 reports `structured_pool_ready=true`
+**And** the structured pool JSONL is loadable
+**When** Exp 5126 fits and evaluates the CPU distributional-energy ranker
+**Then** every split is grouped by task item and stratified by family
+**And** deterministic constraint penalties, learned quality scoring, and
+uncertainty abstention are reported separately
+**And** the headline delta is computed against the strongest cheap baseline
+**And** `ranker_ready_for_audit=true` only if CI95 excludes zero and leakage
+controls pass.
+
+### SCENARIO-INFER-SOTA-031-BLOCKED: Closed Structured Pool Gate Blocks Ranker
+
+**Given** Exp 5125 is missing or reports `structured_pool_ready=false`
+**When** Exp 5126 runs
+**Then** it writes a terminal blocked artifact
+**And** `ranker_ready_for_audit=false`
+**And** no learned or baseline metric is fabricated from candidate rows.
+
+### REQ-INFER-018: EBT Abstraction Layer
+
+The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
+- `ebt_bridge.py` SHALL define an `EBTBridge` class that takes a model and calculates `sequence_energy` from logits or logprobs.
+- The `sequence_energy` SHALL be formulated such that higher probability sequences have lower energy.
+
+### SCENARIO-INFER-018-001: Sequence Energy Calculation
+
+**Given** an initialized `EBTBridge` wrapping an autoregressive model
+**When** a text sequence is passed to the bridge
+**Then** it returns a valid sequence energy value
+**And** sequences with higher likelihood are assigned lower energy
+
+### REQ-INFER-1829: EqM Calibration
+The system SHALL provide an EqM calibration implementation in `python/carnot/inference/eqm_calibration.py` that computes adaptive computation steps for stable valley finding as described in arXiv:2510.02300.
+
+### REQ-INFER-2041: EqM Gradient Extraction on FAR Continuous Space
+The system SHALL provide an EqM gradient extraction module in `python/carnot/inference/far_eqm.py` that maps continuous hidden states (e.g., from `unsloth/gemma-4-26B-A4B-it-GGUF`) to an energy landscape gradient. It MUST support optimization-driven refinement using EqM and be evaluated against toy constraints.
+
+### SCENARIO-INFER-2041-001: Optimization-driven refinement
+**Given** continuous hidden states mapped to an energy landscape
+**When** the EqM optimization step is applied across 10 toy constraints
+**Then** the energy landscape gradient strictly reduces the total energy
+**And** the experiment validation results are saved to `results/experiment_2041_eqm_gradients.json`.
+
+### REQ-INFER-2056: Soft Bellman ARM-to-EBM Solver
+
+The system SHALL provide a Rust `soft_bellman_solve` implementation that maps
+autoregressive token log-probabilities into an EBM-compatible sequence energy.
+For normalized ARM log-probabilities, the solver SHALL use the canonical
+probability gauge of the soft Bellman equation: terminal soft value is zero,
+all prefix soft values solve to zero, immediate rewards equal token log
+probabilities, and token energies are their negation.  The solver SHALL return
+per-token rewards, per-token energies, solved soft values, sequence affinity,
+sequence energy, sequence log-probability, and the root log-partition value.
+
+The PyO3 layer SHALL expose the solver to Python as `soft_bellman_solve`.
+The implementation SHALL reject non-finite or positive token log-probabilities
+instead of silently producing invalid EBM energies.
+
+### SCENARIO-INFER-2056-001: ARM Logprobs Produce EBM Energies
+
+**Given** a finite sequence of ARM token log-probabilities
+**When** `soft_bellman_solve` is called
+**Then** each immediate reward equals the corresponding log-probability
+**And** each token energy equals `-logprob`
+**And** the sequence energy equals the negative sum of token log-probabilities
+**And** the returned soft values satisfy the canonical zero-value Bellman gauge.
+
+### SCENARIO-INFER-2056-002: Exhaustive Sequence Energies Normalize
+
+**Given** all token paths from a small normalized ARM distribution
+**When** each path is converted with `soft_bellman_solve`
+**Then** `exp(-sequence_energy)` for all paths sums to one
+**And** lower ARM likelihood paths receive higher EBM energy.
+
+### REQ-INFER-SOTA-3327: Exp 3327 Energy Descent Substrate Bootstrap Smoke
+
+The system SHALL provide a bootstrap smoke test for energy-descent versus autoregressive generation using local SOTA GGUF inference in `scripts/experiment_3327_energy_descent_substrate_bootstrap_v1.py`.
+The script SHALL write `results/experiment_3327_energy_descent_substrate_bootstrap_v1.json` and decide whether `exp3328` may run.
+The script SHALL use `cached_sota_pair(gpu_indices=(0, 1))` to require at least one of `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`.
+It SHALL preflight cache paths, GPU visibility, and runtime loader health, writing a blocked artifact if preconditions fail.
+It SHALL run a tiny deterministic smoke of 8-16 arithmetic or constraint prompts, recording energy trajectory, verifier score trajectory, candidate text fingerprints, model_specs, batch timing, and whether any exact verifier score improves.
+It SHALL NOT claim a scientific delta, and SHALL set `energy_descent_bootstrap_ready=true` only if live inference, telemetry, and duration/provenance checks are clean.
+
+### SCENARIO-INFER-SOTA-3327-001: Bootstrap Smoke Opens Gate
+
+**Given** SOTA GGUF cache is available and GPU preconditions are met
+**When** the energy-descent bootstrap smoke runs
+**Then** it runs a tiny deterministic smoke and writes telemetry
+**And** the artifact sets `energy_descent_bootstrap_ready=true` only if all checks pass.
+
+### REQ-INFER-3414: FR-11 Adversarial Robustness Stress Test
+The system SHALL execute a full stress test of FR-11 integrating the new NUP phase transition and Latent Spills signals.
+It SHALL initialize the VerifyRepairPipeline with FR-11 metrics enabled.
+It SHALL process a dataset combining normal and adversarially perturbed CoT traces using `MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]`.
+It SHALL evaluate final system accuracy and self-calibration limits and output `results/experiment_3414_fr11_adversarial_robustness.json`.
+
+### SCENARIO-INFER-3414-001: FR-11 Adversarial Robustness Execution
+**Given** FR-11 metrics enabled in VerifyRepairPipeline
+**When** adversarially perturbed CoT traces are processed with Qwen3.6
+**Then** it evaluates accuracy and self-calibration limits
+**And** the experiment artifact `results/experiment_3414_fr11_adversarial_robustness.json` is generated.
+
+### REQ-INFER-3406: Latent Spills Sensing EBM Pipeline
+The system SHALL provide an EBM pipeline to read latent activation energies and detect 'spills' signaling guessing.
+The verification pipeline SHALL be instrumented to extract internal latent states using `MODEL_SPECS = ["unsloth/gemma-4-31B-it-GGUF"]`.
+The EBM SHALL calculate energy spills dynamically per token.
+The pipeline SHALL validate against a small hallucination dataset and output an artifact `results/experiment_3406_latent_spills_sensing.json` with all required schema fields including `honest_verdict` and `spill_detection_ready`.
+
+### SCENARIO-INFER-3406-001: Latent Spills Sensing Pipeline Execution
+**Given** the model unsloth/gemma-4-31B-it-GGUF and a small hallucination dataset
+**When** the latent spills sensing EBM pipeline is executed
+**Then** it calculates energy spills dynamically per token
+**And** the experiment artifact `results/experiment_3406_latent_spills_sensing.json` is generated.
+
+### REQ-INFER-5301: EBT Spectral Step-Control Stability Diagnostic
+
+The system SHALL provide a tiny deterministic EBT/energy-descent diagnostic in
+`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`
+before any energy-guided decoding or inner-loop optimization result treats
+additional descent steps as safe.  The diagnostic SHALL use an offline CPU-safe
+continuous energy fixture, estimate the largest local Hessian eigenvalue with a
+power-iteration Hessian-vector proxy, and compare at least three alpha policies:
+fixed conservative, fixed aggressive, and adaptive spectral step control.
+
+The diagnostic SHALL include a sharpened or ill-conditioned energy case where
+the fixed aggressive step can diverge.  It SHALL log lambda-max estimates, alpha
+choices, energy before and after each step, convergence/divergence flags,
+adaptive recovery behavior, random seed, and a reproducibility checksum.  The
+terminal artifact SHALL be
+`results/experiment_5301_ebt_spectral_step_control_diagnostic_v484.json` and
+SHALL expose principle-wrapped fields `honest_verdict`,
+`inference_substrate`, `spectral_control_ready`, `lambda_max_estimates`,
+`alpha_policy_results`, `divergence_recovery`, `random_seed`, and
+`reproducibility_checksum`, plus a `tests_run` list with command/outcome rows.
+`inference_substrate.value` SHALL equal
+`offline_deterministic_certificate_no_llm`, and `honest_verdict.value` SHALL
+start with `complete:`, `null:`, or `blocked_` while stating whether spectral
+step-control is usable.  The artifact SHALL NOT make an LLM quality,
+SOTA-quality, or hardware-speedup claim.
+
+Artifact field principles SHALL be recorded as:
+- `honest_verdict`: Terminal Exp 5301 verdict; starts with complete:, null:, or blocked_ and states whether spectral step-control is usable.
+- `inference_substrate`: Must be offline_deterministic_certificate_no_llm because the diagnostic uses only a CPU-local analytic energy fixture and no LLM inference.
+- `spectral_control_ready`: True only when the conservative policy decreases energy, the aggressive policy detects divergence, and adaptive spectral control recovers without claiming LLM quality.
+- `lambda_max_estimates`: Largest local Hessian eigenvalue estimates from deterministic power-iteration Hessian-vector products for every descent step.
+- `alpha_policy_results`: Per-policy alpha choices, energy before/after traces, convergence flags, and divergence flags for fixed conservative, fixed aggressive, and adaptive spectral policies.
+- `divergence_recovery`: Telemetry showing the aggressive fixed step diverges and the adaptive spectral policy shrinks alpha before accepting stable steps.
+- `random_seed`: Deterministic seed used for the power-iteration probe vector and checksum provenance.
+- `reproducibility_checksum`: SHA-256 checksum over the deterministic fixture, lambda estimates, alpha traces, and stability decisions, excluding wall-clock time.
+
+### SCENARIO-INFER-5301: Spectral Control Recovers Where Aggressive Fixed Step Diverges
+
+**Given** the deterministic sharpened energy fixture
+**When** fixed conservative, fixed aggressive, and adaptive spectral policies
+run from the same initial state
+**Then** the conservative policy decreases energy monotonically
+**And** the aggressive policy reports detected divergence on the ill-conditioned
+case
+**And** the adaptive spectral policy uses lambda-max estimates to shrink alpha,
+records recovery telemetry, and finishes with lower energy without an LLM
+quality claim.
+
+### REQ-INFER-5317: EBT Telemetry Audit Re-Emission
+
+The system SHALL provide a V485 telemetry audit in
+`python/carnot/experiment_5317_ebt_telemetry_audit_reemit_v485.py` that reads
+the prior Exp5301 and Exp3872 artifacts, explains why Exp5301 was
+adversarially flagged, re-runs the same tiny deterministic EBT spectral
+step-control diagnostic when the prior telemetry remains mechanically valid,
+and writes
+`results/experiment_5317_ebt_telemetry_audit_reemit_v485.json` with a real
+wall-clock `methodology_duration_s`.
+
+The audit SHALL emit principle-wrapped fields `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `workload_counters`, and
+`tests_run`.  `inference_substrate.value` SHALL equal
+`deterministic_ebt_telemetry_audit_no_llm`, and `honest_verdict.value` SHALL
+start with `complete:`, `null:`, or `blocked_`.  The artifact SHALL emit bare
+JSON values for `ebt_telemetry_audited`, `methodology_duration_s`,
+`methodology_flag_cleared`, `lambda_max_logged`,
+`step_control_recovery_logged`, `no_sota_quality_claim`, and
+`no_hardware_speedup_claim`.
+
+The workload counters SHALL record forward energy counts, analytic
+gradient/backward-like counts, autograd backward calls, policy counts, logged
+step counts, alpha-attempt counts, Hessian-vector product counts,
+power-iteration counts, random probe-vector counts, adaptive recovery shrink
+counts, and memory/utilization proxies where available.  The artifact SHALL
+log lambda-max estimates, alpha and step choices, divergence/recovery behavior,
+runtime breakdown, methodology notes, and the prior Exp5301 flag reasons.  It
+SHALL preserve quarantine language by marking the telemetry clean only for this
+tiny deterministic audit while keeping future energy-descent, SOTA-quality,
+and hardware-readiness claims ineligible.
+
+Artifact field principles SHALL be recorded as:
+- `experiment_id`: Identifies the V485 repair receipt so downstream readers do not confuse it with the flagged V484 artifact.
+- `milestone`: Names milestone 2026.07.485 because the audit repairs telemetry for the next milestone without modifying conductor-owned reconciliation docs.
+- `status`: Machine-readable state that distinguishes a completed audit from blocked upstream telemetry.
+- `honest_verdict`: Terminal verdict; starts with complete:, null:, or blocked_ and states whether the telemetry methodology was repaired without broadening the claim.
+- `inference_substrate`: deterministic_ebt_telemetry_audit_no_llm because this audit re-runs a CPU-local analytic fixture and does not load or call an LLM.
+- `workload_counters`: Counts the actual deterministic diagnostic workload so short duration is explainable rather than suspicious.
+- `tests_run`: Records verification commands and outcomes so the artifact is tied to executable checks.
+
+### SCENARIO-INFER-5317: Clean Audit Re-Emits Quarantined Tiny EBT Telemetry
+
+**Given** the V484 Exp5301 artifact is flagged for duration/methodology while
+its deterministic spectral-control telemetry remains internally valid
+**And** Exp3872 is a pre-gate blocked System-2 diagnostic with no usable
+energy-descent claim
+**When** the V485 telemetry audit runs
+**Then** it re-runs the tiny deterministic spectral diagnostic without LLM
+inference
+**And** it emits the required V485 artifact fields with workload counters,
+lambda-max estimates, alpha choices, divergence/recovery telemetry, runtime
+breakdown, and no SOTA or hardware claim
+**And** it clears only the telemetry methodology flag while preserving
+quarantine language that blocks future energy-descent headline claims from the
+tiny diagnostic.
+
+### REQ-INFER-SOTA-5964: Exp 5964 SOTA Atom Compatibility Corpus
+
+The system SHALL provide Exp 5964 as an output-free final-token representation
+corpus over the sealed Exp 5963 exact context/candidate-atom pair fixture.  The
+run SHALL first replay
+`results/experiment_5963_exact_atom_pair_fixture.json` and SHALL block before
+full extraction unless its exact path, SHA-256 hash, and
+`pair_fixture_ready_score == 1.0` are recorded.
+
+Exp 5964 SHALL resolve exactly the three mandated GGUF identities
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.  It SHALL record exact cached GGUF file
+hashes, embedded GGUF tokenizer receipts, llama.cpp version, CUDA backend
+evidence, `n_gpu_layers`, per-device free VRAM, RAM, disk, thermal state,
+atomic output paths, and cleanup receipts.  A resolved GGUF path SHALL be a
+primary model file; multimodal projector files such as `mmproj*.gguf` or other
+non-model sidecars SHALL be recorded as unavailable rather than as complete
+model-file provenance.  If any mandated family, embedded
+tokenizer, CUDA offload, memory, disk, or output prerequisite is unavailable,
+the terminal artifact SHALL emit `status="blocked"` and an `honest_verdict`
+starting with `blocked:`.  It SHALL NOT substitute legacy models, CPU headline
+rows, `AutoTokenizer`, generated text, logits, or intermediate-layer claims.
+
+For each model separately, Exp 5964 SHALL use the same public
+`llama_cpp.Llama(embedding=True, pooling_type=LAST)` family as Exp 5852 and
+SHALL serialize prompts without labels.  It SHALL extract context-alone,
+atom-alone, context-then-atom, context-then-claim-flip-atom, atom-then-context
+order-control, and duplicate-determinism control representations.  Raw vectors
+SHALL be stored only in per-model immutable JSONL row corpora with prefix
+chains.  Each vector row SHALL hash-link to the Exp 5963 pair row, context row,
+source split, prompt serialization, and model file hash.  Cross-family feature
+construction SHALL keep model identity as a stratum rather than a label feature;
+raw dimensions SHALL NOT be concatenated or compared across families before
+within-model train-fold centering and normalization.
+
+Before any label-dependent trained score is permitted, Exp 5964 SHALL audit
+finite values, nonzero within-model variance, duplicate determinism,
+prompt-order sensitivity, claim-flip directional headroom, per-family
+disaggregation, norm-only, length-only, candidate-frequency, label-permutation,
+pair-permutation, and raw-model-identity controls.  Corpus readiness is not a
+classifier-accuracy claim.  The terminal
+`atom_compatibility_corpus_ready_score` SHALL be bare `1.0` only when every
+family passes deterministic extraction and at least two families show
+preregistered claim-flip or pair-order sensitivity beyond the permutation and
+duplicate controls.  Otherwise a fully extracted but non-degenerate-control
+failure SHALL retire the compatibility surface with an `honest_verdict`
+starting with `retired:`.
+
+The terminal artifact SHALL be
+`results/experiment_5964_sota_atom_compatibility_corpus.json` and SHALL expose
+`status`, `preconditions_checked`, `gate_replay_receipt`, `model_specs`,
+`model_file_hashes`, `embedded_tokenizer_and_llama_cpp_receipts`,
+`cuda_offload_vram_thermal_and_cleanup_receipts`,
+`prompt_serialization_and_pair_order_contract`,
+`per_model_row_paths_hashes_counts_and_prefix_chains`,
+`raw_vs_standardized_feature_separation`,
+`finite_variance_duplicate_and_order_controls`,
+`claim_flip_and_per_family_headroom_controls`,
+`norm_length_frequency_label_pair_permutation_and_model_identity_controls`,
+`split_and_label_secrecy_receipts`, `atom_compatibility_corpus_ready_score`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Artifact field principles SHALL be recorded as:
+- `status`: Missing model, CUDA, tokenizer, memory, disk, time, or output prerequisites block before full extraction.
+- `preconditions_checked`: The preflight records every required local prerequisite and refuses legacy or CPU headline substitution.
+- `gate_replay_receipt`: Exp 5963 exact path/hash/value must satisfy `pair_fixture_ready_score == 1.0`.
+- `model_specs`: All three mandated public GGUF identities and exact local files are auditable.
+- `model_file_hashes`: Exact cached GGUF file hashes bind every row to local bytes.
+- `embedded_tokenizer_and_llama_cpp_receipts`: The GGUF runtime and embedded tokenizer are the only model-loading path.
+- `cuda_offload_vram_thermal_and_cleanup_receipts`: Headline rows require genuine CUDA offload, measured resources, and clean teardown.
+- `prompt_serialization_and_pair_order_contract`: Every vector maps to one sealed pair and preregistered ordering.
+- `per_model_row_paths_hashes_counts_and_prefix_chains`: Each family corpus is immutable, complete, and hash-linked to Exp 5963.
+- `raw_vs_standardized_feature_separation`: Train-fold statistics standardize within model; raw dimensions never create a cross-family shortcut.
+- `finite_variance_duplicate_and_order_controls`: Representations must be finite, non-degenerate, deterministic for duplicates, and honestly sensitive to ordering.
+- `claim_flip_and_per_family_headroom_controls`: Readiness requires directional semantic headroom in disaggregated families, not a pooled artifact.
+- `norm_length_frequency_label_pair_permutation_and_model_identity_controls`: Every shortcut remains an explicit measured negative control.
+- `split_and_label_secrecy_receipts`: Labels and test-fold statistics cannot affect extraction, normalization, or prompts.
+- `atom_compatibility_corpus_ready_score`: Emit bare `1.0` only for all-family integrity plus preregistered non-degenerate semantic headroom; the same disqualification retires the surface.
+- `protected_files_unchanged`: Active roadmap, conductor, exclusions, history, and unrelated changes remain unchanged.
+- `duration_s`: Measured wall time for `live_llm_embedding_extraction`.
+- `inference_substrate`: Use measured `live_llm_embedding_extraction`.
+- `verifier_is_oracle`: False for representation features because exact labels remain external.
+- `missing_verifier_gaps`: Known limitations stay explicit.
+- `field_provenance`: Every field traces to task prompt, spec, module, rows, model, and runtime receipts.
+- `test_commands`: Verification commands cover unit, coverage, gate, model, tokenizer, CUDA smoke, row-chain, shortcut, adversarial, spec, E2E, protected-file, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent partial extraction or unchecked rows from becoming readiness.
+- `reproducibility_checksum`: Stable checksum binds row corpora, receipts, controls, and verdict while excluding wall-clock duration.
+- `honest_verdict`: Use `complete_ready:`, `retired:`, or `blocked:`.
+
+### SCENARIO-INFER-SOTA-5964-BLOCKED: Missing Runtime Blocks Before Extraction
+
+**Given** Exp 5963 replays with `pair_fixture_ready_score == 1.0`
+**And** at least one mandated GGUF, embedded tokenizer, or CUDA-offload
+precondition is unavailable
+**When** Exp 5964 runs
+**Then** it writes the terminal artifact with `status="blocked"`
+**And** it records the Exp 5963 gate path/hash/value
+**And** no backend extraction is attempted
+**And** the artifact does not claim CPU, legacy-model, generated-output, or
+intermediate-layer evidence.
+
+### SCENARIO-INFER-SOTA-5964-CORPUS: All Families Produce Immutable Rows
+
+**Given** Exp 5963 is ready, all three mandated GGUF files resolve, embedded
+tokenizers load, and CUDA offload is available
+**When** Exp 5964 extracts output-free LAST-pooled embeddings
+**Then** every model has an immutable per-model row corpus containing the
+preregistered context, atom, context-atom, claim-flip, order-control, and
+duplicate-control rows
+**And** row hashes, prompt hashes, token counts, context hashes, pair hashes,
+source splits, model file hashes, and prefix chains verify exactly.
+
+### SCENARIO-INFER-SOTA-5964-CONTROLS: Shortcuts And Headroom Are Audited
+
+**Given** per-model raw row corpora have been extracted
+**When** Exp 5964 audits the representation surface
+**Then** within-model train-fold statistics are the only standardization source
+**And** finite, variance, duplicate, order, claim-flip, norm-only, length-only,
+candidate-frequency, label-permutation, pair-permutation, and
+raw-model-identity controls are recorded
+**And** readiness is granted only for all-family integrity plus at least two
+families with preregistered semantic headroom beyond permutation and duplicate
+controls.
+
+### REQ-INFER-SOTA-6102: Exp 6102 Sequential VRAM Recovery For SOTA Atom Corpus
+
+The system SHALL provide Exp 6102 at
+`python/carnot/experiment_6102_sota_atom_corpus_vram_recovery.py` and write
+`results/experiment_6102_sota_atom_corpus_vram_recovery.json` plus declared
+per-family row shards. Exp 6102 is the single recovery attempt for the blocked
+Exp 5964 representation corpus: it SHALL keep the sealed Exp 5963 fixture,
+the Exp 5964 prompt and raw representation schema, and exactly the mandated
+GGUF families `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, but SHALL load only one family at a time.
+It SHALL NOT train an Exp 5965-style ranker.
+
+Before model loading, Exp 6102 SHALL hash the Exp 5963 fixture, Exp 5963 row
+streams, Exp 5964 terminal artifact, and Exp 5964 partial row shards; resolve
+exact cached primary GGUF files and quantizations; record embedded GGUF
+tokenizer receipts without calling `AutoTokenizer`; record disk, RAM, swap,
+per-GPU free/used VRAM, thermals, CUDA/runtime build, task-owned PID leases,
+per-family memory estimates, timeout budget, output paths, protected files,
+and the prior Exp 5964 VRAM verdict. If the first family cannot fit after
+task-owned cleanup, Exp 6102 SHALL write a complete blocked artifact, SHALL
+not load a model, and SHALL mark `retirement_triggered=true` when the verdict
+matches Exp 5964's insufficient-VRAM block. It SHALL never kill or evict an
+unrelated process.
+
+Exp 6102 SHALL resume only rows whose fixture hash, model file hash,
+quantization, tokenizer metadata, prompt hash, feature schema, row hash chain,
+and prefix-chain checksum exactly match the current run receipts. Rejected or
+partial Exp 6102 row shards SHALL be quarantined before replacement; Exp 5964
+partial shards SHALL be recorded as immutable prior evidence and SHALL NOT be
+silently mixed into the Exp 6102 corpus.
+
+For each family phase, Exp 6102 SHALL write an atomic phase-start receipt,
+extract raw output-free representation rows and separately recorded
+within-model train-fold standardization receipts, write checkpointed row shards
+and phase-end hashes, close the llama.cpp backend, synchronize CUDA when
+available, verify task-owned process exit and VRAM release, and only then
+advance to the next family. Labels SHALL be replayed independently through the
+Exp 5963 Python/Z3 exact authority; model features SHALL never become the
+oracle. Shortcut coverage SHALL report family, relabel, paraphrase,
+claim-flip, norm, length, lexical, pair/label permutation, raw-model-identity,
+and duplicate-context controls. Readiness requires all three families, all
+declared held splits, at least five semantic-group seeds, complete row
+provenance, and passing verification commands; otherwise the artifact SHALL
+emit the exact blocked, partial, or retired class.
+
+The terminal artifact SHALL expose `status`, `preconditions_checked`,
+`model_specs_and_exact_file_hashes`,
+`quantization_and_embedded_tokenizer_receipts`,
+`runtime_cuda_vram_thermal_and_pid_lease_receipts`,
+`immutable_fixture_and_partial_shard_hashes`,
+`resume_accept_reject_matrix`,
+`per_family_phase_start_end_and_release_receipts`,
+`raw_vs_standardized_feature_schema`,
+`per_family_row_split_and_class_counts`, `python_z3_label_replay`,
+`shortcut_control_coverage`, `row_paths_hashes_and_prefix_chain`,
+`stale_partial_quarantine_receipt`, `all_family_corpus_ready_score`,
+`retirement_triggered`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Artifact field principles SHALL be recorded as:
+- `model_specs_and_exact_file_hashes` and `quantization_and_embedded_tokenizer_receipts`: every headline row traces to one mandated local GGUF and its embedded tokenizer.
+- `runtime_cuda_vram_thermal_and_pid_lease_receipts`: live CUDA use, ownership, cleanup, and capacity are measured rather than inferred.
+- `immutable_fixture_and_partial_shard_hashes` and `resume_accept_reject_matrix`: resumption is allowed only under exact provenance equality.
+- `per_family_phase_start_end_and_release_receipts`: sequential loading and verified release are the changed recovery mechanism.
+- `raw_vs_standardized_feature_schema`: raw measurements remain recoverable and standardization cannot leak across splits.
+- `per_family_row_split_and_class_counts` and `python_z3_label_replay`: adequacy and exact authority are reported by semantic group.
+- `shortcut_control_coverage`: representation compatibility exposes norm, length, lexical, identity, permutation, transform, and duplicate controls.
+- `all_family_corpus_ready_score` and `retirement_triggered`: readiness needs all families; the repeated VRAM verdict retires this recovery shape.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: report measured `live_local_sota_gguf_cuda_representation_extraction`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: exact Python/Z3 labels are oracle; learned representations are not.
+- `honest_verdict`: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+### SCENARIO-INFER-SOTA-6102-BLOCKED-VRAM: First Family Fails Before Model Load
+
+**Given** the Exp 5963 fixture replays and all mandated GGUF files resolve
+**And** measured free VRAM is below the first family's memory estimate after
+task-owned cleanup
+**When** Exp 6102 runs
+**Then** it writes the complete blocked artifact, writes declared empty row
+shards, records CUDA/VRAM/thermal/PID leases, does not call the backend, does
+not kill unrelated processes, and triggers retirement when Exp 5964 already
+blocked for the same insufficient-VRAM verdict.
+
+### SCENARIO-INFER-SOTA-6102-RESUME: Exact Shards Resume And Stale Shards Quarantine
+
+**Given** a prior Exp 6102 row shard exists for one family
+**When** fixture hash, model hash, quantization, embedded tokenizer metadata,
+prompt hashes, feature schema, row hashes, and prefix-chain checksum match
+**Then** the family phase resumes from that shard without re-extraction.
+**And** any mismatched or partial Exp 6102 shard is quarantined before new rows
+are written.
+
+### SCENARIO-INFER-SOTA-6102-CORPUS: Sequential Families Produce Ready Corpus
+
+**Given** all three families fit one at a time and no accepted shard is stale
+**When** Exp 6102 extracts the rows
+**Then** every family writes a phase-start receipt, a phase-end receipt, raw row
+shard hashes, within-family train-fold standardization receipts, split/class
+counts, Python/Z3 label replay, shortcut control coverage, CUDA release
+receipts, and `all_family_corpus_ready_score == 1.0` without launching a
+ranker.
+
+### REQ-INFRA-6312: Model-Local Representation Surface Preflight
+
+The system SHALL provide Exp 6312 at
+`python/carnot/experiment_6312_model_local_representation_surface_preflight.py`.
+It SHALL write
+`results/experiment_6312_model_local_representation_surface_preflight.json`.
+The run SHALL qualify one native representation surface for each mandated local
+GGUF model:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+Before model construction, Exp 6312 SHALL check local model files, tokenizer
+receipts, CUDA devices, free VRAM, RAM, disk, timeout budget, random seeds,
+runtime representation capabilities, output paths, and protected file hashes.
+`MODEL_SPECS` SHALL include all three models in mandated order.  Each entry
+SHALL record local file path, file hash, revision, quantization, context
+length, tokenizer hash, CUDA placement, and headline eligibility.  Missing
+preconditions SHALL terminate with `status="complete_null"` and
+`model_local_representation_surface_ready_score=0.0`.
+
+Exp 6312 SHALL freeze the surface-selection rule before reading fixture labels.
+It SHALL prefer a true hidden-state surface only when the installed runtime
+exposes hidden tensors with tensor provenance.  If that receipt is unavailable,
+it SHALL use the preregistered output-free prefix-state trajectory built from
+repeated deterministic embeddings.  It SHALL not generate answers.  It SHALL
+not train, fit, load, or reuse a cross-model adapter.  It SHALL collect raw
+surface rows atomically per model and unload each model before the next model.
+It SHALL record GPU memory before load, peak or load receipt, and after
+release.
+
+The micro fixture SHALL contain exact vulnerable/fixed code pairs with matched
+code lengths, A/A duplicates, claim-flip controls, pair-swap controls, label
+permutation controls, evaluator-swap controls, norm controls, length controls,
+truncation controls, duplicate controls, and model-identity controls.  Every
+control SHALL be measured per model.  No model surface SHALL rescue another
+model.  Readiness SHALL be bare `1.0` only when every mandated model has one
+reproducible nondegenerate surface and all causal and shortcut controls pass.
+Otherwise readiness SHALL be bare `0.0`.
+
+The terminal artifact SHALL expose `status`,
+`paper_source_and_local_claim_boundary`, `upstream_failure_ledger`,
+`MODEL_SPECS`, `models_used`,
+`model_file_hashes_revisions_and_quantizations`, `tokenizer_hashes`,
+`cuda_and_gpu_offload_receipts_by_model`,
+`gpu_memory_before_peak_and_after_release_by_model`,
+`candidate_surface_inventory_by_model`, `selected_surface_by_model`,
+`surface_tensor_shapes_and_hashes`,
+`hidden_state_runtime_receipts_by_model`,
+`prefix_trajectory_fallback_receipts_by_model`,
+`micro_fixture_path_and_hash`, `causal_intervention_results_by_model`,
+`aa_noise_results_by_model`,
+`claim_flip_pair_swap_label_permutation_evaluator_swap_results_by_model`,
+`norm_length_truncation_duplicate_and_identity_results_by_model`,
+`underpowered_or_missing_cells`, `no_generation_receipt`,
+`no_shared_adapter_receipt`, `surface_selection_rule`,
+`actual_work_duration_receipt`, `duration_padding_count`,
+`source_model_weight_mutation_count`,
+`model_local_representation_surface_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `random_seeds`, `reproducibility_checksum`, and
+`honest_verdict`.  `duration_padding_count` and
+`source_model_weight_mutation_count` SHALL be bare `0`.
+
+Artifact field principles SHALL be recorded for every required field.
+The principles SHALL explain why the field prevents paper overreach, upstream
+failure reuse, missing model provenance, tokenizer drift, CUDA fiction,
+surface-selection leakage, generation leakage, shared-adapter leakage,
+duration padding, source weight mutation, or uncontrolled shortcut passage.
+
+### SCENARIO-INFRA-6312-COMPLETE-NULL: Missing Runtime Closes Cleanly
+
+**Given** at least one mandated local GGUF, tokenizer, CUDA, VRAM, RAM, disk,
+timeout, output, or hidden/fallback surface precondition is unavailable
+**When** Exp 6312 runs
+**Then** it writes the terminal artifact with `status="complete_null"`
+**And** it records the failed preconditions and upstream failure ledger
+**And** it does not construct a model or generate text
+**And** `model_local_representation_surface_ready_score == 0.0`.
+
+### SCENARIO-INFRA-6312-SURFACE-SELECTION: Hidden State Wins Only With Provenance
+
+**Given** the hidden-state runtime receipt exposes tensor provenance for a
+mandated model
+**When** Exp 6312 selects a surface before reading labels
+**Then** it selects the hidden-state surface for that model.
+
+**Given** hidden-state tensor provenance is unavailable
+**When** Exp 6312 selects a surface
+**Then** it selects the preregistered output-free prefix trajectory fallback
+**And** records the hidden-state failure receipt.
+
+### SCENARIO-INFRA-6312-CONTROLS: Per-Model Causal Controls Gate Readiness
+
+**Given** all three mandated models produce deterministic nondegenerate
+surfaces
+**When** Exp 6312 evaluates the micro fixture
+**Then** vulnerable/fixed causal pairs pass per model
+**And** A/A, claim-flip, pair-swap, label-permutation, evaluator-swap, norm,
+length, truncation, duplicate, and model-identity controls pass per model
+**And** readiness becomes `1.0` only when every model passes independently.
+
+## Implementation Status
+
+| Requirement | Python | Tests |
+|------------|--------|-------|
+| REQ-INFER-001 | Implemented | 15+ Python |
+| REQ-INFER-002 | Implemented | 8+ Python |
+| REQ-INFER-003 | Implemented | 8+ Python |
+| REQ-INFER-004 | Implemented | 6+ Python |
+| REQ-INFER-005 | Implemented | 7+ Python |
+| REQ-INFER-006 | Implemented | 14+ Python |
+| REQ-INFER-007 | Implemented | 18+ Python |
+| REQ-INFER-014 | Implemented | 35 Python |
+| REQ-INFER-015 | Implemented | 14 Python |
+| REQ-INFER-016 | Implemented | 10 Python |
+| REQ-INFER-017 | Implemented | 7 Python |
+| REQ-INFER-SOTA-004 | Implemented | 4 Python |
+| REQ-INFER-SOTA-005 | Implemented | 4 Python |
+| REQ-INFER-SOTA-006 | Implemented | 12 Python |
+| REQ-INFER-SOTA-007 | Implemented | 18+ Python |
+| REQ-INFER-SOTA-008 | Implemented | 12 Python |
+| REQ-INFER-SOTA-009 | Implemented | 7 Python |
+| REQ-INFER-SOTA-010 | Implemented (`python/carnot/reporting/live_sota_balanced_telemetry_v2.py`) | Implemented (`tests/python/test_experiment_1480_live_sota_balanced_telemetry_v2.py`) |
+| REQ-INFER-SOTA-011 | Proposed | Proposed |
+| REQ-INFER-SOTA-012 | Implemented (`python/carnot/reporting/sota_runtime_preflight.py`) | Implemented (`tests/python/test_experiment_2836_sota_runtime_preflight.py`) |
+| REQ-INFER-SOTA-013 | Implemented (`python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py`) | Implemented (`tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py`) |
+| REQ-INFER-SOTA-014 | Planned | Planned |
+| REQ-INFER-SOTA-016 | Implemented (`python/carnot/reporting/sota_energy_micro_panel_logprob_corrigendum_v2.py`) | Implemented (`tests/python/test_experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.py`) |
+| REQ-INFER-SOTA-017 | Implemented (`python/carnot/reporting/sota_micro_panel_clean_telemetry_v3.py`) | Implemented (`tests/python/test_experiment_2886_sota_micro_panel_clean_telemetry_v3.py`) |
+| REQ-INFER-SOTA-018 | Implemented (`python/carnot/reporting/spilled_energy_logit_detector_micro_panel_v1.py`) | Implemented (`tests/python/test_experiment_2917_spilled_energy_logit_detector_micro_panel.py`) |
+| REQ-INFER-SOTA-021 | Implemented (`scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py`) | Implemented (`tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py`) |
+| REQ-INFER-SOTA-022 | Implemented (`python/carnot/experiment_3043_verified_speculation_transcript_fingerprint.py`) | Implemented (`tests/python/test_experiment_3043_verified_speculation_transcript_fingerprint.py`) |
+| REQ-INFER-SOTA-023 | Implemented (`python/carnot/reporting/sota_cache_preconditions_manifest_v2.py`) | Implemented (`tests/python/test_experiment_3123_sota_cache_preconditions_manifest_v2.py`) |
+| REQ-INFER-SOTA-024 | Planned (`python/carnot/reporting/cuda_env_forensics_ledger_3206.py`) | Planned (`tests/python/test_experiment_3206_cuda_env_forensics_ledger.py`) |
+| REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
+| REQ-INFER-5301 | Implemented (`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) | Implemented (`tests/python/test_experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) |
+| REQ-INFER-5317 | Implemented (`python/carnot/experiment_5317_ebt_telemetry_audit_reemit_v485.py`) | Implemented (`tests/python/test_experiment_5317_ebt_telemetry_audit_reemit_v485.py`) |
+| REQ-INFER-SOTA-5964 | Implemented (`python/carnot/experiment_5964_sota_atom_compatibility_corpus.py`) | Implemented (`tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py`) |
+| REQ-INFRA-6312 | Implemented (`python/carnot/experiment_6312_model_local_representation_surface_preflight.py`) | Implemented (`tests/python/test_experiment_6312_model_local_representation_surface_preflight.py`) |
+| REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
+| REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
+| REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
+| REQ-INFER-SOTA-029 | Planned (`python/carnot/experiment_5124_clean_sota_runtime_provenance.py`, `scripts/experiment_5124_clean_sota_runtime_provenance_v470.py`, `results/experiment_5124_clean_sota_runtime_provenance_v470.json`) | Planned (`tests/python/test_experiment_5124_clean_sota_runtime_provenance.py`) |
+| REQ-INFER-SOTA-030 | Implemented (`python/carnot/experiment_5125_structured_reasoning_pool_v470.py`, `scripts/experiment_5125_structured_reasoning_pool_v470.py`, `results/experiment_5125_structured_reasoning_pool_v470.json`) | Implemented (`tests/python/test_experiment_5125_structured_reasoning_pool_v470.py`) |
+| REQ-INFER-SOTA-031 | Implemented (`python/carnot/experiment_5126_distributional_energy_ranker_v470.py`, `scripts/experiment_5126_distributional_energy_ranker_v470.py`, `results/experiment_5126_distributional_energy_ranker_v470.json`) | Implemented (`tests/python/test_experiment_5126_distributional_energy_ranker_v470.py`) |
+| REQ-INFER-SOTA-032 | Implemented (`python/carnot/experiment_5136_receipt_structured_pool_v2_v471.py`, `scripts/experiment_5136_receipt_structured_pool_v2_v471.py`, `results/experiment_5136_receipt_structured_pool_v2_v471.json`) | Implemented (`tests/python/test_experiment_5136_receipt_structured_pool_v2_v471.py`) |
+| REQ-INFER-SOTA-033 | Implemented (`python/carnot/experiment_5137_solver_verified_formulation_selector_v471.py`, `scripts/experiment_5137_solver_verified_formulation_selector_v471.py`, `results/experiment_5137_solver_verified_formulation_selector_v471.json`) | Implemented (`tests/python/test_experiment_5137_solver_verified_formulation_selector_v471.py`) |
+| REQ-INFER-2041 | Proposed | Proposed |
+| REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
+
+### REQ-INFER-1957: TruncProof Token-Limited LL(1) Parsing
+
+The system SHALL provide a budget-aware LL(1) grammar parser in `python/carnot/inference/grammar.py` that implements a TruncProof-style budget-aware closure. The parser SHALL track a token budget. When the token budget nears exhaustion, the parser SHALL automatically force deterministic closing tokens to seal the structure to avoid structurally invalid JSON.
+The zero-false-accept parsing rate on truncated runs MUST be evaluated.
+The parser SHALL output an artifact `results/experiment_1957_truncproof_ll1_grammar.json`.
+
+### SCENARIO-INFER-1957-001: Budget-Aware Closure Seals Structure
+
+**Given** an LL(1) parser with a token budget of 5
+**When** 4 tokens have been consumed
+**Then** the parser forces the closing token
+**And** the resulting structure is valid
+
+### REQ-INFER-1970: DOMINO-Style Speculative Grammar Masking
+
+The system SHALL provide a DOMINO-style speculative grammar masker (`DominoGrammarMasker`) in `python/carnot/inference/grammar.py` that builds a subword-aligned transition mask generator for common Carnot schema patterns. It SHALL integrate with the decoding loop to enforce strict adherence without latency spikes, and evaluate exact-acceptance equivalence against a legacy trie path.
+The masker SHALL output an artifact `results/experiment_1970_domino_fast_constraints.json` that includes exact-acceptance equivalence and latency comparisons.
+
+### SCENARIO-INFER-1970-001: DOMINO Masking Evaluates Exact Acceptance
+
+**Given** a DOMINO-style grammar masker initialized with Carnot schema patterns
+**When** it evaluates token acceptance vs a legacy trie path
+**Then** exact-acceptance equivalence is confirmed
+**And** the experiment artifact `results/experiment_1970_domino_fast_constraints.json` is written
+
+### REQ-INFER-1958: GCoT-Decoding Reasoning Paths
+The system shall provide a GCoTBranchingSampler that maintains parallel latent reasoning traces, applies partial-trace energy to rank and cull branches, and implements backtracking when all active branches exceed the energy threshold.
+
+### REQ-INFER-SOTA-2009: Dual Model VRAM Allocator Test for ROCm
+The system SHALL provide a multi-model VRAM allocator test for ROCm in `scripts/experiment_2009_dual.py`.
+The allocator SHALL mock VRAM allocation for SOTA models `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` if hardware is absent.
+The allocator SHALL determine theoretical max sequence length based on total VRAM and model weights.
+The output SHALL be saved to `results/experiment_2009_dual_model.json` with all required schema fields including `honest_verdict` and calculated `max_sequence_length`.
+
+### SCENARIO-INFER-SOTA-2009-001: Dual Model VRAM Allocation
+**Given** the mandated models Qwen 35B and Gemma 31B
+**When** the dual model VRAM allocator is executed
+**Then** theoretical max sequence length is determined
+**And** the result is saved to `results/experiment_2009_dual_model.json`.
+
+
+
+### REQ-INFER-CRANE-2089: Augmented Grammar Decoder
+The inference engine SHALL implement an Augmented Grammar Decoder in `python/carnot/inference/crane_decoder.py`.
+The decoder SHALL apply standard logits until a specific trigger token is generated, and then strictly apply a BNF grammar constraint.
+The output SHALL be saved to `results/experiment_2089_crane_decoder.json` with `crane_ready=true`.
+
+### SCENARIO-INFER-CRANE-2089-001: Augmented Grammar Decoder Execution
+**Given** the models unsloth/gemma-4-31B-it-GGUF and unsloth/Qwen3.6-35B-A3B-GGUF
+**When** the CRANE decoder is executed
+**Then** it interleaves constrained and unconstrained decoding
+**And** the result is saved to `results/experiment_2089_crane_decoder.json`.
+
+### REQ-INFER-CRANE-2090: CRANE HumanEval Evaluation
+The system SHALL evaluate CRANE vs rigid start-to-finish grammar enforcement on 50 HumanEval problems requiring structured JSON output in `scripts/experiment_2090_crane_humaneval.py`.
+The experiment SHALL use model `unsloth/gemma-4-31B-it-GGUF`.
+The output SHALL be saved to `results/experiment_2090_crane_humaneval.json` with `pass_rate_delta > 0` and include fields `target`, `pipeline_invocations`, `simulated_energy_minimized`, `latency_ms`, `honest_verdict`, `crane_pass_rate`, `rigid_pass_rate`.
+
+### SCENARIO-INFER-CRANE-2090-001: CRANE HumanEval Run
+**Given** 50 HumanEval problems
+**When** evaluated with CRANE versus rigid grammar
+**Then** CRANE achieves a positive pass_rate_delta
+**And** the artifact `results/experiment_2090_crane_humaneval.json` is generated.
+
+### REQ-INFER-2133: Hardware-Assisted DAB
+The system SHALL provide a Hardware-Assisted DAB logits processor in `python/carnot/inference/hw_dab.py`.
+It SHALL offload energy evaluations to a simulated LUT representation based on Substrate-Aware KANs.
+The output SHALL be saved to `results/experiment_2133_hw_dab.json` with all required schema fields including `hw_dab_ready`.
+
+### SCENARIO-INFER-2133-001: Hardware-Assisted DAB Evaluation
+**Given** an LLM outputting logits
+**When** the HWDABLogitsProcessor is applied
+**Then** it updates logits by subtracting energy from simulated LUTs
+**And** the experiment artifact `results/experiment_2133_hw_dab.json` is generated.
+
+### REQ-INFER-3412: VGS Textual Constraint Decoding
+The system SHALL adapt the VGS penalty logic to use explicit textual constraint grounding.
+An active decoding modifier (LogitsProcessor) SHALL penalize autoregressive probabilities that disagree with explicit constraints.
+The output SHALL be saved to `results/experiment_3412_vgs_override_decoder.json` showing hallucination avoidance statistics.
+
+### SCENARIO-INFER-3412-001: VGS Textual Constraint Decoder Application
+**Given** an LLM generating text with explicit textual constraints
+**When** evaluated with VGSTextualConstraintLogitsProcessor
+**Then** probabilities disagreeing with constraints are penalized
+**And** hallucination avoidance statistics are reported in `results/experiment_3412_vgs_override_decoder.json`.
+
+### REQ-INFER-SOTA-6648: Three Mandated GGUF Families SHALL Pass Independent Canaries
+
+Exp6648 SHALL define exactly these three model repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and
+`unsloth/gemma-4-31B-it-GGUF`. It SHALL resolve Qwen and the middle MoE with
+`cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))`. It SHALL resolve
+the dense flagship with `resolve_cached_gguf()`. It SHALL not download a model
+or use a legacy model to satisfy admission.
+
+Each family SHALL run in a separate fresh process. The process SHALL use the
+embedded llama.cpp GGUF tokenizer, load the exact hashed file with CUDA
+offload, and run the same fixed short prompt. A family passes only when the
+output is non-empty and input and output token counts are positive. The run
+SHALL use no `AutoTokenizer` or Hugging Face tokenizer path.
+
+#### SCENARIO-INFER-SOTA-6648-ALL-FAMILIES
+
+**Given** the Exp6647 structured gate is ready and all three exact cached GGUF
+files, embedded tokenizers, CUDA devices, and llama.cpp runtime are available
+**When** Exp6648 runs its fixed canaries in launch-order sequence
+**Then** each family emits one independent non-empty CUDA inference row and
+`all_mandated_models_admitted` is true.
+
+#### SCENARIO-INFER-SOTA-6648-NO-SUBSTITUTION
+
+**Given** one mandated model, embedded tokenizer, exact file hash, CUDA
+receipt, or output receipt is missing or substituted
+**When** admission is reduced
+**Then** that family fails, the aggregate stays false, and no legacy or CPU
+smoke row can satisfy the missing family.
+
+## Implementation Status (REQ-INFER-SOTA-6648)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6648 | Implemented (`python/carnot/experiment_6648_three_family_gguf_canaries.py`) | Implemented (`tests/python/test_experiment_6648_three_family_gguf_canaries.py`; exact resolver, embedded-tokenizer, identity, and inference-row coverage) |
+
+### REQ-INFER-SOTA-6649: Two Mandated MoE Models SHALL Produce Comparable Direct Rows
+
+Exp6649 SHALL define exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF` as headline models. It SHALL resolve them
+with `cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 1))`. Each model
+SHALL receive the same ordered task set and comparable frozen decoding limits.
+Legacy models MAY run only as labeled smoke checks. Their rows SHALL not enter
+headline counts or rates.
+
+Each headline row SHALL bind the exact model file and hash, process identity,
+accelerator receipt, prompt and output token counts, latency, raw output, and
+lineage. Exp6649 SHALL make one direct attempt per model-task unit. It SHALL not
+repair, retry, or regenerate output after checking.
+
+#### SCENARIO-INFER-SOTA-6649-COMPARABLE-ROWS
+
+**Given** the admitted Qwen and middle-Gemma GGUF files
+**When** Exp6649 runs the frozen task manifest
+**Then** both models receive every task once with the frozen budgets and every
+row binds local CUDA process evidence.
+
+#### SCENARIO-INFER-SOTA-6649-NO-LEGACY-OR-REPAIR
+
+**Given** a legacy smoke model or an invalid direct proposal
+**When** Exp6649 reduces headline evidence
+**Then** the legacy row is excluded and the invalid proposal remains unchanged
+without retry, repair, or regeneration.
+
+## Implementation Status (REQ-INFER-SOTA-6649)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6649 | Implemented (`python/carnot/experiment_6649_exact_certificate_proposal_corpus.py`) | Implemented (`tests/python/test_experiment_6649_exact_certificate_proposal_corpus.py`; exact model pair, comparable row, and no-intervention coverage) |
+
+### REQ-INFER-SOTA-6676: Three Mandated GGUF Families SHALL Run Matched Transport Units
+
+Exp6676 SHALL use `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve the cached pair with
+`cached_sota_pair()` and the remaining file with `resolve_cached_gguf()`.
+Every file SHALL have valid GGUF magic, a SHA-256 hash, and a loadable embedded
+tokenizer before inference. A legacy or CPU row SHALL not satisfy a mandated
+unit.
+
+Every model SHALL run the same ordered task-arm matrix with frozen seeds,
+proposal-token limits, sampling settings, stop rules, and one request per unit.
+Each completed row SHALL retain input and output token counts, latency, raw
+response bytes, and its model process receipt.
+
+#### SCENARIO-INFER-SOTA-6676-COMPLETE-MATRIX
+
+**Given** all three cached models can run with CUDA offload
+**When** Exp6676 runs the frozen matrix
+**Then** every model-task-arm identity has one completed or explicitly missing
+row and all completed headline rows name a mandated hub ID.
+
+#### SCENARIO-INFER-SOTA-6676-CUDA-BLOCK
+
+**Given** one mandated model cannot resolve, tokenize, or become resident on
+its assigned CUDA device
+**When** preflight or model launch runs
+**Then** Exp6676 writes a terminal blocked artifact and does not substitute a
+CPU or legacy model.
+
+## Implementation Status (REQ-INFER-SOTA-6676)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6676 and SCENARIO-INFER-SOTA-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
+
+### REQ-INFER-SOTA-6782: Sequential SOTA Runtime Admission SHALL Prove Real CUDA Tokens
+
+Exp6782 SHALL freeze this model order:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve each exact cached GGUF,
+hash its bytes, and load its embedded tokenizer. It SHALL not download or
+substitute a model.
+
+Each model SHALL run in a fresh process with the same deterministic canary
+prompt, context, output limit, seed, and compatible llama.cpp parameters. A
+model is ready only when its exact file becomes resident through CUDA offload
+on an owned RTX 3090, emits at least one real output token, closes the backend,
+exits its worker, and returns VRAM to the measured baseline. CPU generation,
+remote inference, a legacy model, or the integrated GPU SHALL not satisfy this
+requirement.
+
+#### SCENARIO-INFER-SOTA-6782-IDENTITY
+
+**Given** all three mandated cached GGUF families
+**When** Exp6782 resolves the frozen manifest
+**Then** every resolved row retains the hub ID, role, path, revision, byte
+size, SHA-256 hash, embedded tokenizer receipt, context, and output limit.
+
+#### SCENARIO-INFER-SOTA-6782-FIRST-TOKEN
+
+**Given** one exact model has an owner-bound RTX 3090 lease
+**When** its fresh llama.cpp worker runs the canary
+**Then** the receipt binds CUDA residency and at least one non-fixture output
+token to that model, worker, device UUID, and lease owner.
+
+#### SCENARIO-INFER-SOTA-6782-SEQUENTIAL-RECOVERY
+
+**Given** an earlier model completed its canary
+**When** the next model starts
+**Then** the earlier backend is closed, its worker is absent, its lease is
+released through the ownership API, and its VRAM recovery receipt has passed.
+
+## Implementation Status (REQ-INFER-SOTA-6782)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-6782 and SCENARIO-INFER-SOTA-6782-* | Planned (`python/carnot/experiment_6782_sequential_sota_runtime_admission.py`) | Planned (`tests/python/test_experiment_6782_sequential_sota_runtime_admission.py`) |
+
+### REQ-INFERENCE-6850: Three-Family Scoring Admission Uses Owned Processes
+
+Exp6850 SHALL qualify execution readiness without running a scientific scoring
+matrix. It SHALL use exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL call `cached_sota_pair()` before it
+resolves all three exact local GGUF files. It SHALL bind each file and its
+native GGUF tokenizer metadata to SHA-256 receipts. It SHALL require CUDA token
+scoring, sufficient disk, free task-owned ports, and a bounded exclusive lease
+on one eligible GPU. It SHALL observe unrelated processes without signaling or
+interrupting them.
+
+Exp6850 SHALL start one model process at a time. Each process receipt SHALL
+record its command, PID, Linux process start ticks, model hash, tokenizer hash,
+GPU UUID, visible devices, port, free VRAM before and after, and an opaque
+ownership-token digest. Process ownership SHALL require the recorded PID, start
+ticks, command hash, process group, owner PID, and ownership-token digest to
+match. A stale PID, reused PID, occupied port, lost lease, or changed ownership
+identity SHALL fail closed. Cleanup SHALL signal only a matching owned process.
+An owned orphan from an interrupted Exp6850 run MAY be reclaimed only when its
+full stored identity still matches. An unrelated llama.cpp, ARC, or other
+process SHALL never be a cleanup target.
+
+Each model SHALL run one fixed prompt-plus-candidate forced-sequence canary.
+The canary SHALL store prompt and candidate token IDs, finite candidate token
+log-probabilities, first useful output, final output, and latency. The prompt
+tokens SHALL not enter the candidate score. The canary SHALL have no scientific
+label and SHALL not support a margin or model-quality claim. Missing tokenizer
+metadata, non-finite token log-probabilities, an empty useful output, a failed
+request, or lease loss SHALL fail that model's admission.
+
+Exp6850 SHALL checkpoint after each complete model. On restart, it SHALL verify
+the model hash, tokenizer hash, canary hash, process receipt, lease receipt, and
+teardown receipt before it skips a model. It SHALL rerun only incomplete or
+invalid canaries. After every model, it SHALL close only the owned process,
+confirm process exit, confirm port release, record VRAM after teardown, and
+release the owner-bound lease.
+
+The terminal artifact SHALL be
+`results/experiment_6850_three_family_scoring_admission_canary.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `model_specs`, `models_used`, `model_artifact_hashes`,
+`tokenizer_receipts`, `process_receipts`, `accelerator_samples`, `rows`,
+`canary_token_receipts`, `lease_receipts`, `checkpoint_manifest`,
+`teardown_receipts`, `admission_canary_complete_score`,
+`three_family_scoring_admission_ready_score`, `scientific_effect_claimed`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. The inference substrate SHALL be
+`live_local_llama_cpp_cuda_forced_sequence_canary`.
+`scientific_effect_claimed` and `verifier_is_oracle` SHALL both be false.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. The honest verdict SHALL start with
+`complete_`. A failed precondition SHALL emit
+`complete_blocked_three_family_scoring_admission_canary` and SHALL record the
+failed check and observed value in `gate_check_summary`.
+
+`admission_canary_complete_score` SHALL depend only on the three complete
+canary token receipts. `three_family_scoring_admission_ready_score`, which
+Exp6851 consumes, SHALL equal one only when all three artifact, process, lease,
+canary, checkpoint, and teardown receipts are complete. It SHALL not depend on
+candidate score direction, a compatibility effect, or model quality.
+
+#### SCENARIO-INFERENCE-6850-PROCESS-IDENTITY: Cleanup Refuses Stale Or Reused PIDs
+
+Given a stored process receipt with an absent PID, reused PID, changed start
+ticks, changed command hash, or changed process group,
+When Exp6850 checks ownership or teardown,
+Then it SHALL send no signal to the current process and SHALL record the exact
+identity failure.
+
+#### SCENARIO-INFERENCE-6850-PORT-AND-ORPHAN: Ports And Orphans Stay Owner-Scoped
+
+Given an occupied requested port or a stored orphan process receipt,
+When Exp6850 starts or recovers a server,
+Then it SHALL block on the occupied port unless the listener matches the full
+owned orphan identity, and it SHALL never terminate an unrelated listener.
+
+#### SCENARIO-INFERENCE-6850-LEASE-LOSS: Lease Loss Stops The Canary
+
+Given an acquired owner-bound GPU lease,
+When its heartbeat expires or its journal, token, model, device, PID, or start
+ticks no longer match,
+Then Exp6850 SHALL stop admission, tear down only its matching owned process,
+and record a blocked lease receipt.
+
+#### SCENARIO-INFERENCE-6850-CANARY: Native Tokens And Finite Scores Are Required
+
+Given one exact model, native tokenizer receipt, free owned port, and valid GPU
+lease,
+When Exp6850 runs the fixed forced-sequence canary,
+Then it SHALL record token IDs, finite candidate token log-probabilities, first
+useful output, final output, latency, model identity, and no scientific label.
+
+#### SCENARIO-INFERENCE-6850-RESTART: Only Complete Verified Canaries Are Skipped
+
+Given a checkpoint with one complete model and one incomplete or hash-drifted
+model,
+When Exp6850 restarts,
+Then it SHALL skip only the complete verified model and rerun every incomplete
+or invalid model.
+
+#### SCENARIO-INFERENCE-6850-TEARDOWN: Exit And Port Release Gate Readiness
+
+Given a completed model canary,
+When Exp6850 tears down the model process,
+Then it SHALL signal only the matching owned identity, confirm process exit,
+confirm port release, record post-teardown VRAM, and release the matching lease
+before the next model starts.
+
+## Implementation Status (REQ-INFERENCE-6850)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6850 and SCENARIO-INFERENCE-6850-* | Implemented (`python/carnot/inference/llama_cpp_process.py`; `python/carnot/experiment_6850_three_family_scoring_admission_canary.py`; `scripts/experiments/experiment_6850_three_family_scoring_admission_canary.py`) | 21 passing tests (`tests/python/test_llama_cpp_process.py`; `tests/python/test_experiment_6850_three_family_scoring_admission_canary.py`) |
+
+### REQ-INFERENCE-6863: Tokenizer-Aware Semantic Contrast Preregistration
+
+Exp6863 SHALL call `cached_sota_pair()` before it resolves these exact local
+GGUF files: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL reject a substituted cache file.
+It SHALL require stable file hashes, embedded tokenizer metadata, Exp6862
+readiness, and no earlier score for a new model and semantic-group identity.
+
+Exp6863 SHALL use only the native llama.cpp GGUF tokenizer in vocabulary-only
+mode. It SHALL not run model evaluation, generation, or token likelihood. Each
+model and contrast cell SHALL record exact prompt and candidate token IDs,
+token counts, special-token settings, chat-template identity, tokenizer hash,
+character counts, presentation order, and frozen sequence hashes.
+
+A model cell SHALL be eligible only when both candidate sequences have equal
+token counts. Its paired controls SHALL also satisfy the frozen prompt-length
+and label-position contract. Exp6863 SHALL freeze identifier, order,
+normalization, label-position, token-count, character-length, and surface-form
+controls. It SHALL preserve each rejected cell and its reasons.
+
+Exp6863 SHALL split by Exp6862 semantic group identity. Calibration and held
+groups SHALL be disjoint. One semantic group SHALL never cross a split through
+another model or row. Held labels SHALL appear only as sealed commitments.
+The calibration loader SHALL reject held identities and SHALL record zero held
+label accesses.
+
+Before any score exists, Exp6863 SHALL freeze the paired contrast, nuisance
+difference-in-differences statistics, random seed, split hashes, confidence
+method, missing-cell rule, family-agreement rule, retirement threshold, and
+sample-size floor. Every model SHALL have at least 20 eligible calibration
+groups and 20 eligible held groups. Both the Qwen and Gemma families SHALL meet
+that floor. A lower count SHALL produce an honest null readiness result.
+
+The terminal artifact SHALL be
+`results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json`.
+It SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`,
+`token_likelihood_call_count`, `rows`, `accepted_cell_manifest`,
+`rejected_cell_manifest`, `nuisance_match_manifest`,
+`calibration_group_manifest`, `sealed_held_group_manifest`,
+`split_overlap_count`, `held_label_access_count`,
+`preregistered_statistic_manifest`, `sample_size_power_rows`,
+`reproducibility_checksum`,
+`semantic_contrast_preregistration_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+`inference_substrate` SHALL be
+`native_gguf_tokenization_without_inference`.
+`token_likelihood_call_count`, `split_overlap_count`, and
+`held_label_access_count` SHALL be zero. `verifier_is_oracle` SHALL be false.
+`semantic_contrast_preregistration_ready_score` SHALL depend only on tokenizer
+receipts, nuisance matching, split isolation, sample floors, and label sealing.
+It SHALL not state a scientific result. A precondition failure SHALL emit
+`complete_blocked_tokenizer_aware_semantic_contrast_preregistration` and name
+the failed check and observed value in `gate_check_summary`.
+
+#### SCENARIO-INFERENCE-6863-NATIVE-TOKENIZER: Metadata And Exact Tokens Are Required
+
+Given one exact GGUF file and its native embedded tokenizer,
+When Exp6863 tokenizes a frozen prompt and both candidates,
+Then it SHALL record exact native token IDs and metadata hashes without a model
+evaluation or token-likelihood call.
+
+#### SCENARIO-INFERENCE-6863-CACHE-AND-HASH: Substitution And Drift Fail Closed
+
+Given a resolved path or file hash that differs from the frozen model receipt,
+When Exp6863 checks the cache,
+Then it SHALL reject that model and name the path or hash drift.
+
+#### SCENARIO-INFERENCE-6863-NUISANCE-MATCH: Unequal Token Counts Reject A Cell
+
+Given a model-specific contrast whose candidate token counts differ or whose
+paired prompt and label-position controls differ,
+When Exp6863 applies the nuisance contract,
+Then it SHALL preserve the cell in the rejected manifest with exact reasons.
+
+#### SCENARIO-INFERENCE-6863-GROUP-SPLIT: Groups Never Leak Across Splits
+
+Given several rows and models for one semantic group identity,
+When Exp6863 freezes calibration and held groups,
+Then all cells for that identity SHALL use one split and split overlap SHALL be
+zero.
+
+#### SCENARIO-INFERENCE-6863-HELD-SEAL: Calibration Cannot Read Held Labels
+
+Given the frozen held-group commitments,
+When the calibration label loader receives a held identity,
+Then it SHALL reject access and the successful preregistration path SHALL
+record zero held-label accesses.
+
+#### SCENARIO-INFERENCE-6863-SAMPLE-FLOOR: Small Splits Return Honest Null Readiness
+
+Given fewer than 20 accepted calibration groups or 20 accepted held groups for
+one required model or family,
+When Exp6863 computes readiness,
+Then readiness SHALL be zero and the terminal verdict SHALL be an honest null.
+
+## Implementation Status (REQ-INFERENCE-6863)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6863 and SCENARIO-INFERENCE-6863-* | Planned (`python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`; `scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) | Planned (`tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) |
+
+### REQ-INFERENCE-6866: Canonical Tokenizer Binding Requalification
+
+Exp6866 SHALL call `cached_sota_pair()` before it extends resolution with
+`flagship_dense()`. It SHALL resolve exactly these GGUF repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL require the Exp6865
+`v601_evidence_contract_ready_score` to equal one. It SHALL also require all
+three frozen model hashes, exact sizes, quantizations, hub IDs, snapshot
+identities, embedded tokenizer metadata, and readable Exp6850 and Exp6863
+receipts. A failed precondition SHALL still write a complete blocked artifact.
+
+Exp6866 SHALL implement reducer version
+`carnot.canonical_tokenizer_receipt_reducer.v1`. The reducer SHALL emit only
+the Exp6865 `carnot.canonical_tokenizer_payload.v1` fields. It SHALL hash
+sorted compact UTF-8 JSON. It SHALL record a source field map for every input.
+It SHALL exclude paths, timestamps, prose, wrapper-only fields, and nested
+receipt hashes from the canonical payload.
+
+Exp6866 SHALL recompute the archived Exp6850 binding from each frozen exact
+GGUF file. It SHALL recompute the live binding from each newly resolved exact
+GGUF file. Both sides SHALL use the same reducer and the same probe manifest.
+Old receipt fields MAY supply migration provenance. They SHALL not change the
+canonical payload.
+
+The canonical semantic payload SHALL include vocabulary identity, special
+token IDs, add-BOS behavior, chat-template identity, tokenization settings,
+and frozen probe outputs. The frozen probes SHALL cover whitespace, newlines,
+tabs, NFC and NFD Unicode, punctuation, label swaps, control-like text,
+literal special-token text, empty text, chat-template boundaries, and both
+Exp6862 sequence templates. Invalid UTF-8 SHALL use explicit replacement.
+Unicode normalization SHALL follow the setting stored on each row.
+
+Exp6866 SHALL emit one row for each model, probe, and setting. Each row SHALL
+contain archived and live token IDs, canonical payload hashes, and an exact
+comparison status. It SHALL preserve each mismatch with a typed reason.
+`wrapper_schema_only` SHALL identify excluded wrapper changes.
+`semantic_payload_equal` SHALL identify equal canonical payloads.
+`semantic_payload_drift` SHALL identify vocabulary, special-token, add-BOS,
+chat-template, setting, or token-output drift. Any semantic drift SHALL block
+that model.
+
+The terminal artifact SHALL be
+`results/experiment_6866_canonical_tokenizer_binding_requalification.json`.
+It SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `archived_receipt_rows`, `live_receipt_rows`,
+`source_field_maps`, `canonical_payload_schema_version`,
+`canonical_payload_hash_rows`, `semantic_probe_manifest`, `rows`,
+`mismatch_witnesses`, `append_only_correction_receipt`,
+`token_likelihood_call_count`, `generated_answer_count`, `random_seed`,
+`reproducibility_checksum`, `canonical_tokenizer_binding_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+The inference substrate SHALL be native GGUF tokenization without inference.
+`token_likelihood_call_count` and `generated_answer_count` SHALL be zero.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with `complete_`.
+
+`canonical_tokenizer_binding_ready_score` SHALL equal one only when all three
+resolved model files are byte-identical to their frozen files. Every canonical
+payload and every probe output SHALL also match. A wrapper-only difference MAY
+produce an append-only correction receipt. Exp6866 SHALL never rewrite an old
+artifact.
+
+#### SCENARIO-INFERENCE-6866-CANONICAL-ORDER: Wrapper Order Does Not Change Identity
+
+Given two receipts with different key order or excluded wrapper fields,
+When the versioned reducer builds both payloads,
+Then their canonical JSON and payload hashes SHALL match.
+
+#### SCENARIO-INFERENCE-6866-SEMANTIC-DRIFT: Semantic Fields Fail Closed
+
+Given a one-token vocabulary change, special-token change, add-BOS change, or
+chat-template change,
+When Exp6866 compares the canonical payloads,
+Then it SHALL emit `semantic_payload_drift` with a typed reason and block that
+model.
+
+#### SCENARIO-INFERENCE-6866-TEXT-NORMALIZATION: Text Handling Is Explicit
+
+Given NFC text, NFD text, or invalid UTF-8 bytes,
+When a frozen setting prepares the probe,
+Then it SHALL apply the named Unicode normalization and UTF-8 replacement mode
+before native tokenization. It SHALL hash the resulting UTF-8 bytes.
+
+#### SCENARIO-INFERENCE-6866-OLD-RECEIPT-MIGRATION: Legacy Wrappers Stay Provenance
+
+Given an Exp6850 tokenizer receipt with its older wrapper schema,
+When Exp6866 migrates its binding from the frozen exact GGUF file,
+Then the old fields SHALL appear in the source field map and correction
+receipt. They SHALL not enter the canonical semantic hash.
+
+#### SCENARIO-INFERENCE-6866-PROBE-MATRIX: Both Sides Use One Frozen Matrix
+
+Given archived and live native GGUF tokenizers for one model,
+When Exp6866 runs every frozen probe and setting,
+Then each comparison row SHALL use identical prepared bytes, add-BOS, and
+special-token settings on both sides. A token-ID difference SHALL block that
+model.
+
+#### SCENARIO-INFERENCE-6866-BLOCKED-ARTIFACT: Preconditions Still Produce Evidence
+
+Given any missing source, model, frozen hash, tokenizer metadata, or Exp6865
+readiness gate,
+When Exp6866 stops before requalification,
+Then it SHALL write
+`complete_blocked_canonical_tokenizer_binding_requalification`. Its
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+## Implementation Status (REQ-INFERENCE-6866)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6866 and SCENARIO-INFERENCE-6866-* | Planned (`python/carnot/experiment_6866_canonical_tokenizer_binding_requalification.py`; `scripts/experiments/experiment_6866_canonical_tokenizer_binding_requalification.py`) | Planned (`tests/python/test_experiment_6866_canonical_tokenizer_binding_requalification.py`) |
+
+### REQ-INFERENCE-6867: Tokenizer-Aware Semantic Preregistration V2
+
+Exp6867 SHALL reuse the exact 100 semantic group identities from Exp6862.
+It SHALL require the exact frozen Exp6862 file hash. It SHALL not regenerate
+the contrast bank. It SHALL require the Exp6866
+`canonical_tokenizer_binding_ready_score` to equal one.
+
+Exp6867 SHALL resolve exactly these local GGUF repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Each file SHALL match the path, hash,
+size, quantization, and snapshot identity frozen by Exp6866. The run SHALL use
+only the native embedded GGUF tokenizer. It SHALL not evaluate model weights.
+
+Each model and semantic contrast cell SHALL record the exact prompt token IDs.
+It SHALL also record both exact candidate token-ID sequences. Each row SHALL
+record the native special-token settings, canonical tokenizer payload hash,
+sequence hashes, sequence identity, semantic family, and presentation order.
+
+A cell SHALL be nuisance-eligible only when it contains exactly two candidates.
+The candidate labels SHALL be `[true, false]` in base order and `[false, true]`
+after the frozen swap. The two candidate token counts SHALL match. Their
+character counts SHALL match. Base and swapped prompt token counts SHALL match.
+Identifier, order, NFC normalization, label position, surface template, and
+sequence hash controls SHALL all pass. Every rejected cell SHALL remain in the
+artifact with all rejection reasons.
+
+Exp6867 SHALL split only by Exp6862 semantic group identity. It SHALL use one
+fixed seed. It SHALL freeze one split checksum. Calibration and held identities
+SHALL be disjoint. A semantic family SHALL not cross the split through another
+row or model. Each family SHALL contribute calibration and held identities.
+
+Held labels SHALL appear only as salted commitments in the sealed held
+manifest. The salt SHALL derive from frozen preregistration inputs. It SHALL not
+appear in the artifact. The calibration reducer SHALL reject every held group
+before it can load a label. A successful run SHALL record zero held-label
+accesses.
+
+Before any token likelihood exists, Exp6867 SHALL freeze these methods:
+the within-group paired contrast; nuisance difference-in-differences contrasts;
+a semantic-group cluster bootstrap interval; complete-cell missingness; a
+per-family effect; cross-model family replication; pooled aggregation; multiple
+comparison handling; and retirement thresholds. Each model SHALL have at least
+20 calibration groups and 20 held groups. Each model SHALL meet the floor from
+accepted cells only.
+
+The terminal artifact SHALL be
+`results/experiment_6867_tokenizer_aware_semantic_preregistration_v2.json`.
+It SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `frozen_contrast_bank_hash`,
+`rows`, `accepted_cell_manifest`, `rejected_cell_manifest`,
+`nuisance_match_manifest`, `calibration_group_manifest`,
+`sealed_held_group_manifest`, `split_overlap_count`,
+`held_label_access_count`, `token_likelihood_call_count`,
+`generated_answer_count`, `preregistered_statistic_manifest`,
+`sample_size_power_rows`, `random_seed`, `reproducibility_checksum`,
+`semantic_contrast_preregistration_v2_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+The inference substrate SHALL be native GGUF tokenization without inference.
+`split_overlap_count`, `held_label_access_count`,
+`token_likelihood_call_count`, and `generated_answer_count` SHALL be zero.
+`verifier_is_oracle` SHALL be false. `honest_verdict` SHALL start with
+`complete_`. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+
+`semantic_contrast_preregistration_v2_ready_score` SHALL equal one only when
+tokenizer identity, nuisance matching, split disjointness, sample floors, and
+held-label sealing pass. This score SHALL not state a scientific result.
+A precondition failure SHALL emit
+`complete_blocked_tokenizer_aware_semantic_preregistration_v2`.
+Its `gate_check_summary` SHALL name the failed check, expected value, and
+observed value.
+
+#### SCENARIO-INFERENCE-6867-BANK-IDENTITY: Bank Mutation Fails Closed
+
+Given a changed Exp6862 byte or semantic group identity,
+When Exp6867 checks its source,
+Then it SHALL stop before tokenization and name the frozen bank mismatch.
+
+#### SCENARIO-INFERENCE-6867-TOKENIZER-IDENTITY: Substitution Fails Closed
+
+Given a resolved model path, file identity, or canonical payload that differs
+from Exp6866,
+When Exp6867 checks the native tokenizer binding,
+Then it SHALL reject the substituted model before cell admission.
+
+#### SCENARIO-INFERENCE-6867-NUISANCE-CONTROLS: Unequal Cells Are Preserved
+
+Given unequal candidate counts, token counts, character counts, prompt counts,
+or frozen presentation controls,
+When Exp6867 checks one cell,
+Then it SHALL reject the cell and preserve all typed reasons.
+
+#### SCENARIO-INFERENCE-6867-GROUP-SPLIT: Groups And Families Stay Disjoint
+
+Given rows for one semantic identity across three models,
+When Exp6867 freezes the split,
+Then every row SHALL use one split. Calibration and held sets SHALL not overlap.
+Every semantic family SHALL be present in both splits.
+
+#### SCENARIO-INFERENCE-6867-HELD-SEAL: Calibration Cannot Read Held Labels
+
+Given a sealed held identity,
+When the calibration reducer requests its labels,
+Then access SHALL fail before label loading. A successful artifact SHALL record
+zero held-label accesses.
+
+#### SCENARIO-INFERENCE-6867-SAMPLE-FLOOR: Low Sample Size Is Not Ready
+
+Given fewer than 20 accepted calibration or held groups for one required model,
+When Exp6867 evaluates readiness,
+Then readiness SHALL be zero. The verdict SHALL be terminal and null.
+
+#### SCENARIO-INFERENCE-6867-SCORE-FREEZE: Earlier Scores Block Preregistration
+
+Given any token likelihood for a new Exp6867 split identity,
+When Exp6867 checks the result corpus,
+Then it SHALL stop before tokenization and record the scored identity.
+
+## Implementation Status (REQ-INFERENCE-6867)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6867 and SCENARIO-INFERENCE-6867-* | Implemented (`python/carnot/experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`; `scripts/experiments/experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`) | Implemented with focused tests, 100% new-module coverage, and the dated end-to-end artifact (`tests/python/test_experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`) |
+
+### REQ-INFERENCE-6868: Three-Family Semantic Scoring Stream V2
+
+Exp6868 SHALL call `cached_sota_pair()` before scoring. It SHALL require the
+Exp6867 `semantic_contrast_preregistration_v2_ready_score` to equal one. It
+SHALL bind all model and native tokenizer hashes to the exact Exp6867 values.
+It SHALL require live local llama.cpp CUDA token scoring, sufficient disk,
+task-owned ports, and one bounded task-owned GPU lease. A failed precondition
+SHALL write `complete_blocked_three_family_semantic_scoring_stream_v2`. Its
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+Exp6868 SHALL score every frozen eligible calibration and held cell for these
+exact repositories: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL run one model worker at a time. It
+SHALL preserve one raw row for each model, semantic group, sequence, candidate
+slot, and nuisance transform. Each row SHALL include token IDs, token log
+probabilities, finite checks, raw log-probability sum, per-token normalization,
+latency, sequence hash, group identity, split, and nuisance-transform identity.
+
+The worker input SHALL contain only frozen prompt and candidate text or their
+token IDs. It SHALL not contain exact labels, commitments, semantic judgments,
+or score interpretation. Exp6868 SHALL generate no answers, repairs, labels, or
+judgments. It SHALL record `generated_answer_count` and
+`held_label_access_count` as zero. It SHALL set `scientific_effect_claimed` to
+false. It SHALL not train or invoke an external generated-text scorer.
+
+Each process receipt SHALL include its command, PID, Linux start ticks,
+ownership-token digest, model and tokenizer hashes, GPU UUID, visible devices,
+offload setting, port, context length, and VRAM samples. The task SHALL observe
+unrelated processes without signaling them. Teardown SHALL signal only a worker
+whose full ownership identity still matches. It SHALL record process exit and
+port release.
+
+Calibration and held raw score sidecars SHALL remain separate and SHALL have
+independent hashes. Exp6868 SHALL not reduce held effects. It SHALL preserve
+failed and timeout cells without imputation. It SHALL write an atomic
+checkpoint after each bounded group batch and completed model. Resume SHALL
+first verify every frozen input hash. It SHALL rerun only incomplete cells.
+
+The terminal artifact SHALL be
+`results/experiment_6868_three_family_semantic_scoring_stream_v2.json`. It
+SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`missing_model_manifest`, `model_artifact_hashes`, `tokenizer_receipts`,
+`process_receipts`, `accelerator_samples`, `lease_receipts`, `rows`,
+`raw_token_sidecars`, `calibration_score_manifest`,
+`sealed_held_score_manifest`, `failed_cell_manifest`, `checkpoint_manifest`,
+`teardown_receipts`, `generated_answer_count`, `held_label_access_count`,
+`scientific_effect_claimed`, `random_seed`, `reproducibility_checksum`,
+`semantic_contrast_stream_v2_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+`semantic_contrast_stream_v2_complete_score` SHALL equal one only when every
+required model cell has a verified raw receipt or an explicit failure row, all
+checkpoints are complete, and teardown is clean. Stream completion SHALL not
+state a scientific positive. `verifier_is_oracle` SHALL be false.
+`honest_verdict` SHALL start with `complete_`. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+#### SCENARIO-INFERENCE-6868-LEASE-LOSS: Lease Loss Stops New Scoring
+
+Given a worker whose task-owned GPU lease expires or changes owner,
+When Exp6868 checks the lease before a cell or bounded batch,
+Then it SHALL stop new scoring, preserve completed rows, checkpoint the partial
+state, and record explicit incomplete or failed cells without imputation.
+
+#### SCENARIO-INFERENCE-6868-PROCESS-IDENTITY: Stale PIDs Never Gain Authority
+
+Given a recorded PID whose Linux start ticks or command identity changed,
+When teardown checks ownership,
+Then it SHALL refuse to signal the process and SHALL record the identity
+mismatch and unclean teardown.
+
+#### SCENARIO-INFERENCE-6868-PORT-OWNERSHIP: Occupied Ports Fail Closed
+
+Given an occupied task port without a matching private owner receipt,
+When Exp6868 prepares the worker,
+Then it SHALL not interrupt the listener and SHALL write a blocked or partial
+artifact with the occupied port observation.
+
+#### SCENARIO-INFERENCE-6868-HASH-DRIFT: Frozen Inputs Bind Resume
+
+Given model, tokenizer, preregistration, row, or checkpoint input hash drift,
+When Exp6868 starts or resumes,
+Then it SHALL stop before scoring the affected cells and name the expected and
+observed hashes.
+
+#### SCENARIO-INFERENCE-6868-LABEL-SEAL: Labels Never Reach Workers
+
+Given calibration rows with plaintext labels and held rows with commitments,
+When Exp6868 constructs a worker request,
+Then the request SHALL contain neither value. A label-shaped request key or
+semantic judgment text SHALL fail before network I/O.
+
+#### SCENARIO-INFERENCE-6868-NONFINITE: Nonfinite Scores Stay Failed
+
+Given a missing, NaN, or infinite token log probability,
+When Exp6868 validates the worker response,
+Then it SHALL preserve an explicit failed cell and SHALL not emit or impute a
+raw score row.
+
+#### SCENARIO-INFERENCE-6868-TIMEOUT: Timeout Rows Are Evidence
+
+Given a health or scoring timeout,
+When the bounded deadline expires,
+Then Exp6868 SHALL preserve a timeout cell, checkpoint completed work, and
+continue only when process ownership and lease state remain valid.
+
+#### SCENARIO-INFERENCE-6868-CHECKPOINT-RESTART: Only Missing Cells Rerun
+
+Given a valid partial atomic checkpoint,
+When Exp6868 restarts with unchanged input hashes,
+Then it SHALL preserve complete cell receipts and rerun only identities that
+have neither a verified score row nor an explicit failure row.
+
+#### SCENARIO-INFERENCE-6868-OWNED-TEARDOWN: Cleanup Is Narrow And Bounded
+
+Given one matching task-owned worker and any unrelated processes,
+When Exp6868 tears down,
+Then it SHALL stop and reap only the matching worker, confirm port release, and
+record zero unrelated process signals.
+
+## Implementation Status (REQ-INFERENCE-6868)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6868 and SCENARIO-INFERENCE-6868-* | Planned (`python/carnot/experiment_6868_three_family_semantic_scoring_stream_v2.py`; `scripts/experiments/experiment_6868_three_family_semantic_scoring_stream_v2.py`) | Planned (`tests/python/test_experiment_6868_three_family_semantic_scoring_stream_v2.py`) |
+
+### REQ-INFERENCE-6887: Three-Family Anchored Relation Proposal Corpus
+
+Exp6887 SHALL call `cached_sota_pair()` before acquisition. It SHALL also use
+`resolve_cached_gguf()` for the dense extension. It SHALL require the Exp6886
+`relation_fixture_ready_score` to equal one. It SHALL require the exact three
+model repositories, their local GGUF files, the pinned Enoki encoder files,
+native GGUF tokenizer receipts, llama.cpp CUDA offload, task-owned GPU leases,
+and zero access to held formal sidecars. A failed precondition SHALL write a
+terminal `complete_blocked_three_family_relation_corpus` artifact. Its gate
+summary SHALL name each failed check, expected value, and observed value.
+
+Exp6887 SHALL use at least 90 frozen Exp6886 public source records. Every one
+of the five fixture families SHALL contribute at least 18 records. The three
+GGUF arms, pinned Enoki encoder arm, and deterministic rule arm SHALL receive
+the same records in the same order. GGUF cells SHALL share one prompt template,
+seed matrix, output budget, and stop policy. The prompt SHALL expose only the
+public source text, source identity, allowed predicate names, and a plain-text
+relation-line protocol. It SHALL not expose held labels, ASP programs, answer
+sets, solver receipts, exact target relations, sidecar paths, or hidden case
+names.
+
+The GGUF protocol SHALL use unconstrained plain-text generation. Exp6887 SHALL
+not use a grammar, JSON schema, constrained decoding, repair prompt, model
+judge, or external text scorer. Each GGUF SHALL use its tokenizer embedded in
+the resolved GGUF. A GGUF repository ID SHALL never be passed to
+`AutoTokenizer.from_pretrained()`. CPU-only fallback, absent owned CUDA
+residency, and missing GPU offload SHALL fail the headline acquisition.
+
+Exp6887 SHALL preserve one terminal cell for each arm and source record. Each
+cell SHALL retain the prompt hash, raw output and hash, native prompt and output
+token counts, latency, stop reason, timeout and truncation state, arm identity,
+source identity, family, task identity, seed, output budget, and runtime
+receipt. Parsing SHALL inspect surface text only. It SHALL preserve every valid
+span and tuple plus malformed, unsupported, duplicate, abstention, empty,
+timeout, and truncation rows. It SHALL not impute or drop a denominator row.
+
+Each GGUF process receipt SHALL record its PID, model hash, tokenizer evidence,
+GPU UUID, visible device, offload layers, context and output limits, VRAM
+samples, lease ownership, and bounded teardown. Cleanup SHALL signal only a
+matching task-owned server. It SHALL confirm process exit, process reap, port
+release, lease release, and zero unrelated process signals. Partial checkpoints
+SHALL bind all frozen input hashes and preserve completed terminal cells. A
+resume SHALL rerun only absent cell identities.
+
+The terminal artifact SHALL be
+`results/experiment_6887_three_family_relation_proposal_corpus.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `relation_fixture_ready_score`,
+`model_specs`, `models_used`, `model_artifact_hashes`, `tokenizer_receipts`,
+`llama_cpp_receipts`, `gpu_lease_rows`, `enoki_asset_receipts`,
+`deterministic_rule_receipts`, `prompt_manifest`,
+`held_sidecar_access_count`, `rows`, `raw_output_manifest`,
+`parse_failure_rows`, `abstention_rows`, `truncation_rows`, `timeout_rows`,
+`per_arm_family_counts`, `server_lifecycle_rows`,
+`model_weight_mutation_count`, `external_text_scorer_call_count`,
+`constrained_schema_decode_count`, `random_seed`, `reproducibility_checksum`,
+`relation_corpus_complete_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Every required field, the incoming gate,
+and the outgoing gate SHALL have one entry in `field_principles`.
+`inference_substrate` SHALL equal
+`live_local_sota_gguf_cuda_plus_pinned_enoki_encoder`.
+`held_sidecar_access_count`, `model_weight_mutation_count`,
+`external_text_scorer_call_count`, and `constrained_schema_decode_count` SHALL
+all equal zero. `verifier_is_oracle` SHALL be false. `honest_verdict` SHALL
+start with `complete_`. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+
+`relation_corpus_complete_score` SHALL be the bare integer one only when all
+five arms have authentic terminal cells for every frozen source record, every
+arm-family count meets its floor, raw rows and hashes replay, held-sidecar
+access is zero, GPU and tokenizer evidence passes for all GGUF arms, the pinned
+Enoki identity passes, and server teardown is clean. It SHALL not depend on
+proposal quality, parser success, abstention rate, timeout count, or truncation
+count. Otherwise it SHALL be zero.
+
+#### SCENARIO-INFERENCE-6887-PRECONDITIONS: Missing Or Drifted Inputs Block
+
+Given a missing model cache, changed Exp6886 gate or hash, changed Enoki
+revision, substituted tokenizer, CPU-only runtime, absent GPU offload, or lease
+failure,
+When Exp6887 checks acquisition inputs,
+Then acquisition SHALL not start and the complete blocked artifact SHALL retain
+the exact failed expectations and observations.
+
+#### SCENARIO-INFERENCE-6887-PROMPT-SEAL: Formal Authority Never Reaches An Arm
+
+Given public source views and sealed held authority,
+When Exp6887 builds any prompt or encoder input,
+Then no held label, hidden case, ASP program, answer set, solver receipt, exact
+target relation, or sidecar path SHALL appear and held-sidecar access SHALL
+remain zero.
+
+#### SCENARIO-INFERENCE-6887-PROTOCOL: Surface Parsing Preserves Failures
+
+Given valid lines, malformed lines, invalid UTF-8 spans, unsupported
+predicates, duplicate tuples, abstentions, and empty output,
+When Exp6887 parses a raw proposal,
+Then it SHALL preserve each input line or empty cell with a typed status and
+SHALL accept only exact source byte spans and protocol fields.
+
+#### SCENARIO-INFERENCE-6887-TIMEOUT-AND-TRUNCATION: Terminal Cells Stay Visible
+
+Given a timed-out request or output-budget stop,
+When Exp6887 records the cell,
+Then it SHALL keep the raw output received, mark the timeout or truncation, and
+retain the cell in every applicable denominator.
+
+#### SCENARIO-INFERENCE-6887-RESUME: Only Absent Cells Run Again
+
+Given a partial checkpoint with unchanged frozen input hashes,
+When Exp6887 resumes,
+Then verified terminal cells SHALL remain byte-identical and only absent cell
+identities SHALL run. Input or checkpoint hash drift SHALL fail closed.
+
+#### SCENARIO-INFERENCE-6887-TEARDOWN: Owned Servers Exit Cleanly
+
+Given one matching task-owned llama.cpp server and unrelated processes,
+When Exp6887 ends a GGUF phase,
+Then it SHALL stop and reap only the owned server, release its port and lease,
+and record zero unrelated process signals.
+
+#### SCENARIO-INFERENCE-6887-COMPLETION: Readiness Measures Acquisition Only
+
+Given all five arm-family matrices and their terminal raw cells,
+When Exp6887 computes its outgoing gate,
+Then complete authentic acquisition SHALL score one even when proposal rows are
+malformed, unsupported, duplicate, abstained, empty, timed out, or truncated.
+Missing cells, bad provenance, label access, or unclean teardown SHALL score
+zero.
+
+## Implementation Status (REQ-INFERENCE-6887)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6887 and SCENARIO-INFERENCE-6887-* | Planned (`python/carnot/experiment_6887_three_family_relation_proposal_corpus.py`; `scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py`) | Planned (`tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py`) |
+
+### REQ-INFERENCE-6899: Live Relation Acquisition Authenticity Canary
+
+Exp6899 SHALL run a small fail-fast canary before any larger relation corpus.
+It SHALL call `cached_sota_pair()` and use the dense cache extension. It SHALL
+bind the exact Exp6886 artifact, its `anchored_relation_v1` fixture manifests,
+all three required GGUF files, native embedded tokenizer receipts, pinned Enoki
+assets, task-owned GPU leases, at least 24,000 MiB of free VRAM before each live
+load, and zero held-sidecar access. Cache drift, a wrong model file, tokenizer
+substitution, a stale receipt, or a failed lease SHALL write
+`complete_blocked_live_relation_acquisition_canary`. The gate summary SHALL
+record the failed check, expected value, and observed value.
+
+Each GGUF arm SHALL use a fresh owned llama.cpp process and CUDA offload. It
+SHALL run the same five source-only records, with one record from each Exp6886
+fixture family. The matrix SHALL use at least two seeds. Every GGUF cell SHALL
+preserve exact raw request and response bytes, their hashes and byte counts,
+native prompt tokens, generated tokens, wall time, stop reason, parser attempt,
+model hash, server PID and start ticks, GPU UUID, offload layers, VRAM before
+and after load, stderr tail, and teardown outcome. PID reuse or a mismatched
+process receipt SHALL fail closed.
+
+The prompt SHALL use one frozen plain relation-line protocol with UTF-8 source
+spans and tuple fields. It SHALL expose source text only. The experiment SHALL
+not use a grammar, JSON schema, finite answer ID, response repair, model judge,
+external text scorer, held label, ASP sidecar, or tuple-correctness score. It
+SHALL preserve timeouts and truncations as failures. Empty response bytes, zero
+generated tokens, an absent stop reason, a parser bypass, or a canned output
+SHALL fail the affected GGUF cell. Canned-output detection SHALL compare raw
+response hashes across distinct source prompts within each model and across
+model families; a repeated non-abstention response SHALL not pass readiness.
+
+Exp6899 SHALL run the pinned Enoki and deterministic lexical controls on the
+same five records. Control rows SHALL remain separate from GGUF rows. Neither
+control SHALL satisfy or substitute for a live GGUF readiness condition.
+
+The terminal artifact SHALL be
+`results/experiment_6899_live_relation_acquisition_canary.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `llama_cpp_receipts`,
+`gpu_lease_rows`, `server_lifecycle_rows`, `prompt_manifest`, `rows`,
+`raw_request_manifest`, `raw_output_manifest`, `output_byte_rows`,
+`generated_token_rows`, `stop_reason_rows`, `parse_attempt_rows`,
+`parse_coverage_by_model`, `empty_cell_count`, `canned_cell_count`,
+`held_sidecar_access_count`, `enoki_control_rows`, `rule_control_rows`,
+`external_text_scorer_call_count`, `constrained_schema_decode_count`,
+`model_weight_mutation_count`, `random_seed`, `reproducibility_checksum`,
+`relation_canary_ready_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each required field and
+`relation_canary_ready_score` SHALL have one principle. The inference substrate
+SHALL equal `live_local_sota_gguf_cuda_authenticity_canary`. All mutation,
+external-scoring, constrained-decode, and held-access counts SHALL equal zero.
+`verifier_is_oracle` SHALL be false. `honest_verdict` SHALL start with
+`complete_`. `verdict_class` SHALL use the closed experiment vocabulary.
+
+`relation_canary_ready_score` SHALL equal the bare integer one only when all
+three GGUF arms have exact model and native tokenizer bindings, distinct fresh
+process identities, owned CUDA residency, positive offload layers, zero empty
+cells, zero canned cells, nonzero generated tokens, observed stop reasons,
+parser attempts for every cell, at least 0.60 surface parse coverage per arm,
+clean bounded teardown, and at least 60 seconds of total live duration. It
+SHALL not depend on tuple correctness or either control arm. Otherwise it
+SHALL equal zero.
+
+#### SCENARIO-INFERENCE-6899-PRECONDITIONS: Drift Blocks Before Live Work
+
+Given cache, fixture, model-file, tokenizer, Enoki, GPU-memory, lease, or held
+access drift,
+When Exp6899 checks its frozen inputs,
+Then it SHALL perform no live acquisition and SHALL write the complete blocked
+artifact with exact expected and observed values.
+
+#### SCENARIO-INFERENCE-6899-CELL-AUTHENTICITY: Every Live Cell Reaches Parsing
+
+Given a required GGUF cell,
+When acquisition ends,
+Then nonempty raw response bytes, positive generated tokens, a stop reason, and
+an observed parser attempt SHALL all be present and bound to the request.
+
+#### SCENARIO-INFERENCE-6899-FAILURES: Terminal Transport Failures Never Pass
+
+Given zero offload, empty bytes, zero generated tokens, parser bypass, canned
+rows, timeout, or truncation,
+When readiness replays the live rows,
+Then it SHALL keep the row as evidence and set readiness to zero.
+
+#### SCENARIO-INFERENCE-6899-PROCESS: Stale Or Reused PIDs Fail Closed
+
+Given a PID whose start ticks or command identity differs from its launch
+receipt, or a receipt older than the current process lifecycle,
+When Exp6899 authenticates or tears down the server,
+Then it SHALL refuse process authority and SHALL record an unclean lifecycle.
+
+#### SCENARIO-INFERENCE-6899-TEARDOWN: Each Model Uses A Fresh Clean Lifecycle
+
+Given three required model families,
+When their live phases finish,
+Then each SHALL have a distinct owned process receipt, confirmed exit and reap,
+released port and lease, zero unrelated signals, and no teardown failure.
+
+#### SCENARIO-INFERENCE-6899-CONTROLS: Controls Cannot Satisfy Live Readiness
+
+Given Enoki and lexical results on the same records,
+When Exp6899 computes readiness,
+Then it SHALL preserve those control rows but SHALL use only the three GGUF
+arms for the live-model gate.
+
+## Implementation Status (REQ-INFERENCE-6899)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6899 and SCENARIO-INFERENCE-6899-* | Planned (`python/carnot/experiment_6899_live_relation_acquisition_canary.py`; `scripts/experiments/experiment_6899_live_relation_acquisition_canary.py`) | Planned (`tests/python/test_experiment_6899_live_relation_acquisition_canary.py`) |
+
+### REQ-INFERENCE-6900: Authentic Anchored Relation Corpus
+
+Exp6900 SHALL scale only the frozen Exp6899 acquisition protocol. It SHALL
+require `relation_canary_ready_score=1` and the exact Exp6899 artifact hash.
+It SHALL bind the same Exp6886 fixture hashes, three authenticated GGUF files,
+native tokenizer receipts, pinned Enoki assets, CUDA runtime, and task-owned GPU
+leases. It SHALL also require zero held-sidecar access. A failed precondition
+SHALL stop acquisition and write
+`complete_blocked_authentic_anchored_relation_corpus`. The gate summary SHALL
+name each failed check with its expected and observed values.
+
+The frozen source matrix SHALL contain exactly 100 public source views. It SHALL
+contain 20 views from each of graph coloring, scheduling, non-monotonic defaults,
+contradictions, and cardinality. Every proposal arm SHALL receive the same source
+IDs. The three GGUF arms SHALL use the four Exp6899 seeds. The Enoki and lexical
+arms SHALL remain deterministic controls with separate provenance and resource
+receipts.
+
+Every GGUF cell SHALL use the exact Exp6899 prompt builder, parser, model file,
+native llama.cpp tokenization, seed policy, output budget, stop policy, server
+arguments, and CUDA offload policy. Exp6900 SHALL detect prompt, parser, request,
+model, tokenizer, or runtime drift before acquisition. It SHALL never call a
+Hugging Face `AutoTokenizer` for a GGUF repository.
+
+Exp6900 SHALL preserve request and response bytes with hashes before parsing.
+It SHALL parse only source spans and the seven protocol tuple fields. It SHALL
+not use a grammar, schema decoder, repair prompt, model judge, text scorer, held
+label, compiler result, solver result, or answer set during acquisition. No arm
+may approve its own proposal.
+
+Each expected cell SHALL end in one or more terminal evidence rows. Accepted,
+malformed, unsupported, duplicate, abstain, empty, timeout, and truncated states
+SHALL remain visible. A process or encoder failure SHALL emit failed cells for
+all absent identities. The experiment SHALL never replace a failed cell with a
+fixture, control, or prior model output.
+
+Exp6900 SHALL support a content-bound partial checkpoint. A resume SHALL keep
+verified completed cells byte-identical and run only absent cell identities.
+Checkpoint input drift, duplicate cell identities, stale process receipts, PID
+reuse, server crashes, unclean teardown, or held-sidecar access SHALL fail closed.
+
+The terminal artifact SHALL be
+`results/experiment_6900_authentic_anchored_relation_corpus.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `llama_cpp_receipts`,
+`gpu_lease_rows`, `server_lifecycle_rows`, `enoki_asset_receipts`,
+`deterministic_rule_receipts`, `prompt_manifest`, `rows`,
+`raw_request_manifest`, `raw_output_manifest`, `parse_failure_rows`,
+`abstention_rows`, `empty_rows`, `truncation_rows`, `timeout_rows`,
+`per_arm_family_counts`, `held_sidecar_access_count`,
+`model_weight_mutation_count`, `external_text_scorer_call_count`,
+`constrained_schema_decode_count`, `random_seed`, `reproducibility_checksum`,
+`relation_corpus_complete_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each required field and the incoming and
+outgoing gate fields SHALL have one plain evidence principle. The inference
+substrate SHALL equal
+`live_local_sota_gguf_cuda_plus_pinned_enoki_encoder`.
+
+`relation_corpus_complete_score` SHALL equal the bare integer one only when the
+preconditions pass, all arm and family denominators are complete, all raw rows
+replay, all runtime identities are authentic, all lifecycles are clean, total
+duration is at least 60 seconds, and held-sidecar access is zero. Proposal
+correctness, parse success, abstention, empty output, timeout, and truncation
+SHALL NOT change this acquisition score. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL use the closed experiment vocabulary. `honest_verdict`
+SHALL be terminal and start with `complete_`.
+
+#### SCENARIO-INFERENCE-6900-PRECONDITIONS: Canary Or Asset Drift Blocks
+
+Given a failed canary gate, changed canary hash, fixture drift, missing model,
+changed tokenizer, Enoki drift, absent CUDA offload, failed lease, or sidecar
+access,
+When Exp6900 checks inputs,
+Then it SHALL perform no acquisition and SHALL write the complete blocked
+artifact with exact expected and observed values.
+
+#### SCENARIO-INFERENCE-6900-PROTOCOL-DRIFT: Frozen Canary Code Stays Exact
+
+Given changed prompt, parser, request, seed, output, stop, or server policy,
+When Exp6900 compares the live code with its frozen canary receipts,
+Then acquisition SHALL stop before any proposal arm runs.
+
+#### SCENARIO-INFERENCE-6900-BALANCE: Each Arm Receives The Same Balanced IDs
+
+Given the frozen public source views,
+When Exp6900 builds its matrix,
+Then every arm SHALL receive 100 distinct source IDs with 20 from each family.
+
+#### SCENARIO-INFERENCE-6900-RAW-ROWS: Empty And Invalid Data Stay Visible
+
+Given empty bytes, malformed lines, unsupported tuples, duplicates, abstentions,
+timeouts, or truncations,
+When Exp6900 records and parses a cell,
+Then raw bytes SHALL remain unchanged and each condition SHALL have a terminal
+row without fixture or control substitution.
+
+#### SCENARIO-INFERENCE-6900-RESUME: Only Missing Cells Run Again
+
+Given a valid partial checkpoint with unchanged input hashes,
+When Exp6900 resumes,
+Then verified terminal cells SHALL stay byte-identical and only absent cell
+identities SHALL run. Duplicate rows or checkpoint drift SHALL fail closed.
+
+#### SCENARIO-INFERENCE-6900-PROCESS: Stale Or Crashed Servers Fail Closed
+
+Given PID reuse, stale identity evidence, a timeout, truncation, or server crash,
+When Exp6900 closes the model phase,
+Then it SHALL preserve all observed bytes, emit remaining failed cells, clean up
+only the owned process, and record whether teardown was clean.
+
+#### SCENARIO-INFERENCE-6900-COMPLETION: Acquisition Is Not Semantic Approval
+
+Given complete authentic denominators that include parser and transport failure
+states,
+When Exp6900 computes the outgoing gate,
+Then acquisition SHALL score one without reading held labels or solver evidence.
+Missing cells, duplicate identities, forged provenance, unclean lifecycle, short
+duration, or sidecar access SHALL score zero.
+
+## Implementation Status (REQ-INFERENCE-6900)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6900 and SCENARIO-INFERENCE-6900-* | Planned (`python/carnot/experiment_6900_authentic_anchored_relation_corpus.py`; `scripts/experiments/experiment_6900_authentic_anchored_relation_corpus.py`) | Planned (`tests/python/test_experiment_6900_authentic_anchored_relation_corpus.py`) |
+
+### REQ-INFERENCE-6920: Exact-Guided Plain-Text Relation Generation
+
+Exp6920 SHALL compare direct generation, unguided best-of-k, and exact-prefix
+frontier search on frozen held Exp6919 tasks. It SHALL run
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve the canonical pair through
+`cached_sota_pair()` and add the dense cache extension through
+`resolve_cached_gguf()`. It SHALL use only the tokenizer embedded in each GGUF.
+It SHALL never pass a GGUF repository ID to `AutoTokenizer.from_pretrained()`.
+
+The preflight SHALL require `prefix_viability_canary_ready_score=1`. It SHALL
+bind the exact Exp6919 artifact, fixture engine, and ASP compiler hashes. It
+SHALL require all three exact cached model files and native tokenizer receipts.
+It SHALL require llama.cpp CUDA offload support. It SHALL select one GPU with at
+least 24 GiB free VRAM. It SHALL require one task-owned lease and zero outside
+ARC job on that GPU. A failed check SHALL stop live work and write
+`complete_blocked_sota_exact_guided_relation_generation`. The
+`gate_check_summary` SHALL record each failed check, expected value, and
+observed value.
+
+The source matrix SHALL contain at least 30 frozen held task records. It SHALL
+cover graph coloring, scheduling, non-monotonic defaults, contradictions, and
+cardinality constraints. Each model and arm SHALL receive the same task order.
+The matrix SHALL use at least three generation seeds. Each source-model-arm
+cell SHALL have a terminal row for every planned candidate, including failures.
+
+The direct arm SHALL receive one full-program draw. It SHALL not call either
+exact engine before its final output is fixed. The unguided best-of-k arm SHALL
+select only by model likelihood. The exact-prefix arm SHALL sample one plain
+relation line per candidate. It SHALL use the Exp6919 Python engine only to
+reject non-extendable prefixes. It SHALL select the feasible candidate with the
+largest model likelihood. Equal likelihoods SHALL use the stable candidate
+index, then plain line text, as the deterministic tie rule. The unguided and
+guided arms SHALL have equal candidate counts and equal sampled-token limits.
+No arm may take hidden samples outside the recorded budget.
+
+All model output SHALL remain unconstrained plain text. Exp6920 SHALL not use a
+grammar, JSON schema, repair prompt, finite answer ID, per-instance answer menu,
+external text scorer, or model judge. The parser SHALL run on the preserved raw
+output. A malformed line SHALL remain a parse failure. The experiment SHALL not
+replace it with a parser-derived, fixture-derived, or repaired line.
+
+Each guided step SHALL record its prior partial program, raw candidate, parsed
+line, likelihood, exact prefix energy, rejection reason, selected branch,
+frontier size, and abstention state. Extendable prefixes SHALL have energy zero.
+Impossible or malformed prefixes SHALL have positive energy. The search SHALL
+not reject a feasible branch. It SHALL not admit an impossible branch. An empty
+feasible frontier SHALL produce an exhausted-search abstention.
+
+After selection, Exp6920 SHALL evaluate every arm through the independent
+Exp6919 clingo final engine. The final engine SHALL not be reused as the in-loop
+engine. Each outcome SHALL retain parse success, exact final validity,
+answer-set effect, abstention, false admission, branch rejection, sampled
+tokens, wall time, VRAM, and energy proxy. Timeouts, truncations, server crashes,
+stale PIDs, zero offload, unclean teardown, and missing rows SHALL remain visible
+and SHALL not become authenticated complete cells.
+
+The terminal artifact SHALL be
+`results/experiment_6920_sota_exact_guided_relation_generation.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `llama_cpp_receipts`,
+`gpu_lease_rows`, `server_lifecycle_rows`, `rows`, `source_rows`,
+`arm_budget_rows`, `direct_generation_rows`, `unguided_best_of_k_rows`,
+`guided_frontier_rows`, `candidate_rows`, `prefix_energy_rows`,
+`rejected_branch_rows`, `selected_branch_rows`, `frontier_size_rows`,
+`abstention_rows`, `parser_rows`, `final_exact_outcome_rows`,
+`independent_solver_receipts`, `per_model_arm_rows`, `per_family_arm_rows`,
+`validity_delta_rows`, `false_admission_rows`, `token_cost_rows`, `latency_rows`,
+`vram_rows`, `energy_proxy_rows`, `raw_request_manifest`,
+`raw_output_manifest`, `external_text_scorer_call_count`,
+`constrained_schema_decode_count`, `repair_prompt_count`,
+`finite_answer_id_count`, `model_weight_mutation_count`, `random_seed`,
+`reproducibility_checksum`, `guided_generation_run_complete_score`,
+`exact_guidance_utility_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+principle for each required field and every gate field.
+
+`inference_substrate` SHALL equal
+`live_local_sota_gguf_cuda_with_dual_exact_engines`. All external-scorer,
+constrained-decode, repair, finite-ID, and model-weight-mutation counts SHALL be
+bare integer zero. `verifier_is_oracle` SHALL be true. `verdict_class` SHALL be
+one of `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. It
+SHALL never be `positive`. `honest_verdict` SHALL start with `complete_`.
+
+`guided_generation_run_complete_score` SHALL equal one only when every
+precondition passes and every planned source-model-seed-arm-candidate row is
+present, budget matched, authenticated, parsed or explicitly failed, evaluated
+by the independent final engine, and covered by aggregate rows. It SHALL equal
+zero after any aggregate-row disagreement.
+
+`exact_guidance_utility_score` SHALL equal one only when guided exact final
+validity exceeds matched unguided best-of-k validity on at least two model
+families. No model family may regress by more than 0.02. Guided parse failure
+must not exceed matched unguided parse failure. Token cost, latency, VRAM, and
+energy proxy must be fully reported. The score SHALL equal zero otherwise.
+
+#### SCENARIO-INFERENCE-6920-PRECONDITIONS: Identity And Resource Drift Blocks
+
+Given a wrong model, tokenizer substitution, changed fixture or engine hash,
+zero CUDA offload, missing lease, low free VRAM, or outside ARC job,
+When Exp6920 checks preconditions,
+Then it SHALL perform no generation and write the complete blocked artifact.
+
+#### SCENARIO-INFERENCE-6920-BUDGET: Candidate And Token Budgets Stay Matched
+
+Given unequal candidate limits, unequal sampled-token limits, or hidden extra
+samples,
+When Exp6920 validates arm evidence,
+Then run completion SHALL score zero and the mismatch SHALL name the cell.
+
+#### SCENARIO-INFERENCE-6920-DIRECT-ISOLATION: Direct Generation Has No Verifier Leakage
+
+Given the direct arm before final evaluation,
+When it samples and fixes its output,
+Then neither exact engine SHALL appear in its prompt, selection, or request log.
+
+#### SCENARIO-INFERENCE-6920-PREFIX-ADMISSION: Impossible Prefixes Fail Closed
+
+Given a malformed or exact non-extendable candidate prefix,
+When the guided frontier evaluates it,
+Then it SHALL record positive energy and SHALL not select the branch.
+
+#### SCENARIO-INFERENCE-6920-FEASIBLE-BRANCH: Feasible Branches Remain Eligible
+
+Given an exact extendable candidate prefix,
+When the guided frontier evaluates it,
+Then it SHALL record zero energy and SHALL keep the branch eligible.
+
+#### SCENARIO-INFERENCE-6920-TIE: Likelihood Ties Stay Deterministic
+
+Given two feasible candidates with equal likelihood,
+When the guided arm selects a branch,
+Then repeated runs SHALL select the smaller candidate index and then line text.
+
+#### SCENARIO-INFERENCE-6920-PARSER: Raw Parse Failures Cannot Be Masked
+
+Given malformed model output,
+When the parser runs,
+Then the raw bytes SHALL remain unchanged and no repair or fixture line may
+replace the malformed candidate.
+
+#### SCENARIO-INFERENCE-6920-RUNTIME: Transport And Process Failures Stay Visible
+
+Given a timeout, truncation, server crash, stale PID, or unclean teardown,
+When Exp6920 closes the cell and server lifecycle,
+Then it SHALL retain the failure and SHALL not count the cell as authenticated.
+
+#### SCENARIO-INFERENCE-6920-ENGINE-SEPARATION: Final Authority Is Independent
+
+Given guided prefix decisions from the Python engine,
+When selected programs receive final evaluation,
+Then only the clingo engine SHALL supply final validity. Reuse of the in-loop
+engine as final authority SHALL set run completion to zero.
+
+#### SCENARIO-INFERENCE-6920-AGGREGATES: Detail Rows Control Every Aggregate
+
+Given a per-model, per-family, delta, token, latency, VRAM, or energy aggregate
+that disagrees with detailed rows,
+When Exp6920 validates the artifact,
+Then run completion SHALL score zero and report the disagreement.
+
+#### SCENARIO-INFERENCE-6920-UTILITY: Oracle Utility Uses Circular Framing
+
+Given a complete exact-guided comparison that passes the utility thresholds,
+When Exp6920 writes its verdict,
+Then `verdict_class` SHALL be `circular_positive`, never `positive`.
+
+## Implementation Status (REQ-INFERENCE-6920)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6920 and SCENARIO-INFERENCE-6920-* | Planned (`python/carnot/experiment_6920_sota_exact_guided_relation_generation.py`; `scripts/experiments/experiment_6920_sota_exact_guided_relation_generation.py`) | Planned (`tests/python/test_experiment_6920_sota_exact_guided_relation_generation.py`) |
+
+### REQ-INFRA-6973: Lease-Aware Three-Family GGUF Runtime Handoff
+
+Exp6973 SHALL resolve the exact cached files for
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL call
+`cached_sota_pair(gpu_indices=(0, 1))` before it extends the pair to all three
+families. Legacy models MAY appear in smoke-only evidence. They SHALL never
+satisfy `lease_aware_runtime_ready_score`.
+
+Before live work, Exp6973 SHALL require exactly two NVIDIA devices, all three
+cached GGUF files, CUDA-capable llama.cpp bindings, readable GPU lease journals,
+and a writable checkpoint. It SHALL distinguish a released or dead-owner stale
+journal from a journal whose exact owner PID and start time remain live. A live
+foreign lease SHALL write `blocked_lease_aware_gguf_runtime` with the failed
+check, expected value, and observed value. It SHALL start no model process and
+send no signal.
+
+For each family, the controller SHALL acquire each required device through
+`carnot.gpu_lease_phase_journal.GpuLease`. It SHALL record the journal before
+and after acquisition, the owner PID and start time, task identity, device UUID,
+model path, file hash, and GGUF metadata. A recovered journal SHALL prove that
+the prior owner identity is absent or reused. Recovery SHALL send no signal.
+
+Exp6973 SHALL load one family at a time in a fresh owned subprocess. Each load
+SHALL use CUDA offload across devices 0 and 1, `n_ctx >= 16384`, and the GGUF's
+embedded tokenizer. It SHALL not call `AutoTokenizer.from_pretrained` for a
+GGUF repository ID. The worker SHALL generate one fixed, nonempty completion
+with a 32-token limit. It SHALL record actual offloaded layers, per-device GPU
+memory delta, token throughput, output hash, exception details, and live time.
+
+The controller SHALL bind the worker PID, start time, parent PID, command, and
+process tree to its own identity. It SHALL signal only that exact owned process
+group when a timeout requires teardown. It SHALL never attach to, reuse,
+relabel, or signal an unowned server.
+
+After each family, the worker SHALL close the model and exit. The controller
+SHALL reap it, prove its port is free, and confirm both devices return within
+512 MiB of the pre-load baseline before it releases the leases or starts the
+next family. The controller SHALL checkpoint every terminal family row through
+atomic replacement. Lease phase journals SHALL end in a consistent terminal
+and released state.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`gpu_topology`, `lease_rows`, `process_ownership_rows`,
+`baseline_gpu_memory_rows`, `load_config_rows`, `live_generation_rows`,
+`gpu_runtime_rows`, `teardown_rows`, `vram_release_rows`, `checkpoint_rows`,
+`runtime_handoff_complete_score`, `lease_aware_runtime_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required
+field and each score. Both scores SHALL be bare integers.
+
+`runtime_handoff_complete_score` SHALL equal one when all three exact family
+rows are terminal. `lease_aware_runtime_ready_score` SHALL equal one only when
+all three rows used CUDA, generated nonempty output, exited cleanly, released
+their ports and VRAM, and left consistent released lease journals.
+`inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_lease_owned_cuda`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. The `honest_verdict` terminal prefix SHALL agree with that class.
+
+#### SCENARIO-INFRA-6973-LEASE: Acquisition Binds The Exact Owner
+
+- GIVEN readable released journals and two free device locks
+- WHEN Exp6973 acquires both device leases for one model
+- THEN each journal records the task PID, PID start time, model, and device UUID.
+- GIVEN an exact live foreign owner or a held device lock
+- WHEN preflight or acquisition runs
+- THEN Exp6973 blocks without starting or signaling a model process.
+
+#### SCENARIO-INFRA-6973-STALE: Stale Ledgers Recover Without Signals
+
+- GIVEN an unreleased journal whose recorded PID is absent or has new start time
+- WHEN Exp6973 acquires that device's free kernel lock
+- THEN recovery is recorded and `signals_sent` stays empty.
+- GIVEN the exact recorded PID and start time are live
+- WHEN Exp6973 examines the journal
+- THEN it classifies the lease as foreign and live, and stops before inference.
+
+#### SCENARIO-INFRA-6973-SERVER: Workers Cannot Adopt Foreign Servers
+
+- GIVEN a fresh worker subprocess and a free task port
+- WHEN a family loads and generates
+- THEN its PID, start time, parent, command, port, process tree, and GPU samples
+  identify the task-owned process.
+- GIVEN a listener or process that does not match that identity
+- WHEN ownership is checked
+- THEN Exp6973 does not attach, relabel, reuse, or signal it.
+
+#### SCENARIO-INFRA-6973-TEARDOWN: Sequential Release Precedes Handoff
+
+- GIVEN one attempted family generation
+- WHEN its worker finishes or fails
+- THEN the model closes, the exact worker exits, its port becomes free, both GPUs
+  recover within 512 MiB, and both leases release before the next family starts.
+
+#### SCENARIO-INFRA-6973-BARE-READINESS: Detail Rows Control Both Scores
+
+- GIVEN all three exact terminal family rows
+- WHEN an independent validator recomputes the artifact
+- THEN `runtime_handoff_complete_score` is a bare one.
+- GIVEN any legacy family, CPU fallback, empty output, nonzero exit, ownership
+  mismatch, occupied port, unreleased VRAM, or inconsistent lease journal
+- WHEN readiness is recomputed
+- THEN `lease_aware_runtime_ready_score` is a bare zero.
+
+## Implementation Status (REQ-INFRA-6973)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6973 and SCENARIO-INFRA-6973-* | Implemented (`python/carnot/experiment_6973_lease_aware_gguf_runtime.py`; `scripts/experiments/experiment_6973_lease_aware_gguf_runtime.py`) | Implemented (`tests/python/test_experiment_6973_lease_aware_gguf_runtime.py`; 20 focused tests, 100% new-module statement coverage) |
+
+### REQ-INF-6975: Delayed-Constraint Three-Schedule Candidate Bank
+
+Exp6975 SHALL build a bounded candidate bank for direct, trigger-switched,
+and draft-conditioned ConstraintIR schedules. It SHALL make no semantic
+success decision and SHALL select no schedule. JSON validity is only a syntax
+diagnostic.
+
+Before generation, Exp6975 SHALL require the bare integer
+`lease_aware_runtime_ready_score=1` from Exp6973. It SHALL require the bare
+integer `fixture_admissibility_ready_score=1` from Exp6974. It SHALL require
+Exp6967 file hash
+`sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee`.
+It SHALL also require at least six eligible calibration pairs, at least six
+eligible held-out pairs, all model files, exactly two CUDA devices, CUDA
+llama.cpp support, and a writable atomic checkpoint. A failed check SHALL
+write `blocked_delayed_constraint_candidate_bank`. The gate summary SHALL
+name the failed check and its expected and observed values.
+
+`MODEL_SPECS` SHALL first call `cached_sota_pair(gpu_indices=(0, 1))`. It
+SHALL then contain exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy models MAY appear in smoke tests.
+They SHALL NOT appear in headline attempt rows.
+
+The frozen roster SHALL select six calibration and six held-out pairs. Each
+split SHALL contain two pairs from each of `bounded_integer_linear`,
+`boolean_cardinality`, and `bounded_piecewise_linear`. Pair IDs, split,
+order, seeds, temperature, top-p, the 128-token total completion cap, stop
+rules, schedule text, schedule hash, and split hash SHALL be frozen before
+generation. Calibration, held-out, and held-future rosters SHALL be disjoint.
+
+The direct schedule SHALL constrain the ConstraintIR certificate from its
+first emitted token. The trigger-switched schedule SHALL allow free reasoning
+until the exact frozen trigger, then constrain only the certificate tail. The
+draft-conditioned schedule SHALL first acquire an unconstrained draft. It
+SHALL then generate a constrained certificate from that same draft. No
+schedule SHALL expose a finite answer menu or answer ID channel.
+
+Exp6975 SHALL run exactly 12 pairs times three schedules times three models,
+for 108 planned live attempts. It SHALL load each model in a fresh task-owned
+process, use CUDA, batch the three schedules for each pair, and tear down one
+model before it starts the next. It SHALL checkpoint after each pair block
+and each family teardown. Malformed, empty, truncated, timeout, and exception
+attempts SHALL remain terminal rows.
+
+The generation process SHALL receive only the public pair formulations, its
+own schedule text, and its own prior draft when the schedule requires it. It
+SHALL never receive an exact witness, expected label, solver result,
+held-future row, or another schedule's completion. Prompt audits and split
+isolation rows SHALL make this boundary replayable.
+
+The checkpoint SHALL contain all fixed prompts and prompt templates before
+generation. A prompt that includes a newly generated draft SHALL be stored
+with that draft before parsing. For each attempt, the checkpoint SHALL persist
+the exact raw phase bytes, raw hashes, finish reasons, token IDs, and energy
+statistics before any parser runs. A later checkpoint stage MAY add syntax
+diagnostics. It SHALL never replace or repair raw bytes.
+
+Each emitted non-control token SHALL have an adjacent-step energy row. That
+row SHALL contain the emitted token ID, selected-token logit, full-vocabulary
+logsumexp, entropy, top probability, step index, token-span byte offsets, full
+vocabulary size, and a hash of the full logit vector. Full vocabulary vectors
+SHALL NOT enter the artifact. These values SHALL be sufficient to recompute
+the selected-token log probability and later Spilled Energy statistics.
+
+After durable raw capture, Exp6975 MAY parse the certificate tail. It SHALL
+record syntax diagnostics only. It SHALL not import or call Z3, certify a
+mapping, compare against exact labels, inspect held-out labels, rank a
+schedule, or select a policy.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`,
+`model_file_hashes`, `gpu_runtime_rows`, `schedule_rows`, `schedule_hashes`,
+`selected_pair_rows`, `split_hash`, `rows`, `per_attempt_rows`,
+`raw_output_rows`, `parser_diagnostic_rows`, `energy_trace_rows`,
+`token_span_rows`, `checkpoint_rows`, `teardown_rows`,
+`split_isolation_rows`, `expected_attempt_count`, `observed_attempt_count`,
+`candidate_bank_complete_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+each required field and `candidate_bank_complete_score`.
+
+`candidate_bank_complete_score` SHALL be the bare integer one only when all
+108 rows are terminal, the exact model roster used CUDA, schedule hashes
+replay, every generated token has sufficient energy and span evidence, raw
+capture precedes parsing, and split isolation passes. Otherwise it SHALL be
+the bare integer zero. `inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_delayed_constraint_generation`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL use a prefix consistent with that class.
+
+#### SCENARIO-INF-6975-GATES: Bare Preconditions Fail Closed
+
+- GIVEN any wrong upstream score, Exp6967 hash, pair count, model file, CUDA
+  count, llama.cpp capability, or checkpoint result
+- WHEN Exp6975 checks preconditions
+- THEN it writes the complete blocked schema and starts no generation process.
+
+#### SCENARIO-INF-6975-ROSTER: Selection Is Balanced And Isolated
+
+- GIVEN the frozen public Exp6967 rows
+- WHEN Exp6975 selects its roster
+- THEN each split has two pairs per formulation family and no pair crosses a
+  split or enters from the held-future roster.
+
+#### SCENARIO-INF-6975-SCHEDULES: Three Hash-Bound Mechanisms Stay Distinct
+
+- GIVEN the frozen schedule table
+- WHEN its hashes replay
+- THEN direct constrains from token one, trigger-switched constrains only after
+  its trigger, and draft-conditioned constrains only after its own draft.
+
+#### SCENARIO-INF-6975-RAW-FIRST: Parsing Cannot Precede Durable Bytes
+
+- GIVEN any generated, empty, truncated, or exception attempt
+- WHEN the checkpoint advances
+- THEN raw phase evidence is written before syntax diagnostics and is unchanged
+  by parsing.
+
+#### SCENARIO-INF-6975-ENERGY: Adjacent Steps Retain Sufficient Scalars
+
+- GIVEN an emitted non-control token
+- WHEN Exp6975 records its adjacent model distribution
+- THEN its energy row and span row contain every required scalar and a full
+  vocabulary hash, but no full vocabulary vector.
+
+#### SCENARIO-INF-6975-ATTEMPTS: Complete Means Exactly 108 Terminal Rows
+
+- GIVEN the 12 by 3 by 3 frozen roster
+- WHEN completion is reduced
+- THEN duplicates, missing rows, nonterminal rows, CPU rows, or an energy-trace
+  gap force `candidate_bank_complete_score` to zero.
+
+#### SCENARIO-INF-6975-NO-POLICY: Syntax Never Becomes Selection
+
+- GIVEN any mix of valid and invalid JSON tails
+- WHEN Exp6975 builds the artifact
+- THEN it reports syntax diagnostics without exact certification, ranking, or
+  schedule selection.
+
+## Implementation Status (REQ-INF-6975)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INF-6975 and SCENARIO-INF-6975-* | Implemented (`python/carnot/experiment_6975_delayed_constraint_candidate_bank.py`; `scripts/experiments/experiment_6975_delayed_constraint_candidate_bank.py`) | 21 tests (`tests/python/test_experiment_6975_delayed_constraint_candidate_bank.py`) |
+
+### REQ-INF-6986: Label-Blind Three-Family Teacher-Forced Feature Bank
+
+Carnot SHALL provide Exp6986 at
+`python/carnot/experiment_6986_three_family_contrast_features.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6986_three_family_contrast_features.py --date 20260904`
+SHALL write `results/experiment_6986_three_family_contrast_features.json`.
+The experiment SHALL score only frozen candidates. It SHALL not generate a new
+answer, fit a verifier, or select a verifier.
+
+Before scoring, Exp6986 SHALL require the bare integer
+`contrast_fixture_complete_score=1` from the pinned Exp6984 artifact. It SHALL
+also require the bare integer `chronological_stream_ready_score=1` from the
+pinned Exp6985 artifact. It SHALL require the exact pinned hashes for Exp6975,
+Exp6976, Exp6984, and Exp6985. It SHALL require 72 Exp6984 candidates, 48
+Exp6985 candidates, and exactly 18 parseable Exp6976 transfer candidates. It
+SHALL require three cached primary GGUF files, exactly two CUDA devices,
+CUDA-capable llama.cpp, a free shipped task lease, and a writable atomic
+checkpoint. Any failed check SHALL write
+`blocked_three_family_contrast_features`. `gate_check_summary` SHALL name the
+failed check and its expected and observed values.
+
+`MODEL_SPECS` SHALL first call `cached_sota_pair(gpu_indices=(0, 1))`. It
+SHALL then contain exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy models MAY appear in smoke tests.
+They SHALL NOT appear in feature rows, family comparisons, or readiness fields.
+Each model SHALL use its GGUF-embedded tokenizer. Exp6986 SHALL never call
+`AutoTokenizer.from_pretrained` for a GGUF repository.
+
+Exp6986 SHALL build the scoring manifest in a separate label-denied process.
+The manifest SHALL contain only candidate identity, prompt text, candidate
+text, source-block identity, order, and content hashes. The process input SHALL
+not contain exact labels, mutation types, source groups, split, future windows,
+or another family's scores. The frozen manifest SHALL record prompt hashes,
+candidate hashes, an order hash, a scoring-config hash, and one manifest hash.
+Mutation tests and process receipts SHALL prove that denied fields fail closed.
+
+Exp6986 SHALL load one family at a time in a fresh task-owned process. Each
+load SHALL use both CUDA devices, `n_ctx >= 16384`, CUDA offload, and the
+embedded tokenizer. The process SHALL teacher-force the exact prompt and
+candidate tokens. It SHALL not call a sampling or answer-generation API.
+Tokenizer evidence SHALL prove that prompt tokenization, candidate tokenization,
+and full-sequence tokenization have an exact candidate-token alignment.
+
+For each candidate token, Exp6986 SHALL retain its token ID, token bytes,
+sequence position, candidate position, selected-token logit, selected-token
+log probability, surprisal, entropy, top probability, top-two probability
+margin, local surprisal change, vocabulary size, and full-logit-vector hash.
+It SHALL not retain full-vocabulary vectors. Each sequence row SHALL report
+sequence NLL, length-normalized NLL, mean token entropy, mean top-probability
+margin, local surprisal change statistics, and token counts. Parser rows SHALL
+contain structural counts only. Parser code SHALL not read labels.
+
+The controller SHALL checkpoint after each source block. A valid checkpoint
+SHALL replay its manifest hash, preserve every completed terminal row, and
+resume without duplicating a candidate-family key. After each family, the
+controller SHALL close the model, reap its exact owned process, release its
+owned port and lease, and prove both devices returned within 512 MiB of the
+baseline. It SHALL never attach to, signal, or terminate an unowned process.
+
+The feature bank SHALL contain exactly 138 candidates times three exact model
+families, or 414 terminal feature rows. Labels SHALL join only after every
+family process exits. `joined_label_rows` SHALL be separate from raw token and
+sequence evidence. The join process SHALL use candidate identity only. It SHALL
+not modify model evidence.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`scoring_manifest_rows`, `scoring_manifest_hash`,
+`candidate_source_count_rows`, `rows`, `per_candidate_model_rows`,
+`raw_token_rows`, `sequence_feature_rows`, `parser_feature_rows`,
+`label_denial_rows`, `process_isolation_rows`, `gpu_runtime_rows`, `lease_rows`,
+`checkpoint_rows`, `teardown_rows`, `vram_release_rows`, `joined_label_rows`,
+`expected_feature_row_count`, `observed_feature_row_count`,
+`three_family_feature_bank_complete_score`, `verifier_fit_performed`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required field
+and for `three_family_feature_bank_complete_score`. Required downstream fields
+SHALL be bare values. `expected_feature_row_count` SHALL equal 414.
+`verifier_fit_performed` and `verifier_is_oracle` SHALL be false.
+`inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_teacher_forced_cuda`.
+
+`three_family_feature_bank_complete_score` SHALL be the bare integer one only
+when all 414 rows replay. Every exact family SHALL use CUDA. Every candidate
+hash and token alignment SHALL replay. All label-denial checks SHALL pass.
+Every family teardown SHALL complete. Predictive value SHALL not affect this
+score. `verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use a terminal
+prefix that agrees with the verdict class.
+
+#### SCENARIO-INF-6986-GATES: Preconditions Fail Closed
+
+- GIVEN a wrong readiness field, source hash, candidate count, GGUF file, CUDA
+  count, llama.cpp capability, task lease, or checkpoint permission
+- WHEN Exp6986 performs preflight
+- THEN it writes the complete blocked schema and starts no scoring process.
+
+#### SCENARIO-INF-6986-LABEL-DENIAL: Model Inputs Cannot Read Labels
+
+- GIVEN a manifest source with a denied field added at any depth
+- WHEN the label-denied builder or scorer validates its input
+- THEN it refuses the input and records the denied path without scoring.
+- GIVEN a valid scoring row
+- WHEN the model process receives it
+- THEN the row contains candidate identity and text only, with no oracle field.
+
+#### SCENARIO-INF-6986-TOKENIZER: Embedded Token Alignment Replays
+
+- GIVEN one frozen prompt and candidate
+- WHEN each GGUF tokenizer builds the teacher-forced sequence
+- THEN the candidate token IDs equal the aligned suffix of the full sequence.
+
+#### SCENARIO-INF-6986-TOKENS: Raw Evidence Is Sufficient And Bounded
+
+- GIVEN one scored candidate token
+- WHEN Exp6986 stores raw evidence
+- THEN the required scalar statistics and logit hash exist.
+- THEN no full-vocabulary vector exists in the artifact.
+
+#### SCENARIO-INF-6986-FAMILIES: Exactly Three Families Complete Every Candidate
+
+- GIVEN the frozen 138-candidate manifest
+- WHEN completion is reduced
+- THEN exactly one terminal row per candidate and required family yields 414.
+- THEN any legacy, missing, duplicate, or nonterminal row keeps readiness zero.
+
+#### SCENARIO-INF-6986-CHECKPOINT: Source Blocks Resume Without Duplication
+
+- GIVEN a checkpoint after any completed source block
+- WHEN a new controller resumes with the same manifest hash
+- THEN it keeps completed rows and starts at the first incomplete block.
+- GIVEN a different manifest hash or a duplicate key
+- WHEN recovery validates the checkpoint
+- THEN recovery fails closed.
+
+#### SCENARIO-INF-6986-TEARDOWN: Owned Release Precedes Family Handoff
+
+- GIVEN a completed or failed family process
+- WHEN the controller tears it down
+- THEN the exact child exits, its port and lease release, and VRAM returns within
+  512 MiB before another family starts.
+- THEN no unowned process receives a signal.
+
+#### SCENARIO-INF-6986-LABEL-JOIN: Labels Open After All Models Exit
+
+- GIVEN 414 terminal label-blind rows and three completed teardown receipts
+- WHEN Exp6986 joins labels
+- THEN the joined rows are separate and the raw model evidence stays unchanged.
+
+#### SCENARIO-INF-6986-BARE: Downstream Fields Stay Machine Readable
+
+- GIVEN a terminal artifact
+- WHEN an independent validator reads downstream fields
+- THEN counts and readiness are bare integers and both verifier booleans are bare.
+
+## Implementation Status (REQ-INF-6986)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INF-6986 and SCENARIO-INF-6986-* | Planned (`python/carnot/experiment_6986_three_family_contrast_features.py`; `scripts/experiments/experiment_6986_three_family_contrast_features.py`) | Planned (`tests/python/test_experiment_6986_three_family_contrast_features.py`) |
+
+### REQ-INF-6998: Three-Family Self-Commitment Shortcut Controls
+
+Carnot SHALL provide Exp6998 at
+`python/carnot/experiment_6998_three_family_commitment_controls.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6998_three_family_commitment_controls.py --date 20260905`
+SHALL write `results/experiment_6998_three_family_commitment_controls.json`.
+This experiment SHALL be an audit-only negative control. It SHALL not fit a
+verifier or add a commitment feature to the Exp6997 learner allowlist. It SHALL
+not claim to reproduce the GSM8K metric from arXiv:2606.05625.
+
+Before inference, Exp6998 SHALL require the bare integer
+`blinded_learner_view_ready_score=1` from the pinned Exp6997 artifact. It SHALL
+freeze exactly 12 source-disjoint Exp6984 held-out pairs and 24 candidates before
+it opens any label data. It SHALL also require all three primary GGUF files,
+exactly two CUDA devices, CUDA-capable llama.cpp, a free shipped task lease, and
+a writable atomic checkpoint. Any failed check SHALL write
+`blocked_three_family_commitment_controls`. The gate summary SHALL name the
+failed check and its expected and observed values.
+
+`MODEL_SPECS` SHALL first call `cached_sota_pair(gpu_indices=(0, 1))`. It SHALL
+then contain exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy models MAY appear in smoke tests.
+They SHALL NOT appear in measurement rows, comparisons, readiness fields, or
+headlines. Each model SHALL use its GGUF-embedded tokenizer. Exp6998 SHALL never
+call `AutoTokenizer.from_pretrained` for a GGUF repository.
+
+The controller SHALL freeze three prompt conditions before inference. `clean`
+SHALL contain only the semantic task and candidate. `true_provenance_hint`
+SHALL add that candidate's mutation-provenance text without an exact label.
+`permuted_decoy_hint` SHALL add another pair's position-matched provenance
+through one frozen pair derangement. No model process SHALL receive an exact
+label, sidecar path, authority result, split, source group, or another family's
+scores. Prompt, candidate, condition, pair, prefix, and derangement hashes SHALL
+make the frozen roster replayable.
+
+For every candidate and condition, each family SHALL generate its own terminal
+`VALID` or `INVALID` choice. The experiment SHALL extract only an unambiguous
+terminal choice. It SHALL then use at most eight frozen, increasing candidate
+prefix fractions. For each prefix it SHALL teacher-force both choice strings
+with the same embedded tokenizer and compute normalized probability mass on the
+model's own terminal choice. Raw evidence SHALL retain choice token IDs, token
+bytes, selected logits, log probabilities, vocabulary size, and full-logit
+hashes. It SHALL not retain full-vocabulary vectors.
+
+For each candidate-condition-family curve, Exp6998 SHALL compute first
+commitment latency at probability 0.8, commitment range, mean uncommitted mass,
+choice flips, and uncertainty. It SHALL report paired true-hint-minus-clean and
+decoy-hint-minus-clean latency deltas, bootstrap intervals, and family strata.
+These summaries SHALL be an adaptation to structured mapping contexts, not a
+paper-metric reproduction.
+
+The controller SHALL load one family at a time in a fresh task-owned process.
+Each load SHALL use both CUDA devices, `n_ctx >= 16384`, and CUDA offload. It
+SHALL checkpoint after each pair-family block. A valid checkpoint SHALL replay
+the frozen manifest hash and resume without duplicate terminal keys. After each
+family, the controller SHALL close the model, reap its exact owned process,
+release its owned port and leases, and prove that both devices returned within
+512 MiB of baseline. It SHALL never attach to, signal, or terminate an unowned
+process.
+
+The experiment SHALL contain exactly 12 pairs times two candidates times three
+conditions times three families, or 216 terminal rows. Exact labels SHALL join
+only after every model process exits. The join SHALL create separate audit rows
+and SHALL not change raw model evidence.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`pair_manifest_rows`, `pair_manifest_hash`, `condition_manifest_rows`,
+`prompt_hash_rows`, `candidate_hash_rows`, `rows`, `per_pair_results`,
+`per_candidate_condition_model_rows`, `terminal_choice_rows`,
+`prefix_fraction_rows`, `choice_token_rows`, `commitment_curve_rows`,
+`first_commitment_latency_rows`, `commitment_range_rows`,
+`uncommitted_mass_rows`, `uncertainty_rows`, `choice_flip_rows`,
+`label_denial_rows`, `process_isolation_rows`, `late_label_join_rows`,
+`paired_condition_delta_rows`, `bootstrap_interval_rows`,
+`family_stratum_rows`, `gpu_runtime_rows`, `lease_rows`, `checkpoint_rows`,
+`teardown_rows`, `vram_release_rows`, `expected_unit_count`,
+`observed_unit_count`, `commitment_control_complete_score`,
+`shortcut_commitment_detected_score`, `audit_only_control`,
+`learner_feature_allowed`, `verifier_fit_performed`,
+`self_commitment_paper_reproduction_claimed`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field and both score fields.
+
+`commitment_control_complete_score` SHALL be the bare integer one only when all
+216 rows replay, every exact family used CUDA, all label-denial and content-hash
+checks pass, and every family teardown completes. Predictive value SHALL not
+affect this score. `shortcut_commitment_detected_score` SHALL be the bare integer
+one only when the paired true-hint-minus-clean latency interval is below zero
+and the decoy condition does not reproduce that effect. A null finding is valid
+and SHALL not block Exp6999. `audit_only_control` SHALL be true.
+`learner_feature_allowed`, `verifier_fit_performed`,
+`self_commitment_paper_reproduction_claimed`, and `verifier_is_oracle` SHALL be
+false. `inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_commitment_probe_cuda`. `verdict_class` SHALL
+be one of `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL use a terminal prefix that agrees with the
+verdict class.
+
+#### SCENARIO-INF-6998-GATES: Preconditions Fail Closed
+
+- GIVEN a wrong Exp6997 score, pair roster, GGUF file, CUDA count, llama.cpp
+  capability, task lease, or checkpoint permission
+- WHEN Exp6998 performs preflight
+- THEN it writes the complete blocked schema and starts no model process.
+
+#### SCENARIO-INF-6998-FREEZE: Pair Selection Precedes Labels
+
+- GIVEN the frozen Exp6984 held-out candidates
+- WHEN Exp6998 builds its pair manifest
+- THEN it selects exactly 12 source-disjoint pairs and 24 candidates before it
+  reads labels or provenance.
+
+#### SCENARIO-INF-6998-DENIAL: Model Inputs Exclude Authority Data
+
+- GIVEN any exact label, sidecar path, authority result, split, source group,
+  or another-family score at any input depth
+- WHEN a model input is validated
+- THEN the worker refuses it before model loading.
+
+#### SCENARIO-INF-6998-CONDITIONS: Hints Are Frozen And Controlled
+
+- GIVEN one candidate in the frozen roster
+- WHEN all three condition prompts are built
+- THEN clean has no provenance text, true hint uses its own provenance, and
+  decoy hint uses the position-matched provenance from the frozen derangement.
+
+#### SCENARIO-INF-6998-TOKENIZER: Prefix And Choice Tokens Replay
+
+- GIVEN one candidate and an embedded GGUF tokenizer
+- WHEN Exp6998 freezes prefixes and teacher-forces both choices
+- THEN prefix order is increasing, the full fraction matches the full candidate,
+  and each choice is an exact token suffix of its scoring context.
+
+#### SCENARIO-INF-6998-CHOICE: Terminal Extraction Is Unambiguous
+
+- GIVEN a model completion
+- WHEN Exp6998 extracts its own terminal choice
+- THEN exactly one final `VALID` or `INVALID` marker succeeds.
+- THEN missing, conflicting, or trailing terminal markers fail closed.
+
+#### SCENARIO-INF-6998-FAMILIES: Exactly 216 Rows Complete
+
+- GIVEN the 12 by two by three by three frozen cross product
+- WHEN completion is reduced
+- THEN any legacy, missing, duplicate, nonterminal, CPU, hash-drifted, or
+  tokenizer-misaligned row keeps completion at zero.
+
+#### SCENARIO-INF-6998-CHECKPOINT: Pair-Family Blocks Resume Safely
+
+- GIVEN a durable pair-family block and the same manifest hash
+- WHEN the controller resumes
+- THEN it reuses the terminal block without duplicating any unit key.
+- GIVEN a changed hash or duplicate key
+- WHEN recovery validates the checkpoint
+- THEN recovery fails closed.
+
+#### SCENARIO-INF-6998-TEARDOWN: Owned Release Precedes Label Join
+
+- GIVEN a completed or failed family worker
+- WHEN the controller tears it down
+- THEN the exact child exits, its port and leases release, and VRAM returns
+  within 512 MiB before another family starts.
+- THEN labels remain unopened until every family teardown passes.
+
+#### SCENARIO-INF-6998-BARE: Audit Fields Stay Machine Readable
+
+- GIVEN any terminal artifact
+- WHEN an independent validator reads its completion fields
+- THEN both scores and both counts are bare integers.
+- THEN all audit and feature-policy flags are bare booleans with their required
+  values.
+
+## Implementation Status (REQ-INF-6998)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INF-6998 and SCENARIO-INF-6998-* | Planned (`python/carnot/experiment_6998_three_family_commitment_controls.py`; `scripts/experiments/experiment_6998_three_family_commitment_controls.py`) | Planned (`tests/python/test_experiment_6998_three_family_commitment_controls.py`) |
+
+### REQ-INFRA-7065: Three-Family Entrance Proposal Bank Uses Matched Local CUDA Inference
+
+Carnot SHALL provide Exp7065 at
+`python/carnot/experiment_7065_v619_three_family_entrance_bank.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7065_v619_three_family_entrance_bank.py --date 20260906`
+SHALL write `results/experiment_7065_v619_three_family_entrance_bank.json`.
+This task SHALL acquire proposal evidence only. It SHALL not fit, choose, or
+apply an energy model.
+
+Before inference, Exp7065 SHALL require the bare integer
+`entrance_fixture_ready_score=1` from Exp7064 and SHALL recompute the fixture
+artifact hash. It SHALL require two owned, idle RTX 3090 leases, CUDA-capable
+llama.cpp, clean stop authority, writable output and checkpoint paths, and all
+three primary GGUF files. An unreadable or foreign live lease, an unattributed
+GPU process or server, a missing model, or any other failed precondition SHALL
+start no model. It SHALL write a schema-complete `blocked` artifact when the
+result path is writable. It SHALL never signal an unowned process.
+
+`MODEL_SPECS` SHALL resolve the pair through
+`cached_sota_pair(gpu_indices=(0, 1))` before extending the exact roster. The
+ordered roster SHALL be exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Every path SHALL name a primary `.gguf`
+file loaded through llama.cpp. The experiment SHALL use each GGUF's embedded
+tokenizer and SHALL never call `AutoTokenizer.from_pretrained` on a GGUF repo.
+Legacy-small and remote model results SHALL not appear in any shard or gate.
+
+The controller SHALL freeze prompt bytes, unit order, four or more proposal
+seeds per held unit, temperature, top-p, context, and completion budget before
+the first model starts. It SHALL reproducibly randomize model order and proposal
+and forced-prefix arm order. Each proposal prompt SHALL request only one first
+arithmetic branch and SHALL omit exact labels, witnesses, reachability, split,
+source identity, and forced-prefix labels.
+
+Each generation SHALL first write raw text, token log probabilities when the
+backend supplies them, timings, prompt and output hashes, model identity, unit,
+seed, arm, and generation parameters to a durable raw shard. Parsing and exact
+labeling SHALL occur only after raw persistence and model teardown. Empty,
+truncated, exception, and parse-failure outputs SHALL remain as terminal raw
+evidence.
+
+The forced-prefix panel SHALL contain at least 24 frozen diversity units per
+model. Each unit SHALL use one exact reachable entrance that was not selected
+by its original proposal rows. The exact prefix and its label SHALL stay
+outside the original proposal prompt. The continuation request SHALL use the
+same context, sampling parameters, and total completion budget, less the
+embedded-token count of the forced prefix.
+
+Each model SHALL run in one fresh task-owned process with owned GPU and port
+leases. The worker SHALL preserve CUDA layer-offload, process identity, GPU
+samples, runner build, and model-file identity evidence. The controller SHALL
+checkpoint terminal raw rows, resume only when the manifest, prompt, model, and
+generation identities match, and reject duplicate keys or drift. It SHALL stop
+only its owned child. Before another model starts, it SHALL prove child exit,
+port release, lease release, and GPU memory recovery.
+
+#### SCENARIO-INFRA-7065-ROSTER: Exact Cached Order Has No Fallback
+
+**Given** the cached SOTA pair and exact family resolver
+**When** Exp7065 builds `MODEL_SPECS`
+**Then** the three required IDs appear once in the required order
+**And** a missing path, identity mismatch, remote ID, or legacy ID blocks.
+
+#### SCENARIO-INFRA-7065-MATCHED: Prompt And Budgets Are Byte-Matched
+
+**Given** the frozen Exp7064 model-visible rows
+**When** schedules are built for all three families
+**Then** prompt bytes, unit order, seeds, context, temperature, top-p, and budget match
+**And** reproducible shuffles change only execution order.
+
+#### SCENARIO-INFRA-7065-RAW-FIRST: Durable Raw Evidence Precedes Labels
+
+**Given** any completion, backend exception, empty output, or truncation
+**When** one attempt becomes terminal
+**Then** its raw row is durable before parsing or exact labeling
+**And** later labels do not change its raw bytes or hash.
+
+#### SCENARIO-INFRA-7065-RESUME: Checkpoints Reject Drift And Duplicates
+
+**Given** a partial raw checkpoint and its frozen manifest hash
+**When** Exp7065 resumes with identical identities
+**Then** completed keys remain unchanged and only missing keys run
+**And** prompt, model, manifest, or duplicate-key drift fails closed.
+
+#### SCENARIO-INFRA-7065-OWNERSHIP: Foreign Resources Are Never Signaled
+
+**Given** an unattributed server, process, GPU lease, or port owner
+**When** preflight or cleanup evaluates it
+**Then** the task blocks with the exact expected and observed values
+**And** its signal list stays empty.
+
+#### SCENARIO-INFRA-7065-CLEANUP: Owned Release Precedes Handoff
+
+**Given** one task-owned model worker
+**When** its family shard completes or fails
+**Then** that child exits and its port and leases release
+**And** GPU memory recovery passes before the next family starts.
+
+## Implementation Status (REQ-INFRA-7065)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7065 and SCENARIO-INFRA-7065-* | Implemented (`python/carnot/experiment_7065_v619_three_family_entrance_bank.py`; `scripts/experiments/experiment_7065_v619_three_family_entrance_bank.py`) | Implemented (`tests/python/test_experiment_7065_v619_three_family_entrance_bank.py`; 23 tests and 100% new-module statement coverage) |
+
+### REQ-INFRA-7080: Recovered Entrance Bank SHALL Cross The Audited Lease Boundary
+
+Carnot SHALL provide Exp7080 at
+`python/carnot/experiment_7080_v620_three_family_entrance_bank.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7080_v620_three_family_entrance_bank.py --date 20260906`
+SHALL write `results/experiment_7080_v620_three_family_entrance_bank.json`.
+This task SHALL acquire proposal evidence only. It SHALL not fit or apply an
+energy model.
+
+Before inference, Exp7080 SHALL require
+`gpu_lease_cold_audit_ready_score=1` from Exp7079. It SHALL also require
+`entrance_fixture_ready_score=1` from Exp7064. It SHALL recompute both source
+artifact hashes. It SHALL require two idle RTX 3090 devices, available owned
+leases, CUDA llama.cpp, clean stop authority, writable output and checkpoint
+paths, and all three cached GGUF files. A missing input, stale hash, cache
+miss, identity mismatch, prompt mismatch, lease loss, foreign owner, CUDA
+failure, authority failure, or path failure SHALL block before model launch.
+The terminal artifact SHALL name the first failed check with its expected and
+observed values. Exp7080 SHALL never signal an unattributed process.
+
+`MODEL_SPECS` SHALL resolve through `cached_sota_pair()` and extend that result
+with the exact third family. The ordered IDs SHALL be
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Each path SHALL identify a primary `.gguf`
+file. llama.cpp SHALL load the file and its embedded tokenizer. Exp7080 SHALL
+not call `AutoTokenizer` on a GGUF repository. A remote or legacy-small model
+SHALL not appear in any execution row or completion gate.
+
+The controller SHALL freeze prompt bytes, unit order, at least four proposal
+seeds, temperature, top-p, context, and completion budget before inference.
+It SHALL use a fixed seed to randomize model order and both arm schedules.
+Each proposal prompt SHALL request one first arithmetic branch only. The
+prompt SHALL exclude exact labels, witnesses, reachability, split, source
+identity, and forced-prefix labels.
+
+Each terminal attempt SHALL write raw text, token log probabilities when
+available, timings, hashes, model identity, unit, seed, arm, and sampling
+parameters before parsing or exact labeling. Empty output, truncation,
+exception, and parse failure SHALL remain raw evidence. The worker SHALL
+checkpoint after each terminal unit. The controller SHALL checkpoint each
+model shard. Resume SHALL accept only an identical manifest, prompt, model,
+sampling contract, and unique raw key.
+
+The forced-prefix arm SHALL contain at least 24 frozen diversity units per
+model. Each unit SHALL use one reachable entrance that the model did not
+select in its proposal rows. The continuation SHALL use the same total budget
+minus the embedded-token count of the forced prefix.
+
+Each model arm SHALL use a fresh task-owned worker and task-owned leases. The
+controller SHALL preserve CUDA offload, runner identity, model-file identity,
+GPU topology, and lease receipts. It SHALL detect lease loss before it credits
+a shard. It SHALL stop only its owned child. It SHALL release each lease
+through unloading, validating, and a terminal phase. It SHALL prove process
+exit, port release, lease release, and VRAM recovery before another shard.
+
+#### SCENARIO-INFRA-7080-ROSTER: Exact Cached Order Has No Fallback
+
+**Given** the local cache resolver
+**When** Exp7080 builds its model roster
+**Then** each required ID appears once in the required order
+**And** a cache miss, identity mismatch, remote ID, or legacy ID blocks.
+
+#### SCENARIO-INFRA-7080-MATCHED: Prompts And Budgets Match By Bytes
+
+**Given** the frozen Exp7064 model view
+**When** Exp7080 builds both arm schedules
+**Then** prompts, unit order, seeds, context, sampling values, and budgets match
+**And** fixed seeds change execution order only.
+
+#### SCENARIO-INFRA-7080-RAW-FIRST: Raw Evidence Precedes Derived Rows
+
+**Given** any terminal model attempt
+**When** the worker stores it
+**Then** raw text and token scores become durable before parsing or labeling
+**And** derived rows cannot change the stored raw bytes or hash.
+
+#### SCENARIO-INFRA-7080-RESUME: Checkpoints Reject Drift
+
+**Given** an existing unit or model checkpoint
+**When** Exp7080 resumes
+**Then** identical completed keys do not run again
+**And** manifest drift, row drift, or duplicate keys fail closed.
+
+#### SCENARIO-INFRA-7080-LEASE-LOSS: Lost Ownership Stops Credit
+
+**Given** a task-owned lease at model launch
+**When** its ID, owner, journal, phase chain, or release receipt changes
+**Then** the shard does not receive completion credit
+**And** cleanup signals remain limited to a proven task-owned child.
+
+#### SCENARIO-INFRA-7080-BLOCKED: Every Resource Failure Is Terminal
+
+**Given** any failed upstream, model, GPU, lease, CUDA, authority, or path gate
+**When** preflight completes
+**Then** no model starts and the artifact uses `verdict_class=blocked`
+**And** `gate_check_summary` keeps the exact expected and observed values.
+
+#### SCENARIO-INFRA-7080-CLEANUP: Full Release Precedes Handoff
+
+**Given** a completed or failed owned shard
+**When** its worker exits
+**Then** the lease reaches a terminal phase and releases
+**And** the port is free and VRAM returns within 512 MiB before handoff.
+
+## Implementation Status (REQ-INFRA-7080)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7080 and SCENARIO-INFRA-7080-* | Planned (`python/carnot/experiment_7080_v620_three_family_entrance_bank.py`; `scripts/experiments/experiment_7080_v620_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7080_v620_three_family_entrance_bank.py`) |
+
+### REQ-INFRA-7086: Chat-Correct Entrance Bank SHALL Use The Complete Frozen Panel
+
+Carnot SHALL provide Exp7086 at
+`python/carnot/experiment_7086_v621_three_family_entrance_bank.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7086_v621_three_family_entrance_bank.py --date 20260906`
+SHALL write `results/experiment_7086_v621_three_family_entrance_bank.json`.
+
+Preflight SHALL require the exact Exp7064 and Exp7085 source hashes. Their
+`entrance_fixture_ready_score` and `chat_transport_ready_score` SHALL each be
+the bare integer one. Preflight SHALL also require the audited lease source,
+the exact three cached primary GGUF files, matching embedded model identity,
+a non-empty embedded chat template, CUDA llama.cpp, two idle RTX 3090 devices,
+available owned leases, clean stop authority, and writable output paths. Any
+failed check SHALL block before generation. An unattributed resource SHALL
+never receive a signal.
+
+`MODEL_SPECS` SHALL resolve through `cached_sota_pair()` and contain exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` in that order. llama.cpp SHALL load each
+resolved local `.gguf` file and its embedded tokenizer. The implementation
+SHALL not call `AutoTokenizer` on a GGUF repository. It SHALL not use a
+remote, legacy-small, or missing-family fallback.
+
+Every model SHALL receive all 96 Exp7064 units in the frozen unit order and
+all four fixed proposal seeds. Proposal prompts SHALL use the exact Exp7085
+system/user role schema, chat call, stop configuration, 192-token total
+budget, temperature, top-p, context, and prompt bytes. Prompts SHALL exclude
+all exact labels, witnesses, reachability, split, and source-group fields.
+The controller SHALL randomize model and arm execution order with fixed seeds.
+
+Each terminal attempt SHALL write raw UTF-8 bytes, raw hashes, token counts,
+finish reason, token log probabilities when available, timings, prompt and
+template receipts, model identity, unit, seed, arm, and sampler values before
+any parser or exact labeler runs. Each unit and model shard SHALL checkpoint.
+Resume SHALL accept only an identical manifest with unique immutable raw keys.
+
+Each model SHALL run a forced-prefix continuation on at least 24 frozen
+diversity units. The prefix SHALL be reachable and absent from that model's
+proposal rows. The worker SHALL use the same total budget minus the prefix's
+embedded-token count. Each model-arm shard SHALL use a fresh owned worker.
+The controller SHALL prove CUDA residence, lease identity and phase history,
+owned process exit, port release, checkpoint integrity, and VRAM recovery.
+
+#### SCENARIO-INFRA-7086-ROSTER-AND-TEMPLATE
+
+**Given** the local GGUF cache and Exp7085 transport contract
+**When** Exp7086 resolves and schedules the three families
+**Then** the exact ordered roster uses local primary GGUF paths
+**And** every row uses the approved chat template, roles, stop values, and budget.
+
+#### SCENARIO-INFRA-7086-PANEL-AND-RANDOMIZATION
+
+**Given** the frozen Exp7064 panel
+**When** proposal and forced-prefix schedules are built
+**Then** all 96 unit IDs and four seeds occur for each model
+**And** fixed seeds randomize execution without changing matched prompt bytes.
+
+#### SCENARIO-INFRA-7086-RAW-FIRST-RESUME
+
+**Given** any complete, empty, truncated, or failed model attempt
+**When** the worker records the attempt
+**Then** raw and score evidence becomes durable before derived evidence
+**And** an identical checkpoint resumes without regeneration while drift blocks.
+
+#### SCENARIO-INFRA-7086-LEASE-LOSS-AND-CLEANUP
+
+**Given** a task-owned model shard
+**When** lease identity, phase history, process ownership, port state, or VRAM changes
+**Then** lost ownership removes completion credit
+**And** cleanup never signals an unowned process and records every signal.
+
+#### SCENARIO-INFRA-7086-BLOCKED
+
+**Given** a failed upstream, hash, cache, identity, template, GPU, CUDA, lease,
+authority, or write-path check
+**When** preflight finishes
+**Then** generation does not start and the substrate class is `blocked_no_run`
+**And** the terminal blocked artifact keeps exact expected and observed values.
+
+## Implementation Status (REQ-INFRA-7086)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7086 and SCENARIO-INFRA-7086-* | Planned (`python/carnot/experiment_7086_v621_three_family_entrance_bank.py`; `scripts/experiments/experiment_7086_v621_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7086_v621_three_family_entrance_bank.py`) |
+
+### REQ-INFER-SOTA-7157: The Shared Registry SHALL Name One Current Qwen3.8 Model
+
+The shared local GGUF registry SHALL name `unsloth/Qwen3.8-27B-GGUF` as its
+only current headline model. Its preferred file SHALL be the cached
+`Qwen3.8-27B-Q4_K_M.gguf`. The cache resolver SHALL use the canonical local
+helper. It SHALL not download weights. Loaders SHALL use the tokenizer and
+chat template embedded in the GGUF. They SHALL not call `AutoTokenizer` on
+the GGUF repository.
+
+The old Qwen3.6 and Gemma entries SHALL remain available in a separate named
+comparator registry. Each old entry SHALL carry an explicit comparator label.
+The compatibility helpers `flagship_moe()`, `flagship_dense()`, and explicit
+`cached_sota_pair(model_indices=...)` calls SHALL keep their old index and
+return behavior. Default pair selection SHALL include Qwen3.8 first. The
+registry SHALL also provide one unambiguous helper that returns only the
+current model and one helper that resolves only its cached GGUF.
+
+#### SCENARIO-INFER-SOTA-7157-CURRENT
+
+**Given** a caller requests the current headline model
+**When** it uses the single-model helper
+**Then** it receives only `unsloth/Qwen3.8-27B-GGUF`
+**And** cache resolution selects the local Q4_K_M GGUF without a remote fallback.
+
+#### SCENARIO-INFER-SOTA-7157-COMPARATORS
+
+**Given** a historical experiment selects old registry indices explicitly
+**When** it calls `cached_sota_pair(model_indices=(0, 1))`
+**Then** it receives the old Qwen3.6 and Gemma 26B comparator identities
+**And** both records are labeled as legacy comparators, not current mandates.
+
+#### SCENARIO-INFER-SOTA-7157-DEFAULT-PAIR
+
+**Given** Qwen3.8 and at least one comparator are cached
+**When** `cached_sota_pair()` uses its default selection
+**Then** Qwen3.8 is the first returned record
+**And** a missing Qwen3.8 cache prevents the default pair from appearing current.
+
+## Implementation Status (REQ-INFER-SOTA-7157)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-7157 and SCENARIO-INFER-SOTA-7157-* | Planned (`python/carnot/inference/sota_models.py`; `scripts/experiment_template.py`) | Planned (`tests/python/test_inference_sota_models.py`) |

@@ -1,0 +1,5315 @@
+# Benchmarks Capability Specification
+
+**Capability:** benchmarks
+**Version:** 0.1.0
+**Status:** Draft
+**Traces to:** FR-09
+
+## Overview
+
+Defines the live precision benchmarks that measure the end-to-end accuracy of Carnot's
+verify-repair pipeline against real math reasoning datasets (GSM8K).  All benchmarks
+must run on live GPU hardware; simulated fallbacks are explicitly labelled as such and
+excluded from headline claims.
+
+## Requirements
+
+### REQ-BENCH-001: Live GPU Required for Headline Results
+
+All benchmark runs that produce headline accuracy claims MUST set
+`inference_mode="live_gpu"`.  Any run that falls back to simulated or CPU-only
+inference MUST write `honest_verdict="simulated_no_verdict"` and MUST NOT be used
+as a headline result.
+
+**Rationale:** Exp 820 showed baseline=0 correct on HumanEval, which is suspicious.
+That result was on a simulated/fallback path that did not actually run the model.
+Headline results that claim a specific accuracy number must be traceable to a
+confirmed live GPU run.
+
+**Acceptance criteria:**
+- `inference_mode` field present in every benchmark artifact.
+- `honest_verdict` is never `"pipeline_improvement"` when `inference_mode != "live_gpu"`.
+
+### REQ-BENCH-010: Live Precision Benchmark Must Run on Live GPU
+
+A live precision benchmark MUST have `inference_mode="live_gpu"` to count as a
+valid measurement.  When live GPU is not available (no CUDA/ROCm device, health
+check fails, or `CARNOT_FORCE_LIVE` not set), the benchmark script MUST:
+
+1. Write a blocked artifact with `honest_verdict="simulated_no_verdict"`.
+2. Set `status="blocked"` in the artifact.
+3. NOT produce accuracy numbers, because they would be fabricated.
+
+**Rationale:** Silent simulation is the root cause of RETRO-033 and multiple false
+improvements across milestones .30-.45.  The invariant check in
+`assert_deliverable_written()` enforces this by rewriting the verdict when a
+`pipeline_improvement` claim is accompanied by `inference_mode != "live_gpu"`.
+
+**Acceptance criteria:**
+- CPU-only machine produces `honest_verdict="simulated_no_verdict"`.
+- Live GPU machine with all models healthy produces `inference_mode="live_gpu"`.
+- `honest_verdict="pipeline_improvement"` is only written when both conditions hold:
+  `inference_mode="live_gpu"` AND `signed_improvement > 0`.
+
+### REQ-BENCH-011: Baseline Condition Must Run First
+
+The BASELINE condition (raw LLM, no pipeline) MUST complete before any
+pipeline-augmented condition (VR, FULL) begins.  The baseline accuracy
+(`accuracy_baseline`) MUST be used as the denominator for all signed improvement
+computations:
+
+```
+signed_improvement_vr   = accuracy_vr   - accuracy_baseline
+signed_improvement_full = accuracy_full - accuracy_baseline
+signed_improvement      = max(signed_improvement_vr, signed_improvement_full)
+```
+
+**Rationale:** If baseline does not run first, a pipeline that refuses to answer
+any question (n_correct=0) would appear to improve on a zero baseline.
+Running baseline first and computing signed improvement exposes this failure mode.
+
+**Acceptance criteria:**
+- Artifact contains `accuracy_baseline`, `accuracy_vr`, `accuracy_full`.
+- `signed_improvement` equals `max(signed_improvement_vr, signed_improvement_full)`.
+- Checkpoint files written after each baseline batch before VR begins.
+
+## Scenarios
+
+### SCENARIO-BENCH-020: Live GPU Baseline Match
+
+**Given** a live GPU machine with Qwen3.5-0.8B loaded
+**When** 50 GSM8K questions are run with no pipeline (BASELINE condition)
+**Then** `n_correct_baseline >= 0` (sanity: result is non-negative and <= 50)
+**And** `accuracy_baseline = n_correct_baseline / 50` is present in the artifact
+
+**Spec traces:** REQ-BENCH-010, REQ-BENCH-011
+
+### SCENARIO-BENCH-025: 50-Question GSM8K Three-Condition Benchmark
+
+**Given** a live GPU machine with Qwen3.5-0.8B
+**When** 50 GSM8K questions are run across three conditions:
+  - BASELINE: raw LLM output only
+  - VR: VerifyRepairPipeline applied to raw LLM output
+  - FULL: VR + JEPA v24 if deployed (else VR only, noted in artifact)
+**Then** the artifact contains all required accuracy and improvement fields
+**And** each condition runs in 5 batches of 10 (checkpointed atomically)
+**And** `honest_verdict="pipeline_improvement"` only when `inference_mode="live_gpu"` AND `signed_improvement > 0`
+**And** `honest_verdict="pipeline_no_improvement"` when `inference_mode="live_gpu"` AND `signed_improvement <= 0`
+**And** `honest_verdict="simulated_no_verdict"` when GPU is unavailable
+
+**Spec traces:** REQ-BENCH-010, REQ-BENCH-011
+
+### SCENARIO-BENCH-030: CPU Fallback Produces Honest Verdict
+
+**Given** a machine with no GPU (or CARNOT_FORCE_LIVE unset)
+**When** the benchmark script runs
+**Then** the artifact has `status="blocked"`, `honest_verdict="simulated_no_verdict"`
+**And** no accuracy numbers are included
+**And** `assert_deliverable_written()` passes
+
+**Spec traces:** REQ-BENCH-010
+
+### REQ-BENCH-1511: Product-Line Solver Oracle Benchmark
+
+Carnot MUST provide a bounded product-line / feature-model benchmark that
+parses semi-formal blueprints into mandatory, optional, requires, and excludes
+constraints, evaluates small instances with a deterministic exhaustive oracle,
+and records separate parse, feasibility, oracle-agreement, and false-accept
+metrics for mandated local SOTA GGUF model outputs.
+
+**Rationale:** CCTU-style executable constraints exercise local tool use, but
+product-line analysis stresses structural parsing and feasibility reasoning in
+a different domain while preserving an auditable oracle.
+
+**Acceptance criteria:**
+- The benchmark defines multiple semi-formal feature-model blueprints with
+  bounded feature counts and expected analysis operations.
+- The oracle enumerates the bounded configuration space deterministically and
+  rejects infeasible configurations before checking optimality or answer
+  agreement.
+- Headline rows come only from mandated local SOTA GGUF models; missing or
+  failed SOTA loading produces an honest terminal blocker rather than a legacy
+  small-model headline.
+- The artifact includes `parse_rate`, `feasibility_rate`,
+  `oracle_agreement_rate`, `verifier_false_accept_rate`,
+  `solver_oracle_ready`, `product_line_benchmark_ready`, and the JSONL
+  manifest path.
+
+### SCENARIO-BENCH-1511: Feature-Model Answers Are Checked Against Oracle
+
+**Given** a bounded feature-model blueprint with mandatory, optional,
+requires, and excludes clauses
+**When** a mandated local SOTA GGUF model emits a JSON answer containing a
+feature selection and self-verifier decision
+**Then** Carnot parses the answer, checks selection feasibility with the
+deterministic oracle, distinguishes infeasible from feasible-but-suboptimal
+answers, and records any model self-verifier false accept in the manifest.
+
+**Spec traces:** REQ-BENCH-1511
+
+### REQ-BENCH-1523: Product-Line Staged Feedback Rescue
+
+Carnot MUST provide a deterministic staged-feedback rescue path for the
+product-line solver-oracle benchmark that:
+
+- loads the Exp1511 JSONL rows and reproduces baseline parse, feasibility,
+  oracle-agreement, and false-accept metrics before rescue;
+- uses only mandated local SOTA GGUF provenance for headline rows and blocks
+  rather than substituting legacy tiny models when the mandated cache path is
+  unavailable;
+- applies auditable syntax-parse, feature-model consistency, solver
+  feasibility, and policy/compliance feedback stages to each row;
+- records per-stage outcomes in a JSONL rescue manifest; and
+- sets `product_line_rescue_ready=true` only when parse rate improves over
+  Exp1511 and either feasibility or oracle agreement improves while
+  `false_accept_rate=0.0`; otherwise it retires the branch with an explicit
+  reason.
+
+### SCENARIO-BENCH-1523: Staged Feedback Rescues Or Retires Product-Line Rows
+
+**Given** Exp1511 product-line rows whose parse rate is 0.333333 and whose
+feasibility and oracle-agreement rates are 0.0
+**When** the staged rescue runner replays those rows through deterministic
+parse, feature-model, feasibility, and policy feedback
+**Then** the final artifact contains the required baseline and rescue metric
+fields, the rescue manifest records every stage per row, and the branch is
+marked ready only when the acceptance gate is satisfied with zero false
+accepts.
+
+**Spec traces:** REQ-BENCH-1523
+
+### REQ-BENCH-1540: Product-Line Staged Benchmark Scale
+
+Carnot MUST provide a scaled product-line staged benchmark pack that extends
+the Exp1523 bounded rescue beyond the six checked rows while keeping
+deterministic validators as the only acceptance authority.  The benchmark MUST:
+
+- write `results/experiment_1540_product_line_staged_benchmark_scale_v3.json`
+  with `status="in_progress"` before source loading or model probing;
+- load the Exp1511/Exp1523 product-line rows and record the syntax,
+  feature-model, solver-feasibility, and policy/oracle fixes responsible for
+  the bounded rescue;
+- build or load at least 40 staged product-line cases unless the available
+  corpus is smaller, in which case it MUST record the available count and
+  blocker;
+- evaluate syntax parsing, feature-model consistency, feasibility, and
+  solver-oracle agreement as separate stages with the exhaustive product-line
+  oracle as authority;
+- run at least one mandated local SOTA GGUF model on benchmark prompts, using
+  automata-style constrained JSON where useful while never allowing that
+  automaton to replace the deterministic oracle;
+- set `product_line_scale_ready=true` only when the scaled pack reaches the
+  case-count gate, all staged rows agree with the oracle, and
+  `false_accept_rate=0.0`; and
+- set `branch_retired=true` with an explicit reason when the branch cannot
+  scale beyond the bounded rescue, the live SOTA provenance gate fails, or
+  `false_accept_rate` exceeds zero.
+
+### SCENARIO-BENCH-1540: Scaled Product-Line Rows Preserve Oracle Labels
+
+**Given** the Exp1523 rescue manifest and the fixed run date `20260508`
+**When** the scaled staged benchmark pack generates product-line variants and
+replays them through syntax, feature-model, feasibility, and policy feedback
+**Then** every manifest row contains reproducible oracle labels, stage
+outcomes, and a final policy decision that accepts only oracle-agreeing
+selections
+**And** the terminal artifact contains the required scale/retirement fields and
+an honest verdict prefix accepted by the conductor.
+
+**Spec traces:** REQ-BENCH-1540
+
+### REQ-BENCH-2931: LLMEval-Logic-Style Local GGUF Z3 Mini Benchmark
+
+Carnot MUST provide a bounded LLMEval-Logic-style mini benchmark that asks
+mandated local GGUF models to translate natural-language logic items into a
+structured formalization JSON, converts parseable formalizations into Z3, and
+reports parseability, Z3 execution, answer correctness, and semantic
+faithfulness as separate metrics.
+
+The benchmark MUST call `cached_sota_pair(gpu_indices=(0, 1))` before any
+fallback resolution and MUST only treat outputs from one of the mandated SOTA
+GGUF model IDs as headline live inference.  If no mandated GGUF is cached, the
+artifact MUST be honest and blocked rather than substituting legacy tiny
+models.
+
+**Acceptance criteria:**
+- The item pack contains 12-20 logic items with gold answers and Z3-checkable
+  gold formalizations, either loaded from a local LLMEval-Logic cache or
+  clearly marked as a forward-authored LLMEval-Logic-style fixture.
+- Each model prompt requests exactly one structured formalization JSON object.
+- The evaluator separately records parseability, Z3 execution, answer
+  accuracy, and rubric-like semantic faithfulness.
+- The artifact includes a reproducibility checksum over items, prompts,
+  model specs, raw outputs, parsed formulas, and Z3 results.
+- `logic_verifier_mini_ready=true` only when mandated live GGUF inference
+  produces at least one usable row and Z3 executes on every parsed row.
+
+### SCENARIO-BENCH-2931: Formalized Logic Answers Are Checked By Z3
+
+**Given** a bounded natural-language logic item with facts, Horn-style rules,
+mutual exclusions, a query, and a gold modal answer
+**When** a mandated local GGUF emits structured formalization JSON
+**Then** Carnot parses the JSON, checks whether the query is possible and
+necessary with Z3, derives the solver answer, compares it with the model answer
+and the gold answer, and records semantic faithfulness separately from syntax
+and Z3 execution.
+
+**Spec traces:** REQ-BENCH-2931
+
+### REQ-BENCH-2959: NL-To-Z3 Execution Repair Mini Benchmark
+
+Carnot MUST provide a bounded natural-language-to-Z3 execution repair mini
+benchmark that replays or collects 8-12 LLMEval-Logic-style local SOTA GGUF
+formalization proposals, repairs only schema-fragment formatting into the
+strict ground-logic JSON contract, executes Z3 on every parseable
+formalization, and never treats model prose or model self-judgment as a proof.
+
+The benchmark MUST include at least one of the mandated local GGUF model IDs in
+`model_specs`, call `cached_sota_pair(gpu_indices=(0, 1))` during precondition
+checking, and honestly record whether a headline model was resolved through the
+pair helper or through a single mandated cached GGUF fallback.  The terminal
+artifact MUST be written to
+`results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json` and include:
+`honest_verdict`, `inference_substrate="live_llm_inference"`,
+`preconditions_checked`, `model_specs`, `headline_models_used`, `z3_import_ok`,
+`z3_execution_repaired`, `n_items`, `parseability_rate`,
+`z3_execution_rate`, `solver_verified_accuracy`, `answer_accuracy`,
+`failure_categories`, `formalization_manifest_sha256`, and `duration_s`.
+
+**Acceptance criteria:**
+- The selected item pack contains 8-12 small logic items with known
+  Z3-checkable labels.
+- The parser repairs only bounded schema fragments such as
+  `formalization: {...}` plus an answer line into the strict JSON contract.
+- Every parseable formalization is executed by Z3; Z3 exceptions are reported
+  separately from parse failures.
+- The artifact reports mutually exclusive counts for `unparseable`,
+  `z3_exception`, `wrong_formula`, `wrong_answer`, and
+  `solver_verified_correct`.
+- `solver_verified_accuracy` is based on the Z3-derived label, while
+  `answer_accuracy` is based on the model answer string; neither metric may be
+  substituted for the other.
+
+### SCENARIO-BENCH-2959: Fragmented Formalizations Are Accepted Or Rejected By Z3
+
+**Given** a live local SOTA GGUF response that contains a repairable
+formalization fragment and a model answer line
+**When** Carnot converts the fragment to the strict ground-logic schema
+**Then** Z3 derives the modal answer for the query, the model answer is scored
+separately, and the row is categorized as solver-verified correct, wrong
+formula, wrong answer, Z3 exception, or unparseable without using model prose as
+proof.
+
+**Spec traces:** REQ-BENCH-2959, SCENARIO-BENCH-2959
+
+### REQ-BENCH-2966: Skill-Labeled Exact Logic Frontier Manifest
+
+Carnot MUST provide a deterministic exact-verifier logic frontier that
+materializes 20-30 compact logic items with known labels, reference Z3
+formalizations, and explicit skill labels for downstream live LLM tasks.  This
+frontier MUST NOT invoke a live model; it exists to separate formal reasoning
+skills before another natural-language-to-Z3 generation attempt.
+
+The materializer MUST check that Python can import Z3 before execution.  If Z3
+is unavailable, it MUST write an honest blocked artifact with
+`preconditions_checked` populated.  When Z3 is available, it MUST execute every
+reference formalization, record per-item pass/fail evidence, write a downstream
+manifest with expected solver status and labels, and write
+`results/experiment_2966_logic_frontier_materializer_v1.json` with:
+`honest_verdict`, `preconditions_checked`, `z3_import_ok`,
+`logic_frontier_materialized`, `n_items`, `skill_labels`,
+`reference_formalizations_executed`, `reference_z3_execution_rate`,
+`reference_solver_accuracy`, `manifest_path`, `manifest_sha256`,
+`model_specs_for_downstream_live_use`,
+`inference_substrate="deterministic_wiring"`, and `duration_s`.
+
+**Acceptance criteria:**
+- The frontier contains 20-30 deterministic items spanning symbolization,
+  quantifier handling, countermodel construction, satisfiability, validity,
+  and answer extraction.
+- Every item has a reference Z3 formalization, an expected solver status, a
+  known label, and one or more skill labels.
+- Z3 executes every reference formalization when the dependency is present, and
+  `reference_solver_accuracy` is computed from solver outcomes rather than
+  natural-language labels alone.
+- The manifest includes the mandated downstream model specs:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- The manifest SHA-256 is computed over the stable manifest JSON that was
+  written to disk.
+
+### SCENARIO-BENCH-2966: Reference Logic Formalizations Execute Exactly
+
+**Given** the deterministic skill-labeled logic frontier
+**When** the materializer runs with Z3 importable
+**Then** every reference formalization is parsed and checked by Z3, the
+per-item result records the actual solver status and whether it matched the
+expected status and answer-extraction fields, and the terminal artifact reports
+`logic_frontier_materialized=true` with deterministic-wiring provenance.
+
+**Spec traces:** REQ-BENCH-2966, SCENARIO-BENCH-2966
+
+### REQ-BENCH-2967: SOTA DCCD NL-To-Z3 Frontier Formalization
+
+Carnot MUST provide a live local-SOTA NL-to-Z3 formalization runner over the
+Exp 2966 exact-verifier frontier.  The runner MUST load the materialized Exp
+2966 manifest, check that `logic_frontier_materialized=true`, verify Python Z3
+import, call `cached_sota_pair(gpu_indices=(0, 1))` before any single-model
+fallback, and use at least one mandated headline GGUF model in `MODEL_SPECS`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The live runner MUST use DCCD-style draft-then-structure prompting: first ask
+the model for an unconstrained formalization draft, then condition a strict
+structured output request on that draft.  The parseable structured proposal
+schema MUST contain `variables`, `predicates`, `assertions`, `query`,
+`expected_status`, and `answer_extraction`.  Carnot MUST execute Z3 on every
+parseable proposal and MUST NOT treat model prose, model self-judgment, or the
+model-provided expected status as proof.
+
+The terminal artifact MUST be written to
+`results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json` and include:
+`honest_verdict`, `inference_substrate="live_llm_inference"`,
+`preconditions_checked`, `model_specs`, `headline_models_used`,
+`legacy_models_only_for_smoke`, `n_items`, `parseability_rate`,
+`z3_execution_rate`, `solver_verified_accuracy`, `answer_accuracy`,
+`baseline_parseability_rate`, `baseline_solver_verified_accuracy`,
+`skill_wise_metrics`, `failure_categories`, `formalization_delta_clean`,
+`formalization_manifest_sha256`, and `duration_s`.
+
+**Acceptance criteria:**
+- If Exp 2966 is not materialized, Z3 is unavailable, or no mandated headline
+  GGUF can be resolved, the runner writes a blocked artifact with populated
+  `preconditions_checked` and zero rates.
+- Every parseable proposal is compiled and checked by Z3; Z3 exceptions are
+  categorized separately from unparseable outputs.
+- Each item is categorized by failure mode and by every Exp 2966 skill label it
+  carries.
+- `formalization_delta_clean` is true only when
+  `parseability_rate>=0.50`, `z3_execution_rate>=0.50`, and
+  `solver_verified_accuracy>0.0`, compared against the .278 baseline
+  `parseability_rate=0.083333` and `solver_verified_accuracy=0.0`.
+- `formalization_manifest_sha256` is computed over the stable item manifest,
+  structured proposals, Z3 results, skill labels, and failure categories.
+
+### SCENARIO-BENCH-2967: DCCD Proposals Are Judged By Z3 Skill-Wise
+
+**Given** the Exp 2966 exact-verifier frontier and at least one resolved
+mandated local GGUF
+**When** the live runner collects DCCD-style structured formalization proposals
+**Then** every parseable proposal is executed by Z3, aggregate and skill-wise
+parseability/Z3/solver/answer metrics are recorded, and the artifact marks
+`formalization_delta_clean` only when the explicit .278 baseline gate is met.
+
+**Spec traces:** REQ-BENCH-2967, SCENARIO-BENCH-2967
+
+### REQ-BENCH-1536: SATQuest CNF Verifier Benchmark
+
+Carnot MUST provide a bounded SATQuest-style CNF verifier benchmark that
+generates a deterministic mix of satisfiable and unsatisfiable SAT instances,
+labels them with PySAT when available or a local exhaustive solver fallback
+when PySAT is unavailable, emits machine, symbolic, and narrative prompt
+formats for each instance, and scores mandated local SOTA GGUF answers against
+the solver oracle rather than model self-verification.
+
+The benchmark MUST record baseline answer accuracy, Carnot energy-ranked
+candidate accuracy, repair-hint-assisted accuracy, and solver-oracle false
+accepts separately from ordinary wrong answers.  Missing SOTA GGUF runtime
+provenance MUST be recorded honestly without substituting legacy small models
+as headline models.
+
+**Decentralization implications:** The benchmark preserves local-first
+operation by using local GGUF model provenance and a local deterministic SAT
+oracle.
+
+### SCENARIO-BENCH-1536: CNF Formats Are Reproducibly Labeled
+
+**Given** the fixed Exp1536 run date and bounded CNF generator seed
+**When** the SATQuest benchmark builds machine, symbolic, and narrative prompts
+for each CNF instance
+**Then** every format shares the same deterministic solver label, the manifest
+records the solver backend used, and false accepts are counted only when a
+model-declared verifier accepts a non-oracle answer.
+
+**Spec traces:** REQ-BENCH-1536
+
+### REQ-BENCH-1549: SATQuest Oracle Evidence Repair
+
+Carnot MUST provide a SATQuest oracle repair gate that replays the Exp1536
+false-accept rows and a bounded regression pack with proof or witness evidence
+before downstream SATQuest or unified-contract work can treat SATQuest as an
+acceptance authority.  The repaired gate MUST:
+
+- prefer PySAT when available while preserving a deterministic exact fallback
+  for bounded local CNFs;
+- attach a checked full assignment witness to every SAT oracle success;
+- attach a checked UNSAT certificate or exhaustive contradiction record to
+  every UNSAT oracle success;
+- reject malformed CNF rows, wrong labels, invalid SAT assignments, SAT answers
+  without full assignment witnesses, and UNSAT answers when no proof or
+  exhaustive contradiction evidence is available;
+- replay the three known Exp1536 false-accept rows and report zero repaired
+  oracle false accepts before setting `satquest_zero_false_accepts=true`; and
+- write an artifact and repaired-case manifest that expose the prior
+  false-accept count, rechecked case IDs, evidence counts, perturbation checks,
+  and honest terminal verdict.
+
+**Decentralization implications:** The repair preserves local-first operation:
+PySAT is optional, exact exhaustive evidence is available locally for the
+bounded benchmark, and no closed-weight model becomes an oracle.
+
+### SCENARIO-BENCH-1549: False Accept Rows Are Replayed With Evidence
+
+**Given** `results/experiment_1536_satquest_cnf_verifier_benchmark.json` and
+`results/satquest_cnf_verifier_1536.jsonl`
+**When** the Exp1549 repair gate extracts the rows where a model self-verifier
+accepted a non-oracle answer
+**Then** the repaired oracle rechecks each row with SAT assignment witnesses or
+UNSAT contradiction evidence, rejects every known false accept, runs malformed
+CNF and perturbation checks, and writes
+`results/experiment_1549_satquest_oracle_false_accept_repair.json` with
+`solver_oracle_false_accepts_after=0`.
+
+**Spec traces:** REQ-BENCH-1549
+
+### REQ-BENCH-1550: SATQuest SOTA Re-Evaluation Under Repaired Oracle
+
+Carnot MUST provide a SATQuest SOTA re-evaluation workflow that runs only after
+the Exp1549 repair artifact confirms `satquest_zero_false_accepts=true`.  The
+workflow MUST use mandated local SOTA GGUF provenance for headline model rows
+when available, honestly block without substituting legacy small GGUFs when
+the mandated cache or llama.cpp runtime is unavailable, and keep the repaired
+solver/proof oracle as the only acceptance authority.
+
+The workflow MUST:
+
+- write `results/experiment_1550_satquest_sota_reeval_zero_false_accepts.json`
+  with `status="in_progress"` before model probing or evaluation;
+- load the repaired SATQuest manifest from Exp1549 and refuse evaluation when
+  the repaired zero-false-accept gate is not present;
+- evaluate at least 30 bounded machine, symbolic, and narrative/natural-language
+  CNF prompt cases when runtime permits;
+- validate SAT assignment witnesses or UNSAT contradiction certificates before
+  accepting any answer;
+- report answer accuracy, witness-validity rate, false-accept rate, solver
+  oracle false accepts, and Carnot energy/ranking AUC as diagnostics only; and
+- include the required artifact fields for model specs, attempted models, case
+  counts, format coverage, automata or format constraints, availability
+  blockers, focused-test status, and an honest terminal verdict.
+
+### SCENARIO-BENCH-1550: SOTA Rows Remain Solver-Grounded
+
+**Given** Exp1549 has written a repaired manifest and
+`satquest_zero_false_accepts=true`
+**When** the Exp1550 runner resolves mandated local SOTA GGUF specs with the
+`cached_sota_pair()` pattern and aggregates generated SATQuest answers
+**Then** every accepted row is backed by a checked assignment witness or UNSAT
+certificate, model self-verification never overrides the solver/proof oracle,
+and the terminal artifact records zero solver-oracle false accepts or an honest
+availability blocker when no mandated SOTA model can run.
+
+**Spec traces:** REQ-BENCH-1550
+
+### REQ-BENCH-1744: Phase 4 EqM Latency-Accuracy Synthesis
+
+Carnot MUST provide an impact analysis script for Exp 1744 that reads the large benchmark
+results (Exp 1743) and synthesizes the tradeoff between EqM-guided decoding latency
+and final accuracy gains.
+The script MUST calculate and write a JSON summary to `results/experiment_1744_impact.json`
+containing the fields `status`, `eqm_latency_overhead_ms`, `accuracy_gain_pct`,
+and `honest_verdict`. Missing input files MUST NOT crash the process but produce
+a blocked artifact or mock data for testing.
+
+### SCENARIO-BENCH-1744: Impact Analysis Generates Scatter Data
+
+**Given** the Exp 1744 analysis script
+**When** executed against the Exp 1743 large benchmark logs
+**Then** it parses token-latency and repair-success rates
+**And** produces a valid `results/experiment_1744_impact.json` artifact containing the synthesized tradeoff metrics.
+
+**Spec traces:** REQ-BENCH-1744
+
+## Implementation Status
+
+| Requirement | Status | Experiment |
+|-------------|--------|------------|
+| REQ-BENCH-001 | Implemented | Exp 427 |
+| REQ-BENCH-010 | Implemented | Exp 840 |
+| REQ-BENCH-011 | Implemented | Exp 840 |
+| REQ-BENCH-1511 | Implemented (`python/carnot/eval/product_line_solver_oracle_benchmark.py`) | Exp 1511 |
+| REQ-BENCH-1523 | Planned (`python/carnot/eval/product_line_parser_feasibility_rescue.py`) | Exp 1523 |
+| REQ-BENCH-1536 | Planned (`python/carnot/eval/satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
+| REQ-BENCH-1549 | Implemented (`python/carnot/eval/satquest_oracle_false_accept_repair.py`) | Exp 1549 |
+| REQ-BENCH-1540 | Implemented (`python/carnot/eval/product_line_staged_benchmark_scale.py`) | Exp 1540 |
+| REQ-BENCH-1550 | Planned (`python/carnot/eval/satquest_sota_reeval_zero_false_accepts.py`) | Exp 1550 |
+| SCENARIO-BENCH-020 | Implemented | Exp 427 |
+| SCENARIO-BENCH-025 | Implemented | Exp 840 |
+| SCENARIO-BENCH-030 | Implemented | Exp 840 |
+| SCENARIO-BENCH-1511 | Implemented (`tests/python/test_experiment_1511_product_line_solver_oracle_benchmark.py`) | Exp 1511 |
+| SCENARIO-BENCH-1523 | Planned (`tests/python/test_experiment_1523_product_line_parser_feasibility_rescue.py`) | Exp 1523 |
+| SCENARIO-BENCH-1536 | Planned (`tests/python/test_experiment_1536_satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
+| SCENARIO-BENCH-1540 | Implemented (`tests/python/test_experiment_1540_product_line_staged_benchmark_scale.py`) | Exp 1540 |
+| SCENARIO-BENCH-1550 | Planned (`tests/python/test_experiment_1550_satquest_sota_reeval_zero_false_accepts.py`) | Exp 1550 |
+| REQ-BENCH-2959 | Implemented (`python/carnot/eval/nl_to_z3_execution_repair_mini_v2.py`) | Exp 2959 |
+| SCENARIO-BENCH-2959 | Implemented (`tests/python/test_experiment_2959_nl_to_z3_execution_repair_mini_v2.py`) | Exp 2959 |
+| REQ-BENCH-2966 | Implemented (`python/carnot/eval/logic_frontier_materializer.py`) | Exp 2966 |
+| SCENARIO-BENCH-2966 | Implemented (`tests/python/test_experiment_2966_logic_frontier_materializer.py`) | Exp 2966 |
+| REQ-BENCH-2967 | Implemented (`python/carnot/eval/sota_nl_to_z3_dccd_formalization.py`) | Exp 2967 |
+| SCENARIO-BENCH-2967 | Implemented (`tests/python/test_experiment_2967_sota_nl_to_z3_dccd_formalization.py`) | Exp 2967 |
+
+### REQ-DUALGPU-101: DualGPU System-2 EqM Benchmark
+
+Carnot MUST provide a comprehensive DualGPU benchmark combining System-2 EqM, FourierCSP, and continuous learning.
+The implementation MUST ensure SOTA models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`) are split or utilized effectively.
+Results MUST be written to `results/experiment_1733_dualgpu.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1733_dualgpu.py` runs the combined benchmark.
+- SOTA models are referenced in the script.
+- Artifact is written to `results/experiment_1733_dualgpu.json`.
+
+### SCENARIO-DUALGPU-101: Comprehensive DualGPU execution
+
+**Given** a DualGPU environment
+**When** the Exp 1733 script runs
+**Then** the System-2 EqM and FourierCSP pipelines execute using the specified SOTA models and write the required artifact.
+
+**Spec traces:** REQ-DUALGPU-101
+
+### REQ-BENCH-1742: SWE-Bench Lite Verify-Repair Harness
+
+Carnot MUST provide an Exp 1742 SWE-Bench Lite harness that selects five
+targeted `princeton-nlp/SWE-bench_Lite` test instances, prompts the mandated
+SOTA GGUF model pair for unified-diff patches with EqM decoding disabled as the
+baseline condition, verifies each patch through bounded Carnot patch checks,
+and evaluates accepted patches through a SWE-Bench-compatible evaluator.
+
+The experiment MUST write `results/experiment_1742_swe_bench.json` with the
+selected instance IDs, model provenance, `eqm_decoding_enabled=false`,
+baseline and verify-repair resolve metrics, per-case attempts, evaluator
+provenance, blockers, and an honest verdict. Missing SOTA weights or missing
+SWE-Bench evaluator dependencies MUST produce a blocked artifact instead of a
+simulated headline result.
+
+### SCENARIO-BENCH-1742: SWE-Bench Lite Baseline Artifact Is Honest
+
+**Given** the Exp 1742 runner and the targeted SWE-Bench Lite cohort
+**When** SOTA GGUF weights or the SWE-Bench evaluator are unavailable
+**Then** the runner writes the required artifact with `status="blocked"`,
+`eqm_decoding_enabled=false`, the selected instance metadata when fetchable,
+and no fabricated resolve-rate headline.
+**And** when injected model and evaluator backends are available, the runner
+records baseline and verify-repair outcomes for each selected instance.
+
+**Spec traces:** REQ-BENCH-1742
+
+### REQ-BENCH-1773: Continuous Latent Constraint Benchmark
+
+Carnot MUST provide a benchmark script to evaluate the continuous latent constraint modeling.
+The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1773_latent_benchmark.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1773_latent_benchmark.py` exists.
+- Records energy convergence and validity rates.
+- Uses `LatentOptimizer` from `python/carnot/models/latent_optimizer.py`.
+
+### SCENARIO-BENCH-1773: Continuous Latent Constraint Execution
+
+**Given** the LatentOptimizer and an energy function
+**When** the benchmark script runs
+**Then** it performs Langevin dynamics optimization
+**And** produces a valid `results/experiment_1773_latent_benchmark.json` artifact containing energy convergence and validity rates.
+
+**Spec traces:** REQ-BENCH-1773
+
+### REQ-E2E-1782: End-to-end evaluation using Qwen 3.6 35B
+
+Carnot MUST provide an E2E benchmark script to evaluate the flagship MoE model, integrating all Phase 1-3 improvements.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1782_e2e_qwen.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1782_e2e_qwen.py` exists.
+- Records latency, parse rate, and energy scores.
+- Artifact is written to `results/experiment_1782_e2e_qwen.json`.
+
+### SCENARIO-E2E-1782: E2E Qwen MoE Evaluation Execution
+
+**Given** the complete Phase 1-3 integrated pipeline
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1782_e2e_qwen.json` artifact containing latency, parse rate, and energy scores.
+
+**Spec traces:** REQ-E2E-1782
+
+### REQ-E2E-1783: End-to-end evaluation using Gemma 3.1 31B
+
+Carnot MUST provide an E2E benchmark script to evaluate the flagship dense model.
+The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1783_e2e_gemma31.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1783_e2e_gemma31.py` exists.
+- Records latency, parse rate, and energy scores.
+- Artifact is written to `results/experiment_1783_e2e_gemma31.json`.
+
+### SCENARIO-E2E-1783: E2E Gemma 3.1 Dense Evaluation Execution
+
+**Given** the complete Phase 1-3 integrated pipeline
+**When** the benchmark script runs using `unsloth/gemma-4-31B-it-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1783_e2e_gemma31.json` artifact containing latency, parse rate, and energy scores.
+
+**Spec traces:** REQ-E2E-1783
+
+
+
+### REQ-BENCH-1789: NRGPT Math Benchmark
+
+Carnot MUST provide a benchmark script to validate the Aleph-style orchestrator and NRGPT exploration on a mathematical benchmark.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1789_math_benchmark.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1789_math_benchmark.py` exists.
+- Records machine-checkable proof success rate.
+- Artifact is written to `results/experiment_1789_math_benchmark.json`.
+
+### SCENARIO-BENCH-1789: NRGPT Math Benchmark Execution
+
+**Given** the NRGPTExplorer
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1789_math_benchmark.json` artifact containing machine-checkable proof success rate.
+
+**Spec traces:** REQ-BENCH-1789
+
+### REQ-E2E-1808: Capstone End-to-end evaluation using Qwen3.6-35B-A3B
+
+Carnot MUST provide an E2E benchmark script to evaluate the flagship MoE model, incorporating the DPO adapter and KAN MILP verifier.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1808_qwen.json`.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1808_capstone_qwen.py` exists.
+- Records repair success rate.
+- Artifact is written to `results/experiment_1808_qwen.json`.
+
+### SCENARIO-E2E-1808: Capstone E2E Qwen MoE Evaluation Execution
+
+**Given** the complete Phase 16 integrated pipeline with DPO adapter and KAN MILP verifier
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1808_qwen.json` artifact containing repair success rate.
+
+**Spec traces:** REQ-E2E-1808
+
+### REQ-E2E-1810: Capstone End-to-end evaluation using Gemma4-26B
+
+Carnot MUST provide an E2E benchmark script to evaluate the flagship MoE model on the Phase 16 capstone pipeline.
+The implementation MUST use `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1810_gemma26.json`.
+It MUST record accuracy and energy metrics.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1810_capstone_gemma26.py` exists.
+- Records accuracy and energy metrics.
+- Artifact is written to `results/experiment_1810_gemma26.json`.
+
+### SCENARIO-E2E-1810: Capstone E2E Gemma4-26B Evaluation Execution
+
+**Given** the complete Phase 16 integrated pipeline
+**When** the benchmark script runs using `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** it performs the execution evaluation
+**And** produces a valid `results/experiment_1810_gemma26.json` artifact containing accuracy and energy metrics.
+
+**Spec traces:** REQ-E2E-1810
+
+### REQ-E2E-1835: SOTA LLM Pipeline with EBRM and Zero-Violation loops Qwen3.6-35B-A3B
+
+Carnot MUST provide an E2E benchmark script to evaluate the SOTA LLM pipeline integrated with EBRM and Zero-Violation loops.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1835_qwen.json`.
+It MUST record repair success rate.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1835_qwen.py` exists.
+- Records repair success rate.
+- Artifact is written to `results/experiment_1835_qwen.json`.
+
+### SCENARIO-E2E-1835: SOTA LLM Pipeline Qwen MoE Evaluation Execution
+
+**Given** the complete SOTA LLM pipeline integrated with EBRM and Zero-Violation loops
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`
+**Then** it performs the verify-repair evaluation
+**And** produces a valid `results/experiment_1835_qwen.json` artifact containing repair success rate.
+
+**Spec traces:** REQ-E2E-1835
+
+### REQ-E2E-1836: SOTA LLM Pipeline with EBRM and Zero-Violation loops Gemma4-31B-it
+
+Carnot MUST provide an E2E benchmark script to evaluate the SOTA LLM pipeline integrated with EBRM and Zero-Violation loops.
+The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1836_gemma31.json`.
+It MUST record repair success rate.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1836_gemma31.py` exists.
+- Records repair success rate.
+- Artifact is written to `results/experiment_1836_gemma31.json`.
+
+### SCENARIO-E2E-1836: SOTA LLM Pipeline Gemma4 MoE Evaluation Execution
+
+**Given** the complete SOTA LLM pipeline integrated with EBRM and Zero-Violation loops
+**When** the benchmark script runs using `unsloth/gemma-4-31B-it-GGUF`
+**Then** it performs the verify-repair evaluation
+**And** produces a valid `results/experiment_1836_gemma31.json` artifact containing repair success rate.
+
+**Spec traces:** REQ-E2E-1836
+
+### REQ-E2E-1837: SOTA LLM Pipeline with EBRM and Zero-Violation loops Gemma4-26B-A4B-it
+
+Carnot MUST provide an E2E benchmark script to evaluate the SOTA LLM pipeline integrated with EBRM and Zero-Violation loops.
+The implementation MUST use `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `results/experiment_1837_gemma26.json`.
+It MUST record repair success rate.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1837_gemma26.py` exists.
+- Records repair success rate.
+- Artifact is written to `results/experiment_1837_gemma26.json`.
+
+### SCENARIO-E2E-1837: SOTA LLM Pipeline Gemma4-26B MoE Evaluation Execution
+
+**Given** the complete SOTA LLM pipeline integrated with EBRM and Zero-Violation loops
+**When** the benchmark script runs using `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** it performs the verify-repair evaluation
+**And** produces a valid `results/experiment_1837_gemma26.json` artifact containing repair success rate.
+
+**Spec traces:** REQ-E2E-1837
+
+
+
+### REQ-E2E-1874: Triple Integration E2E on MoE and Dense SOTA models
+
+Carnot MUST provide an E2E benchmark script to enforce ROCE, HILED, and continuous learning updates across all mandated SOTA models.
+The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1874_e2e.json`.
+It MUST ensure cross-language equivalences, serialization, and sampling pipelines complete without error.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1874_e2e.py` exists.
+- Records cross-language equivalences, serialization, and sampling pipelines status.
+- Artifact is written to `results/experiment_1874_e2e.json`.
+
+### SCENARIO-E2E-1874: Triple Integration E2E Evaluation Execution
+
+**Given** the complete E2E test plan enforcing ROCE, HILED, and continuous learning updates
+**When** the benchmark script runs using `unsloth/gemma-4-31B-it-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** it performs the execution evaluation for cross-language equivalences, serialization, and sampling pipelines
+**And** produces a valid `results/experiment_1874_e2e.json` artifact containing completion metrics.
+
+**Spec traces:** REQ-E2E-1874
+
+### REQ-E2E-1954: Tri-SOTA E2E v6
+
+Carnot MUST provide an E2E benchmark script to evaluate verifiable reasoning dataset across the continuous latent optimization and multi-agent Ising tiers.
+The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1954_tri_sota_e2e_v6.json`.
+It MUST evaluate complete end-to-end trace validity rates against the prior v5 baselines.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1954_tri_sota_e2e_v6.py` exists.
+- Records end-to-end trace validity rates against the prior v5 baselines.
+- Artifact is written to `results/experiment_1954_tri_sota_e2e_v6.json`.
+
+### SCENARIO-E2E-1954: Tri-SOTA E2E v6 Evaluation Execution
+
+**Given** the verifiable reasoning dataset and continuous latent optimization and multi-agent Ising tiers
+**When** the benchmark script runs using `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`
+**Then** it evaluates complete end-to-end trace validity rates against the prior v5 baselines
+**And** produces a valid `results/experiment_1954_tri_sota_e2e_v6.json` artifact containing completion metrics.
+
+**Spec traces:** REQ-E2E-1954
+
+### REQ-BENCH-1771: Constraint-Aware Retrieval Module (CARM) Benchmark
+
+Carnot MUST provide a benchmark suite of unstructured instruction prompts and their ground truth deterministic constraint representations for the Constraint-Aware Retrieval Module (CARM).
+The suite MUST contain exactly 20 cases covering tool-use, arithmetic, and logic constraints.
+The generator script MUST write the deliverable to `results/experiment_1771_care_test_suite.json` and `results/carm_benchmark_cases.json` with `schema="carnot.carm.benchmark.v1"` and `num_cases=20`.
+
+**Acceptance criteria:**
+- Script generates the benchmark cases.
+- JSON output contains `schema`, `num_cases` (20), and an array of cases.
+- Cases cover tool-use, arithmetic, and logic.
+
+### SCENARIO-BENCH-1771: CARM Benchmark Suite Generation
+
+**Given** the need for a CARM benchmark
+**When** the benchmark generation script runs
+**Then** it produces a valid JSON artifact with the correct schema and case count
+**And** the generated test cases are successfully validated by the unit test suite.
+
+**Spec traces:** REQ-BENCH-1771
+
+
+### REQ-HARDWARE-1991: ROCm eGPU Detection and JAX Initialization
+
+Carnot MUST provide a hardware verification script to detect the presence of the RX 7900 XTX eGPU via ROCm and verify its initialization in JAX over Thunderbolt.
+The implementation MUST use `rocminfo` and `jax.devices()`.
+Results MUST be written to `results/experiment_1991_egpu_rocm.json`.
+It MUST record the hardware state and an honest verdict.
+
+**Acceptance criteria:**
+- Script `scripts/experiment_1991_egpu_rocm.py` exists.
+- Records detected hardware state.
+- Artifact is written to `results/experiment_1991_egpu_rocm.json`.
+
+### SCENARIO-HARDWARE-1991: eGPU ROCm Detection Execution
+
+**Given** the hardware verification script
+**When** the benchmark script runs
+**Then** it performs the hardware detection check using `rocminfo` and JAX
+**And** produces a valid `results/experiment_1991_egpu_rocm.json` artifact containing the schema, experiment ID, and an honest verdict.
+
+**Spec traces:** REQ-HARDWARE-1991
+
+### REQ-HARDWARE-2008: ROCm Probe eGPU Detection
+Carnot MUST provide a script `scripts/experiment_2008_rocm.py` that queries `rocminfo` and maps memory limits, generating a mock success if no hardware is found.
+The artifact MUST be saved to `results/experiment_2008_rocm_probe.json`.
+
+### SCENARIO-HARDWARE-2008: ROCm Probe Execution
+**Given** the ROCm probe script is executed
+**When** it queries `rocminfo`
+**Then** it writes probe details or a mock success indicating "hardware missing but probe works" to `results/experiment_2008_rocm_probe.json`
+
+**Spec traces:** REQ-HARDWARE-2008
+
+### REQ-BENCH-2849: Local Evaluation Dataset Manifests
+
+Carnot MUST materialize explicit local JSONL manifests for MBPP, HumanEval,
+TruthfulQA generation, HaluEval, and FEVER before downstream corpus agents spend
+model calls on those benchmarks.  The manifest builder MUST prefer already
+available local `data/` or HuggingFace cache assets, MUST NOT synthesize
+benchmark rows, and MUST mark a dataset readiness boolean false when the local
+asset cannot meet the conservative count gate.
+
+The terminal artifact MUST be written to
+`results/experiment_2849_local_dataset_materialization_v1.json` and include:
+`honest_verdict`, one readiness boolean per dataset, `dataset_status`,
+`manifest_paths`, `manifest_counts`, `manifest_sha256`,
+`preconditions_checked`, `synthetic_rows_created=false`, `duration_s`, and
+`run_date="20260522"`.
+
+**Acceptance criteria:**
+- MBPP, HumanEval, and TruthfulQA manifests preserve stable IDs plus prompts,
+  labels or executable tests, split names, and source paths.
+- HaluEval and FEVER manifests preserve stable IDs plus prompt/input text,
+  candidate or claim text, labels, split names, and source paths.
+- Readiness is true only when the manifest reaches the configured count gate:
+  MBPP >= 100, HumanEval >= 164, TruthfulQA generation >= 200, HaluEval >= 500,
+  and FEVER >= 500.
+- Every non-empty manifest has a recorded SHA256 digest computed from the JSONL
+  bytes on disk.
+
+### SCENARIO-BENCH-2849: Missing Local Corpus Blocks Honestly
+
+**Given** a required dataset is absent from local `data/` and HuggingFace cache
+locations
+**When** the local manifest builder runs without a successful network download
+**Then** the artifact records that dataset readiness as false
+**And** `dataset_status` explains the exact missing resource without creating
+synthetic rows.
+
+**Spec traces:** REQ-BENCH-2849
+
+### REQ-BENCH-2863: Stable Evaluation Manifest Resolver Contract
+
+Carnot MUST expose a reusable resolver that treats
+`results/experiment_2849_local_dataset_materialization_v1.json` as the source
+of truth for local evaluation manifest filenames.  The resolver MUST map the
+canonical corpus keys `halueval`, `fever`, `mbpp`, `humaneval`, and
+`truthfulqa` to the actual dated JSONL manifest paths and SHA256 checksums
+recorded by Exp 2849, rather than assuming plain filenames such as
+`halueval.jsonl` or `fever.jsonl`.
+
+The resolver contract artifact MUST be written to
+`results/experiment_2863_eval_manifest_contract_v2.json` and include:
+`honest_verdict`, `manifest_contract_ready`,
+`manifest_source_artifact="results/experiment_2849_local_dataset_materialization_v1.json"`,
+`resolved_manifest_paths`, `resolved_manifest_sha256`, one readiness boolean
+per canonical corpus, `synthetic_rows_created=false`, `tests_run`,
+`field_principles`, `duration_s`, and `run_date="20260522"`.
+
+**Acceptance criteria:**
+- HaluEval and FEVER consumers can resolve the dated Exp 2849 paths
+  deterministically from the source artifact.
+- Readiness is true for a corpus only when Exp 2849 marked the corpus ready,
+  the resolved manifest file exists, and the file SHA256 matches Exp 2849.
+- The resolver MUST NOT create synthetic rows, infer metrics, or silently
+  replace dated manifest paths with plain aliases.
+
+### SCENARIO-BENCH-2863: HaluEval and FEVER Resolve Dated Manifests
+
+**Given** Exp 2849 records dated local manifest paths and SHA256 checksums for
+HaluEval and FEVER
+**When** the stable evaluation manifest resolver is called for those corpora
+**Then** it returns the dated paths from Exp 2849
+**And** it verifies the recorded checksums
+**And** it reports both corpus readiness booleans without fabricating rows.
+
+**Spec traces:** REQ-BENCH-2863, SCENARIO-BENCH-2863
+
+### REQ-BENCH-2888: TruthfulQA InFi-Check-Style Taxonomy Manifest
+
+Carnot MUST provide an Exp 2888 TruthfulQA taxonomy manifest builder that uses
+only the local TruthfulQA manifest rows and existing Carnot artifacts. The
+builder MUST NOT call a remote LLM, MUST NOT synthesize truth labels, and MUST
+NOT cite or depend on the retired fabricated Exp 2823 artifact.
+
+The terminal artifact MUST be written to
+`results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json` and
+include `honest_verdict`, `truthfulqa_taxonomy_ready`, `source_artifacts`,
+`excluded_artifacts`, `manifest_paths`, `manifest_checksums`,
+`n_rows_available`, `n_rows_materialized`, `taxonomy_fields`,
+`error_type_counts`, `generated_answer_metrics_available`,
+`headline_metric_claim_made=false`, `remote_llm_called=false`,
+`synthetic_labels_created=false`, `tests_run`, `field_principles`,
+`run_date="20260522"`, and a real `duration_s`.
+
+**Acceptance criteria:**
+- The builder resolves the dated TruthfulQA JSONL manifest from the Exp 2863
+  resolver contract and verifies the recorded SHA256 digest before reading
+  rows.
+- The builder records every local TruthfulQA source path present in the
+  materialized rows, including a checksum when the local source file exists.
+- The bounded sample materializes at least 100 local rows when that many rows
+  are available and records deterministic fields
+  `factual_error_type`, `evidence_available`, `justification_available`,
+  `correction_available`, `unsupported_reason`, and `metric_eligibility`.
+- Generated-answer metrics remain null and
+  `generated_answer_metrics_available=false` unless an existing clean
+  generated-answer artifact supplies real generated answers and measured
+  metrics.
+- The retired Exp 2823 artifact is recorded only in `excluded_artifacts` with
+  its checksum and exclusion reason; it is not used as source evidence.
+
+### SCENARIO-BENCH-2888: TruthfulQA Local Labels Become Taxonomy Rows
+
+**Given** the Exp 2863 manifest contract resolves a checksum-verified local
+TruthfulQA JSONL manifest
+**And** Exp 2831 and Exp 2840 do not contain clean generated-answer metrics
+**When** the Exp 2888 taxonomy builder runs
+**Then** it writes the required artifact with at least 100 materialized local
+TruthfulQA rows when available
+**And** every materialized row contains deterministic taxonomy fields derived
+from existing TruthfulQA labels and source metadata
+**And** headline metrics, remote-LLM usage, and synthetic-label creation remain
+explicitly false or null.
+
+**Spec traces:** REQ-BENCH-2888, SCENARIO-BENCH-2888
+
+### REQ-BENCH-2864: HaluEval/FEVER Local Manifest Calibration
+
+Carnot MUST provide an Exp 2864 HaluEval/FEVER full calibration runner that
+depends on the Exp 2863 manifest-contract artifact rather than plain manifest
+filenames. The runner MUST verify `halueval_ready=true` and `fever_ready=true`
+from Exp 2863, load the resolved local JSONL manifests, recompute each manifest
+SHA256 before scoring, and avoid any live LLM invocation.
+
+The runner MUST score only dataset-provided labeled rows with deterministic
+verifier-energy logic, compute AUROC and deterministic bootstrap 95% confidence
+intervals when both binary labels are present, and write honest `null` values
+when a metric is unavailable. The terminal artifact MUST be written to
+`results/experiment_2864_halueval_fever_full_calibration_v3.json` and include:
+`honest_verdict`, `halueval_fever_ready`, `full_benchmark_ready`,
+`live_model_invoked=false`, `manifest_paths_used`, `manifest_sha256_used`,
+`halueval_auroc`, `fever_auroc`, `halueval_n_examples`, `fever_n_examples`,
+`auroc_ci95_by_dataset`, `label_counts_by_dataset`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`,
+`adversarial_verify_passed`, `adversarial_verify_flags`, `field_principles`,
+`run_date="20260522"`, and measured `duration_s`.
+
+**Acceptance criteria:**
+- The runner reads manifest paths and SHA256 values from Exp 2863 fields and
+  never substitutes `halueval.jsonl` or `fever.jsonl` aliases.
+- `halueval_fever_ready` is true only when both Exp 2863 readiness booleans are
+  true and both manifest checksums verify on disk.
+- `live_model_invoked` remains false, and the artifact contains no live-model
+  provenance fields because this calibration uses dataset candidates only.
+- If `scripts/adversarial_verify.py` is present, the runner verifies the
+  written artifact and persists pass/fail plus flag details back into it.
+
+### SCENARIO-BENCH-2864: Full Calibration Uses Resolved Local Manifests
+
+**Given** Exp 2863 resolves dated HaluEval and FEVER manifests with valid
+checksums
+**When** the Exp 2864 calibration runner executes with a fixed random seed
+**Then** it writes the required v3 artifact with the dated manifest paths and
+checksums echoed from Exp 2863
+**And** it reports AUROC and confidence intervals for every dataset that has
+both labels
+**And** it records `live_model_invoked=false` and adversarial-verification
+results without claiming live-model provenance.
+
+**Spec traces:** REQ-BENCH-2864, SCENARIO-BENCH-2864
+
+### REQ-BENCH-2919: ConstraintBench Mini Direct Optimization
+
+Carnot MUST provide a tiny local direct-optimization benchmark inspired by
+ConstraintBench that materializes 15-30 deterministic tasks spanning linear
+integer constraints, knapsack-like binary constraints, and graph/coloring
+constraints.  Each task MUST be small enough for an exact local verifier
+implemented by exhaustive enumeration, and the verifier MUST report syntax,
+feasibility, objective value, and exact optimality as separate outcomes.
+
+The runner MUST call `cached_sota_pair(gpu_indices=(0, 1))` before selecting
+any model.  Headline rows MUST come only from at least one mandated local SOTA
+GGUF (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`) through local llama.cpp inference.  When no
+mandated GGUF is available, the runner MUST write
+`honest_verdict="blocked_sota_gguf_cache_missing"` and MUST NOT report
+headline model results.
+
+The terminal artifact MUST be written to
+`results/experiment_2919_constraintbench_mini_direct_optimization_v1.json` and
+include: `honest_verdict`, `constraintbench_mini_ready`, `model_specs`,
+`models_used`, `cached_sota_pair_used`, `random_seed=2919`,
+`task_manifest_path`, `n_tasks`, `exact_verifier_types`,
+`feasibility_rate`, `optimality_rate`, `syntax_valid_rate`,
+`violation_classes`, `per_task_results`,
+`inference_substrate="live_llm_inference_plus_exact_verifier"`,
+`duration_s`, and `run_date="20260523"`.
+
+**Acceptance criteria:**
+- The manifest contains 15-30 tasks with at least one linear, knapsack, and
+  graph/coloring task, and every task has a deterministic optimum from the
+  local exact verifier.
+- Structured JSON answers are parsed without trusting model self-verification.
+- Feasibility and optimality are reported as independent rates, and violation
+  classes distinguish syntax failures, feasibility violations, and
+  feasible-but-suboptimal answers.
+
+### SCENARIO-BENCH-2919: Feasibility And Optimality Are Separated
+
+**Given** a manifest row from the ConstraintBench mini benchmark
+**When** a local SOTA GGUF emits a structured JSON answer
+**Then** Carnot parses the JSON answer, checks feasibility using the exact
+verifier, computes the objective value, compares against the enumerated optimum,
+and records feasible-but-suboptimal answers separately from infeasible and
+syntax-invalid answers.
+
+**Spec traces:** REQ-BENCH-2919, SCENARIO-BENCH-2919
+
+### REQ-BENCH-2926: ConstraintBench Constrained-Output Rerun
+
+Carnot MUST provide a bounded rerun of the Exp 2919 ConstraintBench mini direct
+optimization row that repairs the prior methodology flags without weakening
+the exact-verifier contract.  The rerun MUST use `random_seed=2926`, build at
+least 30 deterministic tasks, call `cached_sota_pair(gpu_indices=(0, 1))`
+before model selection, and use only mandated local SOTA GGUFs for live
+headline rows.  Legacy tiny models MAY be used only for CPU smoke tests; if no
+mandated GGUF is available, the runner MUST write
+`honest_verdict="blocked_sota_gguf_cache_missing"`.
+
+The runner MUST prefer an installed local constrained decoder such as
+`llguidance`, and otherwise MUST record `constrained_decoder_available=false`
+while using prompt-level JSON schema instructions plus deterministic parser
+repair.  Each task result MUST capture raw model response provenance including
+model path, GPU index, prompt hash, per-task seed, and raw-response file path.
+The exact verifier MUST report syntax validity, feasibility, and optimality as
+separate outcomes.  The terminal artifact MUST compute
+`syntax_valid_rate` over all outputs, `feasibility_rate_overall` over all
+outputs, `feasibility_rate_given_syntax` over syntax-valid outputs, and
+`optimality_rate_given_feasible` over feasible outputs; it MUST NOT treat
+syntax validity as feasibility.
+
+The terminal artifact MUST be written to
+`results/experiment_2926_constraintbench_constrained_output_rerun_v2.json` and
+include: `honest_verdict`, `constraintbench_corrigendum_ready`,
+`flagged_adversarial`, `random_seed=2926`, `reproducibility_checksum`,
+`model_specs`, `models_used`, `cached_sota_pair_used`,
+`constrained_decoder_available`, `n_tasks`, `syntax_valid_rate`,
+`feasibility_rate_overall`, `feasibility_rate_given_syntax`,
+`optimality_rate_given_feasible`, `syntax_feasibility_not_tautological`,
+`per_task_results`, `raw_response_dir`, `live_inference_duration_s`,
+`inference_substrate="live_llm_inference"`, `duration_s`, and
+`run_date="20260523"`.  A live headline row MUST have
+`live_inference_duration_s >= 60`; otherwise the artifact MUST honestly record
+`honest_verdict="blocked_duration_gate_failed"`.
+
+### SCENARIO-BENCH-2926: Rerun Metrics Are Non-Tautological
+
+**Given** a ConstraintBench mini rerun task and a local SOTA GGUF raw response
+**When** Carnot parses the structured answer and runs the exact verifier
+**Then** the artifact records syntax-valid, feasible, and optimal rows as
+separate sets
+**And** feasible-but-suboptimal answers contribute to
+`optimality_rate_given_feasible` but not to syntax invalidity
+**And** syntax-valid but infeasible answers make
+`feasibility_rate_overall` differ from `syntax_valid_rate` in the corrected
+row unless the run is honestly blocked.
+
+**Spec traces:** REQ-BENCH-2926, SCENARIO-BENCH-2926
+
+### REQ-BENCH-3211: ConstraintBench Feasibility/Objective Exact Pilot
+
+Carnot MUST provide a small ConstraintBench-style exact pilot that separates
+hard-constraint feasibility from objective quality without claiming full
+ConstraintBench coverage. The pilot MUST write a JSONL fixture at
+`data/research/constraintbench_feasibility_objective_pilot_v1.jsonl` and a
+terminal artifact at
+`results/experiment_3211_constraintbench_feasibility_objective_pilot_v1.json`.
+
+The fixture MUST contain at least 15 deterministic rows spanning two or more
+small optimization families that are natural for Carnot's existing verification
+surface, such as knapsack, assignment, scheduling, or graph coloring. Every row
+MUST include instance data, human-readable constraints, an exact optimum or
+feasible reference, and the checker backend used to validate candidates. Exact
+references MUST come from local exhaustive enumeration or an equivalent exact
+bounded solver, not from an LLM.
+
+The checker MUST score response quality with separate fields for valid format,
+hallucinated entity or variable, missing or violated constraint,
+feasibility pass, objective value, and objective gap. If an optional LLM smoke
+path is recorded, its model specs MUST include at least one mandated local SOTA
+GGUF from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`; legacy small models may be labeled
+smoke-only but MUST NOT become headline evidence.
+
+The terminal artifact MUST include `schema_version`, `experiment_id`,
+`milestone`, `reference_papers`, `fixture_path`, `fixture_count`,
+`optimization_families`, `exact_solver_backends`,
+`feasibility_metric_defined`, `objective_gap_metric_defined`,
+`hallucinated_entity_metric_defined`, `optional_llm_smoke`,
+`ready_for_clean_verifier`, `conductor_file_modified`,
+`active_roadmap_modified`, and `honest_verdict`.
+
+### SCENARIO-BENCH-3211: Feasibility And Objective Gap Are Scored Separately
+
+**Given** the Exp 3211 exact pilot fixture
+**When** Carnot builds the terminal artifact
+**Then** every fixture row has an exact bounded reference and checker backend
+**And** the checker can distinguish invalid JSON, hallucinated entities,
+constraint violations, feasible-but-suboptimal answers, and exact optimum
+answers
+**And** the artifact reports feasibility, objective gap, hallucinated-entity,
+missing-constraint, and invalid-format metrics as separate quantities while
+leaving `optional_llm_smoke` null unless a mandated local SOTA GGUF smoke run is
+actually invoked.
+
+**Spec traces:** REQ-BENCH-3211, SCENARIO-BENCH-3211
+
+## Implementation Status (REQ-BENCH-3211)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-3211 | Implemented (`python/carnot/eval/constraintbench_feasibility_objective_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3211_constraintbench_feasibility_objective_pilot_v1.py`) |
+
+### REQ-BENCH-5616: Exact Nonstationary Constraint-Stream Fixture
+
+Carnot MUST provide a deterministic exact nonstationary constraint-stream
+benchmark for Exp5616 that separates two independent axes before any learner is
+fit:
+
+- constraint-family or domain-space shifts, represented by explicit
+  `space_shift_families`; and
+- temporal predicate drift within a fixed family, represented by explicit
+  `temporal_drift_types`.
+
+The fixture MUST write a durable JSONL dataset at
+`data/research/experiment_5616_exact_nonstationary_constraint_stream.jsonl` and
+a terminal artifact at
+`results/experiment_5616_exact_nonstationary_constraint_stream.json`. The
+dataset schema SHALL be stable and row-level, with every state and update
+labeled by an exact validator. Rows SHALL include old-rule, current-rule, and
+future-rule labels so retention, adaptation, and leakage can be measured without
+using circular model predictions.
+
+The fixture SHALL include shared-rule, conflicting-rule, no-drift,
+reversible-drift, and persistent-drift cases at preregistered durations
+`1, 2, 4, 8, 16, 32`. Each condition SHALL contain at least 32 independent
+stream instances generated from deterministic seeds, with disjoint train,
+calibration, and held-out splits. The dataset SHALL publish stable stream
+ordering, the seed list, family and duration counts, content hashes, split
+receipts, and a replay loader.
+
+The exact validator SHALL include corruption controls for wrong predicate,
+wrong variable or entity binding, delayed label, and poison update. The fixture
+SHALL prove that the validator rejects every injected violation and accepts
+every known-valid control. The fixture SHALL NOT run an LLM, SHALL NOT fit a policy,
+and SHALL NOT claim self-learning benefit.
+
+The terminal artifact SHALL include required fields `field_principles`,
+`dataset_path`, `schema_version`, `space_shift_families`,
+`temporal_drift_types`, `task_durations`, `instances_per_condition`,
+`split_receipts`, `exact_oracle_label_count`, `oracle_label_error_count`,
+`corruption_controls`, `fixture_ready_score`, `inference_substrate`,
+`random_seeds`, `reproducibility_checksum`, and `honest_verdict`.
+`fixture_ready_score` SHALL be exactly `1.0` only when schema, counts, splits,
+oracle controls, and replay validation pass. `inference_substrate` SHALL be `deterministic_verifier`,
+and no other substrate value is valid for this fixture.
+
+Required field principles:
+
+- `field_principles`: principle "Every required evidence field states why it exists."
+- `dataset_path`: principle "the fixture is durable"
+- `schema_version`: principle "rows have a stable contract"
+- `space_shift_families`: principle "domain changes are explicit"
+- `temporal_drift_types`: principle "time changes are explicit"
+- `task_durations`: principle "the duration axis is preregistered"
+- `instances_per_condition`: principle "denominators meet the evidence floor"
+- `split_receipts`: principle "leakage is excluded"
+- `exact_oracle_label_count`: principle "authority is deterministic"
+- `oracle_label_error_count`: principle "corrupted and valid controls are exact"
+- `corruption_controls`: principle "unsafe cases are represented"
+- `fixture_ready_score`: principle "only complete fixture gates can unlock learners"
+- `inference_substrate`: principle "no LLM participated"
+- `random_seeds`: principle "generation replays exactly"
+- `reproducibility_checksum`: principle "generation replays exactly"
+- `honest_verdict`: principle "a deficient fixture blocks learners"
+
+#### SCENARIO-BENCH-5616-SCHEMA: Dataset Rows Carry Exact Rule Labels
+
+**Given** the Exp5616 generator is run with the preregistered seed list,
+durations, space-shift families, and temporal-drift types
+**When** the JSONL dataset is replay-loaded
+**Then** every row conforms to the stable schema, stream ordering is
+deterministic, train/calibration/held-out splits are disjoint, and each state
+and update has exact old-rule, current-rule, and future-rule labels.
+
+#### SCENARIO-BENCH-5616-CONTROLS: Corruption Controls Fail Closed
+
+**Given** known-valid controls and injected wrong-predicate,
+wrong-binding, delayed-label, and poison-update controls
+**When** the exact validator evaluates the rows
+**Then** every valid control is accepted, every injected violation is rejected,
+`oracle_label_error_count=0`, and `fixture_ready_score=1.0` only if the replay
+loader reproduces the artifact hashes.
+
+**Spec traces:** REQ-BENCH-5616, SCENARIO-BENCH-5616-SCHEMA,
+SCENARIO-BENCH-5616-CONTROLS
+
+## Implementation Status (REQ-BENCH-5616)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5616 | Planned (`python/carnot/experiment_5616_exact_nonstationary_constraint_stream.py`) | Planned (`tests/python/test_experiment_5616_exact_nonstationary_constraint_stream.py`) |
+
+### REQ-BENCH-5757: Exp5746 Proposal Benchmark Scalar Bridge
+
+Carnot MUST provide a read-only scalar bridge for the sealed Exp5746 exact
+proposal-utility benchmark. The bridge MUST reuse the canonical Exp5746 JSON
+artifact and JSONL manifest by hash/reference only; it MUST NOT regenerate rows,
+change train/dev/science split membership, or replace exact receipts with model
+or prose judgments.
+
+The bridge MUST verify the Exp5746 manifest hash, every row hash, split hashes,
+generator version, primary and independent solver versions, exact structure
+receipts, exact solution receipts, validator-disagreement count, held-out split
+disjointness, and adversarial controls before emitting any downstream readiness
+score. It MUST derive top-level bare scalar fields
+`benchmark_ready_score`, `structure_receipt_failure_count`,
+`solution_receipt_failure_count`, `validator_disagreement_count`,
+`heldout_partition_disjoint_score`, `adversarial_verification_clean_score`, and
+`benchmark_bridge_ready_score`.
+
+`benchmark_bridge_ready_score` MUST equal `1.0` only when the upstream
+`benchmark_ready_score` is `1.0`, both receipt failure counts are zero,
+`validator_disagreement_count` is zero, held-out partition disjointness is
+`1.0`, adversarial verification cleanliness is `1.0`, all hashes reproduce,
+and the planned Exp5759 conductor gates pass on the emitted artifact. Missing
+fields, object-wrapped gate values, altered hashes, ambiguous nested values, and
+false readiness MUST fail closed.
+
+The planned Exp5759 conductor gate replay MUST evaluate the emitted bridge
+artifact through `scripts/conductor_gates.evaluate_gates()` against exactly
+these fields: `benchmark_bridge_ready_score`, `benchmark_ready_score`,
+`structure_receipt_failure_count`, `solution_receipt_failure_count`,
+`validator_disagreement_count`, `heldout_partition_disjoint_score`, and
+`adversarial_verification_clean_score`. The bridge MUST preserve all seven as
+top-level bare scalars and MUST keep any explanation in `field_principles`.
+
+Required field principles:
+
+- `benchmark_manifest_path`: principle "sealed manifest is reused by reference"
+- `benchmark_manifest_hash`: principle "manifest bytes replay exactly"
+- `split_manifest_hash`: principle "train/dev/science split commitment is immutable"
+- `row_hash_count`: principle "all 180 row hashes are replayed"
+- `benchmark_ready_score`: principle "upstream exact benchmark readiness is copied only after replay"
+- `structure_receipt_failure_count`: principle "structure omissions block proposal utility"
+- `solution_receipt_failure_count`: principle "missing feasibility/objective receipts block proposal utility"
+- `validator_disagreement_count`: principle "exact validators must agree"
+- `heldout_partition_disjoint_score`: principle "science split must stay disjoint"
+- `adversarial_verification_clean_score`: principle "adversarial controls must all be detected"
+- `benchmark_bridge_ready_score`: principle "downstream GPU panels unlock only after hash and gate replay"
+
+#### SCENARIO-BENCH-5757: Sealed Benchmark Replays Without Row Mutation
+
+**Given** the Exp5746 artifact and JSONL manifest are present
+**When** the scalar bridge verifies the benchmark
+**Then** every manifest row hash and split hash reproduces, the row count is
+180, the science split remains unchanged, exact receipt failure counts are
+zero, adversarial controls are clean, and the bridge readiness score is `1.0`.
+
+#### SCENARIO-BENCH-5757-NEGATIVE-CONTROLS: Broken Evidence Cannot Unlock The Panel
+
+**Given** a missing gate field, wrapper-object gate value, altered upstream or
+manifest hash, ambiguous nested scalar value, or false readiness score
+**When** benchmark bridge validation or conductor-gate replay runs
+**Then** the condition fails closed and cannot satisfy the Exp5759 benchmark
+gate.
+
+**Spec traces:** REQ-BENCH-5757, SCENARIO-BENCH-5757,
+SCENARIO-BENCH-5757-NEGATIVE-CONTROLS
+
+## Implementation Status (REQ-BENCH-5757)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5757 | Implemented (`scripts/experiment_5757_proposal_benchmark_scalar_bridge.py`, `results/experiment_5757_proposal_benchmark_scalar_bridge.json`) | Implemented (`tests/python/test_experiment_5757_proposal_benchmark_scalar_bridge.py`) |
+
+### REQ-BENCH-5759: SOTA Exact Proposal Utility Panel
+
+Carnot MUST provide Exp5759 at
+`python/carnot/experiment_5759_sota_exact_proposal_utility_panel.py` and write
+`results/experiment_5759_sota_exact_proposal_utility_panel.json` by consuming
+only the sealed Exp5757 scalar bridge and the frozen Exp5746 science split.
+The panel MUST define `MODEL_SPECS` containing exactly the three mandated local
+headline GGUF ids: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy tiny models MAY appear only in
+explicit smoke-test receipts and MUST NOT populate headline metrics.
+
+Before model access, the runner MUST verify bridge/upstream hashes, immutable
+science rows, exact solver versions, candidate label bijections, candidate
+ordering seeds, exact budgets, stopping rules, local GGUF paths and hashes,
+llama.cpp CUDA build support, GPU visibility/offload, free VRAM/RAM/disk, and
+checkpoint/resume space. If any model, runtime, or evidence provenance is not
+authenticated, the runner MUST bail before inference and emit a terminal
+blocked artifact rather than substitute stale or unauthenticated evidence.
+
+The runner MUST use only the sealed finite-choice candidate-label interface:
+native logits over one-token sealed labels MAY rank proposals, while generated
+reasoning text, free-form answers, LLM judges, generated-text scoring, PHASE-D
+reopening, grammar-runtime authority, and token scores as semantic authority
+MUST remain absent. Exact deterministic validators are the only authority for
+feasibility and objective values.
+
+For each model, the panel MUST compare the model ordering with paired random
+permutations, the deterministic Carnot energy heuristic, solver-native
+branching, and exact-search-only controls under matched candidate pools,
+validator-call budgets, seeds, and stopping rules. It MUST report top-1
+feasible discovery, top-k exact optimum discovery, nodes/candidates to first
+valid and first optimum, exact-validator calls, hard-violation rate, exact
+objective gap, wall time, model tokens, model-family shortcut residuals, and
+paired bootstrap intervals by row, family, model, and overall.
+
+The artifact MUST preregister bare scalar `proposal_utility_delta_overall` as
+a signed normalized composite where lower nodes/calls/gaps and higher feasible
+or optimal discovery favor the proposal. Bare scalar `proposal_utility_lcb`
+MUST be the paired 95 percent lower bootstrap bound. The downstream gate fields
+`proposal_utility_lcb`, `flagship_nonregression_count`,
+`validator_disagreement_count`, `authority_violation_count`, and
+`proposal_utility_ready_score` MUST be top-level bare scalars and their
+explanations MUST live only in `field_principles`. The ready score MAY equal
+`1.0` only when the lower bound is non-negative, both flagship models have
+non-negative per-family deltas, all three mandated models are authenticated and
+used, and exact-authority violations are zero.
+
+#### SCENARIO-BENCH-5759: Sealed Science Split Produces A Utility Panel
+
+**Given** the Exp5757 bridge is ready, the Exp5746 manifest replays, and all
+three mandated local GGUFs authenticate with llama.cpp CUDA
+**When** Exp5759 scores the frozen science rows through the finite-choice label
+interface
+**Then** the artifact contains all required provenance, metric, bootstrap,
+producer-gate, and no-forbidden-runtime fields, compares against all matched
+controls, and emits a terminal `complete:` verdict without mutating the sealed
+science split.
+
+#### SCENARIO-BENCH-5759-BLOCKED-PRECONDITIONS: Unauthenticated Evidence Blocks Before Inference
+
+**Given** a missing bridge scalar, altered upstream hash, missing GGUF path,
+non-CUDA llama.cpp build, tokenizer label collision, insufficient resources, or
+unreplayable checkpoint space
+**When** Exp5759 preconditions are collected
+**Then** inference is not invoked, the artifact status is `blocked`, the
+producer ready score is `0.0`, and the blocked verdict names the mechanical
+precondition rather than fabricating proposal utility.
+
+**Spec traces:** REQ-BENCH-5759, SCENARIO-BENCH-5759,
+SCENARIO-BENCH-5759-BLOCKED-PRECONDITIONS
+
+## Implementation Status (REQ-BENCH-5759)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5759 | Planned (`python/carnot/experiment_5759_sota_exact_proposal_utility_panel.py`, `results/experiment_5759_sota_exact_proposal_utility_panel.json`) | Planned (`tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py`) |
+
+### REQ-BENCH-5761: Exact Constraint Acquisition Benchmark
+
+Carnot MUST provide Exp5761 at
+`python/carnot/experiment_5761_exact_constraint_acquisition_benchmark.py` and
+write
+`results/experiment_5761_exact_constraint_acquisition_benchmark.json` plus a
+sealed JSONL manifest. The benchmark SHALL be derived only from the immutable
+Exp5746 artifact and manifest after replaying the upstream artifact hash,
+manifest hash, every row hash, split hashes, generator version, solver
+versions, family balance, deterministic seeds, free RAM/disk, local
+license/provenance, and independent faithful-model structure reconstruction.
+If faithful model structure cannot be reconstructed from the sealed Exp5746
+receipts, Exp5761 SHALL fail closed with an `honest_verdict` beginning
+`blocked:`.
+
+Exp5761 SHALL select at least 120 disjoint source cases across
+`finite_domain_csp`, `weighted_maxsat`, `hard_soft_packing`, and
+`finite_state_planning`, preserving a family-stratified train/dev/science split
+before any learner-facing benchmark rows are exposed. For every faithful typed
+model, the generator SHALL emit hash-sealed faithful, incomplete, over-fit, and
+mixed variants. Incomplete variants SHALL delete one or more non-implied
+constraints, over-fit variants SHALL add spurious globally or locally
+restrictive constraints, and mixed variants SHALL combine both operations.
+Hard versus soft roles SHALL be preserved, and semantically equivalent no-op
+mutations SHALL be rejected.
+
+For every variant, Exp5761 SHALL generate exact positive and negative
+assignments and minimal distinguishing membership queries. A primary exact
+enumerator and an independent exact validator SHALL check model semantics,
+satisfiability, objective values, query minimality, hard/soft roles, expected
+repair operations, and adversarial controls. Duplicate, contradictory,
+implied-constraint, infeasible-model, vacuous-global, objective-sign, leakage,
+split-collision, and shortcut controls SHALL be present and detected. Domain
+artifacts, model text and AST, assignments, queries, and expected lifecycle
+operations SHALL be sealed by hash.
+
+The terminal artifact MUST include top-level bare gate scalars
+`ca_benchmark_ready_score`, `exact_validator_disagreement_count`, and
+`train_dev_science_disjoint_score`, and it MUST list those names in
+`producer_gate_fields`. The artifact MUST also include `field_principles`,
+bare `status`, `preconditions_checked`, `spec_refs`,
+`upstream_artifact_hashes`, `generator_version`, `generator_source_hash`,
+`solver_versions`, `benchmark_manifest_path`, `benchmark_manifest_hash`,
+`instance_count`, `family_counts`, `variant_counts`,
+`faithful_model_hashes`, `incomplete_model_hashes`,
+`overfit_model_hashes`, `mixed_model_hashes`, `domain_artifact_hashes`,
+`positive_assignment_count`, `negative_assignment_count`,
+`membership_query_count`, `distinguishing_query_receipts`,
+`expected_repair_receipts`, `hard_soft_role_receipts`, `split_manifest`,
+`science_row_hashes`, `adversarial_controls`,
+`structure_receipt_failure_count`, `solution_receipt_failure_count`,
+`llm_inference_used` with value false, `verifier_is_oracle` with value true,
+`inference_substrate` with value
+`deterministic_exact_solver_dataset_generation_no_llm`,
+`random_seeds`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and an `honest_verdict` beginning `complete:` or
+`blocked:`.
+
+`ca_benchmark_ready_score` SHALL equal `1.0` only when upstream replay passes,
+at least 120 selected cases are disjoint and balanced across the four required
+families, train/dev/science split membership is disjoint, all variant mutations
+are semantic changes except faithful no-op baselines, every variant has exact
+positive and negative assignments, every required discriminating query is
+minimal for its expected repair operation, independent validators agree, all
+adversarial controls are detected, all required hashes replay, no LLM
+inference is used, and the exact verifier is declared as the oracle. Otherwise
+the ready score SHALL be `0.0`.
+
+#### SCENARIO-BENCH-5761: Sealed Acquisition Rows Distinguish Missing And Over-Fit Rules
+
+**Given** the Exp5746 exact benchmark artifact and manifest replay by hash
+**When** Exp5761 derives the constraint-acquisition benchmark
+**Then** at least 120 disjoint cases are selected across the four required
+families, faithful/incomplete/over-fit/mixed variants are sealed, train/dev/
+science split hashes remain disjoint, exact positive and negative assignments
+are present for every variant, distinguishing membership queries expose the
+expected add/remove repair operation, and the three producer gate fields are
+top-level bare scalars.
+
+#### SCENARIO-BENCH-5761-CONTROLS: Invalid Acquisition Evidence Fails Closed
+
+**Given** duplicate rows, contradictory constraints, implied or vacuous
+mutations, infeasible variants, objective-sign inversions, leakage markers,
+split collisions, or shortcut acceptances
+**When** Exp5761 validates controls
+**Then** each control is detected and any undetected control blocks
+`ca_benchmark_ready_score`.
+
+**Spec traces:** REQ-BENCH-5761, SCENARIO-BENCH-5761,
+SCENARIO-BENCH-5761-CONTROLS
+
+## Implementation Status (REQ-BENCH-5761)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5761 | Planned (`python/carnot/experiment_5761_exact_constraint_acquisition_benchmark.py`, `results/experiment_5761_exact_constraint_acquisition_benchmark.json`) | Planned (`tests/python/test_experiment_5761_exact_constraint_acquisition_benchmark.py`) |
+
+### REQ-BENCH-5785: Sealed Hardness/Surface Exact Fixture
+
+Carnot MUST provide Exp5785 at
+`python/carnot/experiment_5785_hardness_surface_fixture.py` and write
+`results/experiment_5785_hardness_surface_fixture.json` plus
+`results/experiment_5785_hardness_surface_fixture.rows.jsonl` without calling
+an LLM. The fixture MUST replay the Exp5784 readiness gates before generation,
+verify Z3 and deterministic exact-validator availability, verify free RAM/disk,
+record deterministic seeds and versions, and fail closed with a terminal
+`blocked:` artifact if either exact authority is unavailable.
+
+The fixture MUST generate a chronological train/calibration/future-test panel
+covering at least the three constraint families `finite_domain_scheduling`,
+`logic_grid`, and `typed_finite_choice`. Within each family, canonical
+independent units MUST cross exact SAT/UNSAT or feasible/infeasible labels,
+preregistered solver conflict/time bins, two or more proof-preserving
+symbol/order/paraphrase surface variants, and one meaning-changing canary.
+Solver effort fields MUST be named as solver-hardness bins and MUST NOT be
+called model hardness. The fixture MUST include a sample-size justification
+with at least 30 independent canonical units per primary paired comparison, or
+else an explicit power rationale; repeated turns or surface variants MUST NOT
+be counted as independent units.
+
+Immutable protected facts, mutable constraints, exact assignments or
+certificates, protected-fact hashes, candidate domains, finite-choice labels,
+surface-transform receipts, meaning-change canaries, chronological split
+receipts, and every row hash MUST be sealed before downstream inference.
+Protected-fact hashes are the authority for proof-preserving surface variants;
+natural-language equivalence alone is insufficient. Candidate completeness
+receipts MUST prove that the exact answer/certificate is present and that all
+candidate labels are unique and bounded. Split isolation and disjoint row hashes
+MUST prove that train, calibration, and future-test rows do not overlap.
+
+The terminal artifact MUST include bare `fixture_ready_score`,
+`exact_label_coverage`, and `parser_control_pass_rate`, and MUST list those
+names in `producer_gate_fields`. It MUST also include `status`,
+`preconditions_checked`, `spec_refs`, `fixture_schema`, `row_file`,
+`row_file_sha256`, `family_counts`, `independent_unit_count`,
+`sample_size_justification`, `chronological_split_receipts`,
+`solver_hardness_bins`, `surface_variant_matrix`,
+`proof_preserving_receipts`, `meaning_change_canary_receipts`,
+`protected_fact_manifest`, `mutable_constraint_manifest`,
+`candidate_completeness_receipts`, `parser_contract`,
+`parser_negative_controls`, `exact_validator_receipts`, `leakage_checks`,
+`inference_substrate` with value
+`deterministic_local_fixture_generation_z3_and_exact_validators_no_llm`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and an
+`honest_verdict` beginning `complete:` or `blocked:`.
+
+`fixture_ready_score` SHALL equal `1.0` only when row hashes replay, exact
+labels cover every fixture row, candidate completeness passes, chronological
+split isolation passes, proof-preserving variants retain exact labels and
+protected-fact hashes, meaning-changing canaries change exact labels or
+certificates, parser controls pass, protected facts remain separate from
+mutable constraints, and all exact validators agree. Otherwise the score SHALL
+be `0.0`.
+
+#### SCENARIO-BENCH-5785: Chronological Exact Fixture Seals Hardness And Surface Rows
+
+**Given** Exp5784 has `evidence_index_ready_score=1.0`,
+`next_range_collision_count=0`, `unresolved_canonical_count=0`, and
+`history_mutation_count=0`
+**When** Exp5785 generates the deterministic fixture
+**Then** it writes the JSON artifact and JSONL rows, includes at least 30
+independent canonical units, preserves train/calibration/future-test chronology,
+seals disjoint row hashes, records solver-hardness bins separately from model
+difficulty, and emits the three producer gate fields as top-level bare scalars.
+
+#### SCENARIO-BENCH-5785-CONTROLS: Surface, Canary, Candidate, And Leakage Faults Block Readiness
+
+**Given** a row-hash mutation, exact-label mismatch, incomplete candidate
+domain, split collision, proof-preserving surface drift, missing
+meaning-changing canary, parser-control failure, protected-fact leakage, or
+exact-validator disagreement
+**When** Exp5785 validates the fixture
+**Then** the artifact remains terminal but `fixture_ready_score=0.0` and the
+blocked verdict names the mechanical fault instead of treating parser failure as
+exact wrongness.
+
+**Spec traces:** REQ-BENCH-5785, SCENARIO-BENCH-5785,
+SCENARIO-BENCH-5785-CONTROLS
+
+## Implementation Status (REQ-BENCH-5785)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5785 | Planned (`python/carnot/experiment_5785_hardness_surface_fixture.py`, `results/experiment_5785_hardness_surface_fixture.json`) | Planned (`tests/python/test_experiment_5785_hardness_surface_fixture.py`) |
+
+### REQ-BENCH-5786: Prospective Local-SOTA Constraint Response Stream
+
+Carnot MUST provide Exp5786 at
+`python/carnot/experiment_5786_sota_constraint_stream.py` and write
+`results/experiment_5786_sota_constraint_stream.json` plus
+`results/experiment_5786_sota_constraint_stream.rows.jsonl`. The experiment
+MUST consume the sealed Exp5785 fixture chronologically and MUST NOT implement
+constraint learning, update model weights, or use legacy tiny models for
+headline cells.
+
+Step 0 MUST replay the Exp5785 producer gates and row-file hash, call
+`cached_sota_pair()`, verify both RTX 3090 devices, verify readable local GGUF
+paths and SHA-256 hashes for exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, verify llama.cpp CUDA build support, verify
+embedded GGUF chat-template availability, verify RAM/VRAM/disk budgets, and
+verify output paths. If any mandated model cannot authenticate positive
+llama.cpp CUDA offload, the terminal artifact MUST be `blocked:` and MUST NOT
+substitute a smoke model into headline rows.
+
+The stream MUST use matched prompt, sampling, stop, max-token, seed, and row
+budgets for every mandated model. It MUST preserve canonical, symbol-relabel,
+order-paraphrase, and meaning-change-canary rows, keep chronological order,
+checkpoint after every model/row cell, and resume exactly without duplicate
+rows. Each JSONL stream row MUST preserve lossless raw response text, a raw
+response SHA-256 hash, prompt hash, fixture row hash, model identity, runtime
+receipt, parser receipt, exact-validator label receipt, taxonomy labels, and a
+row hash.
+
+The artifact MUST report behavior by formal constraint family, solver-hardness
+bin, surface rendering, satisfiability, and model family. It MUST include
+proof-preserving paired deltas and model-identity interactions computed with
+canonical fixture units as the independent cluster. At least 30 independent
+canonical items per primary paired cell MUST be present or the artifact MUST
+document a power calculation; repeated turns, model repeats, and surface
+variants MUST NOT be counted as additional independent items.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`MODEL_SPECS`, `models_used`, `model_runtime_receipts`,
+`gpu_offload_receipts`, `fixture_hash`, `row_file`, `row_file_sha256`,
+`raw_response_receipts`, `checkpoint_resume_receipts`,
+`sample_size_justification`, `independent_unit_count`,
+`failure_taxonomy_counts`, `family_metrics`, `solver_hardness_metrics`,
+`surface_sensitivity_metrics`, `proof_preserving_paired_deltas`,
+`model_identity_interactions`, `parser_failure_rate`,
+`protected_fact_distortion_count`, `satisfiable_drift_count`,
+`exact_label_coverage`, `raw_response_coverage`, `leakage_checks`, bare
+`real_sota_model_count`, bare `stream_ready_score`, `producer_gate_fields`,
+`inference_substrate` with value
+`real_local_llama_cpp_cuda_gguf_generation_plus_exact_z3_validation`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and an
+`honest_verdict` beginning `complete:` or `blocked:`.
+
+`stream_ready_score` SHALL equal `1.0` only when all three mandated local SOTA
+families produce authenticated CUDA GGUF generation rows, raw-response coverage
+and exact-label coverage are both `1.0`, parser failure remains below the
+preregistered threshold, split/hash leakage checks pass, and the stream contains
+enough satisfiable drift to test downstream learning. A complete stream without
+that headroom MUST remain `complete:` but set `stream_ready_score=0.0`.
+
+#### SCENARIO-BENCH-5786: Matched Chronological Stream Preserves Raw Responses
+
+**Given** Exp5785 is ready, all three mandated local GGUFs are readable, and
+llama.cpp authenticates CUDA offload on the dual RTX 3090 host
+**When** Exp5786 runs the matched prospective stream
+**Then** every model/fixture-row cell is checkpointed once, raw response text
+and hashes are preserved, exact labels are assigned only by the fixture
+validator boundary, and the artifact reports family, solver-bin, surface,
+satisfiability, paired-delta, and model-interaction metrics.
+
+#### SCENARIO-BENCH-5786-BLOCKERS: Missing SOTA Offload Blocks Headline Rows
+
+**Given** a missing mandated GGUF, unreadable hash, missing chat template,
+unauthenticated CUDA offload, split/hash leak, duplicate checkpoint row, parser
+failure above threshold, or no satisfiable drift
+**When** Exp5786 validates the stream
+**Then** it writes a terminal artifact with a `blocked:` or complete-but-not-
+ready verdict naming the mechanical fault, excludes tiny smoke models from
+headline rows, and keeps raw responses immutable.
+
+**Spec traces:** REQ-BENCH-5786, SCENARIO-BENCH-5786,
+SCENARIO-BENCH-5786-BLOCKERS
+
+## Implementation Status (REQ-BENCH-5786)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5786 | Planned (`python/carnot/experiment_5786_sota_constraint_stream.py`, `results/experiment_5786_sota_constraint_stream.json`) | Planned (`tests/python/test_experiment_5786_sota_constraint_stream.py`) |
+
+### REQ-BENCH-5896: Typed ConstraintIR Exact Fixture
+
+Carnot MUST provide Exp5896 at
+`python/carnot/experiment_5896_typed_constraint_ir_fixture.py` and write
+`results/experiment_5896_typed_constraint_ir_fixture.json` plus
+`results/experiment_5896_typed_constraint_ir_fixture.rows.jsonl`. The fixture
+SHALL define a minimal engine-neutral typed ConstraintIR schema with canonical
+nodes for entities, finite domains, facts, Horn implications, predicates,
+arithmetic relations, explicit negation, conjunction, and query goals. The
+schema SHALL be versioned, parser-checked, type-checked, and fail closed on
+unknown, ambiguous, unsupported, or ill-typed constructs.
+
+The generator SHALL compile every supported valid IR row to the deterministic
+Python finite-domain evaluator and the Z3 backend. If an optional Prolog
+backend is installed, the artifact SHALL record its applicability; otherwise it
+SHALL explicitly record that Prolog was not used. Whenever two exact backends
+apply, their query behavior and satisfiability labels SHALL agree before the
+row is accepted. Every row SHALL carry an exact certificate or counterexample,
+and fixture labels SHALL be replayed by executable behavior over the finite
+domain rather than by string equality, model judgment, or backend-specific
+prompt tuning.
+
+The row fixture SHALL contain at least three constraint families and include
+held templates, natural-language paraphrases, symbol renamings, order
+permutations, invalid IR, unsatisfiable IR, type errors, omitted constraints,
+and semantic-non-equivalence controls. Paraphrases, renamings, and order
+permutations of a single semantic problem SHALL share a group id and SHALL NOT
+cross train/dev/held-out boundaries. The benchmark SHALL run no LLM and SHALL
+keep the new path default-off.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`constraint_ir_schema_and_version`, `supported_and_rejected_fragments`,
+`parser_and_typecheck_receipts`, `backend_compiler_receipts`,
+`cross_backend_agreement`, `family_template_and_holdout_design`,
+`exact_semantic_equivalence_contract`,
+`invalid_unsat_and_nonequivalence_controls`,
+`split_and_group_leakage_receipts`,
+`label_certificate_and_balance_receipts`, `row_file_receipt`,
+`deterministic_replay_receipt`, `protected_files_unchanged`,
+`typed_constraint_ir_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles:
+
+- `constraint_ir_schema_and_version`: engine-neutral contract prevents backend-specific prompt tuning from defining success.
+- `exact_semantic_equivalence_contract`: executable behavior and certificates own equivalence.
+- `split_and_group_leakage_receipts`: paraphrases and renamings of one problem never cross held boundaries.
+- `typed_constraint_ir_fixture_ready_score`: emit bare 1.0 only for deterministic exact replay, backend agreement, and nontrivial held headroom.
+- `inference_substrate`: use `deterministic_exact_solver_labeled_dataset_no_llm`.
+- `verifier_is_oracle`: true for fixture labels/certificates and never a learned-verifier claim.
+- `honest_verdict`: use `ready:`, `complete_null:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5896-SCHEMA: Typed IR Rejects Ambiguous Constructs
+
+**Given** an Exp5896 ConstraintIR object with the declared schema version
+**When** the parser and typechecker inspect supported nodes, unknown fields,
+unsupported node kinds, ambiguous expressions, and wrong-domain arguments
+**Then** supported rows compile to typed IR receipts while invalid or ill-typed
+rows fail closed with deterministic parser/typecheck receipts.
+
+#### SCENARIO-BENCH-5896-CERTIFICATES: Exact Backends Own Labels
+
+**Given** a supported valid or unsatisfiable Exp5896 IR row
+**When** the Python finite-domain backend and Z3 backend replay the row
+**Then** their satisfiability, query bindings, certificates, or
+counterexamples agree exactly; any disagreement blocks
+`typed_constraint_ir_fixture_ready_score`.
+
+#### SCENARIO-BENCH-5896-LEAKAGE: Semantic Variants Stay Grouped
+
+**Given** canonical rows, paraphrases, symbol renamings, order permutations,
+held templates, omitted constraints, and semantic-non-equivalence controls
+**When** Exp5896 builds train/dev/held-out splits
+**Then** every semantic variant shares its group boundary, no group crosses a
+split, semantic equivalence is decided by finite-domain behavior plus replayed
+certificates, and held-out rows contain nontrivial valid and control examples.
+
+**Spec traces:** REQ-BENCH-5896, SCENARIO-BENCH-5896-SCHEMA,
+SCENARIO-BENCH-5896-CERTIFICATES, SCENARIO-BENCH-5896-LEAKAGE
+
+## Implementation Status (REQ-BENCH-5896)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5896 | Planned (`python/carnot/experiment_5896_typed_constraint_ir_fixture.py`, `results/experiment_5896_typed_constraint_ir_fixture.json`) | Planned (`tests/python/test_experiment_5896_typed_constraint_ir_fixture.py`) |
+
+### REQ-BENCH-5897: SOTA ConstraintIR Trace-Repair A/B
+
+Carnot MUST provide Exp5897 at
+`python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py` and write
+`results/experiment_5897_sota_constraint_ir_repair_ab.json`. The experiment
+SHALL replay Exp5896's exact fixture gate before loading any model, SHALL use
+only the three mandated GGUF headline families
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL resolve them through
+`cached_sota_pair()` plus the cached third family without invoking
+`AutoTokenizer.from_pretrained()` on a GGUF repo.
+
+The runner SHALL block before model load when any headline precondition fails:
+Exp5896 replay, GGUF files and hashes, llama.cpp CUDA offload support, two
+healthy RTX 3090 receipts, adequate VRAM/RAM/disk, no protected training
+workload, GPU-offload readiness, and atomic output readiness. A blocked run
+SHALL still write the required artifact with `status="blocked_precondition"`
+and an honest verdict prefix `blocked_precondition:`.
+
+For each completed model/fixture-row cell, Exp5897 SHALL freeze prompts,
+decoding, seeds, row groups, token budgets, and promotion thresholds before
+generation, then run the following matched arms: single-pass typed IR
+extraction, one exact parser/compiler/solver-trace-guided repair, a matched
+second call with the same repair token budget and no diagnostic trace, and a
+no-information trace-shaped control. A second call alone SHALL NOT be credited
+as trace-guided repair. The trace-guided prompt SHALL expose only
+deployment-available parser, type, compile, and solver diagnostics from the
+candidate being repaired; it SHALL NOT expose hidden gold IR, answer labels,
+held-family identities, certificate solutions, model self-scores, or generated
+answer repair instructions.
+
+The exact executor SHALL be the only evaluation authority. Exp5897 SHALL
+measure parse validity, type validity, compilation, satisfiability handling,
+exact semantic equivalence, query correctness, omitted and spurious
+constraints, unsafe accepted constraints, token counts, latency, an energy
+proxy, model/family/template metrics, and group-bootstrap lower bounds over
+held groups. `trace_repair_mechanism_ready_score` SHALL be the bare value `1.0`
+only when all three headline families complete, the held-group lower bounds
+are positive for trace-guided repair over both no-trace controls, unsafe
+acceptance does not increase, and the exact-verifier boundary remains intact;
+otherwise it SHALL be `0.0`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_and_fixture_hashes`, `model_specs`, `model_file_hashes`,
+`loader_and_cuda_receipts`, `frozen_prompts_decoding_seeds_and_budgets`,
+`arm_definitions_and_compute_parity`, `trace_visibility_and_oracle_boundary`,
+`per_model_family_and_template_metrics`,
+`parse_type_compile_and_semantic_metrics`,
+`omitted_spurious_and_unsafe_constraint_metrics`,
+`group_bootstrap_lower_bounds`, `no_trace_and_no_information_controls`,
+`gpu_utilization_vram_and_latency_receipts`, `raw_output_receipts`,
+`protected_files_unchanged`, `trace_repair_mechanism_ready_score`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles:
+
+- `arm_definitions_and_compute_parity`: a second call alone cannot be credited as trace-guided repair.
+- `trace_visibility_and_oracle_boundary`: only deployment-available exact diagnostics may guide repair.
+- `trace_repair_mechanism_ready_score`: emit bare 1.0 only for positive held lower bounds over both controls, zero unsafe increase, and all three headline families completed.
+- `inference_substrate`: use `live_llm_inference`.
+- `verifier_is_oracle`: true for exact evaluation; the model is only an IR proposer.
+- `honest_verdict`: use `complete_positive:`, `complete_null:`, `unsafe:`, `blocked_precondition:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5897-PRECONDITIONS: Headline Resources Gate Model Load
+
+**Given** Exp5896's checked-in fixture and mandated GGUF model ids
+**When** Exp5897 checks replay, model paths, file hashes, llama.cpp CUDA
+support, dual RTX 3090 health, resource budgets, GPU-offload readiness, and
+protected training processes
+**Then** it resolves all three headline families in frozen order or writes a
+blocked-precondition artifact before any model loader is invoked.
+
+#### SCENARIO-BENCH-5897-TRACE-BOUNDARY: Repair Sees Diagnostics Only
+
+**Given** a model emits a candidate typed ConstraintIR object
+**When** the trace-guided repair arm is prompted
+**Then** the prompt includes only parser/type/compiler/solver diagnostics from
+that candidate, with matched decoding and repair token budget, and excludes
+gold IR, expected labels, held identities, certificate solutions, and
+generated-answer repair content.
+
+#### SCENARIO-BENCH-5897-EXACT-METRICS: Exact Executor Scores A/B Arms
+
+**Given** completed model/row/arm outputs
+**When** Exp5897 evaluates them through the Exp5896 parser, finite-domain
+compiler, Z3 compiler, and exact semantic behavior hashes
+**Then** it reports parse/type/compile/semantic/query, omitted/spurious,
+unsafe-accept, token, latency, energy-proxy, per-group, and grouped-bootstrap
+metrics, and only promotes trace-guided repair when it beats both no-trace
+controls without increasing unsafe acceptance.
+
+**Spec traces:** REQ-BENCH-5897, SCENARIO-BENCH-5897-PRECONDITIONS,
+SCENARIO-BENCH-5897-TRACE-BOUNDARY, SCENARIO-BENCH-5897-EXACT-METRICS
+
+## Implementation Status (REQ-BENCH-5897)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5897 | Planned (`python/carnot/experiment_5897_sota_constraint_ir_repair_ab.py`, `results/experiment_5897_sota_constraint_ir_repair_ab.json`) | Planned (`tests/python/test_experiment_5897_sota_constraint_ir_repair_ab.py`) |
+
+### REQ-BENCH-5907: ConstraintIR Replay Contract Canonical Projection
+
+Carnot MUST provide a shared, public, versioned canonical projection for the
+Exp5896 ConstraintIR fixture artifact so the fixture producer and Exp5897
+consumer compute the same replay checksum. The projection SHALL be owned by one
+helper module rather than duplicated producer/consumer code. The helper SHALL
+reject unknown projection versions, SHALL normalize JSON mappings, lists, and
+numbers deterministically, SHALL exclude self-referential or post-hoc fields
+such as wall-clock duration, test exit-code refreshes, reproducibility checksum
+storage, protected-file receipts, and volatile RAM/disk availability, and SHALL
+bind the actual row-file SHA-256 plus ConstraintIR artifact and row schema
+versions.
+
+The repaired contract SHALL NOT mutate historical Exp5896 or Exp5897 result
+artifacts, SHALL NOT special-case the historical checksum value, SHALL NOT
+weaken comparison by accepting either old or new projections, and SHALL NOT
+claim model-science progress. Legacy Exp5896 evidence MAY be adjudicated under
+the new projection only as immutable historical content: the old checksum
+mismatch SHALL remain recorded as
+`historical_checksum_mismatch_preserved`, while successful row binding,
+certificate replay, schema binding, and shared-helper parity SHALL be recorded
+separately as `new_contract_replay_ready`.
+
+The terminal artifact MUST be
+`results/experiment_5907_constraint_ir_replay_contract.json` and MUST include
+`status`, `preconditions_checked`, `immutable_artifact_hashes`,
+`mismatch_reproduction_and_root_cause`,
+`canonical_projection_schema_and_version`, `excluded_and_bound_fields`,
+`shared_helper_receipt`, `fresh_twin_producer_consumer_replay`,
+`fresh_process_replay_receipt`, `tamper_detection_matrix`,
+`legacy_exp5896_adjudication`, `historical_artifacts_unchanged`,
+`protected_files_unchanged`, `constraint_ir_replay_contract_ready_score`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles:
+
+- `canonical_projection_schema_and_version`: one explicit public projection owns every producer-consumer checksum.
+- `historical_artifacts_unchanged`: a repaired contract cannot rewrite prior evidence.
+- `constraint_ir_replay_contract_ready_score`: emit bare 1.0 only for shared-helper parity, fresh-process exact replay, row binding, and complete tamper rejection.
+- `inference_substrate`: use `deterministic_artifact_replay_no_llm`.
+- `verifier_is_oracle`: true only for checksum/schema/tamper adjudication.
+- `honest_verdict`: use `complete_ready:`, `retired:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5907-CANONICAL: Producer And Consumer Share Projection
+
+**Given** a freshly generated Exp5896 twin fixture
+**When** the producer writes its checksum and Exp5897 replays the fixture gate
+**Then** both entrypoints report the same
+`carnot.constraint_ir.replay_contract_projection.v1` checksum from the shared
+helper and any explicit unknown projection version is rejected.
+
+#### SCENARIO-BENCH-5907-FRESH-PROCESS: Replay Is Independent
+
+**Given** the freshly generated twin fixture rows and artifact on disk
+**When** replay is invoked in a fresh Python process
+**Then** row-file SHA-256, schema versions, certificates, and the public
+projection checksum replay exactly without relying on in-process state.
+
+#### SCENARIO-BENCH-5907-TAMPER: Bound Components Fail Closed
+
+**Given** a producer-written twin fixture artifact
+**When** the row bytes, row-file hash receipt, schema binding, projection
+version, or reproducibility checksum is tampered with
+**Then** replay fails closed for every tamper case.
+
+#### SCENARIO-BENCH-5907-LEGACY: Historical Mismatch Is Preserved
+
+**Given** the checked-in Exp5896 and Exp5897 artifacts
+**When** Exp5907 reproduces the old byte projections and adjudicates Exp5896
+under the new projection
+**Then** the artifact records the old protected-file-hash root cause,
+preserves the historical checksum mismatch, reports the new contract replay
+receipt separately, and verifies the historical artifacts were not rewritten.
+
+**Spec traces:** REQ-BENCH-5907, SCENARIO-BENCH-5907-CANONICAL,
+SCENARIO-BENCH-5907-FRESH-PROCESS, SCENARIO-BENCH-5907-TAMPER,
+SCENARIO-BENCH-5907-LEGACY
+
+## Implementation Status (REQ-BENCH-5907)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5907 | Planned (`python/carnot/constraint_ir_replay_contract.py`, `python/carnot/experiment_5907_constraint_ir_replay_contract.py`, `results/experiment_5907_constraint_ir_replay_contract.json`) | Planned (`tests/python/test_experiment_5907_constraint_ir_replay_contract.py`) |
+
+### REQ-BENCH-5908: VeriSynth Constraint Fixture Plan Replay
+
+Carnot MUST provide a deterministic Exp5908 fixture planner at
+`python/carnot/experiment_5908_verisynth_constraint_fixture.py` and write
+`results/experiment_5908_verisynth_constraint_fixture.json` plus
+`results/experiment_5908_verisynth_constraint_fixture.rows.jsonl`. Exp5908
+SHALL invoke no LLM, SHALL perform no generated-answer repair, SHALL replay
+Exp5907's ConstraintIR gate before constructing plans, and SHALL consume only
+the checked-in Exp5896 typed ConstraintIR fixture rows.
+
+The decomposition schema SHALL define engine-neutral units for finite
+entities/domains, state facts, transition or implication relations,
+invariants, explicit negation, arithmetic constraints, and query goals. Every
+emitted unit SHALL map to supported Exp5896 typed IR nodes and SHALL replay
+through the exact Exp5896 parser and Python/Z3 certificates.
+
+The retrieval index SHALL use only train-visible typed structure and exact
+metadata available at deployment. Paraphrases, symbol renamings,
+order-permutations, held templates, omitted-constraint rows, and semantic
+variants of the same template SHALL share one group identity so no held
+semantic variant can enter the retrieval surface for held rows. Exp5908 SHALL
+freeze prompt-plan arms for direct, semantic decomposition, decomposition plus
+exact-example retrieval, wrong-family retrieval, shuffled decomposition,
+omitted-component decomposition, and no-information retrieval. Treatment arms
+SHALL match token envelopes and exemplar counts where applicable so
+decomposition and retrieval are isolated mechanisms, not extra unbounded
+context.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_and_hashes`, `decomposition_schema_and_supported_units`,
+`prompt_plan_arm_definitions`, `retrieval_index_and_visibility_contract`,
+`family_template_and_group_holdouts`,
+`wrong_family_shuffled_omitted_and_no_information_controls`,
+`token_envelope_and_exemplar_count_parity`,
+`exact_exemplar_and_component_replay`, `row_file_receipt`,
+`consumer_stream_contract`, `protected_files_unchanged`,
+`verisynth_constraint_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles:
+
+- `retrieval_index_and_visibility_contract`: held semantic variants cannot enter the retrieval surface.
+- `prompt_plan_arm_definitions`: decomposition and retrieval must be isolated treatments rather than extra unbounded context.
+- `verisynth_constraint_fixture_ready_score`: emit bare 1.0 only for exact replay, group isolation, nontrivial controls, and deterministic consumer hashes.
+- `inference_substrate`: use `deterministic_exact_solver_labeled_dataset_no_llm`.
+- `verifier_is_oracle`: true for fixture structure and replay labels.
+- `honest_verdict`: use `ready:`, `complete_null:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5908-DECOMPOSITION: Supported Units Replay Exactly
+
+**Given** an Exp5896 typed ConstraintIR row
+**When** Exp5908 builds the semantic-decomposition plan
+**Then** every component has a deterministic component hash, maps to a
+supported typed IR unit, and replays through the exact parser/backend receipts.
+
+#### SCENARIO-BENCH-5908-RETRIEVAL: Held Variants Stay Invisible
+
+**Given** train/dev/held-out Exp5896 split groups
+**When** Exp5908 builds exact-example retrieval
+**Then** only train-visible typed structure and deployment metadata are indexed,
+and no exemplar from the target group or a held split can be retrieved for a
+held row.
+
+#### SCENARIO-BENCH-5908-CONTROLS: Arms Are Matched Negative Controls
+
+**Given** the frozen direct, decomposition, retrieval, wrong-family, shuffled,
+omitted-component, and no-information arms
+**When** Exp5908 emits row-level prompt plans
+**Then** each row has deterministic arm hashes, exemplar-count parity for
+retrieval arms, token-envelope parity for comparable arms, and nontrivial
+wrong-family, shuffled, omitted, and no-information controls.
+
+#### SCENARIO-BENCH-5908-STREAM: Consumer Rows Are Hash Stable
+
+**Given** the terminal Exp5908 artifact and row JSONL
+**When** a future Exp5909 consumer reads the stream contract
+**Then** row-level hashes, artifact and row-file receipts, arm definitions,
+visibility groups, and replay receipts are deterministic and sufficient to
+replay without hidden in-process state.
+
+**Spec traces:** REQ-BENCH-5908, SCENARIO-BENCH-5908-DECOMPOSITION,
+SCENARIO-BENCH-5908-RETRIEVAL, SCENARIO-BENCH-5908-CONTROLS,
+SCENARIO-BENCH-5908-STREAM
+
+## Implementation Status (REQ-BENCH-5908)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5908 | Planned (`python/carnot/experiment_5908_verisynth_constraint_fixture.py`, `results/experiment_5908_verisynth_constraint_fixture.json`) | Planned (`tests/python/test_experiment_5908_verisynth_constraint_fixture.py`) |
+
+### REQ-BENCH-5909: SOTA ConstraintIR Synthesis A/B Stream
+
+Carnot MUST provide a live local-GGUF Exp5909 synthesis experiment at
+`python/carnot/experiment_5909_sota_constraint_synthesis_ab.py` and write
+`results/experiment_5909_sota_constraint_synthesis_ab.json` plus a sealed raw
+proposal JSONL stream. Exp5909 SHALL replay the Exp5908 consumer gate before
+any model load, SHALL use the three mandated GGUF families
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL resolve the first two headline
+families through `cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 2))`
+plus the cached third family. Missing cache, tokenizer, CUDA offload, dual RTX
+3090, RAM, disk, atomic-output, or protected-workload preconditions SHALL write
+an honest `blocked_precondition:` artifact before model generation begins.
+
+The experiment SHALL run direct ConstraintIR synthesis, semantic-decomposition
+synthesis, and decomposition plus exact-example retrieval on every Exp5908 row
+for every completed model. It SHALL also run wrong-family retrieval and shuffled
+decomposition on a preregistered confirmatory subset. All arms SHALL use matched
+decoding, output-token, seed, call-count, and wall-clock budget rules so
+decomposition and retrieval cannot win by unbounded context or extra calls.
+Prompts SHALL NOT expose target hidden gold IR, target exact labels, held
+identities, certificates, or diagnostic repair traces; retrieved examples may
+include only deployment-visible exact examples selected by Exp5908's leakage
+contract.
+
+The exact Exp5896 parser, type checker, Python backend, Z3 backend, and
+semantic replay labels SHALL own outcomes after each proposal is sealed.
+Exp5909 SHALL report parse, type, compile, satisfiability, exact semantic
+equivalence, query correctness, omitted/spurious constraints, unsafe accepted
+constraints, token, latency, VRAM, GPU-utilization, and energy-proxy metrics by
+model, family, template, arm, and group. It SHALL seal the chronological raw
+proposal stream with raw output hashes, prompt hashes, exact labels,
+deployment-visible diagnostics, group IDs, model file hashes, and row hashes for
+downstream transactional learning.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_gate_and_fixture_hashes`, `model_specs`, `model_file_hashes`,
+`embedded_tokenizer_and_loader_cuda_receipts`,
+`frozen_prompts_decoding_seeds_and_budgets`,
+`arm_definitions_and_compute_parity`, `retrieval_and_oracle_visibility`,
+`per_model_family_template_metrics`,
+`parse_type_compile_and_semantic_metrics`,
+`omitted_spurious_and_unsafe_constraint_metrics`,
+`group_bootstrap_lower_bounds`, `wrong_retrieval_and_shuffled_controls`,
+`chronological_raw_stream_receipt`, `residual_error_and_diagnostic_headroom`,
+`gpu_utilization_vram_latency_and_energy_receipts`,
+`protected_files_unchanged`, `constraint_stream_ready_score`,
+`verification_repair_admission_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Field principles:
+
+- `arm_definitions_and_compute_parity`: decomposition and retrieval cannot win by unbounded context or calls.
+- `chronological_raw_stream_receipt`: downstream learning sees only sealed model outputs and deployment-visible evidence in event order.
+- `constraint_stream_ready_score`: emit bare 1.0 only for all three real models, exact labels, raw hashes, and zero authority violation.
+- `verification_repair_admission_ready_score`: emit bare 1.0 only for sufficient exact residual headroom with usable non-oracle diagnostics.
+- `inference_substrate`: use `live_llm_inference`.
+- `verifier_is_oracle`: true for exact evaluation and never for model proposal credit.
+- `honest_verdict`: use `complete_positive:`, `complete_null:`, `unsafe:`, `blocked_precondition:`, or `blocked:`.
+
+#### SCENARIO-BENCH-5909-PRECONDITIONS: Gate Blocks Before Model Load
+
+**Given** the checked-in Exp5908 fixture stream and mandated local GGUF ids
+**When** any upstream replay, cache, embedded tokenizer, CUDA, dual-GPU, RAM,
+disk, atomic-output, or protected-workload precondition fails
+**Then** Exp5909 writes a `blocked_precondition:` artifact, records all
+precondition receipts, and does not call the live model collector.
+
+#### SCENARIO-BENCH-5909-PROMPTS: Prompt Arms Stay Leakage Safe
+
+**Given** an Exp5908 plan row and its Exp5896 source row
+**When** Exp5909 builds direct, decomposition, retrieval, wrong-retrieval, and
+shuffled-control prompts
+**Then** no prompt contains target hidden ConstraintIR JSON, target exact
+labels, certificates, behavior hashes, held identities, or diagnostic repair
+traces, and retrieval examples exclude target-group and held-split examples.
+
+#### SCENARIO-BENCH-5909-STREAM: Raw Proposals Are Chronological And Exact Scored
+
+**Given** three completed mandated model families and stubbed raw proposals
+**When** Exp5909 scores the direct, decomposition, retrieval, and preregistered
+control arms
+**Then** the raw JSONL stream is chronological, every event has raw and prompt
+hashes, every event receives exact parser/type/compile/semantic labels, and the
+artifact exposes complete metric groups without accepting model outputs as an
+oracle.
+
+#### SCENARIO-BENCH-5909-HEADROOM: Repair Admission Requires Residual Diagnostics
+
+**Given** a complete Exp5909 stream
+**When** residual incorrect rows remain in every required fixture group
+**Then** `verification_repair_admission_ready_score` is 1.0 only if those rows
+carry deployment-visible diagnostics and no hidden oracle payload; otherwise it
+is 0.0 even if `constraint_stream_ready_score` is 1.0.
+
+**Spec traces:** REQ-BENCH-5909, SCENARIO-BENCH-5909-PRECONDITIONS,
+SCENARIO-BENCH-5909-PROMPTS, SCENARIO-BENCH-5909-STREAM,
+SCENARIO-BENCH-5909-HEADROOM
+
+## Implementation Status (REQ-BENCH-5909)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-5909 | Planned (`python/carnot/experiment_5909_sota_constraint_synthesis_ab.py`, `results/experiment_5909_sota_constraint_synthesis_ab.json`) | Planned (`tests/python/test_experiment_5909_sota_constraint_synthesis_ab.py`) |
+
+### REQ-BENCH-6504: Exact Structural Benchmark Commitment SHALL Be Sealed Before Learned Work
+
+The Exp6504 workflow SHALL create a procedural exact SAT/CSP benchmark before
+any learned ranker, mutation stream, or downstream SOTA route can inspect held
+rows. It SHALL generate random 3-CNF, pseudo-industrial 3-CNF, Tseitin,
+pigeonhole, graph-coloring, and small scheduling instances with deterministic
+local generators and fixed seeds. Each raw row SHALL preserve the formal
+instance, source family, scale, surface relabeling, density, proof family,
+lineage id, generator seed, and checksum before feature extraction.
+
+Exp6504 SHALL label every accepted instance with exact local solver authority.
+Accepted labels SHALL replay under exhaustive enumeration and Z3, SHALL include
+a model witness for SAT or feasible rows, SHALL include an executable
+refutation receipt for UNSAT or infeasible rows, and SHALL quarantine any
+backend disagreement. No label SHALL be hand-corrected.
+
+Exp6504 SHALL commit train, development, and held splits by base-instance
+lineage before labels or features can affect the split. No base lineage or
+duplicate structural hash SHALL cross split boundaries. The held set SHALL
+contain at least 30 units in every planned headline cell. The headline cells
+SHALL include family cells and one-axis label, scale, and surface cells.
+
+Exp6504 SHALL freeze family, scale, surface, density, proof family, source,
+structural hardness, and solver-effort strata. Solver effort MAY be recorded as
+an audit stratum, but SHALL NOT be used as a model-difficulty proxy.
+
+Exp6504 SHALL test identity, row order, serialization length, generator seed,
+family, duplicate lineage, label balance, solver backend, and split leakage.
+Every shortcut attack SHALL fail closed before
+`base_structural_benchmark_ready_score` can equal `1.0`.
+
+The Exp6504 artifact SHALL be written to
+`results/experiment_6504_exact_structural_benchmark_commitment.json` with
+`inference_substrate=procedural_formal_instances_and_exact_solver_labels_no_llm`
+and `verifier_is_oracle=true` only for exact solver labels and executable
+validity. The artifact SHALL include, at minimum, `status`, `verdict_class`,
+`upstream_gate_receipts`, `benchmark_schema`, `raw_instance_rows`,
+`exact_label_rows`, `exact_replay_rows`, `split_commitment`,
+`stratum_balance_rows`, `minimum_held_cell_size`, `leakage_attack_matrix`,
+`base_structural_benchmark_ready_score`, `per_unit_rows`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal benchmark state."
+- `verdict_class`: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
+- `upstream_gate_receipts`: "Bind both same-roadmap gates and observed values."
+- `benchmark_schema`: "Versions instances, labels, proofs, models, strata, and splits."
+- `raw_instance_rows`: "Preserves every formal instance before feature extraction."
+- `exact_label_rows`: "Provides solver-certified labels and authority receipts."
+- `exact_replay_rows`: "Checks every accepted label with a deterministic replay."
+- `split_commitment`: "Freezes lineage-separated train, development, and held sets."
+- `stratum_balance_rows`: "Records family, scale, surface, hardness, source, and label counts."
+- `minimum_held_cell_size`: "Enforces at least 30 units for percentage comparisons."
+- `leakage_attack_matrix`: "Tests identity, order, length, seed, family, duplicate, backend, and split shortcuts."
+- `base_structural_benchmark_ready_score`: "Same-roadmap gate for the base benchmark."
+- `per_unit_rows`: "Carries instance, label, replay, split, stratum, and attack rows."
+- `aggregate_row_recomputation`: "Recomputes counts and readiness from raw rows."
+- `gate_check_summary`: "Names any failed gate, solver, cell-size, or replay check and observed value."
+- `preconditions_checked`: "Records gates, solver tools, resources, repository, and storage checks."
+- `protected_files_unchanged`: "Proves protected files stayed unchanged."
+- `inference_substrate`: "Declares procedural generators and exact local solvers with no LLM."
+- `verifier_is_oracle`: "True only for exact solver labels and executable validity checks."
+- `field_principles`: "Explains why each commitment field exists."
+- `field_provenance`: "Maps rows to generators, seeds, solver commands, and hashes."
+- `random_seed`: "Records all generator and split seeds."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records commands and exit codes."
+- `reproducibility_checksum`: "Hashes instances, labels, splits, strata, and attacks."
+- `honest_verdict`: "Uses complete_* when the commitment is valid or blocked_* with gate_check_summary."
+
+#### SCENARIO-BENCH-6504-GENERATION: Procedural Families Are Deterministic
+
+**Given** the Exp6503 method contract names six SAT/CSP families
+**When** Exp6504 generates benchmark rows
+**Then** every family emits deterministic raw instances from fixed local seeds
+and every raw row carries source, family, scale, surface, lineage, density, and
+checksum fields before feature extraction.
+
+#### SCENARIO-BENCH-6504-LABELS: Exact Backends Own Labels
+
+**Given** raw formal instances
+**When** Exp6504 labels and replays them
+**Then** every accepted label agrees across exhaustive and Z3 backends, SAT rows
+carry valid model witnesses, UNSAT rows carry executable refutation receipts,
+and disagreements are quarantined without hand correction.
+
+#### SCENARIO-BENCH-6504-SPLITS: Held Cells Are Lineage Separated
+
+**Given** generated base-instance lineages
+**When** Exp6504 commits train, development, and held splits
+**Then** no lineage crosses splits, split rows predate feature extraction, and
+every planned held headline cell contains at least 30 units.
+
+#### SCENARIO-BENCH-6504-STRATA: Surface And Solver Effort Stay Separate
+
+**Given** accepted labels and split rows
+**When** Exp6504 emits strata
+**Then** rows record family, scale, surface, structural hardness, density,
+proof family, source, solver effort, and label counts while declaring that
+solver effort is not a model-difficulty proxy.
+
+#### SCENARIO-BENCH-6504-LEAKAGE: Shortcut Attacks Fail Closed
+
+**Given** raw rows, label rows, split rows, and backend receipts
+**When** Exp6504 runs shortcut attacks
+**Then** identity, row order, serialization length, generator seed, family,
+duplicate lineage, label balance, backend, and split shortcuts are blocked from
+feature use and no false accept remains.
+
+#### SCENARIO-BENCH-6504-SCHEMA: Artifact Is Ready And Checksummed
+
+**Given** rows, receipts, field maps, protected hashes, and command receipts
+**When** Exp6504 validates the artifact
+**Then** every required field has a principle and provenance entry, the
+checksum matches, exact replay passes, `base_structural_benchmark_ready_score`
+equals `1.0`, and the terminal verdict starts with `complete_` or `blocked_`.
+
+## Implementation Status (REQ-BENCH-6504)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6504 | Planned (`python/carnot/experiment_6504_exact_structural_benchmark_commitment.py`, `results/experiment_6504_exact_structural_benchmark_commitment.json`) | Planned (`tests/python/test_experiment_6504_exact_structural_benchmark_commitment.py`) |
+
+### REQ-BENCH-6505: Local SOTA Formal Challenge Mutations SHALL Be One-Shot And Exact-Admitted
+
+Carnot SHALL provide Exp6505 at
+`python/carnot/experiment_6505_sota_formal_challenge_mutations.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6505_sota_formal_challenge_mutations --date 20260822`
+SHALL write
+`results/experiment_6505_sota_formal_challenge_mutations.json`.
+
+Exp6505 SHALL evaluate the Exp6504 gate before model loading. It SHALL record
+the Exp6504 path, hash, `base_structural_benchmark_ready_score`, expected value,
+and observed value. It SHALL check model cache paths, GGUF file sizes,
+llama_cpp CUDA support, GPU inventory, free VRAM, disk space, repository state,
+and protected-file hashes before loading any model. Every failed precondition
+SHALL be named with its observed value.
+
+Exp6505 SHALL use exactly these GGUF model families in `MODEL_SPECS`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve local GGUF files through the
+canonical cache resolver. It SHALL load one model at a time through llama_cpp.
+It SHALL use the tokenizer embedded in each GGUF. It SHALL NOT call
+`AutoTokenizer` for a GGUF repository.
+
+Exp6505 SHALL select development-only source instances from Exp6504 before
+generation. For every selected source and every model family it SHALL issue one
+request. It SHALL not retry a request after parsing or admission fails. It SHALL
+persist exact request bytes, response bytes, hashes, model file identity, seed,
+and terminal runtime receipt before parsing any response.
+
+Exp6505 SHALL freeze a bounded edit DSL for clause, edge, color, job,
+precedence, coefficient, and relabel operations. The prompt SHALL forbid
+answers, labels, solver advice, free-form semantic translation, release
+decisions, hidden held access, and model-identity shortcuts. The parser SHALL
+reject those outputs before exact admission.
+
+Exp6505 SHALL apply syntactically valid edit scripts to a copy of the formal
+development instance only. Exact local tools SHALL parse, replay, solve, check
+model or proof validity, compute novelty, classify label ambiguity, and accept
+or quarantine each mutation. Invalid, duplicate, unchanged, answer-bearing,
+label-bearing, semantic-translation, solver-advice, release-decision, or
+ambiguous outputs SHALL be terminal quarantine rows. Models SHALL never be
+oracles.
+
+Exp6505 SHALL report valid yield, novelty, source family, source scale, exact
+label, edit type, truncation, parser disposition, and runtime outcome separately
+for each SOTA family. A model-family comparison SHALL contain one row for every
+precommitted request. `challenge_generation_complete_score` SHALL be `1.0` when
+every precommitted request has one terminal receipt, even when valid yield is
+zero. `challenge_pool_ready_score` SHALL be separate and SHALL not block the
+base Exp6504 benchmark.
+
+The terminal artifact SHALL include `status`, `verdict_class`,
+`upstream_gate_receipt`, `model_specs`, `model_runtime_receipts`,
+`mutation_grammar`, `source_selection_receipt`,
+`raw_request_response_receipts`, `rows`, `exact_admission_rows`,
+`model_family_results`, `challenge_generation_complete_score`,
+`challenge_pool_ready_score`, `prohibited_output_attack_matrix`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`local_llama_cpp_three_family_formal_mutation_generation_plus_exact_solver_admission`.
+`verifier_is_oracle` SHALL be true only for exact parsing, solving, and validity.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`.
+
+- `status`: "Records terminal generation and admission state."
+- `verdict_class`: "Closed enum: positive | circular_positive | null | blocked | disqualified | partial."
+- `upstream_gate_receipt`: "Binds the base benchmark gate and observed value."
+- `model_specs`: "Lists all three mandated GGUF repositories, files, quantization, and roles."
+- `model_runtime_receipts`: "Records llama_cpp backend, tokenizer, offload, VRAM, and timing per model."
+- `mutation_grammar`: "Freezes the bounded formal edit language."
+- `source_selection_receipt`: "Proves all sources are development-only and chosen before generation."
+- `raw_request_response_receipts`: "Preserves exact bytes and hashes before parsing."
+- `rows`: "Provides one request, parse, edit, exact-check, and disposition row per unit."
+- `exact_admission_rows`: "Records parse, replay, label, proof/model, novelty, and quarantine outcomes."
+- `model_family_results`: "Reports valid yield and failure modes separately for each SOTA family."
+- `challenge_generation_complete_score`: "Same-roadmap gate for complete request accounting."
+- `challenge_pool_ready_score`: "Separates useful valid mutations from execution completeness."
+- `prohibited_output_attack_matrix`: "Tests answers, labels, heuristics, semantic translation, retries, held access, and model identity shortcuts."
+- `per_unit_rows`: "Carries every request and exact admission result."
+- `aggregate_row_recomputation`: "Recomputes all yields, counts, and scores from rows."
+- `gate_check_summary`: "Names any failed benchmark, cache, CUDA, GPU, parse, or runtime check and observed value."
+- `preconditions_checked`: "Records gate, cache, GPU, runtime, tokenizer, disk, and repository checks."
+- `protected_files_unchanged`: "Proves protected files stayed unchanged."
+- `inference_substrate`: "Declares local llama_cpp GGUF generation plus exact CPU parsing and solving."
+- `verifier_is_oracle`: "True only for exact formal admission checks; models are not oracles."
+- `field_principles`: "Explains each generation, admission, and boundary field."
+- `field_provenance`: "Maps rows to model files, raw hashes, parser functions, and solver receipts."
+- `random_seed`: "Records source selection and generation seeds."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records commands and exit codes."
+- `reproducibility_checksum`: "Hashes specs, raw bytes, parses, admissions, and rows."
+- `honest_verdict`: "Uses complete_* for complete accounting, complete_null for zero useful yield, or blocked_* with gate_check_summary for unmet execution preconditions."
+
+#### SCENARIO-BENCH-6505-PROVENANCE: Gate And Model Receipts Precede Loading
+
+**Given** the Exp6504 benchmark artifact and local SOTA model registry
+**When** Exp6505 starts
+**Then** it records the Exp6504 gate, model cache paths, file sizes, llama_cpp
+CUDA support, GPU inventory, free VRAM, disk, and protected hashes before any
+model load event.
+
+#### SCENARIO-BENCH-6505-ONE-SHOT: Development Requests Are Precommitted
+
+**Given** Exp6504 development rows
+**When** Exp6505 selects source instances
+**Then** every selected source has `split=development`, selection occurs before
+generation, and exactly one request is issued for each source and model pair.
+
+#### SCENARIO-BENCH-6505-NO-ANSWER: Prohibited Outputs Fail Closed
+
+**Given** model output that contains an answer, label, solver advice,
+semantic translation, release decision, retry attempt, held access, or
+model-identity shortcut
+**When** Exp6505 parses the output
+**Then** the row is rejected before exact admission and no accepted row contains
+the prohibited content.
+
+#### SCENARIO-BENCH-6505-ADMISSION: Exact Tools Own Mutation Admission
+
+**Given** a syntactically valid bounded edit script
+**When** Exp6505 applies it to a copy of a development formal instance
+**Then** exact local parsing, replay, solving, model/proof validation, novelty,
+duplicate, unchanged, and label-ambiguity checks determine acceptance or
+quarantine without model judgment.
+
+#### SCENARIO-BENCH-6505-SCORES: Complete Accounting Is Separate From Pool Readiness
+
+**Given** all precommitted requests have terminal receipts
+**When** Exp6505 recomputes aggregate rows
+**Then** `challenge_generation_complete_score` is `1.0`, model-family results
+include one row per request, and `challenge_pool_ready_score` is derived only
+from accepted useful mutations.
+
+#### SCENARIO-BENCH-6505-ARTIFACT: Artifact Is Checksummed And Boundary-Safe
+
+**Given** raw bytes, exact admission rows, runtime receipts, protected hashes,
+field principles, field provenance, tests, and attacks
+**When** Exp6505 validates the artifact
+**Then** every required field is present, the checksum matches,
+`verifier_is_oracle` is scoped to exact tools, protected files are unchanged,
+and the terminal verdict starts with `complete_`, `complete_null`, or
+`blocked_`.
+
+## Implementation Status (REQ-BENCH-6505)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6505 | Planned (`python/carnot/experiment_6505_sota_formal_challenge_mutations.py`, `results/experiment_6505_sota_formal_challenge_mutations.json`) | Planned (`tests/python/test_experiment_6505_sota_formal_challenge_mutations.py`) |
+
+### REQ-BENCH-6506: V561 Evidence Corrigendum And V562 Lineage Lock SHALL Be Append-Only
+
+Carnot SHALL provide Exp6506 at
+`python/carnot/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6506_v561_evidence_corrigendum_v562_lineage_lock --date 20260822`
+SHALL write
+`results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`.
+
+Exp6506 SHALL not modify Exp6504, Exp6505, historical roadmaps, or
+`scripts/research_conductor.py`. It SHALL hash those files before and after the
+corrigendum. A changed historical artifact SHALL block
+`v562_exact_branch_ready_score`.
+
+Exp6506 SHALL load Exp6504 from its checked-in artifact and recompute label,
+replay, split, held-cell, stratum, leakage, aggregate, and checksum rows from
+raw rows. It SHALL not trust Exp6504 aggregate fields. If row replay passes, it
+MAY classify Exp6504 as operational benchmark-ready for exact branch-advice
+work. It SHALL NOT reuse the Exp6504 `positive` verdict class as a scientific
+verifier-value claim because `verifier_is_oracle=true`.
+
+Exp6506 SHALL rerun adversarial verification against Exp6504, record the
+observed `VERDICT_CLASS_MISMATCH`, and emit a separate corrigendum disposition.
+The corrected disposition SHALL preserve provenance, declare that exact labels
+and row checks are oracle checks, and keep any top-level Exp6506
+`verdict_class` at `partial` or `null` unless an oracle-distinct scientific
+comparison exists.
+
+Exp6506 SHALL load Exp6505 as a terminal null. It SHALL recompute request
+accounting and accepted-yield rows from Exp6505 rows. It SHALL freeze
+`challenge_generation_complete_score=1.0` and
+`challenge_pool_ready_score=0.0` as terminal evidence. It SHALL not invoke a
+model and SHALL not make the empty mutation pool a downstream prerequisite.
+
+Exp6506 SHALL authorize only the new exact branch-advice lineage. Downstream
+V562 work MAY consume Exp6504 raw instances and exact labels. Downstream V562
+work SHALL NOT consume Exp6505 challenge mutations, learned trajectory energy,
+factor causal value, factor spawning, ARC policy work, hardware acceleration,
+renamed retired scopes, aggregate-only corrections, missing upstream hashes, or
+the old positive-class headline.
+
+The artifact SHALL include `status`, `verdict_class`,
+`cited_upstream_artifacts`, `exp6504_row_recomputation`,
+`exp6504_corrigendum`, `exp6505_terminal_null_receipt`,
+`lineage_decision_rows`, `forbidden_dependency_attack_matrix`,
+`v562_exact_branch_ready_score`, `per_unit_rows`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`independent_v561_artifact_replay_no_llm`. `verifier_is_oracle` SHALL be true
+only for exact label, hash, and row checks.
+
+`v562_exact_branch_ready_score` SHALL be an evidence-lineage gate. It SHALL
+depend on Exp6504 row replay, the corrected class, historical-file hashes,
+Exp6505 terminal-null accounting, and forbidden dependency checks. It SHALL NOT
+turn a repository-wide test-suite failure into a scientific lineage failure.
+Repository validation failures SHALL remain visible in `tests_run` and SHALL
+NOT be rewritten as passing receipts.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes a valid corrigendum from an incomplete replay."
+- `verdict_class`: "The closed enum prevents an exact-oracle self-check from becoming an unsupported positive science claim."
+- `cited_upstream_artifacts`: "Paths, imported fields, and hashes bind every correction to immutable V561 evidence."
+- `exp6504_row_recomputation`: "Independent row replay detects aggregate or classification errors without rewriting history."
+- `exp6504_corrigendum`: "A separate correction preserves provenance and makes the eligible interpretation explicit."
+- `exp6505_terminal_null_receipt`: "The receipt prevents a zero-yield SOTA stream from becoming a hidden prerequisite or a silent rerun."
+- `lineage_decision_rows`: "One row per allowed or forbidden scope makes lineage decisions recheckable."
+- `forbidden_dependency_attack_matrix`: "Adversarial cases ensure renamed or indirect dependencies fail closed."
+- `v562_exact_branch_ready_score`: "A same-roadmap gate prevents downstream work from using quarantined evidence."
+- `per_unit_rows`: "Unit rows let a third party recompute every headline and gate without rerunning V561."
+- `gate_check_summary`: "A blocked verdict must name the failed check and observed value."
+- `preconditions_checked`: "Explicit repository and artifact checks prevent synthesized success when inputs are missing."
+- `protected_files_unchanged`: "Historical roadmaps, artifacts, and the conductor must remain immutable during correction."
+- `inference_substrate`: "Declaring artifact replay with no LLM prevents substrate and SOTA-policy confusion."
+- `verifier_is_oracle`: "Oracle disclosure prevents circular exact checks from supporting a verifier-value headline."
+- `field_principles`: "The artifact must preserve why each evidence field is load-bearing."
+- `field_provenance`: "JSON pointers and reducers make each corrected field independently traceable."
+- `random_seed`: "A fixed attack order makes the fail-closed checks reproducible."
+- `duration_s`: "Measured wall time helps detect implausible or fabricated replay work."
+- `tests_run`: "Command and exit-code receipts show which validation actually ran."
+- `reproducibility_checksum`: "A content hash detects later drift in inputs, rows, or decisions."
+- `honest_verdict`: "A terminal complete_* or blocked_* prefix lets the conductor classify the result safely."
+
+#### SCENARIO-BENCH-6506-ROW-REPLAY: Exp6504 Is Recomputed From Rows
+
+**Given** the immutable Exp6504 artifact
+**When** Exp6506 runs
+**Then** it recomputes labels, exact replays, split rows, held-cell rows,
+strata, leakage attacks, aggregates, and the checksum from raw rows and records
+whether each recomputed value matches the historical artifact.
+
+#### SCENARIO-BENCH-6506-CORRIGENDUM: Positive Oracle Reuse Is Corrected
+
+**Given** Exp6504 declares `verdict_class=positive` with
+`verifier_is_oracle=true`
+**When** Exp6506 reruns adversarial verification
+**Then** it records `VERDICT_CLASS_MISMATCH`, emits a separate corrected
+disposition, and keeps the corrigendum from making a positive scientific
+verifier-value claim.
+
+#### SCENARIO-BENCH-6506-EXP6505-NULL: The Mutation Stream Is Terminal Null
+
+**Given** the Exp6505 artifact
+**When** Exp6506 recomputes request and admission accounting
+**Then** `challenge_generation_complete_score` remains `1.0`,
+`challenge_pool_ready_score` remains `0.0`, accepted mutation count remains
+zero, and no model is invoked.
+
+#### SCENARIO-BENCH-6506-LINEAGE-LOCK: V562 Dependencies Fail Closed
+
+**Given** allowed exact branch-advice inputs and forbidden retired or null
+dependencies
+**When** Exp6506 evaluates lineage rows and attacks
+**Then** only Exp6504 raw instances and exact labels are allowed, while
+Exp6505 challenge rows, retired lineages, renamed scopes, missing hashes,
+aggregate-only corrections, challenge-pool laundering, and positive-class reuse
+fail closed before `v562_exact_branch_ready_score` can equal `1.0`.
+
+## Implementation Status (REQ-BENCH-6506)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6506 | Implemented (`python/carnot/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`, `results/experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.json`) | Implemented (`tests/python/test_experiment_6506_v561_evidence_corrigendum_v562_lineage_lock.py`) |
+
+### REQ-BENCH-6510: V563 Independent Exact Root SHALL Qualify Immutable Evidence Without Retired Task Dependencies
+
+Carnot SHALL provide Exp6510 at
+`python/carnot/experiment_6510_v563_independent_exact_root.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6510_v563_independent_exact_root --date 20260822`
+SHALL write
+`results/experiment_6510_v563_independent_exact_root.json`.
+
+Exp6510 SHALL read Exp6504 and Exp6506 directly as immutable JSON files. It
+SHALL record exact input paths, byte hashes, JSON pointers, solver
+availability, CPU, RAM, disk, git status, exclusion-manifest state, and
+protected-file hashes before qualification. It SHALL not create a bootstrap
+stub. It SHALL not rerun the Exp6506 computation or require the retired
+Exp6506 task ID.
+
+Exp6510 SHALL recompute Exp6504 row counts, exact-label receipts, replay
+receipts, split hashes, historical hashes, corrected class, and readiness from
+file content. It SHALL not trust aggregate-only fields. It SHALL also
+recompute the Exp6506 corrigendum contract from the Exp6506 artifact content:
+`v562_exact_branch_ready_score`, corrected non-positive class, allowed fields,
+forbidden lineage rows, attack rows, and protected historical hashes.
+
+Exp6510 SHALL parse `ops/conductor-log.md` and preserve the V562 conductor
+terminal result. It SHALL record the three
+`artifact_not_updated_past_bootstrap` rows for Exp6506 and the downstream
+Exp6507-Exp6509 gate-block cascade. It SHALL not reactivate Exp6506, Exp6507,
+Exp6508, or Exp6509 as structured dependencies.
+
+Exp6510 SHALL authorize only the new V563 exact branch-counterfactual path.
+The only allowed historical content is Exp6504 raw instances, Exp6504 exact
+labels, and Exp6506 content as immutable receipt evidence. It SHALL forbid
+missing files, stale hashes, aggregate-only trust, historical mutation,
+renamed retired dependencies, indirect Exp6505 challenge-pool use, and a
+positive-class exact-oracle claim.
+
+The artifact SHALL include `status`, `verdict_class`,
+`prior_failure_receipt`, `historical_input_receipts`,
+`independent_row_recomputation`, `lineage_decision_rows`,
+`retired_dependency_attack_matrix`, `atomic_terminal_write_receipt`,
+`v563_independent_root_ready_score`, `per_unit_rows`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`bounded_independent_historical_artifact_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for exact row and hash checks.
+`verdict_class` SHALL be `partial`, `null`, or `blocked`; it SHALL NOT be
+`positive`.
+
+`v563_independent_root_ready_score` SHALL equal `1.0` only when direct row
+checks pass, historical files are unchanged, the verdict class is null or
+partial, every forbidden lineage attack fails closed, no structured dependency
+names Exp6506, Exp6507, Exp6508, or Exp6509, and the target artifact is a
+complete atomic terminal artifact rather than a bootstrap stub.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes the new root from a bootstrap or partial replay."
+- `verdict_class`: "The closed class prevents exact-oracle readiness from becoming an unsupported positive result."
+- `prior_failure_receipt`: "The receipt binds the changed technique to the Exp6506 conductor failure."
+- `historical_input_receipts`: "Exact paths, hashes, and JSON pointers make direct immutable-file use auditable."
+- `independent_row_recomputation`: "Row-derived checks prevent trust in stale or contradictory aggregates."
+- `lineage_decision_rows`: "One row per allowed and forbidden scope proves retired dependencies fail closed."
+- `retired_dependency_attack_matrix`: "Attacks detect renamed, indirect, or structured reuse of retired tasks."
+- `atomic_terminal_write_receipt`: "The receipt addresses the prior bootstrap-update failure with a new bounded write path."
+- `v563_independent_root_ready_score`: "This exact field is the same-roadmap gate for the new branch dataset."
+- `per_unit_rows`: "Per-unit rows make all counts, decisions, and failures independently checkable."
+- `gate_check_summary`: "A blocked result must name the failed path, hash, class, or lineage check and its observed value."
+- `preconditions_checked`: "Explicit checks prevent a root-ready claim when files, solvers, or resources are absent."
+- `protected_files_unchanged`: "Historical artifacts, research-roadmap.yaml, and the conductor must remain unchanged."
+- `inference_substrate`: "Declaring bounded artifact replay with no LLM keeps substrate and SOTA policy explicit."
+- `verifier_is_oracle`: "Oracle disclosure prevents exact consistency checks from supporting verifier-value claims."
+- `field_principles`: "Load-bearing reasons help later tasks preserve the evidence contract."
+- `field_provenance`: "Paths, hashes, reducers, and source lines make every field traceable."
+- `random_seed`: "A fixed attack order makes the qualifier reproducible."
+- `duration_s`: "Measured wall time supports fabrication and bounded-work checks."
+- `tests_run`: "Command and exit-code receipts show which validation actually ran."
+- `reproducibility_checksum`: "A content hash detects later drift in inputs, rows, or lineage decisions."
+- `honest_verdict`: "A complete_* or blocked_* prefix gives the conductor a safe terminal result."
+
+#### SCENARIO-BENCH-6510-DIRECT-IMMUTABLE: Historical Files Are Qualified Directly
+
+**Given** the checked-in Exp6504 and Exp6506 artifacts
+**When** Exp6510 runs
+**Then** it records exact paths, byte hashes, JSON pointers, row counts, label
+receipts, replay receipts, split hashes, protected hashes, solver state, and
+resource preconditions from those files without invoking Exp6506.
+
+#### SCENARIO-BENCH-6510-RETIRED-ISOLATION: Retired Task IDs Stay Out Of Dependencies
+
+**Given** Exp6506 failed in the conductor as
+`artifact_not_updated_past_bootstrap` and Exp6507-Exp6509 were blocked
+**When** Exp6510 emits lineage rows
+**Then** prior failures appear only in `prior_failure_receipt`, no structured
+dependency names Exp6506, Exp6507, Exp6508, or Exp6509, and only the new
+exact branch-counterfactual path is allowed.
+
+#### SCENARIO-BENCH-6510-ATTACKS: Retired And Aggregate Shortcuts Fail Closed
+
+**Given** missing files, stale hashes, aggregate-only fields, historical
+mutation, renamed retired scopes, indirect Exp6505 challenge-pool use, and a
+positive exact-oracle class claim
+**When** Exp6510 evaluates attacks
+**Then** each attack row fails closed before
+`v563_independent_root_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6510-ATOMIC-TERMINAL: Artifact Write Is Complete And Atomic
+
+**Given** all independent qualification gates pass
+**When** Exp6510 writes its deliverable
+**Then** the artifact is written in one atomic terminal operation, contains all
+required fields, records the write receipt, is not a bootstrap stub, and has an
+honest verdict with a `complete_` or `blocked_` prefix.
+
+#### SCENARIO-BENCH-6510-VERDICT-CLASS: Exact Oracle Readiness Is Non-Positive
+
+**Given** exact row and hash checks use oracle authority
+**When** Exp6510 validates the artifact
+**Then** `verdict_class` is `partial`, `null`, or `blocked`, never `positive`,
+and `verifier_is_oracle=true` does not support a scientific performance claim.
+
+## Implementation Status (REQ-BENCH-6510)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6510 | Implemented (`python/carnot/experiment_6510_v563_independent_exact_root.py`, `results/experiment_6510_v563_independent_exact_root.json`) | Implemented (`tests/python/test_experiment_6510_v563_independent_exact_root.py`) |
+
+### REQ-BENCH-6512: Independent Branch Dataset Audit SHALL Close The Readiness Gate
+
+Carnot SHALL provide Exp6512 at
+`python/carnot/experiment_6512_branch_dataset_independent_audit.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6512_branch_dataset_independent_audit --date 20260822`
+SHALL write
+`results/experiment_6512_branch_dataset_independent_audit.json`.
+
+Exp6512 SHALL audit
+`results/experiment_6511_exact_branch_counterfactual_dataset_v2.json` without
+a conductor gate. It SHALL record whether the upstream path exists, its byte
+hash, terminal status, row count, shard count, solver availability, resource
+state, and protected-file hashes before the audit. If the upstream file is
+missing, null, blocked, partial, unreadable, or invalid, Exp6512 SHALL still
+write a complete terminal artifact with
+`branch_dataset_audited_ready_score=0.0`.
+
+Exp6512 SHALL recompute all dataset counts and aggregate values from dataset
+rows. It SHALL not trust upstream aggregate fields. It SHALL replay exact
+receipt fields per row, check immutable base-instance hashes, rebuild train,
+development, and held lineage sets, and reject base-lineage overlap, post-held
+repair, duplicate checkpoints, asymmetric budgets, missing terminal
+dispositions, incomplete shards, missing resume receipts, broken hash chains,
+bad censoring accounting, and features unavailable at decision time.
+
+Exp6512 SHALL run deterministic shortcut attacks for unit IDs, row order,
+serialization length, family, label, future effort, shard order, and censored
+row removal. The audit SHALL report one per-unit audit row for each upstream
+dataset unit that exists. It SHALL report empty per-unit rows with a named
+missing-upstream failure when no upstream rows exist.
+
+The artifact SHALL include `status`, `verdict_class`,
+`upstream_artifact_receipt`, `independent_row_recomputation`,
+`exact_receipt_replay_rows`, `split_and_lineage_audit`,
+`shard_and_censoring_audit`, `feature_timing_audit`,
+`shortcut_attack_matrix`, `branch_dataset_audited_ready_score`,
+`per_unit_rows`, `aggregate_row_recomputation`, `gate_check_summary`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, `reproducibility_checksum`, and
+`honest_verdict`. `inference_substrate` SHALL be
+`independent_branch_dataset_row_and_exact_receipt_replay_no_llm`.
+`verifier_is_oracle` SHALL be true for label and receipt checks.
+`verdict_class` SHALL be `null` only when readiness is valid. It SHALL be
+`blocked` or `disqualified` for invalid inputs.
+
+`branch_dataset_audited_ready_score` SHALL always be present and SHALL be
+either `0.0` or `1.0`. It SHALL equal `1.0` only when exact receipts pass,
+shards are complete, splits are sealed by base lineage, and all features are
+available at decision time. Any failed check SHALL set the score to `0.0` and
+name the failed check and observed value in `gate_check_summary`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal audit status is required even when the upstream file is absent."
+- `verdict_class`: "The class records null, blocked, disqualified, or partial readiness without claiming method value."
+- `upstream_artifact_receipt`: "Path, existence, hash, status, and imported fields make the audit input explicit."
+- `independent_row_recomputation`: "The audit must derive counts and metrics from rows rather than task aggregates."
+- `exact_receipt_replay_rows`: "Per-row replay checks label and validity authority."
+- `split_and_lineage_audit`: "Base-lineage separation prevents development and held leakage."
+- `shard_and_censoring_audit`: "Manifest, resume, timeout, and terminal-count checks detect omitted hard units."
+- `feature_timing_audit`: "Decision-time availability blocks future-effort and outcome leakage."
+- `shortcut_attack_matrix`: "Attacks test identity, order, length, family, label, and censoring shortcuts."
+- `branch_dataset_audited_ready_score`: "This exact closed field is the structured gate for Exp6513 and Exp6518."
+- `per_unit_rows`: "One audit row per dataset unit makes readiness independently recheckable."
+- `aggregate_row_recomputation`: "All audit summaries must derive from per-unit evidence."
+- `gate_check_summary`: "Every score-0 or blocked result names the failed check and observed value."
+- `preconditions_checked`: "Input, solver, and resource checks prevent invented audit results."
+- `protected_files_unchanged`: "An audit cannot repair the source artifact or protected control files."
+- `inference_substrate`: "Declaring independent exact replay with no LLM makes the evidence boundary explicit."
+- `verifier_is_oracle`: "Oracle disclosure prevents exact dataset consistency from becoming a verifier-value claim."
+- `field_principles`: "Reasons beside fields preserve the gate contract."
+- `field_provenance`: "Paths, row IDs, reducers, solvers, and hashes make each audit result traceable."
+- `random_seed`: "A fixed attack order makes the audit reproducible."
+- `duration_s`: "Measured duration supports authenticity checks."
+- `tests_run`: "Command receipts show which validation and E2E checks ran."
+- `reproducibility_checksum`: "A content hash detects later changes to the audit decision."
+- `honest_verdict`: "A complete_* or blocked_* prefix gives downstream gates a safe terminal state."
+
+#### SCENARIO-BENCH-6512-MISSING-UPSTREAM: Missing Exp6511 Still Emits A Closed Gate
+
+**Given** the Exp6511 dataset path is absent
+**When** Exp6512 runs
+**Then** it writes a complete terminal artifact with
+`branch_dataset_audited_ready_score=0.0`, `verdict_class=blocked`,
+`honest_verdict` beginning with `blocked_`, an upstream receipt with
+`exists=false`, empty per-unit rows, and a gate-check row naming the missing
+upstream path.
+
+#### SCENARIO-BENCH-6512-ROW-REPLAY: Rows Own Counts And Exact Receipts
+
+**Given** a present branch-counterfactual dataset
+**When** Exp6512 audits it
+**Then** row counts, labels, exact receipts, base hashes, aggregate metrics,
+and terminal dispositions are recomputed from rows rather than imported
+aggregate fields.
+
+#### SCENARIO-BENCH-6512-SPLIT-LINEAGE: Base Lineage Is Sealed
+
+**Given** train, development, and held rows
+**When** Exp6512 rebuilds lineage sets
+**Then** any base-lineage overlap, duplicate checkpoint, post-held repair,
+asymmetric budget, or missing terminal disposition blocks readiness.
+
+#### SCENARIO-BENCH-6512-SHARDS-CENSORING: Shards And Censoring Are Complete
+
+**Given** a shard manifest, resume receipts, and censored rows
+**When** Exp6512 recomputes shard and censoring state
+**Then** missing shards, broken hash chains, missing resume receipts, timeout
+omission, or mismatched terminal counts block readiness.
+
+#### SCENARIO-BENCH-6512-LEAKAGE: Feature Timing And Shortcuts Fail Closed
+
+**Given** decision-time features and adversarial shortcut probes
+**When** Exp6512 audits feature timing
+**Then** future effort, unit ID, row order, serialization length, family, label,
+shard order, and censored-row-removal leakage block readiness.
+
+## Implementation Status (REQ-BENCH-6512)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6512 | Planned (`python/carnot/experiment_6512_branch_dataset_independent_audit.py`, `results/experiment_6512_branch_dataset_independent_audit.json`) | Planned (`tests/python/test_experiment_6512_branch_dataset_independent_audit.py`) |
+
+### REQ-BENCH-6513: V564 Terminal Handoff SHALL Preserve V563 Outcomes Without Retired Dependencies
+
+Carnot SHALL provide Exp6513 at
+`python/carnot/experiment_6513_v564_terminal_handoff_contract.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6513_v564_terminal_handoff_contract --date 20260822`
+SHALL write
+`results/experiment_6513_v564_terminal_handoff_contract.json`.
+
+Exp6513 SHALL build one bounded terminal handoff from immutable file content
+and conductor rows. It SHALL read Exp6504, Exp6506, Exp6510, and Exp6512
+directly by path and SHA-256 hash. It SHALL parse `ops/conductor-log.md` for
+terminal rows. It SHALL record git status, input paths and hashes,
+conductor-row identifiers, resources, exclusion state, and protected-file
+hashes before it classifies readiness.
+
+Exp6513 SHALL recompute Exp6504 raw, label, replay, split, held-cell,
+stratum, leakage, aggregate, and checksum evidence from rows. It SHALL
+recompute Exp6510 row counts, direct-input receipts, lineage decisions,
+retired-dependency attacks, ready score, and non-positive verdict class from
+Exp6510 rows and file content. It SHALL not trust aggregate-only fields from
+either artifact.
+
+Exp6513 SHALL preserve all historical determinations. It SHALL record the
+three Exp6506 `artifact_not_updated_past_bootstrap` conductor rows, the three
+Exp6510 `artifact_not_updated_past_bootstrap` conductor rows, the missing
+Exp6511 dataset path, and the Exp6512 score-0 blocked audit. It SHALL
+distinguish usable immutable content from eligible task dependencies. Exp6510
+content MAY be read only as a direct path-and-hash input. Exp6510 SHALL NOT
+be used as a structured dependency.
+
+Exp6513 SHALL emit one row per historical task, immutable file, conductor
+terminal event, allowed direct input, forbidden dependency, and retired-scope
+attack. It SHALL attack renamed dependencies, indirect `requires` or
+`gated_on` chains, stale paths, hash drift, positive exact-oracle framing, and
+claims that terminal execution means scientific success.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`prior_failure_receipts`, `historical_task_rows`,
+`immutable_input_receipts`, `allowed_direct_input_rows`,
+`forbidden_dependency_rows`, `retired_dependency_attack_matrix`,
+`v564_handoff_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`bounded_historical_artifact_and_conductor_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for row, hash, and terminal-state
+checks. `verdict_class` SHALL be `null`, `partial`, or `blocked`; it SHALL
+NOT be `positive`.
+
+`v564_handoff_ready_score` SHALL equal `1.0` only when Exp6504 row replay
+passes, Exp6510 rows support its usable-content status, every historical
+failure or block is preserved, Exp6511 is confirmed missing, Exp6512 is
+confirmed as a blocked score-0 audit, protected files remain unchanged, every
+forbidden dependency attack fails closed, and no planned structured dependency
+or requires chain names Exp6506, Exp6507, Exp6508, Exp6509, Exp6510, or
+Exp6511. A blocked verdict SHALL populate `gate_check_summary` with the
+failed check, expected value, observed value, and source path.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes the handoff from a bootstrap or partial write."
+- `honest_verdict`: "The verdict preserves terminal history without claiming scientific success."
+- `verdict_class`: "A null or partial class prevents terminal governance from becoming a performance claim."
+- `prior_failure_receipts`: "Receipts preserve Exp6506 and Exp6510 bootstrap failures, missing Exp6511, and the Exp6512 block without reactivating them."
+- `historical_task_rows`: "One row per prior task separates task outcome from usable file content."
+- `immutable_input_receipts`: "Path and hash receipts make every direct read auditable."
+- `allowed_direct_input_rows`: "Direct input rows authorize content reads without structured dependencies."
+- `forbidden_dependency_rows`: "Forbidden rows prove retired or missing IDs cannot gate V564 work."
+- `retired_dependency_attack_matrix`: "Attacks catch aliases, indirect requires, stale paths, drift, positive framing, and terminal-success confusion."
+- `v564_handoff_ready_score`: "The score opens only when all historical determinations are preserved and no retired structured dependency is planned."
+- `gate_check_summary`: "Each gate records expected and observed values for replay."
+- `per_unit_rows`: "Unit rows expose every task, file, event, input, dependency, and attack row."
+- `aggregate_row_recomputation`: "The aggregate is recomputed from rows instead of imported totals."
+- `preconditions_checked`: "Preconditions record git state, resources, solver, roadmap, exclusion, and required paths."
+- `protected_files_unchanged`: "Historical files and conductor code must remain unchanged during the handoff."
+- `inference_substrate`: "The declaration keeps the handoff in artifact and conductor replay with no LLM."
+- `verifier_is_oracle`: "Oracle disclosure limits authority to row, hash, and terminal-state checks."
+- `field_principles`: "Reasons beside fields help future tasks preserve the contract."
+- `field_provenance`: "Provenance records path, hash, reducer, and constant sources for each field."
+- `random_seed`: "A fixed attack order makes replay deterministic."
+- `duration_s`: "Measured wall time supports authenticity checks."
+- `tests_run`: "Command receipts show which verification actually ran."
+- `reproducibility_checksum`: "A content hash detects drift in inputs, rows, and decisions."
+
+#### SCENARIO-BENCH-6513-DIRECT-IMMUTABLE: Inputs Are Path-And-Hash Reads
+
+**Given** the checked-in Exp6504, Exp6506, Exp6510, and Exp6512 artifacts
+**When** Exp6513 builds immutable input receipts
+**Then** every source records path, existence, SHA-256, imported pointers, and
+`read_mode=direct_path_and_hash`, and no allowed direct input counts as a
+structured dependency.
+
+#### SCENARIO-BENCH-6513-ROW-REPLAY: Readiness Comes From Rows
+
+**Given** Exp6504 and Exp6510 artifacts with aggregate fields
+**When** Exp6513 recomputes readiness
+**Then** Exp6504 counts and Exp6510 content status derive from per-row
+evidence, lineage rows, attack rows, hashes, and non-positive classes rather
+than aggregate-only fields.
+
+#### SCENARIO-BENCH-6513-TERMINAL-HISTORY: V563 Terminal Outcomes Are Preserved
+
+**Given** the conductor log, missing Exp6511 path, and Exp6512 artifact
+**When** Exp6513 emits prior-failure and historical-task rows
+**Then** it records three Exp6506 bootstrap failures, three Exp6510 bootstrap
+failures, the missing Exp6511 deliverable, and the Exp6512 blocked score-0
+audit without reclassifying terminal as scientifically successful.
+
+#### SCENARIO-BENCH-6513-RETIRED-ISOLATION: Retired IDs Cannot Gate V564
+
+**Given** planned V564 roadmap tasks and retired V562/V563 identifiers
+**When** Exp6513 checks `requires` and `gated_on` chains
+**Then** no allowed structured dependency names Exp6506, Exp6507, Exp6508,
+Exp6509, Exp6510, or Exp6511, while direct path-and-hash reads of historical
+files remain allowed.
+
+#### SCENARIO-BENCH-6513-ATTACKS: Shortcut Dependencies Fail Closed
+
+**Given** renamed dependencies, indirect requires chains, stale paths, hash
+drift, positive exact-oracle framing, and terminal-success framing
+**When** Exp6513 evaluates retired-dependency attacks
+**Then** each attack fails closed before `v564_handoff_ready_score` can equal
+`1.0`.
+
+#### SCENARIO-BENCH-6513-ATOMIC-FINAL: The Handoff Is One Complete Artifact
+
+**Given** all handoff gates pass
+**When** Exp6513 writes its deliverable
+**Then** the artifact is written atomically with all required fields, a stable
+checksum, complete provenance, unchanged protected files, and an honest verdict
+with a `complete_` or `blocked_` prefix.
+
+## Implementation Status (REQ-BENCH-6513)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6513 | Planned (`python/carnot/experiment_6513_v564_terminal_handoff_contract.py`, `results/experiment_6513_v564_terminal_handoff_contract.json`) | Planned (`tests/python/test_experiment_6513_v564_terminal_handoff_contract.py`) |
+
+### REQ-BENCH-6514: Atomic Shard Artifact Transaction SHALL Separate Resumable Rows From Terminal Artifacts
+
+Carnot SHALL provide a reusable helper at
+`python/carnot/atomic_shard_transaction.py` and an Exp6514 contract at
+`python/carnot/experiment_6514_atomic_shard_artifact_transaction.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6514_atomic_shard_artifact_transaction --date 20260822`
+SHALL write
+`results/experiment_6514_atomic_shard_artifact_transaction.json`.
+
+The transaction helper SHALL support row-producing experiments that generate
+long data streams. It SHALL write resumable unit rows as content-addressed
+shards outside the conductor-visible final artifact. It SHALL record a planned
+unit journal before terminal rows are finalized. It SHALL compute SHA-256
+hashes for shard bytes and journal records. It SHALL verify a shard before
+reuse, quarantine corrupt shard bytes, and reject a duplicate unit ID if a
+verified terminal record already binds that ID to different content.
+
+The helper SHALL resume only from verified journal records and verified shard
+bytes. A planned unit SHALL count as terminal only when the journal has a
+valid terminal disposition and its referenced content-addressed shard verifies.
+Finalization SHALL fail closed while any planned unit is missing a terminal
+disposition. Finalization SHALL write a complete temporary JSON artifact,
+fsync the file, fsync the parent directory where supported, then atomically
+replace the final path. A successful final path SHALL never contain a
+bootstrap, running, partial, or incomplete status.
+
+The helper SHALL refuse concurrent writers with a lock file. It SHALL recover
+from a stale lock when the recorded process is gone and the lock age exceeds
+the configured stale threshold. It SHALL check available disk space before
+large writes and raise a closed insufficient-disk error before mutating the
+final artifact when the precondition fails.
+
+Exp6514 SHALL exercise crash injection before shard write, after shard write,
+during journal update, before final replace, and after final replace. It SHALL
+prove verified resume after each supported crash point. It SHALL test corrupt
+shard quarantine, stale lock recovery, concurrent-writer refusal, missing unit
+refusal, duplicate unit refusal, and insufficient-disk refusal.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`transaction_schema`, `filesystem_capability_receipt`,
+`crash_injection_rows`, `recovery_rows`, `shard_integrity_rows`,
+`concurrency_attack_rows`, `terminal_write_receipt`,
+`atomic_artifact_contract_ready_score`, `gate_check_summary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`local_filesystem_transaction_and_crash_injection_no_llm`.
+`verifier_is_oracle` SHALL be true only for local transaction invariants.
+`verdict_class` SHALL be `null`, `partial`, `blocked`, or `disqualified`;
+it SHALL NOT be `positive`.
+
+`atomic_artifact_contract_ready_score` SHALL equal `1.0` only when every crash
+injection row, recovery row, shard integrity row, concurrency attack row, and
+terminal write gate passes on the supported local filesystem. A blocked or
+partial result SHALL preserve a closed terminal failure artifact with
+diagnostics in `gate_check_summary`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal status proves the conductor sees a closed artifact, not a bootstrap."
+- `honest_verdict`: "The verdict states whether the filesystem transaction contract is complete or bounded."
+- `verdict_class`: "The class is an infrastructure result and must never be positive."
+- `transaction_schema`: "The schema names the reusable helper and journal format."
+- `filesystem_capability_receipt`: "Filesystem, permissions, disk, process, and fsync receipts bound the local preconditions."
+- `crash_injection_rows`: "Each injected crash records where the process stopped and what survived."
+- `recovery_rows`: "Recovery rows prove resume uses only verified shards and journal records."
+- `shard_integrity_rows`: "Shard rows bind unit IDs to content hashes and quarantine corrupt bytes."
+- `concurrency_attack_rows`: "Concurrency rows prove live locks refuse writers and stale locks recover."
+- `terminal_write_receipt`: "The receipt proves complete-temp fsync and atomic replacement reached the final path."
+- `atomic_artifact_contract_ready_score`: "The score opens only when every local transaction invariant passes."
+- `gate_check_summary`: "Each failed gate records the expected and observed value."
+- `per_unit_rows`: "Per-unit rows expose planned, terminal, crash, recovery, integrity, and concurrency evidence."
+- `aggregate_row_recomputation`: "The aggregate recomputes readiness from rows."
+- `preconditions_checked`: "Preconditions record git state, paths, disk, process, and protected hashes."
+- `protected_files_unchanged`: "The conductor and historical inputs must remain byte-identical."
+- `inference_substrate`: "The declaration prevents a filesystem contract from being read as model inference."
+- `verifier_is_oracle`: "Oracle scope is limited to transaction invariants."
+- `field_principles`: "Principles preserve why each artifact field exists."
+- `field_provenance`: "Provenance maps each field to helper rows, local receipts, or deterministic reducers."
+- `random_seed`: "A fixed seed makes crash and attack ordering reproducible."
+- `duration_s`: "Measured duration supports authenticity checks."
+- `tests_run`: "Command receipts show which validation actually ran."
+- `reproducibility_checksum`: "A checksum detects later drift in rows, gates, or the terminal artifact."
+
+#### SCENARIO-BENCH-6514-SHARD-IDENTITY: Unit Shards Are Content Addressed
+
+**Given** planned units and terminal payloads
+**When** the transaction writes shards
+**Then** shard filenames, shard receipts, and terminal journal records use
+SHA-256 content hashes, verified identical rewrites are idempotent, and a
+duplicate unit ID with different verified content is rejected.
+
+#### SCENARIO-BENCH-6514-PLANNED-TERMINAL: Planned Units Must All Close
+
+**Given** a planned-unit journal with at least one missing terminal unit
+**When** the producer tries to finalize the artifact
+**Then** finalization fails closed before replacing the final path and names
+the missing unit.
+
+#### SCENARIO-BENCH-6514-RESUME-CRASHES: Crash Points Resume Safely
+
+**Given** crash injection before shard write, after shard write, during journal
+update, before replace, and after replace
+**When** the transaction resumes
+**Then** verified shards are reused, orphan shards do not count as terminal
+without a journal record, and an after-replace crash leaves a complete
+terminal final artifact.
+
+#### SCENARIO-BENCH-6514-CORRUPT-QUARANTINE: Corrupt Shards Do Not Resume
+
+**Given** a terminal journal record references a shard whose bytes no longer
+match its hash
+**When** the transaction resumes
+**Then** the corrupt bytes move to quarantine, the unit is no longer terminal,
+and the producer must rewrite a verified shard before finalization.
+
+#### SCENARIO-BENCH-6514-ATOMIC-REPLACE: Final Artifact Replaces Atomically
+
+**Given** all planned units have terminal dispositions
+**When** finalization writes the terminal JSON
+**Then** it fsyncs the complete temporary file, fsyncs the directory where
+supported, atomically replaces the final path, and rejects bootstrap or running
+success payloads.
+
+#### SCENARIO-BENCH-6514-CONCURRENCY: Live Writers Are Refused
+
+**Given** one process holds the transaction lock
+**When** another writer opens the same transaction
+**Then** the second writer is refused, while a stale lock with a dead process
+is removed and recorded as recovered.
+
+#### SCENARIO-BENCH-6514-CLOSED-FAILURE: Failures Write Or Preserve Closed Artifacts
+
+**Given** disk, corruption, duplicate, or missing-unit preconditions fail
+**When** the producer closes the run
+**Then** it writes or preserves a terminal blocked or disqualified artifact
+with diagnostics and never leaves a running artifact at the final path.
+
+## Implementation Status (REQ-BENCH-6514)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6514 | Planned (`python/carnot/atomic_shard_transaction.py`, `python/carnot/experiment_6514_atomic_shard_artifact_transaction.py`, `results/experiment_6514_atomic_shard_artifact_transaction.json`) | Planned (`tests/python/test_atomic_shard_transaction.py`, `tests/python/test_experiment_6514_atomic_shard_artifact_transaction.py`) |
+
+### REQ-BENCH-6516: Exact Branch Pilot SHALL Be Sealed Before Guidance Claims
+
+Carnot SHALL provide Exp6516 at
+`python/carnot/experiment_6516_exact_branch_pilot_dataset_v3.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6516_exact_branch_pilot_dataset_v3 --date 20260823`
+SHALL write
+`results/experiment_6516_exact_branch_pilot_dataset_v3.json`.
+
+Exp6516 SHALL evaluate the two V564 gates before pilot construction. It SHALL
+read Exp6514 and Exp6515 by direct path and hash. It SHALL record expected and
+observed gate values, artifact hashes, solver versions, CPU, RAM, disk,
+output-space bounds, and protected-file hashes. Both gates SHALL equal `1.0`
+before a complete readiness score can be reported.
+
+Exp6516 SHALL read Exp6504 and Exp6510 by direct immutable path and hash. It
+SHALL not use Exp6506, Exp6507, Exp6508, Exp6509, Exp6510, or Exp6511 as a
+structured dependency. It SHALL record prior failure receipts from the direct
+input artifacts. It SHALL use Exp6510 only as a historical receipt that
+authorizes direct file reads.
+
+Exp6516 SHALL freeze a bounded pilot before replay outcomes exist. The pilot
+SHALL cover at least three procedural constraint families, two difficulty
+scales, multiple seeds, and sealed train, development, and held base lineages.
+It SHALL precommit base lineages, checkpoints, candidate values, equal exact
+budgets, cell floors, and terminal dispositions. Checkpoint and feature
+selection SHALL use only decision-time structural data. It SHALL not use unit
+ID, label, held outcome, future effort, row order, serialization length,
+family label, base label, or post-replay effort as a feature.
+
+For every checkpoint, Exp6516 SHALL enumerate every eligible Boolean value. It
+SHALL replay each value under the same exact budget. Each replay SHALL record
+conflicts, propagations, decisions, restarts, model or proof receipt, timeout,
+censoring, terminal disposition, exact answer equality across exact backends,
+and a stable row hash.
+
+Exp6516 SHALL write content-addressed row shards and a planned-unit journal
+through the Exp6514 transaction helper. Resume SHALL accept only verified
+journal records and verified shard bytes. Finalization SHALL occur only after
+every planned unit has a terminal disposition. The final artifact SHALL be
+written through the Exp6514 atomic finalizer.
+
+Exp6516 SHALL attack row order, serialization length, family labels, base
+labels, outcome-derived effort, duplicate checkpoints, split leakage,
+asymmetric budgets, corrupt resume, and omitted hard rows. A false accept in
+any attack SHALL set `branch_pilot_dataset_ready_score=0.0` and SHALL use
+`verdict_class="disqualified"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_gate_receipts`, `prior_failure_receipts`, `direct_input_receipts`,
+`pilot_commitment`, `checkpoint_contract`, `structural_feature_schema`,
+`branch_counterfactual_rows`, `exact_solver_receipts`, `split_commitment`,
+`shard_manifest`, `planned_and_terminal_unit_counts`,
+`censoring_and_budget_rows`, `leakage_attack_matrix`,
+`branch_pilot_dataset_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`procedural_exact_branch_replay_with_transactional_shards_no_llm`.
+`verifier_is_oracle` SHALL be true only for exact labels and validity checks.
+`verdict_class` SHALL be `null` for complete data readiness, `partial` for
+bounded usable data below a claim gate, `blocked` for failed preconditions, or
+`disqualified` for leakage or false terminal accounting. It SHALL NOT be
+`positive`.
+
+`branch_pilot_dataset_ready_score` SHALL equal `1.0` only when every admitted
+row has an exact receipt, every planned unit is terminal, cell floors hold,
+splits are sealed, no leakage attack false accepts, protected files remain
+unchanged, and the final transaction verifies.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal pilot dataset state."
+- `honest_verdict`: "The verdict states whether the bounded pilot is ready without claiming learned guidance value."
+- `verdict_class`: "Null means complete data readiness. Partial, blocked, and disqualified preserve limits and failures."
+- `upstream_gate_receipts`: "The two V564 gates are checked by path, hash, expected value, and observed value."
+- `prior_failure_receipts`: "Historical bootstrap and skipped-dataset failures stay visible without reactivating retired roots."
+- `direct_input_receipts`: "Exp6504 and Exp6510 are read as direct immutable inputs with hashes."
+- `pilot_commitment`: "Families, scales, seeds, splits, budgets, floors, and candidate rules are fixed before replay."
+- `checkpoint_contract`: "Checkpoint selection is deterministic and uses only decision-time structural data."
+- `structural_feature_schema`: "Allowed features exclude identity, labels, row order, length, family labels, and future effort."
+- `branch_counterfactual_rows`: "One row per base checkpoint and eligible value records the exact replay result."
+- `exact_solver_receipts`: "Solver receipts expose model, proof, effort, timeout, censoring, and backend equality."
+- `split_commitment`: "Train, development, and held base lineages are sealed and disjoint."
+- `shard_manifest`: "Content-addressed shards, journal records, resume checks, and finalization state are auditable."
+- `planned_and_terminal_unit_counts`: "Planned and terminal counts prevent omitted or duplicate rows."
+- `censoring_and_budget_rows`: "Equal budgets and explicit timeout or censoring rows prevent asymmetric effort."
+- `leakage_attack_matrix`: "Shortcut attacks detect row order, length, family, label, effort, checkpoint, split, budget, resume, and omission leaks."
+- `branch_pilot_dataset_ready_score`: "The score opens only when rows, receipts, splits, floors, attacks, and transaction checks pass."
+- `gate_check_summary`: "Each failed gate records expected and observed values."
+- `per_unit_rows`: "Per-unit rows expose branch rows and audit rows for independent replay."
+- `aggregate_row_recomputation`: "Aggregates are recomputed from rows, not imported totals."
+- `preconditions_checked`: "Preconditions record direct files, gates, solvers, resources, output bounds, and protected hashes."
+- `protected_files_unchanged`: "Historical inputs and the conductor stay byte-identical during the run."
+- `inference_substrate`: "The declaration keeps the pilot on procedural exact replay with no LLM."
+- `verifier_is_oracle`: "Oracle authority is limited to exact labels and validity checks."
+- `field_principles`: "Principles explain why each artifact field exists."
+- `field_provenance`: "Provenance maps fields to specs, direct inputs, solvers, rows, shards, and tests."
+- `random_seed`: "Fixed seeds make pilot selection and attack order reproducible."
+- `duration_s`: "Measured duration supports authenticity checks."
+- `tests_run`: "Command receipts show which verification actually ran."
+- `reproducibility_checksum`: "A content hash detects drift in gates, rows, shards, and decisions."
+
+#### SCENARIO-BENCH-6516-DIRECT-IMMUTABLE: Inputs Are Path-And-Hash Reads
+
+**Given** checked-in Exp6504, Exp6510, Exp6514, and Exp6515 artifacts
+**When** Exp6516 evaluates gates and direct inputs
+**Then** it records each path, hash, expected value, observed value, source
+pointer, and direct-read mode without adding a retired structured dependency.
+
+#### SCENARIO-BENCH-6516-CHECKPOINTS: Checkpoints Are Deterministic
+
+**Given** selected base rows before replay outcomes exist
+**When** Exp6516 freezes checkpoints
+**Then** the selected variable and candidate values derive only from
+decision-time structural features and every feature is declared in the schema.
+
+#### SCENARIO-BENCH-6516-CANDIDATES: Every Eligible Value Is Replayed
+
+**Given** a Boolean checkpoint
+**When** Exp6516 builds branch units
+**Then** both `false` and `true` values are planned and replayed under the
+same exact budget for every selected base row.
+
+#### SCENARIO-BENCH-6516-EXACT-REPLAY: Exact Receipts Own Outcomes
+
+**Given** each forced branch formula
+**When** Exp6516 solves it
+**Then** exhaustive and Z3 backends agree on SAT or UNSAT, terminal model or
+proof receipts are valid, and timeout or censoring is explicit.
+
+#### SCENARIO-BENCH-6516-SPLIT-SEALING: Base Lineages Stay Disjoint
+
+**Given** train, development, and held pilot rows
+**When** Exp6516 recomputes split state
+**Then** no base lineage crosses splits, every planned split/family/scale cell
+meets its floor, and held rows are not repaired after held outcomes are read.
+
+#### SCENARIO-BENCH-6516-BOUNDED-SHARDS: Shards And Censoring Are Complete
+
+**Given** all planned branch units
+**When** Exp6516 writes row shards
+**Then** the shard manifest records verified resume receipts, terminal counts,
+hashes, censoring counts, and no omitted hard row.
+
+#### SCENARIO-BENCH-6516-RESUME-ATOMIC: Finalization Uses Exp6514
+
+**Given** a verified transaction resume state
+**When** Exp6516 finalizes the dataset
+**Then** the final JSON is atomically replaced only after every planned unit is
+terminal and the artifact checksum validates.
+
+#### SCENARIO-BENCH-6516-ATTACKS: Shortcut And Accounting Attacks Fail Closed
+
+**Given** row order, length, family, label, future-effort, duplicate
+checkpoint, split-leakage, asymmetric-budget, corrupt-resume, and
+omitted-hard-row attacks
+**When** Exp6516 evaluates readiness
+**Then** every attack fails closed before
+`branch_pilot_dataset_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6516-READY: Readiness Is Row-Derived
+
+**Given** all rows, receipts, shards, attacks, protected hashes, and tests
+**When** Exp6516 validates the artifact
+**Then** every required field has a principle and provenance entry, the
+checksum matches, `verdict_class` is `null`, and the terminal verdict starts
+with `complete_` or `blocked_`.
+
+## Implementation Status (REQ-BENCH-6516)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6516 | Planned (`python/carnot/experiment_6516_exact_branch_pilot_dataset_v3.py`, `results/experiment_6516_exact_branch_pilot_dataset_v3.json`) | Planned (`tests/python/test_experiment_6516_exact_branch_pilot_dataset_v3.py`) |
+
+### REQ-BENCH-6517: Branch Pilot Independent Audit SHALL Close Every Upstream Path
+
+Carnot SHALL provide Exp6517 at
+`python/carnot/experiment_6517_branch_pilot_independent_audit.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6517_branch_pilot_independent_audit --date 20260823`
+SHALL write
+`results/experiment_6517_branch_pilot_independent_audit.json`.
+
+Exp6517 SHALL independently audit Exp6516 from rows, immutable base rows,
+shard receipts, and transaction receipts. It SHALL never edit Exp6516, its
+shards, Exp6514, Exp6504, Exp6510, or historical inputs. It SHALL record
+source existence, path, hash, parse status, status, verdict class, branch row
+count, per-unit row count, shard counts, solver availability, resources, and
+protected-file hashes before any readiness decision. It SHALL write a terminal
+artifact even when Exp6516 is missing, corrupt, blocked, partial, incomplete,
+or otherwise invalid.
+
+Exp6517 SHALL recompute branch counts, candidate completeness, exact receipt
+validity, split lineage sets, shard accounting, feature timing, censoring,
+shortcut attacks, and readiness from per-unit evidence. It SHALL verify each
+branch exact receipt against the immutable Exp6504 base row hash and forced
+Boolean assignment. It SHALL reject row/hash drift, missing or mismatched
+receipts, split overlap, outcome-aware repair, duplicate checkpoints,
+asymmetric budgets, missing terminal dispositions, censoring removal, corrupt
+shards, aggregate tampering, and one-cell headroom.
+
+Exp6517 SHALL verify the Exp6514 transaction surface used by Exp6516. It
+SHALL compare planned IDs, terminal IDs, terminal shard hashes, journal
+counts, resume receipts, corrupt-resume detection, final atomic-write
+receipts, and the audited source checksum. It SHALL set
+`branch_pilot_audited_ready_score=1.0` only when every audit passes. Otherwise
+it SHALL set `branch_pilot_audited_ready_score=0.0`, use
+`verdict_class="blocked"` for missing or incomplete input, use
+`verdict_class="disqualified"` for leakage or false receipts, and name every
+failed check and observed value in `gate_check_summary`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_artifact_receipt`, `prior_failure_receipt`,
+`independent_row_recomputation`, `exact_receipt_replay_rows`,
+`split_and_lineage_audit`, `transaction_and_shard_audit`,
+`feature_timing_audit`, `censoring_audit`, `shortcut_attack_matrix`,
+`branch_pilot_audited_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`independent_exact_row_shard_and_receipt_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for dataset integrity checks.
+`verdict_class` SHALL be `null`, `blocked`, or `disqualified`; it SHALL NOT
+be `positive`.
+
+Field principles SHALL be:
+
+- `status`: "A terminal status proves the audit closed even when the source did not."
+- `honest_verdict`: "The verdict reports dataset readiness without claiming learned guidance value."
+- `verdict_class`: "Null means valid readiness. Blocked and disqualified preserve missing, incomplete, leakage, and false-receipt failures."
+- `upstream_artifact_receipt`: "The source receipt records existence, path, hash, parse status, verdict class, row counts, shard counts, solver state, resources, and protected hashes."
+- `prior_failure_receipt`: "Prior Exp6510 and Exp6511 failure context stays visible without becoming a dependency."
+- `independent_row_recomputation`: "Readiness is recomputed from branch rows and per-unit evidence rather than imported aggregate fields."
+- `exact_receipt_replay_rows`: "Each audit row verifies a branch receipt against the immutable base row hash and forced assignment."
+- `split_and_lineage_audit`: "Split rows prove train, development, and held lineages are sealed and disjoint."
+- `transaction_and_shard_audit`: "Shard and journal checks prove planned rows, terminal rows, hashes, resume receipts, and atomic receipts are consistent."
+- `feature_timing_audit`: "Feature rows prove checkpoint selection used decision-time structural features only."
+- `censoring_audit`: "Censoring rows prove budgets, timeouts, and terminal dispositions are symmetric and explicit."
+- `shortcut_attack_matrix`: "Attack rows close identity, order, length, label, effort, censoring, shard, aggregate, and headroom shortcuts."
+- `branch_pilot_audited_ready_score`: "The score opens only when every independent audit gate passes."
+- `gate_check_summary`: "Each failed gate records expected and observed values."
+- `per_unit_rows`: "Audit rows expose one source-unit row plus manifest, split, feature, censoring, and attack rows."
+- `aggregate_row_recomputation`: "The aggregate is rebuilt from audit rows instead of source totals."
+- `preconditions_checked`: "Preconditions record paths, resources, solvers, protected hashes, and planning date."
+- `protected_files_unchanged`: "The source, shards, historical inputs, and conductor must remain byte-identical."
+- `inference_substrate`: "The declaration keeps the audit on exact row, shard, and receipt replay with no LLM."
+- `verifier_is_oracle`: "Oracle authority is limited to dataset integrity checks."
+- `field_principles`: "Principles explain why each required field exists."
+- `field_provenance`: "Provenance maps fields to specs, inputs, rows, receipts, tests, and deterministic reducers."
+- `random_seed`: "A fixed seed makes attack ordering reproducible."
+- `duration_s`: "Measured wall time supports authenticity checks."
+- `tests_run`: "Command receipts show which validation actually ran."
+- `reproducibility_checksum`: "A content hash detects drift in inputs, rows, gates, and decisions."
+
+#### SCENARIO-BENCH-6517-MISSING-UPSTREAM: Missing Sources Close Blocked
+
+**Given** the Exp6516 source path is absent
+**When** Exp6517 runs
+**Then** it writes a terminal blocked artifact with
+`branch_pilot_audited_ready_score=0.0`, `verdict_class="blocked"`, a missing
+source receipt, and failed checks with observed missing values.
+
+#### SCENARIO-BENCH-6517-ROW-REPLAY: Exact Receipts Are Independently Replayed
+
+**Given** a valid Exp6516 branch artifact and immutable Exp6504 base rows
+**When** Exp6517 audits branch units
+**Then** every exact receipt is recomputed from the base hash, checkpoint
+variable, candidate value, and equal budget before readiness can open.
+
+#### SCENARIO-BENCH-6517-SHARDS: Shard And Journal Receipts Must Match Rows
+
+**Given** Exp6516 shard manifest rows and Exp6514 transaction receipts
+**When** Exp6517 verifies planned IDs, terminal IDs, shard hashes, journal
+counts, resume receipts, corrupt-resume evidence, and atomic receipts
+**Then** any mismatch blocks or disqualifies readiness and is named in
+`gate_check_summary`.
+
+#### SCENARIO-BENCH-6517-SPLIT-TIMING: Splits And Features Stay Pre-Outcome
+
+**Given** branch rows, checkpoint rows, and feature schema
+**When** Exp6517 rebuilds train, development, and held lineage sets
+**Then** it rejects overlap, outcome-aware repair, duplicate checkpoints,
+forbidden features, and features recorded after replay.
+
+#### SCENARIO-BENCH-6517-ATTACKS: Leakage And Tampering Fail Closed
+
+**Given** attacks for IDs, row order, serialization length, family shortcuts,
+label shortcuts, future effort, censoring removal, corrupt shards, aggregate
+tampering, and one-cell headroom
+**When** Exp6517 evaluates readiness
+**Then** each shortcut fails closed before
+`branch_pilot_audited_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6517-TERMINAL: Valid Readiness Is Complete And Reproducible
+
+**Given** every independent audit gate passes
+**When** Exp6517 writes its deliverable
+**Then** the artifact has all required fields, `verdict_class=null`, the exact
+inference substrate, complete provenance and principles, unchanged protected
+files, and a matching reproducibility checksum.
+
+## Implementation Status (REQ-BENCH-6517)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6517 | Planned (`python/carnot/experiment_6517_branch_pilot_independent_audit.py`, `results/experiment_6517_branch_pilot_independent_audit.json`) | Planned (`tests/python/test_experiment_6517_branch_pilot_independent_audit.py`) |
+
+### REQ-BENCH-6518: Structural Branch Controls SHALL Be Matched Before Learned Routing
+
+Carnot SHALL provide Exp6518 at
+`python/carnot/experiment_6518_structural_control_headroom_ab_v2.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6518_structural_control_headroom_ab_v2 --date 20260823`
+SHALL write
+`results/experiment_6518_structural_control_headroom_ab_v2.json`.
+
+Exp6518 SHALL evaluate the Exp6517 audit gate before running control arms. It
+SHALL record the gate path, hash, expected value, observed value, solver
+versions, resources, and protected-file hashes. A failed audit gate SHALL write
+a terminal blocked artifact.
+
+Exp6518 SHALL use the same Exp6516 pilot units, solver settings, seeds,
+restart budget, time limit, and terminal disposition rules for every arm. It
+SHALL freeze these arms before execution: native dynamic, shuffled dynamic,
+static analytical, partial-assignment consistency, periodic bounded refocus,
+random critical-variable enumeration, and analytical enumeration. The arm
+contract SHALL state that advice may order decisions only. It SHALL preserve
+all Boolean candidate values and SHALL keep the exact solver as the label
+authority.
+
+Exp6518 SHALL record one matched row for each pilot unit and arm. Each row
+SHALL record first changed decision, changed-decision count, candidate
+preservation, conflicts, propagations, decisions, restarts, wall time, control
+overhead, timeout, censoring, proof or model receipt, and exact answer
+equality. It SHALL report solver-only cost and total charged cost. Total cost
+SHALL charge feature computation, refocus, enumeration, and exact fallback.
+
+Exp6518 SHALL precommit the primary metric as held split total charged work
+units versus native dynamic. It SHALL report held transfer by family and seed.
+`structural_headroom_candidate_score` SHALL equal `1.0` only when a non-native
+arm has positive held charged benefit in the primary metric, exact answer
+equality, live decision influence, and support in more than one family and
+seed. Otherwise it SHALL equal `0.0`.
+
+Exp6518 SHALL attack inert advice, no-headroom units, row-order coupling,
+family identity, tuned held thresholds, omitted losses, timeout selection, and
+one-seed wins. Any correctness drift, candidate loss, leakage, or hidden cost
+SHALL set `structural_control_execution_complete_score=0.0`. Correctness drift
+or leakage SHALL use `verdict_class="disqualified"`. A failed precondition
+SHALL use `verdict_class="blocked"`. A complete run with no held benefit SHALL
+use `verdict_class=null`. An incomplete but usable run SHALL use
+`verdict_class="partial"`. A complete run with oracle-distinct held charged
+benefit SHALL use `verdict_class="positive"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_gate_receipt`, `prior_failure_receipts`, `preregistration`,
+`arm_contract`, `per_game_results`, `live_influence_rows`,
+`exact_answer_equality_rows`, `charged_cost_rows`, `censoring_rows`,
+`family_seed_summary`, `attack_matrix`,
+`structural_control_execution_complete_score`,
+`structural_headroom_candidate_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`procedural_exact_solver_structural_controls_no_llm`. `verifier_is_oracle`
+SHALL be false for method value. The artifact SHALL separately record
+`exact_solver_is_label_authority=true`.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal structural-control comparison state."
+- `honest_verdict`: "States the matched held result without turning the control into learned-router evidence."
+- `verdict_class`: "Closed enum separates positive, null, partial, blocked, and disqualified outcomes."
+- `upstream_gate_receipt`: "Pins the Exp6517 audit gate by path, hash, expected value, observed value, solvers, resources, and protected hashes."
+- `prior_failure_receipts`: "Keeps Exp6508 and method-boundary failures visible without making them dependencies."
+- `preregistration`: "Freezes the planning date, primary metric, splits, score rules, and stop rules before rows are scored."
+- `arm_contract`: "Freezes the seven structural arms and proves each arm may order candidates but not remove them."
+- `per_game_results`: "Stores one matched exact-solver row for each pilot unit and arm."
+- `live_influence_rows`: "Shows whether advice changed a live decision path relative to native dynamic."
+- `exact_answer_equality_rows`: "Shows exact-solver and Z3 labels match for every compared row."
+- `charged_cost_rows`: "Reports solver-only and total charged cost, including feature, refocus, enumeration, and fallback work."
+- `censoring_rows`: "Records timeout, censoring, restart, and terminal-disposition symmetry."
+- `family_seed_summary`: "Reports held transfer by family and seed before a candidate score can open."
+- `attack_matrix`: "Tests inert advice, no-headroom units, row order, family identity, held tuning, omitted losses, timeout selection, and one-seed wins."
+- `structural_control_execution_complete_score`: "Opens only when the matched rows, equality, costs, censoring, attacks, and protected hashes pass."
+- `structural_headroom_candidate_score`: "Opens only when held charged benefit is positive with equality, live influence, and family plus seed support."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `per_unit_rows`: "Flattens game, influence, equality, cost, censoring, family-seed, and attack rows for recomputation."
+- `aggregate_row_recomputation`: "Recomputes execution and candidate scores from rows."
+- `preconditions_checked`: "Records paths, resources, solvers, seeds, budgets, and protected hashes."
+- `protected_files_unchanged`: "Proves the audit, pilot, method contract, prior blocked receipt, and conductor stayed byte-identical."
+- `inference_substrate`: "Declares exact procedural controls with no LLM inference."
+- `verifier_is_oracle`: "False because method value is measured, not certified by a verifier."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, input artifacts, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins arm seeds and shuffled critical-variable controls."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in gates, rows, costs, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6518-AUDIT-GATE: Exp6517 Gate Is Evaluated First
+
+**Given** the Exp6517 audit artifact
+**When** Exp6518 starts
+**Then** it records the direct path, hash, expected readiness value,
+observed readiness value, solver versions, resources, and protected hashes
+before any complete execution score can open.
+
+#### SCENARIO-BENCH-6518-ARM-CONTRACT: Structural Arms Preserve Candidates
+
+**Given** the audited Exp6516 pilot units
+**When** Exp6518 freezes native dynamic, shuffled dynamic, static analytical,
+partial-assignment consistency, periodic bounded refocus, random
+critical-variable enumeration, and analytical enumeration
+**Then** every arm uses matched budgets, seeds, restart limits, time limits,
+terminal dispositions, and complete Boolean candidate preservation.
+
+#### SCENARIO-BENCH-6518-LIVE-INFLUENCE: Advice Changes Live Decisions
+
+**Given** native dynamic as the reference arm
+**When** each non-native structural arm solves a pilot unit
+**Then** Exp6518 records the first changed decision and the changed-decision
+count without using that decision change as a correctness label.
+
+#### SCENARIO-BENCH-6518-COST-EQUALITY: Equality And Charged Cost Are Recomputed
+
+**Given** matched exact-solver rows
+**When** Exp6518 computes solver-only and total charged work
+**Then** every row records exact answer equality, proof or model receipt,
+feature cost, refocus cost, enumeration cost, fallback cost, timeout, and
+censoring.
+
+#### SCENARIO-BENCH-6518-HELD-TRANSFER: Held Benefit Needs Family And Seed Support
+
+**Given** the held split rows
+**When** Exp6518 computes the precommitted primary metric
+**Then** a candidate score of `1.0` requires positive charged benefit,
+correctness equality, live influence, and support in more than one family and
+seed.
+
+#### SCENARIO-BENCH-6518-ATTACKS: Controls Fail Closed Under Shortcut Attacks
+
+**Given** inert advice, no-headroom units, row-order coupling, family identity,
+tuned held thresholds, omitted losses, timeout selection, and one-seed wins
+**When** Exp6518 evaluates the attack matrix
+**Then** each attack must fail closed before execution or candidate scores can
+open.
+
+#### SCENARIO-BENCH-6518-TERMINAL: Artifact Is Reproducible
+
+**Given** all matched rows, attacks, costs, equality checks, and protected
+hashes
+**When** Exp6518 validates the deliverable
+**Then** every required field has a principle and provenance entry, the
+checksum matches, and the verdict class follows the precommitted enum.
+
+## Implementation Status (REQ-BENCH-6518)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6518 | Planned (`python/carnot/experiment_6518_structural_control_headroom_ab_v2.py`, `results/experiment_6518_structural_control_headroom_ab_v2.json`) | Planned (`tests/python/test_experiment_6518_structural_control_headroom_ab_v2.py`) |
+
+### REQ-BENCH-6519: Structural Headroom Certification SHALL Be Recomputed From Rows
+
+Carnot SHALL provide Exp6519 at
+`python/carnot/experiment_6519_structural_headroom_certificate.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6519_structural_headroom_certificate --date 20260823`
+SHALL write
+`results/experiment_6519_structural_headroom_certificate.json`.
+
+Exp6519 SHALL read Exp6518 by direct path and hash. It SHALL record source
+existence, path, hash, parse status, terminal status, verdict class, row
+counts, resources, and protected-file hashes before any claim can open. If the
+source is missing, unparsable, nonterminal, or lacks valid row evidence, the
+artifact SHALL still close terminally with
+`certified_structural_headroom_score=0.0` and `verdict_class="blocked"`.
+
+Exp6519 SHALL recompute all structural-control metrics from Exp6518
+`per_unit_rows`, not from Exp6518 aggregate fields. It SHALL rejoin every
+structural-control row to the sealed Exp6517 pilot audit by base instance hash,
+checkpoint ID, split, family, and the two Boolean candidate rows. It SHALL
+reject missing units, duplicate unit-arm rows, missing candidate values, and
+post-hoc modified source rows.
+
+Exp6519 SHALL replay a deterministic solver-receipt sample and every
+correctness discrepancy. The replay SHALL compare exact status, Z3 status,
+receipt validity, decision-trace hash, solver-only work, charged work, and
+live influence against the row evidence. Advice SHALL count as live only when
+the row shows a changed decision path relative to native dynamic.
+
+Exp6519 SHALL recompute paired effects, uncertainty, long-tail metrics,
+censoring bounds, headroom strata, family breadth, seed breadth, and total
+charged cost. It SHALL attack identity shortcuts, row order, serialization
+length, family imbalance, held tuning, cost omission, inactive hooks,
+one-win headlines, aggregate contradiction, and exact-oracle class inflation.
+
+`certified_structural_headroom_score` SHALL equal `1.0` only when causal
+influence, correctness, charged benefit, family breadth, seed breadth,
+candidate preservation, censoring, protected hashes, aggregate contradiction
+checks, and all attack rows pass independently. Otherwise it SHALL equal
+`0.0` and the artifact SHALL list failed checks and observations. A positive
+`verdict_class` SHALL be used only for independently certified
+oracle-distinct headroom. A valid no-benefit result SHALL use
+`verdict_class=null`. Missing evidence SHALL use `verdict_class="blocked"`.
+Leakage, correctness drift, or contradictory rows SHALL use
+`verdict_class="disqualified"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_artifact_receipt`, `independent_row_recomputation`,
+`exact_receipt_replay_rows`, `live_influence_audit`, `charged_cost_audit`,
+`paired_effect_rows`, `breadth_and_censoring_audit`, `attack_matrix`,
+`certified_structural_headroom_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`independent_structural_control_row_and_solver_receipt_replay_no_llm`.
+`verifier_is_oracle` SHALL be false for the performance claim.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal independent certificate state."
+- `honest_verdict`: "States whether row-derived evidence certified structural headroom."
+- `verdict_class`: "Closed enum separates certified positive, null, blocked, and disqualified outcomes."
+- `upstream_artifact_receipt`: "Pins Exp6518 by path, hash, terminal status, class, row counts, resources, and protected hashes."
+- `independent_row_recomputation`: "Recomputes row identity, joins, equality, influence, costs, and aggregate contradictions without trusting Exp6518 aggregates."
+- `exact_receipt_replay_rows`: "Replays deterministic solver samples and every correctness discrepancy."
+- `live_influence_audit`: "Counts live advice only when rows show a changed decision path."
+- `charged_cost_audit`: "Charges solver, feature, refocus, enumeration, and fallback work from rows."
+- `paired_effect_rows`: "Reports paired native-versus-arm held effects, uncertainty, and tail metrics."
+- `breadth_and_censoring_audit`: "Records family breadth, seed breadth, headroom strata, timeouts, censoring, and bounds."
+- `attack_matrix`: "Forces identity, order, length, family, tuning, cost, inactive-hook, one-win, aggregate, and oracle-class attacks closed."
+- `certified_structural_headroom_score`: "Opens only when all independent certificate gates pass."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `per_unit_rows`: "Emits one audit row per unit-arm and attack for external row checks."
+- `aggregate_row_recomputation`: "Rebuilds the certificate score and verdict from independent rows."
+- `preconditions_checked`: "Records paths, hashes, resources, solvers, planning date, row counts, and protected hashes."
+- `protected_files_unchanged`: "Proves protected upstream and verifier files stayed byte-identical during the run."
+- `inference_substrate`: "Declares independent structural-control row and solver-receipt replay with no LLM."
+- `verifier_is_oracle`: "False because the performance claim is measured, not oracle-certified."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, solver replay, tests, and hashes."
+- `random_seed`: "Pins deterministic replay sampling and attack ordering."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "Detects drift in inputs, rows, gates, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6519-MISSING-SOURCE: Missing Evidence Closes Zero
+
+**Given** the Exp6518 source path is absent
+**When** Exp6519 runs
+**Then** it writes a terminal blocked artifact with
+`certified_structural_headroom_score=0.0`, a missing source receipt, failed
+checks, and required fields.
+
+#### SCENARIO-BENCH-6519-INDEPENDENT-ROWS: Rows Own The Reduction
+
+**Given** Exp6518 per-unit structural-control rows and the sealed Exp6517
+pilot audit
+**When** Exp6519 recomputes metrics
+**Then** it uses row-type containers, rejects missing or duplicated unit-arm
+rows, verifies the two candidate values per pilot unit, and rederives
+aggregate scores without importing Exp6518 aggregate fields.
+
+#### SCENARIO-BENCH-6519-EXACT-REPLAY: Solver Receipts Are Sampled
+
+**Given** sampled structural rows and any correctness discrepancy rows
+**When** Exp6519 replays solver receipts
+**Then** exact status, Z3 status, receipt validity, trace hash, solver-only
+work, charged work, and live influence must agree with row evidence.
+
+#### SCENARIO-BENCH-6519-LIVE-COST-BREADTH: Benefit Needs Influence, Cost, And Breadth
+
+**Given** held split native and non-native rows
+**When** Exp6519 scores headroom
+**Then** certification requires changed live decisions, exact equality,
+positive charged benefit, family breadth greater than one, and seed breadth
+greater than one.
+
+#### SCENARIO-BENCH-6519-ATTACKS: Shortcut Attacks Fail Closed
+
+**Given** identity, row-order, length, family-imbalance, held-tuning, cost,
+inactive-hook, one-win, aggregate-contradiction, and exact-oracle-class attacks
+**When** Exp6519 evaluates the attack matrix
+**Then** each attack row must fail closed before
+`certified_structural_headroom_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6519-TERMINAL: Certificate Is Reproducible
+
+**Given** every independent gate passes
+**When** Exp6519 writes its deliverable
+**Then** every required field has a principle and provenance entry, the exact
+inference substrate is declared, `verifier_is_oracle=false`, protected files
+are unchanged, and the reproducibility checksum matches.
+
+## Implementation Status (REQ-BENCH-6519)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6519 | Planned (`python/carnot/experiment_6519_structural_headroom_certificate.py`, `results/experiment_6519_structural_headroom_certificate.json`) | Planned (`tests/python/test_experiment_6519_structural_headroom_certificate.py`) |
+
+### REQ-BENCH-6520: Safety-Net Branch Routers SHALL Preserve Exact Authority
+
+Carnot SHALL provide Exp6520 at
+`python/carnot/experiment_6520_safety_net_branch_router_ab.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6520_safety_net_branch_router_ab --date 20260823`
+SHALL write
+`results/experiment_6520_safety_net_branch_router_ab.json`.
+
+Exp6520 SHALL evaluate the Exp6519 structural headroom gate before any learned
+router can be scored. It SHALL record the gate path, hash, expected value,
+observed value, CPU, GPU, RAM, disk, framework versions, and protected-file
+hashes. A failed gate or missing resource precondition SHALL write a terminal
+blocked artifact.
+
+Exp6520 SHALL freeze native dynamic, best certified static analytical, compact
+linear, matched compact MLP, and compact KAN arms before training. All learned
+families SHALL use the same Exp6516 branch pilot rows, feature schema, train and
+development rows, optimization budget, seed grid, confidence threshold, and
+bounded exact-solver budget. Learned advice SHALL order Boolean candidates only.
+It SHALL never remove a candidate. The exact solver SHALL be release authority.
+
+Exp6520 SHALL build each exception table only from train and development errors.
+It SHALL hash every exception key, value, lineage, model version, schema version,
+and table manifest. Held rows SHALL NOT enter any exception table. A schema
+mismatch, stale model and table pair, missing exception entry, checksum failure,
+model failure, exception hit, or confidence abstention SHALL route the row to
+native exact fallback.
+
+Exp6520 SHALL exhaustively replay the bounded pilot domain. Each row SHALL record
+the learned route, exception hit, abstention, fallback trigger, changed decision,
+exact answer, solver work, lookup cost, model cost, total charged cost, storage
+charge, candidate preservation, exact equality, and terminal disposition. The
+artifact SHALL report held charged benefit, exception coverage, exhaustive
+correctness, abstention, fallback, and storage trade-offs.
+
+Exp6520 SHALL attack held contamination, key collisions, stale model/table
+pairs, missing entries, exception growth, lookup omission, KAN capacity
+mismatch, GPU-only advantage, and false 100-percent coverage. A positive
+`verdict_class` SHALL require held charged benefit beyond Exp6519's best
+certified structural arm, exact answer equality, full candidate preservation, a
+bounded table size, and support in more than one model family, model seed,
+problem family, and problem seed. A valid no-benefit result SHALL use
+`verdict_class=null`. Bounded usable evidence below the positive gate SHALL use
+`verdict_class="partial"`. Failed gates or resource preconditions SHALL use
+`verdict_class="blocked"`. Leakage or correctness drift SHALL use
+`verdict_class="disqualified"`.
+
+The artifact SHALL include `status`, `honest_verdict`, `verdict_class`,
+`upstream_gate_receipt`, `preregistration`, `model_and_arm_specs`,
+`train_dev_held_receipts`, `exception_table_manifest`, `per_game_results`,
+`exception_abstention_fallback_rows`, `candidate_preservation_rows`,
+`exact_answer_equality_rows`, `exhaustive_pilot_audit`,
+`charged_cost_and_storage_rows`, `attack_matrix`,
+`safety_net_router_ready_score`, `gate_check_summary`, `per_unit_rows`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`. `inference_substrate` SHALL be
+`local_compact_router_plus_exact_exception_table_and_native_solver_no_llm`.
+`verifier_is_oracle` SHALL be false for router value. The artifact SHALL record
+`exact_solver_is_release_authority=true`.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal safety-net router comparison state."
+- `honest_verdict`: "States whether the router beat the certified structural gate without changing exact authority."
+- `verdict_class`: "Closed enum separates positive, null, partial, blocked, and disqualified outcomes."
+- `upstream_gate_receipt`: "Pins Exp6519 by path, hash, expected value, observed value, resources, frameworks, and protected hashes."
+- `preregistration`: "Freezes the planning date, arms, seed grid, primary metric, budgets, fallback rules, and verdict gates."
+- `model_and_arm_specs`: "Declares native, analytical, linear, MLP, and KAN arms with matched features, rows, budgets, and seeds."
+- `train_dev_held_receipts`: "Records split counts and proves held rows are excluded from training and exception writes."
+- `exception_table_manifest`: "Hashes exception keys, values, lineage, model versions, schema versions, and train-development coverage."
+- `per_game_results`: "Stores one exhaustive pilot-domain route row for each unit and arm."
+- `exception_abstention_fallback_rows`: "Shows why runtime used learned ordering or native fallback for each row."
+- `candidate_preservation_rows`: "Proves every route keeps the full Boolean candidate set."
+- `exact_answer_equality_rows`: "Shows the routed answer equals the exact branch-domain answer."
+- `exhaustive_pilot_audit`: "Recomputes bounded-domain coverage, equality, fallback, abstention, and changed-decision counts."
+- `charged_cost_and_storage_rows`: "Charges solver work, lookup, model execution, fallback, and storage."
+- `attack_matrix`: "Tests contamination, collisions, stale pairs, missing entries, growth, omitted lookup, KAN capacity, GPU-only advantage, and false coverage."
+- `safety_net_router_ready_score`: "Opens only when the gate, correctness, preservation, costs, attacks, and positive or null verdict rules agree."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `per_unit_rows`: "Flattens route, fallback, preservation, equality, cost, audit, and attack rows for recomputation."
+- `aggregate_row_recomputation`: "Rebuilds verdict inputs from rows rather than imported totals."
+- `preconditions_checked`: "Records source paths, hashes, resources, frameworks, split policy, seeds, budgets, and protected hashes."
+- `protected_files_unchanged`: "Proves upstream artifacts, solver code, specs, and conductor stayed byte-identical during the run."
+- `inference_substrate`: "Declares local compact routers, exact exception tables, and native exact fallback with no LLM."
+- `verifier_is_oracle`: "False because router value is measured; exact solver authority is recorded separately."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins model seed grid, train order, and attack ordering."
+- `duration_s`: "Records measured wall time."
+- `tests_run`: "Records validation commands and exit codes."
+- `reproducibility_checksum`: "A content hash detects drift in gates, models, tables, rows, costs, and verdicts."
+
+#### SCENARIO-BENCH-6520-GATE: Structural Headroom Gate Is Checked First
+
+**Given** the Exp6519 certificate artifact
+**When** Exp6520 starts
+**Then** it records the direct path, hash, expected score, observed score,
+resources, framework versions, protected-file hashes, and failed preconditions
+before any router score can open.
+
+#### SCENARIO-BENCH-6520-ARMS: Compact Routers Use Matched Budgets
+
+**Given** the Exp6516 branch pilot rows
+**When** Exp6520 freezes native, static analytical, linear, MLP, and KAN arms
+**Then** every learned arm shares the same feature schema, train rows,
+development rows, optimization budget, confidence threshold, and seed grid.
+
+#### SCENARIO-BENCH-6520-EXCEPTIONS: Held Rows Never Enter Tables
+
+**Given** train, development, and held pilot rows
+**When** Exp6520 builds exception tables
+**Then** only train and development model errors produce exception entries, and
+each entry hashes its key, value, lineage, model version, and schema version.
+
+#### SCENARIO-BENCH-6520-RUNTIME: Runtime Falls Back Before Unsafe Ordering
+
+**Given** an exception hit, abstention, schema mismatch, model failure,
+checksum failure, or stale model/table pair
+**When** Exp6520 routes a pilot unit
+**Then** it uses native exact fallback, preserves every candidate, records the
+fallback trigger, and lets the exact solver own the terminal answer.
+
+#### SCENARIO-BENCH-6520-EXHAUSTIVE: Pilot Domain Is Fully Replayed
+
+**Given** every bounded pilot unit and every frozen arm
+**When** Exp6520 replays routes
+**Then** each row records learned route, exception, abstention, fallback,
+changed decision, exact answer, solver work, lookup cost, model cost, total
+cost, storage, and terminal disposition.
+
+#### SCENARIO-BENCH-6520-ATTACKS: Safety-Net Shortcuts Fail Closed
+
+**Given** held contamination, key collisions, stale pairs, missing entries,
+exception growth, lookup omission, KAN capacity mismatch, GPU-only advantage,
+and false coverage attacks
+**When** Exp6520 evaluates the attack matrix
+**Then** every attack must fail closed before
+`safety_net_router_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6520-TERMINAL: Verdict Is Row-Derived
+
+**Given** all route, fallback, equality, preservation, cost, storage, audit,
+and attack rows
+**When** Exp6520 validates the deliverable
+**Then** every required field has a principle and provenance entry, the
+checksum matches, exact solver release authority is true, and the verdict class
+follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6520)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6520 | Planned (`python/carnot/experiment_6520_safety_net_branch_router_ab.py`, `results/experiment_6520_safety_net_branch_router_ab.json`) | Planned (`tests/python/test_experiment_6520_safety_net_branch_router_ab.py`) |
+
+### REQ-BENCH-3389: ConstraintBench AR vs VGB Repair Evaluation
+
+Carnot MUST provide an evaluation script that runs a subset of ConstraintBench tasks (at least 10) through standard autoregressive generation on unsloth/Qwen3.6-35B-A3B-GGUF and compares the validity ratio against candidates repaired by the VGB repair ladder.
+
+#### SCENARIO-BENCH-3389-1: Run Evaluation
+**Given** the script `scripts/experiment_3389_constraintbench.py` is executed
+**When** the evaluation completes
+**Then** it MUST write an artifact to `results/experiment_3389_constraintbench.json` containing the evaluation metrics for both AR and VGB repair loops.
+
+### REQ-BENCH-3585: Realistic Factual Corpus with Headroom
+
+- REQ-BENCH-3585-1: The corpus generation shall retrieve realistic QA pairs (e.g. HaluEval).
+- REQ-BENCH-3585-2: The model confidence for each pair shall be generated using a SOTA GGUF model via `cached_sota_pair`.
+- REQ-BENCH-3585-3: The sequence logprob / model-confidence AUROC shall be materially < 0.95 to ensure the corpus provides headroom for verifier benchmarking.
+
+#### SCENARIO-BENCH-3585-1: Corpus Generation produces realistic headroom
+**Given** the generation script `experiment_3585_realistic_factual_corpus.py`
+**When** the corpus is generated and scored
+**Then** the confidence baseline AUROC must be `< 0.95`.
+
+### REQ-BENCH-6530: External Constraint Corpus Audit
+
+Carnot MUST provide an independent audit for the Exp6529 DRIFT-Bench external
+constraint corpus. The audit MUST always write
+`results/experiment_6530_external_constraint_corpus_audit.json`. It MUST write
+`external_constraint_corpus_audited_ready_score` with that exact spelling on
+all terminal paths, including missing, blocked, partial, corrupt, and valid
+paths.
+
+The audit MUST NOT trust source aggregates, intake aggregates, source IDs,
+local IDs, or source-file path declarations as proof of independence. It MUST
+recompute file hashes, source-to-local row identity, chronology, exact labels,
+family-blind split membership, shard and transaction receipts, row aggregates,
+and leakage attacks from the source files and fixture rows it reads.
+
+The artifact MUST include `status`, `honest_verdict`, `verdict_class`,
+`source_existence_and_hash_receipts`,
+`independent_revision_and_license_receipt`, `source_identity_audit_rows`,
+`chronology_replay_rows`, `independent_exact_replay_rows`,
+`split_and_lineage_audit`, `shard_and_transaction_audit`,
+`independent_aggregate_rows`, `leakage_attack_matrix`,
+`external_constraint_corpus_audited_ready_score`, `gate_check_summary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+The artifact SHALL use `verdict_class=null` for a complete integrity audit,
+`partial` for a bounded nonfatal limitation, `blocked` for missing or failed
+prerequisites, and `disqualified` for provenance or leakage corruption.
+`honest_verdict` SHALL begin with `complete_`, `blocked_`, `partial_`, or
+`disqualified_`. `inference_substrate` SHALL be
+`independent_external_source_fixture_and_exact_solver_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for source, split, and exact-label
+audits.
+
+#### SCENARIO-BENCH-6530-MISSING: Missing Upstream Writes A Blocked Audit
+
+**Given** the Exp6529 intake artifact or fixture is absent
+**When** Exp6530 runs
+**Then** it writes the required artifact, records the missing path and observed
+existence value in `gate_check_summary`, sets `verdict_class="blocked"`, and
+sets `external_constraint_corpus_audited_ready_score=0.0`.
+
+#### SCENARIO-BENCH-6530-SOURCE: Source Identity Is Independently Hashed
+
+**Given** an Exp6529 intake artifact that names a pinned DRIFT-Bench revision
+and source-file hashes
+**When** Exp6530 audits the source files used by fixture rows
+**Then** it resolves the pinned revision, verifies license and corruption text,
+recomputes every source-file hash, and rejects any mismatch without using source
+IDs as proof.
+
+#### SCENARIO-BENCH-6530-CHRONOLOGY: Raw Turns Replay In Order
+
+**Given** fixture rows with source raw turns and local turns
+**When** Exp6530 reconstructs cumulative constraints
+**Then** every turn for a base problem must be contiguous, increasing by one,
+and free of duplicate event keys or chronology gaps.
+
+#### SCENARIO-BENCH-6530-EXACT: Exact Labels Replay Independently
+
+**Given** held rows and a preregistered train/development sample
+**When** Exp6530 initializes its exact replay path
+**Then** every audited row must reproduce the fixture exact label, contradiction
+state, and terminal disposition from raw constraints rather than cached solver
+results.
+
+#### SCENARIO-BENCH-6530-SPLIT: Family-Blind Splits Are Reconstructed
+
+**Given** train, development, and held fixture rows
+**When** Exp6530 rebuilds base-problem lineages
+**Then** no base problem may cross splits, no family alias collision may exist,
+no post-held repair may be admitted, and every row must have a terminal
+disposition.
+
+#### SCENARIO-BENCH-6530-SHARDS: Shards And Receipts Match Fixture Rows
+
+**Given** Exp6529 shard, journal, resume, final-write, and fixture receipts
+**When** Exp6530 verifies transaction integrity
+**Then** planned IDs, terminal IDs, shard hashes, journal chain, resume
+receipts, final atomic-write receipt, fixture hash, and row counts must match
+the rows independently read from disk.
+
+#### SCENARIO-BENCH-6530-ATTACKS: Leakage And Tampering Fail Closed
+
+**Given** attacks on IDs, row order, entity names, serialization length, family
+labels, answer fields, solver caches, missing hard rows, hashes, and aggregates
+**When** Exp6530 recomputes aggregate rows
+**Then** every attack must pass before
+`external_constraint_corpus_audited_ready_score` can equal `1.0`, and failed
+attacks must be named with observed values in `gate_check_summary`.
+
+## Implementation Status (REQ-BENCH-6530)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6530 | Planned (`python/carnot/experiment_6530_external_constraint_corpus_audit.py`, `results/experiment_6530_external_constraint_corpus_audit.json`) | Planned (`tests/python/test_experiment_6530_external_constraint_corpus_audit.py`) |
+
+### REQ-BENCH-6542: Content-Pinned DRIFT-Bench External Intake V2
+
+Carnot SHALL build Exp6542 as a bounded content-pinned DRIFT-Bench fixture.
+The intake SHALL gate on Exp6541
+`v566_direct_source_ready_score == 1.0`, reuse only DRIFT-Bench commit
+`d24cda4f59a6ee06bafe886f4724899a7ec94f1c`, verify tree and required-file
+hashes before transformation, and write
+`results/experiment_6542_drift_bench_external_intake_v2.json` plus
+`results/fixtures/v566_drift_bench_external_slice.jsonl`.
+
+The fixture SHALL freeze a bounded balanced sample before any replay outcome or
+cost is inspected. It SHALL cover seating, scheduling, and logic-grid domains,
+multiple problem sizes where the source domain has multiple sizes, early and
+late turn positions, and low, medium, and high pre-replay effort strata. Source
+problem IDs SHALL remain immutable, local unit IDs SHALL be separate, and no
+turn from one base problem may cross train, development, or held splits.
+
+The intake SHALL replay each admitted cumulative constraint state through the
+local Z3 checker from the pinned source tree. Each fixture row SHALL record
+source hashes, local IDs, chronological state, exact satisfiability, assignment
+validity, conflict or MUS evidence when available, solver effort, timeout,
+censoring, code hash, and terminal status. The reducer SHALL not import
+upstream SQLite databases, paper aggregates, or cached model results.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`,
+`source_revision_and_license_receipt`, `source_tree_and_file_hashes`,
+`upstream_corruption_boundary`, `intake_commitment`,
+`family_turn_and_effort_census`, `source_to_local_identity_rows`,
+`exact_replay_rows`, `solver_receipts`, `split_commitment`, `shard_manifest`,
+`planned_and_terminal_unit_counts`, `fixture_path_and_hash`,
+`leakage_attack_matrix`, `external_constraint_corpus_ready_score`,
+`gate_check_summary`, `per_unit_rows`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+The artifact SHALL use `verdict_class=null` for a complete data contract,
+`partial` for a bounded usable corpus below the readiness floor, `blocked` for
+a failed gate or direct precondition, and `disqualified` for provenance or
+leakage failure. `honest_verdict` SHALL begin with `complete_`, `partial_`,
+`blocked_`, or `disqualified_`. `inference_substrate` SHALL be
+`content_pinned_drift_intake_and_local_z3_replay_no_llm`.
+`verifier_is_oracle` SHALL be true only for exact labels and assignment
+validity.
+
+#### SCENARIO-BENCH-6542-SOURCE: Source-To-Local Identity Is Hash Bound
+
+**Given** the pinned DRIFT-Bench source tree and Exp6541 gate receipt
+**When** Exp6542 selects fixture rows
+**Then** each row records immutable source IDs, separate local unit IDs,
+source-file hashes, source-turn hashes, and pre-transform tree hashes before
+any local replay label is accepted.
+
+#### SCENARIO-BENCH-6542-CHRONOLOGY: Base-Problem Chronology Is Preserved
+
+**Given** admitted turns from one base problem
+**When** fixture rows are emitted
+**Then** cumulative constraint states remain in source turn order, chronology
+indices increase without gaps inside each base problem, and no base-problem
+turn crosses train, development, or held splits.
+
+#### SCENARIO-BENCH-6542-EXACT: Local Z3 Replay Regenerates Receipts
+
+**Given** a selected source turn with a gold assignment
+**When** Exp6542 calls the pinned `src/z3_checker.py`
+**Then** it records satisfiability, assignment validity, solver effort,
+timeout state, conflict or MUS evidence when available, code hash, and terminal
+status without trusting paper or SQLite result aggregates.
+
+#### SCENARIO-BENCH-6542-SPLIT: Lineage Sealing Prevents Leakage
+
+**Given** train, development, and held fixture partitions
+**When** Exp6542 audits lineage
+**Then** no base problem, source problem, or family alias crosses splits, and
+entity-name or row-order leakage attacks must pass before readiness can open.
+
+#### SCENARIO-BENCH-6542-SHARDS: Planned Units Are Resumable And Atomic
+
+**Given** content-addressed terminal row shards and a transaction journal
+**When** Exp6542 finalizes the JSONL fixture
+**Then** planned and terminal unit counts match, corrupt resume state is
+rejected, all terminal rows round-trip, and the final fixture is atomically
+replaced through the shipped shard transaction helper.
+
+#### SCENARIO-BENCH-6542-CENSORING: Timeouts And Nonterminal Units Are Accounted
+
+**Given** replay rows that timeout, censor, or fail before terminal closure
+**When** Exp6542 recomputes readiness
+**Then** censored rows remain explicit, missing terminal units are named in
+`gate_check_summary`, and `external_constraint_corpus_ready_score` stays `0.0`
+until every planned unit is terminal.
+
+#### SCENARIO-BENCH-6542-ATTACKS: Tampering And Inherited Aggregates Fail Closed
+
+**Given** duplicate turns, chronology gaps, family aliases, source hash
+mismatch, solver-version drift, corrupt resume, missing terminal units, or
+inherited aggregate rows
+**When** Exp6542 evaluates its attack matrix
+**Then** every failed attack records expected and observed values, provenance or
+leakage failures are disqualified, and complete readiness requires all attacks
+to pass.
+
+## Implementation Status (REQ-BENCH-6542)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6542 | Implemented (`python/carnot/experiment_6542_drift_bench_external_intake_v2.py`, `results/experiment_6542_drift_bench_external_intake_v2.json`, `results/fixtures/v566_drift_bench_external_slice.jsonl`) | Implemented (`tests/python/test_experiment_6542_drift_bench_external_intake_v2.py`) |
+
+### REQ-BENCH-6543: Independent DRIFT Corpus Audit V2
+
+Carnot SHALL provide Exp6543 as an always-runnable independent audit for the
+V566 DRIFT-Bench intake. The audit SHALL write
+`results/experiment_6543_external_corpus_independent_audit_v2.json` and SHALL
+always include `external_constraint_corpus_audited_ready_score` with that exact
+spelling.
+
+The audit SHALL resolve the direct source commit independently of Exp6542. It
+SHALL verify revision, license, schema, problem-file census, corruption
+warning, source hashes, fixture hash, solver version, resource receipts,
+random sample seed, and protected-file hashes. It SHALL recompute
+source-to-local identity, source-row hashes, chronology, split lineage,
+aggregate rows, transaction closure, and exact Z3 replay from source files and
+fixture rows. It SHALL NOT trust source aggregates, intake aggregates, source
+IDs, local IDs, or source-file path declarations as proof of split
+independence.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `source_existence_and_hash_receipts`,
+`independent_revision_license_and_schema_receipt`,
+`source_identity_audit_rows`, `chronology_replay_rows`,
+`split_and_lineage_audit`, `independent_exact_replay_rows`,
+`shard_and_transaction_audit`, `missing_input_disposition`,
+`independent_aggregate_rows`, `leakage_attack_matrix`,
+`external_constraint_corpus_audited_ready_score`, `gate_check_summary`,
+`per_unit_rows`, `aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+The artifact SHALL use `verdict_class=null` for a clean independent audit,
+`partial` for usable but incomplete evidence, `blocked` for missing inputs, and
+`disqualified` for false provenance or leakage. `honest_verdict` SHALL begin
+with `complete_`, `partial_`, `blocked_`, or `disqualified_`.
+`inference_substrate` SHALL be
+`independent_source_split_transaction_and_z3_replay_audit_no_llm`.
+`verifier_is_oracle` SHALL be true for audit checks only and SHALL NOT declare
+a positive scientific class.
+
+#### SCENARIO-BENCH-6543-MISSING: Missing Inputs Produce A Closed Audit
+
+**Given** the Exp6542 intake artifact, V566 fixture, or pinned DRIFT source root
+is absent
+**When** Exp6543 runs
+**Then** it writes all required fields, records each missing path and observed
+value in `gate_check_summary`, sets `verdict_class="blocked"`, and sets
+`external_constraint_corpus_audited_ready_score=0.0`.
+
+#### SCENARIO-BENCH-6543-SOURCE: Source Hashes Are Independently Recomputed
+
+**Given** fixture rows that name DRIFT source files and source-turn hashes
+**When** Exp6543 audits identity
+**Then** it recomputes file, problem, turn, constraint, and source-row hashes
+from the pinned source tree and rejects duplicates, omissions, source drift, or
+modified constraints without using source IDs as proof.
+
+#### SCENARIO-BENCH-6543-CHRONOLOGY: Base-Problem Turns Remain Ordered
+
+**Given** rows from one base problem
+**When** Exp6543 rebuilds chronology
+**Then** turn indices and source turn IDs are contiguous, increasing, and free
+of duplicate event keys or reordering inside the base problem.
+
+#### SCENARIO-BENCH-6543-SPLIT: Lineage Sets Are Rebuilt From Rows
+
+**Given** train, development, and held fixture rows
+**When** Exp6543 recomputes base-problem lineage sets
+**Then** no base problem may overlap splits, no outcome-based sampling marker
+may exist, lineage floors must hold, and post-held repair rows fail readiness.
+
+#### SCENARIO-BENCH-6543-EXACT: Z3 Replay Ignores Cached Solver Receipts
+
+**Given** a deterministic stratified sample plus every timeout, contradiction,
+or unusual-effort row
+**When** Exp6543 constructs Z3 solvers from source constraints
+**Then** replayed satisfiability, assignment validity, timeout state, receipt
+hashes, and terminal status must match the fixture rows without trusting
+Exp6542 exact-replay aggregates.
+
+#### SCENARIO-BENCH-6543-TRANSACTION: Shards And Final Fixture Close Atomically
+
+**Given** Exp6542 planned units, terminal shards, journal, resume receipts,
+corrupt-resume probe, fixture hash, and final atomic write receipt
+**When** Exp6543 audits transaction closure
+**Then** planned and terminal IDs match fixture rows, every shard hash matches
+its content-addressed file, the journal hash and record count match disk, resume
+receipts are closed, and the final fixture hash matches the atomic receipt.
+
+#### SCENARIO-BENCH-6543-ATTACKS: Tampering And Leakage Fail Closed
+
+**Given** missing artifacts, success-labeled empty fixtures, null rows,
+duplicate IDs, aggregate tampering, solver path aliasing, source-row aliases,
+post-held repair, or outcome-based sampling
+**When** Exp6543 recomputes gates and attack rows
+**Then** each failed check is named with observed values and
+`external_constraint_corpus_audited_ready_score` remains `0.0`.
+
+## Implementation Status (REQ-BENCH-6543)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6543 | Planned (`python/carnot/experiment_6543_external_corpus_independent_audit_v2.py`, `results/experiment_6543_external_corpus_independent_audit_v2.json`) | Planned (`tests/python/test_experiment_6543_external_corpus_independent_audit_v2.py`) |
+
+### REQ-BENCH-6544: External Structural Headroom SHALL Be Matched And Charged
+
+Carnot SHALL provide Exp6544 at
+`python/carnot/experiment_6544_external_structural_headroom.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6544_external_structural_headroom --date 20260823`
+SHALL write
+`results/experiment_6544_external_structural_headroom.json`.
+
+Exp6544 SHALL evaluate the Exp6543 structured gate before running any arm. It
+SHALL record the gate path, hash, expected value, observed value, input hashes,
+solver identity, resources, timeout, seeds, and protected-file hashes. A failed
+gate or missing fixture SHALL write a terminal blocked artifact with the failed
+check and observed value in `gate_check_summary`.
+
+Exp6544 SHALL freeze unit, turn, family, effort, seed, budget, tie, timeout,
+and stop contracts before arm execution. It SHALL compare exactly these
+controls: native, random, analytical, bounded-refocus, and one-shot-enumeration.
+Every arm SHALL use identical candidate sets, seed grids, proposal budgets,
+exact-check budgets, timeout limits, and terminal stop rules. Every candidate
+set SHALL be preserved. A control MAY reorder candidates only. It SHALL NOT use
+entity names, source IDs, target assignments, held outcomes, future turns,
+family labels, or row order as features.
+
+Exp6544 SHALL adapt only reusable structural features from the current turn and
+past constraints. It SHALL record the structural features used for each control.
+It SHALL keep native exact fallback available for every arm. It SHALL charge
+every proposal, exact check, control overhead, and fallback check. It SHALL
+record timeout and censoring state for every row.
+
+Exp6544 SHALL emit one row for each unit, turn, seed, and arm. Each row SHALL
+record exact answer equality, candidate order, candidate hashes, exact checks,
+solver effort, proposals, charged work, wall time, timeout, and censoring. It
+SHALL report overall and family-stratified charged effects, paired uncertainty,
+headroom rows, no-headroom rows, and Simpson-reversal checks from rows.
+
+Exp6544 SHALL attack identity leakage, row-order leakage, unequal budgets,
+deleted candidates, warm-cache asymmetry, timer aliases, cherry-picked seeds,
+and aggregate-only claims. Any shortcut failure, candidate deletion,
+correctness drift, leakage, or invalid comparison SHALL set
+`external_structural_headroom_ready_score=0.0`. Correctness drift or leakage
+SHALL use `verdict_class="disqualified"`. A failed gate or precondition SHALL
+use `verdict_class="blocked"`. A complete run with no benefit SHALL use
+`verdict_class=null`. Narrow or incomplete support SHALL use
+`verdict_class="partial"`. A complete run with charged held structural value,
+exact equality, multi-family support, and no shortcut failure SHALL use
+`verdict_class="positive"`.
+
+`external_structural_headroom_ready_score` SHALL equal `1.0` only when a
+preregistered non-learned control has positive held charged value beyond both
+native and random, exact equality, multi-family support, candidate preservation,
+matched budgets, and no shortcut failure. Otherwise it SHALL equal `0.0`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `frozen_comparison_contract`,
+`control_definitions`, `family_and_effort_census`, `per_unit_rows`,
+`paired_effect_rows`, `family_effect_rows`, `charged_cost_recomputation`,
+`exact_equality_receipt`, `candidate_preservation_receipt`,
+`censoring_and_timeout_receipts`, `shortcut_attack_matrix`,
+`external_structural_headroom_ready_score`, `gate_check_summary`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`external_drift_exact_solver_structural_controls_no_llm`.
+`verifier_is_oracle` SHALL be false because structural controls do not supply
+ground truth. The Z3 replay path SHALL be recorded separately as evaluation
+authority.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6544 external structural comparison state."
+- `honest_verdict`: "Names the charged held result and its family support."
+- `verdict_class`: "Separates positive, null, partial, blocked, and disqualified outcomes."
+- `upstream_gate_receipt`: "Pins Exp6543 by path, hash, expected value, observed value, input hashes, solvers, resources, timeouts, seeds, and protected hashes."
+- `frozen_comparison_contract`: "Freezes unit, turn, family, effort, seed, budget, tie, timeout, and stop rules before scoring."
+- `control_definitions`: "Defines native, random, analytical, bounded-refocus, and one-shot-enumeration as non-learned order-only controls."
+- `family_and_effort_census`: "Reports fixture family, split, turn, effort, and held-support counts."
+- `per_unit_rows`: "Stores one unit-turn-seed-arm row with order, checks, cost, equality, timeout, and censoring evidence."
+- `paired_effect_rows`: "Reports paired held charged effects versus native and random with uncertainty from rows."
+- `family_effect_rows`: "Reports charged effects, headroom cells, no-headroom cells, and Simpson checks by family."
+- `charged_cost_recomputation`: "Recomputes proposal, exact-check, control, fallback, and total charged work from rows."
+- `exact_equality_receipt`: "Shows each arm's exact answer matches the audited Z3 label."
+- `candidate_preservation_receipt`: "Shows every arm preserved the same candidate set for every unit and seed."
+- `censoring_and_timeout_receipts`: "Records timeout, censoring, budget, and stop-rule symmetry."
+- `shortcut_attack_matrix`: "Attacks identity leakage, row-order leakage, unequal budgets, deleted candidates, warm-cache asymmetry, timer aliases, cherry-picked seeds, and aggregate-only claims."
+- `external_structural_headroom_ready_score`: "Opens only for charged held value beyond native and random with exact equality, multi-family support, and no shortcut failure."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `aggregate_row_recomputation`: "Rebuilds the verdict and score from per-unit, effect, equality, preservation, censoring, and attack rows."
+- `preconditions_checked`: "Records paths, hashes, resources, solver identity, date, seeds, budgets, timeouts, and protected hashes."
+- `protected_files_unchanged`: "Shows guarded inputs, specs, prior structural artifacts, and conductor files stayed byte-identical during the run."
+- `inference_substrate`: "Declares external DRIFT exact-solver structural controls with no LLM."
+- `verifier_is_oracle`: "False because compared controls do not certify ground truth."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins arm seeds, random controls, and attack ordering."
+- `duration_s`: "Records measured reducer wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in gates, rows, costs, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6544-GATE: Exp6543 Gate Is Evaluated First
+
+**Given** the Exp6543 independent audit artifact
+**When** Exp6544 starts
+**Then** it records the direct path, hash, expected readiness value, observed
+readiness value, input hashes, solver identity, resources, timeout, seeds, and
+protected hashes before any ready score can open.
+
+#### SCENARIO-BENCH-6544-CONTRACT: Matched Controls Preserve Candidates
+
+**Given** the audited V566 DRIFT fixture
+**When** Exp6544 freezes native, random, analytical, bounded-refocus, and
+one-shot-enumeration controls
+**Then** every arm uses identical unit, turn, seed, budget, tie, timeout, stop,
+and candidate-preservation contracts.
+
+#### SCENARIO-BENCH-6544-FAMILY-BLIND: Controls Use Only Structural Features
+
+**Given** train, development, and held fixture rows
+**When** controls order candidates
+**Then** ordering uses reusable structural features from current or past
+constraints only, and never uses entity names, source IDs, assignments, held
+outcomes, future turns, family labels, or row order.
+
+#### SCENARIO-BENCH-6544-COST-EQUALITY: Rows Charge Every Proposal And Exact Check
+
+**Given** matched unit-turn-seed-arm rows
+**When** Exp6544 computes exact equality and charged work
+**Then** every row records proposal order, exact-check count, solver effort,
+proposal cost, exact-check cost, control overhead, fallback cost, total charged
+work, timeout, and censoring.
+
+#### SCENARIO-BENCH-6544-EFFECTS: Held Benefit Needs Native And Random Baselines
+
+**Given** held rows from all frozen arms
+**When** Exp6544 computes paired effects
+**Then** a ready score of `1.0` requires a non-learned control with positive
+held charged value beyond both native and random, exact equality,
+multi-family support, and no shortcut failure.
+
+#### SCENARIO-BENCH-6544-ATTACKS: Shortcut Failures Close The Claim
+
+**Given** identity leakage, row-order leakage, unequal budgets, deleted
+candidates, warm-cache asymmetry, timer aliases, cherry-picked seeds, and
+aggregate-only claims
+**When** Exp6544 evaluates the shortcut matrix
+**Then** every shortcut must fail closed before
+`external_structural_headroom_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6544-TERMINAL: Artifact Is Row-Derived And Reproducible
+
+**Given** all matched rows, effects, costs, equality receipts, preservation
+receipts, censoring receipts, shortcut checks, and protected hashes
+**When** Exp6544 writes its deliverable
+**Then** every required field has a principle and provenance entry, the exact
+inference substrate is declared, `verifier_is_oracle=false`, the checksum
+matches, and the verdict class follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6544)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6544 | Planned (`python/carnot/experiment_6544_external_structural_headroom.py`, `results/experiment_6544_external_structural_headroom.json`) | Planned (`tests/python/test_experiment_6544_external_structural_headroom.py`) |
+
+### REQ-BENCH-6545: External Safety-Net Router SHALL Preserve Exact Fallback
+
+Carnot SHALL provide Exp6545 at
+`python/carnot/experiment_6545_external_safety_net_router.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6545_external_safety_net_router --date 20260823`
+SHALL write
+`results/experiment_6545_external_safety_net_router.json`.
+
+Exp6545 SHALL evaluate the Exp6544 structured gate before fitting,
+calibration, exception-table freeze, or held evaluation. It SHALL record the
+gate path, hash, expected value, observed value, input hashes, CPU identity,
+GPU identity, seeds, budgets, timeouts, and protected-file hashes. A failed
+gate or missing precondition SHALL write a terminal blocked artifact and SHALL
+populate `gate_check_summary` with the failed check and observed value.
+
+Exp6545 SHALL freeze compact linear, compact MLP, and compact KAN router
+families only. It SHALL NOT run a broad architecture sweep. It SHALL freeze
+selection, calibration, abstention, exception-table, exact-fallback, budget,
+seed, timeout, and rollback rules before any held outcome is evaluated. Learned
+advice SHALL order candidates only. It SHALL preserve the full candidate set
+and keep native exact fallback reachable for every arm.
+
+Exp6545 SHALL train only on sealed train rows. It SHALL calibrate abstention
+only on development rows. It SHALL hash and freeze an immutable train-only
+exception table before held evaluation. Held rows SHALL NOT be used for fitting,
+calibration, exception-table writes, threshold selection, or model selection.
+
+Exp6545 SHALL compare the Exp6544 certified structural control, each eligible
+compact router, router plus abstention, and router plus exception table and
+exact fallback on identical held candidate sets and budgets. Each per-unit row
+SHALL record routing score, uncertainty, chosen order, abstention, table hit,
+fallback, exact equality, proposals, exact checks, wall time, timeout, and
+charged total cost. Charged cost SHALL include structural-control overhead,
+model, lookup, proposal, exact-check, fallback, and total charged work.
+
+Exp6545 SHALL report overall held effects, family effects, effort effects, and
+abstention-bin effects. It SHALL preserve every negative and no-headroom cell.
+It SHALL attack family identity, source ID, entity names, row order, solver
+effort leakage, held table writes, deleted candidates, fallback unreachability,
+calibration reuse, and timer fabrication.
+
+`external_safety_net_ready_score` SHALL equal `1.0` only when a frozen eligible
+router beats the Exp6544 certified structural control on held charged cost,
+preserves exact equality, preserves all candidates, keeps full fallback
+reachable, has calibrated abstention, uses an immutable train-only exception
+table, passes rollback checks, and passes all shortcut attacks. Otherwise it
+SHALL equal `0.0`. A positive verdict SHALL require those same conditions. A
+complete run with no value SHALL use `verdict_class=null`. Narrow support SHALL
+use `verdict_class="partial"`. A failed gate or precondition SHALL use
+`verdict_class="blocked"`. Leakage, held mutation, correctness drift, deleted
+candidates, or invalid comparison SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `frozen_router_contract`,
+`training_and_calibration_receipts`, `candidate_model_rows`,
+`exception_table_path_hash_and_freeze_receipt`, `abstention_calibration_rows`,
+`per_unit_rows`, `paired_effect_rows`, `family_and_effort_effect_rows`,
+`charged_cost_recomputation`, `exact_equality_and_fallback_receipt`,
+`shortcut_attack_matrix`, `rollback_receipt`,
+`external_safety_net_ready_score`, `gate_check_summary`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`local_compact_router_train_only_exception_table_and_external_exact_fallback_no_llm`.
+`verifier_is_oracle` SHALL be false because the learned router is not ground
+truth. Z3 SHALL remain the separate evaluation authority.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6545 external Safety-Net router state."
+- `honest_verdict`: "Names the selected held charged result and the fallback/equality support."
+- `verdict_class`: "Separates positive, null, partial, blocked, and disqualified router outcomes."
+- `upstream_gate_receipt`: "Pins Exp6544 by path, hash, expected value, observed value, input hashes, CPU, GPU, seeds, budgets, timeouts, and protected hashes."
+- `frozen_router_contract`: "Freezes compact model families, feature schema, selection, calibration, abstention, exception, fallback, budget, seed, timeout, and rollback rules before held scoring."
+- `training_and_calibration_receipts`: "Proves fitting used sealed train rows, calibration used development rows, and held rows were unavailable."
+- `candidate_model_rows`: "Records the frozen compact linear, MLP, and KAN router parameters, costs, hashes, and eligibility."
+- `exception_table_path_hash_and_freeze_receipt`: "Hashes the train-only exception table and proves it was frozen before held evaluation with no held writes."
+- `abstention_calibration_rows`: "Reports development-only uncertainty bins, thresholds, and abstention decisions."
+- `per_unit_rows`: "Stores one unit-seed-arm row with routing score, uncertainty, order, abstention, table hit, fallback, exact equality, proposals, checks, time, timeout, and charged cost."
+- `paired_effect_rows`: "Reports held charged effects for each router arm versus the Exp6544 certified structural control."
+- `family_and_effort_effect_rows`: "Reports family, effort, abstention-bin, negative, and no-headroom cells from rows."
+- `charged_cost_recomputation`: "Recomputes model, lookup, proposal, exact-check, fallback, and total charged work from rows."
+- `exact_equality_and_fallback_receipt`: "Shows exact equality, full candidate preservation, and reachable native exact fallback."
+- `shortcut_attack_matrix`: "Attacks family identity, source ID, entity names, row order, solver effort leakage, held table writes, deleted candidates, fallback unreachability, calibration reuse, and timer fabrication."
+- `rollback_receipt`: "Declares the structural-control rollback path and proves unsafe router states close to score zero."
+- `external_safety_net_ready_score`: "Opens only for a frozen eligible router with held charged value, exact equality, calibrated abstention, train-only immutable exceptions, reachable fallback, and no shortcut failure."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `aggregate_row_recomputation`: "Rebuilds the verdict and ready score from gate, row, cost, equality, fallback, calibration, exception, attack, and rollback receipts."
+- `preconditions_checked`: "Records paths, hashes, CPU, GPU, seeds, budgets, timeouts, protected hashes, and exact-solver authority."
+- `protected_files_unchanged`: "Shows guarded inputs, specs, prior artifacts, and conductor files stayed byte-identical during the run."
+- `inference_substrate`: "Declares local compact router training with train-only exceptions and external exact fallback, with no LLM."
+- `verifier_is_oracle`: "False because router value is measured and Z3 is the separate evaluation authority."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins model fitting, evaluation seeds, table hashing, and attack ordering."
+- `duration_s`: "Records measured reducer wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in gates, models, tables, rows, costs, attacks, rollback, and verdicts."
+
+#### SCENARIO-BENCH-6545-GATE: Exp6544 Gate Is Evaluated First
+
+**Given** the Exp6544 external structural headroom artifact
+**When** Exp6545 starts
+**Then** it records the direct path, hash, expected readiness value, observed
+readiness value, input hashes, CPU identity, GPU identity, seeds, budgets,
+timeouts, and protected hashes before any held router claim can open.
+
+#### SCENARIO-BENCH-6545-TRAIN-CAL: Train And Calibration Splits Are Sealed
+
+**Given** train, development, and held V566 fixture rows
+**When** Exp6545 fits routers, selects thresholds, and freezes exceptions
+**Then** fitting uses train rows only, calibration uses development rows only,
+and held rows are unavailable to fitting, calibration, table writes, and model
+selection.
+
+#### SCENARIO-BENCH-6545-ROUTERS: Compact Families Are Frozen
+
+**Given** the compact linear, MLP, and KAN router family
+**When** Exp6545 builds candidate models
+**Then** it emits exactly those frozen model rows, with shared features,
+matched budgets, fixed costs, hashes, and no broad architecture sweep.
+
+#### SCENARIO-BENCH-6545-RUNTIME: Runtime Preserves Candidates And Fallback
+
+**Given** matched candidate sets from the Exp6544 certified structural control
+**When** Exp6545 routes each unit
+**Then** every arm preserves all candidates, records chosen order, score,
+uncertainty, abstention, table hit, fallback, exact equality, proposals, exact
+checks, timeout, time, and charged total cost.
+
+#### SCENARIO-BENCH-6545-EFFECTS: Held Value Is Charged Against Structural Control
+
+**Given** held rows for the certified structural control and all router arms
+**When** Exp6545 computes paired effects
+**Then** a ready score of `1.0` requires held charged value beyond the
+certified structural control, calibrated abstention, exact equality, reachable
+fallback, and no shortcut failure.
+
+#### SCENARIO-BENCH-6545-ATTACKS: Shortcut And Mutation Attacks Fail Closed
+
+**Given** family identity, source ID, entity names, row order, solver effort
+leakage, held table writes, deleted candidates, fallback unreachability,
+calibration reuse, and timer fabrication attacks
+**When** Exp6545 evaluates the shortcut matrix
+**Then** every shortcut must fail closed before
+`external_safety_net_ready_score` can equal `1.0`.
+
+#### SCENARIO-BENCH-6545-ROLLBACK: Unsafe Router State Rolls Back
+
+**Given** a failed gate, failed calibration, held table write, equality drift,
+candidate deletion, unreachable fallback, or shortcut failure
+**When** Exp6545 recomputes the aggregate verdict
+**Then** it closes the ready score to `0.0` and declares the Exp6544 certified
+structural control as the rollback target.
+
+#### SCENARIO-BENCH-6545-TERMINAL: Artifact Is Row-Derived And Reproducible
+
+**Given** gates, model rows, calibration rows, exception receipts, per-unit
+rows, effect rows, cost receipts, exact receipts, attack rows, rollback rows,
+and protected hashes
+**When** Exp6545 writes its deliverable
+**Then** every required field has a principle and provenance entry, the
+inference substrate is exact, `verifier_is_oracle=false`, the checksum matches,
+and the verdict class follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6545)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6545 | Planned (`python/carnot/experiment_6545_external_safety_net_router.py`, `results/experiment_6545_external_safety_net_router.json`) | Planned (`tests/python/test_experiment_6545_external_safety_net_router.py`) |
+
+### REQ-BENCH-6564: Rust PyO3 Safety-Net NFR01 Benchmark SHALL Charge Equal Work
+
+Carnot SHALL provide Exp6564 at
+`python/carnot/experiment_6564_rust_pyo3_safety_net_nfr01.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6564_rust_pyo3_safety_net_nfr01 --date 20260823`
+SHALL write
+`results/experiment_6564_rust_pyo3_safety_net_nfr01.json`.
+
+Exp6564 SHALL evaluate the Exp6563 production workload canary gate before
+benchmarking. It SHALL record the gate path, hash, observed readiness value,
+CPU model, CPU governor, core placement, RAM, Python version, timer
+resolution, Rust and Cargo versions, compiler flags, release extension hash,
+thermal state, protected-file hashes, and the exact workload contract hash. A
+failed gate, missing binding, missing workload, or timer precondition SHALL
+write a terminal blocked artifact and SHALL populate `gate_check_summary` with
+the failed check and observed value.
+
+Exp6564 SHALL benchmark pure Python scalar, PyO3 scalar, and PyO3 batch
+routing over identical raw request bytes. The request set SHALL be derived from
+the Exp6563 frozen workload contract and SHALL cover supported, abstain,
+fallback, exception, malformed, and unsupported conditions. Batch construction,
+serialization, copies, Python conversion, and result materialization SHALL be
+charged. The benchmark SHALL use fixed randomized condition order, warm-up,
+repeated blocks, multiple batch sizes, process and wall timers, and row-level
+allocation accounting.
+
+Exp6564 SHALL confirm byte-identical decisions, request ordering, error class,
+fallback reason, request hash, and exact downstream result for every request.
+The Rust path SHALL remain a compact decision router only. It SHALL NOT move
+Z3, LLM inference, exact verification, natural-language extraction, or release
+authority into Rust.
+
+`rust_pyo3_nfr01_ready_score` SHALL equal `1.0` only when steady-state median
+batched throughput is at least `10.0` times pure Python scalar on the
+preregistered workload, all decisions are exact, p99 latency is within the
+frozen bound, and no work is omitted. A parity-only or sub-threshold speed
+result SHALL use `verdict_class="null"`. Narrow support SHALL use
+`verdict_class="partial"`. Failed prerequisites SHALL use
+`verdict_class="blocked"`. Unequal work, omitted errors, timing fabrication, or
+correctness drift SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `abi_schema_and_build_receipts`,
+`frozen_benchmark_contract`, `per_unit_rows`, `scalar_and_batch_parity_rows`,
+`throughput_and_latency_rows`, `allocation_and_copy_rows`,
+`exact_downstream_equality_receipt`, `benchmark_attack_matrix`,
+`rust_pyo3_nfr01_ready_score`, `aggregate_row_recomputation`,
+`gate_check_summary`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`cpu_python_scalar_vs_rust_pyo3_scalar_and_batch_exact_decisions`.
+`verifier_is_oracle` SHALL be false because the cross-language implementation
+is not release authority.
+
+#### SCENARIO-BENCH-6564-GATE: Exp6563 Workload Contract Is Pinned
+
+**Given** the Exp6563 production workload canary artifact
+**When** Exp6564 starts
+**Then** it records the canary path, hash, readiness value, workload matrix
+hash, request count, condition coverage, toolchain receipts, and protected
+hashes before timing can produce a promotion claim.
+
+#### SCENARIO-BENCH-6564-PARITY: Scalar And Batch Decisions Match
+
+**Given** identical raw Safety-Net ABI request bytes
+**When** Python scalar, PyO3 scalar, and PyO3 batch paths route them
+**Then** decisions, canonical output bytes, ordering, error types, fallback
+reasons, request hashes, and exact downstream results match for every request.
+
+#### SCENARIO-BENCH-6564-NFR01: Batched Throughput Gates NFR01
+
+**Given** warm-up, randomized blocks, multiple batch sizes, and charged batch
+assembly
+**When** Exp6564 recomputes throughput and p99 from unit rows
+**Then** `rust_pyo3_nfr01_ready_score` opens only for at least `10.0x` median
+batched throughput, exact parity, p99 within the frozen bound, and no omitted
+work.
+
+#### SCENARIO-BENCH-6564-ATTACKS: Timing Shortcuts Fail Closed
+
+**Given** compiler/debug mismatch, hidden preprocessing, unequal request
+counts, discarded errors, warm-cache bias, timer granularity, one-outlier
+medians, uncharged batch assembly, and aggregate-only speedup attacks
+**When** Exp6564 evaluates the attack matrix
+**Then** any failed attack closes the benchmark to `null`, `partial`,
+`blocked`, or `disqualified` before a positive NFR01 claim can open.
+
+## Implementation Status (REQ-BENCH-6564)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6564 | Planned (`python/carnot/experiment_6564_rust_pyo3_safety_net_nfr01.py`, `results/experiment_6564_rust_pyo3_safety_net_nfr01.json`) | Planned (`tests/python/test_experiment_6564_rust_pyo3_safety_net_nfr01.py`) |
+
+### REQ-BENCH-6546: SMT Cost Guard SHALL Separate Conflict, Surface, Model, And Exact Dispatch
+
+Carnot SHALL provide Exp6546 at
+`python/carnot/experiment_6546_smt_cost_guard_sota.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6546_smt_cost_guard_sota --date 20260823`
+SHALL write
+`results/experiment_6546_smt_cost_guard_sota.json`.
+
+Exp6546 SHALL evaluate the Exp6543 structured gate before model loading or
+held inference. It SHALL record input hashes, `cached_sota_pair(gpu_indices=(0,
+1))`, exact mandated hub IDs, GGUF paths and hashes, llama.cpp version and CUDA
+support, GPU identity and VRAM, CPU, RAM, disk, thermal state, budgets, and
+protected-file hashes. A failed gate, cache, GPU, llama.cpp, model-load, or
+runtime precondition SHALL write a terminal blocked artifact and SHALL populate
+`gate_check_summary` with the failed check and observed value.
+
+Exp6546 SHALL require `MODEL_SPECS` rows for exactly these three hub IDs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Each row SHALL use a local `model_path`
+resolved to a GGUF file and SHALL load through llama.cpp. It SHALL NOT call a
+Transformers tokenizer or a Transformers model loader on a GGUF repository ID.
+
+Exp6546 SHALL freeze a bounded balanced held challenge from the audited V566
+fixture across domain and measured Z3 conflict strata. It SHALL create multiple
+proof-preserving surface prompts for each logical instance. It SHALL verify
+surface equivalence with unchanged constraint hashes and exact labels before
+inference. It SHALL use train and development rows only to freeze the
+conflict-dispatch threshold. Held model cost, held answers, and held parse
+outcomes SHALL NOT affect threshold selection.
+
+Exp6546 SHALL run unguarded local inference and guarded exact-tool dispatch
+under identical final-output, timeout, parsing, token, and time-accounting
+contracts. Guarded rows MAY route high-conflict prompts directly to the exact
+Z3 authority. Every unit SHALL remain terminal: successful inference, exact
+tool completion, timeout, model-load failure, parse failure, and checkpoint
+resume state are all recorded as rows.
+
+Exp6546 SHALL report conflict-cost association conditional on surface and
+model, surface effects conditional on logical instance, guarded token and time
+effects, exact completion, calibration, censoring, and failure cells from rows.
+It SHALL NOT report solver conflict count as a universal model-hardness or
+correctness score.
+
+`smt_cost_guard_ready_score` SHALL equal `1.0` only when the preregistered guard
+reduces held charged token or time cost with exact-completion non-inferiority
+across at least two mandated model families and the surface-controlled audit
+passes. Otherwise it SHALL equal `0.0`. A positive verdict SHALL require those
+same conditions. A complete run with no benefit SHALL use `verdict_class=null`.
+One-model or unstable support SHALL use `verdict_class="partial"`. A failed
+gate, cache, GPU, or runtime precondition SHALL use `verdict_class="blocked"`.
+Confounding, model substitution, held threshold tuning, or invalid accounting
+SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `MODEL_SPECS`, `models_used`,
+`model_cache_and_load_receipts`, `frozen_challenge_contract`,
+`logical_instance_rows`, `proof_preserving_surface_receipts`,
+`solver_conflict_rows`, `frozen_dispatch_contract`, `per_unit_rows`,
+`model_and_surface_effect_rows`, `conflict_cost_association_rows`,
+`guarded_versus_unguarded_rows`, `token_and_time_recomputation`,
+`exact_completion_receipt`, `calibration_rows`,
+`censoring_and_timeout_receipts`, `confound_attack_matrix`,
+`smt_cost_guard_ready_score`, `gate_check_summary`,
+`aggregate_row_recomputation`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_principles`, `field_provenance`, `random_seed`, `duration_s`,
+`tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`authenticated_local_llama_cpp_sota_gguf_inference_plus_exact_z3_cost_guard`.
+`verifier_is_oracle` SHALL be false because the cost guard is the tested
+mechanism. Z3 SHALL remain the separate exact evaluation authority.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6546 SMT cost-guard state."
+- `honest_verdict`: "Names the guarded held cost result and exact-completion support."
+- `verdict_class`: "Separates positive, null, partial, blocked, and disqualified cost-guard outcomes."
+- `upstream_gate_receipt`: "Pins Exp6543 by path, hash, expected value, observed value, input hashes, cache, hardware, llama.cpp, budgets, and protected hashes."
+- `MODEL_SPECS`: "Records the three mandated SOTA GGUF hub IDs, local GGUF paths, hashes, quantization, and llama.cpp placement."
+- `models_used`: "Lists the exact mandated hub IDs that supplied inference rows."
+- `model_cache_and_load_receipts`: "Shows cache resolution, GGUF hashes, embedded-tokenizer checks, llama.cpp import, CUDA support, load, smoke, or blocked runtime state."
+- `frozen_challenge_contract`: "Freezes held unit count, domain strata, conflict strata, surfaces, prompt contract, timeout, token accounting, seed, and stop rules before scoring."
+- `logical_instance_rows`: "Stores one logical-instance row with split, domain, fixture identity, constraints hash, exact label, and conflict stratum."
+- `proof_preserving_surface_receipts`: "Shows each surface variant preserves the same logical constraints and exact label."
+- `solver_conflict_rows`: "Records measured Z3 conflicts, decisions, propagations, assertions, quantiles, and replay status."
+- `frozen_dispatch_contract`: "Freezes the train-development-only threshold and exact-tool dispatch rule before held scoring."
+- `per_unit_rows`: "Stores one model-surface-instance-arm row with tokens, time, timeout, parse, exact validity, dispatch, tool time, and charged totals."
+- `model_and_surface_effect_rows`: "Reports surface effects conditional on logical instance and model."
+- `conflict_cost_association_rows`: "Reports conflict-cost association conditional on surface and model without claiming universal model hardness."
+- `guarded_versus_unguarded_rows`: "Reports held guarded cost and exact-completion effects by model family."
+- `token_and_time_recomputation`: "Recomputes prompt tokens, output tokens, tool time, model time, charged time, and charged tokens from rows."
+- `exact_completion_receipt`: "Shows guarded exact completion is non-inferior to unguarded completion before any positive score opens."
+- `calibration_rows`: "Shows threshold fitting used train and development rows only and held rows were unavailable."
+- `censoring_and_timeout_receipts`: "Records timeout, parse-failure, model-failure, checkpoint, and terminal-row coverage."
+- `confound_attack_matrix`: "Attacks prompt-length confounding, surface non-equivalence, cache order, warm-up asymmetry, token mismatch, timer aliases, model substitution, held threshold tuning, tool-time omission, and cherry-picked timeouts."
+- `smt_cost_guard_ready_score`: "Opens only for preregistered held token or time savings with exact-completion non-inferiority across at least two mandated model families and no surface-controlled confound."
+- `gate_check_summary`: "Names every failed gate with expected and observed values."
+- `aggregate_row_recomputation`: "Rebuilds the verdict and ready score from gates, rows, costs, exact completion, calibration, censoring, attacks, and protected hashes."
+- `preconditions_checked`: "Records paths, hashes, cache, hardware, llama.cpp, solver, budgets, date, seeds, and protected hashes."
+- `protected_files_unchanged`: "Shows guarded inputs, specs, prior artifacts, model registry, template, and conductor files stayed byte-identical during the run."
+- `inference_substrate`: "Declares authenticated local llama.cpp SOTA GGUF inference plus exact Z3 cost guard."
+- `verifier_is_oracle`: "False because guard value is measured and Z3 is the separate evaluation authority."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to specs, inputs, rows, reducers, tests, and hashes."
+- `random_seed`: "Pins challenge selection, surface ordering, dispatch calibration, model seeds, and attack ordering."
+- `duration_s`: "Records measured reducer and live-inference wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in gates, models, prompts, rows, costs, attacks, and verdicts."
+
+#### SCENARIO-BENCH-6546-GATE: Gate And Model Identity Are Checked First
+
+**Given** the Exp6543 independent audit artifact and local SOTA GGUF cache
+**When** Exp6546 starts
+**Then** it records the audit gate, `cached_sota_pair(gpu_indices=(0, 1))`,
+all three mandated model paths and hashes, llama.cpp/CUDA support, hardware,
+budgets, and protected hashes before any held model claim can open.
+
+#### SCENARIO-BENCH-6546-CHALLENGE: Conflict And Surface Strata Are Frozen
+
+**Given** the audited V566 fixture and pinned Z3 replay
+**When** Exp6546 builds the bounded challenge
+**Then** it selects held logical instances across domains and measured conflict
+strata, emits multiple proof-preserving surface prompts per instance, and
+verifies unchanged constraints and exact labels before inference.
+
+#### SCENARIO-BENCH-6546-DISPATCH: Train And Development Rows Freeze The Guard
+
+**Given** train, development, and held fixture rows
+**When** Exp6546 fits the conflict threshold
+**Then** threshold selection uses train and development conflicts only, held
+cost and held target answers are unavailable, and high-risk held rows may route
+directly to Z3 under the frozen rule.
+
+#### SCENARIO-BENCH-6546-RUNTIME: Unguarded And Guarded Rows Share Accounting
+
+**Given** the three mandated local llama.cpp GGUF models and exact Z3 authority
+**When** Exp6546 runs unguarded and guarded arms
+**Then** every model-surface-instance-arm row records prompt tokens, output
+tokens, wall time, first-token time when available, timeout, parse state, exact
+validity, dispatch, tool time, total charged time, and terminal status.
+
+#### SCENARIO-BENCH-6546-EFFECTS: Claims Are Row-First And Surface-Controlled
+
+**Given** terminal held rows from all surfaces and model families
+**When** Exp6546 computes effects
+**Then** it reports model-surface effects, conflict-cost associations, guarded
+versus unguarded cost, exact completion, calibration, and failure cells from
+rows without treating solver conflict as universal model hardness.
+
+#### SCENARIO-BENCH-6546-ATTACKS: Confounds And Substitution Fail Closed
+
+**Given** prompt-length confounding, surface non-equivalence, cache order,
+warm-up asymmetry, token counter mismatch, timer aliasing, model substitution,
+held threshold tuning, tool-time omission, and cherry-picked timeout attacks
+**When** Exp6546 evaluates the confound matrix
+**Then** every shortcut must fail closed before `smt_cost_guard_ready_score`
+can equal `1.0`.
+
+#### SCENARIO-BENCH-6546-CHECKPOINT: Resume Keeps Terminal Rows Stable
+
+**Given** a partial Exp6546 checkpoint
+**When** Exp6546 resumes the same frozen challenge
+**Then** completed terminal rows are reused by row hash, missing rows are run
+under the same contracts, and the checkpoint receipt is included in censoring
+and timeout coverage.
+
+#### SCENARIO-BENCH-6546-TERMINAL: Artifact Is Validated And Reproducible
+
+**Given** gates, model receipts, challenge rows, surface receipts, conflict
+rows, dispatch contract, per-unit rows, effects, recomputations, completion
+receipts, calibration rows, censoring rows, attacks, and protected hashes
+**When** Exp6546 writes its deliverable
+**Then** every required field has a principle and provenance entry, the
+inference substrate is exact, `verifier_is_oracle=false`, the checksum matches,
+and the verdict class follows the preregistered enum.
+
+## Implementation Status (REQ-BENCH-6546)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6546 | Planned (`python/carnot/experiment_6546_smt_cost_guard_sota.py`, `results/experiment_6546_smt_cost_guard_sota.json`) | Planned (`tests/python/test_experiment_6546_smt_cost_guard_sota.py`) |
+
+### REQ-BENCH-6547: External Transfer Independent Audit SHALL Always Run
+
+Carnot SHALL provide Exp6547 at
+`python/carnot/experiment_6547_external_transfer_independent_audit.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6547_external_transfer_independent_audit --date 20260823`
+SHALL write
+`results/experiment_6547_external_transfer_independent_audit.json`.
+
+Exp6547 SHALL always produce a terminal artifact. Missing, blocked, partial,
+or disqualified upstream lanes SHALL still emit diagnostic rows, gate rows, and
+a zero audited readiness score for that lane. Exp6547 SHALL not suppress one
+lane because another lane is blocked.
+
+Exp6547 SHALL independently recompute router and cost-guard claims from
+per-unit rows. It SHALL not trust upstream aggregate fields as authority. It
+SHALL recompute structural paired effects, learned-router paired effects,
+candidate preservation, exact equality, train-only fitting, development-only
+calibration, immutable held tables, abstention, fallback reachability, cost
+accounting, GGUF model identity, surface balance, token counts, tool-time
+charging, terminal coverage, and exact completion from rows.
+
+`external_transfer_audited_ready_score` SHALL equal `1.0` only when at least
+one scientific lane has a row-supported eligible result and every adopted claim
+passes the independent checks. Otherwise it SHALL equal `0.0`. A clean audit
+SHALL use `verdict_class=null`. A run with only one auditable lane SHALL use
+`verdict_class="partial"`. Missing prerequisite artifacts or blocked upstream
+lanes with no adopted row-supported claim SHALL use `verdict_class="blocked"`.
+False model identity, leakage, invalid exact equality, or invalid cost
+accounting SHALL use `verdict_class="disqualified"`.
+
+The artifact SHALL include exactly these fields: `status`, `honest_verdict`,
+`verdict_class`, `input_disposition_rows`, `router_row_recomputation`,
+`cost_guard_row_recomputation`, `independent_exact_replay_rows`,
+`source_equivalence_rows`, `model_identity_audit_rows`,
+`exception_and_fixture_hash_receipts`, `candidate_and_fallback_audit`,
+`calibration_audit_rows`, `token_time_and_tool_cost_audit`,
+`censoring_and_terminal_coverage`, `shortcut_attack_matrix`,
+`lane_dispositions`, `external_transfer_audited_ready_score`,
+`gate_check_summary`, `per_unit_rows`, `aggregate_row_recomputation`,
+`preconditions_checked`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_principles`, `field_provenance`, `random_seed`,
+`duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`independent_external_router_cost_and_exact_replay_audit_no_llm`.
+`verifier_is_oracle` SHALL be true for audit checks only. Exp6547 SHALL not
+turn an audit pass into a new positive scientific claim.
+
+Field principles SHALL be:
+
+- `status`: "Records the terminal Exp6547 independent audit state."
+- `honest_verdict`: "States each lane disposition without merging router and cost-guard evidence."
+- `verdict_class`: "Separates clean, partial, blocked, and disqualified audit outcomes."
+- `input_disposition_rows`: "Records existence, hashes, status, verdict class, and ready score for each required upstream artifact."
+- `router_row_recomputation`: "Recomputes structural and learned-router effects from rows instead of trusted aggregates."
+- `cost_guard_row_recomputation`: "Recomputes SOTA guarded versus unguarded effects from rows instead of trusted aggregates."
+- `independent_exact_replay_rows`: "Samples exact replay receipts and checks row-level equality against the audited fixture authority."
+- `source_equivalence_rows`: "Checks proof-preserving surface and source-equivalence receipts before adopting any transfer claim."
+- `model_identity_audit_rows`: "Verifies mandated GGUF IDs, local model paths, hashes, loader identity, and substitution resistance."
+- `exception_and_fixture_hash_receipts`: "Pins fixture, exception table, checkpoint, model registry, and protected inputs by hash."
+- `candidate_and_fallback_audit`: "Checks candidate preservation, abstention, fallback reachability, and exact equality across router rows."
+- `calibration_audit_rows`: "Checks train-only fitting and development-only calibration boundaries."
+- `token_time_and_tool_cost_audit`: "Recomputes prompt tokens, output tokens, model time, tool time, charged time, and charged tokens."
+- `censoring_and_terminal_coverage`: "Checks timeouts, parse failures, nonterminal rows, checkpoint coverage, and exact completion."
+- `shortcut_attack_matrix`: "Attacks identity, entity names, row order, leakage, prompt length, cache order, timing, duplicates, null rows, hidden writes, omitted tool cost, and aggregate tampering."
+- `lane_dispositions`: "Keeps router and cost-guard dispositions separate so one lane cannot rescue or suppress the other."
+- `external_transfer_audited_ready_score`: "Opens only when row-supported eligible claims pass every adopted independent check."
+- `gate_check_summary`: "Names failed checks with expected and observed values."
+- `per_unit_rows`: "Flattens independent row checks used by the aggregate reducer."
+- `aggregate_row_recomputation`: "Rebuilds the final score and verdict class from rows and lane dispositions."
+- `preconditions_checked`: "Records paths, hashes, code hashes, solver receipts, model receipts, resources, seed, and protected hashes."
+- `protected_files_unchanged`: "Shows guarded source and evidence files stayed byte-identical during the run."
+- `inference_substrate`: "Declares a deterministic external router, cost, and exact replay audit with no LLM inference."
+- `verifier_is_oracle`: "True only for audit checks; the artifact makes no new positive scientific claim."
+- `field_principles`: "Explains why each required field exists."
+- `field_provenance`: "Maps each field to rows, upstream artifacts, checks, tests, and hashes."
+- `random_seed`: "Pins deterministic replay sampling and attack ordering."
+- `duration_s`: "Records measured reducer wall time."
+- `tests_run`: "Records validation command receipts."
+- `reproducibility_checksum`: "Detects drift in inputs, rows, lane dispositions, gates, and verdict."
+
+#### SCENARIO-BENCH-6547-ALWAYS-RUN: Missing Inputs Still Produce Rows
+
+**Given** one or more missing or blocked upstream artifacts
+**When** Exp6547 runs
+**Then** it writes a terminal artifact with input disposition rows, failed gate
+observations, lane dispositions, and
+`external_transfer_audited_ready_score=0.0` for each unavailable adopted lane.
+
+#### SCENARIO-BENCH-6547-ROW-REDUCTION: Aggregates Are Not Trusted
+
+**Given** structural, router, and cost-guard artifacts with per-unit rows
+**When** Exp6547 recomputes effects
+**Then** paired effects, support counts, exact equality, cost totals, token
+totals, and terminal coverage are derived from rows and compared with upstream
+aggregate claims.
+
+#### SCENARIO-BENCH-6547-MODEL-IDENTITY: GGUF Identity Is Audited
+
+**Given** Exp6546 model specs and model rows
+**When** Exp6547 audits model identity
+**Then** every adopted cost-guard row uses one of the mandated GGUF hub IDs,
+the local path hash matches the spec row, the loader is llama.cpp, and model
+substitution fails closed.
+
+#### SCENARIO-BENCH-6547-SHORTCUTS: Shortcut Attacks Fail Closed
+
+**Given** identity, entity-name, row-order, solver-leakage, prompt-length,
+cache-order, timing, duplicate-unit, null-row, hidden-held-write, omitted-tool
+cost, and aggregate-tampering attacks
+**When** Exp6547 evaluates the shortcut matrix
+**Then** every adopted lane must fail closed before the audited readiness score
+can equal `1.0`.
+
+#### SCENARIO-BENCH-6547-EXACT-EQUALITY: Exact Labels Remain The Authority
+
+**Given** router rows, fixture rows, and exact replay receipts
+**When** Exp6547 audits exact equality
+**Then** every adopted router row preserves exact labels and every exact replay
+sample matches the fixture authority.
+
+#### SCENARIO-BENCH-6547-COST-ACCOUNTING: Tool And Model Costs Are Charged
+
+**Given** cost-guard model, surface, arm, and tool rows
+**When** Exp6547 recomputes charged totals
+**Then** prompt tokens plus output tokens equal charged tokens, model time plus
+tool time equals charged time, and guarded savings include direct-tool cost.
+
+#### SCENARIO-BENCH-6547-CALIBRATION: Held Rows Stay Sealed
+
+**Given** train, development, and held rows from the router and cost guard
+**When** Exp6547 audits fitting, calibration, threshold, and exception rows
+**Then** train-only fitting, development-only calibration, immutable exception
+tables, and held-unavailable threshold selection are required for adoption.
+
+#### SCENARIO-BENCH-6547-ATOMIC-OUTPUT: Artifact Is Stable And Reproducible
+
+**Given** all audit rows, lane dispositions, protected hashes, and tests
+**When** Exp6547 writes the deliverable
+**Then** the artifact is written atomically, has field principles and
+provenance for every required field, has a matching checksum, and validates
+through the module CLI.
+
+## Implementation Status (REQ-BENCH-6547)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6547 | Planned (`python/carnot/experiment_6547_external_transfer_independent_audit.py`, `results/experiment_6547_external_transfer_independent_audit.json`) | Planned (`tests/python/test_experiment_6547_external_transfer_independent_audit.py`) |
+
+### REQ-BENCH-6555: Proof-Preserving Constraint Saturation Fixture
+
+Carnot SHALL provide Exp6555 at
+`python/carnot/experiment_6555_proof_preserving_constraint_saturation_fixture.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6555_proof_preserving_constraint_saturation_fixture --date 20260823`
+SHALL write
+`results/experiment_6555_proof_preserving_constraint_saturation_fixture.json`,
+`results/fixtures/v567_constraint_saturation.jsonl`, and
+`docs/research-notes/v567-constraint-saturation-sota-mapping.md`.
+
+Exp6555 SHALL evaluate the Exp6548 structured gate before fixture generation.
+It SHALL record the upstream path and hash, direct arXiv availability, query
+timestamps, Python and Z3 versions, CPU, RAM, disk, the V566 source fixture
+hash, and protected-file hashes. It SHALL not run model inference. It SHALL not
+modify `scripts/research_conductor.py`.
+
+Exp6555 SHALL ingest three to five primary 2025-2026 sources for
+compositional constraint load, executable variant generation, selective
+verification, and symbolic certification. Each source row SHALL record exact
+URLs, arXiv availability, method mapping to current Carnot code, a falsifiable
+fixture use, and a named failure mode. The research note SHALL state the
+bottom-line fixture contract before model outcomes exist.
+
+Exp6555 SHALL freeze at least 36 base lineages across seating, scheduling, and
+logic-grid domains. It SHALL derive equivalent and intentionally hardened
+variants across simultaneous constraint counts from 1 through 12, structural
+and lexical constraint types, sparse and interacting graphs, cumulative turns,
+and at least two surface forms.
+
+Exp6555 SHALL prove every equivalent variant preserves the source solution set.
+It SHALL prove every hardened variant adds only its declared constraint. Every
+variant SHALL emit deterministic per-clause and joint checkers with code
+hashes, Z3 receipts, exact labels, source IDs, local IDs, chronology,
+constraint graph, surface, timeout, and censoring. Train, development, and
+held lineage splits SHALL be frozen before any downstream model run. No base
+problem, entity alias, row ordering, template family, or answer-derived feature
+may cross splits.
+
+Exp6555 SHALL create the fixture through content-addressed shards and atomic
+finalization. It SHALL attack source drift, non-equivalent rewrites,
+undeclared hardening, missing clauses, solver disagreement, duplicate
+lineages, surface leakage, post-label sampling, corrupt resume, and
+aggregate-only success.
+
+`constraint_saturation_fixture_ready_score` SHALL equal `1.0` only when the
+SOTA mapping is source-backed, every planned unit is terminal, equivalence or
+hardening proofs pass, exact checkers round-trip, split floors hold, and
+hashes close. A complete fixture SHALL use `verdict_class=null`; a bounded
+usable subset SHALL use `partial`; failed gates or prerequisites SHALL use
+`blocked`; false provenance, leakage, or invalid proofs SHALL use
+`disqualified`.
+
+The artifact SHALL include at least these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `literature_source_rows`,
+`sota_to_experiment_mapping`, `source_and_generator_hashes`,
+`frozen_variant_and_split_contract`, `equivalence_and_hardening_proof_rows`,
+`exact_clause_checker_contract`, `sample_size_and_power_contract`,
+`fixture_path_and_hash`, `per_unit_rows`, `attack_matrix`,
+`constraint_saturation_fixture_ready_score`, `aggregate_row_recomputation`,
+`gate_check_summary`, `preconditions_checked`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`random_seed`, `duration_s`, `tests_run`, and `reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`primary_source_sota_ingestion_and_proof_preserving_z3_fixture_no_llm`.
+`verifier_is_oracle` SHALL be true for variant labels only.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes a completed fixture from a partial download or generation pass."
+- `honest_verdict`: "The verdict must state source, proof, split, and checker closure with a terminal prefix."
+- `verdict_class`: "A closed class prevents a partial or invalid fixture from becoming positive science."
+- `upstream_gate_receipt`: "The fixture must identify the eligible V566 evidence root it extends."
+- `literature_source_rows`: "One row per primary source makes the execution-time SOTA refresh auditable."
+- `sota_to_experiment_mapping`: "Each adopted method must map to current code, a falsifiable use, and a named failure mode."
+- `source_and_generator_hashes`: "Immutable source and generator identities prevent silent benchmark drift."
+- `frozen_variant_and_split_contract`: "Constraint counts, types, interactions, surfaces, and lineage splits must be fixed before outcomes."
+- `equivalence_and_hardening_proof_rows`: "Every variant needs an exact witness for preserved or intentionally narrowed semantics."
+- `exact_clause_checker_contract`: "Deterministic per-clause and joint checks keep labels independent of model behavior."
+- `sample_size_and_power_contract`: "Lineage, domain, constraint-count, interaction, and surface floors bound later claims."
+- `fixture_path_and_hash`: "A content hash makes every downstream row traceable to the sealed fixture."
+- `per_unit_rows`: "Every source and derived unit must carry its proof, checker, split, and terminal status."
+- `attack_matrix`: "Equivalence, leakage, solver, resume, and aggregate attacks test the fixture contract."
+- `constraint_saturation_fixture_ready_score`: "One binary field gives the SOTA comparison an exact readiness gate."
+- `aggregate_row_recomputation`: "Readiness must derive from the complete unit ledger."
+- `gate_check_summary`: "A blocked result must name the failed upstream, source, solver, or storage check and value."
+- `preconditions_checked`: "Source, solver, resource, and network receipts separate blocked work from invalid science."
+- `protected_files_unchanged`: "The task must preserve the active roadmap and conductor."
+- `inference_substrate`: "Primary-source ingestion and exact variant generation perform no LLM inference."
+- `verifier_is_oracle`: "Z3 and executable clause checkers are exact fixture authority, not a learned-verifier claim."
+- `field_provenance`: "Each readiness and proof field must point to source rows, hashes, and reducer code."
+- `random_seed`: "Fixed sampling and ordering seeds make fixture construction repeatable."
+- `duration_s`: "Monotonic time exposes skipped source, solver, or transaction work."
+- `tests_run`: "Named validation commands show the source, proof, split, and transaction paths executed."
+- `reproducibility_checksum`: "A final content hash protects the sealed contract."
+
+#### SCENARIO-BENCH-6555-GATE: Clean V566 Evidence Gates The Fixture
+
+**Given** the Exp6548 evidence contract and the V566 DRIFT fixture
+**When** Exp6555 starts
+**Then** it records the gate path, gate hash, source fixture hash, direct arXiv
+availability, query timestamps, solver identity, resources, and protected-file
+hashes before readiness can open.
+
+#### SCENARIO-BENCH-6555-SOTA: Primary Sources Map To Fixture Decisions
+
+**Given** current arXiv primary-source rows
+**When** Exp6555 writes the SOTA note
+**Then** each selected method has exact URLs, a Carnot stack mapping, a
+falsifiable fixture use, and a named failure mode.
+
+#### SCENARIO-BENCH-6555-VARIANTS: Constraint Load Factors Are Frozen
+
+**Given** the audited V566 DRIFT fixture
+**When** Exp6555 derives saturation rows
+**Then** at least 36 lineages span seating, scheduling, and logic-grid domains,
+constraint counts 1 through 12, structural and lexical types, sparse and
+interacting graphs, cumulative turns, and at least two surface forms.
+
+#### SCENARIO-BENCH-6555-PROOFS: Equivalence And Hardening Are Exact
+
+**Given** equivalent and hardened variants
+**When** Exp6555 checks each variant
+**Then** equivalent variants preserve the source solution set, hardened
+variants add only the declared constraint, and every row records Z3 receipts
+plus per-clause and joint checker hashes.
+
+#### SCENARIO-BENCH-6555-SPLITS: Lineage Isolation Holds
+
+**Given** train, development, and held fixture splits
+**When** Exp6555 audits lineage
+**Then** no base problem, entity alias, row ordering, template family, or
+answer-derived feature crosses splits.
+
+#### SCENARIO-BENCH-6555-ATTACKS: Invalid Fixtures Fail Closed
+
+**Given** source drift, non-equivalent rewrites, undeclared hardening, missing
+clauses, solver disagreement, duplicate lineages, surface leakage, post-label
+sampling, corrupt resume, or aggregate-only success
+**When** Exp6555 evaluates its attack matrix
+**Then** each attack records the observed value and readiness remains `0.0`
+until all attacks pass.
+
+#### SCENARIO-BENCH-6555-ATOMIC: Terminal Artifact And Fixture Are Stable
+
+**Given** terminal shards, proof rows, split rows, protected hashes, and tests
+**When** Exp6555 finalizes the fixture and JSON artifact
+**Then** both outputs are written atomically, the checksum validates, exact
+checkers round-trip, and `constraint_saturation_fixture_ready_score=1.0`.
+
+## Implementation Status (REQ-BENCH-6555)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6555 | Planned (`python/carnot/experiment_6555_proof_preserving_constraint_saturation_fixture.py`, `results/experiment_6555_proof_preserving_constraint_saturation_fixture.json`, `results/fixtures/v567_constraint_saturation.jsonl`) | Planned (`tests/python/test_experiment_6555_proof_preserving_constraint_saturation_fixture.py`) |
+
+### REQ-BENCH-6556: SOTA Constraint Saturation Intervention A/B
+
+Carnot SHALL provide Exp6556 at
+`python/carnot/experiment_6556_sota_constraint_saturation_intervention_ab.py`.
+The command
+`.venv/bin/python -m carnot.experiment_6556_sota_constraint_saturation_intervention_ab --date 20260823`
+SHALL write
+`results/experiment_6556_sota_constraint_saturation_intervention_ab.json`.
+
+Exp6556 SHALL evaluate the sealed Exp6555 fixture gate before model work. It
+SHALL resolve `cached_sota_pair(gpu_indices=(0, 1))`, verify both RTX 3090
+devices, driver, VRAM, llama.cpp, GGUF file hashes, writable checkpoint space,
+fixture hash, exact checker hashes, seeds, Z3, and protected-file hashes. A
+missing required model, GPU, runner, checker, fixture, or cache contract SHALL
+write a terminal blocked artifact. It SHALL not substitute a legacy model for a
+headline row and SHALL not pass a GGUF repository ID to
+`AutoTokenizer.from_pretrained()`.
+
+Exp6556 SHALL declare `MODEL_SPECS` containing exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Every completed model row SHALL identify the
+local `.gguf` file, file hash, llama.cpp loader, process, GPU, prompt hash,
+response hash, token count, timing, exit status, timeout, and censoring state.
+
+Exp6556 SHALL freeze matched model, lineage, variant, surface, seed, arm,
+budget, threshold, decomposition limit, timeout, censoring, and adoption rules
+before held outcomes. The held contract SHALL include at least 36 base lineages
+per model balanced across seating, scheduling, and logic-grid domains,
+constraint-count bins, structural and lexical constraint types, sparse and
+interacting graphs, and at least two surfaces.
+
+Exp6556 SHALL compare flat generation, longer-flat generation, bounded
+decomposition, the V566 exact-tool cost guard, and a combined bounded route on
+identical model, lineage, variant, surface, seed cells. Bounded decomposition
+SHALL preserve every clause and SHALL include an exact final joint check.
+Longer-flat generation SHALL be a required control so selective verification
+cannot win only because it spent more initial compute.
+
+Exp6556 SHALL emit raw rows for per-clause success, all-constraint success,
+exact final validity, harmful interventions, recoveries, regressions, tokens,
+solver calls, wall time, charged cost, timeout, abstention, decomposition,
+fallback, censoring, model, k, type, interaction, and surface. Headline
+aggregates SHALL derive only from emitted rows and a frozen reducer.
+
+`constraint_saturation_intervention_ready_score` SHALL equal `1.0` only when
+rows establish a model and k-stratified phase curve and a preregistered bounded
+arm improves exact joint success or charged cost over both flat and
+longer-flat controls without increased invalid release, harmful intervention,
+timeout, or unsupported routing. `verdict_class` SHALL be `positive` only in
+that case. It SHALL be `null` for no benefit, `partial` for narrow support or
+tradeoffs, `blocked` for failed gates or resources, and `disqualified` for
+leakage, false receipts, missing clauses, or invalid release.
+
+The artifact SHALL include at least these fields: `status`, `honest_verdict`,
+`verdict_class`, `upstream_gate_receipt`, `MODEL_SPECS`,
+`live_model_and_gpu_receipts`, `frozen_arm_and_budget_contract`,
+`sample_size_and_power_contract`, `per_unit_rows`,
+`per_clause_and_joint_result_rows`, `route_decomposition_and_fallback_rows`,
+`harmful_intervention_ledger`, `charged_cost_rows`,
+`constraint_load_phase_curve`, `constraint_saturation_intervention_ready_score`,
+`aggregate_row_recomputation`, `gate_check_summary`, `preconditions_checked`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `random_seed`, `duration_s`, `tests_run`, and
+`reproducibility_checksum`.
+
+`inference_substrate` SHALL be
+`authenticated_local_llama_cpp_sota_gguf_constraint_saturation_plus_exact_clause_joint_checks`.
+`verifier_is_oracle` SHALL be false for the routing comparison.
+
+Field principles SHALL be:
+
+- `status`: "A terminal state distinguishes a completed multi-model comparison from setup-only work."
+- `honest_verdict`: "The verdict must state phase-curve, intervention, harm, cost, and receipt outcomes with a terminal prefix."
+- `verdict_class`: "A closed class prevents blocked, unsafe, circular, or narrow evidence from becoming positive."
+- `upstream_gate_receipt`: "The comparison must identify the exact sealed fixture that authorized execution."
+- `MODEL_SPECS`: "Exact mandated model identities prevent smoke models from supporting headline claims."
+- `live_model_and_gpu_receipts`: "Process, file, GPU, timing, and output receipts prove fresh local inference."
+- `frozen_arm_and_budget_contract`: "Arms, budgets, thresholds, decomposition bounds, and adoption rules must precede held outcomes."
+- `sample_size_and_power_contract`: "Per-model lineage, domain, k, interaction, surface, and seed floors bound comparative claims."
+- `per_unit_rows`: "Every model, lineage, variant, surface, seed, arm, and condition needs a raw row."
+- `per_clause_and_joint_result_rows`: "Clause success cannot substitute for exact all-constraint success."
+- `route_decomposition_and_fallback_rows`: "Every intervention, abstention, split, and exact fallback must be visible."
+- `harmful_intervention_ledger`: "Recoveries and regressions must be counted symmetrically."
+- `charged_cost_rows`: "Tokens, solver calls, retries, persistence, and wall time must be charged to each arm."
+- `constraint_load_phase_curve`: "The claimed collapse boundary must derive from model and k-stratified rows."
+- `constraint_saturation_intervention_ready_score`: "One binary field gates adoption on benefit beyond longer-flat compute with no safety loss."
+- `aggregate_row_recomputation`: "Every headline must derive from emitted rows and the frozen reducer."
+- `gate_check_summary`: "A blocked run must name the failed fixture, model, GPU, runner, or checker and observed value."
+- `preconditions_checked`: "Resource and identity receipts separate infrastructure blocks from model nulls."
+- `protected_files_unchanged`: "The experiment must preserve protected orchestration files."
+- `inference_substrate`: "The artifact must declare authenticated local llama.cpp GGUF inference plus exact clause and joint checks."
+- `verifier_is_oracle`: "The learned route is not authority; executable clause and joint checkers remain separate release authority."
+- `field_provenance`: "Each phase, benefit, harm, and cost field must point to raw receipts and reducer code."
+- `random_seed`: "Fixed generation, routing, and ordering seeds make the comparison repeatable."
+- `duration_s`: "Flagship GGUF inference across matched arms requires plausible monotonic wall time."
+- `tests_run`: "Named unit, lint, verifier, and E2E receipts show all paths executed."
+- `reproducibility_checksum`: "A final hash detects mutation of the terminal comparison."
+
+#### SCENARIO-BENCH-6556-GATE: Required Local SOTA Preconditions Fail Closed
+
+**Given** the sealed Exp6555 fixture and mandatory local SOTA model policy
+**When** Exp6556 evaluates preconditions
+**Then** it records the fixture gate, `cached_sota_pair(gpu_indices=(0, 1))`,
+dual RTX 3090 receipts, llama.cpp, GGUF paths and hashes, checker hashes, Z3,
+seeds, writable checkpoint space, and protected hashes before any completed
+comparison can open.
+
+#### SCENARIO-BENCH-6556-MATCHED-ARMS: Held Cells Are Frozen Before Outcomes
+
+**Given** Exp6555 fixture rows
+**When** Exp6556 builds the held comparison matrix
+**Then** every mandated model uses the same lineage, variant, surface, seed,
+arm, budget, threshold, decomposition limit, timeout, and adoption rule cells
+with at least 36 base lineages per model.
+
+#### SCENARIO-BENCH-6556-CHECKS: Exact Clause And Joint Checks Remain Authority
+
+**Given** model responses and exact-tool fallback outputs
+**When** Exp6556 scores a cell
+**Then** per-clause success, all-constraint success, exact final validity,
+abstention, timeout, censoring, solver calls, and response hashes are recorded
+without treating the route as an oracle.
+
+#### SCENARIO-BENCH-6556-INTERVENTIONS: Bounded Routes Are Charged And Audited
+
+**Given** flat, longer-flat, bounded-decomposition, exact-tool-cost-guard, and
+combined-route arms
+**When** Exp6556 recomputes effects
+**Then** decomposition rows preserve all clauses, exact fallback is reachable,
+charged tokens and solver calls are counted, and recoveries and regressions
+are symmetric against both flat controls.
+
+#### SCENARIO-BENCH-6556-TERMINAL: Readiness Requires Benefit Beyond Longer Flat
+
+**Given** emitted raw rows and route receipts
+**When** Exp6556 finalizes the artifact
+**Then** the phase curve, cost effects, harm ledger, invalid-release rate,
+timeout rate, supported-routing checks, and protected-file hashes determine the
+terminal verdict and checksum.
+
+## Implementation Status (REQ-BENCH-6556)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-BENCH-6556 | Planned (`python/carnot/experiment_6556_sota_constraint_saturation_intervention_ab.py`, `results/experiment_6556_sota_constraint_saturation_intervention_ab.json`) | Planned (`tests/python/test_experiment_6556_sota_constraint_saturation_intervention_ab.py`) |

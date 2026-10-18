@@ -1,0 +1,637 @@
+E....EEEEEEEEEEEEEEEEEEE.EF                                              [100%]
+==================================== ERRORS ====================================
+_______________ ERROR at setup of test_real_parity_and_lifecycle _______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+---------------------------- Captured stdout setup -----------------------------
+[exp8205] phase=8609_start_no_model_load_MODEL_SPECS=[]_current_llm_calls=0 completed=0 pending=0
+_______________ ERROR at setup of test_verdicts_and_cold_replay ________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+__________ ERROR at setup of test_rehashed_tampering[completed_count] __________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+___________ ERROR at setup of test_rehashed_tampering[target_model] ____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+____________ ERROR at setup of test_rehashed_tampering[parity_rows] ____________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+______________ ERROR at setup of test_rehashed_tampering[receipt] ______________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+_________________ ERROR at setup of test_checksum_and_missing __________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+_______ ERROR at setup of test_rehashed_primitive_contracts[descriptor] ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+________ ERROR at setup of test_rehashed_primitive_contracts[operands] _________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+_________ ERROR at setup of test_rehashed_primitive_contracts[roster] __________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+__________ ERROR at setup of test_rehashed_primitive_contracts[graph] __________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+_________ ERROR at setup of test_rehashed_primitive_contracts[loaded] __________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+________ ERROR at setup of test_rehashed_primitive_contracts[partition] ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+____ ERROR at setup of test_rehashed_primitive_contracts[lifecycle_roster] _____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+______ ERROR at setup of test_rehashed_primitive_contracts[contamination] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+______ ERROR at setup of test_rehashed_primitive_contracts[stale_payload] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+____ ERROR at setup of test_rehashed_primitive_contracts[failed_lifecycle] _____
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+______ ERROR at setup of test_rehashed_primitive_contracts[external_gate] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+_____ ERROR at setup of test_rehashed_primitive_contracts[fixture_config] ______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+_______ ERROR at setup of test_rehashed_primitive_contracts[node_union] ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+_______ ERROR at setup of test_private_child_failure_and_forced_cleanup ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def work(tmp_path_factory):
+>       return e.measure(tmp_path_factory.mktemp("qualification8609"), "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+=================================== FAILURES ===================================
+_________________ test_measurement_owned_failure_and_deadline __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T070433-936653-3f69314d/test_measurement_owned_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f87e87cf710>
+
+    def test_measurement_owned_failure_and_deadline(tmp_path, monkeypatch):
+        """REQ-VERIFY-8609: an owned measurement error seals a disqualified artifact."""
+    
+        def fail(*args, **kwargs):
+            raise TimeoutError("controlled measurement deadline")
+    
+        monkeypatch.setattr(e.peer, "execute", fail)
+>       work = e.measure(tmp_path / "failed", "20261017")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_lean_qualification_8609.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/lean_qualification_8609.py:237: in measure
+    prototype.replay(root / "results" / (prototype.NAME + ".json"))
+python/carnot/reporting/lean_resident_8608.py:450: in replay
+    authenticate(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py', 'sha256': 'sha256:7865070fe8b58fb21e301bd5b1a75ac7ba7923ab9d4ccc5b4fd0051da3c2f966'}
+
+    def authenticate(ref: Json) -> Path:
+        """Missing evidence is different from a measured zero or a changed file."""
+        path = Path(ref["path"])
+        if sha256_file(path) != ref["sha256"]:
+>           raise ValueError("input_hash:" + str(path))
+E           ValueError: input_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py
+
+python/carnot/reporting/lean_resident_8608.py:59: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=8609_start_no_model_load_MODEL_SPECS=[]_current_llm_calls=0 completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_lean_qualification_8609.py::test_measurement_owned_failure_and_deadline
+ERROR tests/python/test_lean_qualification_8609.py::test_real_parity_and_lifecycle
+ERROR tests/python/test_lean_qualification_8609.py::test_verdicts_and_cold_replay
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[completed_count]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[target_model]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[parity_rows]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[receipt]
+ERROR tests/python/test_lean_qualification_8609.py::test_checksum_and_missing
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[descriptor]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[operands]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[roster]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[graph]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[loaded]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[partition]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[lifecycle_roster]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[contamination]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[stale_payload]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[failed_lifecycle]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[external_gate]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[fixture_config]
+ERROR tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[node_union]
+ERROR tests/python/test_lean_qualification_8609.py::test_private_child_failure_and_forced_cleanup
+1 failed, 5 passed, 1 warning, 21 errors in 18.15s

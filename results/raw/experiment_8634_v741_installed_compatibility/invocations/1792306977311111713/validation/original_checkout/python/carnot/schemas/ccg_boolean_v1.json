@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "carnot.ccg_boolean.v1",
+  "title": "Carnot Boolean Constraint Composite Graph V1",
+  "type": "object",
+  "required": ["schema", "instance_id", "nodes", "edges", "graph_cut_edges", "mapping_contract"],
+  "properties": {
+    "schema": {"const": "carnot.ccg_boolean.v1"},
+    "instance_id": {"type": "string"},
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "kind"],
+        "properties": {
+          "node_id": {"type": "string"},
+          "kind": {"enum": ["source", "sink", "variable", "auxiliary_term"]}
+        }
+      }
+    },
+    "edges": {"type": "array"},
+    "graph_cut_edges": {"type": "array"},
+    "mapping_contract": {"type": "object"}
+  }
+}

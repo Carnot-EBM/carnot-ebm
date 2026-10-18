@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "carnot.boolean_wcsp.v1",
+  "title": "Carnot Boolean WCSP V1",
+  "type": "object",
+  "required": ["schema", "instance_id", "n_variables", "terms"],
+  "properties": {
+    "schema": {"const": "carnot.boolean_wcsp.v1"},
+    "instance_id": {"type": "string"},
+    "n_variables": {"type": "integer", "minimum": 1, "maximum": 12},
+    "classes": {"type": "array", "items": {"type": "string"}},
+    "seed": {"type": "integer"},
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term_id", "scope", "costs"],
+        "properties": {
+          "term_id": {"type": "string"},
+          "scope": {
+            "type": "array",
+            "items": {"type": "integer", "minimum": 0},
+            "minItems": 0,
+            "maxItems": 2,
+            "uniqueItems": true
+          },
+          "costs": {"type": "object"}
+        }
+      }
+    }
+  }
+}

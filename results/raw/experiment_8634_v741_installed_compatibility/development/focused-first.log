@@ -1,0 +1,206 @@
+F......F.....                                                            [100%]
+=================================== FAILURES ===================================
+____________________ test_actual_wheel_and_public_contracts ____________________
+
+work = {'bundle': {'extension': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8545_v734_nine_i...ccead2b6975a80a88ced7756b8c14890'}], 'passed': True, 'prefix': '/var/tmp/carnot-8634-vxa8fb1h/environment', ...}], ...}
+
+    def test_actual_wheel_and_public_contracts(work):
+        """REQ-VERIFY-8634: wheel imports and numerical results retain original contracts."""
+>       assert not work["gate_check_summary"]
+E       AssertionError: assert not [{'check': 'installed_compatibility_inputs_or_execution', 'expected': 1, 'field': 'installed_prototype_ready_score_and_contracts', 'observed': 'numerical_parity', ...}]
+
+tests/python/test_installed_compatibility_8634.py:24: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8205] phase=8634_preconditions_no_model_load_MODEL_SPECS=[]_current_language_model_calls=0 completed=0 pending=0
+[exp8205] phase=8634_inputs_authenticated completed=0 pending=0
+[exp8205] phase=before_subprocess_private_venv completed=0 pending=1
+[exp8205] phase=after_subprocess_private_venv completed=1 pending=0
+[exp8205] phase=before_subprocess_install_exact_wheel completed=0 pending=1
+[exp8205] phase=after_subprocess_install_exact_wheel completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_exports completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_exports completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_absent completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_absent completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_errors completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_errors completed=1 pending=0
+[exp8205] phase=before_subprocess_installed_public completed=0 pending=1
+[exp8205] phase=after_subprocess_installed_public completed=1 pending=0
+[exp8205] phase=8633_before_worker_python completed=0 pending=0
+[exp8205] phase=8633_after_worker_python completed=339 pending=0
+[exp8205] phase=8633_before_worker_python completed=0 pending=0
+[exp8205] phase=8633_after_worker_python completed=339 pending=0
+[exp8205] phase=8633_before_worker_python completed=0 pending=0
+[exp8205] phase=8633_after_worker_python completed=6 pending=0
+[exp8205] phase=8633_before_worker_python completed=0 pending=0
+[exp8205] phase=8633_after_worker_python completed=6 pending=0
+[exp8205] phase=8634_before_expired completed=0 pending=16
+[exp8205] phase=8634_after_expired completed=1 pending=15
+[exp8205] phase=8634_before_duplicate completed=1 pending=15
+[exp8205] phase=8634_after_duplicate completed=2 pending=14
+[exp8205] phase=8634_before_unknown completed=2 pending=14
+[exp8205] phase=8634_after_unknown completed=3 pending=13
+[exp8205] phase=8634_before_unknown_id completed=3 pending=13
+[exp8205] phase=8634_after_unknown_id completed=4 pending=12
+[exp8205] phase=8634_before_malformed completed=4 pending=12
+[exp8205] phase=8634_after_malformed completed=5 pending=11
+[exp8205] phase=8634_before_nonfinite completed=5 pending=11
+[exp8205] phase=8634_after_nonfinite completed=6 pending=10
+[exp8205] phase=8634_before_empty completed=6 pending=10
+[exp8205] phase=8634_after_empty completed=7 pending=9
+[exp8205] phase=8634_before_long_text completed=7 pending=9
+[exp8205] phase=8634_after_long_text completed=8 pending=8
+[exp8205] phase=8634_before_stale completed=8 pending=8
+[exp8205] phase=8634_after_stale completed=9 pending=7
+[exp8205] phase=8634_before_partial completed=9 pending=7
+[exp8205] phase=8634_after_partial completed=10 pending=6
+[exp8205] phase=8634_before_timeout completed=10 pending=6
+[exp8205] phase=8634_after_timeout completed=11 pending=5
+[exp8205] phase=8634_before_idle completed=11 pending=5
+[exp8205] phase=8634_after_idle completed=12 pending=4
+[exp8205] phase=8634_before_abnormal completed=12 pending=4
+[exp8205] phase=8634_after_abnormal completed=13 pending=3
+[exp8205] phase=8634_before_backpressure completed=13 pending=3
+[exp8205] phase=8634_after_backpressure completed=14 pending=2
+[exp8205] phase=8634_before_oversized completed=14 pending=2
+[exp8205] phase=8634_after_oversized completed=15 pending=1
+[exp8205] phase=8634_before_fragmented completed=15 pending=1
+[exp8205] phase=8634_after_fragmented completed=16 pending=0
+[exp8205] phase=8634_before_expired completed=0 pending=16
+[exp8205] phase=8634_after_expired completed=1 pending=15
+[exp8205] phase=8634_before_duplicate completed=1 pending=15
+[exp8205] phase=8634_after_duplicate completed=2 pending=14
+[exp8205] phase=8634_before_unknown completed=2 pending=14
+[exp8205] phase=8634_after_unknown completed=3 pending=13
+[exp8205] phase=8634_before_unknown_id completed=3 pending=13
+[exp8205] phase=8634_after_unknown_id completed=4 pending=12
+[exp8205] phase=8634_before_malformed completed=4 pending=12
+[exp8205] phase=8634_after_malformed completed=5 pending=11
+[exp8205] phase=8634_before_nonfinite completed=5 pending=11
+[exp8205] phase=8634_after_nonfinite completed=6 pending=10
+[exp8205] phase=8634_before_empty completed=6 pending=10
+[exp8205] phase=8634_after_empty completed=7 pending=9
+[exp8205] phase=8634_before_long_text completed=7 pending=9
+[exp8205] phase=8634_after_long_text completed=8 pending=8
+[exp8205] phase=8634_before_stale completed=8 pending=8
+[exp8205] phase=8634_after_stale completed=9 pending=7
+[exp8205] phase=8634_before_partial completed=9 pending=7
+[exp8205] phase=8634_after_partial completed=10 pending=6
+[exp8205] phase=8634_before_timeout completed=10 pending=6
+[exp8205] phase=8634_after_timeout completed=11 pending=5
+[exp8205] phase=8634_before_idle completed=11 pending=5
+[exp8205] phase=8634_after_idle completed=12 pending=4
+[exp8205] phase=8634_before_abnormal completed=12 pending=4
+[exp8205] phase=8634_after_abnormal completed=13 pending=3
+[exp8205] phase=8634_before_backpressure completed=13 pending=3
+[exp8205] phase=8634_after_backpressure completed=14 pending=2
+[exp8205] phase=8634_before_oversized completed=14 pending=2
+[exp8205] phase=8634_after_oversized completed=15 pending=1
+[exp8205] phase=8634_before_fragmented completed=15 pending=1
+[exp8205] phase=8634_after_fragmented completed=16 pending=0
+[exp8205] phase=8633_before_worker_native completed=0 pending=0
+[exp8205] phase=8633_after_worker_native completed=339 pending=0
+[exp8205] phase=8633_before_worker_native completed=0 pending=0
+[exp8205] phase=8633_after_worker_native completed=339 pending=0
+[exp8205] phase=8633_before_worker_native completed=0 pending=0
+[exp8205] phase=8633_after_worker_native completed=6 pending=0
+[exp8205] phase=8633_before_worker_native completed=0 pending=0
+[exp8205] phase=8633_after_worker_native completed=6 pending=0
+[exp8205] phase=8634_before_expired completed=0 pending=16
+[exp8205] phase=8634_after_expired completed=1 pending=15
+[exp8205] phase=8634_before_duplicate completed=1 pending=15
+[exp8205] phase=8634_after_duplicate completed=2 pending=14
+[exp8205] phase=8634_before_unknown completed=2 pending=14
+[exp8205] phase=8634_after_unknown completed=3 pending=13
+[exp8205] phase=8634_before_unknown_id completed=3 pending=13
+[exp8205] phase=8634_after_unknown_id completed=4 pending=12
+[exp8205] phase=8634_before_malformed completed=4 pending=12
+[exp8205] phase=8634_after_malformed completed=5 pending=11
+[exp8205] phase=8634_before_nonfinite completed=5 pending=11
+[exp8205] phase=8634_after_nonfinite completed=6 pending=10
+[exp8205] phase=8634_before_empty completed=6 pending=10
+[exp8205] phase=8634_after_empty completed=7 pending=9
+[exp8205] phase=8634_before_long_text completed=7 pending=9
+[exp8205] phase=8634_after_long_text completed=8 pending=8
+[exp8205] phase=8634_before_stale completed=8 pending=8
+[exp8205] phase=8634_after_stale completed=9 pending=7
+[exp8205] phase=8634_before_partial completed=9 pending=7
+[exp8205] phase=8634_after_partial completed=10 pending=6
+[exp8205] phase=8634_before_timeout completed=10 pending=6
+[exp8205] phase=8634_after_timeout completed=11 pending=5
+[exp8205] phase=8634_before_idle completed=11 pending=5
+[exp8205] phase=8634_after_idle completed=12 pending=4
+[exp8205] phase=8634_before_abnormal completed=12 pending=4
+[exp8205] phase=8634_after_abnormal completed=13 pending=3
+[exp8205] phase=8634_before_backpressure completed=13 pending=3
+[exp8205] phase=8634_after_backpressure completed=14 pending=2
+[exp8205] phase=8634_before_oversized completed=14 pending=2
+[exp8205] phase=8634_after_oversized completed=15 pending=1
+[exp8205] phase=8634_before_fragmented completed=15 pending=1
+[exp8205] phase=8634_after_fragmented completed=16 pending=0
+[exp8205] phase=8634_before_expired completed=0 pending=16
+[exp8205] phase=8634_after_expired completed=1 pending=15
+[exp8205] phase=8634_before_duplicate completed=1 pending=15
+[exp8205] phase=8634_after_duplicate completed=2 pending=14
+[exp8205] phase=8634_before_unknown completed=2 pending=14
+[exp8205] phase=8634_after_unknown completed=3 pending=13
+[exp8205] phase=8634_before_unknown_id completed=3 pending=13
+[exp8205] phase=8634_after_unknown_id completed=4 pending=12
+[exp8205] phase=8634_before_malformed completed=4 pending=12
+[exp8205] phase=8634_after_malformed completed=5 pending=11
+[exp8205] phase=8634_before_nonfinite completed=5 pending=11
+[exp8205] phase=8634_after_nonfinite completed=6 pending=10
+[exp8205] phase=8634_before_empty completed=6 pending=10
+[exp8205] phase=8634_after_empty completed=7 pending=9
+[exp8205] phase=8634_before_long_text completed=7 pending=9
+[exp8205] phase=8634_after_long_text completed=8 pending=8
+[exp8205] phase=8634_before_stale completed=8 pending=8
+[exp8205] phase=8634_after_stale completed=9 pending=7
+[exp8205] phase=8634_before_partial completed=9 pending=7
+[exp8205] phase=8634_after_partial completed=10 pending=6
+[exp8205] phase=8634_before_timeout completed=10 pending=6
+[exp8205] phase=8634_after_timeout completed=11 pending=5
+[exp8205] phase=8634_before_idle completed=11 pending=5
+[exp8205] phase=8634_after_idle completed=12 pending=4
+[exp8205] phase=8634_before_abnormal completed=12 pending=4
+[exp8205] phase=8634_after_abnormal completed=13 pending=3
+[exp8205] phase=8634_before_backpressure completed=13 pending=3
+[exp8205] phase=8634_after_backpressure completed=14 pending=2
+[exp8205] phase=8634_before_oversized completed=14 pending=2
+[exp8205] phase=8634_after_oversized completed=15 pending=1
+[exp8205] phase=8634_before_fragmented completed=15 pending=1
+[exp8205] phase=8634_after_fragmented completed=16 pending=0
+[exp8205] phase=8634_measurement_complete completed=690 pending=0
+________________________ test_artifact_and_cold_replay _________________________
+
+work = {'bundle': {'extension': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8545_v734_nine_i...ccead2b6975a80a88ced7756b8c14890'}], 'passed': True, 'prefix': '/var/tmp/carnot-8634-vxa8fb1h/environment', ...}], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261018T065521-917117-774edb72/test_artifact_and_cold_replay0')
+
+    def test_artifact_and_cold_replay(work, tmp_path):
+        """SCENARIO-REPORT-8634-REPLAY: external authority rejects rehashed claim edits."""
+        from carnot.reporting import installed_runner_8634 as r
+    
+        authority_path = tmp_path / "authority.json"
+        receipts = [dict(name=n, passed=True) for n in r.REQUIRED]
+        frozen = dict(
+            work, validation_receipts=receipts, original_node_union={}, child_shard_manifest=[]
+        )
+        atomic_json(authority_path, frozen)
+        authority = e.reference(authority_path)
+        value = r.artifact(authority)
+        output = tmp_path / (e.NAME + ".json")
+        atomic_json(output, value)
+        r.replay(output, authority)
+>       assert value["installed_measurement_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_installed_compatibility_8634.py:85: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_installed_compatibility_8634.py::test_actual_wheel_and_public_contracts
+FAILED tests/python/test_installed_compatibility_8634.py::test_artifact_and_cold_replay
+2 failed, 11 passed, 1 warning in 65.97s (0:01:05)
