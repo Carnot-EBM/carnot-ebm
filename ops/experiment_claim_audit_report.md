@@ -11,10 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
+| CLAIM_SUPPORTED | 1 |
 | NO_CLAIM | 6 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8620_v740_triviaplus_extraction.json
+## experiment_8632_complete_source_comparison.json
 
 **NO_CLAIM**
 
@@ -25,26 +26,49 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative efficacy or generalization claim is made. The descriptive extraction audit would be contradicted by missing census rows, incorrect majority-label aggregation, or abstentions counted as usable scores.
+Not applicable: this artifact reports a blocked prerequisite check and makes no claim about streaming source coverage, cost, or comparative value.
 
 ## WAS THAT CHECKED
-Yes, audit checks are reported: all 190 intended rows completed, with 135 usable rows and 55 explicit budget abstentions. Shown aggregations match the release. The target head was not evaluated, and the lexical scores remain exploratory without winner selection. The artifact does not turn audit readiness into a detector-benefit claim.
+No coverage or cost comparison was performed. The prerequisite was checked in gates_evaluated: streaming readiness was 0 against required 1, blocking execution.
 
 ## EVIDENCE
+`blocked_gate_check_v1`; `blocked`; `blocked_gate_check_failed`; `streaming_extractor_ready_score`; `actual=0 == expected=1`; `conductor_pre_gate`.
 
-- `honest_verdict`: `complete_null_v740_triviaplus_extraction`; `verdict_class`: `null`
-- `intended_count`: `190`; `completed_count`: `190`
-- `usable_rows`: `135`; `source_windows_over_budget`: `55`
-- `matches_release`: `true`; `invalid_count`: `0`
-- `status`: `descriptive_exploratory`; `selected_winner`: `false`
-- `evaluated_this_invocation`: `false`
+## RECOMMENDATION
+KEEP
+
+## experiment_8633_v741_installed_lean_prototype.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+An installed response differing from its corresponding original-worker response, or a failed import/export check, would invalidate this mechanical compatibility receipt. No comparative benefit is asserted.
+
+## WAS THAT CHECKED
+Yes, for mechanical compatibility: actual private and installed executions were compared, with parity, import, and export checks. Visible rows pass; totals report 128 completed and zero failures or exclusions.
+
+Matching the original worker is the intended compatibility result. The oracle flag does not establish circular added-value reasoning because no verifier benefit is claimed. Exposed requests are explicitly treated as compatibility operands, with zero generalization credit.
+
+## EVIDENCE
+- `methodology`: `Compare actual private and installed Python/native children on identical original64 frames. No fitting, generation, speed or confidence claim.`
+- `installed_prototype_ready_score`: `One only when original64 Python/native comparisons, imports, exports and all owned checks pass. No surface qualification or speed credit.`
+- `exposure_scope`: `original exposed64 research requests; mechanical compatibility only`
 - `generalized_learning_benefit_score`: `0`; `independent_generalization_score`: `0`
-- `Numeric1 iff original inputs and owned checks qualify the complete honest census, including zero usable rows.`
+- `prototype_parity_rows`: `parity`: `true`; `status`: `ok`
+- `import_trace_rows`: `clean`: `true`; `clean_shutdown`: `true`
+- `export_contract_rows`: `passed`: `true`
+- `completed_count`: `128`; `failed_count`: `0`; `excluded_count`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8621_v740_lean_resident_qualification.json
+## experiment_8634_v741_installed_compatibility.json
 
 **NO_CLAIM**
 
@@ -55,22 +79,70 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this artifact reports execution qualification without claiming comparative speed, learning, or generalization benefit.
+An installed response differing from its private baseline would refute parity; a failed mandatory gate would defeat readiness. The artifact makes no comparative value or generalization claim.
 
 ## WAS THAT CHECKED
-No comparative benefit test is reported; benchmarking is explicitly skipped. The displayed acceptance gates concern execution mechanics.
+Yes, for deployment compatibility. The displayed response pairs match, and public-contract and rejection/recovery checks are recorded. The mandatory node-union check fails, and the artifact reports disqualification with zero readiness. Baseline ties serve the parity check; they are not presented as superiority. Oracle status and synthetic fixture fitting do not establish added value, but none is claimed.
 
 ## EVIDENCE
-- `accepted_benchmark_claim`: `false`
-- `benchmark_skipped`: `true`
-- `speed_inferred`: `false`
+
+- `honest_verdict`: `complete_disqualified_installed_compatibility`
+- `installed_measurement_ready_score`: `0`
+- `required_checks_passed`: `false`
+- Within `original_node_union`, `name`: `exact_node_union`; `passed`: `false`
+- `exposure_scope`: `Exposed compatibility operands and synthetic public verification smoke; deployment only`
 - `generalized_learning_benefit_score`: `0`
-- `Invocation-bound mechanics evidence; no independent learning or speed benefit.`
+- `independent_generalization_score`: `0`
+- `Bind this invocation to immutable primitives; compatibility supplies no independent scientific credit.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8622_v740_lean_resident_cost.json
+## experiment_8635_installed_complete_cost.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this is a blocked-gate receipt. Its title describes an intended measurement, not a comparative finding.
+
+## WAS THAT CHECKED
+No inference-cost comparison is reported. The prerequisite check ran in `gates_evaluated` and failed: installed readiness was 0 against a required 1. The artifact records that failure explicitly.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `installed_measurement_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8636_qwen_evidence_canary.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this artifact records a blocked prerequisite check and makes no experimental performance or added-value claim.
+
+## WAS THAT CHECKED
+The prerequisite was checked: runtime readiness was 0 against a required 1, so execution was blocked before the experiment. This supplies no comparative result to assess.
+
+## EVIDENCE
+`schema`: `blocked_gate_check_v1`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `runtime_repair_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8637_v741_arc_observer_transfer.json
 
 **CLAIM_SUPPORTED**
 
@@ -78,28 +150,33 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-On the exposed answers and single host, lean_native improves throughput over legacy_native at length 16, batch 1, preserving decisions with p95 latency within 5% of baseline.
+Observer-on and observer-off matched in this run, while causal benefit and independent generalization remained unestablished.
 
 ## WHAT WOULD REFUTE IT
-A primary throughput confidence interval with lower bound ≤1, p95 latency ratio >1.05, or any decision mismatch would fail the stated benefit criterion. A tie against lean_python would undermine a separate claim of added benefit from native arithmetic.
+An on/off mismatch in actions, observations, RNG, legacy records, or termination would refute parity; an eligible outcome establishing independently attributable benefit would contradict the reported null.
 
 ## WAS THAT CHECKED
-Yes. The primary comparison reports throughput bounds above 1, latency within tolerance, and full parity across ten paired repeats. These timing outcomes could have failed independently of the correctness oracle.
+Yes for parity: all eight paired comparisons explicitly check those quantities and pass. Observer-off is the appropriate cheap comparator and ties throughout.
 
-The cheapest direct arithmetic control, lean_python, is present and loses at length 16. The length-1 arithmetic interval includes 1, but that comparison is explicitly descriptive. Generalization scores are zero; the headline concerns execution cost on exposed inputs. The reported roster is complete, with no failures, censoring, or exclusions.
+Benefit was not established: all 16 redirect windows are censored, with zero complete horizons per game and no causal attribution. This supports the bounded null reporting claim, not a conclusion that benefit cannot occur.
 
 ## EVIDENCE
-- `lean_service_benefit_score`: `Primary lean_native/legacy_native throughput lower95>1, p95<=1.05 and exact decisions.`
-- `primary_contrast`: `baseline`: `legacy_native`; `treatment`: `lean_native`; `length`: `16`; `batch`: `1`; `throughput_ratio_ci95`: `2.6021614396438366`, `2.7140499917159295`; `p95_request_latency_ratio`: `1.026794316978981`; `full_parity`: `true`.
-- `arithmetic_contrast`: `baseline`: `lean_python`; `throughput_ratio_ci95`: `1.179907577230295`, `1.2584953582202063`.
-- `exposure_scope`: `original exposed64 answers, repeated on one host`.
-- `verifier_is_oracle`: `true`; `independent_generalization_score`: `0`; `generalized_learning_benefit_score`: `0`.
-- `completed_count`: `240`; `intended_count`: `240`; `failed_count`: `0`; `censored_count`: `0`; `excluded_count`: `0`.
+- `honest_verdict`: `complete_null_arc_observer_transfer`
+- `observer_action_parity_rows`; `equality`; `actions`, `legacy`, `observations`, `rng`, `termination`: `true`
+- `censored_count`: `16`; `full_horizons`: `0`
+- `classification`: `explicitly_censored`; `causal_attribution`: `null`
+- `headline_solve_credit`: `0`; `generalized_learning_benefit_score`: `0`; `independent_generalization_score`: `0`; `promotion_ready_score`: `0`
+- `exposure_scope`: `historically_exposed_public_games_adapters_withheld`
+- `hidden_game_performance`: `unmeasured`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8624_v740_arc_outcome_observer.json
+## experiment_8638_v741_hardware_operation_delta.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_8639_v741_capstone.json
 
 **NO_CLAIM**
 
@@ -110,129 +187,21 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative benefit claim is asserted. The narrower instrumentation assertion would fail if enabling the observer changed actions, RNG state, receipts or termination, or classified a reset-shortened window as a completed no-progress horizon.
+No comparative benefit is asserted. Qualified current execution satisfying the required gates would contradict the corresponding blocked-status report. Missing execution cannot establish that a method has no benefit.
 
 ## WAS THAT CHECKED
-Yes, for instrumentation: the displayed parity rows check actions, effects, RNG, receipts, termination and horizon status across full-horizon, early-levelup and reset fixtures. These checks could fail. Historical short windows remain censored rather than supplying negative outcomes or arm credit. This establishes a mechanical receipt; it does not test comparative benefit.
+The blocked status is supported by explicit gate failures: expected readiness scores of 1 are observed as 0, and skipped producers are identified. Comparative benefit was not tested in those branches. Historical and prototype measurements are explicitly scoped or unqualified; they are not promoted into current generalization or verifier-value claims.
 
 ## EVIDENCE
-
-- `methodology_note`: `Horizon accounting qualifies instrumentation only. No policy, learner, deadline behavior, game solver, arm ranking or solve count changes.`
-- `honest_verdict`: `complete_null_arc_outcome_observer`
-- `arc_observer_ready_score`: `Numeric0/1: reachable action-preserving instrumentation with all owned checks passed.`
-- `promotion_ready_score`: `Numeric0: no policy or solve promotion is measured.`
-- `full_horizon`, `early_levelup`, `reset`
-- `equality`: `actions`, `effects`, `horizon_status`, `numpy_rng`, `receipt`, `rng`, `termination`; `true`
-- `horizon_status`: `censored`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8625_v740_hardware_operation_boundary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative headline to falsify. The narrower accounting statement that compatible physical execution remains unauthenticated would be contradicted by an authenticated compatible execution receipt in its own records.
-
-## WAS THAT CHECKED
-Yes, as an evidence-availability check: `gate_check_summary` records the physical-execution prerequisite as failed. No accelerator performance comparison was conducted. The positive boundary score explicitly concerns accounting readiness, while acceleration estimates remain conditional and physical readiness remains zero.
-
-## EVIDENCE
-
-- `exposure_scope`: `exposed_engineering_accounting_only`
-- `rows`: `Each unit is an operation-to-board mapping, not an independent question or device measurement.`
-- `hardware_boundary_ready_score`: `One requires authenticated mapping, qualified cost, current authority and passing owned checks. It makes no acceleration claim.`
-- `physical_hardware_ready_score`: `0`
-- `measured_acceleration`: `null`
-- `conditional`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8626_v740_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-V740 remains blocked on qualified learning while retaining a qualified lean-service throughput benefit over the native legacy baseline.
-
-## WHAT WOULD REFUTE IT
-A matched native legacy comparator tying or beating the lean service on complete-session throughput, or an advantage obtained through unequal outputs or omitted costs, would defeat the benefit claim. Qualified current learning satisfying the failed prerequisites would contradict the learning-blocked assessment.
-
-## WAS THAT CHECKED
-Yes, within the reported scope. The primary cost comparison uses a serious native baseline, ten paired repeats, declared full parity, and a throughput-ratio interval entirely above one. The slower prototype measurements are explicitly unqualified; the positive score is defined for inclusive session costs.
-
-Failed execution prerequisites and absent current learning evidence retain the learning block. Historical unqualified losses receive no learning or generalization credit. Administrative completion counts terminal dispositions, not successful experiments. Oracle-based evidence replay is not presented as proof of the verifier’s added scientific value.
-
-## EVIDENCE
-- `baseline`: `legacy_native`; `treatment`: `lean_native`
-- `paired_repeats`: `10`; `full_parity`: `true`
-- `throughput_ratio_ci95`: `2.6021614396438366`, `2.7140499917159295`
-- `complete_cost_benefit_score`: `1`
-- `prototype_operation_subtotal_not_complete_session_cost`; `qualified_cost`: `false`
-- `qualified_learning`: `false`; `learning_execution_ready_score`: `0`
-- `conditional_exposed_learning_benefit_score`: `0`; `generalized_learning_benefit_score`: `0`
-- `All twelve scheduling dispositions have terminal accounting; this does not count successful experiments.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8618_causal_brier_stream.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No learning outcome or comparative value is asserted. This artifact records a prerequisite failure that blocked execution.
-
-## WAS THAT CHECKED
-The prerequisites were checked: execution readiness was 0 against required 1; methods readiness passed. There is no experimental result to assess for refutation.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `learning_execution_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8623_qwen_evidence_canary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No experimental success or comparative value claim is made. This artifact only records a failed prerequisite gate.
-
-## WAS THAT CHECKED
-Yes, the prerequisite gates were evaluated: runtime readiness was 0 against required 1; canary input readiness passed. The artifact reports the experiment as blocked, without claiming experimental success.
-
-## EVIDENCE
-`blocked_gate_check_v1`, `blocked`, `blocked_gate_check_failed`, `runtime_repair_ready_score`, `actual=0 == expected=1`, `canary_inputs_ready_score`, `actual=1 == expected=1`, `conductor_pre_gate`
+- `administrative_complete`: `true`
+- `branch_outcomes` → `learning`: `blocked_no_current_execution`
+- `branch_outcomes` → `native_cost`: `blocked_no_current_complete_cost`
+- `acceptance_gates` → `qualified_learning`: `false`
+- `acceptance_gates` → `packaging_noninferiority`: `false`
+- `current_language_model_calls`: `0`
+- `numerical_inference_this_invocation`: `false`
+- `current_learning` → `observed`: `null`
+- `streaming` rows: `qualified`: `false`; `semantic_correctness_established`: `false`
 
 ## RECOMMENDATION
 KEEP

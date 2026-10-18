@@ -20540,3 +20540,5 @@ code |
 | 2026-10-18 08:40 UTC | Measure real cross-game redirect horizons through  | OK | 103 passed, 1 warning in 51.12s |
 | 2026-10-18 09:14 UTC | Map newly measured learning and installed inferenc | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 89 passed, 1 warning in 33.77s |
 | 2026-10-18 10:04 UTC | Reconcile thirteen outcomes and close unchanged sc | OK | 95 passed, 1 warning in 194.62s (0:03:14) |
+| 2026-10-18 11:45 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-10-18 11:59 UTC | Plan next milestone | FAIL | Codex CLI error: same190 responses in128 groups. Completeness cannot establis |
