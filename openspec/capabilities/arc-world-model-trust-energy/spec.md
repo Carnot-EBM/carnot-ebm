@@ -37779,3 +37779,31 @@ are separate; unqualified receipts earn neither solve nor generalization credit.
 Only authenticated receipts later than the qualified Exp8272 frontier enter the
 current delta. Missing operands block; an authenticated empty delta after owned
 qualification meets the anti-churn generalization floor with both scores zero.
+
+### REQ-ARC-WMTE-7830: Cross-game value-head label is the position inside the level
+
+The cross-game trainer `scripts/arc_cross_game_verifier_train.py` SHALL label each frame with its steps to the next level-up divided by the length of the level segment that holds the frame. A segment runs from the frame after one level-up to the frame just before the next. The label SHALL lie in [0, 1). Frames after the last level-up SHALL stay unlabeled. The trainer SHALL NOT use steps-plus-one as the divisor, because that makes the label equal d/(d+1) and saturate near 1.
+
+Origin: the 2026-10-18 depth-calibration test found 521 of 632 rows at a label of 0.75 or more. See `docs/research-notes/depth-calibration-cross-game-verifier-2026-10-18.md`.
+
+Scope of this requirement: the label function only. Checkpoints under `models/arc_verifier_cross_game*.json` were trained with the old label. They are NOT retrained by this requirement. A retrain changes the scored agent and needs its own approval and a live A/B.
+
+#### SCENARIO-ARC-WMTE-7830-1
+
+Given levels `[0]*10 + [1]*4 + [2]`, the first ten frames share a segment length of 10 and labels 0.9 down to 0.0 in steps of 0.1.
+
+#### SCENARIO-ARC-WMTE-7830-2
+
+In the same sequence the next four frames restart with a segment length of 4 and labels 0.75, 0.5, 0.25, 0.0.
+
+#### SCENARIO-ARC-WMTE-7830-3
+
+The frame after the last level-up has no distance and a segment length of 0.
+
+#### SCENARIO-ARC-WMTE-7830-4
+
+Given 61 frames then one level-up, the label difference between frame 0 (61 steps out) and frame 50 (11 steps out) exceeds 0.1. Under the old divisor it was 0.075.
+
+Tests: `tests/python/test_arc_verifier_variant_augmentation.py::test_label_is_position_in_level_not_d_over_d_plus_one` and `::test_label_spread_on_long_level_is_not_saturated`.
+
+Implementation status: implemented 2026-10-18 (label function and tests). Retrain of shipped checkpoints: not done.
