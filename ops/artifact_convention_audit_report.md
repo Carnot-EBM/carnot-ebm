@@ -9,26 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 1 |
 | CANNOT_DETERMINE | 2 |
 
-## experiment_8605_causal_brier_stream.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Experiment 8605 was blocked because both prerequisite gates observed readiness scores of 0 when 1 was required.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8608_v739_lean_resident_prototype.json
+## experiment_8620_v740_triviaplus_extraction.json
 
 **CANNOT_DETERMINE**
 
@@ -36,15 +21,31 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible excerpt reports passed prototype acceptance gates, but the artifact ends before its overall claim or verdict appears.
+The extraction audit is ready and reports a complete null, with no selected winner.
 
 ## WHAT IS MISSING
-The remainder of the artifact: it cuts off mid-entry in "cited_upstream_artifacts". "accepted_benchmark_claim" is false and "acceptance_gates" records passing checks, but the overall verdict and any subsequent experimental results are unavailable.
+The remainder of "extraction_rows": the artifact cuts off mid-"fixed_scores", while "completed_count" is 190 and "descriptive_auroc_intervals" reports 135 usable rows.
 
 ## THE CHECK A READER CANNOT DO
-Does the artifact’s overall verdict assert a comparative result, report a blocker, or merely acknowledge prototype readiness?
+Do all 135 usable rows’ "fixed_scores" and "binary_target" values reproduce the reported AUROCs?
 
-## experiment_8609_v739_lean_resident_qualification.json
+## experiment_8621_v740_lean_resident_qualification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The listed validation commands passed; no comparative research claim or blocked verdict is recorded.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8622_v740_lean_resident_cost.json
 
 **CANNOT_DETERMINE**
 
@@ -52,15 +53,15 @@ Does the artifact’s overall verdict assert a comparative result, report a bloc
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible excerpt reports passing validation commands, but no experiment headline claim is visible.
+At length 16 and batch 1, `lean_native` outperforms `lean_python` in throughput and p95 request latency, with full parity.
 
 ## WHAT IS MISSING
-The complete artifact: it ends mid-"path" within "acceptance_gates" → "historical_v738_replay" → "source_files". The visible "passed", "actual_exit", and "expected_exit" fields describe validation receipts; the experiment’s final verdict is unavailable.
+Per-repeat paired throughput and latency measurements are absent from the visible text: `"arithmetic_contrast"` contains only `"paired_repeats"`, `"throughput_ratio_ci95"`, and `"p95_request_latency_ratio"`. The artifact cuts off inside `"cited_upstream_artifacts"`, so whether measurement rows appear later cannot be determined; paths and hashes alone supply no metric values.
 
 ## THE CHECK A READER CANNOT DO
-Does the experiment’s final verdict assert a comparative result or report a blocker, and what recorded evidence supports it?
+Do the ten paired repeats show a consistent native advantage, or does an outlier drive the reported improvement?
 
-## experiment_8610_lean_resident_cost.json
+## experiment_8624_v740_arc_outcome_observer.json
 
 **CHECKABLE**
 
@@ -68,23 +69,7 @@ Does the experiment’s final verdict assert a comparative result or report a bl
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `lean_measurement_ready_score` was 0, while the gate required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8611_qwen_evidence_canary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `runtime_repair_ready_score` was 0 while the gate required 1.
+The outcome observer is mechanically ready, but this run establishes no causal benefit, solve credit, or promotion readiness.
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +77,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8612_arc_outcome_observer.json
+## experiment_8625_v740_hardware_operation_boundary.json
 
 **CHECKABLE**
 
@@ -100,7 +85,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `exp8602-contract-methods.methods_ready_score` was 0, while the gate required 1.
+Compatible physical execution and learning costs remain unqualified; the reported speedup ceilings are conditional calculations, not measured acceleration.
 
 ## WHAT IS MISSING
 nothing
@@ -108,7 +93,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8613_v739_hardware_operation_boundary.json
+## experiment_8626_v740_capstone.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+Lean native provides a qualified benefit over legacy native, with a throughput ratio confidence interval of 2.602–2.714 across 10 paired repeats.
+
+## WHAT IS MISSING
+Per-repeat baseline and treatment throughput and request-latency measurements for all 10 pairs. “primary_contrast” records “throughput_ratio_ci95” and “p95_request_latency_ratio”; “rows” contains only R0 primitive timings in “partition_s” and “total_s”.
+
+## THE CHECK A READER CANNOT DO
+Did the throughput benefit occur consistently across the 10 paired repeats, or depend on a few outliers?
+
+## experiment_8618_causal_brier_stream.json
 
 **CHECKABLE**
 
@@ -116,7 +117,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Hardware acceleration is not established, and acquisition is not recommended pending compatible device execution and complete cost evidence.
+Execution was blocked because upstream `learning_execution_ready_score` was 0 while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -124,7 +125,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8614_v739_capstone.json
+## experiment_8623_qwen_evidence_canary.json
 
 **CHECKABLE**
 
@@ -132,7 +133,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports administrative completion while research qualification remains blocked, with failed checks and observed values documented.
+Experiment 8623 was blocked because `runtime_repair_ready_score` was 0 while the gate required 1.
 
 ## WHAT IS MISSING
 nothing

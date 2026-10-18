@@ -4129,3 +4129,18 @@ Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Queue: `research-roadmap-next.yaml`. Preserved historical design:
 `openspec/change-proposals/research-roadmap-v737-preserved-20261016.md`.
 The active V737 roadmap and conductor remain unchanged.
+
+## 2026-10-17 — Planned V741 research milestone
+
+| Requirement | Planned tasks and evidence | Status |
+|---|---|---|
+| REQ-REPORT-V741-PLAN; FR-09/10 | Exp8627 binds thirteen full task objects, visible table, digest and authority mutations | Staged; no activation |
+| REQ-REPORT-V741-LEARNING; FR-06/11 | Exp8628 retains real child shards; Exp8630 trains the fixed small head; Exp8631 audits future loss and retention | Planned; old learning failures remain disqualified or blocked |
+| REQ-REPORT-V741-SOURCE; FR-12 | Exp8629 streaming prototype; Exp8632 complete-source comparison with per-response custody | Planned; exposed engineering evidence, not factuality |
+| REQ-REPORT-V741-DEPLOYMENT; FR-05/08/NFR-01 | Exp8633 installed lean entry; Exp8634 public compatibility; Exp8635 complete matched costs | Planned; packaging and arithmetic claims remain separate |
+| REQ-REPORT-V741-BOUNDARIES | Exp8636 bounded Qwen canary; Exp8637 real live observer panel; Exp8638 hardware cost delta; Exp8639 terminal accounting | Planned; optional resource gates remain independent |
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Queue: `research-roadmap-next.yaml`. V740 design is preserved at
+`openspec/change-proposals/research-roadmap-v740-preserved-20261017.md`.
+The active V740 roadmap, conductor and exclusion manifest remain unchanged.

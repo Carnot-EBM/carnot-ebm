@@ -18422,3 +18422,20 @@ analyzes its new cross-game action receipts without rerunning the same panel.
 A primary/secondary literature scan precedes design. MedExpert's assisted labels
 and error-selected subset receive an explicit release/eligibility audit. Optional
 Qwen3.8 generation and hardware evidence stay separate from CPU science.
+
+## 2026-10-17 — V741 research plan staged
+
+Milestone 2026.10.741 stages exactly thirteen tasks, Exp8627–Exp8639, in four phases.
+The design and YAML share full task objects, a visible table and a canonical digest.
+The active V740 roadmap and conductor remain unchanged. This is planning only.
+
+V740 qualified a lean lifecycle gain but lost original child coverage evidence for
+learning qualification. Its extractor abstained on 55 of 190 long-source responses.
+V741 addresses those specific mechanisms, completes the fixed causal study, and
+qualifies an installed lean entry. Fresh ARC observer episodes retain unchanged
+actions. Optional Qwen generation requires changed causal CUDA evidence.
+
+The literature scan precedes experiment design and records retrieval limitations.
+Planned requirements, architecture and traceability are aligned. Historical nulls,
+quarantines, model restrictions and board limits remain intact. Validation results
+will be appended after the complete contract and relevant checks run.

@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (99 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (101 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,11 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (99 modul
 
 ## Hostile LLM review
 
-**TL;DR: Zero demonstrated SELF_DISCOVERY_ADVANCEs. The empty artifact list supports no claim of autonomous solving progress.**
+**TL;DR: No SELF_DISCOVERY_ADVANCE demonstrated. Zero recent artifacts means nothing to classify, not a clean bill of health.**
 
-Per-artifact: none (`[]`). No artifacts to classify, inspect for provenance, or compare against the registry.
+Per-artifact: none (`[]`). No artifact-level verdicts are justified. Recommended action: supply live-entrypoint traces linking the agent’s observations, attempts, runtime discoveries, and verified solve to a level absent from the prior registry.
 
-**Pattern watch:** Recent drift is unassessable, but existing mechanisms warrant scrutiny: [arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:1) explicitly uses per-game adapters and hand verifiers; [arc_competition_agent.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py:11) describes banked solution replay. Both can satisfy import reachability without proving self-discovery.
-
-Recommended action: credit future solves only with an entrypoint execution trace linking the agent’s own attempts and runtime induction to a successful new level, registry comparison, and provenance establishing freedom from source-derived rules, offline oracle search, or hand-built per-game logic.
+**Pattern watch:** The 101-module reachability pass establishes static connectivity only. It does not prove execution, autonomous discovery, or clean provenance. A source-derived adapter or offline ground-truth BFS remains **OUTER_LOOP_RE** even after wiring it into the live agent. This empty batch establishes neither that drift nor its absence.
 

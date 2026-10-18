@@ -22494,3 +22494,15 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
 - 2026-10-18: Harden live ARC horizon and censoring records without changing actions (⚠️ Research Finding) — honest_verdict=complete_null_arc_outcome_observer; results/experiment_8624_v740_arc_outcome_observer.json
 - 2026-10-18: Map complete learning and lean-service operations to actual hardware support (⚠️ Blocked) — honest_verdict=complete_blocked_v740_hardware_operation_boundary; results/experiment_8625_v740_hardware_operation_boundary.json
 - 2026-10-18: Reconcile twelve outcomes and close exact unchanged studies (⚠️ Blocked) — honest_verdict=complete_blocked_v740_capstone; results/experiment_8626_v740_capstone.json
+
+## 2026-10-17 — Stage research milestone 2026.10.741
+
+- Added the complete thirteen-task design and matching staged YAML, Exp8627–Exp8639.
+- Preserved V740 design bytes and its actual terminal findings.
+- Recorded primary and secondary literature research before experiment design.
+- Planned immutable child-coverage custody, fixed continuous learning, streaming
+  source processing, installed lean inference, and real live ARC horizon evidence.
+- Kept explicit model/substrate declarations, per-unit rows, retirement entries,
+  exact upstream gate fields, flushed progress, bounded writes and terminal verdicts.
+- Reconciled planned reporting requirements, architecture, traceability and status.
+  No experiment execution, activation, conductor change or push is part of this work.

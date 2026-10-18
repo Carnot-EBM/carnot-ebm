@@ -53619,3 +53619,91 @@ papers remain revisits. External results do not establish Carnot performance.
 Planning inference: finish the unmeasured causal, extraction and lean-service
 questions with explicit current authority. Preserve prior scientific nulls.
 Prefer a precise measurement repair over changing the learner to evade a gate.
+
+## 2026-10-17 — V741 planning scan: complete evidence and deployable learning
+
+This scan precedes the V741 design. It covers the eight requested arXiv topics
+and six secondary channels. External results do not qualify Carnot measurements.
+The V740 archive records completion on October 18 UTC. This planning date uses
+the workspace date, October 17 in America/New_York.
+
+### Promising methods and evidence boundaries
+
+- **Newly inspected method:** [Towards Long Context Hallucination Detection,
+  2504.19457](https://arxiv.org/abs/2504.19457), April 28, 2025, decomposes
+  context and response before aggregating representations. The
+  [full text](https://arxiv.org/html/2504.19457v1) describes injected errors in
+  BookSum. Its labels are not independent natural-error truth. Use the bounded
+  decomposition principle to investigate Carnot's measured source-window limit.
+  A streaming lexical reducer would be a Carnot adaptation, not a replication
+  of the paper's trained encoder. Preserve every source window and its offset.
+  Inspect the [author code](https://github.com/amazon-science/long-context-hallucination-detection)
+  as a method reference only; no new model dependency is selected.
+- **Newly inspected diagnostic lead:** [Hallucination Span Detection with
+  Input-Side Evidence Alignment, 2608.15804](https://arxiv.org/abs/2608.15804),
+  August 16, 2026, connects output spans to input evidence through masked-token
+  prediction. Adopt explicit input-span provenance as an evaluation requirement.
+  Defer its trained encoder. Lexical matching does not inherit semantic
+  entailment, calibrated confidence or human alignment quality from this paper.
+- **Revisited release:** [Trivia+, 2605.11330](https://arxiv.org/abs/2605.11330)
+  now has local release and extraction evidence in Exp8617/Exp8620. V740 found
+  55 of 190 response rows outside the 128-window limit. The 128 question groups
+  are exposed development data. A different streaming execution mechanism can
+  test completeness; another unchanged lexical score census cannot establish
+  independent verification. Preserve private data custody and the missing p2
+  confidence input. Do not impute p2 or train the existing nine-input head on it.
+- **Revisited continuous learning:** [Calibeating Made Simple,
+  2603.22167](https://arxiv.org/abs/2603.22167) motivates proper-loss controls.
+  [Capacity-constrained delayed feedback,
+  2606.11711](https://arxiv.org/abs/2606.11711) makes finite pending capacity and
+  lost feedback explicit. Complete the fixed causal study after retaining real
+  execution evidence. Neither paper proves a bound for Carnot's nonlinear learner.
+- **Revisited acceleration:** [Online spline KAN,
+  2602.02056](https://arxiv.org/abs/2602.02056) uses sparse local updates and
+  studies fixed-point FPGA learning. Retain the existing head and measure its
+  complete execution path. V740's lean-service gain makes integration a concrete
+  next step; it does not justify changing spline bases or claiming device speed.
+
+### Primary topic coverage
+
+| Topic | Source checked | Use or deferral |
+|---|---|---|
+| EBM reasoning and verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605) | Compatibility and probability identities do not certify factual truth. Preserve the hybrid architecture. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461); [PAL, 2503.19466](https://arxiv.org/abs/2503.19466) | Explicit algebraic feasibility differs from extracting the correct language constraint. Defer a new solver. |
+| Ising applications in ML | [Probabilistic Algorithms for Ising Machines, 2610.03972](https://arxiv.org/abs/2610.03972) | Separate deterministic evaluation, optimization and distribution sampling. |
+| Hallucination mitigation | Long-context decomposition, input-side alignment and Trivia+ above | Test complete evidence processing and retain source offsets. No factuality claim from overlap. |
+| Kolmogorov-Arnold networks | Online spline KAN above; [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) | Preserve the fixed objective and retention controls before a new classifier or basis. |
+| Energy-guided generation | [EBD, 2605.28020](https://arxiv.org/abs/2605.28020) | Reward-guided decoding remains deferred until the local runtime and verifier utility qualify. |
+| Hardware sampling | [FPGA decomposition, 2602.15985](https://arxiv.org/abs/2602.15985); [million-p-bit computer, 2606.25313](https://arxiv.org/abs/2606.25313) | Include preprocessing, transfer and host costs. Published devices do not establish local access. |
+| Continual constraints | Proper-loss, capacity and sparse KAN papers above | Seal predictions before delayed feedback; evaluate future loss and retention separately. |
+
+### Secondary channels and retrieval limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS energy-based work. Indexed EBT
+  conference material was returned. The [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  returned a browser challenge. Use its primary arXiv methods; no unread review
+  outcome is claimed.
+- **Semantic Scholar:** exact-ID searches and citation requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  did not return a usable citation inventory. Citation-following remains incomplete.
+- **Hugging Face Papers:** inspected verification results, including
+  [input-side alignment](https://huggingface.co/papers/2608.15804),
+  [RT4CHART](https://huggingface.co/papers/2603.27752) and
+  [SIRIN](https://huggingface.co/papers/2608.00033). Method claims selected above
+  were checked against arXiv. Feed dates are not original publication dates.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned pages were
+  month-old snapshots. No current ranking or new trending dependency is claimed.
+  The long-context repository came from its paper.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). Preserve projected versus measured
+  efficiency and the final-vocabulary/data-movement cost boundaries. These
+  posts do not provide authenticated Carnot TSU execution.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The product page did not provide a reproducible architecture update that
+  changes Carnot's current verification or deployment evidence.
+
+Planning inference: repair the specific lost-shard mechanism once; finish the
+fixed learning study. Test streaming evidence processing and integrate the lean
+service gain. Preserve qualified nulls and require new receipts before device work.

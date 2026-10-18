@@ -632,3 +632,22 @@ analysis; zero resolved outcomes do not authorize a policy change or repeat pane
 The optional Qwen canary requires changed CUDA evidence and explicit current
 validator custody. Board support stays operation-specific. These are planned
 studies, not implementation, deployment or new scientific findings.
+
+## Planned V741 execution and installation boundaries — 2026-10-17
+
+V741 stages thirteen experiments, Exp8627–Exp8639, in four phases. Per-child raw
+coverage snapshots qualify the existing delayed-feedback learner. The numerical
+head, original causal protocol and historical failures remain unchanged.
+
+A separate streaming lexical reducer tests complete source processing on exposed
+Trivia+ data. It preserves old-domain features and does not feed a new input
+representation into the learning or deployment branch. Missing judge confidence
+remains missing. Complete input coverage does not certify semantic entailment.
+
+The measured lean worker gains an opt-in installed-package entry with lazy exports.
+Public import contracts and all affected integration surfaces must qualify before
+fresh installed/private cost measurement. The small checkpoint retains its research
+scope; packaging does not establish independent calibration. The ARC branch records
+fresh real redirect horizons with unchanged actions and adapter-withheld games.
+Optional CUDA generation remains conditional. Hardware costs stay operation-specific.
+These are planned changes, not implemented behavior or new scientific results.

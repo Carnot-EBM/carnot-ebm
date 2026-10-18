@@ -102479,3 +102479,86 @@ Missing producers and pre-gated tasks remain blocked. Qualified null studies
 close their exact scope. An observer fixture grants no live solve or priority
 credit. Unknown prior exposure stays unknown. New evidence requirements name
 the changed prerequisite needed before another run.
+
+## REQ-REPORT-V741-PLAN: Complete staged milestone authority
+
+Status: planned, not implemented by this document update.
+V741 SHALL contain exactly thirteen tasks, Exp8627 through Exp8639, in four phases.
+The visible table, embedded full JSON, canonical task digest and staged YAML SHALL
+agree on every task field. Each gate SHALL reference an earlier same-roadmap task
+and a numeric readiness field declared by that producer. Current authority SHALL
+remain distinct from preserved V740 and original historical readers.
+
+### SCENARIO-REPORT-V741-CONTRACT
+
+Matching staged V741 with active V740 qualifies staging only. Authentic V741
+activation qualifies current execution. Mutating count, order, title, phase,
+deliverable, prompt, model, substrate, gates, retirement fields, digest or marker
+SHALL reject authority. No future experiment artifact is needed to bind the plan.
+
+## REQ-REPORT-V741-LEARNING: Retained execution before fixed causal science
+
+Status: planned. Exp8628 SHALL snapshot every original subprocess coverage shard
+before combine or cleanup. Original and owned aggregates SHALL use separate paths.
+A second combine SHALL preserve original bytes. The complete original test union,
+83 executable runner statements and real deadline semantics SHALL qualify before
+Exp8630 runs the inherited continuous-learning protocol. Exp8631 SHALL independently
+reduce later proper loss and simultaneous retention under unchanged criteria.
+Prediction sealing SHALL precede feedback release. Exposed data SHALL NOT support
+independent generalization. Historical disqualifications SHALL remain unchanged.
+
+### SCENARIO-REPORT-V741-SHARDS
+
+A missing, overwritten, foreign-source, duplicated or substituted shard rejects
+qualification. A removed diagnostic clock read rejects semantic qualification even
+when its normalized statement executes. Missing external science is blocked;
+required owned-check failure is disqualified. Neither is a scientific null.
+
+## REQ-REPORT-V741-SOURCE: Complete bounded source processing
+
+Status: planned. Exp8629 SHALL stream the existing lexical window reduction with
+exact old-domain features and source-byte offsets. It SHALL preserve original
+order, exact-byte deduplication and answer cap 16. Chunk sizes 1/32/128 SHALL agree.
+Exp8632 SHALL retain the exposed 190-response/128-question roster and all failures.
+All 135 originally usable rows SHALL preserve exact features. New completeness
+requires full window custody within registered resource bounds. Label joining
+SHALL follow feature sealing. Missing p2 SHALL NOT be imputed. Lexical completeness
+SHALL NOT be reported as semantic entailment, factuality or calibrated confidence.
+
+### SCENARIO-REPORT-V741-SOURCE-COST
+
+The comparison SHALL keep common-support and recovered-support scores separate.
+Dropped windows, changed offsets and label-bearing inputs SHALL fail qualification.
+Resource exhaustion SHALL retain the response and its abstention reason. Public
+results SHALL NOT redistribute private source text or transformed examples.
+
+## REQ-REPORT-V741-DEPLOYMENT: Installed lean inference with public compatibility
+
+Status: planned. Exp8633 SHALL provide an opt-in installed entry for the existing
+resident worker. Lazy exports SHALL preserve public import contracts and optional
+dependency semantics. Exp8634 SHALL qualify real installed execution outside the
+checkout without PYTHONPATH and check affected Python, CLI, MCP and HTTP surfaces.
+Exp8635 SHALL measure all 120 registered cells with complete client/worker costs.
+Packaging noninferiority and native/Python speed SHALL remain separate metrics.
+Only native/Python lower95>=10 under equal complete lifecycle meets NFR-01.
+
+### SCENARIO-REPORT-V741-INSTALLATION
+
+Checkout shadowing, export drift, numerical mismatch or missing child coverage
+rejects qualification. Missing cost cells remain visible. A fixed checkpoint's
+availability through a package SHALL NOT certify independent calibration.
+
+## REQ-REPORT-V741-BOUNDARIES: Live observations and operation-specific hardware
+
+Status: planned. Exp8636 SHALL require changed causal CUDA evidence before bounded
+Qwen3.8-27B generation. Exp8637 SHALL collect real observer off/on SDK episodes
+through the live agent with adapters withheld and zero model calls. Actions and
+legacy receipts SHALL agree. Censored horizons SHALL NOT become causal wins.
+Exp8638 SHALL reuse board facts and admit only qualified new cost boundaries.
+Exp8639 SHALL account for all thirteen outcomes and unchanged publication gates.
+
+### SCENARIO-REPORT-V741-TERMINAL
+
+Optional resource absence SHALL NOT block unrelated CPU branches. Unchanged
+external blockers SHALL use blocked, never retryable partial. Qualified nulls close
+their exact study. No plan or observer fixture grants solve, device or publication credit.
