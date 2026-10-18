@@ -7,6 +7,7 @@ head gives a deep game a search heuristic before it has its own trajectory.
 Honest test: cross-game transfer over GENERIC grid features is a weak signal; this
 measures whether it actually helps wa30 vs novelty-only. Zero quota.
 """
+
 from __future__ import annotations
 
 import json
@@ -44,7 +45,8 @@ def _metaharness():
     load_actions / normalize / WARMUP_GAMES) so the cross-game corpus stays in sync with the single
     source of truth for which solve trajectory each game has -- no parallel trajectory list."""
     spec = importlib.util.spec_from_file_location(
-        "mh", str(REPO / "scripts" / "arc3_replay_scorecard_metaharness.py"))
+        "mh", str(REPO / "scripts" / "arc3_replay_scorecard_metaharness.py")
+    )
     mh = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mh)
     return mh
@@ -65,7 +67,7 @@ def _replay_seq(env, game, actions, mh):
     (and thus the level-up structure) is fixed here; augmentation transforms only the OBSERVED frame at
     featurize time, never the actions, so every augmented copy keeps known-correct labels."""
     f = env.reset()
-    if game in mh.WARMUP_GAMES and actions:               # consume the swallowed first step (sc25)
+    if game in mh.WARMUP_GAMES and actions:  # consume the swallowed first step (sc25)
         aid, data = mh.normalize(actions[0])
         if aid is not None:
             f = env.step(getattr(GameAction, f"ACTION{aid}"), data=data)
@@ -83,20 +85,25 @@ def _replay_seq(env, game, actions, mh):
 
 
 def _steps_to_next_up(levels):
-    """For a level sequence, return per-index (dist, run) = steps to the next level-up (None past the
-    last level-up). Segmented by level transitions so the normalizer is the segment length."""
+    """For a level sequence, return per-index (dist, seg) = steps to the next level-up and the length
+    of the level segment that row sits in (None dist past the last level-up).
+
+    A segment runs from the row after one level-up to the row just before the next. Its length is
+    the label normalizer, so dist / seg is a position inside the level in [0, 1). Before
+    REQ-ARC-WMTE-7830 the second field counted steps back from the level-up, so it always equalled
+    dist + 1 and the label saturated near 1 (see
+    docs/research-notes/depth-calibration-cross-game-verifier-2026-10-18.md)."""
     n = len(levels)
+    ups = [i for i in range(n - 1) if levels[i + 1] > levels[i]]
     next_up = [None] * n
-    d = None
-    run = 0
-    for i in range(n - 1, -1, -1):
-        if i < n - 1 and levels[i + 1] > levels[i]:        # a level-up happens at i+1
-            d = 0
-            run = 1
-        elif d is not None:
-            d += 1
-            run += 1
-        next_up[i] = (d, run)
+    prev = -1
+    for b in ups:
+        seg = b - prev
+        for i in range(prev + 1, b + 1):
+            next_up[i] = (b - i, seg)
+        prev = b
+    for i in range(prev + 1, n):
+        next_up[i] = (None, 0)
     return next_up
 
 
@@ -126,12 +133,16 @@ def _featurize_with_context(featurize, frame, previous_frame=None, action_id=Non
     return featurize(frame, **kwargs)
 
 
-def _featurize_reflected(frame, featurize, axis, previous_frame=None, action_id=None, goal_frame=None):
+def _featurize_reflected(
+    frame, featurize, axis, previous_frame=None, action_id=None, goal_frame=None
+):
     """Featurize `frame` with reflected context on `axis` (None = identity)."""
     f2 = _reflect_frame(frame, axis)
     prev2 = _reflect_frame(previous_frame, axis)
     goal2 = _reflect_frame(goal_frame, axis)
-    return _featurize_with_context(featurize, f2, previous_frame=prev2, action_id=action_id, goal_frame=goal2)
+    return _featurize_with_context(
+        featurize, f2, previous_frame=prev2, action_id=action_id, goal_frame=goal2
+    )
 
 
 def _goal_frame_for_index(seq, next_up, i):
@@ -149,7 +160,7 @@ def _previous_context(seq, norm, i):
     return prev, action
 
 
-def collect_pooled(featurize=cross_game_features, variants=0):
+def collect_pooled(featurize=cross_game_features, variants=0, return_dist=False):
     """Pool FRAME-ONLY (features, steps-to-next-level-up) over ALL banked solves. The label is normalized
     steps to the NEXT level-up (lower == closer to advancing a level) -- exactly what the live explorer's
     frontier ordering wants -- pooled across games so a never-seen game inherits a progress heuristic.
@@ -166,7 +177,7 @@ def collect_pooled(featurize=cross_game_features, variants=0):
     mh = _metaharness()
     arc = kit.offline_arcade()
     axes = [None] + _AUG_AXES[: max(0, variants)]
-    X, y, per_game = [], [], {}
+    X, y, per_game, dists = [], [], {}, []
     for game in sorted(mh.GAME_ARTIFACTS):
         src = mh.RESOLVED_ARTIFACTS.get(game, mh.GAME_ARTIFACTS[game])
         actions = mh.load_actions(src)
@@ -179,15 +190,26 @@ def collect_pooled(featurize=cross_game_features, variants=0):
         for axis in axes:
             for i in range(len(seq)):
                 if next_up[i] is None or next_up[i][0] is None:
-                    continue                               # tail after the last level-up: no label
+                    continue  # tail after the last level-up: no label
                 dist, seg = next_up[i]
                 prev, action = _previous_context(seq, norm, i)
                 goal = _goal_frame_for_index(seq, next_up, i)
-                X.append(_featurize_reflected(
-                    seq[i][0], featurize, axis, previous_frame=prev, action_id=action, goal_frame=goal))
-                y.append(dist / max(1, seg))               # normalized steps-to-next-level-up in [0,1]
+                X.append(
+                    _featurize_reflected(
+                        seq[i][0],
+                        featurize,
+                        axis,
+                        previous_frame=prev,
+                        action_id=action,
+                        goal_frame=goal,
+                    )
+                )
+                y.append(dist / max(1, seg))  # position inside the level, in [0, 1)
+                dists.append(dist)  # raw steps, for depth-bucket analysis
                 cnt += 1
         per_game[game] = cnt
+    if return_dist:
+        return X, y, per_game, dists
     return X, y, per_game
 
 
@@ -216,8 +238,14 @@ def collect_discriminative(featurize=cross_game_features_v2, neg_per_game=14, se
         for j, (f, _lv) in enumerate(seq):
             prev, action = _previous_context(seq, norm, j)
             goal = _goal_frame_for_index(seq, next_up, j)
-            X.append([float(v) for v in _featurize_with_context(
-                featurize, f, previous_frame=prev, action_id=action, goal_frame=goal)])
+            X.append(
+                [
+                    float(v)
+                    for v in _featurize_with_context(
+                        featurize, f, previous_frame=prev, action_id=action, goal_frame=goal
+                    )
+                ]
+            )
             y.append(1.0)
             npos += 1
         # negatives: from sampled on-path prefixes, take one non-gold action -> off-path frame
@@ -241,13 +269,25 @@ def collect_discriminative(featurize=cross_game_features_v2, neg_per_game=14, se
             gold = norm[i][0]
             choices = [a for a in _SIMPLE_ACTIONS if a != gold] + [6]  # +click
             aid2 = int(rng.choice(choices))
-            data2 = {"x": int(rng.integers(0, 64)), "y": int(rng.integers(0, 64))} if aid2 == 6 else None
+            data2 = (
+                {"x": int(rng.integers(0, 64)), "y": int(rng.integers(0, 64))}
+                if aid2 == 6
+                else None
+            )
             f2 = env.step(getattr(GameAction, f"ACTION{aid2}"), data=data2)
-            if f2 is None or _levels_completed(f2) > lvl0:   # None or accidentally won -> not a negative
+            if (
+                f2 is None or _levels_completed(f2) > lvl0
+            ):  # None or accidentally won -> not a negative
                 continue
             goal = _goal_frame_for_index(seq, next_up, min(i, len(seq) - 1))
-            X.append([float(v) for v in _featurize_with_context(
-                featurize, f2, previous_frame=f, action_id=aid2, goal_frame=goal)])
+            X.append(
+                [
+                    float(v)
+                    for v in _featurize_with_context(
+                        featurize, f2, previous_frame=f, action_id=aid2, goal_frame=goal
+                    )
+                ]
+            )
             y.append(0.0)
             nneg += 1
         per_game[game] = {"pos": npos, "neg": nneg}
@@ -332,7 +372,10 @@ def _v3_feature_class_metrics(X, y, per_game):
     slices = cross_game_feature_slices_v3()
     v2_range = [slices["v2"]]
     v2_metrics = _discriminative_metrics(_subset_rows(X, v2_range), y, per_game)
-    out = {"v2": v2_metrics["loo_auroc"], "v3_full": _discriminative_metrics(X, y, per_game)["loo_auroc"]}
+    out = {
+        "v2": v2_metrics["loo_auroc"],
+        "v3_full": _discriminative_metrics(X, y, per_game)["loo_auroc"],
+    }
     for name in ("object_relational", "frame_delta", "action_conditioned", "predicate_distance"):
         rows = _subset_rows(X, [slices["v2"], slices[name]])
         out[f"v2_plus_{name}"] = _discriminative_metrics(rows, y, per_game)["loo_auroc"]
@@ -399,7 +442,9 @@ def _build_exp4476_artifact(
     if loo_gate_passed:
         honest_verdict = f"success: cross_game_features_v3_loo_auroc_{v3:.3f}_passes_gate"
     elif v2 is not None and v3 is not None and v3 > v2:
-        honest_verdict = f"complete: cross_game_features_v3_honest_null_improved_{v2:.3f}_to_{v3:.3f}_below_gate"
+        honest_verdict = (
+            f"complete: cross_game_features_v3_honest_null_improved_{v2:.3f}_to_{v3:.3f}_below_gate"
+        )
     else:
         suffix = "nan" if v3 is None else f"{v3:.3f}"
         honest_verdict = f"complete: cross_game_features_v3_honest_null_no_transfer_{suffix}"
@@ -450,42 +495,76 @@ def _main_discriminative() -> int:
     npos, nneg = int(sum(y)), int(len(y) - sum(y))
     print(f"  collected {npos} on-path POS + {nneg} off-path NEG from {len(per_game)} games")
     if nneg < 10 or npos < 10:
-        print("  too few examples -- abort"); return 1
+        print("  too few examples -- abort")
+        return 1
 
     metrics = _discriminative_metrics(X, y, per_game)
     mean_auroc = metrics["loo_auroc"]
     full = DiscriminativeVerifier(feat).fit(X, y)
     in_sample = metrics["in_sample_auroc"]
     print(f"  IN-SAMPLE AUROC (per-game feature ceiling): {in_sample:.3f}")
-    print(f"  LEAVE-ONE-GAME-OUT AUROC (cross-game transfer): {mean_auroc:.3f} "
-          f"over {metrics['n_held_out_games']} games")
+    print(
+        f"  LEAVE-ONE-GAME-OUT AUROC (cross-game transfer): {mean_auroc:.3f} "
+        f"over {metrics['n_held_out_games']} games"
+    )
     if in_sample > 0.6 and mean_auroc < 0.55:
-        verdict = ("PER-GAME ONLY: off-path negatives ARE separable within a game (in-sample>0.6) but do "
-                   "NOT transfer cross-game (loo~chance) -> train a discriminative head ONLINE per game "
-                   "during exploration; a cross-game pre-trained head is NOT usable (needs richer "
-                   "relational/delta/action-conditioned features, not just more negatives).")
+        verdict = (
+            "PER-GAME ONLY: off-path negatives ARE separable within a game (in-sample>0.6) but do "
+            "NOT transfer cross-game (loo~chance) -> train a discriminative head ONLINE per game "
+            "during exploration; a cross-game pre-trained head is NOT usable (needs richer "
+            "relational/delta/action-conditioned features, not just more negatives)."
+        )
     elif mean_auroc >= 0.55:
         verdict = "TRANSFERS: off-path negatives carry cross-game discriminative signal."
     else:
         verdict = "NULL: off-path negatives do not separate even in-sample -- negatives too weak or features too coarse."
     print(f"  VERDICT: {verdict}")
-    ckpt = REPO / "models" / ("arc_discriminative_verifier_v2.json" if use_v2 else
-                              "arc_discriminative_verifier_v3.json")
+    ckpt = (
+        REPO
+        / "models"
+        / (
+            "arc_discriminative_verifier_v2.json"
+            if use_v2
+            else "arc_discriminative_verifier_v3.json"
+        )
+    )
     games = list(per_game)
-    full.save(ckpt, meta={"trained_games": games, "feature_names": fname,
-                          "provenance": f"win-reachability classifier; in_sample_auroc={in_sample:.3f}, "
-                                        f"loo_auroc={mean_auroc:.3f}. {verdict}"})
-    out = REPO / "results" / ("arc_discriminative_verifier_v2.json" if use_v2 else
-                              "arc_discriminative_verifier_v3.json")
-    payload = {"n_pos": npos, "n_neg": nneg, "per_game": per_game,
-               "in_sample_auroc": in_sample, "loo_auroc": mean_auroc,
-               "n_held_out_games": metrics["n_held_out_games"], "verdict": verdict,
-               "checkpoint": f"models/{ckpt.name}", "feature_names": fname,
-               "honest_verdict": "complete_discriminative_cross_game_transfer_measured",
-               "inference_substrate": "verifier_ensemble_against_cached_candidates",
-               "mode": "discriminative_win_reachability_off_path_negatives"}
+    full.save(
+        ckpt,
+        meta={
+            "trained_games": games,
+            "feature_names": fname,
+            "provenance": f"win-reachability classifier; in_sample_auroc={in_sample:.3f}, "
+            f"loo_auroc={mean_auroc:.3f}. {verdict}",
+        },
+    )
+    out = (
+        REPO
+        / "results"
+        / (
+            "arc_discriminative_verifier_v2.json"
+            if use_v2
+            else "arc_discriminative_verifier_v3.json"
+        )
+    )
+    payload = {
+        "n_pos": npos,
+        "n_neg": nneg,
+        "per_game": per_game,
+        "in_sample_auroc": in_sample,
+        "loo_auroc": mean_auroc,
+        "n_held_out_games": metrics["n_held_out_games"],
+        "verdict": verdict,
+        "checkpoint": f"models/{ckpt.name}",
+        "feature_names": fname,
+        "honest_verdict": "complete_discriminative_cross_game_transfer_measured",
+        "inference_substrate": "verifier_ensemble_against_cached_candidates",
+        "mode": "discriminative_win_reachability_off_path_negatives",
+    }
     out.write_text(json.dumps(payload, indent=2))
-    (REPO / "results" / "arc_discriminative_verifier.json").write_text(json.dumps(payload, indent=2))
+    (REPO / "results" / "arc_discriminative_verifier.json").write_text(
+        json.dumps(payload, indent=2)
+    )
 
     if not use_v2:
         slices = cross_game_feature_slices_v3()
@@ -559,45 +638,74 @@ def main() -> int:
     use_v2 = "--v2" in sys.argv or variants > 0
     featurize = cross_game_features_v2 if use_v2 else cross_game_features
     fname = "cross_game_features_v2" if use_v2 else "cross_game_features"
-    print(f"== BRIDGE: train ONE cross-game value head ({fname}) on ALL banked solves "
-          f"[variants={variants}] ==")
+    print(
+        f"== BRIDGE: train ONE cross-game value head ({fname}) on ALL banked solves "
+        f"[variants={variants}] =="
+    )
     X, y, per_game = collect_pooled(featurize=featurize, variants=variants)
     aug = f" (reflection-augmented x{variants + 1})" if variants else ""
     print(f"  pooled {len(X)} frame-only states from {len(per_game)} games{aug}: {per_game}")
     if not X:
-        print("  no trajectories — abort"); return 1
+        print("  no trajectories — abort")
+        return 1
     cg = LearnedVerifier(featurize).fit(X, y)
     base = "arc_verifier_cross_game_v2" if use_v2 else "arc_verifier_cross_game"
     suffix = f"_aug{variants}" if variants else ""
     ckpt = REPO / "models" / f"{base}{suffix}.json"
-    cg.save(ckpt, meta={"trained_games": list(per_game), "feature_names": fname,
-                        "variants_per_game": variants,
-                        "provenance": "BRIDGE: pooled normalized steps-to-next-level-up over all banked "
-                                      "solve trajectories (frame-only)"
-                                      + (f"; REFLECTION-augmented x{variants + 1} (known-correct labels on "
-                                         "reflected layouts; diversifies the v2 occupancy features -> "
-                                         "reflection-invariance for the held-out eval games)" if variants else "")
-                                      + "; the live explorer loads this to route its frontier on UNSEEN games"})
-    print(f"  trained cross-game value head on {cg.n_samples} states; weights[:6]={cg.w[:6].round(3).tolist()}")
+    cg.save(
+        ckpt,
+        meta={
+            "trained_games": list(per_game),
+            "feature_names": fname,
+            "variants_per_game": variants,
+            "provenance": "BRIDGE: pooled normalized steps-to-next-level-up over all banked "
+            "solve trajectories (frame-only)"
+            + (
+                f"; REFLECTION-augmented x{variants + 1} (known-correct labels on "
+                "reflected layouts; diversifies the v2 occupancy features -> "
+                "reflection-invariance for the held-out eval games)"
+                if variants
+                else ""
+            )
+            + "; the live explorer loads this to route its frontier on UNSEEN games",
+        },
+    )
+    print(
+        f"  trained cross-game value head on {cg.n_samples} states; weights[:6]={cg.w[:6].round(3).tolist()}"
+    )
     print(f"  checkpoint: models/{ckpt.name}  (the live StepwiseExplorer loads this)")
     out = REPO / "results" / f"{base.replace('arc_verifier_', 'arc_')}{suffix}.json"
-    out.write_text(json.dumps({"pooled_states": len(X), "per_game": per_game,
-                               "variants_per_game": variants,
-                               "weights": cg.w.tolist(), "checkpoint": f"models/{ckpt.name}",
-                               "feature_names": fname,
-                               "label": "normalized_steps_to_next_level_up",
-                               "mode": "bridge_cross_game_value_head_offline_to_live"}, indent=2))
+    out.write_text(
+        json.dumps(
+            {
+                "pooled_states": len(X),
+                "per_game": per_game,
+                "variants_per_game": variants,
+                "weights": cg.w.tolist(),
+                "checkpoint": f"models/{ckpt.name}",
+                "feature_names": fname,
+                "label": "normalized_steps_to_next_level_up",
+                "mode": "bridge_cross_game_value_head_offline_to_live",
+            },
+            indent=2,
+        )
+    )
     print(f"  wrote {out.relative_to(REPO)}")
 
-    if "--ab" in sys.argv:        # optional slow sanity A/B on wa30 (a held-out deep game)
+    if "--ab" in sys.argv:  # optional slow sanity A/B on wa30 (a held-out deep game)
         import time
+
         arc = kit.offline_arcade()
         for label, vf in [("novelty_only", None), ("cross_game_value_head", cg)]:
             env = arc.make("wa30", scorecard_id=arc.open_scorecard())
             t0 = time.time()
-            traj, lvl = graph_explore_solve_v3(env, 0, max_expansions=20000, max_depth=80, verifier=vf)
-            print(f"  wa30 [{label:22}]: {'SOLVED L'+str(lvl)+' /'+str(len(traj)) if traj else 'no-advance best L'+str(lvl)} "
-                  f"[{time.time()-t0:.0f}s]")
+            traj, lvl = graph_explore_solve_v3(
+                env, 0, max_expansions=20000, max_depth=80, verifier=vf
+            )
+            print(
+                f"  wa30 [{label:22}]: {'SOLVED L' + str(lvl) + ' /' + str(len(traj)) if traj else 'no-advance best L' + str(lvl)} "
+                f"[{time.time() - t0:.0f}s]"
+            )
     return 0
 
 

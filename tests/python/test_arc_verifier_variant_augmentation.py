@@ -29,7 +29,8 @@ from carnot.agentic.arc_variant_generator import reflect_grid  # noqa: E402
 
 def _train_mod():
     spec = importlib.util.spec_from_file_location(
-        "xgtrain", str(REPO / "scripts" / "arc_cross_game_verifier_train.py"))
+        "xgtrain", str(REPO / "scripts" / "arc_cross_game_verifier_train.py")
+    )
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
     return m
@@ -54,9 +55,34 @@ def test_steps_to_next_up_labels():
     # collector): dist=0 at the state JUST BEFORE a level-up (one action wins the level), incrementing
     # backward; the tail after the last level-up is unlabeled.
     nu = _train_mod()._steps_to_next_up([0, 0, 1, 1, 2])
-    assert nu[1][0] == 0 and nu[0][0] == 1          # idx1 is one action from the idx2 up; idx0 is two
-    assert nu[3][0] == 0 and nu[2][0] == 1          # idx3 is one action from the idx4 up; idx2 is two
-    assert nu[4] is None or nu[4][0] is None        # no label past the last level-up
+    assert nu[1][0] == 0 and nu[0][0] == 1  # idx1 is one action from the idx2 up; idx0 is two
+    assert nu[3][0] == 0 and nu[2][0] == 1  # idx3 is one action from the idx4 up; idx2 is two
+    assert nu[4] is None or nu[4][0] is None  # no label past the last level-up
+
+
+def test_label_is_position_in_level_not_d_over_d_plus_one():
+    # REQ-ARC-WMTE-7830 / SCENARIO-7830-1: the normalizer is the level SEGMENT length. The old code
+    # counted `run` back from the level-up, so run == dist + 1 and the label d/run saturated near 1
+    # (dist 10 -> 0.91, dist 60 -> 0.98). A 10-row level must give labels 0.0 .. 0.9 evenly.
+    levels = [0] * 10 + [1] * 4 + [2]
+    nu = _train_mod()._steps_to_next_up(levels)
+    labels = [d / seg for d, seg in nu[:10]]
+    assert [seg for _, seg in nu[:10]] == [10] * 10  # whole first level shares one normalizer
+    assert labels == pytest.approx([i / 10 for i in range(9, -1, -1)])
+    assert max(labels) - min(labels) == pytest.approx(0.9)  # the old label spanned only 0.5 .. 0.91
+    # SCENARIO-7830-2: a second level restarts the segment; its own length is the normalizer.
+    labels2 = [d / seg for d, seg in nu[10:14]]
+    assert [seg for _, seg in nu[10:14]] == [4] * 4
+    assert labels2 == pytest.approx([0.75, 0.5, 0.25, 0.0])
+    # SCENARIO-7830-3: the tail after the last level-up stays unlabeled.
+    assert nu[14] == (None, 0)
+
+
+def test_label_spread_on_long_level_is_not_saturated():
+    # SCENARIO-7830-4: 60 rows from the goal must not look like 10 rows from it.
+    nu = _train_mod()._steps_to_next_up([0] * 61 + [1])
+    far, near = nu[0], nu[50]
+    assert far[0] / far[1] - near[0] / near[1] > 0.1
 
 
 def test_v2_reflection_diversifies_but_v1_invariant():
@@ -69,7 +95,7 @@ def test_v2_reflection_diversifies_but_v1_invariant():
     v1_h = np.array(m._featurize_reflected(f, cross_game_features, 1))
     v2_h = np.array(m._featurize_reflected(f, cross_game_features_v2, 1))
     assert np.abs(v1_base - v1_h).sum() == pytest.approx(0.0, abs=1e-9)  # v1 reflection-invariant
-    assert np.abs(v2_base - v2_h).sum() > 0.0                            # v2 genuinely diversified
+    assert np.abs(v2_base - v2_h).sum() > 0.0  # v2 genuinely diversified
 
 
 def test_featurize_reflected_identity_is_noop():
@@ -99,8 +125,8 @@ def test_discriminative_verifier_separates_synthetic():
     X = np.vstack([pos, neg]).tolist()
     y = [1.0] * 60 + [0.0] * 60
     clf = DiscriminativeVerifier(lambda v: v).fit(X, y)
-    assert clf.proba(pos[0].tolist()) > 0.7   # confidently on-path
-    assert clf.proba(neg[0].tolist()) < 0.3   # confidently off-path
+    assert clf.proba(pos[0].tolist()) > 0.7  # confidently on-path
+    assert clf.proba(neg[0].tolist()) < 0.3  # confidently off-path
 
 
 def _synthetic_frame(grid, levels=0):
@@ -217,7 +243,10 @@ def test_v3_action_accepts_enum_string_and_invalid_forms():
     # Spec: REQ-LEARN-4476-3, SCENARIO-LEARN-4476-FEATURES.
     frame = _synthetic_frame([[0, 1], [0, 0]])
 
-    enum_like = _slice(cross_game_features_v3(frame, action_id=SimpleNamespace(name="ACTION3")), "action_conditioned")
+    enum_like = _slice(
+        cross_game_features_v3(frame, action_id=SimpleNamespace(name="ACTION3")),
+        "action_conditioned",
+    )
     string_like = _slice(cross_game_features_v3(frame, action_id="ACTION5"), "action_conditioned")
     invalid = _slice(cross_game_features_v3(frame, action_id="not-an-action"), "action_conditioned")
 

@@ -81,3 +81,30 @@ docstring says.
    signal exists at all. It was not run.
 3. This test does not decide whether Idea B earns a slot. It lowers the expected value of the
    cross-game version.
+
+## Addendum 2026-10-18: label fixed, skill unchanged
+
+The label defect above is fixed in `_steps_to_next_up` (REQ-ARC-WMTE-7830). The divisor is now the
+level segment length. Two new tests pin it. The old function fails both.
+
+I reran the same leave-one-game-out test with the fixed label. Numbers:
+`depth-calibration-cross-game-verifier-2026-10-18.fixed-label.data.json`.
+
+- The label now spreads evenly. Rows per label quartile: 173, 154, 159, 146. Before: 37, 0, 74, 521.
+- Held-out skill did not change. Spearman on the label: v1 -0.032, v3 0.019.
+- Mean absolute error on the label: v1 0.252 against 0.250 for a constant guess. v3 0.371 against 0.250.
+- Within-quartile Spearman is between -0.09 and 0.15 for every quartile and both feature sets.
+- The bias still has the regression-to-the-mean shape: too far near the goal, too near far from it.
+
+So label saturation was not the reason for the missing skill. The frame features do not carry a
+cross-game distance signal at the 632-row scale. The saturated label did hide this: it made the
+estimator look better-behaved on rank than it is.
+
+Not done, on purpose:
+
+- The shipped `models/arc_verifier_cross_game*.json` checkpoints still use the old label. The live
+  explorer loads one of them. A retrain changes the scored agent. Given the result above, a retrain
+  would not be expected to help. It needs its own approval and a live A/B.
+- No per-game (within-game) fit. That is still the test that could show whether any depth signal
+  exists.
+- Same limits as before: replayed paths, non-independent rows, a regressor and not a probability.

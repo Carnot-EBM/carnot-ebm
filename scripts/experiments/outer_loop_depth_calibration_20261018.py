@@ -35,7 +35,7 @@ def ridge(X, y, lam):
 res = {}
 for name, feat in [("v1", cross_game_features), ("v3", cross_game_features_v3)]:
     print(f"collect {name}", flush=True)
-    X, y, per_game = trainer.collect_pooled(featurize=feat, variants=0)
+    X, y, per_game, dists = trainer.collect_pooled(featurize=feat, variants=0, return_dist=True)
     X = np.array(X, float)
     y = np.array(y, float)
     games = np.concatenate([[g] * n for g, n in per_game.items()])
@@ -48,7 +48,7 @@ for name, feat in [("v1", cross_game_features), ("v3", cross_game_features_v3)]:
         f = ridge(X[~te], y[~te], 10.0)
         pred[te] = np.clip(f(X[te]), 0, 1)
         base[te] = y[~te].mean()
-    dd = np.round(y / np.maximum(1e-9, 1 - y))  # raw steps-to-level-up recovered from d/(d+1)
+    dd = np.array(dists, float)  # raw steps to the next level-up
     ly = np.log1p(dd)
     lp = np.zeros_like(ly)
     for g in per_game:
