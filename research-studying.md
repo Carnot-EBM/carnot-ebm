@@ -6670,3 +6670,12 @@ actual sparse writes and anchored offsets. Defer CORTEX until internal-state
 access and independent span labels qualify. Enoki's learned verifier does not
 supply independent truth. No paper establishes Carnot benefit or local speed.
 See `docs/research-notes/v742-contract-methods.md` for boundaries.
+## V742 observed closure boundaries — 2026-10-18
+
+Seven producers ran before the capstone. Qualification failures still prevent causal
+learning, complete-source coverage and complete installed-cost conclusions.
+Passive reset provenance fixtures qualified; live reset-cause transfer did not.
+Keep the V733 source, V735 cold-cost and V737 supervisor null protocols closed.
+Reopen failed scopes only with the concrete changed operands recorded in the V742
+capstone. Preserve historical quarantines, unknown exposure and absent physical costs.
+No new literature discovery, hidden-game solve, promotion or hardware speed is claimed.

@@ -53798,3 +53798,13 @@ repair tasks can run. Preserve historical failure bytes. Complete fixed learning
 source coverage and installed-cost measurements only after their owned checks
 pass. Use fresh ARC reset-cause evidence to explain observed censoring without
 promoting a supervisor arm from incomplete horizons.
+## V742 capstone evidence reconciliation — 2026-10-18
+
+Local evidence review, with no new literature scan: Exp8641/8642/8646 failed their
+original execution qualifications. Exp8649 qualified the passive recording fixtures;
+Exp8650 remained disqualified with incomplete horizons and missing reset causes.
+Exp8651 supplied no qualified new operation costs or compatible physical execution.
+The capstone preserves the prior literature registrations and historical nulls.
+See `docs/research-notes/v742-capstone.md` and the original producer references in
+`results/experiment_8652_v742_capstone.json`. Missing scientific evidence remains
+blocked. It is not a new scientific null or an independent-generalization result.

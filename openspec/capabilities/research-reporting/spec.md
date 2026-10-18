@@ -102850,3 +102850,22 @@ GateMate requires dated physical change, GM1Ax IDCODE0x20000001 and n16 sample/h
 evidence. No probing is permitted. NPU and TSU remain unqualified.
 The 100x target needs compatible dominant work and unaccelerated share <=0.01.
 The report SHALL name remaining host operations and required architecture changes.
+## REQ-REPORT-8652: Reconcile the thirteen V742 slots without reopening history
+
+Bind the full Exp8640–Exp8652 table, JSON digest and activated authority.
+Read declared producer paths before exact conductor fallback names. A cascade
+receipt accounts for a slot but does not create a scientific producer.
+Keep missing paths, missing fields, failed qualifications and measured zeros distinct.
+Reduce original immutable primitives before admitting scientific conclusions.
+Preserve V733 source-information, V735 cold-cost and V737 supervisor nulls.
+Keep all historical quarantines. Compare literal verdicts and underlying causes.
+Close only qualified null protocols. Require changed operands before reopening failures.
+Emit per-task and per-gap decisions, exact reopening conditions and stable G1–G4.
+Successful reconciliation with external missing science is complete_blocked.
+
+### SCENARIO-REPORT-8652-ACCOUNTING
+
+All thirteen slots remain visible, including absent and pre-gated producers.
+Reset provenance alone cannot establish supervisor benefit or hidden-game solves.
+Installed compatibility cannot establish costs, 10x performance or generalization.
+Optional hardware absence cannot block this independent CPU reconciliation.

@@ -56689,3 +56689,19 @@ The conductor owns ops/status, changelog and traceability reconciliation.
 Actual private children exercise successful publication, failed owned work, invalid
 dates and missing replay operands. Rehashed measurements and edited summaries fail
 cold replay. Final publication validates cold reconstruction and unchanged readers.
+## REQ-VERIFY-8652: Authenticate the V742 capstone in fresh bounded processes
+
+Write focused failing tests before implementation. Collect original node IDs once.
+Run bounded disjoint serial children under their original authority and dates.
+Preserve child coverage files before combining copies. A killed child fails.
+Require 100 percent newly owned statement coverage, private E2E-018/021,
+Ruff, strict mypy and scoped spec coverage. Retain commands, clocks and hashed logs.
+Cold replay must reconstruct claims from immutable original sources and reject
+missing inputs or self-consistently rehashed tampering. Preserve unchanged scanner
+severity. Validate exact candidate bytes before atomic primary publication.
+
+### SCENARIO-VERIFY-8652-REJECTION
+
+Private success, failed child, invalid dates, missing replay inputs and rehashed
+claim mutations exercise actual CLI children. Failed owned checks disqualify.
+External unchanged incompleteness remains blocked, never partial.
