@@ -22550,3 +22550,4 @@ Experiment IDs and acceptance counts: no data available this milestone.
 Artifact: `results/operational_retro_2026_10_741.json`.
 - 2026-10-18: Bind thirteen tasks and separate research operands from execution qualification (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v742_contract_methods; results/experiment_8640_v742_contract_methods.json
 - 2026-10-18: Qualify original learning execution with immutable per-child coverage (⚠️ Research Finding) — honest_verdict=complete_disqualified_v742_learning_execution_custody; results/experiment_8641_v742_learning_execution_custody.json
+- 2026-10-18: Qualify streaming extraction with immutable measurements and actual child data (⚠️ Research Finding) — honest_verdict=complete_disqualified_v742_streaming_execution_custody; results/experiment_8642_v742_streaming_execution_custody.json
