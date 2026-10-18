@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.741",
+  "generated_at": "2026-10-18T10:25:01.240947Z",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 58.2,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify installed inference and existing public import contracts",
+      "duration_minutes": 20.87,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure real cross-game redirect horizons through the qualified live observer",
+      "duration_minutes": 8.64,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind thirteen tasks and seal changed execution and deployment protocols",
+      "duration_minutes": 8.15,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map newly measured learning and installed inference operations to hardware suppo",
+      "duration_minutes": 8.11,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes and close unchanged scientific and deployment questi",
+      "duration_minutes": 7.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 7 synthesis-only experiments in 58.2 minutes, with 0 compute-bound experiments. Installed-inference and public-import qualification was the longest recorded task at 20.87 minutes; its internal delays are unresolved. Compute-task GPU efficiency and DualGPURunner compliance are not applicable.",
+  "bottlenecks_identified": [
+    "Qualify installed inference and existing public import contracts was the longest recorded synthesis task. The supplied timings do not establish why it took longer.",
+    "File-modification-time reconstruction provides coarse task durations without phase timings. It cannot separate setup, validation, waiting, and artifact-writing costs."
+  ],
+  "improvements_suggested": [
+    "Add task-linked monotonic phase timestamps for setup, qualification, validation, and artifact writes. Record compute requirements and model concurrency so GPU samples can be attributed to relevant tasks.",
+    "Cache reusable installed-inference and public-import qualification evidence by environment, build, and contract hashes. Rerun affected checks when those inputs change; measure reuse before claiming a saving.",
+    "Generate reconciliation drafts from a shared validated outcome manifest. Check whether this reduces transcription work while retaining independent acceptance checks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument phases within the longest qualification task to identify its actual delay.",
+    "Prototype hash-keyed reuse of qualification evidence with explicit invalidation.",
+    "Use a validated outcome manifest to prepare reconciliation drafts and measure the effort saved."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No measured savings comparison is supplied, so estimated_time_savings_pct records 0 as an unmeasured placeholder. The GPU snapshot cannot establish task-level efficiency; synthesis-only GPU inactivity is expected, and single-model inference does not require DualGPURunner. Experiment IDs, acceptance counts, and compute-task performance: no data available this milestone."
+}

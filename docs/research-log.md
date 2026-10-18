@@ -7527,3 +7527,18 @@ criteria. This operational record makes no scientific-result claim.
 - theme: Operational efficiency across 9 completed experiments (0 compute-bound, 9 synthesis-only) in 108 minutes of milestone wall time.
 - key result: honest operational negative — 9 synthesis-only experiments completed in 108.1 wall-time minutes (averaging 12 minutes per experiment) led by qualifying executable deadline statements with source-bound coverage and semantic c (71.62 min), binding twelve tasks and sealing independent learning evidence and service methods (10.09 min), mapping complete learning and lean-service operations to actual hardware support (9.61 min), hardening live ARC horizon and censoring records without changing actions (5.46 min), and reconciling twelve outcomes and closing exact unchanged studies (5.19 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null and 0% GPU utilization across both RTX 3090 GPUs reflecting expected idle behavior for non-GPU synthesis workloads.
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.741
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency across 7 completed experiments (0 compute-bound, 7 synthesis-only) in 58 minutes of milestone wall time.
+- key result: honest operational negative — 7 synthesis-only experiments completed in 58.2 wall-time minutes (averaging 8 minutes per experiment) led by qualifying installed inference and existing public import contracts (20.87 min), measuring real cross-game redirect horizons through the qualified live observer (8.64 min), binding thirteen tasks and sealing changed execution and deployment protocols (8.15 min), mapping newly measured learning and installed inference operations to hardware suppo (8.11 min), and reconciling thirteen outcomes and close unchanged scientific and deployment questi (7.02 min); zero compute-bound experiments were executed with gpu_idle_on_compute_bound_tasks recorded as null, with GPU 0 at 0% utilization reflecting expected idle behavior for non-GPU synthesis workloads and GPU 1 active at 97% utilization on background inference processes.
+- acceptance: no data available this milestone
+
+
+### Milestone 2026.10.741
+
+- exp_range: no data available this milestone
+- theme: Operational efficiency of synthesis-only execution and qualification.
+- key result: Qualification was the longest recorded synthesis task; compute-task GPU efficiency and DualGPURunner compliance were not applicable. Phase timing and reusable qualification evidence are proposed; savings remain unmeasured.
+- acceptance: no data available this milestone

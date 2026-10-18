@@ -4290,3 +4290,19 @@ unavailable: the documented session-metrics script is absent.
 | 1 | 2026-10-16T04:19:20Z | 2026-10-16T04:22:03Z | Wrote operational retro for milestone 2026.10.735; preserved locked timing fields; appended changelog and research-log; ran adversarial reviewer subagent (approved clean) | ~20k |
 
 One adversarial reviewer checked the retrospective and verified compliance against locked fields, authoritative numbers, and repo rules (VERDICT: PASS).
+
+
+## Session: 2026-10-18 — Milestone 2026.10.741 operational retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|--------------|
+| Current | 2026-10-18T10:25:01.240947Z | 2026-10-18T10:30:11Z | User requested the operational retrospective and append-only documentation. Preserved locked measurements and recorded evidence limits. | unavailable |
+
+### Session Summary
+
+Authoritative token counts and costs are unavailable. The required
+`scripts/session-metrics.py` command failed because the script is absent.
+Artifact and documentation checks passed. The global spec audit and
+reconciliation report missing references in existing tests.

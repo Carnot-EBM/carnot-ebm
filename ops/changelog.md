@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-10-18 — Operational retrospective for milestone 2026.10.741
+
+- Wrote `results/operational_retro_2026_10_741.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.741`. Authoritative disk-mtime fallback data records 7 experiments completed (0 compute-bound, 7 synthesis-only) across 58.2 total wall-time minutes (average 8 minutes per experiment).
+- Execution wall time was led by: 'Qualify installed inference and existing public import contracts' (20.87 minutes, synthesis-only), 'Measure real cross-game redirect horizons through the qualified live observer' (8.64 minutes, synthesis-only), 'Bind thirteen tasks and seal changed execution and deployment protocols' (8.15 minutes, synthesis-only), 'Map newly measured learning and installed inference operations to hardware suppo' (8.11 minutes, synthesis-only), and 'Reconcile thirteen outcomes and close unchanged scientific and deployment questi' (7.02 minutes, synthesis-only).
+- Point-in-time GPU monitor polling observed GPU 0 at 0% utilization (4MB allocated) and GPU 1 at 97% utilization (22361MB allocated) servicing background inference processes; `gpu_idle_on_compute_bound_tasks` is null as zero compute-bound tasks were run, and snapshot 0% GPU utilization on GPU 0 reflects expected idle behavior for non-GPU synthesis workloads.
+- Recommended operational improvements: decompose prolonged installed inference and public import contract qualification runs into modular sub-checks with early failure detection; introduce incremental receipt caching and evidence memoization for recurring task-binding, hardware-support mapping, redirect horizon measurement, and outcome-reconciliation passes on unchanged evidence; and persist synchronous start and finish execution timestamps directly into experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.
+
 ## 2026-10-18 — Fix Exp8633 standalone replay imports
 
 - Anchor the experiment CLI's package and publication-reader imports to its
@@ -22527,3 +22534,17 @@ Recorded 9 completed experiments in 141.5 minutes (2.4 hours), including 0 compu
 - 2026-10-18: Measure real cross-game redirect horizons through the qualified live observer (⚠️ Research Finding) — honest_verdict=complete_null_arc_observer_transfer; results/experiment_8637_v741_arc_observer_transfer.json
 - 2026-10-18: Map newly measured learning and installed inference operations to hardware support (⚠️ Research Finding) — honest_verdict=complete_disqualified_no_admitted_hardware_operation_delta; results/experiment_8638_v741_hardware_operation_delta.json
 - 2026-10-18: Reconcile thirteen outcomes and close unchanged scientific and deployment questions (⚠️ Blocked) — honest_verdict=complete_blocked_v741_capstone; results/experiment_8639_v741_capstone.json
+
+
+## 2026-10-18 — Milestone 2026.10.741 operational retrospective
+
+User-requested execution review: 7 synthesis-only experiments completed in
+58.2 minutes, with 0 compute-bound experiments. The locked timing fields remain
+unchanged. Installed-inference and public-import qualification was the longest
+recorded task at 20.87 minutes; its cause is unresolved. Compute-task GPU
+efficiency and DualGPURunner compliance are not applicable. Recommend phase
+timing, hash-keyed qualification reuse, and outcome-manifest reconciliation.
+Savings remain unmeasured; the artifact uses 0 as the required estimate placeholder.
+Experiment IDs and acceptance counts: no data available this milestone.
+
+Artifact: `results/operational_retro_2026_10_741.json`.
