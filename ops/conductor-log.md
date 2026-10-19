@@ -20606,3 +20606,4 @@ code |
 | 2026-10-19 06:18 UTC | Measure complete-source coverage and cost on the f | OK | 98 passed, 5 warnings in 27.03s |
 | 2026-10-19 07:44 UTC | Qualify installed inference with owned historical  | OK | 98 passed, 1 warning in 29.86s |
 | 2026-10-19 08:31 UTC | Measure complete installed and private inference a | OK | 95 passed, 1 warning in 56.91s |
+| 2026-10-19 08:39 UTC | Run bounded mandated-Qwen evidence views only afte | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8653-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
