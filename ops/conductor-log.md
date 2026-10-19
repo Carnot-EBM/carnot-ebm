@@ -20609,3 +20609,4 @@ code |
 | 2026-10-19 08:39 UTC | Run bounded mandated-Qwen evidence views only afte | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8653-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-10-19 09:17 UTC | Repair live reset recording for real SDK frames an | OK | 119 passed, 1 warning in 36.73s |
 | 2026-10-19 09:55 UTC | Measure corrected reset-cause transfer across adap | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 98 passed, 1 warning in 50.32s |
+| 2026-10-19 10:34 UTC | Map new complete costs to actual KV260 PolarFire a | OK | 92 passed, 1 warning in 45.90s |
