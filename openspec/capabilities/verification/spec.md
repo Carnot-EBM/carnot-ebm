@@ -56748,3 +56748,28 @@ source drift, absent/empty/overwritten shards and verify second-combine immutabi
 Fresh bounded CLI processes reject missing primitives and self-consistently
 rehashed feature, offset, source-role and summary mutations. Report actual
 validator severity, zero current model calls and separate numerical identity.
+
+## REQ-VERIFY-8659: Retain and replay complete-source primitives
+
+Tests SHALL precede implementation and cite the driving requirements. Preserve
+immutable response features, ordered offsets/deduplication logs, cost receipts,
+source identities and the exact collected node union. Bound serial children with
+flushed heartbeats and preserve raw SQLite/JUnit/commands/exits/clocks before
+combining copies. Consumer coverage instruments actual consumer sources only.
+Require100 percent newly owned statements, scoped Ruff/format, strict mypy,
+spec tracing and private E2E-018/021. Stop measurements by3600 seconds and retain
+900 seconds for validation. No whole-repository or historical controllers run.
+
+### SCENARIO-VERIFY-8659-REPLAY
+
+Fresh bounded replay reconstructs claims from pinned private inputs and immutable
+primitives. Missing operands and self-consistently rehashed feature/window/summary
+tampering fail. Validate final candidate bytes with primary_publication and the
+unchanged adversarial/strict-row consumers, preserving actual severity.
+
+Implementation20261019: the Exp8659 runner retains role-specific child suites,
+SQLite originals and twice-combined disposable copies. Fresh extraction children
+fork after imports; each has its own PID, clocks, public descriptor and logs.
+Tests cover worker failures, bounded heartbeat/kill behavior, private CLI paths
+and rehashed source/feature/window/log/seal/summary rejection. The primary's
+validation references bind the actual checked invocation.

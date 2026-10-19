@@ -103024,3 +103024,37 @@ validation. Missing external operands block; failed owned checks disqualify.
 Cold replay rejects missing operands, mixed source roles, and rehashed offsets or
 features. Unchanged validators check final bytes before atomic publication.
 No language model, energy head, natural-response comparison or learning runs.
+
+## REQ-REPORT-8659: Measure complete extraction on the fixed exposed roster
+
+Exp8659 SHALL authenticate Exp8653 extraction_inputs_ready_score and Exp8656
+streaming_extractor_ready_score as numeric one. Preserve all190 response IDs in128
+question groups,135 originally usable responses and55 window-limit abstentions.
+Compare original capped extraction with chunk32 streaming; check chunk1/128
+invariance, exact common-domain feature hashes and every ordered source window.
+Keep source512KiB, answer64KiB, answer cap16, time30s and memory256MiB limits.
+Run three interleaved paired cost repeats with order controls and fresh response
+children; retain time, I/O, windows, bytes, memory and explicit abstentions.
+Seal features before joining labels. Report four fixed scores on common/recovered
+support and10000 question-cluster draws with seed7418632. Coverage does not grant
+semantic, calibration, detector or generalization benefit. Never fit or impute p2.
+
+### SCENARIO-REPORT-8659-COMPARISON
+
+Exact common-domain parity, complete window custody, resource bounds and at least
+one recovered response are all required for engineering readiness. Missing inputs
+never shrink the intended roster. A measurement deadline retains censored rows.
+
+### SCENARIO-REPORT-8659-PUBLICATION
+
+Accept --date20261019 and private output. Zero current model/head calls, no model
+loads. Missing files, fields and observed zero have distinct gate evidence.
+External unchanged failure blocks; failed owned checks disqualify. Preserve all
+historical nulls and quarantines. The conductor reconciles ops and traceability.
+
+Implementation20261019: `complete_source_8659.py` and
+`complete_source_runner_8659.py` back the thin Exp8659 CLI. The primary is
+`results/experiment_8659_v743_complete_source_comparison.json`; immutable
+invocations remain below its raw directory. `test_complete_source_8659.py`
+traces parity, recovery, private publication and rejection behavior. See
+`docs/research-notes/v743-complete-source-comparison.md` for measured scope.
