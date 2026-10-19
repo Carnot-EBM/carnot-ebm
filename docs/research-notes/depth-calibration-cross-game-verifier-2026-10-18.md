@@ -212,3 +212,17 @@ follows row order, which falls with the label. This inflates Spearman, mostly th
 
 Not checked by the reviewer, and not checked by me: a re-run of the experiments, the
 `_goal_frame_for_index` leak, and that the fixed-label cross-game data file came from the committed code.
+
+## Addendum 2026-10-19 (ties measured)
+
+The two within-game scripts now rank with `scipy.stats.rankdata` (average ranks for ties). Before, they used `argsort(argsort)`, which breaks ties by order. Same data, same split, CPU only.
+
+| Quantity | Ordinal ranks (before) | Tie-averaged (now) |
+|---|---|---|
+| clock-only pooled Spearman | 0.75 | 0.752 |
+| v1 pooled Spearman | 0.41 | 0.405 |
+| v1 + clock pooled Spearman | 0.74 | 0.730 |
+| v1 within-level median | 0.996 | 0.998 |
+| v3 pooled / within-level median | not recorded | 0.467 / 0.942 |
+
+The tie bias is negligible. No conclusion changes: the within-game signal is mostly a step counter. The "before" values are from the earlier text of this note, not from a re-run of the old code.
