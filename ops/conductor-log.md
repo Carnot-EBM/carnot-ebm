@@ -20604,3 +20604,4 @@ code |
 | 2026-10-19 05:29 UTC | Measure continuous small-head learning through the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8655-learning-execution-qualification) |
 | 2026-10-19 05:29 UTC | Audit later Brier benefit and simultaneous retenti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8657-causal-brier-stream) |
 | 2026-10-19 06:18 UTC | Measure complete-source coverage and cost on the f | OK | 98 passed, 5 warnings in 27.03s |
+| 2026-10-19 07:44 UTC | Qualify installed inference with owned historical  | OK | 98 passed, 1 warning in 29.86s |
