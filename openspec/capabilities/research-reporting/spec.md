@@ -103154,3 +103154,32 @@ recorder errors, matching request/action/post-observation joins and exact action
 RNG, SDK, termination and legacy observer parity. Publish readiness only after
 current coverage and replay pass. This engineering witness gives zero solve,
 promotion, learning or generalization credit. Exp8664 owns the full panel.
+
+## REQ-REPORT-8664: Corrected adapter-withheld reset transfer
+
+Authenticate Exp8663 reset_provenance_ready_score=1 and Exp8653
+arc_inputs_ready_score=1 independently of the sealed original observer authority.
+Bind a new panel adapter to the corrected recorder's sealed source bytes.
+Keep ar25/ft09/lf52/tn36, seeds11/22, observer and capability mask on; cross
+only reset recording off/on. Run16 fresh official SDK episodes with512 actions,
+120 seconds and horizon120. Withhold adapters, stored routes and induction.
+Retain canonical public frames, exact callback identities and bounded errors.
+
+### SCENARIO-REPORT-8664-TRANSFER
+
+Require exact actions, RNG, environment calls, observations, termination and old
+observer receipts in all8 pairs. Join unique actual request IDs at current action
+indices to public reset observations and callback records. Unknown, conflicting,
+fabricated and unobserved requests prevent diagnostic transfer. Recorder errors
+prevent row qualification. Count each game/seed once; zero-reset games retain
+zero support and unestablished diagnostic transfer. Keep row readiness separate.
+Zero complete horizons gives no arm retirement, promotion, policy benefit or
+level-solve headline. Preserve historical nulls and quarantines. A qualified null
+closes only this exact provenance panel until its mechanism or evidence changes.
+
+Implementation20261019: Exp8664 retains16 fresh episodes and exact8/8 parity.
+All236 enabled resets have authentic causes and zero recorder exceptions.
+The unchanged observer retains1,022 duplicate_observation issues per episode.
+The original clean-observer assertion remains enforced; row readiness and
+diagnostic transfer remain zero. This is failed qualification, not a scientific
+null. All16 redirects remain censored and complete horizons remain zero.

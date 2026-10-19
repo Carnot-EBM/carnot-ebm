@@ -56828,3 +56828,25 @@ rehashed tampering against independent sealed authority. Validate final bytes
 through primary_publication and unchanged adversarial and strict-row readers.
 Failed owned checks disqualify; missing external operands block. No game source,
 per-game models, full transfer rerun or model load is authorized.
+
+## REQ-VERIFY-8664: Seal corrected transfer primitives and private validation
+
+Write traced failing tests before implementation. Accept --date20261019. Retain
+every intended slot and exact upstream gates with path, hash, field, operator,
+expected and observed values; missing file, missing field and zero differ.
+Use bounded children with parent heartbeats within60 seconds, disk scratch and
+3600-second measurement cap with900 seconds reserved inside4800 seconds.
+Require100 percent newly owned statements, including child and rejection paths.
+Run private E2E-018/021 with original assertions, disjoint node shards, source
+hashes, raw child SQLite, JUnit, commands, exits and clocks before combination.
+Instrument consumers separately from producers. A killed child fails validation.
+
+### SCENARIO-VERIFY-8664-REPLAY
+
+Cold-replay immutable operands in a fresh bounded process. Reject missing inputs,
+changed aggregates and self-consistently rehashed substitutions against an
+independent measurement seal. Validate final bytes with primary_publication,
+unchanged adversarial verification and strict row consistency. Owned failures
+disqualify; unchanged external incompleteness blocks. Declare no_model_load,
+MODEL_SPECS=[] and zero language-model calls; authenticate numerical inference
+separately. The conductor owns ops, changelog and traceability reconciliation.
