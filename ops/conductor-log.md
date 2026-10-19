@@ -20607,3 +20607,4 @@ code |
 | 2026-10-19 07:44 UTC | Qualify installed inference with owned historical  | OK | 98 passed, 1 warning in 29.86s |
 | 2026-10-19 08:31 UTC | Measure complete installed and private inference a | OK | 95 passed, 1 warning in 56.91s |
 | 2026-10-19 08:39 UTC | Run bounded mandated-Qwen evidence views only afte | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8653-contract-methods.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-10-19 09:17 UTC | Repair live reset recording for real SDK frames an | OK | 119 passed, 1 warning in 36.73s |
