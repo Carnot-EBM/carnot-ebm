@@ -166,9 +166,8 @@ The clock feature is the number of steps since the level started.
   It makes error worse (0.181 against 0.166).
 - Per game, the clock alone has Spearman 0.73 to 0.90 in all five games. v1 is near zero in lp85,
   tn36 and tr87.
-- v1 beats the clock on Spearman in dc22 only (0.83 against 0.73). Its error there is still worse
-  (0.160 against 0.184 for the clock is better for v1 in dc22, but the Spearman gain is 0.09 on one game
-  and I did not test it).
+- dc22 is the one game where v1 beats the clock: Spearman 0.83 against 0.73, error 0.160 against
+  0.184. It is one game, and I did not test the gap. Do not read it as a finding.
 
 Correction to the previous addendum. The within-level Spearman (median 0.996) is not informative. Inside
 one level, any steadily rising counter ranks the rows perfectly against a label that falls with time.
