@@ -15,6 +15,15 @@ In flight:
 
 - The 27B llm_on run on variants 2, 3 and 4 runs on GPU 1 (log in the session scratchpad, output dirs `results/arc_induction_plans_20261017_llm_on_v{2,3,4}/`). It needs about 45 hours per variant. When a variant ends, pair it by `variant_signature` against the llm_off run, count first wins and discordant pairs, and append the result to `docs/research-notes/arc-heldout-test-scope-2026-10-10.md`.
 
+Update 2026-10-19:
+
+- The depth note carries two addenda: the earlier prose corrections and a tie-bias check. The tie bias is at most 0.01 on the pooled figures. It changes no conclusion. Pushed as `3105a8672e` on both mirrors.
+- The llm_on run was still alive at last check, on variant 2. It had 25 paired cells: 1 win with the LLM off, 5 with it on. That is too few to call. It was not re-checked this turn.
+- The calibration script `outer_loop_depth_calibration_20261018.py` still uses ordinal ranks. The two within-game scripts use tie-averaged ranks.
+- `scipy` is imported by the within-game scripts. It worked in the venv (1.17.1). Not checked as a declared dependency.
+- No full pytest run. No adversarial reviewer re-ran the experiments.
+- `push_safe.sh` is in the session scratchpad only. It is not in the repo.
+
 Not done, and why:
 
 - The shipped `models/arc_verifier_cross_game*.json` files are NOT retrained. They still use the old label. The live explorer loads one. A retrain changes the scored agent, so it needs approval and a live A/B. The measurements give no reason to expect a gain.

@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-10-19 — Outer loop: depth-note corrections and tie-bias check (user requests: "Guard, review", "go", "ops")
+
+Each item below was triggered by a user instruction. None was agent-initiated.
+
+1. After a review ("Guard, review"), corrected three prose errors in the depth note: two per-game claims and one overreach. Appended as an addendum, not rewritten. Commit `99dedb2f8c` (local).
+2. Measured the tie bias in the within-game Spearman. Ordinal ranks (`argsort(argsort)`) against tie-averaged ranks (`scipy.stats.rankdata`) differ by at most 0.01 on the pooled figures. Clock-only 0.75 to 0.752. v1 0.41 to 0.405. v1 plus clock 0.74 to 0.730. No conclusion changes. Both within-game scripts now use `rankdata`. The "before" column comes from the earlier note text, not a re-run of the old code. Commit `02eb08cef2` (local), pushed as `3105a8672e` on both mirrors.
+3. `scripts/experiments/outer_loop_depth_calibration_20261018.py` still uses ordinal ranks. Not changed. The two sets of scripts are now inconsistent.
+
+Error lifecycle, step 6 (prevent): the push helper `push_safe.sh` fails closed on an empty base, an empty tip, a non-commit tip, or a replay conflict. It lives only in the session scratchpad. It is not in the repo and has no test.
+
 ## 2026-10-18 — Outer loop: depth calibration of the cross-game value head (user requests: "go", "fix label", "per-game", "clock", "ops")
 
 All entries below were triggered by a user instruction in the outer-loop session. None was agent-initiated, except the ruff format noted in item 2.

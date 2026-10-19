@@ -14,6 +14,14 @@ Start times and token counts were not recorded during these turns, and I do not 
 | 4 | not recorded | not recorded | "clock": clock baseline, corrected turn 3's reading, pushed three commits, found and disclosed a duplicate empty commit | not measured |
 | 5 | not recorded | 2026-10-19T01:25Z (first `date` reading of the turn, before the edits) | "ops": wrote status, changelog and metrics entries | not measured |
 
+Turns 6 to 8 (2026-10-19). Token counts not measured.
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 6 | not recorded | not recorded | "Guard, review": reviewed the depth note, corrected three prose errors by addendum | not measured |
+| 7 | 2026-10-19T15:40:54Z | 2026-10-19T15:42:11Z | "go": measured the tie bias, re-ran both within-game scripts, pushed `3105a8672e` | not measured |
+| 8 | 2026-10-19T17:26:52Z | 2026-10-19T17:27:19Z | "ops": wrote status and changelog entries for the note corrections and the tie check | not measured |
+
 No subagents were used in these turns. No adversarial reviewer ran on the label fix or the clock baseline. CLAUDE.md asks for one on non-trivial changes. That gap is open.
 
 ---
