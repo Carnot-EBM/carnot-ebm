@@ -102946,3 +102946,48 @@ drift. Preserve historical nulls/quarantines and separate learning operand readi
 Missing files, missing fields and observed zero have distinct gate evidence.
 Optional runtime absence pre-skips only the canary. Independent CPU operands stay
 qualified. The unchanged 120-cell installed matrix and seeds7418632/7418635 remain.
+
+## REQ-REPORT-8654: Execute the registered learning core without training authority
+
+Execute only the 39 registered cohort A nodes in three module-aware children.
+Keep the exact original assertions and the complete 64-node A/B partition.
+Authenticate Exp8653 methods and operands independently of historical execution.
+Retain Exp8641's measured timeout diagnosis, including original25 exit -9 after
+62.074893612 seconds. Nominal deadline success does not replace missing mutants.
+Publish learning_core_ready_score only after every A node and owned check passes.
+Emit scope core_only and the exact 25-node B remainder. Training still needs
+Exp8655's full execution gate and unchanged A source/config/input identities.
+
+### SCENARIO-REPORT-8654-PARTITION
+
+Reject duplicate, omitted, foreign or cross-module nodes. Reuse module fixtures
+within the registered bounded children. Deny launches whose complete registered
+budget cannot fit before 3600 seconds with at least 900 seconds for validation.
+Keep missing files, missing fields and measured zero distinct in gate rows.
+
+## REQ-VERIFY-8654: Seal and replay bounded core execution
+
+Retain unique raw SQLite, contexts, source hashes, JUnit, command, PID, clocks,
+environment and exit before combining disposable copies. A second combine must
+preserve original bytes. Reject changed sources, missing/deleted/rehashed shards,
+failed or killed children and self-consistently rehashed claims. Instrument each
+child's actual sources; consumer-only checks cannot supply producer statements.
+Require 100 percent newly owned statements, private CLI and E2E-018/021 checks,
+scoped Ruff, strict mypy and spec tracing. Cold-replay immutable primitives in a
+fresh bounded process. Publish only exact bytes accepted by primary_publication
+and the unchanged adversarial and strict row consumers, retaining their severity.
+
+### SCENARIO-VERIFY-8654-REPLAY
+
+Accept --date 20261019 and reject invalid/private-unsafe arguments. Missing
+external operands produce complete_blocked; failed owned checks disqualify.
+No model loads, language-model calls or generator weight changes occur. Numerical
+head inference authenticates its own checkpoint. Historical nulls stay unchanged.
+
+### SCENARIO-VERIFY-8654-RETAINED-FAILURE
+
+A validation repair may reduce retained immutable children only as disqualified.
+Archive the old driver bytes and report every changed source with expected and
+observed hashes. Preserve passing node outcomes without granting readiness.
+A future fresh execution must earn qualification under unchanged driver bytes.
+Per-child source order remains local; duplicate shards and foreign sources fail.

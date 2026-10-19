@@ -1,0 +1,25 @@
+[exp8654] start no_model_load MODEL_SPECS=[] current_llm_calls=0
+[exp8654] phase=preconditions_no_model_load_MODEL_SPECS=[]_current_llm_calls=0 completed=0 pending=0
+[exp8205] phase=before_scratch_filesystem completed=0 pending=1
+[exp8205] phase=after_scratch_filesystem completed=1 pending=0
+[exp8654] phase=before_numerical_checkpoint_inference completed=0 pending=0
+[exp8653] phase=small_head_inference_before completed=0 pending=1
+[exp8653] phase=small_head_inference_after completed=1 pending=0
+[exp8654] phase=after_numerical_checkpoint_inference completed=1 pending=0
+[exp8205] phase=before_collection completed=0 pending=1
+[exp8205] phase=after_collection completed=1 pending=0
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8654_v743_learning_core_execution.py", line 14, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/learning_core_runner_8654.py", line 192, in main
+    return run(
+           ^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/learning_core_runner_8654.py", line 130, in run
+    e.execute(work)
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/learning_core_8654.py", line 356, in execute
+    plan = groups(partition, work["collected"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/learning_core_8654.py", line 60, in groups
+    raise ValueError("original_partition")
+ValueError: original_partition
