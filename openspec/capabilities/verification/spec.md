@@ -56705,3 +56705,21 @@ severity. Validate exact candidate bytes before atomic primary publication.
 Private success, failed child, invalid dates, missing replay inputs and rehashed
 claim mutations exercise actual CLI children. Failed owned checks disqualify.
 External unchanged incompleteness remains blocked, never partial.
+
+## REQ-VERIFY-8653: Bound and cold-replay immutable V743 registration
+
+Use no_model_load, empty MODEL_SPECS and zero current language-model calls;
+authenticate numerical head inference separately. Supervise bounded serial children
+with flushed heartbeats, retain SQLite originals and combine copies only. Collect
+node IDs once; consumer-only tests do not supply producer coverage. Require100
+percent newly owned statements, focused tests, private E2E-018/021, scoped Ruff,
+strict mypy and specification tracing before checked-byte atomic publication.
+Read supplied CUDA evidence once without device commands; absent causal repair
+cannot qualify runtime. Failed owned checks disqualify; unchanged external gaps
+block. Same-roadmap outputs remain future dependencies.
+
+### SCENARIO-VERIFY-8653-REPLAY
+
+Accept --date 20261019. Real private CLI publication and bounded fresh replay
+reject missing primitives, altered clocks, operands and self-consistently rehashed
+claims. Preserve unchanged scanner severity and historical assertions.

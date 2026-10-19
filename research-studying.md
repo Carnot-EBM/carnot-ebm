@@ -6690,3 +6690,15 @@ Exp8653 will ingest and freeze the implementation mapping before measurement.
 The staged fourteen-task plan finishes these existing questions after observed
 execution defects qualify. New detector architectures, broad benchmarks and
 physical acceleration remain deferred to evidence, not assumed benefit.
+
+## V743 methods registration — 2026-10-19
+
+Exp8653 freezes the V743 scan from research-references.md into six use/defer rows:
+long-context decomposition (2504.19457v1), HallDetect limits (2608.05823v1),
+Calibeating (2603.22167v1), delayed-capacity OCO (2606.11711v1), sparse spline-local
+KAN (2602.02056v3) and OpenHalDet access controls (2606.06959). Adopt complete lexical
+windows with offsets, separate semantic checks, proper-loss comparators, causal
+feedback accounting, fixed-basis write accounting and equal detector inputs.
+Defer trained encoders, new architectures/dependencies and all theorem/performance
+transfers. The source scan and local source versions are hash-bound in the V743
+protocol. Fixed scientific studies remain future dependencies until executed.

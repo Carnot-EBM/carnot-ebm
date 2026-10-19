@@ -102919,3 +102919,30 @@ packaging noninferiority is not10x native acceleration. Missing external science
 is blocked, not retrying partial. ARC provenance grants no solve credit or policy
 promotion. All comparative claims retain per-unit rows and exact denominators.
 Every task requires flushed phase/long-call/loop progress and bounded file writes.
+
+## REQ-REPORT-8653: Freeze V743 methods and independent branch operands
+
+Register fourteen complete task dictionaries Exp8653–Exp8666 against independent
+visible and JSON authority, a canonical digest and end marker. Accept staged V743
+with active V742 and actual V743 activation. Reject full-object mutations and
+self-consistently rehashed substitutions against a separately pinned protocol.
+Inherit the five V742 scientific methods unchanged by value and hash. Authenticate
+preserved V742 bytes, original numerical head, labels, accounting, validator,
+extraction roster and installed operands independently of failed execution.
+Register the exact original64-node union in disjoint fixture-aware cohorts A/B,
+retaining original27 runner nodes, source hashes and bounded child budgets.
+Freeze reset serialization/event ownership from actual Exp8650 public evidence;
+policy, horizon, priorities, seeds and quotas remain unchanged. Register six
+literature adaptations without transferring theorems or reported performance.
+
+### SCENARIO-REPORT-8653-AUTHORITY
+
+Accept both authority lifecycle states; reject count, order, ID, title, phase,
+deliverable, prompt, model, substrate, gate, retirement, table, digest and marker
+drift. Preserve historical nulls/quarantines and separate learning operand readiness.
+
+### SCENARIO-REPORT-8653-OPERANDS
+
+Missing files, missing fields and observed zero have distinct gate evidence.
+Optional runtime absence pre-skips only the canary. Independent CPU operands stay
+qualified. The unchanged 120-cell installed matrix and seeds7418632/7418635 remain.
