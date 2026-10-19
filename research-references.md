@@ -53808,3 +53808,64 @@ The capstone preserves the prior literature registrations and historical nulls.
 See `docs/research-notes/v742-capstone.md` and the original producer references in
 `results/experiment_8652_v742_capstone.json`. Missing scientific evidence remains
 blocked. It is not a new scientific null or an independent-generalization result.
+
+## V743 planning scan — 2026-10-18 (America/New_York)
+
+Fresh web research completed before experiment design. This pass rechecked
+2025–2026 primary methods against the V742 terminal artifacts. The leads below
+already occur in this reference file; they are revalidated methods, not claims
+of new discovery. Retrieval on the UTC clock can fall on October19.
+
+| Area | Primary source and date/version | Finding and local adoption limit |
+|---|---|---|
+| Energy-based verification/reasoning | [EBT, 2507.02092v1](https://arxiv.org/abs/2507.02092), July2 2025; [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605), May25 2026 revision | Compatibility-energy inference and the ARM/EBM probability correspondence are relevant foundations. Neither makes extracted language constraints ground truth. Preserve oracle-distinct evaluation. |
+| Neural constraint satisfaction | [Efficient Constraint Handling in Neural Solvers for Routing, 2602.16012](https://arxiv.org/abs/2602.16012), February2026 | Structured feasibility and arbitrary language evidence are separate problems. No new routing solver is warranted by the current extraction blocker. |
+| Ising/ML and FPGA sampling | [Probabilistic Algorithms for Ising Machines, 2610.03972](https://arxiv.org/abs/2610.03972), October2 2026; [Pipelined p-computer, 2607.21077](https://arxiv.org/abs/2607.21077), July23 2026 | Distinguish deterministic evaluation, optimization and distribution sampling. Dense designs depend on bandwidth and precision. A literature speedup cannot qualify Carnot board operations. |
+| Hallucination mitigation | [Long Context Hallucination Detection, 2504.19457](https://arxiv.org/abs/2504.19457), April28 2025; [HallDetect, 2608.05823v1](https://arxiv.org/html/2608.05823v1), August6 2026 | Decomposition and aggregation motivate complete-source processing with preserved evidence spans. Carnot's lexical reducer is an engineering adaptation, not the learned entailment method. Complete processing and semantic correctness need separate metrics. |
+| KAN and online constraints | [Spline-local online learning, 2602.02056v1](https://arxiv.org/html/2602.02056v1), February2 2026 | Local spline support suggests sparse parameter writes and fixed-point execution. Keep the existing head and count actual writes, inference, update and storage costs separately before proposing a physical kernel. |
+| Energy-guided generation | [Energy-Based Decoding, 2605.28020v1](https://arxiv.org/abs/2605.28020), May27 2026 | Reward-tilted decoding uses a frozen generator and an external reward signal. Defer policy steering until both runtime and verification utility qualify; bounded evidence generation is only a canary. |
+| Continual learning | [Calibeating Made Simple, 2603.22167v1](https://arxiv.org/html/2603.22167v1), March2026; [Capacity-Constrained Delayed OCO, 2606.11711](https://arxiv.org/abs/2606.11711), June10 2026 | Use proper-loss comparators and preserve pending/admitted/lost feedback. Seal predictions before label release and assess retention separately. Convex regret results do not transfer automatically to the nonlinear spline head. |
+| Comparable verification evaluation | [OpenHalDet, 2606.06959](https://arxiv.org/abs/2606.06959), June5 2026; [author repository](https://github.com/Nellie179/Hallucination-Detection) | Freeze detector access, inputs and scoring settings. Adopt the equal-access ledger; defer a new broad benchmark or dependency while fixed studies remain unmeasured. |
+
+The full method pages for HallDetect, Calibeating and spline-local KAN were
+opened. Their local implications are experimental hypotheses, not transferred
+performance claims. Proposed follow-up should finish causal updates, quantify
+complete-source coverage, and compare identical installed/private work only
+once the observed execution failures are addressed. Source-window completion
+cannot establish entailment or independent generalization on the exposed roster.
+
+### Secondary channels and retrieval limitations
+
+- **OpenReview:** searched 2026 energy/verifier submissions. Indexed ICLR2026
+  PDF material included [8ta0xgtsJK](https://openreview.net/pdf?id=8ta0xgtsJK).
+  Opening it returned a browser challenge. No unread review or acceptance
+  outcome is adopted as evidence.
+- **Semantic Scholar:** tried the citation APIs for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20),
+  plus exact-ID site searches. Both API opens failed. Citation-following is
+  incomplete; no citation count or absence claim follows.
+- **Hugging Face Papers:** checked [OpenHalDet](https://huggingface.co/papers/2606.06959),
+  [TRIVIA+](https://huggingface.co/papers/2605.11330) and
+  [SIRIN](https://huggingface.co/papers/2608.00033). Primary papers remain
+  method authority. Feed dates and generated summaries are discovery aids.
+- **GitHub Trending:** opened [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly); retrieved pages
+  were marked crawled last month. No current ranking is asserted. OpenHalDet's
+  author repository was inspected directly; no dependency was installed.
+- **Extropic:** opened [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). The latter explicitly excludes final
+  dense logits from headline efficiency and latency comparisons; its energy
+  ratio also excludes inter-device data movement. Chip count is not modeled.
+  These are projections with a measured GPU comparator, not local TSU results.
+  Complete operation accounting is the useful methodological implication.
+- **Logical Intelligence:** opened [Kona1.0](https://logicalintelligence.com/kona).
+  The page positions Kona as a constraint reasoning layer. It supplies no
+  reproducible architecture specification or benchmark sufficient to change
+  Carnot's numerical implementation.
+
+The hardware wishlist's dated corrections and Exp8651 remain local authority:
+KV260 support is operation-specific with k_max<=5; PolarFire evidence is Linux
+CPU dispatch; GateMate retains the physical/JTAG blocker. No authenticated TSU
+or NPU workload is available. Acquisition priority should follow newly qualified
+complete costs, not vendor projections or another unchanged availability probe.

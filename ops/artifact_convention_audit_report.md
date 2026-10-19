@@ -9,10 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| CANNOT_DETERMINE | 3 |
+| CHECKABLE | 6 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_8632_complete_source_comparison.json
+## experiment_8645_complete_source_comparison.json
 
 **CHECKABLE**
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `streaming_extractor_ready_score` was 0, failing the required value of 1.
+The experiment was blocked because upstream `streaming_extractor_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -28,7 +28,71 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8633_v741_installed_lean_prototype.json
+## experiment_8646_v742_installed_compatibility.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The recorded acceptance checks pass except for “exact_node_union” and “installed_compatibility.”
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8647_installed_complete_cost.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Experiment 8647 was blocked because the upstream `installed_measurement_ready_score` was 0, failing the required equality to 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8648_qwen_evidence_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The run was blocked because `runtime_repair_ready_score` was 0 while the gate required 1, as recorded in `gates_evaluated` and `gate_check_summary`.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8649_v742_arc_reset_provenance.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Reset-provenance recording passed qualification on three public fixtures with action parity preserved, without claiming learning benefit or solve credit.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8650_v742_arc_reset_transfer.json
 
 **CANNOT_DETERMINE**
 
@@ -36,35 +100,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The installed prototype met its mechanical readiness gate, including compatibility checks on 128 responses.
+The visible fragment reports passing acceptance gates and action parity, but the overall headline verdict is unavailable.
 
 ## WHAT IS MISSING
-The supplied artifact cuts off inside "historical_model_provenance". "installed_prototype_ready_score" is 1, but actual "prototype_parity_rows" and "rows" are only named in "field_principles"; their contents are unavailable, so aggregate-only reporting cannot be established.
+The artifact’s remainder: it cuts off mid-string inside "censored_reason_rows". "action_parity_rows" and "cause_support_rows" are present, but the complete verdict and any "gate_check_summary" cannot be inspected.
 
 ## THE CHECK A READER CANNOT DO
-Did each of the 128 installed responses match its original-worker counterpart?
+Does the complete artifact report a blocked verdict, and if so, does it identify the failed check and observed value?
 
-## experiment_8634_v741_installed_compatibility.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-
-The visible portion reports failed “exact_node_union” and “installed_compatibility” gates, but the headline verdict is unavailable.
-
-## WHAT IS MISSING
-
-The artifact cuts off inside “historical_model_provenance”, before the current “honest_verdict”, “verdict_class”, and remaining results. “acceptance_gates” identifies failed checks, and “historical_8609.gate_check_summary” supplies a historical blocker diagnostic.
-
-## THE CHECK A READER CANNOT DO
-
-Does the current invocation’s final verdict have supporting per-unit results or a recorded blocker diagnostic?
-
-## experiment_8635_installed_complete_cost.json
+## experiment_8651_v742_hardware_operation_evidence.json
 
 **CHECKABLE**
 
@@ -72,7 +116,7 @@ Does the current invocation’s final verdict have supporting per-unit results o
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because the upstream `installed_measurement_ready_score` was 0, failing the required value of 1.
+Hardware-operation evidence is blocked by missing artifacts and failed readiness checks, documented in "gate_check_summary" with expected and observed values; no achieved speedup is claimed.
 
 ## WHAT IS MISSING
 nothing
@@ -80,23 +124,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8636_qwen_evidence_canary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `runtime_repair_ready_score` was 0, failing the required equality to 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8637_v741_arc_observer_transfer.json
+## experiment_8652_v742_capstone.json
 
 **CANNOT_DETERMINE**
 
@@ -104,42 +132,10 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The headline claim cannot be identified from the truncated artifact.
+The visible portion claims administrative completion and capstone readiness, and says the FoVer headline independently reproduced.
 
 ## WHAT IS MISSING
-The artifact ends inside "actual_redirect_rows"; the remaining content and any headline claim or final verdict are unavailable. "acceptance_gates" records pass flags.
+The artifact cuts off inside "cited_upstream_artifacts"; its final verdict, any blocker diagnostics, and any per-unit metric rows are unavailable. "administrative_complete", "capstone_ready_score", and "G2" do not resolve what the omitted remainder records.
 
 ## THE CHECK A READER CANNOT DO
-Does the artifact’s headline conclusion follow from its per-unit results?
-
-## experiment_8638_v741_hardware_operation_delta.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Hardware admission remains gated because compatible physical execution and a new complete-cost boundary have not been established.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8639_v741_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone reports administrative completion while substantive acceptance gates remain unmet, with blocked tasks explained by failed readiness checks or missing producer artifacts.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+Does the complete artifact supply per-unit evidence for its claimed learning contribution, or only aggregate assertions?

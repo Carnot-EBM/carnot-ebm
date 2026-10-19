@@ -6679,3 +6679,14 @@ Keep the V733 source, V735 cold-cost and V737 supervisor null protocols closed.
 Reopen failed scopes only with the concrete changed operands recorded in the V742
 capstone. Preserve historical quarantines, unknown exposure and absent physical costs.
 No new literature discovery, hidden-game solve, promotion or hardware speed is claimed.
+
+## V743 planning selections — 2026-10-18
+
+Fresh primary/secondary scan recorded in research-references.md before design.
+Revalidated leads: long-context decomposition/HallDetect for complete evidence;
+Calibeating and delayed-capacity OCO for fixed proper-loss/feedback controls;
+spline-local KAN for actual coordinate writes; OpenHalDet for equal access.
+Exp8653 will ingest and freeze the implementation mapping before measurement.
+The staged fourteen-task plan finishes these existing questions after observed
+execution defects qualify. New detector architectures, broad benchmarks and
+physical acceleration remain deferred to evidence, not assumed benefit.

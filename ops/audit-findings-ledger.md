@@ -280,3 +280,8 @@ of truth, not this line.)
 | 2026-10-15 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor | REAL_BUG | OPEN | |
 | 2026-10-17 | qa_layer_authenticity_audit | adversarial_verify.py::_cheap_learned_value_marker | REAL_BUG | OPEN | |
 | 2026-10-18 | qa_layer_authenticity_audit | adversarial_verify.py::_has_uniform_energy_ablation_evidence | SILENT_NON_FIRING | OPEN | |
+| 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_iter_real_fields | SILENT_NON_FIRING | OPEN | |
+| 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_path_has_marker | REAL_BUG | OPEN | |
+| 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_is_arc_generation_or_exploration_artifact | SILENT_NON_FIRING | OPEN | |
+| 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_archive_zero_reasons | SILENT_NON_FIRING | OPEN | |
+| 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_shape_dims | REAL_BUG | OPEN | |

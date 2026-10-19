@@ -651,3 +651,23 @@ scope; packaging does not establish independent calibration. The ARC branch reco
 fresh real redirect horizons with unchanged actions and adapter-withheld games.
 Optional CUDA generation remains conditional. Hardware costs stay operation-specific.
 These are planned changes, not implemented behavior or new scientific results.
+
+## Planned V743 execution boundaries — 2026-10-18
+
+V743 stages fourteen experiments, Exp8653–Exp8666, in four phases. The existing
+nine-input small head and fixed delayed-feedback protocol remain unchanged.
+Original learning execution is partitioned into core and deadline cohorts with
+separate task budgets; the complete original test and semantic union still gates
+training. Source/config/input changes invalidate cross-task receipt reuse.
+
+Streaming qualification separates historical custody-driver authority from
+current execution and actual consumer coverage. Installed qualification gives
+historical fixtures privately owned result inputs so cleanup preserves the
+tracked-results guard. Complete-source features stay outside the current learner
+and installed-cost workload. These independent gates precede fixed studies.
+
+Actual SDK payload/context correction precedes the unchanged adapter-withheld
+ARC provenance panel. Policy, horizons and solve credit remain unchanged.
+Optional bounded Qwen3.8 generation requires causal CUDA evidence. Hardware
+mapping uses only qualified complete costs and actual supported operations.
+This is planned work, not deployed behavior or a new scientific result.

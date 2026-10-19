@@ -4185,3 +4185,16 @@ The active V740 roadmap, conductor and exclusion manifest remain unchanged.
 | SCENARIO-PREM-002 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
 | SCENARIO-PREM-003 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
 | SCENARIO-PREM-004 | Qualify installed inference and existing public import contracts | Implemented-Partial | results/experiment_8634_v741_installed_compatibility.json |
+
+## V743 staged planning traceability — 2026-10-18
+
+| Requirement | Planned scope | Status | Authority |
+|---|---|---|---|
+| REQ-REPORT-V743-PLAN | Fourteen identical tasks, Exp8653–Exp8666; full contract and gate agreement | Planned | openspec/change-proposals/research-roadmap-vNEXT.md; research-roadmap-next.yaml |
+| REQ-REPORT-V743-EXECUTION | Bounded original learning cohorts, source-role streaming coverage and guarded private cleanup | Planned | Exp8654/8655/8656/8660 task prompts |
+| REQ-REPORT-V743-STUDIES | FR-11 causal updates/retention, FR-12 complete source, FR-05/08 and NFR-01 complete installed costs | Planned | Exp8657–Exp8662 task prompts |
+| SCENARIO-REPORT-V743-CLAIMS | Live ARC provenance transfer, operation-specific boards and unconditional reconciliation | Planned | Exp8663–Exp8666 task prompts |
+
+The prior V742 design is preserved at
+`openspec/change-proposals/research-roadmap-v742-preserved-20261018.md`.
+These entries register planned obligations, not scientific outcomes.

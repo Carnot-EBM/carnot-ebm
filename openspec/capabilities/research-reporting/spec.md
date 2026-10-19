@@ -102869,3 +102869,53 @@ All thirteen slots remain visible, including absent and pre-gated producers.
 Reset provenance alone cannot establish supervisor benefit or hidden-game solves.
 Installed compatibility cannot establish costs, 10x performance or generalization.
 Optional hardware absence cannot block this independent CPU reconciliation.
+
+## V743 staged research plan — 2026-10-18
+
+### REQ-REPORT-V743-PLAN
+
+Status: Planned; no experiment or production behavior is implemented here.
+The V743 design and staged YAML shall contain exactly fourteen identical full
+task dictionaries, Exp8653 through Exp8666, in conductor order. The visible table,
+JSON block, canonical task digest, gate producers and REQUIRED ARTIFACT FIELDS
+shall agree. Preserve the V742 design and active queue. Each continuation shall
+name its prior failure, changed cause and mechanical retirement signal.
+
+### SCENARIO-REPORT-V743-CONTRACT
+
+Reject omitted/reordered tasks, mutated prompts, gates, model/substrate declarations,
+missing end markers, stale digests and missing prior-failure subfields. Accept a
+staged V743 plan beside active V742 without changing historical authority.
+
+### REQ-REPORT-V743-EXECUTION
+
+The planned learning qualification shall split the original test union into disjoint
+core and deadline cohorts, retaining all64 original nodes, original27 runner nodes,
+83 executable runner statements and original semantic mutation controls. Reused
+cohort evidence requires unchanged transitive code/config/operands. Streaming
+qualification shall separate historical custody drivers, current adapters and
+actual consumer coverage. Installed qualification shall preserve guarded cleanup
+and all122 original assertions using privately owned result inputs.
+
+### SCENARIO-REPORT-V743-QUALIFICATION
+
+A killed child, missing node, changed source, absent mutation case, empty required
+coverage or cleanup alias into shared evidence shall prevent readiness. Historical
+failures remain disqualified even after a new execution qualifies.
+
+### REQ-REPORT-V743-STUDIES
+
+The plan shall include actual delayed small-head updates and a separate future-loss
+and simultaneous-retention audit, complete-source comparison on190 responses in128
+exposed question groups, and complete installed/private Python/native costs.
+Protocols retain original controls, thresholds and seeds. A bounded Qwen canary
+requires causal runtime change. Real SDK recorder correction precedes fixed live
+ARC transfer. Operation-specific hardware and capstone readers remain independent.
+
+### SCENARIO-REPORT-V743-CLAIMS
+
+Coverage is not semantic truth; exposed learning is not independent generalization;
+packaging noninferiority is not10x native acceleration. Missing external science
+is blocked, not retrying partial. ARC provenance grants no solve credit or policy
+promotion. All comparative claims retain per-unit rows and exact denominators.
+Every task requires flushed phase/long-call/loop progress and bounded file writes.
