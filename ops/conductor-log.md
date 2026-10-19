@@ -20599,3 +20599,4 @@ code |
 | 2026-10-19 02:09 UTC | Milestone 2026.10.743 activated | OK | 14 tasks queued |
 | 2026-10-19 02:53 UTC | Bind fourteen tasks and freeze bounded execution a | OK | 130 passed, 1 warning in 225.38s (0:03:45) |
 | 2026-10-19 04:26 UTC | Execute the original learning core with fixture-aw | OK | 108 passed, 1 warning in 99.68s (0:01:39) |
+| 2026-10-19 04:35 UTC | Qualify the complete learning union with original  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8654-learning-core-execution.learning_core_ready_score (actual=0 == expected=1) |
