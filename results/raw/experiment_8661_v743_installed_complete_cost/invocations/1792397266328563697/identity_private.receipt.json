@@ -1,0 +1,31 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "env",
+    "-u",
+    "PYTHONPATH",
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-c",
+    "import sys,json,hashlib,importlib.metadata,os;from pathlib import Path;os.chdir('/var/tmp/carnot-8661-uv30cope');sys.path.insert(0,'/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference');import resident_protocol as w;v,n,e=w.configuration(Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8661_v743_installed_complete_cost/invocations/1792397266328563697/head.json'),'sha256:ccc309efcd617e6d851fafcf6ad30f251712cef2e1bc11ee714da0df7ba48476','native');refs=[dict(path=m.__file__,sha256='sha256:'+hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()) for k,m in list(sys.modules.items()) if k in ['resident_protocol','resident_energy','_resident_alignment','carnot.inference.resident_protocol','carnot.inference.resident_energy','numpy','scipy']];print(json.dumps(dict(head_hash=w.numeric.canonical_hash(v['head']),modules=refs,extension=e,versions={k:importlib.metadata.version(k) for k in ['numpy','scipy','pip','setuptools']})))"
+  ],
+  "command": "env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import sys,json,hashlib,importlib.metadata,os;from pathlib import Path;os.chdir('\"'\"'/var/tmp/carnot-8661-uv30cope'\"'\"');sys.path.insert(0,'\"'\"'/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference'\"'\"');import resident_protocol as w;v,n,e=w.configuration(Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8661_v743_installed_complete_cost/invocations/1792397266328563697/head.json'\"'\"'),'\"'\"'sha256:ccc309efcd617e6d851fafcf6ad30f251712cef2e1bc11ee714da0df7ba48476'\"'\"','\"'\"'native'\"'\"');refs=[dict(path=m.__file__,sha256='\"'\"'sha256:'\"'\"'+hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()) for k,m in list(sys.modules.items()) if k in ['\"'\"'resident_protocol'\"'\"','\"'\"'resident_energy'\"'\"','\"'\"'_resident_alignment'\"'\"','\"'\"'carnot.inference.resident_protocol'\"'\"','\"'\"'carnot.inference.resident_energy'\"'\"','\"'\"'numpy'\"'\"','\"'\"'scipy'\"'\"']];print(json.dumps(dict(head_hash=w.numeric.canonical_hash(v['\"'\"'head'\"'\"']),modules=refs,extension=e,versions={k:importlib.metadata.version(k) for k in ['\"'\"'numpy'\"'\"','\"'\"'scipy'\"'\"','\"'\"'pip'\"'\"','\"'\"'setuptools'\"'\"']})))'",
+  "deadline_s": 60,
+  "duration_s": 0.417311885,
+  "ended_monotonic_ns": 717042204510435,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8661_v743_installed_complete_cost/invocations/1792397266328563697/identity_private.stdout",
+  "log_sha256": "sha256:dbdb22fda713d40ae74fd0ae62179efcbd25ee18ddac6862723e3b8cd0e9782c",
+  "name": "identity_private",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 717041787198550,
+  "started_wall_ns": 1792397286567056692,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8661_v743_installed_complete_cost/invocations/1792397266328563697/identity_private.stderr",
+  "stderr_sha256": "sha256:3d3d10a4c6fd05d1b2f5c7c4fbce2b41f1928deb2c7abdada54240385a0ba5ed",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8661_v743_installed_complete_cost/invocations/1792397266328563697/identity_private.stdout",
+  "stdout_sha256": "sha256:dbdb22fda713d40ae74fd0ae62179efcbd25ee18ddac6862723e3b8cd0e9782c",
+  "timed_out": false
+}

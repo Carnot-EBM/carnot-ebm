@@ -56792,3 +56792,23 @@ missing-node, killed-shard, coverage-presence and actual private CLI controls
 exercise the task-owned materializer/report/validation paths. The teardown
 plugin audits roots before original pytest fixture removal. Historical and
 current raw shards remain separate before current-only combination.
+
+## REQ-VERIFY-8661: Seal complete cost operands and owned validation
+
+Write traced tests first. Retain immutable child commands, exits, clocks, JUnit,
+raw SQLite and source hashes before combining copies. Instrument only actual
+owned sources; unchanged consumers supply their own coverage. Require100 percent
+new statements, real private CLI paths, private E2E-018/021, scoped Ruff, strict
+mypy and spec tracing. Bound child waits and emit heartbeats within60 seconds.
+Cold replay in a fresh process reconstructs reductions from separately pinned
+primitives; reject missing operands and self-consistently rehashed tampering.
+Unchanged terminal readers inspect final bytes before primary_publication.
+Owned failures disqualify; unchanged external failures block. No model loads or
+current generator calls; numerical inference authenticates the original head.
+
+### SCENARIO-VERIFY-8661-REPLAY
+
+Accept --date20261019 and private outputs outside the checkout. Reject unsafe
+private paths, invalid dates, changed sources, malformed timing partitions,
+missing cells, altered responses and self-consistent summary/hash substitutions.
+Stop measurement by3600 seconds and reserve900 seconds for validation in4800.

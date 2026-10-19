@@ -103101,3 +103101,32 @@ failure record, explicit historical overlays, private materializer manifests,
 source before/after hashes and independently pinned cold replay. Readiness is
 conditional on both complete unions, owned cleanup and current coverage; the
 historical disqualifications and scientific nulls remain unchanged.
+
+## REQ-REPORT-8661: Measure equal complete installed and private inference
+
+Require Exp8660 installed_measurement_ready_score and Exp8653 deployment_inputs_ready_score
+as numeric one. Freeze their exact bytes, current wheel, original64 requests, private
+entry, native extension, nine-input109-coefficient checkpoint and unchanged methods.
+Execute private/installed crossed with Python/native, lengths1/4/16, batch1, ten
+paired repeats, alternating registered pair order:120 cells. Retain every missing
+cell and full text extraction, framing, scaling, residual, normalization, decision,
+serialization and clean shutdown clocks without overlapping sums. Match original
+probabilities at1e-12 relative/absolute tolerance and exact typed decisions.
+Primary L16 packaging requires throughput lower95>=0.95 and p95 ratio<=1.05.
+Use10000 paired-index draws, seed7418635. Only installed native/Python lower95>=10
+meets NFR-01. Readiness, packaging and arithmetic scores remain distinct. Preserve
+historical nulls, quarantines, exposed-checkpoint and no-hardware-claim boundaries.
+
+### SCENARIO-REPORT-8661-MATRIX
+
+Keep all120 cells and original64 independent question identities. Repetition does
+not enlarge independent N. Missing files, fields and observed zero have distinct
+gate records. Optional devices cannot block CPU inference. Incomplete timing
+cannot become zero-cost or reduced-N success. A qualified complete null closes
+only this installed mechanism at the fixed workload.
+
+Implementation20261019 for REQ-REPORT-8661: `installed_cost_8661.py`, its session,
+runner and validation modules, and the thin Exp8661 CLI implement the fixed matrix.
+Traced tests are `test_installed_cost_8661.py` and `test_installed_cost_runner_8661.py`.
+Immutable per-cell primitives and the checked primary retain actual outcomes;
+`docs/research-notes/v743-installed-complete-cost.md` states the estimands and limits.
