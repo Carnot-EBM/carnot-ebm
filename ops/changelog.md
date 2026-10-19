@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-10-18 — Outer loop: depth calibration of the cross-game value head (user requests: "go", "fix label", "per-game", "clock", "ops")
+
+All entries below were triggered by a user instruction in the outer-loop session. None was agent-initiated, except the ruff format noted in item 2.
+
+1. Measured whether a cross-game distance estimate is less reliable far from the goal. Leave-one-game-out ridge fit on 632 rows from 18 games. No held-out skill at any depth. Commit `c6b8601f41`. Script `scripts/experiments/outer_loop_depth_calibration_20261018.py`.
+2. Found and fixed a label defect in `scripts/arc_cross_game_verifier_train.py`. The label was `d/(d+1)` and saturated. It now divides by the level segment length. Added REQ-ARC-WMTE-7830 and two regression tests. Reran the test: skill unchanged. Commit `993417a4df`. Ruff reformatted two files that were already unformatted at HEAD (whitespace and wrapping only, about 240 lines). Shipped checkpoints were not retrained.
+3. Ran a within-game fit (train on other levels of one game, test on the held-out level). It looked like a depth signal for v1. Commit `c539a87363`. Script `outer_loop_depth_within_game_20261018.py`. That reading was later corrected (item 4).
+4. Ran a clock baseline (feature is steps since the level started). The clock alone gave pooled Spearman 0.75 and error 0.166. v1 gave 0.41 and 0.227. v1 plus clock gave 0.74 and 0.181. The within-game signal is a step counter. Within-level Spearman is uninformative because any rising counter ranks perfectly inside one level. Commits `aaf55ee79d` and `1fc3b4b372`. Script `outer_loop_depth_clock_baseline_20261018.py`.
+5. Push correction. A first push script replayed the label-fix commit again instead of the new commit. It created an empty duplicate commit on main (`275f21bc8a`). The three real commits were replayed in order afterwards. Final range on both mirrors: `275f21bc8a..5c56cc792c`.
+
+Error lifecycle, step 6 (prevent): the replay helper script rewrote its own commit id inside the push script. Check: compare the diffstat of the replayed tip with the local commit before you push. I did not build a lint for this.
+
 ## 2026-10-18 — Operational retrospective for milestone 2026.10.742
 
 - Wrote `results/operational_retro_2026_10_742.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.742`. Authoritative disk-mtime fallback data records 8 experiments completed (0 compute-bound, 8 synthesis-only) across 136.6 total wall-time minutes (average 17 minutes per experiment).

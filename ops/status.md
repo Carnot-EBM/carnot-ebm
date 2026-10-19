@@ -1,5 +1,29 @@
 # Carnot — Operational Status
 
+## 2026-10-18 — Outer loop: ARC induction pairing and cross-game value head
+
+Handoff for the next session. Branch `note-openai-math`. All items below are pushed to both mirrors.
+
+What works:
+
+- A matched llm_off arm exists in the ARC induction driver. It is deterministic. The 25-cell result is 1 win with the LLM off against 5 with it on.
+- The cross-game value head label is fixed (REQ-ARC-WMTE-7830). `_steps_to_next_up` now divides by the level segment length. Two regression tests pin it. The old function fails both.
+- Depth-calibration measurements are recorded in `docs/research-notes/depth-calibration-cross-game-verifier-2026-10-18.md`, with data files beside it. Result: across games the frame features have no held-out skill. Inside a game they rank no better than a step counter.
+- Reading note on NCM, HybridAgent and Coconut is in `docs/research-notes/`.
+
+In flight:
+
+- The 27B llm_on run on variants 2, 3 and 4 runs on GPU 1 (log in the session scratchpad, output dirs `results/arc_induction_plans_20261017_llm_on_v{2,3,4}/`). It needs about 45 hours per variant. When a variant ends, pair it by `variant_signature` against the llm_off run, count first wins and discordant pairs, and append the result to `docs/research-notes/arc-heldout-test-scope-2026-10-10.md`.
+
+Not done, and why:
+
+- The shipped `models/arc_verifier_cross_game*.json` files are NOT retrained. They still use the old label. The live explorer loads one. A retrain changes the scored agent, so it needs approval and a live A/B. The measurements give no reason to expect a gain.
+- The v3 feature set reads a goal frame built from the future level-up frame. In the trainer harness this leaks the label. Not fixed.
+- NCM Idea A (a verifier per level on NCM Sudoku) needs GPU 1 after the llm_on run.
+- The r11l held-out skip has no explanation.
+- The local branch SHAs differ from the pushed ones. The push used plumbing replays. One empty duplicate commit of the label fix sits on main (`275f21bc8a`). It has no diff.
+- `results/arc_e3/*/world_model.py` and `attempts/manifest.jsonl` show as modified in this worktree. They are not from this work.
+
 ## 2026-10-18 — Exp8633 standalone replay import repair
 
 The direct experiment CLI now resolves its own checkout before importing the
@@ -58,7 +82,7 @@ repository-wide spec-tracing issue.
 
 This verifies the code repair; historical research verdicts retain their authority.
 
-**Last Updated:** 2026-10-16
+**Last Updated:** 2026-10-18 (outer-loop ARC section only; earlier sections unchanged)
 
 ## 2026-10-15 — V735 research plan staged
 

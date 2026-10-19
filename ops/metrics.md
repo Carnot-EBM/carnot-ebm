@@ -1,5 +1,23 @@
 # Carnot — Session Metrics
 
+## Session: 2026-10-18 Outer loop, depth calibration of the cross-game value head
+
+### Turn Log
+
+Start times and token counts were not recorded during these turns, and I do not reconstruct them here. Run `python3 scripts/session-metrics.py` for authoritative token counts. Only the end time of the last turn was measured.
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | not recorded | not recorded | "go": ran Idea B, depth calibration on own solver traces; found no held-out skill and a label defect | not measured |
+| 2 | not recorded | not recorded | "fix label": fixed `_steps_to_next_up`, added REQ-ARC-WMTE-7830 and two tests, reran, pushed | not measured |
+| 3 | not recorded | not recorded | "per-game": within-game fit, committed | not measured |
+| 4 | not recorded | not recorded | "clock": clock baseline, corrected turn 3's reading, pushed three commits, found and disclosed a duplicate empty commit | not measured |
+| 5 | not recorded | 2026-10-19T01:25Z (first `date` reading of the turn, before the edits) | "ops": wrote status, changelog and metrics entries | not measured |
+
+No subagents were used in these turns. No adversarial reviewer ran on the label fix or the clock baseline. CLAUDE.md asks for one on non-trivial changes. That gap is open.
+
+---
+
 ## Session: 2026-10-18 Milestone 2026.10.742 Operational Retrospective
 
 ### Turn Log
