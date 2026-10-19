@@ -6702,3 +6702,17 @@ feedback accounting, fixed-basis write accounting and equal detector inputs.
 Defer trained encoders, new architectures/dependencies and all theorem/performance
 transfers. The source scan and local source versions are hash-bound in the V743
 protocol. Fixed scientific studies remain future dependencies until executed.
+
+## V743 observed closure boundaries — 2026-10-19
+
+The fixed complete-source coverage study now has a qualified positive:55 recovered
+responses,190 total responses and128 exposed question groups. Semantic truth and
+independent generalization remain open. Installed compatibility and120 complete
+cost cells qualify; packaging noninferiority does not meet the10x requirement.
+The qualified installed performance null closes that exact unchanged protocol.
+Retain corrected SDK serialization and236 authenticated reset causes. Transfer
+remains disqualified by the unchanged observer's duplicate_observation assertions,
+with zero complete horizons. Learning retains39 core-node outcomes but changed
+source identity and a pre-gated25-node cohort prevent current benefit/retention
+claims. Reopen only with the concrete changed operands and stop conditions in
+Exp8666. No new architecture, generator training or hardware claim follows.

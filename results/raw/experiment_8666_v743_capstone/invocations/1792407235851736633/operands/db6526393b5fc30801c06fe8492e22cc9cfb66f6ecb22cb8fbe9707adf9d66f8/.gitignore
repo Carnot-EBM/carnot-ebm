@@ -1,0 +1,393 @@
+# Rust
+/target/
+# 2026-09-29: an experiment (results/raw/experiment_7339_v644_native_binding/target/)
+# ran cargo build under a per-experiment-ID path outside the repo root. The anchored
+# /target/ rule above only matches a target/ dir at the repo root, so this one --
+# 5,405 files, 1.6GB, a full cargo build directory including a 71.5MB debug binary --
+# was committed wholesale. Same "moving per-experiment-ID path a static rule can't
+# list in advance" class as the 2026-09-18 GGUF-cache incident. Catch every target/
+# dir, not just the root one.
+**/target/
+**/*.rs.bk
+Cargo.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Virtual environments
+# The trailing-slash forms match DIRECTORIES ONLY. On 2026-07-26 a git worktree
+# was given a `.venv` SYMLINK pointing at the real venv (so the pre-commit
+# torch-CUDA guard could find torch), `git add -A` did NOT ignore it -- a symlink
+# is not a directory, so `.venv/` never matched -- and a machine-specific
+# absolute-path symlink got committed as a mode-120000 blob. The slash-less forms
+# below close that hole for symlinks and plain files of the same name.
+.venv/
+.venv
+venv/
+venv
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code MCP config (developer-specific venv paths)
+.mcp.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+tarpaulin-report.html
+
+# Secrets — only encrypted versions (*.enc.yaml, *.enc) should be committed
+.env
+.env.*
+!.env.enc
+secrets.*.yaml
+!secrets.*.enc.yaml
+# The dotted pattern above matches `secrets.prod.yaml` but NOT `secrets/hf_token.yaml`
+# — and `secrets/` is where this project actually keeps its credentials. The 2026-07-31
+# security audit confirmed via `git check-ignore` that `secrets/hf_token.yaml` was
+# committable, which is the exact plaintext path `docs/sops-hf-token-setup.md` used to
+# tell operators to create. Deny the whole directory, then re-admit only the SOPS
+# ciphertext. Anything decrypted into `secrets/` is now unstageable by construction.
+secrets/*
+!secrets/*.enc.yaml
+!secrets/*.enc
+# `ops/secrets.yaml` is referenced by two experiment scripts as a sops source; it lives
+# outside `secrets/` so the rule above cannot cover it.
+ops/secrets.yaml
+*.key
+*.pem
+# SSH private keys carry no extension, so `*.key` / `*.pem` never matched them.
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+*_rsa
+*_ed25519
+data/*.safetensors
+exports/**/model.safetensors
+.venv-npu
+.venv-vllm-trial
+.hypothesis/
+
+# Local-only multi-GB artifacts (never commit — re-downloadable / re-generable).
+# Surgical patterns: DO NOT exclude models/constraint-verifier-v2/ (small,
+# intentionally tracked) or output/** files that the conductor already
+# committed.  Target only the large re-downloadable / re-generable files.
+models/**/*.gguf
+models/**/*.mxfp4
+models/**/*.safetensors
+models/**/*.onnx
+models/**/*.onnx_data*
+models/gpt-oss-safeguard-20b/
+models/gpt-oss-safeguard-120b/
+models/openai_privacy_filter/
+# ^ Added 2026-04-23 after the conductor's auto-checkpoint committed
+#   17 GB of HuggingFace-downloaded model weights (model.safetensors,
+#   onnx/*.onnx_data*, original/) into this path.  GitHub's 100 MB
+#   per-file limit rejected the push; history was rewritten with
+#   git-filter-repo to purge models/openai_privacy_filter/** and the
+#   Vivado-generated BD netlists.  These patterns prevent the conductor
+#   from re-committing any HuggingFace model tree.  If a model directory
+#   must be tracked (e.g. a small hand-built artifact), add a negation
+#   with `!models/<dirname>/`.
+
+# Large training checkpoints.  The conductor's bounded-training drivers
+# (Thesis-A EBT, etc.) save *.pt checkpoints under results/; one of them
+# (results/experiment_3734_checkpoint.pt, 765 MB) exceeded GitHub's 100 MB
+# limit and silently blocked every push for 143 commits.  History was
+# purged with git-filter-repo 2026-06-03.  These patterns keep checkpoints
+# untracked so it cannot recur.  Result JSON artifacts are still tracked.
+results/**/*.pt
+results/*.pt
+
+# THIRD occurrence of the same incident class, 2026-09-18. The 2026-06-03 /
+# 2026-06-08 patterns below (`results/*.ckpt` etc.) only matched the TOP
+# LEVEL of results/, not nested paths -- 25 real *.ckpt files under
+# results/trm_runs/snapshots/ and results/trm_runs/<experiment>/ were still
+# tracked and pushed fine to GitHub in isolation (each under 100MB), but
+# combined with a 17GB cached GGUF model blob under
+# results/raw/experiment_NNNN/task_owned_model_cache/ (a HuggingFace-cache-
+# shaped directory, four separate copies under four different experiment
+# IDs) and ~30 oversized results/**/*.json[l] dumps, the accumulated push
+# exceeded GitHub's 2GB pack-size cap entirely, blocking every push for 19
+# days (2026-08-30 to 2026-09-18). Fixed both ways: git-filter-repo
+# --strip-blobs-bigger-than 90M purged the existing history (see
+# ops/known-issues.md 2026-09-18 entry for the full incident), and the
+# glob below is now recursive so this exact shape cannot recur silently.
+# A per-path .gitignore list is still fundamentally reactive against a
+# model-cache directory keyed by a changing experiment ID -- see the
+# known-issues entry's queued follow-up for a conductor-side hard size
+# gate at commit time, which is the only fix that closes this for good.
+results/raw/**/task_owned_model_cache/
+
+# Vivado intermediate / future-build artifacts.  The .gen/ subtree
+# contains >100 MB synthesized netlists (carnot_ising_bd_*_sim_netlist.v
+# and .vhdl) that GitHub also rejected.
+output/carnot_ising_bd/project/carnot_ising.runs/impl_*/
+output/carnot_ising_bd/project/carnot_ising.runs/synth_*/
+output/carnot_ising_bd/project/.Xil/
+output/carnot_ising_bd/project/carnot_ising.gen/
+output/carnot_ising_bd/vivado_*.backup.*
+output/carnot_ising_bd/*.jou
+output/carnot_ising_bd/.Xil/
+# Catch-all for Vivado sim netlists regardless of where they land.
+output/**/*sim_netlist*.v
+output/**/*sim_netlist*.vhdl
+output/**/*sim_netlist*.vhd
+
+# Vivado output scratch (2026-05-21 cleanup) — `.jou` (TCL command
+# journal) and `.log` (run log) are written to the CWD on every
+# Vivado invocation; `vivado_<PID>.backup.{jou,log}` are previous-run
+# rotations. None are inputs to anything; future runs regenerate
+# fresh ones. Same for webtalk and .Xil scratch dirs. Globally
+# ignored so the pattern doesn't recur in any directory.
+vivado.jou
+vivado.log
+vivado_*.backup.jou
+vivado_*.backup.log
+vivado_*.jou
+vivado_*.log
+webtalk.jou
+webtalk.log
+hs_err_pid*.log
+**/.Xil/
+# Other Vivado run-time scratch (added 2026-05-21 after clockInfo.txt
+# appeared at root during an FPGA task). Vivado / Xilinx tools dump
+# these to CWD on every invocation; none are project sources.
+clockInfo.txt
+planAhead.jou
+planAhead.log
+usage_statistics_webtalk.html
+usage_statistics_webtalk.xml
+fsm_encoding_report.html
+xilinx_dl.log
+xsim.dir/
+xsim_*.jou
+xsim_*.log
+
+# Vivado v4 KV260 build artifacts (Exp 971+) — match the existing
+# carnot_ising_bd patterns above. v4 introduced a new project name
+# variant.
+output/carnot_ising_v4_bd/
+output/carnot_ising_v[0-9]*_bd/
+
+# Conductor supervisor test must stay quarantined — running it kills the conductor
+tests/python/test_conductor_supervisor.py
+
+# ------------------------------------------------------------------------------
+# Root-clutter guard (2026-06-09). Agents/experiments repeatedly write one-off
+# scratch scripts (probe*.py, check_*.py, test_*.py, append_*.py, fix_*.py, ...)
+# into the REPO ROOT instead of scripts/experiments/ or tests/python/. Ignoring
+# root-level *.py stops `git add -A` (including the conductor's --no-verify
+# commits, which still honor .gitignore) from re-tracking them. Real Python lives
+# in python/, scripts/, tests/ — never the repo root. ~155 prior scratch files
+# were archived to legacy/root-scratch-2026-06/ in this cleanup. conftest.py and
+# setup.py are whitelisted in case a build ever legitimately needs them at root.
+/*.py
+!/conftest.py
+!/setup.py
+
+# LaTeX build artifacts written to the repo root by paper compiles (regenerable)
+/main.aux
+/main.log
+/main.out
+/main.bbl
+/main.blg
+/main.toc
+/main.fls
+/main.fdb_latexmk
+/main.synctex.gz
+# Vivado per-invocation clock report written to CWD (regenerable scratch)
+/clockInfo.txt
+# Quarantine dir for the root-clutter sweeper (scripts/root_clutter_sweep.py) — it
+# relocates untracked root scratch here (reversible) instead of hard-deleting it.
+.root-scratch-trash/
+
+# Conductor pre-test fingerprint cache — local-only, regenerated on first run
+ops/.pretest-cache.json
+
+# QA-layer authenticity audit rotation state — local-only, tracks which
+# adversarial_verify.py function-chunk the next milestone-close audit
+# starts from, regenerated on first run
+ops/.qa_layer_audit_rotation.json
+
+# Test-suite mutation detector state — local-only, per-working-tree.
+#   .test_suite_mutation_snapshot.json  which tracked files were ALREADY dirty before a run
+#   .test_suite_mutation_pending.json   the interlock: exists => a test run rewrote tracked
+#                                       files and they were not restored; the pre-commit hook
+#                                       `test-suite-mutation-gate` refuses while it is there.
+# Both describe THIS checkout's transient state, so committing either would export one
+# machine's in-flight condition to everyone else. See scripts/test_suite_mutation_check.py.
+#   .test_suite_mutation_backup/        pre-revert copies of every file --restore reverted, so a
+#                                       wrong revert costs a `cp` instead of the work. `git
+#                                       checkout --` is unrecoverable, and the detector cannot
+#                                       tell a test's write from a human's concurrent edit.
+#   .test_suite_mutation_runs/          PER-RUN replacements for the two files above: one
+#                                       <run-id>.snapshot.json and one <uuid>.pending.json per
+#                                       run, so concurrent workflows in one working tree cannot
+#                                       overwrite each other's baseline or delete each other's
+#                                       interlock. The two single files remain listed because
+#                                       they are still READ (legacy trees); nothing writes them.
+ops/.test_suite_mutation_snapshot.json
+ops/.test_suite_mutation_pending.json
+ops/.test_suite_mutation_runs/
+ops/.test_suite_mutation_backup/
+
+# Killed-subagent output tails — local-only diagnostics, one file per kill.
+# The conductor log truncates its detail column to 80 characters and the child's
+# output is never written anywhere else, so a kill used to destroy its own
+# evidence. These files are that evidence. They describe THIS checkout's runs,
+# they are pruned to the newest 500, and committing them would export one
+# machine's transient failures. See scripts/research_conductor.py
+# _persist_output_tail and ops/known-issues.md 2026-09-09.
+ops/.task_output_tails/
+
+# Deliverable status observations — local-only, one line per status CHANGE seen
+# by the conductor's deliverable watch. Written to answer whether a run that
+# writes a `blocked` artifact ever supersedes it in the SAME run, which decides
+# whether two guards may exempt the precondition class. Describes this checkout's
+# runs. See scripts/research_conductor.py _record_deliverable_observation.
+ops/.deliverable_observations.jsonl
+
+# Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
+# an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
+ebt_tmp/
+
+# Embedded experiment clones (have their own .git) — must NEVER be committed as
+# submodule gitlinks. A conductor `git add -A` committed `nano-trm` as a mode
+# 160000 gitlink with no .gitmodules (commit c4c612662, 2026-06-06), which broke
+# EVERY GitHub Actions checkout (Pages, CI, phase1-reproducer) at
+# `fatal: No url found for submodule path 'nano-trm'`. Ignore the embedded repos
+# so this cannot recur.
+/nano-trm/
+/ebt_tmp/
+/trm_src/
+/hrm_ckpt/
+/external/ARC-GEN/
+# ARC-AGI-3 Milestone 1 winner repos, cloned for study (2026-07-11) -- each
+# has its own .git, same gitlink risk as ARC-GEN above.
+/external/duck-harness/
+/external/arc-m1-2nd-reki/
+/external/arc-m1-3rd-forge/
+# paperbanana (diagram-generation tool), cloned 2026-07-21 for the local
+# ERNIE-Image image-gen backend integration -- same gitlink risk as above.
+/external/paperbanana/
+
+# Verifier/model weights under results/ -> HuggingFace + IPFS, NOT git (rule 3).
+# results/**/*.pt was added 2026-04-23 but missed top-level + .safetensors/.bin/.gguf
+# in results/ (25 small verifier safetensors, ~18MB, slipped in). These patterns stop
+# NEW verifier/abstraction weights from landing in git as they grow; the binaries live
+# on HF/IPFS keyed by CID, referenced from ops/verifier_registry.yaml. (2026-06-08)
+# WIDENED 2026-09-18 (third occurrence, see results/**/*.pt comment above): these
+# were top-level-only (`results/*.ckpt`), which does not match a nested path like
+# `results/trm_runs/snapshots/ckpt_val0.626_ep11599.ckpt` -- exactly the shape that
+# contributed to the 2026-09-18 GitHub pack-size incident. Made recursive.
+results/**/*.pt
+results/**/*.safetensors
+results/**/*.bin
+results/**/*.gguf
+results/**/*.ckpt
+
+# ARC-AGI-3 SDK local cache (downloaded game envs + recordings) — not source
+environment_files/
+recordings/
+data/arc_public_demo_human_replay_corpus/
+
+# Pytest tmp_path basetemp — ephemeral test outputs, never commit (2026-06-16 security audit)
+.tmp-pytest/
+recordings/arc_live_submit/
+recordings/arc_live_probe/
+
+# Large binary model checkpoints never belong in git (2026-06-20 operator directive). All *.ckpt are
+# the retired nano-TRM Sudoku run (~1.4GB, val-0.63, DO_NOT_RELAUNCH, grafted=chance). Use `git add -f`
+# to deliberately track a specific small checkpoint if ever needed. (Legitimate SMALL models in models/
+# *.safetensors / *.pt stay tracked -- not ignored here.)
+*.ckpt
+
+# Generated transition-capture corpus (large npz; regenerated from probes + human replays)
+data/arc_transition_corpus/
+
+# Phase-2 repair-A/B scratch: each cell starts a llama-server with its own CARNOT_ARC_E3_DIR so
+# it cannot write into results/arc_e3 (which is EVIDENCE). Those redirect dirs are process
+# scratch, not measurements -- the measurements are ab.json and the completion .txt files.
+results/arc_engine_validation_20260731/harness/ab/*/e3/
+results/arc_engine_validation_20260731/harness/capture/*/e3/
+
+# LARGE ARTIFACT EXCLUSION (2026-07-31) -- see ops/large-artifact-exclusions.md
+#
+# This 461 MB row dump exceeded GitHub's hard 100 MB per-file limit, and its presence in history
+# blocked EVERY push to the canonical mirror from 2026-07-23 onward -- 411 commits stranded. It
+# was removed from main's history by git-filter-repo and REMAINS ON DISK, untracked.
+#
+# The ignore entry is the load-bearing half: the conductor and outer loop both run `git add -A`,
+# so without this line the file would be re-added on the next commit and re-break the mirror
+# immediately. Do not remove it without also solving the >100 MB problem (Git LFS or equivalent).
+#
+# NOT a never-prune violation: the substantive record -- claims, methodology, per-row sha256
+# hashes for all 1944 rows, the deterministic config hash, and the integrity audit -- lives in
+# results/experiment_5852_three_family_paired_embeddings.json (637 KB, still tracked) and
+# results/experiment_5853_paired_embedding_integrity_audit.json. Only bulk float data left git.
+results/experiment_5852_three_family_paired_embeddings.rows.jsonl
+
+# Per-run eval outputs. `arc_leaderboard_eval.py` writes a run-scoped file here instead of
+# clobbering the tracked full-sweep record (see that script's write site). These are transient
+# measurements, not the research record, so they stay out of git.
+results/arc_live_oracle_gap_runs/
+results/arc_leaderboard_eval_runs/
+
+# Per-session scope declarations for scripts/harness_integrity_lint.py. These are local
+# state, like the mutation-check run files. A committed scope would become active for every
+# session in every checkout and refuse commits nobody could explain.
+ops/.agent_scopes/
+
+# Conductor bookkeeping state: escalation-dedupe ledgers, rewritten every few seconds by the
+# running loop. TRACKED until 2026-08-29, and that was a standing commit deadlock: a
+# test-suite mutation marker naming them can never go clean while the loop runs, so it
+# refused every hook-respecting commit indefinitely. The conductor itself was immune
+# (--no-verify), so the cost fell entirely on humans and agents -- five refused commits in
+# one day.
+#
+# Safe to untrack: every reader treats absence as fresh state, and run_stop_authority.py
+# documents the fail direction out loud -- "Unreadable state = fresh state: persistence
+# restarts, which only DELAYS an action (fail toward not killing)." The cost on a fresh clone
+# is that deduplicated alerts re-fire once, which is self-correcting.
+#
+# Siblings ops/.agent_scopes/ and ops/.test_suite_mutation_runs/ are already ignored for the
+# same reason: per-run local state does not belong in the research record.
+ops/.activation_replan_state.json
+ops/.arc_leaderboard_technique_watch_state.json
+ops/.arc_news_watch_state.json
+ops/.audit_findings_ledger_state.json
+ops/.conductor_reexec_state.json
+ops/.run_sentinel_state.json
+ops/.stop_authority_state.json
+
+# Autoresearch conductor round (REQ-AUTO-019/020): a fast-resume cache and the
+# full audit trail of every hypothesis tried, accepted or not. Same reasoning
+# as the siblings above -- local per-machine state, not the research record.
+# The durable record is the git-committed lineage under
+# ops/autoresearch_discoveries/ (one commit per accepted hypothesis, tracked).
+ops/.autoresearch_baselines.json
+ops/.autoresearch_experiment_log.json

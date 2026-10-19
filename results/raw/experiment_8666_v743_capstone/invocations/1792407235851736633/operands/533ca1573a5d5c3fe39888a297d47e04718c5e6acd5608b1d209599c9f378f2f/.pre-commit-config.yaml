@@ -1,0 +1,595 @@
+# Default to the pre-commit (commit-time) stage for every hook that does not
+# declare its own `stages:`. Without this, installing the pre-push hook type
+# (for the blog-publish-guard below) would make ALL these commit-stage linters
+# ALSO run at push time — which would newly gate the conductor's auto-push on
+# unrelated checks (overdue-priority, torch-cuda, etc.) that previously only ran
+# at commit. Pinning the default to pre-commit keeps push-time scope to exactly
+# the hooks that opt in with `stages: [pre-push]` (i.e. blog-publish-guard).
+default_stages: [pre-commit]
+
+repos:
+  # Secret scanning — gitleaks v8.x scans staged file diffs for high-
+  # confidence API-key / private-key / cloud-credential patterns before
+  # they get committed. Runs `gitleaks protect --staged` which only
+  # inspects the diff going into the commit (not full history), so the
+  # hook is fast (<1 s on typical commits).  Allowlist for
+  # tests/python/test_ebm_cot_calibrator_v*.py JAX-PRNG-key false
+  # positives lives in `.gitleaks.toml` at the repo root.
+  #
+  # A full-history scan across the 2542-commit record was run 2026-04-23
+  # and produced only those 3 allowlisted false positives — this hook
+  # exists to keep that clean-state invariant from drifting.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # Large-file guard. 2026-09-28 incident: exp7597/exp7611/exp7740 committed
+  # raw episode logs up to 613MB straight to results/raw/. GitHub hard-blocks
+  # any file over 100MB, and the mirror silently failed to push for 490
+  # commits before anyone noticed (gitea has no such limit and kept
+  # accepting pushes). Fixed by a git-filter-repo history rewrite; this hook
+  # is the check that stops it from happening again.
+  #
+  # LOWERED to 50MB on 2026-09-29 after a second incident: files at 85-94MB
+  # (inside the old 90MB cap) committed cleanly via the conductor's own
+  # --no-verify checkpoint path (which this hook never sees) and triggered
+  # GitHub's large-file warnings on push -- under the 100MB hard limit by a
+  # few MB of luck, not by design. 50MB matches GitHub's own documented
+  # "recommended maximum file size" and the matching in-process conductor
+  # guard (research_conductor.py:OVERSIZED_FILE_THRESHOLD_BYTES, also
+  # lowered the same day) -- both layers now agree.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: ["--maxkb=50000"]
+
+  # Rust formatting
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: fmt
+        name: rustfmt
+        args: ["--", "--check"]
+      - id: cargo-check
+        name: cargo check
+        args: ["--workspace", "--exclude", "carnot-python"]
+
+  # Rust linting
+  - repo: local
+    hooks:
+      - id: clippy
+        name: clippy
+        entry: cargo clippy --workspace --exclude carnot-python -- -D warnings
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+      # Rust test coverage enforcement
+      - id: rust-test-coverage
+        name: rust tests
+        entry: cargo test --workspace --exclude carnot-python
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+  # Python formatting and linting
+  # Pinned to match the .venv ruff (0.15.9) — the older pre-commit pin
+  # (v0.8.6) didn't recognize newer rule codes like UP045 added in our
+  # per-file ignores, causing TOML parse errors at hook time.
+  #
+  # CHECK-ONLY mode (2026-05-03 fail-forward fix): the hooks below run
+  # in non-modifying mode so pre-commit never needs to stash-and-restore
+  # the working tree. The stash-restore cycle silently lost 5+ files
+  # during the .94 milestone when the restore patch failed to apply
+  # cleanly. By making hooks check-only the working tree is never
+  # touched, eliminating the data-loss path entirely. Operators run
+  # `.venv/bin/ruff check --fix` and `.venv/bin/ruff format` manually
+  # before staging if they want auto-fixes.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # v0.15.9 -> v0.15.17 (2026-08-05): pyproject.toml's per-file-ignores gained UP045
+    # (commit cfca5de955), a rule id v0.15.9 does not recognize -- ruff fails to PARSE
+    # the config at all rather than reporting a lint finding, so both hooks below have
+    # been erroring on every commit that reaches them since that commit landed (silently
+    # bypassed via --no-verify on automated commits, but blocking any hook-respecting
+    # commit that touched a Python file). v0.15.17 is not a guess: it is the exact
+    # version already running in .venv/bin/ruff, verified to parse pyproject.toml clean
+    # and pass `ruff check`/`ruff format --check` on this repo before the bump.
+    rev: v0.15.17
+    hooks:
+      - id: ruff
+        args: ["--no-fix"]
+      - id: ruff-format
+        args: ["--check"]
+
+  # Python type checking
+  - repo: local
+    hooks:
+      # Hook entries below use .venv/bin/<tool> rather than bare names so
+      # they work without the operator activating the venv before each
+      # commit. Pre-commit's `language: system` doesn't activate the venv
+      # by itself; bare `mypy`/`pytest` require those binaries on $PATH,
+      # which is fragile across operator clones and the conductor's
+      # automated commit pipeline. Activated 2026-04-26 after the audit
+      # found these hooks were silently broken on this clone.
+      - id: mypy
+        name: mypy
+        # --ignore-missing-imports: many runtime deps (optax, z3, sklearn,
+        #   pynvml, mlir_aie, etc.) lack PEP-561 type-stub markers; mypy's
+        #   default behaviour is to error on each. We don't gain much from
+        #   stub-installing every transitive — strict typing inside our
+        #   own modules is what matters.
+        # --explicit-package-bases + cwd=python/, target=carnot: running
+        #   from the repo root with target `python/carnot` made mypy treat
+        #   BOTH the repo root (cwd, implicit base under
+        #   explicit-package-bases with no mypy_path set) AND `python/`
+        #   (the real package root, matching the editable-install .pth)
+        #   as valid package bases for the SAME files, so every file
+        #   resolved to two conflicting module names
+        #   ("python.carnot.foo" vs "carnot.foo") and mypy aborted with
+        #   "Source file found twice" on whichever file its directory walk
+        #   happened to hit first — non-deterministic and, in practice,
+        #   ALWAYS before it ever reached real project code. Adding
+        #   mypy_path=python does not fix this (it only adds a second
+        #   candidate base on top of the cwd-implicit one, shifting which
+        #   file wins the race instead of removing the ambiguity).
+        #   Running with cwd=python/ so `carnot` is the only base mypy can
+        #   infer removes the ambiguity outright. Fixed 2026-07-11 — see
+        #   pyproject.toml's [tool.mypy] python_version comment for the
+        #   sibling fix (this bug was also masking a python_version=3.11
+        #   vs installed-3.12-numpy-stub mismatch that only surfaced once
+        #   this crash was cleared).
+        entry: bash -c 'cd python && ../.venv/bin/mypy --ignore-missing-imports --explicit-package-bases carnot'
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      # Python test coverage enforcement — manual stage only.
+      #
+      # Originally ran on every commit, but the .73 milestone surfaced
+      # the conductor-incompatibility: each conductor commit blocks for
+      # 10+ min on this hook, and pytest-xdist's multiprocessing leaves
+      # zombie workers if it's killed mid-run (contributed to the
+      # 2026-04-26 swap-saturation incident — see
+      # `openspec/change-proposals/conductor-process-isolation.md`).
+      #
+      # Coverage is now CI-only — see `.github/workflows/ci.yml`'s
+      # `python-test` job. Run locally with:
+      #   pre-commit run --hook-stage manual pytest-coverage
+      # or
+      #   .venv/bin/pytest tests/python --cov=python/carnot --cov-fail-under=100
+      - id: pytest-coverage
+        name: pytest (100% coverage) — manual / CI-only
+        stages: [manual]
+        entry: .venv/bin/pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      # Spec coverage: every test must reference a REQ-* or SCENARIO-*
+      # Staged-only scope (pass_filenames: true) — catches NEW untraceable
+      # tests at commit time. Whole-repo audits run via:
+      #   .venv/bin/python scripts/check_spec_coverage.py
+      # (no args). Switched to staged-only on 2026-04-28 after the .80
+      # rescue blocker — the previous whole-repo scope blocked unrelated
+      # commits on 41 pre-existing untraceable conductor-generated tests.
+      - id: spec-coverage
+        name: spec coverage check
+        entry: .venv/bin/python scripts/check_spec_coverage.py
+        language: system
+        types_or: [python, rust]
+        pass_filenames: true
+
+      # ARC solve/scoring artifact substrate guard: catches the exp4433-class
+      # omission where a fast deterministic ARC solve artifact forgot
+      # `inference_substrate` and later tripped the live-model duration floor.
+      # Legitimate live-model ARC tasks must be explicitly listed in
+      # ops/arc_artifact_live_allowlist.txt.
+      - id: arc-artifact-lint
+        name: ARC artifact inference-substrate lint
+        entry: .venv/bin/python scripts/arc_artifact_lint.py --allow-live-file ops/arc_artifact_live_allowlist.txt
+        language: system
+        files: '^results/.*experiment_[^/]*(?:arc|solve|config_rule|world_model)[^/]*\.json$'
+        pass_filenames: true
+
+      # ARC reproduced-count integrity: registry totals must be derived from
+      # per-game levels_reproduced, not live-recorded provisional rows, and the
+      # A6 package count must be replay-valid before an operator can use it.
+      - id: arc-count-integrity-lint
+        name: ARC reproduced-count integrity lint
+        entry: .venv/bin/python scripts/arc_count_integrity_lint.py --max-registry-replays 3
+        language: system
+        files: '^(ops/arc_solve_registry\.yaml|results/experiment_4460_submission_package_prep\.json)$'
+        pass_filenames: true
+
+      # ARC focused pytest preconditions are smoke gates, not coverage gates:
+      # any focused baseline/precondition pytest command must include --no-cov.
+      - id: arc-precondition-nocov-lint
+        name: ARC precondition pytest no-cov lint
+        entry: .venv/bin/python scripts/arc_precondition_nocov_lint.py
+        language: system
+        files: '^(python/carnot/experiment_[^/]*(?:_arc_|solve|first_contact)[^/]*\.py|scripts/arc[^/]*\.py|ops/arc_solve_registry\.yaml)$'
+        pass_filenames: true
+
+      # ARC roadmap activation preconditions are also smoke gates: planner
+      # prompts for track=arc-* tasks must not launch pytest without --no-cov.
+      - id: arc-nocov-precondition-lint
+        name: ARC roadmap precondition pytest no-cov lint
+        entry: .venv/bin/python scripts/arc_nocov_precondition_lint.py
+        language: system
+        files: '^research-roadmap(?:-next)?\.yaml$'
+        pass_filenames: true
+
+      # Batching enforcement: prevent new sequential question loops in experiment scripts
+      # (RETRO-045) — documentation alone (Exp 481, 77 violations) did not prevent new
+      # violations; this hook makes enforcement automatic at commit time.
+      - id: batching-check
+        name: Batching enforcement (BatchedInferenceRunner required)
+        entry: .venv/bin/python scripts/batching_precommit_check.py
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      # Technical report HTML sync: regenerate docs/technical-report.html
+      # whenever docs/technical-report.md changes, so GitHub Pages never
+      # lags behind the Markdown source of truth. Before this hook the HTML
+      # drifted three milestones behind the MD (stuck at "473 experiments /
+      # 22 milestones" while the MD read "500+ / 25"). The hook runs
+      # scripts/build_technical_report.py, stages the regenerated HTML, and
+      # lets the commit proceed with both files included in the same commit.
+      - id: tech-report-html-sync
+        name: technical-report.html sync from .md
+        entry: .venv/bin/python scripts/precommit_sync_technical_report.py
+        language: system
+        files: '^docs/technical-report\.md$'
+        pass_filenames: false
+
+      # Canonical-URL discipline: fail the commit if any tracked source/
+      # docs/config file contains `github.com/ianblenke/carnot` (the
+      # operator's local-filesystem-mirror name). The canonical URL is
+      # `github.com/Carnot-EBM/carnot-ebm`. Per CLAUDE.md "Canonical
+      # Repository URL Discipline" (2026-05-20) — this is the second
+      # sweep / first structural fix. Local filesystem paths like
+      # `/home/.../github.com/ianblenke/carnot/...` are NOT flagged
+      # because they describe on-disk locations, not URL references.
+      - id: canonical-url-lint
+        name: Canonical GitHub URL discipline (no ianblenke/carnot URLs)
+        entry: python3 scripts/canonical_url_lint.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      # Paper-v6 narrowing lint: mechanically enforces the G3 narrowing
+      # discipline over operator paper targets and tracked paper-v6 JSON
+      # artifacts. Additive guard for retracted Paper-v6 prose; the lint
+      # reports violations but never edits operator-curated docs.
+      - id: paper-v6-narrowing-lint
+        name: Paper-v6 narrowing lint
+        entry: python3 scripts/paper_v6_narrowing_lint.py
+        language: system
+        files: '^(docs/arxiv-paper/main\.tex|docs/technical-report\.md|results/paper_v6_.*\.json)$'
+        pass_filenames: false
+
+      # Operator-curated docs lint: refuses [conductor]-marked commits
+      # that touch README.md, docs/index.html, docs/tutorial.md, etc.
+      # per CLAUDE.md "Public Documentation Discipline". Layer 1
+      # mechanical backstop for the rule that exp3166 (2026-05-26
+      # codex agent) violated by reverting README.md back to a HF
+      # model card. Outer-loop and operator commits are unaffected.
+      - id: operator-curated-docs-lint
+        name: Public Documentation Discipline (forbid conductor edits)
+        entry: python3 scripts/operator_curated_docs_lint.py
+        language: system
+        stages: [commit-msg]
+        pass_filenames: true
+        always_run: true
+
+      # Overdue-priority forcing function: refuses commits to
+      # research-roadmap-next.yaml or ops/known-issues.md that leave
+      # any priority at pending_count >= 3 without pickup or
+      # operator_override per CLAUDE.md "Overdue-Priority Forcing
+      # Function" (2026-04-28). Layer 1 mechanical backstop for the
+      # rule that the .294-.298 planners structurally ignored — the
+      # Prompt-Injection KAN v4 priority sat at pending_count=5
+      # across 5 milestones because the rule was design-time
+      # discipline only.
+      - id: overdue-priority-lint
+        name: Overdue-Priority Forcing Function discipline
+        entry: python3 scripts/overdue_priority_lint.py
+        language: system
+        files: '^(research-roadmap-next\.yaml|ops/known-issues\.md)$'
+        pass_filenames: false
+
+      # Adversarial landing-page lint: catches fever-dream patterns
+      # (bloated cards, per-milestone narrative, raw expNNNN, internal
+      # acronyms, section card-count caps exceeded). Layer 1 of the
+      # defense; Layer 2 is the periodic AI audit at
+      # scripts/pages_adversarial_audit.py. Per CLAUDE.md "Adversarial
+      # Landing-Page Discipline" (2026-05-21).
+      - id: pages-fever-dream-lint
+        name: Landing-page bloat / jargon / drift lint
+        entry: python3 scripts/pages_fever_dream_lint.py
+        language: system
+        files: '^docs/index\.html$'
+        pass_filenames: false
+
+      # ARC live-path reachability lint: every ARC world-model / solver module
+      # under python/carnot/agentic/ MUST be reachable from the LIVE agent path
+      # (scripts/arc_loop_solve.py or arc_competition_agent.py), else it is an
+      # ORPHAN that produces no live capability/efficiency -- the failure mode
+      # the hazard-aware nav world model fell into (2026-06-22). Per CLAUDE.md
+      # "ARC Live-Path Reachability Discipline".
+      - id: arc-orphan-solver-lint
+        name: ARC solver/world-model live-path reachability
+        entry: python3 scripts/arc_orphan_solver_lint.py
+        language: system
+        files: '^(python/carnot/agentic/arc_.*\.py|scripts/arc_loop_solve\.py)$'
+        pass_filenames: false
+
+      # Artifact freshness lint: refuse a commit that leaves an ANALYSER-PRODUCED
+      # artifact stale w.r.t. the code that built it. Origin 2026-07-26: an
+      # artifact sat committed for ~1h56m after its analyser was edited and
+      # committed WITHOUT a rebuild. That window changed no number (verified by
+      # rebuild + deep-diff), but nobody could have known that without doing the
+      # rebuild -- and a stale artifact's figures are quoted exactly as
+      # confidently as a fresh one's. CRITICALLY the `files:` list matches the
+      # ANALYSER / harness / shared-schema side as well as results/, because in
+      # the real incident the artifact was NOT touched: an artifact-only trigger
+      # would have waved it straight through. pass_filenames: false so the whole
+      # registered set is re-checked whichever side moved. Reads the small
+      # ops/analyzer_artifact_index.json rather than scanning the 6.1 GB
+      # results/ tree.
+      - id: artifact-freshness-lint
+        name: Analyser-produced artifacts are not stale
+        entry: python3 scripts/artifact_freshness_lint.py
+        language: system
+        # GENERATED, do not hand-edit: python3 scripts/artifact_freshness_lint.py --emit-hook-pattern
+        # (the lint itself refuses the commit if this drifts from the registered dependency union)
+        files: ^(python/carnot/agentic/arc_actions_to_progress\.py|python/carnot/agentic/arc_competition_agent\.py|python/carnot/agentic/arc_executable_world_model\.py|python/carnot/agentic/arc_hud_row_schema\.py|python/carnot/agentic/arc_solver_kit\.py|python/carnot/agentic/arc_world_model_trust_energy\.py|python/carnot/experiment_4605_live_integration_scored_agent\.py|python/carnot/experiment_5714_think_mode_rescoped_ab\.py|python/carnot/experiment_5726_thinkingcap_16k_dualgpu_reason_ab\.py|python/carnot/experiment_5760_cegis_refinement_induction_ab\.py|python/carnot/experiment_5764_gemma31b_singleshot_induction_ab\.py|results/first_win_llm_on_20260727/analyse\.py|results/first_win_llm_on_20260727/build_artifact\.py|results/first_win_llm_on_20260727/firstwin\.py|results/first_win_llm_on_20260727/guardtest\.py|results/first_win_llm_on_20260727/recheck_after_commit\.py|results/generator_concurrency_5866/boundary\.py|results/generator_concurrency_5866/build_artifact\.py|results/generator_concurrency_5866/fixprice\.py|results/generator_concurrency_5866/harness\.py|results/generator_concurrency_fix_20260727/build_fix_artifact\.py|results/generator_concurrency_fix_20260727/fixverify\.py|results/generator_concurrency_fix_20260727/mutate\.py|results/inducer_h2h_6021/build_artifact_6021\.py|results/inducer_h2h_6021/h2h_arm_runner\.py\.frozen|results/inducer_h2h_6021/h2h_reason_tag_probe\.py\.frozen|scripts/analyze_arc_early_stop_sweep\.py|scripts/analyze_arc_gateway_accurate_rescore\.py|scripts/analyze_arc_gateway_rescore\.py|scripts/analyze_arc_llm_on_wallclock_envelope\.py|scripts/analyze_arc_max_actions_answer\.py|scripts/analyze_arc_reset_charge_attribution\.py|scripts/analyze_scored_path_lever_ab\.py|scripts/arc_gateway_card_ground_truth\.py|scripts/arc_gateway_exact_attribution\.py|scripts/arc_gateway_rescore\.py|scripts/arc_leaderboard_eval\.py|scripts/arc_llm_on_contention_probe\.py|scripts/arc_llm_on_liveness_lint\.py|scripts/arc_llm_on_wallclock_budget_probe\.py|scripts/arc_per_level_reset_attribution_capture\.py|scripts/arc_scored_path_early_stop_sweep\.py|scripts/arc_scored_path_lever_harness\.py|scripts/experiments/experiment_6011_world_model_change_gate_four_arm\.py|scripts/experiments/experiment_6012_hidden_state_trust_gate_hole\.py|scripts/experiments/experiment_6013_hidden_state_change_gate_closure\.py|scripts/kaggle/submission_kernel/main\.py|scripts/analyze_.*\.py|ops/analyzer_artifact_index\.json|results/.*\.json)$
+        pass_filenames: false
+
+      # Ledger-invariant lint (REQ-CONDUCTOR-ARCHIVE-2): the regression lock
+      # for truthful archival (commit 87f209cdcf). Forward-only from
+      # 2026-08-22 -- historical corpus (1,841 surplus duplicate entries, 57
+      # phantom OK rows) never blocks a commit. Refuses: a NEW duplicate
+      # milestone id, the retired 'OK (conductor)' literal, and an OK row
+      # whose deliverable does not exist.
+      - id: research-complete-ledger-lint
+        name: research-complete.yaml holds one truthful entry per milestone
+        entry: .venv/bin/python scripts/research_complete_ledger_lint.py
+        language: system
+        files: ^research-complete\.yaml$
+        pass_filenames: true
+
+      - id: substrate-alias-evidence-lint
+        name: A new no-LLM substrate alias carries evidence (REQ-SUBSTRATE-ALIAS-1)
+        # The fabrication gate skips DURATION_TOO_SHORT for any substrate named
+        # in NO_LLM_SUBSTRATE_ALIASES. Measured 2026-08-23: 19 of 38 aliases
+        # added in two days, each in the same commit as the artifact it
+        # exempted. A new alias now needs a test naming it, or a dated line in
+        # ops/substrate_alias_acks.md. Fails closed if the diff cannot be read.
+        entry: .venv/bin/python scripts/substrate_alias_evidence_lint.py
+        language: system
+        files: ^scripts/adversarial_verify\.py$
+        pass_filenames: false
+
+      - id: eval-run-consumer-field-lint
+        name: An eval-run consumer's declared fields are emitted somewhere real (REQ-ARC-WMTE-6642)
+        # Three consumers in three days ran against fields no eval-run artifact
+        # recorded (trajectory_supervisor, generator_channels, induction_attempts
+        # provenance), each discovered only after the GPU-hours were spent. This
+        # join fails at commit time instead: a consumer naming the runs directory
+        # must declare EVAL_RUN_FIELDS_READ, and every declared field must exist
+        # in a real artifact or in producer source. Scoped to the .py trees where
+        # a consumer or producer can appear; stdlib-only, so python3 suffices,
+        # but the venv interpreter keeps parity with sibling hooks.
+        entry: .venv/bin/python scripts/eval_run_consumer_field_lint.py
+        language: system
+        files: ^(scripts/.*\.py|python/carnot/.*\.py)$
+        pass_filenames: false
+
+      - id: determination-preservation-lint
+        name: Fabrication-gate determinations are not silently dropped
+        # .venv/bin/python since 2026-08-21: scripts/adversarial_verify.py now
+        # imports the installed carnot package (carnot.terminal_artifacts),
+        # which the system python3 cannot see. Under python3 the lint
+        # fail-closed REFUSED every commit that staged a results/*.json file
+        # ("could not import scripts/adversarial_verify.py"). The venv
+        # interpreter is what spec-coverage already uses.
+        entry: .venv/bin/python scripts/determination_preservation_lint.py
+        language: system
+        # Scoped to results/*.json ONLY -- the determination lives in the artifact, and the
+        # writer that strips it is an arbitrary experiment script, not one auditable code path.
+        # Deliberately NOT keyed to the writers: there are thousands of experiment scripts and
+        # any writer-side allow-list would miss the next one. Origin: 2026-07-27, when a
+        # conductor re-run dropped `flagged_adversarial: True` from 7 artifacts, silently
+        # re-admitting them to headline aggregation (the fabrication gate keys off the field
+        # being PRESENT). pass_filenames is false because the check is a git diff against HEAD,
+        # not a per-file scan -- see the lint's docstring for why `--cached` was wrong.
+        #
+        # always_run: true SINCE 2026-07-29, AND IT IS LOAD-BEARING, NOT TIDINESS. pre-commit
+        # decides whether a hook runs by matching `files:` against its own staged-file list, and
+        # `pre_commit.git.get_staged_files` builds that list with `--diff-filter=ACMRTUXB` --
+        # its source comment reads "Everything except for D". So a commit that ONLY DELETES
+        # artifacts matches nothing, and this hook was never invoked at all. Deleting
+        # results/experiment_3946_r11l_first_solve.json destroys its determination, its
+        # hand-written corrigendum and its provenance declaration in one move -- strictly worse
+        # than editing any one of them out -- and it was invisible at BOTH layers: pre-commit
+        # never ran the hook, and the lint's own `--diff-filter=M` would have ignored the
+        # deletion even if it had. The lint side is fixed in `_tracked_json_under_results`;
+        # this is the other half. `files:` is kept as documentation of intent, but with
+        # always_run it no longer gates invocation.
+        files: ^results/.*\.json$
+        always_run: true
+        pass_filenames: false
+
+      - id: capstone-milestone-rot-lint
+        name: A capstone must not refuse when the live roadmap moves past its milestone
+        entry: .venv/bin/python scripts/capstone_milestone_rot_lint.py
+        language: system
+        # WHY (2026-08-29). A capstone freezes MILESTONE at authoring time. Two of them then
+        # read the LIVE research-roadmap.yaml and raised unless it still matched, so they were
+        # green only during their own milestone. One built its artifact at MODULE scope, so the
+        # raise landed at COLLECTION and pytest abandoned the whole run -- 57,917 tests
+        # interrupted by one file, and every conductor task shelling out to
+        # `pytest tests/python` failed with it, exp6682 among them.
+        #
+        # The correct pattern already existed 23 times (compare the ARTIFACT's own milestone).
+        # This exists so a 26th capstone cannot rediscover the mistake.
+        #
+        # NARROW ON PURPOSE. Two false-positive classes were found and rejected while building
+        # it: matching by variable name flagged 6 correct capstones whose validators also call
+        # their argument `payload`, and matching any comparison flagged 8 more that merely
+        # RECORD `milestone_matches` as a field. The rule is: ONE function both reads the live
+        # roadmap AND raises (or asserts) on the mismatch.
+        files: ^python/carnot/experiment_.*capstone.*\.py$
+        pass_filenames: true
+
+      - id: harness-integrity-lint
+        name: A commit stays inside the scope its session declared
+        entry: python3 scripts/harness_integrity_lint.py --check
+        language: system
+        # WHY THIS IS WIRED (2026-08-27). Nothing recorded what an agent said it was going
+        # to touch, so nothing could tell an intended edit from a stray one. `git add -A`
+        # swept another agent's staged file into an unrelated commit twice in one day, and
+        # two agents independently invented "commit with an explicit pathspec" as the fix
+        # while under pressure -- which is exactly when a hand-typed pathspec is forgotten.
+        #
+        # INERT WITHOUT A DECLARATION, AND THAT IS LOAD-BEARING, NOT LAZINESS. The conductor
+        # commits with `git add -A` every few minutes and declares no scope. A hook that
+        # refused by default would wedge the research loop on the day it landed. Inside a
+        # declaration it is fail-closed: an unreadable scope file refuses rather than passes,
+        # and a git failure refuses rather than reporting clean.
+        #
+        # always_run + pass_filenames false because the check is a git diff against the index
+        # plus a working-tree hash of the sealed set, not a per-file scan. always_run also
+        # matters for the same reason it does on determination-preservation-lint: pre-commit
+        # builds its staged-file list with --diff-filter excluding deletions, so a
+        # delete-only commit would never invoke a `files:`-gated hook at all, and a deletion
+        # is as much an out-of-scope change as an edit.
+        always_run: true
+        pass_filenames: false
+
+      - id: test-suite-mutation-gate
+        name: A test run that rewrote tracked files may not be committed unresolved
+        entry: python3 scripts/test_suite_mutation_check.py --gate
+        language: system
+        # WHY THIS IS WIRED (2026-07-29). Running the suite REWRITES THE RESEARCH RECORD: a
+        # class of tests/python/test_experiment_*.py calls runpy.run_path on the real
+        # scripts/experiments/experiment_NNNN_*.py, which writes its artifact as a side effect
+        # at the same fixed path the historical artifact lives at. One run left 39 tracked
+        # files modified, including a hand-written corrigendum deleted from exp3946 and
+        # exp307's inference_mode flipped live_gpu -> cpu_training. `git add -A` then publishes
+        # the rewrite with nobody having read a diff.
+        #
+        # The sibling determination-preservation-lint above catches the CONTENT regressions
+        # that class produces. This one is the broad, shallow half: it refuses while
+        # ops/.test_suite_mutation_pending.json exists, which the --run wrapper writes whenever
+        # it detects tracked files a test run moved and did not restore. Complementary, not
+        # redundant -- that lint knows nothing about openspec/ or output/, which were also hit.
+        #
+        # always_run + pass_filenames: false because the marker's EXISTENCE is the signal; it
+        # is independent of which files this particular commit happens to touch.
+        always_run: true
+        pass_filenames: false
+
+      - id: qa-layer-audit-scope-check
+        name: A newly-wired guard must be classified as audited or acknowledged
+        entry: python3 scripts/qa_layer_authenticity_audit.py --check-targets
+        language: system
+        # WHY THIS IS WIRED (2026-07-29). --check-targets is the QA-layer audit's defence
+        # against its own target list going stale: it sweeps the script hooks in this file
+        # plus the runtime guards in python/carnot/testing/, and refuses anything that is
+        # neither in GUARD_TARGETS nor in ACKNOWLEDGED_NON_QA_LAYER. Shipped with no caller,
+        # it ran only when a human remembered to type it -- trust without verification, the
+        # same shape the whole discipline exists to defeat, one level up. (The audit does
+        # still emit a SCOPE GAP section on every full run, so a gap surfaces at the next
+        # milestone-close regardless; this hook moves that from "eventually" to "at the
+        # moment the guard is wired", while the author is present to classify it.)
+        #
+        # Scoped to the two files that can INTRODUCE a guard: this config (a new pre-commit
+        # hook) and the runtime-guard package. Editing a guard's body does not change the
+        # scope question, so it deliberately does not fire on scripts/*.py.
+        #
+        # NOTE the deliberate asymmetry with the audit itself: this hook is a pure
+        # classification check and makes no LLM call, so it is fast and offline. The audit
+        # proper is never wired to pre-commit for exactly that reason.
+        files: ^(\.pre-commit-config\.yaml|python/carnot/testing/.*\.py)$
+        pass_filenames: false
+
+      - id: arc-llm-on-liveness-lint
+        name: An ARC row claiming the LLM tier must have had a live generator
+        entry: python3 scripts/arc_llm_on_liveness_lint.py --baseline
+        language: system
+        # WHY THIS IS WIRED (2026-07-27). The lint was shipped the same day as the generator
+        # concurrency fix with NO caller at all -- not in this file, not in
+        # research_conductor.py -- which reproduced, one level up, the exact defect its own
+        # docstring was written about: "NOTHING REFUSES on it. It is a field, not a gate."
+        #
+        # FORWARD-ONLY via --baseline. The existing corpus carries 55 real FAIL findings across
+        # 25 files: recordings of the 2026-07-26 fault and its probe arms, which are the
+        # evidence the fix rests on and cannot be deleted (never-prune). They are exempted by
+        # ops/arc_llm_on_liveness_baseline.json, keyed on (file, json_path, code) so a recorded
+        # dead cell staying dead is fine but that same row acquiring a NEW failure class is not.
+        # A missing baseline file does NOT open the gate -- every FAIL blocks in that case,
+        # because an exemption list that vanished must make the gate refuse, not admit.
+        #
+        # Scoped to results/*.json for the same reason as determination-preservation-lint above:
+        # the claim lives in the artifact, and the writer is an arbitrary experiment script.
+        files: ^(results/.*\.json|ops/arc_llm_on_liveness_baseline\.json)$
+        pass_filenames: false
+
+      # NOTE: the blog publish guard runs as a STANDALONE git pre-push hook
+      # (scripts/git-hooks/pre-push, installed via scripts/install-git-hooks.sh),
+      # NOT as a pre-commit hook. pre-commit's pre-push dispatcher stashes
+      # unstaged files for the duration of the hook run, which would introduce a
+      # stash window on the conductor's auto-push path (cf. CLAUDE.md "Never
+      # Stash — Always Commit-First"). The standalone hook reads committed SHAs
+      # only and never touches the working tree, so no stash is needed. See
+      # scripts/blog_publish_guard.py + ops/known-issues.md (Blog publish gate).
+
+      # Verifier authenticity lint: catches adversarially-aware cheating
+      # patterns in python/carnot/verify/ (sleep-padding to bypass
+      # DURATION_TOO_SHORT, score-capping to bypass IMPLAUSIBLE_PERFECT,
+      # random-data evaluators, mock_sleep parameters). Per CLAUDE.md
+      # "Verifier Authenticity Discipline" (2026-05-21). Catches the
+      # nla_eval_awareness_1716.py class of fake. The dishonest-naming
+      # class (tier0s_halluguard.py) is caught by the per-milestone AI
+      # audit in scripts/verifier_authenticity_audit.py.
+      - id: verifier-authenticity-lint
+        name: Verifier authenticity (no adversarial-check gaming)
+        entry: python3 scripts/verifier_authenticity_lint.py
+        language: system
+        files: '^python/carnot/(verify|pipeline)/.*\.py$'
+        pass_filenames: false
+
+      # A mutation proof's marker must never reach a commit. On 2026-08-25 two
+      # hand-run proofs collided and left `pass  # MUTATED M6` in
+      # arc_executable_world_model.py, on the LIVE ARC scored path. That line
+      # is valid Python: it parses, imports, and clears every other hook here,
+      # so nothing else in this config would have stopped it. The sibling
+      # mutation-PROOF session in test_suite_mutation_check.py is opt-in -- an
+      # agent has to remember to wrap -- and a wrapper nobody calls is this
+      # project's own named bug class, so this hook watches for the harm
+      # instead of for the ritual. Residual: a hooks-skipped commit bypasses
+      # it, which is how the observed incident would have landed; the session
+      # wrapper and this hook are complements. Per CLAUDE.md "Test-Run Record
+      # Integrity Discipline" and REQ-OPS-MUTATION-PROOF-2.
+      - id: mutation-marker-lint
+        name: A mutation proof's marker may not reach a commit
+        entry: python3 scripts/mutation_marker_lint.py
+        language: system
+        files: '\.py$'
+
+      # Torch CUDA build guard: catches the 2026-05-21 regression where
+      # `torch 2.12.0+cpu` silently replaced the CUDA build, causing all
+      # GPU-bound .268 experiment tasks to emit blocked_cuda_unavailable.
+      # Refuses any commit where .venv's torch.version.cuda is None.
+      # Pairs with the [[tool.uv.index]] pin in pyproject.toml.
+      - id: check-torch-cuda
+        name: torch CUDA build check (no CPU-only regression)
+        entry: python3 scripts/check_torch_cuda.py
+        language: system
+        pass_filenames: false
+        always_run: true

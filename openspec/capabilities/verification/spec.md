@@ -56868,3 +56868,28 @@ Ops and traceability reconciliation remain conductor-owned for this task.
 Valid cold replay passes. Missing operands, replaced snapshots, changed source
 hashes and rehashed summary edits fail. Owned child failure cannot yield a
 qualified mapping. External absence remains complete_blocked.
+
+## REQ-VERIFY-8666: Seal bounded capstone evidence and validate final bytes
+
+Use flushed phase progress, supervised children, disk-backed /var/tmp scratch,
+no_model_load and zero current language-model calls. Authenticate numerical head
+identity separately. Retain original SQLite, JUnit, source hashes, commands,
+exits and clocks before combining copies. Instrument consumers for their actual
+sources. Require100 percent new statements, focused private CLI controls,
+private E2E-018/021, Ruff, strict mypy and requirement tracing. Stop measurement
+by3600 seconds and reserve900 seconds inside4800 seconds. Preserve unchanged
+publication G1-G4 and actual adversarial severity before atomic publication.
+
+### SCENARIO-VERIFY-8666-REPLAY
+
+Fresh bounded cold replay rejects missing operands, changed source identities
+and self-consistently rehashed aggregate substitutions. Failed owned validation
+disqualifies; unchanged external absence blocks. No historical controller,
+whole-repository suite, exclusion edit, conductor edit or external publication.
+Ops, status and traceability reconciliation remain conductor-owned.
+
+Implementation20261019: test_v743_capstone_8666.py exercises real private CLI,
+aggregate/operand substitutions, bounded failures and source custody. The runner
+collects scoped nodes once, preserves child SQLite/JUnit and measures consumers
+separately. An empty collection cannot invoke an unscoped suite. Final primary
+bytes require fresh cold replay and unchanged adversarial and strict-row readers.

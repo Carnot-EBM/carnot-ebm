@@ -53902,3 +53902,15 @@ remains incomplete. Extropic Writing/Z1T and the Kona page were reopened;
 no local hardware or architecture qualification follows. GitHub Python Trending
 again returned a page marked crawled last month; no current ranking is claimed.
 These leads are filed for later planning, with no change to V743 scope or gates.
+
+## V743 capstone evidence use — 2026-10-19
+
+Exp8666 introduces no new literature claim. It reconciles the registered method
+uses against original producers and immutable operands. Exp8659 recovers55 of190
+responses in128 exposed groups; completeness does not establish entailment.
+Exp8661 qualifies120 complete cost cells and packaging noninferiority but not
+NFR-01. Exp8664 authenticates236 reset causes while the original observer's
+cleanliness assertion still fails. Learning cohort B, future benefit and retention
+remain absent. Keep prior source-information, cold-cost and supervisor nulls
+closed. See docs/research-notes/v743-capstone.md and the primary result's exact
+reopening operands; no theorem, unexposed generalization or hardware gain transfers.

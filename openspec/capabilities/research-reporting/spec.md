@@ -103216,3 +103216,29 @@ runner/validation adapters and the thin experiment CLI implement this contract.
 `test_hardware_operation_evidence_8665.py` exercises independent admission,
 original pinned authority, actual private CLI failures and rehashed tampering.
 The primary and immutable raw invocation retain the terminal validation receipts.
+
+## REQ-REPORT-8666: Reconcile fourteen V743 outcomes without promoting qualification
+
+Bind every full V743 task object and original activation to the visible table and
+sealed digest. Resolve declared producer paths before exact conductor fallback
+names or authenticated cascade records. Preserve literal verdicts, gates, missing
+files, missing fields and observed zeros. Recompute original64-node cohort custody,
+source completeness, installed costs and reset joins from admitted raw operands.
+Preserve historical nulls and quarantines; failed qualification is not a null.
+Emit per-task and PRD-gap decisions, causal retirement scopes, reopening operands
+and stop conditions. Successful reconciliation may remain complete_blocked.
+
+### SCENARIO-REPORT-8666-ACCOUNTING
+
+All fourteen slots, including the capstone, remain visible. Source support cannot
+close semantics or generalization; packaging noninferiority cannot satisfy10x.
+Missing cohort B cannot complete cohort A's original union. Qualified installed
+cost nulls close only their original protocol. Reset callback repair cannot
+promote supervisor efficacy while original observer assertions fail.
+
+Implementation20261019: the thin Exp8666 CLI and v743_capstone input, reduction,
+report and runner modules retain all14 slots, literal prior verdicts and causal
+scopes. Original JUnit, source windows, installed frames and reset callbacks are
+cold-reduced. Learning absence and failed observer qualification remain distinct
+from newly qualified coverage and installed-cost findings. Ops reconciliation
+is conductor-owned; terminal receipts determine owned qualification.
