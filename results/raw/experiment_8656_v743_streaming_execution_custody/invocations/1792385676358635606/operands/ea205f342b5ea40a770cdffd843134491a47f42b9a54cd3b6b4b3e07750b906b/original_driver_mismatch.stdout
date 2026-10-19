@@ -1,0 +1,217 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______________________ test_measure_build_and_cold_replay ______________________
+
+tmp_path = PosixPath('/var/tmp/exp8656-checks-swdbjjz2/reproduce-original/test_measure_build_and_cold_re0')
+
+    def test_measure_build_and_cold_replay(tmp_path):
+        """SCENARIO-REPORT-8642-PUBLICATION: immutable measurements survive repeated readers."""
+        from carnot.reporting import streaming_execution_8642 as e
+    
+        work = e.measure(e.ROOT, tmp_path / "raw", "20261018")
+        work["validation"] = dict(
+            receipts=[dict(name="fixture", passed=True)],
+            child_shard_manifest=[],
+            original_node_union=dict(passed=True),
+            coverage=dict(passed=True),
+        )
+        ref = e.seal(work)
+        output = tmp_path / (e.NAME + ".json")
+        value = e.build(ref, [], {}, output)
+        e.atomic_json(output, value)
+        assert e.replay(output) and e.replay(output)
+>       assert value["streaming_extractor_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_streaming_custody_8642.py:107: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8642] phase=preconditions_no_model_load_current_calls_0 completed=0 pending=0
+[exp8629] phase=start_preconditions completed=0 pending=0
+[exp8629] phase=before_fixture_benchmark completed=0 pending=11
+[exp8629] phase=after_fixture_benchmark completed=1 pending=10
+[exp8629] phase=before_fixture_benchmark completed=1 pending=10
+[exp8629] phase=after_fixture_benchmark completed=2 pending=9
+[exp8629] phase=before_fixture_benchmark completed=2 pending=9
+[exp8629] phase=after_fixture_benchmark completed=3 pending=8
+[exp8629] phase=before_fixture_benchmark completed=3 pending=8
+[exp8629] phase=after_fixture_benchmark completed=4 pending=7
+[exp8629] phase=before_fixture_benchmark completed=4 pending=7
+[exp8629] phase=after_fixture_benchmark completed=5 pending=6
+[exp8629] phase=before_fixture_benchmark completed=5 pending=6
+[exp8629] phase=after_fixture_benchmark completed=6 pending=5
+[exp8629] phase=before_fixture_benchmark completed=6 pending=5
+[exp8629] phase=after_fixture_benchmark completed=7 pending=4
+[exp8629] phase=before_fixture_benchmark completed=7 pending=4
+[exp8629] phase=after_fixture_benchmark completed=8 pending=3
+[exp8629] phase=before_fixture_benchmark completed=8 pending=3
+[exp8629] phase=after_fixture_benchmark completed=9 pending=2
+[exp8629] phase=before_fixture_benchmark completed=9 pending=2
+[exp8629] phase=after_fixture_benchmark completed=10 pending=1
+[exp8629] phase=before_fixture_benchmark completed=10 pending=1
+[exp8629] phase=after_fixture_benchmark completed=11 pending=0
+[exp8629] phase=measurement_sealed completed=33 pending=0
+[exp8205] phase=before_subprocess_retention_probe completed=0 pending=1
+[exp8205] phase=after_subprocess_retention_probe completed=1 pending=0
+[exp8205] phase=before_subprocess_coverage_combine completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_combine completed=1 pending=0
+[exp8642] phase=immutable_measurement_sealed completed=0 pending=0
+[exp8642] phase=cold_replay_start completed=0 pending=0
+[exp8642] phase=cold_fixture completed=1 pending=10
+[exp8642] phase=cold_fixture completed=2 pending=9
+[exp8642] phase=cold_fixture completed=3 pending=8
+[exp8642] phase=cold_fixture completed=4 pending=7
+[exp8642] phase=cold_fixture completed=5 pending=6
+[exp8642] phase=cold_fixture completed=6 pending=5
+[exp8642] phase=cold_fixture completed=7 pending=4
+[exp8642] phase=cold_fixture completed=8 pending=3
+[exp8642] phase=cold_fixture completed=9 pending=2
+[exp8642] phase=cold_fixture completed=10 pending=1
+[exp8642] phase=cold_fixture completed=11 pending=0
+[exp8642] phase=replay_passed completed=0 pending=0
+[exp8642] phase=cold_replay_start completed=0 pending=0
+[exp8642] phase=cold_fixture completed=1 pending=10
+[exp8642] phase=cold_fixture completed=2 pending=9
+[exp8642] phase=cold_fixture completed=3 pending=8
+[exp8642] phase=cold_fixture completed=4 pending=7
+[exp8642] phase=cold_fixture completed=5 pending=6
+[exp8642] phase=cold_fixture completed=6 pending=5
+[exp8642] phase=cold_fixture completed=7 pending=4
+[exp8642] phase=cold_fixture completed=8 pending=3
+[exp8642] phase=cold_fixture completed=9 pending=2
+[exp8642] phase=cold_fixture completed=10 pending=1
+[exp8642] phase=cold_fixture completed=11 pending=0
+[exp8642] phase=replay_passed completed=0 pending=0
+____________________ test_private_cli_modes_and_publication ____________________
+
+tmp_path = PosixPath('/var/tmp/exp8656-checks-swdbjjz2/reproduce-original/test_private_cli_modes_and_pub0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdd84a04980>
+
+    def test_private_cli_modes_and_publication(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8642-PUBLICATION: real standalone children and checked readers."""
+        import os
+        import subprocess
+        import sys
+        from carnot.reporting import streaming_execution_8642 as e
+        from carnot.reporting import streaming_execution_runner_8642 as runner
+    
+        cli = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        work_path = tmp_path / "private.json"
+        result = subprocess.run(
+            cli + ["--date", "20261018", "--measure-only", str(work_path)],
+            cwd="/var/tmp",
+            env=env,
+            capture_output=True,
+            timeout=60,
+        )
+        assert result.returncode == 0, result.stderr.decode()
+        assert subprocess.run(cli + ["--date", "20261399"], capture_output=True).returncode == 2
+        assert (
+            subprocess.run(
+                cli + ["--cold-replay", str(tmp_path / "absent")], capture_output=True
+            ).returncode
+            == 1
+        )
+        monkeypatch.setattr(
+            runner,
+            "run_checks",
+            lambda _: dict(
+                receipts=[dict(name="outer", passed=True)],
+                child_shard_manifest=[],
+                original_node_union=dict(passed=True),
+                coverage=dict(passed=True),
+            ),
+        )
+        output = tmp_path / (e.NAME + ".json")
+        assert runner.main(["--date", "20261018", "--output", str(output)]) == 0
+        value = json.loads(output.read_bytes())
+>       assert e.replay(output) and value["verdict_class"] == "null"
+E       AssertionError: assert (True and 'disqualified' == 'null'
+E        +  where True = <function replay at 0x7fdd84a60220>(PosixPath('/var/tmp/exp8656-checks-swdbjjz2/reproduce-original/test_private_cli_modes_and_pub0/experiment_8642_v742_streaming_execution_custody.json'))
+E        +    where <function replay at 0x7fdd84a60220> = <module 'carnot.reporting.streaming_execution_8642' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/streaming_execution_8642.py'>.replay
+E         
+E         - null
+E         + disqualified)
+
+tests/python/test_streaming_custody_8642.py:195: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8642] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8642] phase=preconditions_no_model_load_current_calls_0 completed=0 pending=0
+[exp8629] phase=start_preconditions completed=0 pending=0
+[exp8629] phase=before_fixture_benchmark completed=0 pending=11
+[exp8629] phase=after_fixture_benchmark completed=1 pending=10
+[exp8629] phase=before_fixture_benchmark completed=1 pending=10
+[exp8629] phase=after_fixture_benchmark completed=2 pending=9
+[exp8629] phase=before_fixture_benchmark completed=2 pending=9
+[exp8629] phase=after_fixture_benchmark completed=3 pending=8
+[exp8629] phase=before_fixture_benchmark completed=3 pending=8
+[exp8629] phase=after_fixture_benchmark completed=4 pending=7
+[exp8629] phase=before_fixture_benchmark completed=4 pending=7
+[exp8629] phase=after_fixture_benchmark completed=5 pending=6
+[exp8629] phase=before_fixture_benchmark completed=5 pending=6
+[exp8629] phase=after_fixture_benchmark completed=6 pending=5
+[exp8629] phase=before_fixture_benchmark completed=6 pending=5
+[exp8629] phase=after_fixture_benchmark completed=7 pending=4
+[exp8629] phase=before_fixture_benchmark completed=7 pending=4
+[exp8629] phase=after_fixture_benchmark completed=8 pending=3
+[exp8629] phase=before_fixture_benchmark completed=8 pending=3
+[exp8629] phase=after_fixture_benchmark completed=9 pending=2
+[exp8629] phase=before_fixture_benchmark completed=9 pending=2
+[exp8629] phase=after_fixture_benchmark completed=10 pending=1
+[exp8629] phase=before_fixture_benchmark completed=10 pending=1
+[exp8629] phase=after_fixture_benchmark completed=11 pending=0
+[exp8629] phase=measurement_sealed completed=33 pending=0
+[exp8205] phase=before_subprocess_retention_probe completed=0 pending=1
+[exp8205] phase=after_subprocess_retention_probe completed=1 pending=0
+[exp8205] phase=before_subprocess_coverage_combine completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_combine completed=1 pending=0
+[exp8642] phase=immutable_measurement_sealed completed=0 pending=0
+[exp8205] phase=before_subprocess_reject_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_reject_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_reject_rehashed completed=0 pending=1
+[exp8205] phase=after_subprocess_reject_rehashed completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_lint completed=0 pending=1
+[exp8205] phase=after_subprocess_row_lint completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_lint completed=0 pending=1
+[exp8205] phase=after_subprocess_row_lint completed=1 pending=0
+[exp8642] phase=published completed=33 pending=0
+[exp8642] phase=cold_replay_start completed=0 pending=0
+[exp8642] phase=cold_fixture completed=1 pending=10
+[exp8642] phase=cold_fixture completed=2 pending=9
+[exp8642] phase=cold_fixture completed=3 pending=8
+[exp8642] phase=cold_fixture completed=4 pending=7
+[exp8642] phase=cold_fixture completed=5 pending=6
+[exp8642] phase=cold_fixture completed=6 pending=5
+[exp8642] phase=cold_fixture completed=7 pending=4
+[exp8642] phase=cold_fixture completed=8 pending=3
+[exp8642] phase=cold_fixture completed=9 pending=2
+[exp8642] phase=cold_fixture completed=10 pending=1
+[exp8642] phase=cold_fixture completed=11 pending=0
+[exp8642] phase=replay_passed completed=0 pending=0
+=============================== warnings summary ===============================
+tests/python/test_streaming_custody_8642.py::test_measure_build_and_cold_replay
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: cache could not write path /home/ianblenke/github.com/ianblenke/carnot/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/home/ianblenke/github.com/ianblenke/carnot/.pytest_cache/v/cache/nodeids'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: cache could not write path /home/ianblenke/github.com/ianblenke/carnot/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/home/ianblenke/github.com/ianblenke/carnot/.pytest_cache/v/cache/lastfailed'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_streaming_custody_8642.py::test_measure_build_and_cold_replay
+FAILED tests/python/test_streaming_custody_8642.py::test_private_cli_modes_and_publication
+2 failed, 3 warnings in 21.58s

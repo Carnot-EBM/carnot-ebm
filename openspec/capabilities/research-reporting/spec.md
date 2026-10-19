@@ -102991,3 +102991,36 @@ Archive the old driver bytes and report every changed source with expected and
 observed hashes. Preserve passing node outcomes without granting readiness.
 A future fresh execution must earn qualification under unchanged driver bytes.
 Per-child source order remains local; duplicate shards and foreign sources fail.
+## REQ-REPORT-8656: Separate streaming driver authority and consumer coverage
+
+Implementation: `python/carnot/reporting/streaming_adapter_8656.py`,
+`streaming_execution_8656.py`, `streaming_execution_runner_8656.py` and the thin
+Exp8656 experiment CLI. Verification is in
+`tests/python/test_streaming_execution_8656.py`; execution receipts remain in the
+Exp8656 primary and its immutable raw invocation. See
+`docs/research-notes/v743-streaming-execution-custody.md` for evidence boundaries.
+
+Exp8656 SHALL preserve Exp8629 and Exp8642 disqualifications, authenticate their
+original source closures, and replay unchanged historical assertions in private
+filesystem views. Current adapter execution SHALL have its own source identity.
+Driver byte changes alone SHALL NOT veto exact independently checked numerical
+parity. Consumer-only suites SHALL retain statements from their actual sources;
+they SHALL NOT provide producer coverage or require unrelated streaming work.
+Readiness requires all original/current node outcomes and 100 percent exact
+current producer and newly owned adapter statements. Preserve chunk1/32/128,
+UTF-8 offsets, sentence/window order, byte-safe deduplication, answer cap16 and
+source512KiB/answer64KiB/time30s/memory256MiB/dedup32MiB limits.
+
+### SCENARIO-REPORT-8656-AUTHORITY
+
+Replay sealed original drivers separately from current tests. Retain the two
+historical failed test identities/logs and reproduce driver mismatch and empty
+consumer coverage failures. Neither old producer becomes qualified retroactively.
+
+### SCENARIO-REPORT-8656-PUBLICATION
+
+Accept --date 20261019 outside the checkout; freeze invocation measurements before
+validation. Missing external operands block; failed owned checks disqualify.
+Cold replay rejects missing operands, mixed source roles, and rehashed offsets or
+features. Unchanged validators check final bytes before atomic publication.
+No language model, energy head, natural-response comparison or learning runs.

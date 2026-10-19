@@ -56723,3 +56723,28 @@ block. Same-roadmap outputs remain future dependencies.
 Accept --date 20261019. Real private CLI publication and bounded fresh replay
 reject missing primitives, altered clocks, operands and self-consistently rehashed
 claims. Preserve unchanged scanner severity and historical assertions.
+## REQ-VERIFY-8656: Preserve role-specific child evidence
+
+Implementation: the Exp8656 role inventory, immediate SQLite capture, separate
+measurement/validation seals and cold replay. Traced rejection tests are in
+`tests/python/test_streaming_execution_8656.py`; actual disjoint executions and
+owned statement counts are recorded in the Exp8656 primary artifact.
+
+Collect original/current nodes once and execute bounded disjoint serial children.
+Retain actual SQLite, contexts, exact source hashes, JUnit, commands, exits and
+clocks immediately. Combine copies twice; original bytes SHALL remain unchanged.
+Missing, empty, overwritten, source-mismatched or killed child evidence fails.
+Historical source data and consumer data SHALL NOT enter current producer or
+adapter statement gates. Require focused tests, private E2E-018/021, scoped Ruff,
+strict mypy, spec tracing and 100 percent newly owned statement coverage.
+
+### SCENARIO-VERIFY-8656-CAPTURE
+
+Reproduce legacy unsuffixed coverage loss, retain immediate capture, reject
+source drift, absent/empty/overwritten shards and verify second-combine immutability.
+
+### SCENARIO-VERIFY-8656-REPLAY
+
+Fresh bounded CLI processes reject missing primitives and self-consistently
+rehashed feature, offset, source-role and summary mutations. Report actual
+validator severity, zero current model calls and separate numerical identity.
