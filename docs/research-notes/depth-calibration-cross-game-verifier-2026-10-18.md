@@ -184,3 +184,31 @@ level length. A clock cannot know the length of a new level, so its error floor 
 
 What this does not decide. A learned estimator of distance to the goal may exist. This test shows that
 these frame features do not beat a counter. It does not test other features.
+
+## Addendum 2026-10-19: review corrections to the two addenda above
+
+An independent reviewer re-derived the label fix, its tests and both within-game scripts from source.
+It found no defect in the label code, the segment logic or the leave-one-level-out split. It found
+three errors in the prose above. I checked each against the two `.data.json` files. All three are real.
+
+1. The clock addendum says the clock alone has Spearman 0.73 to 0.90 in all five games. That is wrong.
+   Per game it is dc22 0.73, lp85 0.54, tn36 0.69, tr87 0.85, tu93 0.90. The range is 0.54 to 0.90.
+2. The within-game addendum says v1 beats the constant on error in 3 of 5 games. That is wrong.
+   v1 beats the constant in dc22 (0.160) and tu93 (0.215). lp85 is a tie (0.2505 against 0.2508).
+   tn36 (0.270) and tr87 (0.258) are worse than the constant. So it is 2 of 5.
+3. The clock addendum says adding v1 to the clock does not help. That holds for the pooled numbers
+   only. Per game, v1 plus clock raises Spearman in lp85 (0.54 to 0.78) and tu93 (0.90 to 0.94).
+   It lowers tu93 error (0.095 to 0.072). It hurts dc22, tn36 and tr87 on error.
+
+Effect on the conclusion. The pooled result stands: the clock alone beats v1, and v1 plus clock is
+worse than the clock alone. The data does not rule out a small frame contribution in two of five games.
+"The v1 signal is a step counter" is supported. "The frame carries no distance signal at all" is not
+shown. Treat the earlier wording as too strong.
+
+One bias is not quantified. Both scripts rank with `argsort(argsort)`, which gives ordinal ranks and
+does not average ties. Predictions clipped to 0 or 1, and constant predictions, tie. The tiebreak
+follows row order, which falls with the label. This inflates Spearman, mostly the within-level median
+(0.996), which this note already calls uninformative. I did not measure its effect on the pooled values.
+
+Not checked by the reviewer, and not checked by me: a re-run of the experiments, the
+`_goal_frame_for_index` leak, and that the fixed-label cross-game data file came from the committed code.
