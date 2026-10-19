@@ -148,3 +148,40 @@ What it means. A within-game depth estimate is plausible. A cross-game one is no
 live agent learns inside the game it plays. So the within-game result is the relevant one for Idea B.
 It still needs a test against a clock-only baseline (feature = steps since the level started) before
 anyone calls it a distance signal. That test is the next step. I did not run it.
+
+## Addendum 2026-10-18: clock baseline, the within-game signal is a step counter
+
+I ran the baseline the previous addendum named. Same leave-one-level-out split, same 479 rows, same
+5 games. Script: `scripts/experiments/outer_loop_depth_clock_baseline_20261018.py`. Numbers:
+`depth-calibration-cross-game-verifier-2026-10-18.clock-baseline.data.json`. CPU only.
+The clock feature is the number of steps since the level started.
+
+| Features | Pooled Spearman | MAE model | MAE constant |
+|---|---|---|---|
+| clock only | 0.75 | 0.166 | 0.250 |
+| v1 frame features | 0.41 | 0.227 | 0.250 |
+| v1 plus clock | 0.74 | 0.181 | 0.250 |
+
+- The clock alone beats v1 on pooled Spearman and on error. Adding v1 to the clock does not help.
+  It makes error worse (0.181 against 0.166).
+- Per game, the clock alone has Spearman 0.73 to 0.90 in all five games. v1 is near zero in lp85,
+  tn36 and tr87.
+- v1 beats the clock on Spearman in dc22 only (0.83 against 0.73). Its error there is still worse
+  (0.160 against 0.184 for the clock is better for v1 in dc22, but the Spearman gain is 0.09 on one game
+  and I did not test it).
+
+Correction to the previous addendum. The within-level Spearman (median 0.996) is not informative. Inside
+one level, any steadily rising counter ranks the rows perfectly against a label that falls with time.
+So that metric cannot separate a distance signal from a clock. I should have seen this before I ran
+the test. The pooled score and the error are the metrics that can tell them apart.
+
+Conclusion. The v1 features carry no distance signal beyond a step counter inside a game. The
+earlier "depth signal for v1" was a clock. Idea B stays unanswered for frame features, and the
+frame features are not the cheap route to it.
+
+Limits. Same as before: five games, non-independent rows, no standard error. The clock needs the level
+start step. The live explorer knows it, so a clock feature is available to it. The label depends on the
+level length. A clock cannot know the length of a new level, so its error floor is not zero.
+
+What this does not decide. A learned estimator of distance to the goal may exist. This test shows that
+these frame features do not beat a counter. It does not test other features.
