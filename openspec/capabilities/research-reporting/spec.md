@@ -103058,3 +103058,46 @@ Implementation20261019: `complete_source_8659.py` and
 invocations remain below its raw directory. `test_complete_source_8659.py`
 traces parity, recovery, private publication and rejection behavior. See
 `docs/research-notes/v743-complete-source-comparison.md` for measured scope.
+
+## REQ-REPORT-8660: Qualify installed inference with owned historical cleanup
+
+Exp8660 SHALL retain the Exp8646 six passing runner calls and two guarded teardown
+errors, its116/122 historical union and690 numerical rows as historical evidence.
+The new invocation SHALL authenticate the original122 node inventory and protocol
+hash from ae7e7115c6. Historical replay uses explicit namespace overlays for the
+original protocol and original V738 authority; current source stays unchanged.
+Only the task-owned checkout materializer may change cleanup ownership. Results
+and other cleanup roots SHALL be actual private directories with hashed copied
+operands. Recursive aliases outside the private root SHALL fail before launch
+and cleanup. Keep tracked_results_guard unchanged and enabled.
+
+### SCENARIO-REPORT-8660-OWNERSHIP
+
+First reproduce guarded removal using a private fixture. Reject a malicious
+results alias, run real teardown, and compare original evidence hashes before and
+after. Preserve original test bytes and assertions, including runner teardown.
+
+### SCENARIO-REPORT-8660-INSTALLED
+
+Build a fresh current wheel outside the checkout and remove PYTHONPATH for its
+Python/native complete-response, public-import, optional-error, CLI, MCP and HTTP
+checks. Retain the original64 requests, knots, decay, long text and thresholds.
+Malformed frames, deadlines, stale inputs, failure and killed-worker cleanup are
+required controls. Compatibility grants no timing or generalization benefit.
+
+### SCENARIO-REPORT-8660-PUBLICATION
+
+Use no_model_load, MODEL_SPECS=[] and zero current generator calls. Authenticate
+the numerical head separately. Readiness requires both complete node unions,
+100 percent newly owned statements and terminal readers. Keep immutable raw
+children, source hashes, commands, exits, clocks, JUnit and SQLite shards before
+combining copies. Fresh replay rejects missing and rehashed operands. Owned
+failures disqualify; unchanged external incompleteness blocks. The conductor
+owns status, changelog and traceability reconciliation.
+
+Implementation20261019 for REQ-REPORT-8660: the thin Exp8660 runner binds the
+unchanged current wheel/public/numerical checks to an authenticated Exp8646
+failure record, explicit historical overlays, private materializer manifests,
+source before/after hashes and independently pinned cold replay. Readiness is
+conditional on both complete unions, owned cleanup and current coverage; the
+historical disqualifications and scientific nulls remain unchanged.

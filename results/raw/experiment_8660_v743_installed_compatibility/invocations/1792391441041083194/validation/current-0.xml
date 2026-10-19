@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="6" time="5.435" timestamp="2026-10-19T02:51:11.222325-04:00" hostname="icbfl1"><testcase classname="tests.python.test_installed_checkout_8660" name="test_owned_entries_and_recursive_alias_rejection" time="0.010" /><testcase classname="tests.python.test_installed_checkout_8660" name="test_overlay_retains_original_except_materialization" time="0.038" /><testcase classname="tests.python.test_installed_checkout_8660" name="test_guarded_failure_is_private" time="0.289" /><testcase classname="tests.python.test_installed_checkout_8660" name="test_copy_files_empty_work_roots_and_manifest" time="0.208" /><testcase classname="tests.python.test_installed_checkout_8660" name="test_copied_hash_and_overlay_identity_fail_closed" time="0.003" /><testcase classname="tests.python.test_installed_checkout_8660" name="test_original_test_bytes_match_independent_historical_seal" time="2.808"><failure message="KeyError: 'original_nodes'">tmp_path = PosixPath('/var/tmp/carnot-8660-validation-h63u0suh/current-tests-0/test_original_test_bytes_match0')
+
+    def test_original_test_bytes_match_independent_historical_seal(tmp_path):
+        """SCENARIO-VERIFY-8660-CUSTODY: live assertions must match the sealed Exp8646 inventory."""
+        import json
+        from carnot.reporting.installed_lean_8633 import load
+        from carnot.reporting.installed_report_8660 import HISTORY, HISTORY_PIN
+    
+        history = load(dict(path=str(e.ROOT / HISTORY), sha256=HISTORY_PIN))
+        reference = next(
+            r
+            for r in history["raw_shard_hashes"]
+            if r["path"].endswith("/validation/collected_nodes.json")
+        )
+        sealed = load(reference)
+        original = {r["path"]: r["sha256"] for r in sealed["source_hashes"]}
+        manifest = e.overlay(tmp_path)
+        assert len(manifest["test_sources"]) == 8
+        assert all(original[r["path"]] == r["sha256"] for r in manifest["test_sources"])
+&gt;       assert len(history["original_node_union"]["original_nodes"]) == 122
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'original_nodes'
+
+tests/python/test_installed_checkout_8660.py:115: KeyError</failure></testcase></testsuite></testsuites>

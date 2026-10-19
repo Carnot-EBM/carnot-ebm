@@ -56773,3 +56773,22 @@ fork after imports; each has its own PID, clocks, public descriptor and logs.
 Tests cover worker failures, bounded heartbeat/kill behavior, private CLI paths
 and rehashed source/feature/window/log/seal/summary rejection. The primary's
 validation references bind the actual checked invocation.
+
+## REQ-VERIFY-8660: Private checkout teardown and separate source coverage
+
+### SCENARIO-VERIFY-8660-CUSTODY
+
+The original122 IDs SHALL execute unchanged with independently sealed historical
+protocol and authority overlays. Current/public tests and newly owned coverage
+SHALL be checked separately. A killed validation child or teardown error fails
+its entire shard. Consumer-only execution supplies no unrelated producer credit.
+The unchanged tracked-results guard SHALL reject a private malicious-alias control.
+New materializer, rejection, CLI and child paths require100 percent statements.
+Retain raw SQLite before combining copies and run private E2E-018/021 readers,
+Ruff check/format, strict mypy and scoped spec coverage before publication.
+
+Implementation20261019 for REQ-VERIFY-8660: focused ownership, hash rejection,
+missing-node, killed-shard, coverage-presence and actual private CLI controls
+exercise the task-owned materializer/report/validation paths. The teardown
+plugin audits roots before original pytest fixture removal. Historical and
+current raw shards remain separate before current-only combination.
