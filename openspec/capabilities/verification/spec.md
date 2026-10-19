@@ -56812,3 +56812,19 @@ Accept --date20261019 and private outputs outside the checkout. Reject unsafe
 private paths, invalid dates, changed sources, malformed timing partitions,
 missing cells, altered responses and self-consistent summary/hash substitutions.
 Stop measurement by3600 seconds and reserve900 seconds for validation in4800.
+## REQ-VERIFY-8663: Seal reset reproduction, bounded witness and current validation
+
+Authenticate Exp8650 public streams and original errors independently of current
+code. Preserve 236 missing causes, 688 requests, 16 censored redirects and 8/8
+action equality as disqualified provenance. Keep Exp8649 fixture qualification.
+Retain bounded diagnostics, source hashes, raw child coverage SQLite, JUnit,
+commands, exits and clocks before combining copies. Instrument only sources
+actually tested. Require100 percent new statements and private E2E-018/021.
+
+### SCENARIO-VERIFY-8663-REPLAY
+
+Accept --date 20261019. Fresh bounded replay SHALL reject missing operands and
+rehashed tampering against independent sealed authority. Validate final bytes
+through primary_publication and unchanged adversarial and strict-row readers.
+Failed owned checks disqualify; missing external operands block. No game source,
+per-game models, full transfer rerun or model load is authorized.

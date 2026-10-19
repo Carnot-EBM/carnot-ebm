@@ -1,0 +1,30 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_fresh_process_reproduction_without_prior_recorder_import _________
+
+tmp_path = PosixPath('/var/tmp/carnot8663/cold-red/test_fresh_process_reproductio0')
+
+    def test_fresh_process_reproduction_without_prior_recorder_import(tmp_path):
+        """SCENARIO-REPORT-8663-PAYLOAD: cold startup cannot rely on test import order."""
+        code = "from pathlib import Path; from carnot.reporting.arc_reset_witness_8663 import authenticate,reproduce; from carnot.reporting.arc_reset_8663 import ROOT; import sys; assert reproduce(authenticate(ROOT),Path(sys.argv[1]))['passed']"
+        result = subprocess.run([sys.executable, "-u", "-c", code, str(tmp_path)], capture_output=True, text=True, timeout=60)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_reset_witness_8663.py", line 159, in reproduce
+E             patch.object(package, "arc_reset_provenance", old),
+E             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+E             original, local = self.get_original()
+E                               ^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/unittest/mock.py", line 1437, in get_original
+E             raise AttributeError(
+E         AttributeError: <module 'carnot.agentic' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/__init__.py'> does not have the attribute 'arc_reset_provenance'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '-c', "from pathlib impor...thub.com/ianblenke/carnot/python/carnot/agentic/__init__.py\'> does not have the attribute \'arc_reset_provenance\'\n').returncode
+
+tests/python/test_arc_reset_reporting_8663.py:156: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_reset_reporting_8663.py::test_fresh_process_reproduction_without_prior_recorder_import
+1 failed in 4.31s

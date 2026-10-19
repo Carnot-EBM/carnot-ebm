@@ -103130,3 +103130,27 @@ runner and validation modules, and the thin Exp8661 CLI implement the fixed matr
 Traced tests are `test_installed_cost_8661.py` and `test_installed_cost_runner_8661.py`.
 Immutable per-cell primitives and the checked primary retain actual outcomes;
 `docs/research-notes/v743-installed-complete-cost.md` states the estimands and limits.
+## REQ-REPORT-8663: Qualify real SDK reset payloads and callback ownership
+
+Exp8663 SHALL reproduce Exp8650's retained TypeError with public SDK frame
+shapes before correction. Recursively encode nested arrays, lists and enums
+without dropping public values. Bind a fresh monotone action context before
+serialization. Failed serialization SHALL never reuse an earlier context.
+Record unknown causes and repeated callbacks explicitly. Equal pixels across
+actions SHALL remain separate observations. Keep recording opt-in and bounded.
+
+### SCENARIO-REPORT-8663-PAYLOAD
+
+Real FrameDataRaw payloads, same-pixel successive observations, repeated reset,
+two requesters, missing observations, serialization failures and selected/returned
+callbacks SHALL have focused regressions. Original semantic assertions SHALL
+run under sealed original authority and against compatible corrected paths.
+
+### SCENARIO-REPORT-8663-WITNESS
+
+A deterministic two-episode off/on witness SHALL use actual official SDK calls
+and make_carnot_agent with adapters, routes and induction withheld. Require zero
+recorder errors, matching request/action/post-observation joins and exact action,
+RNG, SDK, termination and legacy observer parity. Publish readiness only after
+current coverage and replay pass. This engineering witness gives zero solve,
+promotion, learning or generalization credit. Exp8664 owns the full panel.

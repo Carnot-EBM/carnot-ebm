@@ -1,0 +1,155 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+__________ test_recursive_real_sdk_payload_and_unchanged_simple_hash ___________
+
+    def test_recursive_real_sdk_payload_and_unchanged_simple_hash():
+        """SCENARIO-REPORT-8663-PAYLOAD: conversion preserves every nested value."""
+        frame = real_frame()
+        expected = dict(level=0, state=str(frame.state), full_reset=False, pixels=[[[1, 2], [3, 4]]])
+>       assert r.public_hash(frame) == canonical_hash(expected)
+               ^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_reset_provenance_8663.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/agentic/arc_reset_provenance.py:26: in public_hash
+    return str(canonical_hash(value))
+               ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:44: in canonical_hash
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:238: in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:200: in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:258: in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.encoder.JSONEncoder object at 0x7f1230459610>
+o = array([[1, 2],
+       [3, 4]], dtype=int8)
+
+    def default(self, o):
+        """Implement this method in a subclass such that it returns
+        a serializable object for ``o``, or calls the base implementation
+        (to raise a ``TypeError``).
+    
+        For example, to support arbitrary iterators, you could
+        implement default like this::
+    
+            def default(self, o):
+                try:
+                    iterable = iter(o)
+                except TypeError:
+                    pass
+                else:
+                    return list(iterable)
+                # Let the base class default method raise the TypeError
+                return super().default(o)
+    
+        """
+>       raise TypeError(f'Object of type {o.__class__.__name__} '
+                        f'is not JSON serializable')
+E       TypeError: Object of type ndarray is not JSON serializable
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:180: TypeError
+____________ test_same_pixels_repeated_resets_and_callback_identity ____________
+
+    def test_same_pixels_repeated_resets_and_callback_identity():
+        """SCENARIO-REPORT-8663-PAYLOAD: equal frames do not collapse action identities."""
+        recorder = r.ResetProvenance()
+        policy = SimpleNamespace(_arc_reset_provenance=recorder)
+        frame = real_frame()
+        for index in (1, 2):
+            r.prepare(policy, frame)
+            r.request(policy, "executed.branch")
+            recorder.selected(("RESET", None))
+            assert r.sdk_call(policy, ("RESET", None), lambda: frame) is frame
+            row = recorder.requests[-1]
+            assert row["action_index"] == index
+            assert row["reset_request_id"] == f"{index}:{index}"
+>           assert row["pre_observation_sha256"] == row["post_observation_sha256"]
+E           AssertionError: assert 'sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b' == None
+
+tests/python/test_arc_reset_provenance_8663.py:49: AssertionError
+__________ test_serialization_failure_cannot_borrow_previous_context ___________
+
+    def test_serialization_failure_cannot_borrow_previous_context():
+        """SCENARIO-REPORT-8663-PAYLOAD: failed begin installs a fresh invalid context."""
+        recorder = r.ResetProvenance()
+        recorder.begin(dict(level=2))
+        recorder.request("previous")
+        policy = SimpleNamespace(_arc_reset_provenance=recorder)
+        r.prepare(policy, dict(level=0, unsupported=object()))
+        r.request(policy, "current")
+        row = recorder.requests[-1]
+>       assert row["action_index"] == 2
+E       assert 1 == 2
+
+tests/python/test_arc_reset_provenance_8663.py:67: AssertionError
+_______________ test_request_conflicts_bounds_and_sdk_exception ________________
+
+    def test_request_conflicts_bounds_and_sdk_exception():
+        """SCENARIO-REPORT-8663-PAYLOAD: real call sites remain distinct and bounded."""
+        recorder = r.ResetProvenance(limit=4)
+>       recorder.begin(real_frame(), 8, 2.0)
+
+tests/python/test_arc_reset_provenance_8663.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/agentic/arc_reset_provenance.py:50: in begin
+    pre_observation_sha256=public_hash(observation),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/agentic/arc_reset_provenance.py:26: in public_hash
+    return str(canonical_hash(value))
+               ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:44: in canonical_hash
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:238: in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:200: in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:258: in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.encoder.JSONEncoder object at 0x7f1230497ef0>
+o = array([[1, 2],
+       [3, 4]], dtype=int8)
+
+    def default(self, o):
+        """Implement this method in a subclass such that it returns
+        a serializable object for ``o``, or calls the base implementation
+        (to raise a ``TypeError``).
+    
+        For example, to support arbitrary iterators, you could
+        implement default like this::
+    
+            def default(self, o):
+                try:
+                    iterable = iter(o)
+                except TypeError:
+                    pass
+                else:
+                    return list(iterable)
+                # Let the base class default method raise the TypeError
+                return super().default(o)
+    
+        """
+>       raise TypeError(f'Object of type {o.__class__.__name__} '
+                        f'is not JSON serializable')
+E       TypeError: Object of type ndarray is not JSON serializable
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py:180: TypeError
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_reset_provenance_8663.py::test_recursive_real_sdk_payload_and_unchanged_simple_hash
+FAILED tests/python/test_arc_reset_provenance_8663.py::test_same_pixels_repeated_resets_and_callback_identity
+FAILED tests/python/test_arc_reset_provenance_8663.py::test_serialization_failure_cannot_borrow_previous_context
+FAILED tests/python/test_arc_reset_provenance_8663.py::test_request_conflicts_bounds_and_sdk_exception
+4 failed in 2.62s
