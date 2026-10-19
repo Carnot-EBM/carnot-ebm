@@ -56850,3 +56850,21 @@ unchanged adversarial verification and strict row consistency. Owned failures
 disqualify; unchanged external incompleteness blocks. Declare no_model_load,
 MODEL_SPECS=[] and zero language-model calls; authenticate numerical inference
 separately. The conductor owns ops, changelog and traceability reconciliation.
+
+## REQ-VERIFY-8665: Authenticate hardware mapping without rerunning science
+
+Freeze source bytes, hashes and original historical authority. Cold replay in
+a bounded child SHALL reject missing operands and self-consistently rehashed
+changes. Preserve actual INFO findings; critical findings and failed owned
+checks disqualify. Validate final bytes before atomic primary publication.
+Run scoped serial unit/CLI tests, private E2E-018/021, Ruff, strict mypy and
+spec tracing. Retain original child SQLite, source identities, JUnit, command,
+exit and duration before combining copies. Require100 percent newly owned
+statements, including rejection paths. Consumer tests do not cover producers.
+Ops and traceability reconciliation remain conductor-owned for this task.
+
+### SCENARIO-VERIFY-8665-REPLAY
+
+Valid cold replay passes. Missing operands, replaced snapshots, changed source
+hashes and rehashed summary edits fail. Owned child failure cannot yield a
+qualified mapping. External absence remains complete_blocked.

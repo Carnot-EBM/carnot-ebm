@@ -103183,3 +103183,36 @@ The unchanged observer retains1,022 duplicate_observation issues per episode.
 The original clean-observer assertion remains enforced; row readiness and
 diagnostic transfer remain zero. This is failed qualification, not a scientific
 null. All16 redirects remain censored and complete horizons remain zero.
+
+## REQ-REPORT-8665: Map qualified complete costs to retained operation limits
+
+Exp8665 SHALL pin the original Exp8651 report and Exp8625 ledger. It SHALL
+admit Exp8657 learning, Exp8661 installed and Exp8659 extraction independently.
+A qualified timing report does not imply a complete operation partition.
+Each missing file, field, zero, receipt or span SHALL retain exact diagnostics.
+Installed primitives SHALL be reduced with the unchanged producer span reader.
+An opaque binding residual SHALL NOT become isolated spline arithmetic.
+Conditional removal bounds require complete, disjoint, compatible spans.
+The zero denominator means an unbounded conditional limit, never measured speed.
+Retain KV260 quadratic Ising k<=5, PolarFire Linux CPU dispatch, GateMate's
+ordered physical-change/IDCODE/n16 obligations, and unqualified NPU/TSU status.
+Report qualification is separate from physical support and scientific benefit.
+No historical timing, model call, device probe or purchase SHALL run.
+
+### SCENARIO-REPORT-8665-INDEPENDENT
+
+Missing learning cannot veto installed costs. Missing-all, one-present,
+missing-field, observed-zero, invalid receipt and critical findings retain
+their distinct dispositions through unchanged publication and gate readers.
+
+### SCENARIO-REPORT-8665-BOUNDARY
+
+Keep every cohort, arm and service boundary separate. Preserve extraction
+observations whose startup, transport or shutdown spans are absent, with null
+complete costs. Preserve opaque arithmetic as missing compatible operands.
+
+Implementation20261019: `hardware_operation_evidence_8665.py`, the bounded
+runner/validation adapters and the thin experiment CLI implement this contract.
+`test_hardware_operation_evidence_8665.py` exercises independent admission,
+original pinned authority, actual private CLI failures and rehashed tampering.
+The primary and immutable raw invocation retain the terminal validation receipts.
