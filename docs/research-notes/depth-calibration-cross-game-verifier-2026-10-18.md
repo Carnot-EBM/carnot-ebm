@@ -108,3 +108,43 @@ Not done, on purpose:
 - No per-game (within-game) fit. That is still the test that could show whether any depth signal
   exists.
 - Same limits as before: replayed paths, non-independent rows, a regressor and not a probability.
+
+## Addendum 2026-10-18: within-game fit shows a depth signal for v1
+
+I ran the within-game test. For each game, I train on all but one level of that game. I score the held-out
+level. I repeat for every level. Script: `scripts/experiments/outer_loop_depth_within_game_20261018.py`.
+Numbers: `depth-calibration-cross-game-verifier-2026-10-18.within-game.data.json`. CPU only.
+
+Only 5 games qualify (dc22, lp85, tn36, tr87, tu93). The rest have fewer than two levels with 20 or more
+labeled rows. The test scores 479 rows in 19 to 21 held-out levels.
+
+| Feature set | Pooled Spearman | MAE model | MAE constant | Median Spearman inside one level | Levels with positive Spearman |
+|---|---|---|---|---|---|
+| v1 | 0.41 | 0.227 | 0.250 | 0.996 | 17 of 19 |
+| v3 | 0.47 | 0.220 | 0.250 | 0.942 | 19 of 21 |
+
+- Per game, v1 Spearman is 0.83 (dc22), 0.52 (tu93), 0.20 (tr87), 0.17 (tn36), -0.01 (lp85).
+  The model beats the constant on MAE in 3 of 5 games for v1. dc22 gives most of the gain.
+- So a depth signal exists inside a game. It does not exist across games (see above). This is the
+  split the earlier result left open.
+
+Limits. Read these before you use the numbers:
+
+1. The v3 features include a predicate distance to a goal frame. The harness builds that goal frame from
+   the future level-up frame (`_goal_frame_for_index`). A live agent has no goal frame. So v3 leaks the
+   label here. Do not trust the v3 row. The v1 features do not read the goal frame, so v1 is the clean row.
+   The cross-game run above also passed this goal frame to v3. It found no skill, so the leak did not
+   rescue it. I did not fix the leak.
+2. The label is position in the level, which grows with time. Any frame feature that moves steadily
+   while a level runs (a counter, a bar, a growing filled area) gives a high rank score inside one level.
+   The 0.996 median says "the frame carries a clock". It does not say "the frame carries distance to the
+   goal". I did not test that split.
+3. Rows are consecutive frames of one replayed path. They are not independent. No standard error is given.
+4. Five games are a small sample. dc22 dominates. lp85 shows no skill.
+5. Inside a held-out level, rank score is what the live explorer needs. MAE and pooled score are
+   secondary.
+
+What it means. A within-game depth estimate is plausible. A cross-game one is not, at this scale. The
+live agent learns inside the game it plays. So the within-game result is the relevant one for Idea B.
+It still needs a test against a clock-only baseline (feature = steps since the level started) before
+anyone calls it a distance signal. That test is the next step. I did not run it.
