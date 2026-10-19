@@ -108,3 +108,79 @@ Not done, on purpose:
 - No per-game (within-game) fit. That is still the test that could show whether any depth signal
   exists.
 - Same limits as before: replayed paths, non-independent rows, a regressor and not a probability.
+
+## Addendum 2026-10-18: within-game fit shows a depth signal for v1
+
+I ran the within-game test. For each game, I train on all but one level of that game. I score the held-out
+level. I repeat for every level. Script: `scripts/experiments/outer_loop_depth_within_game_20261018.py`.
+Numbers: `depth-calibration-cross-game-verifier-2026-10-18.within-game.data.json`. CPU only.
+
+Only 5 games qualify (dc22, lp85, tn36, tr87, tu93). The rest have fewer than two levels with 20 or more
+labeled rows. The test scores 479 rows in 19 to 21 held-out levels.
+
+| Feature set | Pooled Spearman | MAE model | MAE constant | Median Spearman inside one level | Levels with positive Spearman |
+|---|---|---|---|---|---|
+| v1 | 0.41 | 0.227 | 0.250 | 0.996 | 17 of 19 |
+| v3 | 0.47 | 0.220 | 0.250 | 0.942 | 19 of 21 |
+
+- Per game, v1 Spearman is 0.83 (dc22), 0.52 (tu93), 0.20 (tr87), 0.17 (tn36), -0.01 (lp85).
+  The model beats the constant on MAE in 3 of 5 games for v1. dc22 gives most of the gain.
+- So a depth signal exists inside a game. It does not exist across games (see above). This is the
+  split the earlier result left open.
+
+Limits. Read these before you use the numbers:
+
+1. The v3 features include a predicate distance to a goal frame. The harness builds that goal frame from
+   the future level-up frame (`_goal_frame_for_index`). A live agent has no goal frame. So v3 leaks the
+   label here. Do not trust the v3 row. The v1 features do not read the goal frame, so v1 is the clean row.
+   The cross-game run above also passed this goal frame to v3. It found no skill, so the leak did not
+   rescue it. I did not fix the leak.
+2. The label is position in the level, which grows with time. Any frame feature that moves steadily
+   while a level runs (a counter, a bar, a growing filled area) gives a high rank score inside one level.
+   The 0.996 median says "the frame carries a clock". It does not say "the frame carries distance to the
+   goal". I did not test that split.
+3. Rows are consecutive frames of one replayed path. They are not independent. No standard error is given.
+4. Five games are a small sample. dc22 dominates. lp85 shows no skill.
+5. Inside a held-out level, rank score is what the live explorer needs. MAE and pooled score are
+   secondary.
+
+What it means. A within-game depth estimate is plausible. A cross-game one is not, at this scale. The
+live agent learns inside the game it plays. So the within-game result is the relevant one for Idea B.
+It still needs a test against a clock-only baseline (feature = steps since the level started) before
+anyone calls it a distance signal. That test is the next step. I did not run it.
+
+## Addendum 2026-10-18: clock baseline, the within-game signal is a step counter
+
+I ran the baseline the previous addendum named. Same leave-one-level-out split, same 479 rows, same
+5 games. Script: `scripts/experiments/outer_loop_depth_clock_baseline_20261018.py`. Numbers:
+`depth-calibration-cross-game-verifier-2026-10-18.clock-baseline.data.json`. CPU only.
+The clock feature is the number of steps since the level started.
+
+| Features | Pooled Spearman | MAE model | MAE constant |
+|---|---|---|---|
+| clock only | 0.75 | 0.166 | 0.250 |
+| v1 frame features | 0.41 | 0.227 | 0.250 |
+| v1 plus clock | 0.74 | 0.181 | 0.250 |
+
+- The clock alone beats v1 on pooled Spearman and on error. Adding v1 to the clock does not help.
+  It makes error worse (0.181 against 0.166).
+- Per game, the clock alone has Spearman 0.73 to 0.90 in all five games. v1 is near zero in lp85,
+  tn36 and tr87.
+- dc22 is the one game where v1 beats the clock: Spearman 0.83 against 0.73, error 0.160 against
+  0.184. It is one game, and I did not test the gap. Do not read it as a finding.
+
+Correction to the previous addendum. The within-level Spearman (median 0.996) is not informative. Inside
+one level, any steadily rising counter ranks the rows perfectly against a label that falls with time.
+So that metric cannot separate a distance signal from a clock. I should have seen this before I ran
+the test. The pooled score and the error are the metrics that can tell them apart.
+
+Conclusion. The v1 features carry no distance signal beyond a step counter inside a game. The
+earlier "depth signal for v1" was a clock. Idea B stays unanswered for frame features, and the
+frame features are not the cheap route to it.
+
+Limits. Same as before: five games, non-independent rows, no standard error. The clock needs the level
+start step. The live explorer knows it, so a clock feature is available to it. The label depends on the
+level length. A clock cannot know the length of a new level, so its error floor is not zero.
+
+What this does not decide. A learned estimator of distance to the goal may exist. This test shows that
+these frame features do not beat a counter. It does not test other features.
