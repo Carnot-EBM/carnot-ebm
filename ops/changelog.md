@@ -22570,3 +22570,4 @@ Artifact: `results/operational_retro_2026_10_741.json`.
 - 2026-10-19: Qualify installed inference with owned historical checkout cleanup (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v743_installed_compatibility; results/experiment_8660_v743_installed_compatibility.json
 - 2026-10-19: Measure complete installed and private inference at equal numerical work (⚠️ Research Finding) — honest_verdict=complete_null_v743_installed_complete_cost; results/experiment_8661_v743_installed_complete_cost.json
 - 2026-10-19: Repair live reset recording for real SDK frames and callback identities (⚠️ Research Finding) — honest_verdict=complete_null_arc_reset_provenance; results/experiment_8663_v743_arc_reset_provenance.json
+- 2026-10-19: Measure corrected reset-cause transfer across adapter-withheld live games (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_reset_transfer; results/experiment_8664_v743_arc_reset_transfer.json
