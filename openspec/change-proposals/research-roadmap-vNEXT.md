@@ -7,12 +7,22 @@
 **Supersedes:** V742 scheduling; historical evidence remains unchanged.
 **Task contract:** Exactly 14 tasks, Exp8653 through Exp8666, in conductor order.
 
+**Activation refusal repair (2026-10-18):** The unchanged exclusion guard found
+thirteen scope-matched prior failures for Exp8653 and an empty `prior_failures`
+list. Both task authorities now include all thirteen exact ledger IDs/verdicts,
+the diagnosed authority defect and the specific V743 difference, with
+`retire_if_same_verdict: true` on every entry. No override is used. Task IDs,
+order, prompts, gates, scientific methods and the other thirteen tasks are
+unchanged from `ops/roadmap-quarantine/roadmap-2026.10.743-refusal1.yaml`.
+The embedded full-task digest is refreshed to include this failure history.
+
 ## What V742 Proved
 
 V742 completed thirteen scheduling slots. Eight producers ran including its
 capstone; four slots have conductor pre-gate receipts and one has a cascade-skip
-record. The archive currently ends at V741, so the active V742 queue, conductor
-log, original artifacts and Exp8652 capstone supply the latest disposition.
+record. The initial design preceded archival; `research-complete.yaml` now
+includes V742. Its queue, conductor log, original artifacts and Exp8652 capstone
+supply the terminal disposition.
 Conductor `OK` and scheduling completion do not establish scientific success.
 The full prior design is preserved byte-for-byte in
 `openspec/change-proposals/research-roadmap-v742-preserved-20261018.md`.
@@ -366,7 +376,7 @@ every complete YAML task dictionary, including prompts and optional fields.
 | 13 | exp8665-hardware-operation-evidence | Map new complete costs to actual KV260 PolarFire and GateMate operation limits | 4 | results/experiment_8665_v743_hardware_operation_evidence.json |
 | 14 | exp8666-capstone | Reconcile fourteen outcomes and close exact unchanged scientific questions | 4 | results/experiment_8666_v743_capstone.json |
 
-canonical_tasks_sha256: `9e2b82c9848840daddf08f28e1d722178a72b91ce676daa13e1883a5e9713bca`
+canonical_tasks_sha256: `69d4edc2aec6bc1ba6b2028d1a9d3b06400be2501f8c40ed093a09f737acd1e0`
 
 <!-- V743_TASK_CONTRACT_START -->
 ```json
@@ -388,7 +398,86 @@ canonical_tasks_sha256: `9e2b82c9848840daddf08f28e1d722178a72b91ce676daa13e1883a
       "inference_substrate_class": "no_model_load",
       "MODEL_SPECS": [],
       "gated_on": [],
-      "prior_failures": [],
+      "prior_failures": [
+        {
+          "experiment_id": "exp7532-v659-contract-methods",
+          "verdict": "complete_blocked_incomplete_v659_authorities",
+          "addressed_by": "The prior design had no visible table and only eight YAML tasks instead of fourteen. V743 supplies fourteen full objects, an independent table, digest and end marker; step 5 rejects count/order drift and step 13 requires fresh terminal readers without relaxing guards.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7713-v672-contract-methods",
+          "verdict": "complete_blocked_v672_independent_contract",
+          "addressed_by": "Both independent design representations were absent. V743 supplies and independently parses the visible table and complete JSON, and requires their exact equality with all fourteen executable YAML tasks before readiness.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7940-v689-contract-methods",
+          "verdict": "complete_blocked_authority",
+          "addressed_by": "A full-task mismatch and missing preserved staging blocked authority. V743 binds complete objects including prompts and lineage, tests staged versus activated authority, and authenticates preserved historical bytes separately.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp7992-v693-contract-methods",
+          "verdict": "complete_blocked_authority",
+          "addressed_by": "The visible table, machine contract and digest were absent. V743 includes all three with fourteen matching tasks; step 5 rejects mismatches before methods_ready_score can become one.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8018-v695-contract-methods",
+          "verdict": "complete_blocked_authority",
+          "addressed_by": "The machine contract was absent and all thirteen authority rows mismatched. V743 provides a version-marked full contract and exact fourteen-row YAML agreement while preserving original historical readers.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8374-v722-contract-methods",
+          "verdict": "complete_blocked_direct_contract_methods",
+          "addressed_by": "The independent V722 design contract was unavailable. V743 supplies its own independently parsed table, complete JSON and digest and preserves V742 bytes; it does not reconstruct or clear missing V722 authority.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8388-v723-contract-methods",
+          "verdict": "complete_blocked_v723_contract_methods",
+          "addressed_by": "Historical V722 authority remained absent. V743 authenticates the qualified V742 operand lineage independently and never treats mutable vNEXT as historical authority; the old missing V722 evidence stays blocked.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8416-v725-contract-methods",
+          "verdict": "complete_blocked_v725_contract_methods",
+          "addressed_by": "The old design authority was missing, thirteen intended tasks became four, and CUDA repair was absent. V743 binds fourteen complete tasks and separates optional runtime_repair_ready_score so absent CUDA only pre-skips Exp8662.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8443-v727-contract-methods",
+          "verdict": "complete_blocked_v727_contract_methods",
+          "addressed_by": "Missing table, complete task objects and digest caused the authority parser failure. V743 supplies all three plus versioned markers and requires count, full-object and digest equality before registration.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8471-v729-contract-methods",
+          "verdict": "complete_blocked_v729_contract_methods",
+          "addressed_by": "Both JSON markers and the independent visible table were missing. V743 includes matching start/end markers, a fourteen-row table and complete task JSON; step 5 tests missing-marker and contract mutations.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8499-v731-contract-methods",
+          "verdict": "complete_blocked_v731_contract_methods",
+          "addressed_by": "The independent table, embedded objects and printed digest were missing. V743 supplies all three and binds every prompt, gate and retirement field to the executable YAML before readiness.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8565-v736-contract-methods",
+          "verdict": "complete_blocked_v736_contract_methods",
+          "addressed_by": "The V736 JSON contract was missing. V743 carries its own versioned full contract and tests staged V743 beside active V742 and authentic activation; old V736 authority is not replaced.",
+          "retire_if_same_verdict": true
+        },
+        {
+          "experiment_id": "exp8602-v739-contract-methods",
+          "verdict": "complete_blocked_v739_contract_methods",
+          "addressed_by": "The frozen V739 authority lacked its JSON contract. V743 supplies complete current authority and separately preserved V742 bytes, tests both lifecycle states, and retains the historical V739 blockage.",
+          "retire_if_same_verdict": true
+        }
+      ],
       "agent_type": "claude",
       "model": "opus",
       "prompt": "CONTEXT:\nWork in {project_root} on {date}. V742 completed thirteen scheduling slots, not thirteen scientific studies. Exp8640 qualified independent input gates. Exp8641 retained coverage but exhausted its measurement budget before the original node union and deadline mutations completed. Exp8642 failed current/original driver separation and demanded unrelated source statements from consumer-only children. Exp8646 passed current numerical checks but historical fixture teardown hit the tracked-results guard. Learning, complete-source comparison and installed costs never ran. Exp8650 preserved action parity but live reset recording raised TypeError and left236 observed resets without authenticated causes. Preserve all historical nulls and quarantines. V743 contains exactly fourteen tasks, Exp8653 through Exp8666.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/research-roadmap-v742-preserved-20261018.md; research-references.md; python/carnot/reporting/v741_contract_inputs.py; python/carnot/reporting/v741_contract_methods.py; python/carnot/reporting/roadmap_contract.py; openspec/change-proposals/v741-methods-protocol.json; results/experiment_8627_v741_contract_methods.json; results/experiment_8639_v741_capstone.json; python/carnot/verify/cuda_reader_8410.py; research-studying.md; python/carnot/reporting/v742_contract_methods.py; python/carnot/reporting/v742_contract_inputs.py; openspec/change-proposals/v742-methods-protocol.json; results/experiment_8640_v742_contract_methods.json; results/experiment_8652_v742_capstone.json\n\nTASK:\nBind fourteen tasks and freeze bounded execution and unchanged scientific methods. Deliver results/experiment_8653_v743_contract_methods.json. Create thin runner scripts/experiments/experiment_8653_v743_contract_methods.py, immutable primitives in results/raw/experiment_8653_v743_contract_methods/ and notes docs/research-notes/v743-contract-methods.md. Same-roadmap artifacts are future dependencies.\n\nCONCRETE STEPS:\n1. PRECONDITIONS: Print a flushed start line. Authenticate exact input paths and hashes, tools, free memory and writable disk-backed scratch. Distinguish missing files, missing fields and observed zero in gate_check_summary. Optional hardware absence cannot block independent CPU work.\n\n2. Print a flushed progress line at each phase boundary and before and after every model load, generation, benchmark and subprocess that can take minutes. Use unbuffered output; print completed/pending counts inside long loops. Supervise children with a flushed heartbeat at least every60 seconds and keep every silence gap under600 seconds. Write any file over about200 lines in several tool calls of at most150 lines, with a progress message between calls. Poll in tool calls of at most60 seconds. Stop measurements by3600 seconds and reserve at least900 seconds for validation within the4800-second hard cap. Never pad duration.\n\n3. Spec first: confirm relevant REQ-* and SCENARIO-* before implementation, then write focused failing tests. Preserve scientific thresholds and original assertions. Accept --date {date}; runners belong in scripts/experiments/, tests in tests/python/, scratch in /var/tmp. Do not change research-roadmap.yaml, scripts/research_conductor.py, shared validators, generator weights or external services.\n\n4. Declare inference_substrate_class=no_model_load, MODEL_SPECS=[] and zero current language-model calls. Separate historical generator identities from current execution. Authenticate any numerical energy head and checkpoint separately; no_model_load does not mean no numerical inference.\n\n5. Bind exactly fourteen full dictionaries Exp8653 through Exp8666. Independently parse the visible task table, complete JSON, canonical_tasks_sha256 and end marker. Test staged V743 with active V742 and genuinely activated V743. Reject count/order/ID/title/phase/deliverable/prompt/model/substrate/gate/retirement mutations. Authenticate preserved V742 bytes; never read mutable vNEXT as historical authority.\n\n6. Create openspec/change-proposals/v743-methods-protocol.json before measurements. Inherit objective_updates, objective_audit, streaming_extraction_protocol, installed_entry_2x2 and evidence_canary by value/hash from the original V742 protocol. Bind historical originals independently, including numerical head, data, labels, accounting and validator receipts. Preserve the separate learning_operands_ready_score established by Exp8640; failed old execution must not block qualification itself.\n\n7. Register disjoint learning test cohorts A and B, derived from the exact original64-node union: A covers test_learning_clock_8592.py, test_causal_brier_stream_8582.py and test_objective_checkpoint_8461.py; B covers test_deadline_edge_8603.py, test_deadline_statement_8616.py and the two original E2E nodes. Preserve all original27 runner nodes. Collect full IDs and hashes before partitioning. Group by module/fixture to avoid repeated preparation, use measured child budgets, and keep each cohort within its own task reserve. No node is waived or counted twice.\n\n8. Ingest the V743 scan from research-references.md: long-context decomposition, HallDetect limits, Calibeating, delayed-capacity OCO, sparse online KAN and OpenHalDet access controls. Register use/defer decisions and source versions; update research-studying.md. These are adaptations, not theorem or paper-performance transfers.\n\n9. Authenticate extraction inputs independently: Exp8617 release, Exp8620 roster190 responses/128 exposed questions, original capped features and eight streaming features. Authenticate deployment inputs from Exp8633/8621/8622 independently of failed compatibility. Preserve seed7418632 for source and7418635 for installed costs; no post-outcome tuning.\n\n10. Register the unchanged installed/private by Python/native120-cell matrix and unchanged causal benefit/retention protocol. Freeze a new reset callback payload protocol using actual Exp8650 public frames and errors, then the same four-game/two-seed16-episode panel. The correction may change serialization and event ownership, never policy actions, horizon, priorities or quotas.\n\n11. Use the existing CUDA evidence reader once on supplied changed evidence without device commands. runtime_repair_ready_score=1 requires causal library/environment hashes plus real context/copy success; canary_inputs_ready_score independently requires validator custody. No repair receipt means pre-skip the optional canary. Emit branch readiness independently, with every failed operand named; methods_ready_score alone cannot certify execution.\n\n12. Run focused unit tests, actual private CLI paths, Ruff check/format, strict mypy and scripts/check_spec_coverage.py --files <owned-test-files>. Run applicable ops/e2e-test-plan.md checks, including private E2E-018/021. Require100 percent newly owned statement coverage including child/rejection paths. Preserve original node IDs/assertions and independently sealed historical authority. Collect once; run bounded disjoint children with -n 0 -o addopts= --no-cov. Retain raw child SQLite, source hashes, JUnit, command, exit and duration before combining copies. Instrument each child for the sources it actually tests; consumer-only execution cannot provide producer coverage. A killed child fails validation. No whole-repository suite or recursive historical controllers.\n\n13. Cold-replay immutable primitives in a fresh bounded process. Reject missing operands and self-consistently rehashed tampering. Run primary_publication, scripts/adversarial_verify.py --json <private-candidate> and scripts/verdict_row_consistency_lint.py --strict <private-candidate>; preserve actual severity. Validate final bytes before atomic publication. Failed owned checks disqualify. Unchanged external incompleteness is blocked, never partial. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md without rewriting historical outcomes.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: Bind the result to this invocation.\nhonest_verdict, verdict_class: principle: Use complete_ terminal prefixes. verdict_class is exactly positive | circular_positive | null | blocked | disqualified | partial. Partial means incomplete owned work that a retry may finish; external unchanged failure is blocked.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* names upstream, check, path/hash, field, operator, expected and observed; missing differs from zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, historical_model_provenance, target_model: principle: Separate current execution and numerical checkpoint identity from imported generators.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, sample_size_budget: principle: Retain one metric/status row per intended unit and arm, including missing reasons; siblings and seeds do not enlarge independent question N.\nverifier_is_oracle, exposure_scope, independent_generalization_score, generalized_learning_benefit_score: principle: Oracle-dependent positives are circular_positive; exposed data cannot establish independent generalization.\nrequired_checks_passed, flagged_adversarial, acceptance_gates, validation_receipts, terminal_validation_sidecar_path, adversarial_findings: principle: Failed acceptance gates forbid positive classes; readiness differs from benefit.\npreconditions_checked, duration_s, phase_spans, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: Retain real clocks and immutable source/operand evidence.\ncited_upstream_artifacts, field_principles: principle: Identify original producers and explain each metric or gate.\nmethods_ready_score, current_contract_ready_score, learning_operands_ready_score, extraction_inputs_ready_score, deployment_inputs_ready_score, arc_inputs_ready_score, runtime_repair_ready_score, canary_inputs_ready_score: principle: Separate branch operands from execution and optional runtime.\nmethods_protocol_reference, cohort_partition_reference, inherited_operand_checks, gate_field_map, literature_method_rows, canonical_tasks_sha256, authority_mutation_rows: principle: Immutable premeasurement registration preserves all old methods and exact task authority.\nbranch_gate_values: principle: Every declared readiness score is a top-level numeric0/1 with an explicit check; qualification and scientific benefit stay separate.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8653_v743_contract_methods.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"

@@ -1,5 +1,11 @@
 # Carnot — Session Metrics
 
+## Session: 2026-10-18 V743 activation refusal repair
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-10-19T01:35:30Z | In progress | User requested exact repair of Exp8653 missing failure history, matching V743 design/YAML, and unchanged activation guards | Not measured |
+
 ## Session: 2026-10-18 Milestone 2026.10.742 Operational Retrospective
 
 ### Turn Log

@@ -16,7 +16,82 @@ tasks:
   inference_substrate_class: no_model_load
   MODEL_SPECS: []
   gated_on: []
-  prior_failures: []
+  prior_failures:
+  - experiment_id: exp7532-v659-contract-methods
+    verdict: complete_blocked_incomplete_v659_authorities
+    addressed_by: The prior design had no visible table and only eight YAML tasks instead of fourteen. V743
+      supplies fourteen full objects, an independent table, digest and end marker; step 5 rejects count/order
+      drift and step 13 requires fresh terminal readers without relaxing guards.
+    retire_if_same_verdict: true
+  - experiment_id: exp7713-v672-contract-methods
+    verdict: complete_blocked_v672_independent_contract
+    addressed_by: Both independent design representations were absent. V743 supplies and independently parses
+      the visible table and complete JSON, and requires their exact equality with all fourteen executable
+      YAML tasks before readiness.
+    retire_if_same_verdict: true
+  - experiment_id: exp7940-v689-contract-methods
+    verdict: complete_blocked_authority
+    addressed_by: A full-task mismatch and missing preserved staging blocked authority. V743 binds complete
+      objects including prompts and lineage, tests staged versus activated authority, and authenticates
+      preserved historical bytes separately.
+    retire_if_same_verdict: true
+  - experiment_id: exp7992-v693-contract-methods
+    verdict: complete_blocked_authority
+    addressed_by: The visible table, machine contract and digest were absent. V743 includes all three with
+      fourteen matching tasks; step 5 rejects mismatches before methods_ready_score can become one.
+    retire_if_same_verdict: true
+  - experiment_id: exp8018-v695-contract-methods
+    verdict: complete_blocked_authority
+    addressed_by: The machine contract was absent and all thirteen authority rows mismatched. V743 provides
+      a version-marked full contract and exact fourteen-row YAML agreement while preserving original historical
+      readers.
+    retire_if_same_verdict: true
+  - experiment_id: exp8374-v722-contract-methods
+    verdict: complete_blocked_direct_contract_methods
+    addressed_by: The independent V722 design contract was unavailable. V743 supplies its own independently
+      parsed table, complete JSON and digest and preserves V742 bytes; it does not reconstruct or clear
+      missing V722 authority.
+    retire_if_same_verdict: true
+  - experiment_id: exp8388-v723-contract-methods
+    verdict: complete_blocked_v723_contract_methods
+    addressed_by: Historical V722 authority remained absent. V743 authenticates the qualified V742 operand
+      lineage independently and never treats mutable vNEXT as historical authority; the old missing V722
+      evidence stays blocked.
+    retire_if_same_verdict: true
+  - experiment_id: exp8416-v725-contract-methods
+    verdict: complete_blocked_v725_contract_methods
+    addressed_by: The old design authority was missing, thirteen intended tasks became four, and CUDA repair
+      was absent. V743 binds fourteen complete tasks and separates optional runtime_repair_ready_score so
+      absent CUDA only pre-skips Exp8662.
+    retire_if_same_verdict: true
+  - experiment_id: exp8443-v727-contract-methods
+    verdict: complete_blocked_v727_contract_methods
+    addressed_by: Missing table, complete task objects and digest caused the authority parser failure. V743
+      supplies all three plus versioned markers and requires count, full-object and digest equality before
+      registration.
+    retire_if_same_verdict: true
+  - experiment_id: exp8471-v729-contract-methods
+    verdict: complete_blocked_v729_contract_methods
+    addressed_by: Both JSON markers and the independent visible table were missing. V743 includes matching
+      start/end markers, a fourteen-row table and complete task JSON; step 5 tests missing-marker and contract
+      mutations.
+    retire_if_same_verdict: true
+  - experiment_id: exp8499-v731-contract-methods
+    verdict: complete_blocked_v731_contract_methods
+    addressed_by: The independent table, embedded objects and printed digest were missing. V743 supplies
+      all three and binds every prompt, gate and retirement field to the executable YAML before readiness.
+    retire_if_same_verdict: true
+  - experiment_id: exp8565-v736-contract-methods
+    verdict: complete_blocked_v736_contract_methods
+    addressed_by: The V736 JSON contract was missing. V743 carries its own versioned full contract and tests
+      staged V743 beside active V742 and authentic activation; old V736 authority is not replaced.
+    retire_if_same_verdict: true
+  - experiment_id: exp8602-v739-contract-methods
+    verdict: complete_blocked_v739_contract_methods
+    addressed_by: The frozen V739 authority lacked its JSON contract. V743 supplies complete current authority
+      and separately preserved V742 bytes, tests both lifecycle states, and retains the historical V739
+      blockage.
+    retire_if_same_verdict: true
   agent_type: claude
   model: opus
   prompt: |

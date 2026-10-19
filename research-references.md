@@ -53869,3 +53869,36 @@ KV260 support is operation-specific with k_max<=5; PolarFire evidence is Linux
 CPU dispatch; GateMate retains the physical/JTAG blocker. No authenticated TSU
 or NPU workload is available. Acquisition priority should follow newly qualified
 complete costs, not vendor projections or another unchanged availability probe.
+
+### V743 refusal-repair literature recheck — 2026-10-18
+
+The operator requested a narrow repair of missing Exp8653 failure history.
+The recheck precedes that revision and retains the existing fourteen studies.
+Searches covered energy verification, neural constraints, Ising ML, hallucination
+mitigation, KAN, energy-guided decoding, hardware sampling and continual learning.
+EBT and ARM–EBM primary pages retain the versions cited above.
+
+- [KAC, 2503.21076](https://arxiv.org/abs/2503.21076), March27 2025,
+  replaces linear classifiers with a KAN-derived RBF classifier for continual
+  learning. This is a candidate future architecture comparison, not evidence
+  that Carnot's fixed sparse head improves. Defer structural changes until
+  Exp8657/8658 finish the registered benefit and retention test.
+- [RT4CHART, 2603.27752](https://arxiv.org/abs/2603.27752) decomposes RAG
+  answers into claims and checks them against retrieved context. Discovered
+  again through [Hugging Face Papers](https://huggingface.co/papers/2603.27752).
+  It supports investigating claim-level evidence after the fixed complete-source
+  study; it does not convert lexical coverage into entailment or justify a new
+  unregistered arm in Exp8659.
+- [BNN robustness via Ising/QUBO, 2602.13536](https://arxiv.org/abs/2602.13536),
+  February14 2026, supplies a distinct formal robustness workload. Its binary
+  constraint formulation is a future hardware mapping lead, not a demonstrated
+  acceleration of Carnot's spline learner or proof of language correctness.
+
+Secondary recheck: OpenReview search surfaced an
+[EBT conference manuscript](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf);
+only indexed text was inspected in this pass. Both Semantic Scholar citation
+API requests again returned retrieval errors, so the citing-paper inventory
+remains incomplete. Extropic Writing/Z1T and the Kona page were reopened;
+no local hardware or architecture qualification follows. GitHub Python Trending
+again returned a page marked crawled last month; no current ranking is claimed.
+These leads are filed for later planning, with no change to V743 scope or gates.

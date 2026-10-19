@@ -20592,3 +20592,6 @@ code |
 | 2026-10-19 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_claim_text age-week 3: OPEN 21 days: REAL_BUG |
 | 2026-10-19 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_uniform_energy_ablation_evidence age-week 0: OPEN 1  |
 | 2026-10-19 00:45 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-10-19 01:22 UTC | Plan milestone 2026.10.743 | OK | 14 tasks proposed |
+| 2026-10-19 01:35 UTC | Activation REFUSED: milestone 2026.10.743 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp8653-contract-methods. NEXT_ROADMAP_FILE left in place for operator inspection. |
+| 2026-10-19 01:35 UTC | Activation replan 1/2: 2026.10.743 | OK | refused roadmap quarantined to roadmap-2026.10.743-refusal1.yaml; replanning with lint report |
