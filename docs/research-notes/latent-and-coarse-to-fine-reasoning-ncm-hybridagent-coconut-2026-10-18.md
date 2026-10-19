@@ -111,3 +111,42 @@ Decision floor. The hypothesis comes from Coconut's Fig 7 and has not been check
 1. Read the NCM Sudoku appendix for the test-set size, the seed count and the trajectory.
 2. Read HybridAgent Table 5 before citing the latent readout as faithful.
 3. Decide whether Idea A or Idea B earns a task slot. Neither is scheduled.
+
+## Addendum 2026-10-19 (video, appendix and repo read)
+
+Sources read: the Code Bear video "NCM: The LLM Killer?" (description in full; transcript for the
+first 236 of 393 seconds, from whisper `small`), the NCM appendix on Sudoku, HybridAgent Table 5
+and the readability metric, and the two GitHub repositories (file listings, both READMEs, the
+Sudoku config, the readout and reward code). Nothing was cloned or run. Most of both PDFs
+(40 and 45 pages) was not read.
+
+1. **The video adds no evidence.** It summarizes the two papers. Its Sudoku figures match
+   Table 3: left-to-right baselines solve 0.6 to 1.0 percent of hard boards, NCM 86.1 percent,
+   FMLM+ 81.3 percent. Its 99.8 percent rebuild figure for summaries was not checked. The title
+   "LLM killer" is not supported: the largest NCM tested has 725M parameters, and NCM lost on
+   translation to a diffusion model.
+2. **Open item 1 is answered in part.** The appendix gives the trajectory (Figure 20): correct
+   cells per pass are 16, 15, 16, 21, 19, 25, 28, 44, 55, 62, 64, 81. The drafts are not monotone.
+   The paper and the repo config state no test-set size and no seed count. The config names only
+   `puzzles.pickle`. The size would be in the HF dataset, which was not opened. The 4.8 point gap
+   between NCM and FMLM+ on hard boards therefore cannot be tested for significance.
+3. **Open item 2 is answered.** HybridAgent Table 5 (MATH500, 14B): no intervention 88.2;
+   cross-problem latent replacement 48.6; random-token replacement 44.6; mean-latent
+   replacement 58.4; nearest-token replacement 87.2; blocking latent mode 78.8. At 8B the
+   figures are 84.6, 44.8, 41.2, 53.6, 82.6 and 80.4. Latent thoughts are used, and their
+   content matters more than perturbation size. Latent mode itself is worth about 4 to 9 points
+   over text-only reasoning. The readout is cosine nearest-token, so it shows alignment with a
+   token embedding. It does not show that a latent means that token.
+4. **Lesson for Carnot.** A replacement control (swap in the same feature from another example)
+   is a cheap test that a learned feature carries content. The depth-calibration result for the
+   cross-game value head is the same shape: the within-game signal was a step counter. Run a
+   replacement or shuffle control before reading signal into a new learned feature.
+5. **HybridAgent does not fit the pinned generator.** It needs hidden-state feedback and a
+   trained adapter on Qwen3 8B and 14B bases. The pinned generator is a GGUF model behind
+   `llama-server`, which gives no hidden-state feedback. Research reading only. Both repos
+   are MIT, with released weights.
+6. **Idea A is unchanged.** NCM releases tokenizer and generator checkpoints for easy, medium
+   and hard Sudoku, with `evaluate.py`. It needs GPU 1, which the llm_on run holds.
+
+Remaining open items: open the HF Sudoku dataset to get the test-set size; decide whether Idea A
+earns a slot. Item 3 of the original list is unchanged.
