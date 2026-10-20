@@ -180,3 +180,37 @@ earns a slot. Item 3 of the original list is unchanged.
 
 Open: the MEMORILLA paper body and `inputs_embeds` feasibility were not checked. The NCM Sudoku
 test-set size and seed count are still unknown.
+
+## Addendum 2026-10-20 (looped language models, video "AI Is Starting to Think in Loops")
+
+Source. The video is https://youtu.be/UFTk5HBCtoo (26 min, channel PY). I read its description and
+chapter list through the invidious instance on nassy.local. The captions were empty. A second
+session (Haven) read a full local transcript and the abstracts of the cited papers. I read its
+note, not the transcript and not the papers. Every figure below is the authors' or the narrator's.
+Nobody here measured it.
+
+1. **Idea.** A looped model runs the same layers several times for each token and feeds the full
+   hidden vector back in. A written chain of thought passes about 16 bits (one token) between
+   steps. A loop passes thousands of numbers that nobody reads. Coconut (arXiv 2412.06769) is the
+   same idea at the input side.
+2. **Gains are reasoning, not recall.** Ouro (2510.25741) scores 41% on MMLU after one pass and 67%
+   after three. Knowledge capacity stays near 2 bits per weight. Saunshi et al. (2502.17416) show
+   that a k-layer model looped L times nearly matches a kL-layer model.
+3. **Recurrence is not free.** An iso-depth study (2604.21106) puts one repeated block at about
+   0.46 of a unique block. The key-value cache grows with every pass. Running more passes than the
+   model trained with hurts: one Ouro result falls from 65% at 4 passes to 39% at 8.
+4. **Training is fragile.** The first two Huginn runs collapsed or learned to ignore the loop.
+   Released looped models run only 2 to 4 passes.
+5. **Monitoring.** Paper 2610.02741 finds that more loops lowered monitorability on some tasks
+   under stress tests. Its cross-model comparison finds no evidence that looped models are
+   systematically less monitorable. The video states this more strongly than the paper. My first
+   summary of the video repeated that stronger claim. It was wrong, and the Haven note corrects it.
+6. **Astra.** The report that GPT-6 Astra is looped is unconfirmed by OpenAI.
+7. **What this means for Carnot.** The mandated generator is fixed-depth, so nothing changes for
+   it. A latent-reasoning generator would give a text-reading verifier less to read, which
+   supports keeping the verifier outside the generator. TRM training stays retired (operator
+   directive 2026-06-18). The over-looping result is a caution against assuming that more
+   test-time compute always helps. We have not tested that for our agent.
+
+Open: I did not read the cited papers or the transcript. I did not verify the Astra claims.
+Nanbeige4.2-3B (2607.22083) and Ouro are untested by us and are not the mandated model.

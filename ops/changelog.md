@@ -22603,3 +22603,7 @@ Correction. The status entry above this one says the llm_on run had "25 paired c
 
 Error lifecycle, step 6 (prevent): no check built for the `pkill` lesson. A check would fire on legitimate use of `pkill`, so it stays as prose here and in the session rules.
 
+
+## 2026-10-20 — Outer loop: looped-models video read, note addendum
+
+User asked what we can learn from https://youtu.be/UFTk5HBCtoo, then to fetch it with invidious on nassy.local, then to read the Haven note, then "note". I fetched metadata and the audio (captions were empty). I read the Haven session's note. I appended an addendum to the latent-reasoning research note. I retracted my first claim that 8 passes made monitoring worse: the paper finds it only on some tasks. Nothing was transcribed here. Nothing was pushed.
