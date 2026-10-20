@@ -18509,3 +18509,13 @@ Validation: artifact, locked-field, append-only, protected-file, and whitespace
 checks passed. Documentation freshness passed. The repository-wide spec audit
 and final reconciliation report missing references in existing tests.
 Runtime E2E checks do not apply to this documentation-only change.
+
+Update 2026-10-20 (llm_on pairing, partial):
+
+- Pairing key: `variant_signature`. llm_on cells: variant 2 (19) and variant 4 (2). llm_off cells: 75 in `results/arc_induction_plans_20261017_llm_off_v234/`. 21 pairs, 0 cell errors.
+- Result: both won 2 (lp85, sp80); only llm_on won 1 (ar25~color02); only llm_off won 0; neither won 18. Exact two-sided sign test on 1 discordant pair: p = 1.0. This shows nothing either way.
+- Limits: one run per arm per cell (k=1). The ar25~color02 llm_on win reached level 1 at action 40, but I did not check whether the LLM-induced model caused it. Whether llm_off is deterministic was not checked, so the one discordant pair could be run-to-run noise. The goal of 100 paired cells is out of reach at the measured pace.
+- Scope cut: variant 4 stopped after 2 cells. `queue_v23.sh` resumed variant 2 (6 games missing, about 15 h at 2.5 h per game, from one measured cell). Variant 3 (25 cells) starts after it unless stopped. Say "stop v3" to cut it.
+- The status update above this one (25 paired cells, 1 against 5 wins) is not reproduced by the current cells. See the changelog correction.
+- Still open: v3 goal-frame leak; shipped `models/arc_verifier_cross_game*.json` use the old label; vocabulary-violation warnings (`actions [7]`, GAP-6260) continue and may lower llm_on wins; killed processes 1249, 512407, 512411 unidentified; NCM note commit `c1880a17e4` unpushed.
+

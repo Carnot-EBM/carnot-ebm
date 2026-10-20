@@ -22585,3 +22585,21 @@ Artifact: `results/operational_retro_2026_10_741.json`.
 - 2026-10-18: Measure reset-cause transfer across adapter-withheld live games (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_reset_transfer; results/experiment_8650_v742_arc_reset_transfer.json
 - 2026-10-18: Map qualified new operations while preserving absent cost and physical evidence (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_evidence; results/experiment_8651_v742_hardware_operation_evidence.json
 - 2026-10-18: Reconcile thirteen outcomes and close unchanged scientific questions (⚠️ Blocked) — honest_verdict=complete_blocked_v742_capstone; results/experiment_8652_v742_capstone.json
+
+## 2026-10-19 — Outer loop: NCM and MEMORILLA reading, llm_on scope cut, partial pairing (user requests: "paper", NCM search, NCM training question, "check what the CNN experiment concluded", "status", "scope, note", "pair, ops")
+
+Each item below was triggered by a user instruction. None was agent-initiated.
+
+1. "paper": read the MEMORILLA paper page and repo. Venue unconfirmed. Only the abstract page was read. An earlier "4,000x" figure came from the page only. I corrected my own earlier claims.
+2. NCM-on-ARC search: no project found. The search collides with NCA (neural cellular automata). Leaderboard numbers were fragmentary and conflicting, so none were recorded.
+3. NCM training question: recommended not training on public-level solutions. It repeats the 2026-09-08 leave-one-game-out leak and gives no clean held-out test.
+4. CNN question: read exp4547, exp4629 and exp5590. Held-out delta AUROC 0.709. Cached first-win rate 0.407 to 0.591. Tiny model (8 channels, 497 examples). One run was a null.
+5. "note": appended the MEMORILLA and NCM-on-ARC addendum to the NCM note. Local commit `c1880a17e4`, not pushed.
+6. `pkill` incident (earlier this session): `pkill -x python` killed the llm_on variant-2 driver (exit 143). It also killed processes 1249, 512407 and 512411, which are still unidentified. Variant 3 then exited 2 ("BLOCKED: server not confirmed on the intended card"). Lesson: never use `pkill -x python` or `pkill -f`; kill by exact PID.
+7. "scope": stopped the variant 4 run by exact PID (2 cells done: ar25, bp35; one cd82 cell of about 1 h lost). `queue_v23.sh` then resumed variant 2 on GPU 1. Variant 3 follows automatically unless stopped. The variant 4 pace was 9181 s for one cell, so 25 games would take days.
+8. "pair": paired the 21 llm_on cells (19 variant 2, 2 variant 4) with the llm_off cells by `variant_signature`. Result in `ops/status.md`. No file in `results/` was written.
+
+Correction. The status entry above this one says the llm_on run had "25 paired cells: 1 win with the LLM off, 5 with it on". The current cells do not reproduce that. They give 21 paired cells, 2 wins with the LLM off, 3 with it on. I do not know the source of the earlier figures. Treat the earlier figures as unverified.
+
+Error lifecycle, step 6 (prevent): no check built for the `pkill` lesson. A check would fire on legitimate use of `pkill`, so it stays as prose here and in the session rules.
+

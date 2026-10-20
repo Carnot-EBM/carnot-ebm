@@ -4345,3 +4345,15 @@ Authoritative token counts and costs are unavailable. The required
 `scripts/session-metrics.py` command failed because the script is absent.
 Artifact and documentation checks passed. The global spec audit and
 reconciliation report missing references in existing tests.
+
+Turns 9 to 14 (2026-10-19 to 2026-10-20). Start times were not recorded. Token counts not measured.
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 9 | not recorded | not recorded | "paper": read MEMORILLA page and repo | not measured |
+| 10 | not recorded | not recorded | NCM-on-ARC search | not measured |
+| 11 | not recorded | not recorded | NCM training question: recommended against | not measured |
+| 12 | not recorded | not recorded | CNN experiment conclusions (exp4547, 4629, 5590) | not measured |
+| 13 | 2026-10-19T23:58:57Z | not recorded | "scope, note": stopped variant 4 by PID, appended NCM addendum, commit `c1880a17e4` | not measured |
+| 14 | 2026-10-20T00:12:11Z | 2026-10-20T00:12:54Z | "pair, ops": partial pairing (21 pairs), wrote this entry | not measured |
+
