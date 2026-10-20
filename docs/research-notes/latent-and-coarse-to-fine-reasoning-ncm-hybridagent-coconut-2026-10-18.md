@@ -150,3 +150,33 @@ Sudoku config, the readout and reward code). Nothing was cloned or run. Most of 
 
 Remaining open items: open the HF Sudoku dataset to get the test-set size; decide whether Idea A
 earns a slot. Item 3 of the original list is unchanged.
+
+## Addendum 2026-10-19 (MEMORILLA, NCM on ARC, training on public solutions)
+
+1. **MEMORILLA (arXiv 2610.21375, snap-stanford/memorilla, Apache 2.0).** A frozen encoder and a
+   learned memory module emit 16 query-dependent memory tokens into the input embedding space of
+   a frozen Qwen3-8B. The abstract reports FactKG 84.33% against 80.43% with full context, at 108
+   times fewer document tokens. It also reports TextWorld 18.6% to 24.2%. The seed count and the
+   test size are not stated. Only the abstract page and the repo were read. The paper body, the
+   ablations and any shuffle control were not read. The venue is unconfirmed.
+2. **MEMORILLA does not fit the pinned generator.** The released checkpoint is Qwen3-8B only. It
+   injects embeddings, so the serving stack must accept `inputs_embeds`. The pinned generator is a
+   GGUF model behind `llama-server`. The repo has a vLLM integration. It does not state llama.cpp
+   support. Whether `inputs_embeds` works on the pinned vLLM stack was not checked.
+3. **NCM on ARC: no project found.** A search of the ARC leaderboard and the web found no project
+   that uses an NCM model on ARC. The search collides with NCA (neural cellular automata), for
+   example arXiv 2506.15746 and ARC-NCA arXiv 2505.08778. Leaderboard numbers found were
+   fragmentary and conflicted, so none are quoted here. The common theme was that scaffolding and
+   harness drive the gains. This is a search result, not proof that nobody tried.
+4. **Recommendation: do not train an NCM model on the public-level solutions.** Three project
+   rules apply. Trained weights are not the live mechanism. A solve made by outer-loop reverse
+   engineering is `outer_loop_re`, and it does not count. The 2026-09-08 leave-one-game-out run
+   disqualified itself, because withholding the module did not withhold the knowledge. Training
+   on the public solutions repeats that leak. It also gives no clean held-out test.
+5. **Related evidence: the frame-change CNN.** The held-out delta AUROC was 0.709. The
+   cached-transition first-win rate went from 0.407 to 0.591, and the median action count went
+   from 2 to 1. The model is tiny (8 channels, 497 examples). One follow-up run was a null. Read
+   this as a small signal on cached data, not as live evidence.
+
+Open: the MEMORILLA paper body and `inputs_embeds` feasibility were not checked. The NCM Sudoku
+test-set size and seed count are still unknown.
