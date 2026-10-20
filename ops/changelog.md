@@ -22607,3 +22607,9 @@ Error lifecycle, step 6 (prevent): no check built for the `pkill` lesson. A chec
 ## 2026-10-20 — Outer loop: looped-models video read, note addendum
 
 User asked what we can learn from https://youtu.be/UFTk5HBCtoo, then to fetch it with invidious on nassy.local, then to read the Haven note, then "note". I fetched metadata and the audio (captions were empty). I read the Haven session's note. I appended an addendum to the latent-reasoning research note. I retracted my first claim that 8 passes made monitoring worse: the paper finds it only on some tasks. Nothing was transcribed here. Nothing was pushed.
+
+### 2026-10-20 — Outer loop: media cleanup and guard
+User request: "cleanup the 9.7 MB audio file and associated video file and clean out and prevent those large assets from making it into the repo".
+- Deleted the scratch audio (`loops/loops.webm`, the old `vid/` audio and raw files) and the copy at `/tmp/loops.webm` on nassy. No video file was ever downloaded. Only audio was fetched. No media file was ever tracked in git (`git ls-files` showed none).
+- Added audio and video extensions to `.gitignore`. This stops `git add -A` and the conductor checkpoint path.
+- Added the `forbid-audio-video-files` pre-commit hook. It refuses a staged file by extension. The existing 50 MB size hook passes small files, so it did not cover this case.

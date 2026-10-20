@@ -391,3 +391,18 @@ ops/.stop_authority_state.json
 # ops/autoresearch_discoveries/ (one commit per accepted hypothesis, tracked).
 ops/.autoresearch_baselines.json
 ops/.autoresearch_experiment_log.json
+
+# Audio and video downloads (video transcription work, 2026-10-20). A 9.7 MB
+# opus file sat in scratch space and nearly rode in with `git add -A`. The
+# size guard (50 MB) does not stop files this small. Ignore by type instead.
+*.webm
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.m4a
+*.opus
+*.mp3
+*.wav
+*.flac
+*.ogg
