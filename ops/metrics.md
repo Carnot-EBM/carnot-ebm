@@ -5,6 +5,31 @@
 | Turn | Start | End | Description | Tokens |
 |---|---|---|---|---|
 | 1 | 2026-10-19T01:35:30Z | In progress | User requested exact repair of Exp8653 missing failure history, matching V743 design/YAML, and unchanged activation guards | Not measured |
+## Session: 2026-10-18 Outer loop, depth calibration of the cross-game value head
+
+### Turn Log
+
+Start times and token counts were not recorded during these turns, and I do not reconstruct them here. Run `python3 scripts/session-metrics.py` for authoritative token counts. Only the end time of the last turn was measured.
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | not recorded | not recorded | "go": ran Idea B, depth calibration on own solver traces; found no held-out skill and a label defect | not measured |
+| 2 | not recorded | not recorded | "fix label": fixed `_steps_to_next_up`, added REQ-ARC-WMTE-7830 and two tests, reran, pushed | not measured |
+| 3 | not recorded | not recorded | "per-game": within-game fit, committed | not measured |
+| 4 | not recorded | not recorded | "clock": clock baseline, corrected turn 3's reading, pushed three commits, found and disclosed a duplicate empty commit | not measured |
+| 5 | not recorded | 2026-10-19T01:25Z (first `date` reading of the turn, before the edits) | "ops": wrote status, changelog and metrics entries | not measured |
+
+Turns 6 to 8 (2026-10-19). Token counts not measured.
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 6 | not recorded | not recorded | "Guard, review": reviewed the depth note, corrected three prose errors by addendum | not measured |
+| 7 | 2026-10-19T15:40:54Z | 2026-10-19T15:42:11Z | "go": measured the tie bias, re-ran both within-game scripts, pushed `3105a8672e` | not measured |
+| 8 | 2026-10-19T17:26:52Z | 2026-10-19T17:27:19Z | "ops": wrote status and changelog entries for the note corrections and the tie check | not measured |
+
+No subagents were used in these turns. No adversarial reviewer ran on the label fix or the clock baseline. CLAUDE.md asks for one on non-trivial changes. That gap is open.
+
+---
 
 ## Session: 2026-10-18 Milestone 2026.10.742 Operational Retrospective
 
@@ -4325,3 +4350,15 @@ Authoritative token counts and costs are unavailable. The required
 `scripts/session-metrics.py` command failed because the script is absent.
 Artifact and documentation checks passed. The global spec audit and
 reconciliation report missing references in existing tests.
+
+Turns 9 to 14 (2026-10-19 to 2026-10-20). Start times were not recorded. Token counts not measured.
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 9 | not recorded | not recorded | "paper": read MEMORILLA page and repo | not measured |
+| 10 | not recorded | not recorded | NCM-on-ARC search | not measured |
+| 11 | not recorded | not recorded | NCM training question: recommended against | not measured |
+| 12 | not recorded | not recorded | CNN experiment conclusions (exp4547, 4629, 5590) | not measured |
+| 13 | 2026-10-19T23:58:57Z | not recorded | "scope, note": stopped variant 4 by PID, appended NCM addendum, commit `c1880a17e4` | not measured |
+| 14 | 2026-10-20T00:12:11Z | 2026-10-20T00:12:54Z | "pair, ops": partial pairing (21 pairs), wrote this entry | not measured |
+

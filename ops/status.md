@@ -1,5 +1,38 @@
 # Carnot — Operational Status
 
+## 2026-10-18 — Outer loop: ARC induction pairing and cross-game value head
+
+Handoff for the next session. Branch `note-openai-math`. All items below are pushed to both mirrors.
+
+What works:
+
+- A matched llm_off arm exists in the ARC induction driver. It is deterministic. The 25-cell result is 1 win with the LLM off against 5 with it on.
+- The cross-game value head label is fixed (REQ-ARC-WMTE-7830). `_steps_to_next_up` now divides by the level segment length. Two regression tests pin it. The old function fails both.
+- Depth-calibration measurements are recorded in `docs/research-notes/depth-calibration-cross-game-verifier-2026-10-18.md`, with data files beside it. Result: across games the frame features have no held-out skill. Inside a game they rank no better than a step counter.
+- Reading note on NCM, HybridAgent and Coconut is in `docs/research-notes/`.
+
+In flight:
+
+- The 27B llm_on run on variants 2, 3 and 4 runs on GPU 1 (log in the session scratchpad, output dirs `results/arc_induction_plans_20261017_llm_on_v{2,3,4}/`). It needs about 45 hours per variant. When a variant ends, pair it by `variant_signature` against the llm_off run, count first wins and discordant pairs, and append the result to `docs/research-notes/arc-heldout-test-scope-2026-10-10.md`.
+
+Update 2026-10-19:
+
+- The depth note carries two addenda: the earlier prose corrections and a tie-bias check. The tie bias is at most 0.01 on the pooled figures. It changes no conclusion. Pushed as `3105a8672e` on both mirrors.
+- The llm_on run was still alive at last check, on variant 2. It had 25 paired cells: 1 win with the LLM off, 5 with it on. That is too few to call. It was not re-checked this turn.
+- The calibration script `outer_loop_depth_calibration_20261018.py` still uses ordinal ranks. The two within-game scripts use tie-averaged ranks.
+- `scipy` is imported by the within-game scripts. It worked in the venv (1.17.1). Not checked as a declared dependency.
+- No full pytest run. No adversarial reviewer re-ran the experiments.
+- `push_safe.sh` is in the session scratchpad only. It is not in the repo.
+
+Not done, and why:
+
+- The shipped `models/arc_verifier_cross_game*.json` files are NOT retrained. They still use the old label. The live explorer loads one. A retrain changes the scored agent, so it needs approval and a live A/B. The measurements give no reason to expect a gain.
+- The v3 feature set reads a goal frame built from the future level-up frame. In the trainer harness this leaks the label. Not fixed.
+- NCM Idea A (a verifier per level on NCM Sudoku) needs GPU 1 after the llm_on run.
+- The r11l held-out skip has no explanation.
+- The local branch SHAs differ from the pushed ones. The push used plumbing replays. One empty duplicate commit of the label fix sits on main (`275f21bc8a`). It has no diff.
+- `results/arc_e3/*/world_model.py` and `attempts/manifest.jsonl` show as modified in this worktree. They are not from this work.
+
 ## 2026-10-18 — Exp8633 standalone replay import repair
 
 The direct experiment CLI now resolves its own checkout before importing the
@@ -58,7 +91,7 @@ repository-wide spec-tracing issue.
 
 This verifies the code repair; historical research verdicts retain their authority.
 
-**Last Updated:** 2026-10-16
+**Last Updated:** 2026-10-18 (outer-loop ARC section only; earlier sections unchanged)
 
 ## 2026-10-15 — V735 research plan staged
 
@@ -18476,3 +18509,13 @@ Validation: artifact, locked-field, append-only, protected-file, and whitespace
 checks passed. Documentation freshness passed. The repository-wide spec audit
 and final reconciliation report missing references in existing tests.
 Runtime E2E checks do not apply to this documentation-only change.
+
+Update 2026-10-20 (llm_on pairing, partial):
+
+- Pairing key: `variant_signature`. llm_on cells: variant 2 (19) and variant 4 (2). llm_off cells: 75 in `results/arc_induction_plans_20261017_llm_off_v234/`. 21 pairs, 0 cell errors.
+- Result: both won 2 (lp85, sp80); only llm_on won 1 (ar25~color02); only llm_off won 0; neither won 18. Exact two-sided sign test on 1 discordant pair: p = 1.0. This shows nothing either way.
+- Limits: one run per arm per cell (k=1). The ar25~color02 llm_on win reached level 1 at action 40, but I did not check whether the LLM-induced model caused it. Whether llm_off is deterministic was not checked, so the one discordant pair could be run-to-run noise. The goal of 100 paired cells is out of reach at the measured pace.
+- Scope cut: variant 4 stopped after 2 cells. `queue_v23.sh` resumed variant 2 (6 games missing, about 15 h at 2.5 h per game, from one measured cell). Variant 3 (25 cells) starts after it unless stopped. Say "stop v3" to cut it.
+- The status update above this one (25 paired cells, 1 against 5 wins) is not reproduced by the current cells. See the changelog correction.
+- Still open: v3 goal-frame leak; shipped `models/arc_verifier_cross_game*.json` use the old label; vocabulary-violation warnings (`actions [7]`, GAP-6260) continue and may lower llm_on wins; killed processes 1249, 512407, 512411 unidentified; NCM note commit `c1880a17e4` unpushed.
+

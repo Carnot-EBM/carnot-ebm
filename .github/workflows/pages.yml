@@ -1,0 +1,43 @@
+name: Pages
+
+# Deploys docs/ to GitHub Pages. It checks out only docs/, with no file contents for
+# the rest of the repo, because the full repo is about 5 GB and the built-in Pages
+# build fails at its checkout step. It stays idle until Settings > Pages > Source is
+# set to "GitHub Actions". Until then the built-in build keeps running.
+on:
+  push:
+    branches: [main]
+    paths: ['docs/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: docs
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

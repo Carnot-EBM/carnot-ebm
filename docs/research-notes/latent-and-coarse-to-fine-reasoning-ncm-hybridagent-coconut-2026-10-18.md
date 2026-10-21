@@ -111,3 +111,136 @@ Decision floor. The hypothesis comes from Coconut's Fig 7 and has not been check
 1. Read the NCM Sudoku appendix for the test-set size, the seed count and the trajectory.
 2. Read HybridAgent Table 5 before citing the latent readout as faithful.
 3. Decide whether Idea A or Idea B earns a task slot. Neither is scheduled.
+
+## Addendum 2026-10-19 (video, appendix and repo read)
+
+Sources read: the Code Bear video "NCM: The LLM Killer?" (description in full; transcript for the
+first 236 of 393 seconds, from whisper `small`), the NCM appendix on Sudoku, HybridAgent Table 5
+and the readability metric, and the two GitHub repositories (file listings, both READMEs, the
+Sudoku config, the readout and reward code). Nothing was cloned or run. Most of both PDFs
+(40 and 45 pages) was not read.
+
+1. **The video adds no evidence.** It summarizes the two papers. Its Sudoku figures match
+   Table 3: left-to-right baselines solve 0.6 to 1.0 percent of hard boards, NCM 86.1 percent,
+   FMLM+ 81.3 percent. Its 99.8 percent rebuild figure for summaries was not checked. The title
+   "LLM killer" is not supported: the largest NCM tested has 725M parameters, and NCM lost on
+   translation to a diffusion model.
+2. **Open item 1 is answered in part.** The appendix gives the trajectory (Figure 20): correct
+   cells per pass are 16, 15, 16, 21, 19, 25, 28, 44, 55, 62, 64, 81. The drafts are not monotone.
+   The paper and the repo config state no test-set size and no seed count. The config names only
+   `puzzles.pickle`. The size would be in the HF dataset, which was not opened. The 4.8 point gap
+   between NCM and FMLM+ on hard boards therefore cannot be tested for significance.
+3. **Open item 2 is answered.** HybridAgent Table 5 (MATH500, 14B): no intervention 88.2;
+   cross-problem latent replacement 48.6; random-token replacement 44.6; mean-latent
+   replacement 58.4; nearest-token replacement 87.2; blocking latent mode 78.8. At 8B the
+   figures are 84.6, 44.8, 41.2, 53.6, 82.6 and 80.4. Latent thoughts are used, and their
+   content matters more than perturbation size. Latent mode itself is worth about 4 to 9 points
+   over text-only reasoning. The readout is cosine nearest-token, so it shows alignment with a
+   token embedding. It does not show that a latent means that token.
+4. **Lesson for Carnot.** A replacement control (swap in the same feature from another example)
+   is a cheap test that a learned feature carries content. The depth-calibration result for the
+   cross-game value head is the same shape: the within-game signal was a step counter. Run a
+   replacement or shuffle control before reading signal into a new learned feature.
+5. **HybridAgent does not fit the pinned generator.** It needs hidden-state feedback and a
+   trained adapter on Qwen3 8B and 14B bases. The pinned generator is a GGUF model behind
+   `llama-server`, which gives no hidden-state feedback. Research reading only. Both repos
+   are MIT, with released weights.
+6. **Idea A is unchanged.** NCM releases tokenizer and generator checkpoints for easy, medium
+   and hard Sudoku, with `evaluate.py`. It needs GPU 1, which the llm_on run holds.
+
+Remaining open items: open the HF Sudoku dataset to get the test-set size; decide whether Idea A
+earns a slot. Item 3 of the original list is unchanged.
+
+## Addendum 2026-10-19 (MEMORILLA, NCM on ARC, training on public solutions)
+
+1. **MEMORILLA (arXiv 2610.21375, snap-stanford/memorilla, Apache 2.0).** A frozen encoder and a
+   learned memory module emit 16 query-dependent memory tokens into the input embedding space of
+   a frozen Qwen3-8B. The abstract reports FactKG 84.33% against 80.43% with full context, at 108
+   times fewer document tokens. It also reports TextWorld 18.6% to 24.2%. The seed count and the
+   test size are not stated. Only the abstract page and the repo were read. The paper body, the
+   ablations and any shuffle control were not read. The venue is unconfirmed.
+2. **MEMORILLA does not fit the pinned generator.** The released checkpoint is Qwen3-8B only. It
+   injects embeddings, so the serving stack must accept `inputs_embeds`. The pinned generator is a
+   GGUF model behind `llama-server`. The repo has a vLLM integration. It does not state llama.cpp
+   support. Whether `inputs_embeds` works on the pinned vLLM stack was not checked.
+3. **NCM on ARC: no project found.** A search of the ARC leaderboard and the web found no project
+   that uses an NCM model on ARC. The search collides with NCA (neural cellular automata), for
+   example arXiv 2506.15746 and ARC-NCA arXiv 2505.08778. Leaderboard numbers found were
+   fragmentary and conflicted, so none are quoted here. The common theme was that scaffolding and
+   harness drive the gains. This is a search result, not proof that nobody tried.
+4. **Recommendation: do not train an NCM model on the public-level solutions.** Three project
+   rules apply. Trained weights are not the live mechanism. A solve made by outer-loop reverse
+   engineering is `outer_loop_re`, and it does not count. The 2026-09-08 leave-one-game-out run
+   disqualified itself, because withholding the module did not withhold the knowledge. Training
+   on the public solutions repeats that leak. It also gives no clean held-out test.
+5. **Related evidence: the frame-change CNN.** The held-out delta AUROC was 0.709. The
+   cached-transition first-win rate went from 0.407 to 0.591, and the median action count went
+   from 2 to 1. The model is tiny (8 channels, 497 examples). One follow-up run was a null. Read
+   this as a small signal on cached data, not as live evidence.
+
+Open: the MEMORILLA paper body and `inputs_embeds` feasibility were not checked. The NCM Sudoku
+test-set size and seed count are still unknown.
+
+## Addendum 2026-10-20 (looped language models, video "AI Is Starting to Think in Loops")
+
+Source. The video is https://youtu.be/UFTk5HBCtoo (26 min, channel PY). I read its description and
+chapter list through the invidious instance on nassy.local. The captions were empty. A second
+session (Haven) read a full local transcript and the abstracts of the cited papers. I read its
+note, not the transcript and not the papers. Every figure below is the authors' or the narrator's.
+Nobody here measured it.
+
+1. **Idea.** A looped model runs the same layers several times for each token and feeds the full
+   hidden vector back in. A written chain of thought passes about 16 bits (one token) between
+   steps. A loop passes thousands of numbers that nobody reads. Coconut (arXiv 2412.06769) is the
+   same idea at the input side.
+2. **Gains are reasoning, not recall.** Ouro (2510.25741) scores 41% on MMLU after one pass and 67%
+   after three. Knowledge capacity stays near 2 bits per weight. Saunshi et al. (2502.17416) show
+   that a k-layer model looped L times nearly matches a kL-layer model.
+3. **Recurrence is not free.** An iso-depth study (2604.21106) puts one repeated block at about
+   0.46 of a unique block. The key-value cache grows with every pass. Running more passes than the
+   model trained with hurts: one Ouro result falls from 65% at 4 passes to 39% at 8.
+4. **Training is fragile.** The first two Huginn runs collapsed or learned to ignore the loop.
+   Released looped models run only 2 to 4 passes.
+5. **Monitoring.** Paper 2610.02741 finds that more loops lowered monitorability on some tasks
+   under stress tests. Its cross-model comparison finds no evidence that looped models are
+   systematically less monitorable. The video states this more strongly than the paper. My first
+   summary of the video repeated that stronger claim. It was wrong, and the Haven note corrects it.
+6. **Astra.** The report that GPT-6 Astra is looped is unconfirmed by OpenAI.
+7. **What this means for Carnot.** The mandated generator is fixed-depth, so nothing changes for
+   it. A latent-reasoning generator would give a text-reading verifier less to read, which
+   supports keeping the verifier outside the generator. TRM training stays retired (operator
+   directive 2026-06-18). The over-looping result is a caution against assuming that more
+   test-time compute always helps. We have not tested that for our agent.
+
+Open: I did not read the cited papers or the transcript. I did not verify the Astra claims.
+Nanbeige4.2-3B (2607.22083) and Ouro are untested by us and are not the mandated model.
+
+## Addendum 2026-10-20: Sep-Latent (arXiv 2610.22924)
+
+Source: the arXiv HTML page, read through a fetch tool that returns a model summary. I did not
+read the PDF or check the tables myself. Every figure below is the authors' own.
+
+1. **Idea.** Sep-Latent (Zhejiang University and Alibaba) compresses a chain of thought into the
+   hidden states of separator tokens such as a newline. Training scales down attention to the
+   other reasoning tokens, so the reasoning moves into the separators. It also aligns separator
+   and answer hidden states with an explicit-chain teacher at every layer. The model stops by
+   emitting a termination token, so depth varies by query.
+2. **Reported result.** On Llama3.2-1B with GSM8k-Aug it scores 56.8% with 5.4 tokens. The
+   explicit-chain baseline scores 56.2% with 25.3 tokens. CODI scores 50.7% with 7.2 tokens.
+   Removing the attention decay gives 50.7%. Removing the distillation gives 47.2%. Removing both
+   gives 37.6%.
+3. **Limits stated by the authors.** It does not beat the explicit chain on every task. Written
+   chains give steadier supervision on harder logic tasks. The authors suggest reinforcement
+   learning as future work.
+4. **Problems in the paper.** The text and Table 1 disagree on MultiArith (95.7% against 97.7%)
+   and SVAMP (62.0% against 64.0%). The abstract says "more than two-fold" fewer tokens than CODI.
+   The table shows 5.4 against 7.2 tokens, about 1.3 times fewer. No code link appears.
+5. **What this means for Carnot.** Almost nothing. The paper tests arithmetic and commonsense
+   questions on 1B to 8B models. It has no ARC, verifier or test-time-learning content. It needs
+   distillation training and weight updates, and we may not update the mandated generator's
+   weights. A latent chain also gives a text-reading verifier less to check, the same point as
+   item 7 above. One observation fits our design: the correct answer often sits in the sampled
+   output distribution when greedy decoding misses it. That supports selecting among samples with
+   a verifier. It is not a new finding.
+
+Open: I did not read the PDF. I did not check the figures against the paper's own tables.

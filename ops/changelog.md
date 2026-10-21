@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-10-19 — Outer loop: depth-note corrections and tie-bias check (user requests: "Guard, review", "go", "ops")
+
+Each item below was triggered by a user instruction. None was agent-initiated.
+
+1. After a review ("Guard, review"), corrected three prose errors in the depth note: two per-game claims and one overreach. Appended as an addendum, not rewritten. Commit `99dedb2f8c` (local).
+2. Measured the tie bias in the within-game Spearman. Ordinal ranks (`argsort(argsort)`) against tie-averaged ranks (`scipy.stats.rankdata`) differ by at most 0.01 on the pooled figures. Clock-only 0.75 to 0.752. v1 0.41 to 0.405. v1 plus clock 0.74 to 0.730. No conclusion changes. Both within-game scripts now use `rankdata`. The "before" column comes from the earlier note text, not a re-run of the old code. Commit `02eb08cef2` (local), pushed as `3105a8672e` on both mirrors.
+3. `scripts/experiments/outer_loop_depth_calibration_20261018.py` still uses ordinal ranks. Not changed. The two sets of scripts are now inconsistent.
+
+Error lifecycle, step 6 (prevent): the push helper `push_safe.sh` fails closed on an empty base, an empty tip, a non-commit tip, or a replay conflict. It lives only in the session scratchpad. It is not in the repo and has no test.
+
+## 2026-10-18 — Outer loop: depth calibration of the cross-game value head (user requests: "go", "fix label", "per-game", "clock", "ops")
+
+All entries below were triggered by a user instruction in the outer-loop session. None was agent-initiated, except the ruff format noted in item 2.
+
+1. Measured whether a cross-game distance estimate is less reliable far from the goal. Leave-one-game-out ridge fit on 632 rows from 18 games. No held-out skill at any depth. Commit `c6b8601f41`. Script `scripts/experiments/outer_loop_depth_calibration_20261018.py`.
+2. Found and fixed a label defect in `scripts/arc_cross_game_verifier_train.py`. The label was `d/(d+1)` and saturated. It now divides by the level segment length. Added REQ-ARC-WMTE-7830 and two regression tests. Reran the test: skill unchanged. Commit `993417a4df`. Ruff reformatted two files that were already unformatted at HEAD (whitespace and wrapping only, about 240 lines). Shipped checkpoints were not retrained.
+3. Ran a within-game fit (train on other levels of one game, test on the held-out level). It looked like a depth signal for v1. Commit `c539a87363`. Script `outer_loop_depth_within_game_20261018.py`. That reading was later corrected (item 4).
+4. Ran a clock baseline (feature is steps since the level started). The clock alone gave pooled Spearman 0.75 and error 0.166. v1 gave 0.41 and 0.227. v1 plus clock gave 0.74 and 0.181. The within-game signal is a step counter. Within-level Spearman is uninformative because any rising counter ranks perfectly inside one level. Commits `aaf55ee79d` and `1fc3b4b372`. Script `outer_loop_depth_clock_baseline_20261018.py`.
+5. Push correction. A first push script replayed the label-fix commit again instead of the new commit. It created an empty duplicate commit on main (`275f21bc8a`). The three real commits were replayed in order afterwards. Final range on both mirrors: `275f21bc8a..5c56cc792c`.
+
+Error lifecycle, step 6 (prevent): the replay helper script rewrote its own commit id inside the push script. Check: compare the diffstat of the replayed tip with the local commit before you push. I did not build a lint for this.
+
 ## 2026-10-18 — Operational retrospective for milestone 2026.10.742
 
 - Wrote `results/operational_retro_2026_10_742.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.742`. Authoritative disk-mtime fallback data records 8 experiments completed (0 compute-bound, 8 synthesis-only) across 136.6 total wall-time minutes (average 17 minutes per experiment).
@@ -22573,3 +22595,31 @@ Artifact: `results/operational_retro_2026_10_741.json`.
 - 2026-10-19: Measure corrected reset-cause transfer across adapter-withheld live games (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_reset_transfer; results/experiment_8664_v743_arc_reset_transfer.json
 - 2026-10-19: Map new complete costs to actual KV260 PolarFire and GateMate operation limits (⚠️ Blocked) — honest_verdict=complete_blocked_v743_hardware_operation_evidence; results/experiment_8665_v743_hardware_operation_evidence.json
 - 2026-10-19: Reconcile fourteen outcomes and close exact unchanged scientific questions (⚠️ Blocked) — honest_verdict=complete_blocked_v743_capstone; results/experiment_8666_v743_capstone.json
+
+## 2026-10-19 — Outer loop: NCM and MEMORILLA reading, llm_on scope cut, partial pairing (user requests: "paper", NCM search, NCM training question, "check what the CNN experiment concluded", "status", "scope, note", "pair, ops")
+
+Each item below was triggered by a user instruction. None was agent-initiated.
+
+1. "paper": read the MEMORILLA paper page and repo. Venue unconfirmed. Only the abstract page was read. An earlier "4,000x" figure came from the page only. I corrected my own earlier claims.
+2. NCM-on-ARC search: no project found. The search collides with NCA (neural cellular automata). Leaderboard numbers were fragmentary and conflicting, so none were recorded.
+3. NCM training question: recommended not training on public-level solutions. It repeats the 2026-09-08 leave-one-game-out leak and gives no clean held-out test.
+4. CNN question: read exp4547, exp4629 and exp5590. Held-out delta AUROC 0.709. Cached first-win rate 0.407 to 0.591. Tiny model (8 channels, 497 examples). One run was a null.
+5. "note": appended the MEMORILLA and NCM-on-ARC addendum to the NCM note. Local commit `c1880a17e4`, not pushed.
+6. `pkill` incident (earlier this session): `pkill -x python` killed the llm_on variant-2 driver (exit 143). It also killed processes 1249, 512407 and 512411, which are still unidentified. Variant 3 then exited 2 ("BLOCKED: server not confirmed on the intended card"). Lesson: never use `pkill -x python` or `pkill -f`; kill by exact PID.
+7. "scope": stopped the variant 4 run by exact PID (2 cells done: ar25, bp35; one cd82 cell of about 1 h lost). `queue_v23.sh` then resumed variant 2 on GPU 1. Variant 3 follows automatically unless stopped. The variant 4 pace was 9181 s for one cell, so 25 games would take days.
+8. "pair": paired the 21 llm_on cells (19 variant 2, 2 variant 4) with the llm_off cells by `variant_signature`. Result in `ops/status.md`. No file in `results/` was written.
+
+Correction. The status entry above this one says the llm_on run had "25 paired cells: 1 win with the LLM off, 5 with it on". The current cells do not reproduce that. They give 21 paired cells, 2 wins with the LLM off, 3 with it on. I do not know the source of the earlier figures. Treat the earlier figures as unverified.
+
+Error lifecycle, step 6 (prevent): no check built for the `pkill` lesson. A check would fire on legitimate use of `pkill`, so it stays as prose here and in the session rules.
+
+
+## 2026-10-20 — Outer loop: looped-models video read, note addendum
+
+User asked what we can learn from https://youtu.be/UFTk5HBCtoo, then to fetch it with invidious on nassy.local, then to read the Haven note, then "note". I fetched metadata and the audio (captions were empty). I read the Haven session's note. I appended an addendum to the latent-reasoning research note. I retracted my first claim that 8 passes made monitoring worse: the paper finds it only on some tasks. Nothing was transcribed here. Nothing was pushed.
+
+### 2026-10-20 — Outer loop: media cleanup and guard
+User request: "cleanup the 9.7 MB audio file and associated video file and clean out and prevent those large assets from making it into the repo".
+- Deleted the scratch audio (`loops/loops.webm`, the old `vid/` audio and raw files) and the copy at `/tmp/loops.webm` on nassy. No video file was ever downloaded. Only audio was fetched. No media file was ever tracked in git (`git ls-files` showed none).
+- Added audio and video extensions to `.gitignore`. This stops `git add -A` and the conductor checkpoint path.
+- Added the `forbid-audio-video-files` pre-commit hook. It refuses a staged file by extension. The existing 50 MB size hook passes small files, so it did not cover this case.

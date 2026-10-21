@@ -45,6 +45,17 @@ repos:
       - id: check-added-large-files
         args: ["--maxkb=50000"]
 
+  # Media guard. The size hook above passes small files. This one refuses any
+  # staged audio or video file by type. The repo holds no media. Put downloads
+  # in the scratchpad, never in the tree.
+  - repo: local
+    hooks:
+      - id: forbid-audio-video-files
+        name: forbid audio and video files
+        language: fail
+        entry: audio or video file staged; keep media out of the repo
+        files: '(?i)\.(webm|mp4|mkv|mov|avi|m4a|opus|mp3|wav|flac|ogg)$'
+
   # Rust formatting
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0

@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+from scipy.stats import rankdata
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "scripts"))
@@ -20,8 +21,8 @@ from carnot.agentic.arc_value_learner import cross_game_features, cross_game_fea
 def spearman(a, b):
     if len(a) < 5 or np.std(a) == 0 or np.std(b) == 0:
         return None
-    ra = np.argsort(np.argsort(a))
-    rb = np.argsort(np.argsort(b))
+    ra = rankdata(a)  # average ranks for ties
+    rb = rankdata(b)
     return float(np.corrcoef(ra, rb)[0, 1])
 
 
