@@ -214,3 +214,33 @@ Nobody here measured it.
 
 Open: I did not read the cited papers or the transcript. I did not verify the Astra claims.
 Nanbeige4.2-3B (2607.22083) and Ouro are untested by us and are not the mandated model.
+
+## Addendum 2026-10-20: Sep-Latent (arXiv 2610.22924)
+
+Source: the arXiv HTML page, read through a fetch tool that returns a model summary. I did not
+read the PDF or check the tables myself. Every figure below is the authors' own.
+
+1. **Idea.** Sep-Latent (Zhejiang University and Alibaba) compresses a chain of thought into the
+   hidden states of separator tokens such as a newline. Training scales down attention to the
+   other reasoning tokens, so the reasoning moves into the separators. It also aligns separator
+   and answer hidden states with an explicit-chain teacher at every layer. The model stops by
+   emitting a termination token, so depth varies by query.
+2. **Reported result.** On Llama3.2-1B with GSM8k-Aug it scores 56.8% with 5.4 tokens. The
+   explicit-chain baseline scores 56.2% with 25.3 tokens. CODI scores 50.7% with 7.2 tokens.
+   Removing the attention decay gives 50.7%. Removing the distillation gives 47.2%. Removing both
+   gives 37.6%.
+3. **Limits stated by the authors.** It does not beat the explicit chain on every task. Written
+   chains give steadier supervision on harder logic tasks. The authors suggest reinforcement
+   learning as future work.
+4. **Problems in the paper.** The text and Table 1 disagree on MultiArith (95.7% against 97.7%)
+   and SVAMP (62.0% against 64.0%). The abstract says "more than two-fold" fewer tokens than CODI.
+   The table shows 5.4 against 7.2 tokens, about 1.3 times fewer. No code link appears.
+5. **What this means for Carnot.** Almost nothing. The paper tests arithmetic and commonsense
+   questions on 1B to 8B models. It has no ARC, verifier or test-time-learning content. It needs
+   distillation training and weight updates, and we may not update the mandated generator's
+   weights. A latent chain also gives a text-reading verifier less to check, the same point as
+   item 7 above. One observation fits our design: the correct answer often sits in the sampled
+   output distribution when greedy decoding misses it. That supports selecting among samples with
+   a verifier. It is not a new finding.
+
+Open: I did not read the PDF. I did not check the figures against the paper's own tables.
