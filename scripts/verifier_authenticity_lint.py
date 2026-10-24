@@ -79,6 +79,10 @@ ALLOWLIST = {
     "python/carnot/pipeline/findings_audit_2001.py",
     "python/carnot/pipeline/findings_audit_1984.py",
     # tests are allowed to validate the patterns
+    # False positive, operator-approved 2026-10-24: SCORE_FLOOR_AT_01 matches
+    # `max(-4.0, a - event.get("rate", 0.01) * b)`, a gradient clamp. The regex
+    # reads the `0.01` default in `.get(...)` as a score floor.
+    "python/carnot/verify/local_qualification_8333.py",
 }
 
 PATTERNS = [
@@ -136,9 +140,7 @@ def scan_file(path: Path) -> list[tuple[str, int, str, str]]:
     for kind, pat, why in PATTERNS:
         for m in pat.finditer(src):
             line_no = src[: m.start()].count("\n") + 1
-            line_text = (
-                lines[line_no - 1][:160] if line_no - 1 < len(lines) else ""
-            )
+            line_text = lines[line_no - 1][:160] if line_no - 1 < len(lines) else ""
             hits.append((kind, line_no, line_text, why))
     return hits
 

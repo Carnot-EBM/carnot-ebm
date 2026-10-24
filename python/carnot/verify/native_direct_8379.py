@@ -11,6 +11,7 @@ import math
 import os
 from pathlib import Path
 import shutil
+import tempfile
 from types import SimpleNamespace
 from typing import Any
 
@@ -109,6 +110,9 @@ def extension(private: Path, logs: Path, supplied: str | None = None) -> tuple[A
             raise ValueError("native_build_failed")
         path = project / "target/release/libcarnot_python.so"
     print("[exp8379] before_actual_extension_import", flush=True)
+    # The .so is built with coverage on. A prebuilt one skips the build branch above, so the
+    # profile path is unset and the runtime writes default_*.profraw into the cwd (repo root).
+    os.environ.setdefault("LLVM_PROFILE_FILE", f"{tempfile.gettempdir()}/carnot-8379-%p-%m.profraw")
     spec = importlib.util.spec_from_file_location("_rust", path)
     if spec is None or spec.loader is None:
         raise ValueError("extension_spec")

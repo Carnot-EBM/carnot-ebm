@@ -13,6 +13,9 @@ from pathlib import Path
 # probes all backends at startup, which fails with CUDA_ERROR_OUT_OF_MEMORY
 # when GPUs are occupied by other processes.
 os.environ.setdefault("JAX_PLATFORMS", "cpu")
+# Native test extensions are built with coverage on. Without this, they write
+# default_*.profraw into the cwd (the repo root) when loaded. See commit message.
+os.environ.setdefault("LLVM_PROFILE_FILE", f"{tempfile.gettempdir()}/carnot-llvm-%p-%m.profraw")
 
 import jax
 import pytest
