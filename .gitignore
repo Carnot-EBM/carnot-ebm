@@ -142,6 +142,14 @@ results/*.pt
 # gate at commit time, which is the only fix that closes this for good.
 results/raw/**/task_owned_model_cache/
 
+# 2026-10-24: two exact shapes of the >50MB files the staging guard kept out of
+# git (604 files, 91GB, moved to ~/carnot-oversized-raw-backup-20261024).
+# Only names with no small tracked twin are listed. Generic names such as
+# episode.json or measurement.json also have small tracked copies, so ignoring
+# them would hide real records. The commit-time size gate covers the rest.
+results/raw/**/logits.npy
+results/raw/**/custody/d3b51f2253ba58f0a7f299b883bc6b4f3a27f81701c9ab15accb3bd770a91669.4
+
 # Vivado intermediate / future-build artifacts.  The .gen/ subtree
 # contains >100 MB synthesized netlists (carnot_ising_bd_*_sim_netlist.v
 # and .vhdl) that GitHub also rejected.
