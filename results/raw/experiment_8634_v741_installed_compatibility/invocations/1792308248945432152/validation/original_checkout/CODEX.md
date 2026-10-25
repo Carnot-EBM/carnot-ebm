@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/CODEX.md

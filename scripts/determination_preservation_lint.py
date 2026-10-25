@@ -933,6 +933,23 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
     return out
 
 
+# Validation scratch copies of the repo (2026-10-24). A validator pass copied the whole
+# checkout under these dirs. Deleting a copy loses nothing if the live file at the same relative
+# path still carries every protected field. Fail-closed: no live twin, or a twin missing a
+# field, means the deletion is still refused.
+_SCRATCH_COPY = re.compile(
+    r"^(results/raw/.+/validation/(?:original_checkout|original_v738))/(?P<rel>.+)$"
+)
+
+
+def _scratch_copy_is_redundant(base: str, path: str, stakes: list[str]) -> bool:
+    m = _SCRATCH_COPY.match(path)
+    if not m:
+        return False
+    twin = _load_at(base, m.group("rel"))
+    return twin is not None and set(stakes) <= set(_protected_content(twin))
+
+
 def _check_side(ref: str | None, all_files: bool, staged: bool) -> list[str]:
     base = ref if ref else "HEAD"
     violations: list[str] = []
@@ -948,6 +965,8 @@ def _check_side(ref: str | None, all_files: bool, staged: bool) -> list[str]:
         if isinstance(loaded, (_Missing, _Unreadable)):
             stakes = _protected_content(old)
             if not stakes:
+                continue
+            if new_path is None and _scratch_copy_is_redundant(base, path, stakes):
                 continue
             if isinstance(loaded, _Missing):
                 what = (

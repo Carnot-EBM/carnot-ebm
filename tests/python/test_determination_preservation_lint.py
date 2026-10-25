@@ -1483,3 +1483,34 @@ def test_cleared_deliberately_never_reports_a_still_flagged_artifact_as_cleared(
         "flagged_adversarial_cleared_note": "Cleared 2026-07-29: re-verified, 0 flagged.",
     }
     assert dpl._cleared_deliberately(genuinely_cleared) is True
+
+
+def _commit_copy(r: Path, rel: str, art: Path) -> str:
+    """Commit a scratch copy of art under a validation/original_checkout dir; return its path."""
+    dest = r / "results/raw/exp_9/invocations/1/validation/original_checkout" / rel
+    dest.parent.mkdir(parents=True)
+    dest.write_text(art.read_text())
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "copy")
+    return str(dest.relative_to(r))
+
+
+def test_deleting_a_scratch_copy_whose_live_twin_survives_passes(repo):
+    r, art = repo
+    cp = _commit_copy(r, "results/experiment_1_thing.json", art)
+    _git(r, "rm", "-q", cp)
+    assert dpl.check() == []
+
+
+def test_deleting_a_scratch_copy_with_no_live_twin_is_still_refused(repo):
+    r, art = repo
+    cp = _commit_copy(r, "results/experiment_2_other.json", art)
+    _git(r, "rm", "-q", cp)
+    assert dpl.check()
+
+
+def test_deleting_the_live_artifact_is_still_refused_when_a_copy_exists(repo):
+    r, art = repo
+    _commit_copy(r, "results/experiment_1_thing.json", art)
+    _git(r, "rm", "-q", str(art.relative_to(r)))
+    assert dpl.check()

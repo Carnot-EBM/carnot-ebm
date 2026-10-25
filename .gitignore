@@ -417,3 +417,8 @@ ops/.autoresearch_experiment_log.json
 
 # LLVM coverage output written by instrumented test runs; regenerable.
 *.profraw
+
+# 2026-10-24: validation scratch copies of the repo (symlinks back to the live checkout
+# cause "Too many levels of symbolic links" on every git command). Untracked, left on disk.
+results/raw/**/validation/original_checkout/
+results/raw/**/validation/original_v738/
