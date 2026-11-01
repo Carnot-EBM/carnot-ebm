@@ -103646,6 +103646,48 @@ blocks; failed owned execution disqualifies. Learning execution readiness is1
 only after the exact union, original semantics, private E2E-020 and owned checks
 pass. Readiness grants no scientific benefit or physical hardware claim.
 
+## REQ-REPORT-8701: Relational feature and symbolic capacity audit
+
+Implementation: `python/carnot/reporting/relational_feature_8701.py`,
+`relational_feature_runner_8701.py` and the thin Exp8701 runner. Eleven focused
+tests cover all 318 newly owned statements, including real CLI rejection and
+retained child replay. The constructed audit covers 480 views and 120 exact
+opposite-truth lexical collisions. Overall readiness remains blocked because the
+registered nine-input head lacks candidate p2 probabilities in the supplied
+worlds. See `docs/research-notes/v746-relational-feature-audit.md`. Ops and
+traceability reconciliation for this invocation is conductor-owned.
+
+Bind the full V746 contract and original branch operands, including Exp8698's
+terminally accepted 480 views. Freeze all sources, tests and configuration before
+measurement. Compare unchanged complete-source lexical vectors at chunks 1/32/128;
+retain exact opposite-truth collisions and equivalent-wording controls per world.
+Authenticate the frozen nine-input head separately. Missing candidate p2 input
+must block its evaluation, never be replaced by an invented constant or truth.
+Report every intended unit and arm, clocks, spans, decisions and distinct missing
+file, missing field, zero and changed-byte failures. Oracle records provide only
+constructed capacity, never natural extraction or an oracle-distinct benefit.
+
+### SCENARIO-REPORT-8701-CAPACITY
+
+Static parameterized SQLite queries are fixed before candidate inspection.
+Complete records agree with all 480 truth controls; deleting required records
+escalates unknowns; reversed relations remain distinct from omissions. Retain
+separate extraction omission, wrong relation, wrong query and wrong decision
+diagnostics and all equivalence checks. No generated SQL or Python is executed.
+Readiness requires complete intended coverage, equivalence/unknown correctness,
+producer authority and complete owned validation. Missing numerical operands
+leave overall readiness blocked even when symbolic capacity checks pass.
+
+### SCENARIO-REPORT-8701-CUSTODY
+
+Flagged producers never grant readiness. Retain disjoint child SQLite, JUnit,
+commands, source hashes, real exits and durations before combining copies.
+Require 100 percent newly owned statements, actual private CLI success and
+rejection, private E2E-018/021, unchanged scanners and fresh cold replay. Reject
+missing operands and consistently rehashed tampering. Owned failures disqualify;
+external incompleteness blocks. Publish checked final bytes atomically. Preserve
+historical quarantines and V733/V735/V737/V743 nulls. No model is loaded.
+
 ## REQ-REPORT-8698: Answer-independent relational world qualification
 
 Authenticate the original V744 protocol, integer evaluator, 120 worlds, admissible
