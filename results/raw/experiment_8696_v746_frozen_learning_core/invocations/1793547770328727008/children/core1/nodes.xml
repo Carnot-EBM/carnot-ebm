@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="15" time="695.454" timestamp="2026-11-01T10:47:35.314531-05:00" hostname="icbfl1"><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_original_authority_and_missing" time="23.293" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_fixed_stream_restart_and_counters" time="49.515" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_wrong_rule_and_duplicate_delivery" time="0.367" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_real_cli_publication_and_rejections" time="360.271"><failure message="AssertionError: Traceback (most recent call last):&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8582_v737_causal_brier_stream.py&quot;, line 14, in &lt;module&gt;&#10;      raise SystemExit(main())&#10;                       ^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_brier_runner_8582.py&quot;, line 152, in main&#10;      return run(&#10;             ^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_brier_runner_8582.py&quot;, line 113, in run&#10;      publication = publish_primary(output, value, lambda path: terminal(path, raw))&#10;                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py&quot;, line 73, in publish_primary&#10;      raise ValueError(&quot;candidate_rejected&quot;)&#10;  ValueError: candidate_rejected&#10;  &#10;assert False">measured = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261101T154720-1077077-2357c141/causal85820'), {'adversarial_findings': ...ning_report_8434.py', 'sha256': 'sha256:132c9e3171f1369892a0ab7d23bc02cb87ff473aa3456c70128023a1fae9927e'}, ...], ...})
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261101T154720-1077077-2357c141/test_real_cli_publication_and_0')
+
+    def test_real_cli_publication_and_rejections(measured, tmp_path):
+        """SCENARIO-VERIFY-8582-PUBLICATION: private actual CLI and cold mutations."""
+        _, work = measured
+        output = tmp_path / (e.NAME + ".json")
+        argv = [sys.executable, "-u", str(e.ROOT / e.CLI)]
+        receipt = child(
+            "private",
+            [
+                *argv,
+                "--private-output",
+                str(output),
+                "--resume-measurement",
+                str(Path(work["raw"]) / "measurement.json"),
+            ],
+            tmp_path / "logs",
+            deadline=600,
+        )
+&gt;       assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8582_v737_causal_brier_stream.py", line 14, in &lt;module&gt;
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_brier_runner_8582.py", line 152, in main
+E             return run(
+E                    ^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/causal_brier_runner_8582.py", line 113, in run
+E             publication = publish_primary(output, value, lambda path: terminal(path, raw))
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert False
+
+tests/python/test_causal_brier_stream_8582.py:106: AssertionError</failure></testcase><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_owned_failures_and_gate_classes" time="35.505" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_source_resource_and_upstream_rejections" time="0.240" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_rehashed_primitive_rejections" time="141.680" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_measurement_adapter_and_counter_rejection" time="6.625" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_production_dispatch_and_deadline" time="19.950" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_validation_requires_exact_nodes_and_measured_statements" time="0.119" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_owned_worker_cli_uses_original_head" time="35.935" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_validation_supervision_budget" time="0.001" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_rejected_publication_and_readiness" time="0.004" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_retention_comparison_rejects_drift" time="13.132" /><testcase classname="tests.python.test_causal_brier_stream_8582" name="test_resumed_history_is_sealed_before_validation" time="4.641" /></testsuite></testsuites>

@@ -103610,3 +103610,20 @@ Reject count, order, identity, title, phase, path, model, substrate, prompt, gat
 prior-failure, marker, table and digest mutations, including coordinated rehashes.
 Construct reports without mutating nested inputs. Publish only validated final
 bytes through unchanged primary_publication and retain terminal scanner results.
+
+## REQ-REPORT-8696: Frozen original learning core
+
+Authenticate the V746 full-object contract and Exp8695 terminal producer, and read
+the pinned V744 scientific operands directly. Preserve the exact 39-node cohort A,
+27-node original runner subset and 25-node remainder. Readiness requires a fresh
+invocation, retained producer SQLite/JUnit, owned statement coverage and matching
+before/after transitive source identities. Cohort A never authorizes training.
+Preserve Exp8654 source-drift rejection and all historical quarantines and nulls.
+
+### SCENARIO-REPORT-8696-CORE
+
+Collect once, group by original module/fixture identity and admit each complete
+child budget before the 3600-second measurement boundary. Retain real exits,
+durations, configuration, sources and coverage before combining copies. Missing
+external files/fields, observed zero and changed bytes have distinct gate rows.
+Failed owned checks disqualify even when an external prerequisite also fails.

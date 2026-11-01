@@ -57138,3 +57138,30 @@ and rejects missing or rehashed operands. Keep disk-backed scratch, flushed phas
 counts and parent heartbeats within60 seconds. Run private E2E-018/021 separately.
 External incompleteness blocks; owned failures disqualify. Ops reconciliation is
 conductor-owned.
+
+## REQ-VERIFY-8696: Sealed core replay and publication
+
+Freeze transitive sources, tests, configuration and original numerical operands
+before execution in a private disk-backed checkout bundle. Preserve canonical
+fixture paths and require their bytes to equal the private seal before and after
+every child. Retain separate producer and owned coverage; consumer coverage cannot
+qualify either. No model loads or language-model calls occur.
+
+### SCENARIO-VERIFY-8696-REPLAY
+
+Actual private CLI success/rejection and fresh bounded cold replay must reject
+missing operands, aggregate tampering and consistently rehashed primitive changes
+against an independent seal. Validate exact final bytes through unchanged
+primary_publication, adversarial verification and strict row lint. Require100
+percent newly owned statements, private E2E-018/021 and retained actual receipts.
+Optional hardware never vetoes CPU execution. Reconciliation is conductor-owned.
+
+### SCENARIO-VERIFY-8696-FIXTURE-CLOCK
+
+A cached mechanics fixture may contain clocks from an earlier boot. Before the
+source/input seal, copy its four scientific data files byte for byte and create
+a private fixture with a measured current monotonic start/end pair. Only raw
+location and these two clocks may differ. Keep original cells, coefficients,
+labels, restart receipts and original fixture hash unchanged. A failed invocation
+with a negative resumed duration remains disqualified; the corrected adapter
+requires a new complete invocation and cannot reuse its passing nodes.
