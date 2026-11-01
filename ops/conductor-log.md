@@ -21037,3 +21037,4 @@ code |
 | 2026-11-01 07:19 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
 | 2026-11-01 07:51 UTC | Plan milestone 2026.11.745 | OK | 14 tasks proposed |
 | 2026-11-01 08:07 UTC | Milestone 2026.11.745 activated | OK | 14 tasks queued |
+| 2026-11-01 09:33 UTC | Bind fourteen tasks after qualifying immutable rep | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 99 passed, 1 warning in 192.54s (0:03:12) |
