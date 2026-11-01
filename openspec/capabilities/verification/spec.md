@@ -57003,3 +57003,41 @@ real failed/killed children and bounded measurement failures. Qualification uses
 the existing disjoint collector, separate consumer instrumentation and retained
 raw SQLite/JUnit. Final-byte cold/adversarial/strict-row readers precede atomic
 publication. The result retains actual receipts; no historical assertion changes.
+
+## REQ-VERIFY-8681: Original-node and immutable evidence qualification
+
+Accept --date20261101. Freeze source, tests, configuration and inputs before
+measurement. Execute all77 original contract nodes and new regressions in bounded
+private children. Preserve original SQLite, commands, JUnit, exits and clocks
+before combining copies. Require100 percent newly owned statements and exercise
+the original line113 rejection. Run scoped Ruff, strict mypy, spec tracing and
+private E2E-018/021. No full suite or recursive historical controller.
+
+### SCENARIO-VERIFY-8681-REPLAY
+
+Fresh replay reconstructs the independent measurement and rejects absent operands,
+changed streams and self-consistently rehashed local replacements. Actual private
+CLI success, owned failure and rejection paths qualify. Final cold, adversarial
+and strict-row checks precede atomic publication. Preserve stamped quarantines.
+Ops, status, changelog and traceability reconciliation is conductor-owned.
+
+Implementation20261101: test_v745_contract_8681.py executes the retained mutation,
+complete nested-hash regressions, real retained SQLite rejection controls,
+independent authority mutations, private CLI and failed-child paths. The runner
+collects original nodes once and retains disjoint JUnit and SQLite before combine.
+Cold replay and unchanged terminal validators determine publication qualification.
+
+### SCENARIO-VERIFY-8681-STANDALONE
+
+Ordinary pytest and standalone original CLI invocations SHALL authenticate the
+exact retained ARC source operand without requiring a pytest plugin. Only the
+registered source path and SHA256 may resolve to its retained snapshot. Missing
+or changed snapshots SHALL reject. Other source/hash pairs SHALL use ordinary
+file authentication. Preserve live source bytes, original contract assertions
+and historical result bytes.
+
+Verified 20261101: 132 relevant tests passed with zero skips, including all 77
+original nodes, 18 V745 cases and private E2E-018/021. Genuine unit, plugin and
+standalone CLI executions cover all 638 statements in the seven affected files
+at 100 percent. Scoped Ruff, strict mypy and spec tracing pass. Existing global
+spec-reference and architecture-age reconciliation failures remain separate.

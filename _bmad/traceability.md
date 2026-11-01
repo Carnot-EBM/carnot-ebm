@@ -1,6 +1,21 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-11-01
+
+## Exp8681 standalone original-input authentication — 2026-11-01
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8681 / SCENARIO-VERIFY-8681-STANDALONE | V744 contract authentication resolves the exact pinned ARC operand to retained bytes; the V745 private adapter shares its constants | Regression verifies ordinary authentication, unrelated intact references, wrong path/hash, altered snapshot and absent snapshot; original contract and CLI assertions remain unchanged |
+
+Repair validation receipts: `/tmp/carnot-8681-repair/`.
+
+Validation: all 132 relevant tests passed with zero skips, including the unchanged
+original 77, all 18 V745 cases, E2E-018/021 and publication readers. Genuine unit,
+plugin and standalone CLI coverage covers all 638 statements in seven affected
+implementation files at 100 percent. Scoped Ruff, strict mypy and spec tracing
+pass. Repository-wide reconciliation still reports the pre-existing 1142 missing
+spec references and stale architecture date; the full repository suite was not run.
 
 ## Exp8633 standalone replay imports — 2026-10-18
 

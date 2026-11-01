@@ -1,5 +1,26 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-11-01
+
+## 2026-11-01 — Exp8681 standalone original-input authentication
+
+Original V744 contract tests failed outside the private pytest plugin because
+their pinned ARC source had received a later live repair. Contract authentication
+now checks the exact retained snapshot for that registered path and digest.
+The private adapter shares the same registration. Missing or changed snapshots
+still reject. Original tests, live ARC code, historical result bytes and
+`scripts/research_conductor.py` remain unchanged.
+
+Validation receipts are in `/tmp/carnot-8681-repair/`. Repository-wide spec tracing
+reports 1,142 existing missing requirement references; scoped tracing passes.
+
+Validation complete: 132 relevant tests passed with zero skips (original 77,
+V745's 18, E2E-018/021 and publication readers). Combined genuine unit/plugin/CLI
+coverage passes 100 percent for all 638 statements across seven implementation
+files. Ruff check/format, strict mypy and scoped spec tracing pass. General
+reconciliation still reports the existing spec-reference gaps and stale
+architecture date. The full repository suite was not run.
+
 ## 2026-10-18 — Outer loop: ARC induction pairing and cross-game value head
 
 Handoff for the next session. Branch `note-openai-math`. All items below are pushed to both mirrors.

@@ -103498,3 +103498,39 @@ map independently admitted operations to KV260, PolarFire and GateMate with thei
 physical limits intact. Exp8694 SHALL account for fourteen slots, retain literal
 classes and use stable publication G1–G4. External missing science is blocked;
 unexecuted hypotheses are not retired as scientific negatives.
+
+## REQ-REPORT-8681: Immutable V745 method registration
+
+Exp8681 SHALL bind exactly fourteen full tasks, the visible table, versioned
+markers and digest against an independent canonical seal. Staged or activated
+V745 authority is sufficient. Preserve original V744 objectives, cohorts,
+relational corpus, installed batching protocols and historical result bytes.
+Register symbolic extraction and numerical feasibility as separate studies.
+Original admissible operands determine branch readiness. Failed owned checks
+force methods readiness to zero. Optional CUDA absence stays branch-local.
+
+### SCENARIO-REPORT-8681-AUTHORITY
+
+Reject changed counts, order, IDs, titles, phases, deliverables, models,
+substrates, prompts, gates, prior failures, markers, table and digest. Reject
+consistent replacements even when all mutable authorities are rehashed.
+
+### SCENARIO-REPORT-8681-IMMUTABLE
+
+Reproduce the original nested mutation from the retained source bundle. Hash the
+complete measurement before build, repeated build and fresh replay. The corrected
+boundary SHALL preserve every nested operand. A real retained SQLite shard passes;
+missing or changed shards reject. The original77 contract tests retain authority.
+
+Implementation20261101: v745_contract_methods/report/runner and the thin Exp8681
+entrypoint provide independent task authority, exact original branch manifests,
+terminal producer custody and pure report construction. An explicit private
+adapter authenticates the retained original ARC input for unchanged contract
+nodes. It preserves the later live repair and historical disqualification.
+The result's invocation receipts determine measured qualification.
+
+Standalone repair20261101: original contract authentication resolves only the
+registered ARC source path and digest to its retained snapshot. Ordinary pytest
+and direct CLI runs share this check with the private adapter. Live source,
+original assertions and historical artifacts remain intact; missing or changed
+snapshots fail authentication.

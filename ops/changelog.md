@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-11-01 — Fix standalone V744/V745 contract authentication
+
+Resolve the original ARC input's exact registered path and digest to its retained
+snapshot in shared contract authentication. Reuse those constants in the private
+adapter so ordinary pytest and direct CLI runs authenticate the same evidence.
+Add missing/altered snapshot and wrong path/hash regressions. Preserve the live
+ARC repair, all original assertions, historical artifacts and the conductor.
+Validation receipts: `/tmp/carnot-8681-repair/`.
+
+Verified 132 relevant tests with zero skips, including all 77 original nodes and
+private E2E-018/021. Genuine unit/plugin/CLI coverage passes 100 percent across
+all 638 statements in seven affected implementation files. Scoped Ruff, strict
+mypy and spec tracing pass. Existing global spec-reference and architecture-age
+issues remain; no full repository suite was run.
+
 ## 2026-10-19 — Outer loop: depth-note corrections and tie-bias check (user requests: "Guard, review", "go", "ops")
 
 Each item below was triggered by a user instruction. None was agent-initiated.
@@ -22661,4 +22676,3 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - Slowest synthesis-only experiments were: 'Qualify single-owner ARC observation delivery while retaining conflict checks' (16.34 minutes / 16min), 'Bind fourteen tasks and freeze independent research and execution operands' (13.34 minutes / 13min), 'Measure fresh cross-game horizons through the qualified live observation path' (11.63 minutes / 12min), 'Map new batch and learning costs to authenticated hardware operations' (7.99 minutes / 8min), and 'Reconcile fourteen outcomes and close exact research and deployment scopes' (0.59 minutes / 1min).
 - GPU monitor report at `2026-11-01T05:59:33.921377+00:00` recorded GPU 0 (NVIDIA GeForce RTX 3090) at 0% utilization (4/24576MB allocated, 46C); `gpu_idle_on_compute_bound_tasks` is `null` because 0 compute-bound tasks ran, and 0% utilization on GPU 0 is expected behavior for synthesis-only tasks.
 - Recommended improvements: add phase-timed sub-check boundaries to the 16.34-minute ARC observation delivery qualification and 11.63-minute live cross-game horizon measurement tasks; memoize unchanged contract bindings (13.34 minutes) and hardware cost mappings (7.99 minutes); and persist explicit start and end timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction.
-

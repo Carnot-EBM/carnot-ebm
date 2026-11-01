@@ -52,7 +52,19 @@ OWNED = [
 MODEL_SPECS: list[Json] = []
 reference, read, tasks_digest = base.reference, base.read, base.tasks_digest
 checksum, atomic_json, sha256_file = base.checksum, base.atomic_json, base.sha256_file
-checked = readers.checked
+ARC_SOURCE = ROOT / "python/carnot/agentic/arc_competition_agent.py"
+ARC_ARCHIVE = (
+    ROOT
+    / "results/raw/experiment_8681_v745_contract_methods/original_inputs/arc_competition_agent.py"
+)
+ARC_PIN = "sha256:49ef8d079585454de40cc2b92600a2be5c4d12dbc69fc5e95f21b20de01cd58c"
+
+
+def checked(ref: Json) -> bool:
+    """Authenticate the sealed ARC operand from retained bytes after its live repair."""
+    if ref == dict(path=str(ARC_SOURCE), sha256=ARC_PIN):
+        return bool(readers.checked(dict(path=str(ARC_ARCHIVE), sha256=ARC_PIN)))
+    return bool(readers.checked(ref))
 
 
 def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
