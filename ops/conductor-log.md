@@ -21018,3 +21018,5 @@ code |
 | 2026-11-01 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8409_v724_retrospective_label_criterion.json age-week 3: OPEN 21 days |
 | 2026-11-01 00:06 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_uniform_energy_ablation_evidence age-week 2: OPEN 14 |
 | 2026-11-01 01:34 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-01 02:07 UTC | Plan milestone 2026.11.744 | OK | 14 tasks proposed |
+| 2026-11-01 02:20 UTC | Milestone 2026.11.744 activated | OK | 14 tasks queued |
