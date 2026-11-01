@@ -103595,6 +103595,34 @@ Recompute numerical error/parity from original per-update rows and preserve each
 format. Reject omitted rows, inconsistent summaries and changed bytes. Exposed,
 constructed and independent natural evidence remain distinct. No fresh model call.
 
+## REQ-REPORT-8702: Independently authenticated installed bounded batches
+
+Bind the fourteen full V746 task objects and canonical digest locally through
+the existing reader. Authenticate original Exp8660 compatibility, Exp8661 cost
+and the pinned V744 installed batching method with their terminal producers.
+Missing files, missing fields, numerical zero and changed bytes are distinct
+external blockers. Flagged producers cannot grant readiness. Preserve all
+historical quarantines and V733/V735/V737/V743 nulls. No model loads or LLM calls.
+
+### SCENARIO-REPORT-8702-INSTALLED
+
+Freeze source, tests and configuration before building and measuring a wheel.
+Exercise the installed CLI and actual PyO3 extension outside the checkout with
+matching features, probabilities within 1e-12 and exact typed decisions. Retain
+original compatibility nodes and assertions, public imports and private-output
+guards. Publish batch_service_ready_score=1 only after complete owned validation.
+Emit the registered sixty-cell complete-cost roster for Exp8703. Deployability
+and parity establish no throughput, independent generalization or learning gain.
+
+### SCENARIO-REPORT-8702-CUSTODY
+
+Retain real child exits, clocks, JUnit, immutable SQLite and source references
+before combining copies. Require 100 percent newly owned statements, real CLI
+success/rejection, private E2E-018/021, Ruff, strict mypy and traced tests. Fresh
+cold replay rejects missing operands and consistently rehashed tampering.
+Unchanged validators check final bytes before atomic publication. Owned failures
+disqualify; unchanged external incompleteness blocks. Reconciliation is conductor-owned.
+
 ## REQ-REPORT-8695: Retained V746 branch authority
 
 Bind all fourteen complete V746 task objects, the visible table, both markers

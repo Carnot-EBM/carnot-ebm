@@ -1,0 +1,968 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="8" failures="3" skipped="0" tests="19" time="33.399" timestamp="2026-11-01T14:52:38.357114-05:00" hostname="icbfl1"><testcase classname="tests.python.test_installed_batch_report_8702" name="test_original_inputs_and_registered_roster" time="0.330"><failure message="AssertionError: [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026.11.746', 'field': 'v746_authority', ...}]&#10;assert False">def test_original_inputs_and_registered_roster():
+        """REQ-REPORT-8702: original accepted producers, not Exp8681, authorize work."""
+        value = e.inputs(e.ROOT)
+&gt;       assert value["passed"], value["gate_check_summary"]
+E       AssertionError: [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026.11.746', 'field': 'v746_authority', ...}]
+E       assert False
+
+tests/python/test_installed_batch_report_8702.py:15: AssertionError</failure></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_external_failure_states" time="0.002" /><testcase classname="tests.python.test_installed_batch_report_8702" name="test_terminal_binding" time="0.001" /><testcase classname="tests.python.test_installed_batch_report_8702" name="test_original_byte_change_blocks" time="0.001" /><testcase classname="tests.python.test_installed_batch_report_8702" name="test_private_cli_guards" time="2.400" /><testcase classname="tests.python.test_installed_batch_report_8702" name="test_actual_installed_success_and_rejection" time="26.843"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_build_and_sealed_replay" time="0.000"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_wheel_failure_paths" time="0.533" /><testcase classname="tests.python.test_installed_batch_report_8702" name="test_validation_keeps_disjoint_roles" time="0.205" /><testcase classname="tests.python.test_installed_batch_report_8702" name="test_run_success_and_replay_controls" time="0.000"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_owned_failures_stay_disqualified" time="0.345"><failure message="AssertionError: assert None == 'cpu_scratch_memory'">tmp_path = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/test_owned_failures_stay_disqu0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7fc38557fdd0&gt;
+
+    def test_owned_failures_stay_disqualified(tmp_path, monkeypatch):
+        """REQ-REPORT-8702: resource and measurement errors remain failed owned checks."""
+        from carnot.reporting import installed_batch_runner_8702 as r
+    
+        monkeypatch.setattr(r.shared, "source_hashes", lambda: [])
+        monkeypatch.setattr(
+            r.shared,
+            "preconditions",
+            lambda *a: dict(disk_backed=False, writable=True, free_memory_kib=1, free_disk_bytes=1),
+        )
+        monkeypatch.setattr(r, "publish_primary", lambda output, value, validator: {})
+        assert r.run(tmp_path / (e.NAME + ".json"), private=True) == 0
+        work = json.loads(next(tmp_path.glob("raw/**/work.json")).read_text())
+&gt;       assert work["owned_error"] == "cpu_scratch_memory"
+E       AssertionError: assert None == 'cpu_scratch_memory'
+
+tests/python/test_installed_batch_report_8702.py:273: AssertionError</failure></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_installed_budget_reset_and_opt_out" time="0.000"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_missing_original_operand_and_assertions" time="0.308"><failure message="KeyError: 'observed_state'">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7fc3805ce870&gt;
+tmp_path = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/test_missing_original_operand_0')
+
+    def test_missing_original_operand_and_assertions(monkeypatch, tmp_path):
+        """REQ-REPORT-8702: missing registered extension and corrupted head assertions fail closed."""
+        original = Path.is_file
+        monkeypatch.setattr(Path, "is_file", lambda p: False if str(p).endswith(".so") else original(p))
+        result = e.inputs(e.ROOT)
+        assert not result["passed"]
+&gt;       assert result["gate_check_summary"][0]["observed_state"] == "missing_file"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'observed_state'
+
+tests/python/test_installed_batch_report_8702.py:325: KeyError</failure></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_measure_rejects_failed_children" time="0.000"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_install_and_public_contract_failures" time="0.000"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_protocol_delta_is_nonempty" time="0.044" /><testcase classname="tests.python.test_installed_batch_report_8702" name="test_replay_operand_and_custody_failures" time="0.000"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_measure_deadline_and_wrong_response_ids" time="0.000"><error message="failed on setup with &quot;KeyError: 'extension'&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _trace=&lt;pluggy._tracing.TagTracerS...099c2f0&gt;, _basetemp=PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def installed(tmp_path_factory):
+        """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+        from carnot.reporting import installed_batch_measure_8702 as m
+    
+        root = tmp_path_factory.mktemp("installed8702")
+        scratch = root / "scratch"
+        scratch.mkdir()
+        inputs = e.inputs(e.ROOT)
+&gt;       result = m.measure(root / "raw", scratch, inputs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_installed_batch_report_8702.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/installed_batch_measure_8702.py:260: in measure
+    command, config, receipts, identities = prepare(raw, scratch, inputs)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/raw')
+scratch = PosixPath('/var/tmp/installed8702-2ymns8ad/9/tmp/installed87020/scratch')
+inputs = {'contract': {'gate_check_summary': [{'artifact_field': 'v746_authority', 'check': 'v746_authority', 'expected': '2026...als/v744-methods-protocol.json', 'sha256': 'sha256:842e28d27098b7dadf41290c407e72cfa4019a2cbb09429c492355aa0f55cb67'}]}
+
+    def prepare(raw: Path, scratch: Path, inputs: Json) -&gt; tuple[list[str], Path, list[Json], Json]:
+        """Build current sources offline and install without importing the checkout package."""
+        source = scratch / "source"
+        source.mkdir()
+        shutil.copytree(
+            e.ROOT / "python",
+            source / "python",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.egg-info"),
+        )
+        for name in ["pyproject.toml", "README.md", "LICENSE", "NOTICE"]:
+            shutil.copyfile(e.ROOT / name, source / name)
+        receipts = [
+            child(
+                "build_wheel",
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "wheel",
+                    "--no-index",
+                    "--no-deps",
+                    "--no-build-isolation",
+                    str(source),
+                    "-w",
+                    str(raw / "wheels"),
+                ],
+                raw,
+                deadline=180,
+            )
+        ]
+        if not receipts[-1]["passed"]:
+            raise ValueError("wheel_build")
+        (wheel,) = (raw / "wheels").glob("*.whl")
+        environment = scratch / "environment"
+        receipts.append(
+            child(
+                "venv",
+                [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
+                raw,
+                deadline=90,
+            )
+        )
+        python = str(environment / "bin/python")
+        (site,) = environment.glob("lib/python*/site-packages")
+        (site / "local-dependencies.pth").write_text(sysconfig.get_path("purelib") + "\n")
+        receipts.append(
+            child(
+                "install_wheel",
+                [
+                    python,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-index",
+                    "--no-deps",
+                    "--ignore-installed",
+                    str(wheel),
+                ],
+                raw,
+                deadline=90,
+            )
+        )
+        if not all(r["passed"] for r in receipts):
+            raise ValueError("wheel_install")
+        probe = (
+            "import os,runpy,json,importlib.metadata;from pathlib import Path;"
+            f"os.chdir({str(scratch)!r});"
+            "from carnot.inference import resident_protocol as p;"
+            f"assert str(p.__file__).startswith({str(site)!r});"
+            f"s=runpy.run_path({str(e.ROOT / 'tests/python/test_installed_lean_8633.py')!r});"
+            f"[s[n](Path({str(scratch)!r})) for n in ['test_lean_import_and_no_path_mutation','test_original_export_contract','test_optional_jax_absence','test_module_cli_help_and_rejection']];"
+            "s['test_legacy_contract_snapshot']();"
+            "d=importlib.metadata.distribution('carnot-ebm');"
+            "print(json.dumps(dict(origin=p.__file__,record=d.read_text('RECORD'),versions={n:importlib.metadata.version(n) for n in ['carnot-ebm','numpy','scipy','pip','setuptools']})))"
+        )
+        receipts.append(
+            child(
+                "installed_public_contract",
+                ["env", "-u", "PYTHONPATH", python, "-u", "-c", probe],
+                raw,
+                deadline=90,
+            )
+        )
+        if not receipts[-1]["passed"]:
+            raise ValueError("installed_public_contract")
+        identity = json.loads(Path(receipts[-1]["stdout_path"]).read_text().splitlines()[-1])
+        e.atomic_json(raw / "installed_identity.json", identity)
+&gt;       extension = site / "carnot_native" / Path(inputs["extension"]["path"]).name
+                                                  ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'extension'
+
+python/carnot/reporting/installed_batch_measure_8702.py:113: KeyError</error></testcase><testcase classname="tests.python.test_installed_batch_report_8702" name="test_measurement_cap_is_owned_failure" time="0.358" /></testsuite></testsuites>

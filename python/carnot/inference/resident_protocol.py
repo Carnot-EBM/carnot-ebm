@@ -112,7 +112,15 @@ def configuration(path: Path, digest: str, arm: str) -> tuple[Json, Any, Json | 
     return config, native, loaded
 
 
-def decide(value: Any, config: Json, digest: str, native: Any, seen: set[str]) -> Json:
+def decide(
+    value: Any,
+    config: Json,
+    digest: str,
+    native: Any,
+    seen: set[str],
+    *,
+    remaining: int | None = None,
+) -> Json:
     """Each rejection creates a fresh error with no successful payload attached."""
     identifier = value.get("request_id") if isinstance(value, dict) else None
     try:
@@ -131,6 +139,31 @@ def decide(value: Any, config: Json, digest: str, native: Any, seen: set[str]) -
         seen.add(identifier)
         if value.get("operation") == "shutdown":
             return dict(request_id=identifier, status="shutdown", config_hash=digest)
+        if remaining is not None:
+            items = value.get("rows")
+            count = (
+                len(items) if value.get("operation") == "batch" and isinstance(items, list) else 1
+            )
+            if count > remaining:
+                raise ValueError("item_budget")
+        if value.get("operation") == "batch":
+            if __package__:
+                from . import resident_batch
+            else:
+                import resident_batch
+            responses, spans, features = resident_batch.evaluate(
+                config["head"], value.get("rows"), native, config.get("max_batch_size")
+            )
+            if time.monotonic_ns() >= deadline:
+                raise ValueError("evaluation_deadline")
+            return dict(
+                request_id=identifier,
+                status="ok",
+                config_hash=digest,
+                responses=responses,
+                spans=spans,
+                feature_hashes=features,
+            )
         if value.get("operation") != "infer":
             raise ValueError("operation")
         response, spans = numeric.evaluate(config["head"], value["row"], native)
@@ -165,6 +198,11 @@ def serve(path: Path, digest: str, arm: str, timeout: float = 15) -> int:
             ),
         )
         seen: set[str] = set()
+        remaining = config.get("item_budget", 1024)
+        if "max_batch_size" in config and (
+            type(remaining) is not int or not 1 <= remaining <= 1024
+        ):
+            raise ValueError("item_budget")
         for index in range(MAX_REQUESTS):
             payload = read_frame(0, timeout)
             if payload is None:
@@ -175,7 +213,17 @@ def serve(path: Path, digest: str, arm: str, timeout: float = 15) -> int:
                 value = json.loads(payload)
             except (ValueError, UnicodeError):
                 value = None
-            response = decide(value, config, digest, native, seen)
+            response = decide(
+                value,
+                config,
+                digest,
+                native,
+                seen,
+                remaining=remaining if "max_batch_size" in config else None,
+            )
+            if "max_batch_size" in config and response["status"] == "ok":
+                count = len(response["responses"]) if "responses" in response else 1
+                remaining -= count
             write_frame(1, response, timeout)
             if (index + 1) % 100 == 0:
                 print(

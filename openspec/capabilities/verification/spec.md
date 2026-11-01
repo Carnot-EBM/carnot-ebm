@@ -57182,3 +57182,19 @@ publication, adversarial and strict row validation, private E2E-018/020/021 and
 fresh bounded cold replay. Reject absent operands and rehashed primitive changes
 against an independent invocation seal. Keep flushed parent heartbeats within60
 seconds. Publish only checked final bytes. Ops reconciliation is conductor-owned.
+
+## REQ-VERIFY-8702: Opt-in bounded installed batch envelopes
+
+The resident protocol accepts operation=batch only with an explicit max_batch_size
+integer from1 through16. Preserve single infer behavior and the65536-byte frame,
+request identity, immutable config, deadline and session bounds. Count items,
+not envelopes, against an opt-in session budget of at most1024. Never cache answers.
+
+### SCENARIO-VERIFY-8702-ENVELOPE
+
+Reject an empty, oversized, malformed, private-field, invalid-probability or
+repeated-item-ID envelope in full, without successful payload leakage. Recompute
+all complete text features and numerical work. Match Python/native features,
+probabilities within1e-12 and exact typed decisions for every admitted item.
+Exercise stale/duplicate envelope IDs, expired deadlines, truncated frames,
+reset sessions and state isolation using actual installed child processes.

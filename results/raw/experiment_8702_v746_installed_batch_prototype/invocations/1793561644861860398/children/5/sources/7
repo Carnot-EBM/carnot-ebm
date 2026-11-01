@@ -1,0 +1,499 @@
+"""REQ-REPORT-8702 / SCENARIO-REPORT-8702-CUSTODY: independent deployment gates."""
+
+from copy import deepcopy
+import json
+from pathlib import Path
+
+import pytest
+
+from carnot.reporting import installed_batch_8702 as e
+
+
+def test_original_inputs_and_registered_roster():
+    """REQ-REPORT-8702: original accepted producers, not Exp8681, authorize work."""
+    value = e.inputs(e.ROOT)
+    assert value["passed"], value["gate_check_summary"]
+    assert len(value["requests"]) == 64
+    assert len(value["head"]["parameters"]) == 109
+    roster = e.roster(value["method"])
+    assert len(roster) == 60
+    assert sum(r["item_evaluations"] for r in roster) == 61440
+    assert all(r["status"] == "pending_Exp8703" for r in roster)
+
+
+def test_external_failure_states(tmp_path):
+    """REQ-REPORT-8702: absent bytes, fields, zero, flags and changes differ."""
+    path = tmp_path / "producer.json"
+    pin = dict(path=str(path), sha256="sha256:" + "0" * 64)
+    assert e.authenticate(pin, {"ready": 1})["failures"][0]["observed_state"] == "missing_file"
+    path.write_text("{}")
+    assert e.authenticate(pin, {})["failures"][0]["observed_state"] == "changed_bytes"
+    for value, expected, state in [
+        ({}, {"ready": 1}, "missing_field"),
+        ({"ready": 0}, {"ready": 1}, "observed_zero"),
+        ({"flagged_adversarial": True}, {"flagged_adversarial": False}, "observed"),
+    ]:
+        path.write_text(json.dumps(value))
+        row = e.authenticate(e.reference(path), expected)["failures"][0]
+        assert row["observed_state"] == state
+        assert row["field"] == next(iter(expected))
+        assert row["operator"] == "=="
+    path.write_text("not JSON")
+    assert not e.authenticate(e.reference(path), {})["passed"]
+
+
+def test_terminal_binding(tmp_path):
+    """SCENARIO-REPORT-8702-CUSTODY: accepted sidecars bind exact producer bytes."""
+    side = tmp_path / "side.json"
+    path = tmp_path / "producer.json"
+    side.write_text(json.dumps(dict(primary_sha256="wrong", report=dict(passed=True))))
+    path.write_text(json.dumps(dict(terminal_validation_sidecar_path=str(side))))
+    assert not e.authenticate(e.reference(path), {}, terminal=True)["passed"]
+    side.write_text(
+        json.dumps(dict(primary_sha256=e.reference(path)["sha256"], report=dict(passed=True)))
+    )
+    assert e.authenticate(e.reference(path), {}, terminal=True)["passed"]
+    side.unlink()
+    assert not e.authenticate(e.reference(path), {}, terminal=True)["passed"]
+
+
+def test_original_byte_change_blocks(tmp_path, monkeypatch):
+    """REQ-REPORT-8702: independently pinned methods cannot be consistently replaced."""
+    value = e.inputs(tmp_path)
+    assert not value["passed"] and value["gate_check_summary"]
+
+
+def test_private_cli_guards(tmp_path):
+    """SCENARIO-REPORT-8702-CUSTODY: direct private CLI has bounded failure exits."""
+    from carnot.reporting.installed_batch_runner_8702 import main
+
+    assert main(["--date", "20261102"]) == 2
+    assert main(["--private-output", str(e.ROOT / "results/forbidden.json")]) == 2
+    assert main(["--cold-replay", str(tmp_path / "missing")]) == 1
+
+
+@pytest.fixture(scope="module")
+def installed(tmp_path_factory):
+    """SCENARIO-REPORT-8702-INSTALLED: real wheels and pipe children qualify the adapter."""
+    from carnot.reporting import installed_batch_measure_8702 as m
+
+    root = tmp_path_factory.mktemp("installed8702")
+    scratch = root / "scratch"
+    scratch.mkdir()
+    inputs = e.inputs(e.ROOT)
+    result = m.measure(root / "raw", scratch, inputs)
+    assert result["passed"]
+    assert len(result["rows"]) == 2048
+    assert len(result["envelope_rejection_rows"]) == 26
+    yield root, scratch, inputs, result
+
+
+def test_actual_installed_success_and_rejection(installed):
+    """SCENARIO-REPORT-8702-INSTALLED: all actual Python/native item results agree."""
+    root, scratch, inputs, result = installed
+    assert result["installed_wheel_reference"]["path"].endswith(".whl")
+    assert result["loaded_extension_reference"]["sha256"] == inputs["extension"]["sha256"]
+    assert all(r["passed"] for r in result["rows"] + result["envelope_rejection_rows"])
+
+
+def test_build_and_sealed_replay(installed, monkeypatch):
+    """SCENARIO-REPORT-8702-CUSTODY: measured primitives survive cold replay and reject coordinated edits."""
+    from carnot.reporting import installed_batch_runner_8702 as r
+
+    root, scratch, inputs, result = installed
+    raw = root / "report"
+    raw.mkdir()
+    output = root / (e.NAME + ".json")
+    work = dict(
+        raw=str(raw),
+        output=str(output),
+        invocation_id="private-test",
+        sources=[],
+        inputs=inputs,
+        preconditions={},
+        measurement=result,
+        validation=dict(
+            checks=[dict(name="private", passed=True)],
+            coverage=dict(complete=True),
+            children=[],
+            receipts=[],
+        ),
+        duration_s=1.0,
+        started_at_utc="2026-11-01T00:00:00Z",
+        ended_at_utc="2026-11-01T00:00:01Z",
+        phase_spans=[],
+    )
+    e.atomic_json(raw / "invocation_seal.json", work)
+    work["seal_reference"] = e.reference(raw / "invocation_seal.json")
+    e.atomic_json(raw / "work.json", work)
+    value = e.build(work, output)
+    e.atomic_json(output, value)
+    assert r.replay(output, value["primitive_reference"])
+    value["completed_count"] += 1
+    value["reproducibility_checksum"] = e.canonical_hash(value)
+    e.atomic_json(output, value)
+    assert not r.replay(output, value["primitive_reference"])
+    for failed in ["checks", "coverage"]:
+        changed = deepcopy(work)
+        if failed == "checks":
+            changed["validation"]["checks"][0]["passed"] = False
+        else:
+            changed["validation"]["coverage"]["complete"] = False
+        assert e.build(changed, output)["verdict_class"] == "disqualified"
+    changed = deepcopy(work)
+    changed["inputs"]["gate_check_summary"] = [
+        dict(field="external", observed_state="missing_file")
+    ]
+    assert e.build(changed, output)["verdict_class"] == "blocked"
+
+
+def test_wheel_failure_paths(tmp_path, monkeypatch):
+    """REQ-REPORT-8702: failed build and install receipts cannot qualify an executable."""
+    from carnot.reporting import installed_batch_measure_8702 as m
+
+    def fail(name, *args, **kwargs):
+        return dict(passed=False)
+
+    monkeypatch.setattr(m, "child", fail)
+    with pytest.raises(ValueError, match="wheel_build"):
+        m.prepare(tmp_path, tmp_path, {})
+
+
+def test_validation_keeps_disjoint_roles(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8702-CUSTODY: owned and historical children never share coverage credit."""
+    from types import SimpleNamespace
+    from carnot.reporting import installed_batch_runner_8702 as r
+
+    raw, scratch = tmp_path / "raw", tmp_path / "scratch"
+    raw.mkdir()
+    scratch.mkdir()
+    original = ["original.py::test_original"]
+    nodes = original + [s + "::test_owned" for s in e.TESTS]
+    observed = []
+
+    def fake_child(name, argv, logs, **kwargs):
+        observed.append((name, argv))
+        path = raw / (name + ".txt")
+        path.write_text("\n".join(nodes) if name == "collect_once" else "")
+        return dict(name=name, passed=True, stdout_path=str(path))
+
+    monkeypatch.setattr(r, "child", fake_child)
+    monkeypatch.setattr(r.historical, "overlay", lambda *a: {})
+    monkeypatch.setattr(r, "historical_command", lambda *a: ["historical_namespace"])
+    monkeypatch.setattr(
+        r.retained,
+        "retain",
+        lambda command, nodes, private, target, sources, role: dict(role=role, nodes=nodes),
+    )
+    monkeypatch.setattr(
+        r.retained, "aggregate", lambda children, expected: dict(passed=True, node_ids=expected)
+    )
+    monkeypatch.setattr(e, "protocol_added_lines", lambda: {1})
+    combined = dict(combined_reference=dict(path=str(raw / "coverage")))
+    monkeypatch.setattr(
+        r.retained,
+        "combine",
+        lambda rows, path: (observed.append(("combine_roles", rows)), combined)[1],
+    )
+    monkeypatch.setattr(
+        r,
+        "Coverage",
+        lambda **kwargs: SimpleNamespace(
+            load=lambda: None, analysis2=lambda p: (p, [1], [], [], "")
+        ),
+    )
+    result = r.validate(raw, scratch, [], original)
+    assert result["coverage"]["complete"]
+    assert not result["original_node_union"]["passed"]
+    assert all(c["role"] == "owned" for name, c in observed if name == "unused")
+    owned = next(v for k, v in observed if k == "combine_roles")
+    assert len(owned) == 2 and all(c["role"] == "owned" for c in owned)
+    assert all(
+        "--no-cov" in argv and "-n" in argv for name, argv in observed if name.startswith("tests-")
+    )
+
+
+def test_run_success_and_replay_controls(installed, monkeypatch):
+    """SCENARIO-REPORT-8702-CUSTODY: real private publication and fresh cold CLI checks."""
+    from carnot.reporting import installed_batch_runner_8702 as r
+
+    root, scratch, inputs, result = installed
+    monkeypatch.setattr(r.shared, "source_hashes", lambda: [])
+    monkeypatch.setattr(r.measurement, "measure", lambda *a, **k: result)
+    monkeypatch.setattr(
+        r,
+        "validate",
+        lambda *a: dict(
+            checks=[dict(name="test_control", passed=True)],
+            receipts=[],
+            coverage=dict(complete=True),
+            children=[],
+        ),
+    )
+    output = root / "published" / (e.NAME + ".json")
+    assert r.run(output) == 0
+    value = json.loads(output.read_text())
+    assert value["batch_service_ready_score"] == 1
+    assert (
+        r.main(
+            [
+                "--cold-replay",
+                str(output),
+                "--authority",
+                value["primitive_reference"]["path"],
+                value["primitive_reference"]["sha256"],
+            ]
+        )
+        == 0
+    )
+    work_ref = value["primitive_reference"]
+    work = e.load(work_ref)
+    original = deepcopy(work)
+    work["duration_s"] += 1
+    e.atomic_json(Path(work_ref["path"]), work)
+    assert not r.replay(output, value["primitive_reference"])
+    e.atomic_json(Path(work_ref["path"]), original)
+    side = Path(value["terminal_validation_sidecar_path"])
+    assert side.is_file()
+
+
+def test_owned_failures_stay_disqualified(tmp_path, monkeypatch):
+    """REQ-REPORT-8702: resource and measurement errors remain failed owned checks."""
+    from carnot.reporting import installed_batch_runner_8702 as r
+
+    monkeypatch.setattr(r.shared, "source_hashes", lambda: [])
+    monkeypatch.setattr(
+        r.shared,
+        "preconditions",
+        lambda *a: dict(disk_backed=False, writable=True, free_memory_kib=1, free_disk_bytes=1),
+    )
+    monkeypatch.setattr(r, "publish_primary", lambda output, value, validator: {})
+    assert r.run(tmp_path / (e.NAME + ".json"), private=True) == 0
+    work = json.loads(next(tmp_path.glob("raw/**/work.json")).read_text())
+    assert work["owned_error"] == "cpu_scratch_memory"
+    assert e.build(work, tmp_path / (e.NAME + ".json"))["verdict_class"] == "disqualified"
+    monkeypatch.setattr(r, "run", lambda *args, **kwargs: 0)
+    assert r.main(["--private-output", str(tmp_path / "outside.json")]) == 0
+
+
+def test_installed_budget_reset_and_opt_out(installed):
+    """REQ-VERIFY-8702: real session budgets count items and reset state on relaunch."""
+    from carnot.reporting import installed_batch_measure_8702 as m
+
+    root, scratch, inputs, result = installed
+    config = e.load(result["config_reference"])
+    config["item_budget"] = 1
+    path = root / "one-item.json"
+    e.atomic_json(path, config)
+    command = [
+        str(scratch / "environment/bin/python"),
+        "-u",
+        "-m",
+        "carnot.inference.resident_protocol",
+    ]
+    row = inputs["requests"][0]
+    frames = [
+        dict(operation="batch", rows=[row], request_id="first"),
+        dict(operation="infer", row=row),
+    ]
+    for index in range(2):
+        trace = m.session(command, path, "python", frames, scratch, root / f"reset-{index}")
+        assert trace["actual_exit"] == 0
+        assert trace["observations"][0]["response"]["status"] == "ok"
+        assert trace["observations"][1]["response"]["error"] == "item_budget"
+    config.pop("max_batch_size")
+    e.atomic_json(path, config)
+    trace = m.session(command, path, "python", frames[:1], scratch, root / "opt-out")
+    assert trace["observations"][0]["response"]["error"] == "batch_not_enabled"
+    private = [
+        str(Path(__import__("sys").executable)),
+        "-u",
+        str(e.ROOT / "scripts/experiments/resident_worker_8608.py"),
+    ]
+    config["max_batch_size"] = 16
+    e.atomic_json(path, config)
+    trace = m.session(private, path, "python", frames[:1], scratch, root / "private-adapter")
+    assert trace["observations"][0]["response"]["status"] == "ok"
+
+
+def test_missing_original_operand_and_assertions(monkeypatch, tmp_path):
+    """REQ-REPORT-8702: missing registered extension and corrupted head assertions fail closed."""
+    original = Path.is_file
+    monkeypatch.setattr(Path, "is_file", lambda p: False if str(p).endswith(".so") else original(p))
+    result = e.inputs(e.ROOT)
+    assert not result["passed"]
+    assert result["gate_check_summary"][0]["observed_state"] == "missing_file"
+    monkeypatch.undo()
+    original_load = e.load
+
+    def altered(ref):
+        if ref["path"].endswith("frozen_heads.json"):
+            return dict(heads=dict(spline9=[dict(parameters=[])]))
+        return original_load(ref)
+
+    monkeypatch.setattr(e, "load", altered)
+    with pytest.raises(ValueError, match="original_assertions"):
+        e.inputs(e.ROOT)
+    path = tmp_path / "changed.json"
+    path.write_text("{}")
+    ref = e.reference(path)
+    path.write_text("[]")
+    with pytest.raises(ValueError, match="changed_bytes"):
+        original_load(ref)
+
+
+def test_measure_rejects_failed_children(installed, monkeypatch):
+    """REQ-REPORT-8702: a child exit failure forbids qualification before reading outputs."""
+    from carnot.reporting import installed_batch_measure_8702 as m
+
+    root, scratch, inputs, result = installed
+    monkeypatch.setattr(
+        m, "prepare", lambda *a: ([], Path(result["config_reference"]["path"]), [], {})
+    )
+
+    def failed(*args, **kwargs):
+        path = args[-1]
+        path.mkdir(parents=True)
+        e.atomic_json(path / "session.json", {})
+        return dict(actual_exit=1)
+
+    monkeypatch.setattr(m, "session", failed)
+    with pytest.raises(ValueError, match="installed_child"):
+        m.measure(root / "failed", scratch, inputs)
+
+
+def test_install_and_public_contract_failures(installed, monkeypatch):
+    """SCENARIO-REPORT-8702-INSTALLED: success requires install and original public checks."""
+    from carnot.reporting import installed_batch_measure_8702 as m
+
+    root, scratch, inputs, result = installed
+    original = m.child
+    for failure in ["install_wheel", "installed_public_contract"]:
+        work = root / failure
+        raw = work / "raw"
+        raw.mkdir(parents=True)
+
+        def reject(name, argv, logs, **kwargs):
+            return dict(passed=False) if name == failure else original(name, argv, logs, **kwargs)
+
+        monkeypatch.setattr(m, "child", reject)
+        with pytest.raises(
+            ValueError, match="wheel_install" if failure == "install_wheel" else failure
+        ):
+            m.prepare(raw, work, inputs)
+
+
+def test_protocol_delta_is_nonempty():
+    """REQ-VERIFY-8702: coverage includes added protocol statements without old-code inflation."""
+    assert len(e.protocol_added_lines()) > 20
+
+
+def test_replay_operand_and_custody_failures(installed, monkeypatch):
+    """SCENARIO-REPORT-8702-CUSTODY: immutable seals, operands and producer receipts are independent gates."""
+    from carnot.reporting import installed_batch_runner_8702 as r
+
+    root, scratch, inputs, result = installed
+    raw = root / "replay-controls"
+    raw.mkdir()
+    output = raw / (e.NAME + ".json")
+    base = dict(
+        raw=str(raw),
+        output=str(output),
+        invocation_id="replay-controls",
+        sources=[],
+        inputs=inputs,
+        preconditions={},
+        measurement=result,
+        validation=dict(
+            checks=[dict(name="private", passed=True)],
+            coverage=dict(complete=True),
+            children=[],
+            receipts=[],
+        ),
+        duration_s=1.0,
+        started_at_utc="2026-11-01T00:00:00Z",
+        ended_at_utc="2026-11-01T00:00:01Z",
+        phase_spans=[],
+    )
+    for mode in ["seal", "operand", "failed_child", "valid_child"]:
+        work = deepcopy(base)
+        if mode == "operand":
+            work["sources"] = [dict(path=str(raw / "missing"), sha256="sha256:" + "0" * 64)]
+        if "child" in mode:
+            e.atomic_json(raw / "child.json", dict(node_ids=["private::test_child"]))
+            work["validation"]["children"] = [e.reference(raw / "child.json")]
+            monkeypatch.setattr(
+                r.retained, "aggregate", lambda *a: dict(passed=mode == "valid_child")
+            )
+        e.atomic_json(raw / "seal.json", dict(work, changed=True) if mode == "seal" else work)
+        work["seal_reference"] = e.reference(raw / "seal.json")
+        e.atomic_json(raw / "work.json", work)
+        value = e.build(work, output)
+        e.atomic_json(output, value)
+        pin = value["primitive_reference"]
+        assert not r.replay(output)
+        assert r.replay(output, pin) == (mode == "valid_child")
+    work["owned_error"] = "deadline"
+    e.atomic_json(raw / "work.json", work)
+    assert e.build(work, output)["batch_service_ready_score"] == 0
+
+
+def test_measure_deadline_and_wrong_response_ids(installed, monkeypatch):
+    """REQ-VERIFY-8702: exhausted time and wrong response identities retain failed children."""
+    from carnot.reporting import installed_batch_measure_8702 as m
+
+    root, scratch, inputs, result = installed
+    config = Path(result["config_reference"]["path"])
+    command = [
+        str(scratch / "environment/bin/python"),
+        "-u",
+        "-m",
+        "carnot.inference.resident_protocol",
+    ]
+    with pytest.raises(TimeoutError, match="measurement_admission"):
+        m.session(command, config, "python", [], scratch, root / "expired", deadline_ns=0)
+    with pytest.raises(TimeoutError, match="measurement_prepare"):
+        m.measure(root / "late-prepare", scratch, inputs, deadline_ns=0)
+    readings = iter([0, 1, 50_000_000_000])
+    monkeypatch.setattr(m.time, "monotonic_ns", lambda: next(readings, 50_000_000_000))
+    with pytest.raises(TimeoutError, match="measurement_stop"):
+        m.session(
+            command,
+            config,
+            "python",
+            [dict(operation="infer", row=inputs["requests"][0])],
+            scratch,
+            root / "stopped",
+            deadline_ns=100_000_000_000,
+        )
+    monkeypatch.undo()
+    replies = iter([b'{"status":"ready"}', b'{"request_id":"wrong","config_hash":"wrong"}'])
+    monkeypatch.setattr(m.wire, "read_frame", lambda *a: next(replies))
+    with pytest.raises(ValueError, match="worker_identity"):
+        m.session(
+            command,
+            config,
+            "python",
+            [dict(operation="infer", row=inputs["requests"][0])],
+            scratch,
+            root / "wrong-id",
+        )
+    assert json.loads((root / "wrong-id/failed_child.json").read_text())["killed"]
+
+
+def test_measurement_cap_is_owned_failure(tmp_path, monkeypatch):
+    """REQ-REPORT-8702: a late measurement disqualifies even if other gates pass."""
+    from carnot.reporting import installed_batch_runner_8702 as r
+
+    monkeypatch.setattr(r.shared, "source_hashes", lambda: [])
+    monkeypatch.setattr(
+        r.shared,
+        "preconditions",
+        lambda *a: dict(disk_backed=False, writable=True, free_memory_kib=1, free_disk_bytes=1),
+    )
+    monkeypatch.setattr(r, "publish_primary", lambda *a: {})
+    readings = iter([0, 3601 * 10**9, 3602 * 10**9])
+    monkeypatch.setattr(r.time, "monotonic_ns", lambda: next(readings, 3602 * 10**9))
+    assert r.run(tmp_path / (e.NAME + ".json"), private=True) == 0
+    work = json.loads(next(tmp_path.glob("raw/**/work.json")).read_text())
+    assert work["owned_error"] == "measurement_cap_exceeded"
