@@ -22650,3 +22650,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - No experiment was executed by planning. Active `research-roadmap.yaml`,
   `scripts/research_conductor.py` and the exclusion manifest remain unchanged.
 - 2026-11-01: Bind fourteen tasks and freeze independent research and execution operands (⚠️ Research Finding) — honest_verdict=complete_disqualified_v744_contract_methods; results/experiment_8667_v744_contract_methods.json
+- 2026-11-01: Qualify single-owner ARC observation delivery while retaining conflict checks (⚠️ Research Finding) — honest_verdict=complete_null_arc_observation_ownership; results/experiment_8677_v744_arc_observation_ownership.json
