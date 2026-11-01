@@ -57093,3 +57093,22 @@ Cold replay in a bounded fresh child rejects missing operands and consistently
 rehashed tampering against an independent seal. Private CLI destinations must
 remain outside the checkout. Keep raw SQLite and JUnit; newly owned statement
 coverage must equal100 percent. Failed owned validation disqualifies readiness.
+
+
+## REQ-VERIFY-8694: Sealed capstone replay and bounded qualification
+
+Freeze source, tests, configuration and inputs before deterministic reconciliation.
+Use disk-backed private scratch and flushed supervised children. Keep an independent
+seal outside the replaceable candidate envelope. Fresh-process replay rejects absent
+operands and consistently rehashed report/primitive tampering. Private outputs and
+cleanup stay outside the checkout, including symlink aliases. Owned failure
+removes readiness; external absence remains blocked. Preserve JUnit, raw SQLite,
+commands, exits, clocks and logs. Require100 percent newly owned statements with
+real private CLI and failure paths, Ruff, strict types and scoped spec coverage.
+Run original private E2E-018/021 nodes separately from owned qualification.
+
+### SCENARIO-VERIFY-8694-REPLAY
+
+Successful private CLI publication replays; changed source, rows, clocks, child
+logs, receipts and a locally rehashed primitive cannot pass independent seals.
+Invalid dates and private destinations are rejected. A failed child disqualifies.

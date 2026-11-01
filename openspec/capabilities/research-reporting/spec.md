@@ -103569,3 +103569,28 @@ is numeric1 only when primary arithmetic and owned validation pass. A numerical
 null concerns this format only. All operations remain on CPU; no physical FPGA,
 synthesis, deployment, sub-microsecond or acceleration claim follows. Preserve
 historical quarantine and null records. Ops reconciliation is conductor-owned.
+
+
+## REQ-REPORT-8694: V745 fourteen-slot terminal reconciliation
+
+Bind all fourteen complete independently sealed task dictionaries, Exp8681–8694.
+Resolve declared deliverables before authenticated conductor receipts; preserve
+literal GATE_BLOCK logs and absent honest_verdict values for artifact-free skips.
+Scheduling completion never establishes scientific measurement. Stamped flags
+survive clean scanners. Recompute admitted precision gates from immutable rows;
+retain V744 closed horizons, V733/V735/V737/V743 nulls and oracle-distinct limits.
+One stop/continue decision per scope names changed reopening operands. Missing
+prerequisites leave untested hypotheses open. G1–G4 keep their stable definitions;
+external scientific incompleteness is complete_blocked, even after reconciliation.
+
+### SCENARIO-REPORT-8694-ACCOUNTING
+
+Fourteen rows retain producer, pre-gate and log-only dispositions, authenticated
+terminal readiness, original stamps, three PRD gaps and numeric branch gates.
+CPU integer feasibility never grants physical execution or independent learning.
+
+### SCENARIO-REPORT-8694-REDUCTION
+
+Recompute numerical error/parity from original per-update rows and preserve each
+format. Reject omitted rows, inconsistent summaries and changed bytes. Exposed,
+constructed and independent natural evidence remain distinct. No fresh model call.

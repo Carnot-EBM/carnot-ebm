@@ -1,0 +1,569 @@
+....F.F..FFF...F.                                                        [100%]
+=================================== FAILURES ===================================
+___________________________ test_tampering[missing] ____________________________
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_tampering_missing_0')
+mode = 'missing'
+
+    @pytest.mark.parametrize("mode", ["rows", "primitive", "receipts", "missing"])
+    def test_tampering(private, tmp_path, mode):
+        """SCENARIO-VERIFY-8694-REPLAY: self-consistent rehashes cannot grant authority."""
+        _, original = private
+        value = deepcopy(original)
+        if mode == "rows":
+            value["rows"][0]["eligible"] = True
+        elif mode == "receipts":
+            value["validation_receipts"][0]["passed"] = False
+        else:
+            work = e.read(value["primitive_reference"])
+            work["duration_s"] += 1
+            p = tmp_path / "measurement.json"
+            if mode == "primitive":
+                e.atomic_json(p, work)
+>           value["primitive_reference"] = e.reference(p)
+                                           ^^^^^^^^^^^^^^
+
+tests/python/test_v745_capstone_8694.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v736_contract_methods.py:73: in reference
+    return dict(path=str(path.absolute()), sha256=sha256_file(path))
+                                                  ^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:52: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_tampering_missing_0/measurement.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_tampering_missing_0/measurement.json'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+_________________________ test_gate_states_and_custody _________________________
+
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_gate_states_and_custody0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4c2cf7c6e0>
+
+    
+    
+    def test_gate_states_and_custody(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8694-ACCOUNTING: distinguish zero, drift and flagged authority."""
+        path = tmp_path / "experiment_8681_fixture.json"
+        task = dict(id="exp8681-contract-methods")
+        assert e.observe(path, task, "ready")["operand_state"] == "missing_file"
+        e.atomic_json(path, {})
+        assert e.observe(path, task, "ready")["operand_state"] == "missing_field"
+        e.atomic_json(path, dict(ready=0))
+        assert e.observe(path, task, "ready")["operand_state"] == "observed_zero"
+        e.atomic_json(path, dict(ready=1))
+        assert (
+            e.observe(path, task, "ready", expected_hash="sha256:wrong")["operand_state"]
+            == "changed_bytes"
+        )
+        value = dict(
+            experiment_id=8681,
+            task_id=task["id"],
+            ready=1,
+            honest_verdict="complete_null_fixture",
+            verdict_class="null",
+            flagged_adversarial=False,
+            required_checks_passed=True,
+        )
+>       from carnot.reporting.primary_publication import publish_primary
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v745_capstone_8694.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_gate_states_and_custody0/experiment_8681_fixture.json')
+value = {'experiment_id': 8681, 'flagged_adversarial': False, 'honest_verdict': 'complete_null_fixture', 'ready': 1, ...}
+validator = <function test_gate_states_and_custody.<locals>.<lambda> at 0x7f4c2dcfb740>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+>                   raise ValueError("conflicting_identity")
+E                   ValueError: conflicting_identity
+
+python/carnot/reporting/primary_publication.py:67: ValueError
+________________________ test_replay_rejections[clock] _________________________
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_replay_rejections_clock_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4c2d874770>
+mode = 'clock'
+
+            e.locate(task)
+    
+    
+    @pytest.mark.parametrize("mode", ["source", "clock", "log", "reduction"])
+    def test_replay_rejections(private, tmp_path, monkeypatch, mode):
+        """SCENARIO-VERIFY-8694-REPLAY: original clocks, logs and arithmetic stay bound."""
+        _, value = private
+        work = deepcopy(e.read(value["primitive_reference"]))
+        read = e.read
+        if mode == "source":
+            work["code_refs"] = []
+        elif mode == "clock":
+            work["end_ns"] += 1
+        elif mode == "log":
+            work["publication_receipt"]["stdout_sha256"] = "sha256:wrong"
+        monkeypatch.setattr(
+            e, "read", lambda ref: work if ref == value["primitive_reference"] else read(ref)
+        )
+        monkeypatch.setattr(reduction, "reduce", lambda *a: {})
+        path = tmp_path / "candidate.json"
+        e.atomic_json(path, value)
+        with pytest.raises(
+            ValueError,
+            match={
+                "source": "independent_source_seal",
+                "clock": "authority_or_clock_drift",
+                "log": "child_log_drift",
+>               "reduction": "cold_reduction_drift",
+            ^^^^^^^^^^^^^^^^^^^
+            }[mode],
+        ):
+
+tests/python/test_v745_capstone_8694.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v745_capstone.py:231: in replay
+    e.verify(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'exists': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py', 'sha25.../1793533850196921926/code/377e10b04f6730dc9c2463b39b8b34c7f18ed06031fca315373780b187e00bd1/test_v745_capstone_8694.py'}
+
+    def verify(ref: Json) -> None:
+        """A copied operand cannot replace the independently named source bytes."""
+        if not Path(ref["path"]).is_file():
+            if ref.get("exists", True):
+                raise ValueError("missing_operand:" + ref["path"])
+            return
+        if sha256_file(Path(ref["path"])) != ref["sha256"]:
+>           raise ValueError("original_hash:" + ref["path"])
+E           ValueError: original_hash:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py
+
+python/carnot/reporting/v743_capstone_inputs.py:41: ValueError
+
+During handling of the above exception, another exception occurred:
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_replay_rejections_clock_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4c2d874770>
+mode = 'clock'
+
+            e.locate(task)
+    
+    
+    @pytest.mark.parametrize("mode", ["source", "clock", "log", "reduction"])
+    def test_replay_rejections(private, tmp_path, monkeypatch, mode):
+        """SCENARIO-VERIFY-8694-REPLAY: original clocks, logs and arithmetic stay bound."""
+        _, value = private
+        work = deepcopy(e.read(value["primitive_reference"]))
+        read = e.read
+        if mode == "source":
+            work["code_refs"] = []
+        elif mode == "clock":
+            work["end_ns"] += 1
+        elif mode == "log":
+            work["publication_receipt"]["stdout_sha256"] = "sha256:wrong"
+        monkeypatch.setattr(
+            e, "read", lambda ref: work if ref == value["primitive_reference"] else read(ref)
+        )
+>       monkeypatch.setattr(reduction, "reduce", lambda *a: {})
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'authority_or_clock_drift'
+E         Actual message: 'original_hash:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py'
+
+tests/python/test_v745_capstone_8694.py:193: AssertionError
+_________________________ test_replay_rejections[log] __________________________
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_replay_rejections_log_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4c2d0be030>
+mode = 'log'
+
+            e.locate(task)
+    
+    
+    @pytest.mark.parametrize("mode", ["source", "clock", "log", "reduction"])
+    def test_replay_rejections(private, tmp_path, monkeypatch, mode):
+        """SCENARIO-VERIFY-8694-REPLAY: original clocks, logs and arithmetic stay bound."""
+        _, value = private
+        work = deepcopy(e.read(value["primitive_reference"]))
+        read = e.read
+        if mode == "source":
+            work["code_refs"] = []
+        elif mode == "clock":
+            work["end_ns"] += 1
+        elif mode == "log":
+            work["publication_receipt"]["stdout_sha256"] = "sha256:wrong"
+        monkeypatch.setattr(
+            e, "read", lambda ref: work if ref == value["primitive_reference"] else read(ref)
+        )
+        monkeypatch.setattr(reduction, "reduce", lambda *a: {})
+        path = tmp_path / "candidate.json"
+        e.atomic_json(path, value)
+        with pytest.raises(
+            ValueError,
+            match={
+                "source": "independent_source_seal",
+                "clock": "authority_or_clock_drift",
+                "log": "child_log_drift",
+>               "reduction": "cold_reduction_drift",
+            ^^^^^^^^^^^^^^^^^^^
+            }[mode],
+        ):
+
+tests/python/test_v745_capstone_8694.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v745_capstone.py:231: in replay
+    e.verify(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'exists': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py', 'sha25.../1793533850196921926/code/377e10b04f6730dc9c2463b39b8b34c7f18ed06031fca315373780b187e00bd1/test_v745_capstone_8694.py'}
+
+    def verify(ref: Json) -> None:
+        """A copied operand cannot replace the independently named source bytes."""
+        if not Path(ref["path"]).is_file():
+            if ref.get("exists", True):
+                raise ValueError("missing_operand:" + ref["path"])
+            return
+        if sha256_file(Path(ref["path"])) != ref["sha256"]:
+>           raise ValueError("original_hash:" + ref["path"])
+E           ValueError: original_hash:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py
+
+python/carnot/reporting/v743_capstone_inputs.py:41: ValueError
+
+During handling of the above exception, another exception occurred:
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_replay_rejections_log_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4c2d0be030>
+mode = 'log'
+
+            e.locate(task)
+    
+    
+    @pytest.mark.parametrize("mode", ["source", "clock", "log", "reduction"])
+    def test_replay_rejections(private, tmp_path, monkeypatch, mode):
+        """SCENARIO-VERIFY-8694-REPLAY: original clocks, logs and arithmetic stay bound."""
+        _, value = private
+        work = deepcopy(e.read(value["primitive_reference"]))
+        read = e.read
+        if mode == "source":
+            work["code_refs"] = []
+        elif mode == "clock":
+            work["end_ns"] += 1
+        elif mode == "log":
+            work["publication_receipt"]["stdout_sha256"] = "sha256:wrong"
+        monkeypatch.setattr(
+            e, "read", lambda ref: work if ref == value["primitive_reference"] else read(ref)
+        )
+>       monkeypatch.setattr(reduction, "reduce", lambda *a: {})
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'child_log_drift'
+E         Actual message: 'original_hash:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py'
+
+tests/python/test_v745_capstone_8694.py:193: AssertionError
+______________________ test_replay_rejections[reduction] _______________________
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_replay_rejections_reducti0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4c2cddf770>
+mode = 'reduction'
+
+            e.locate(task)
+    
+    
+    @pytest.mark.parametrize("mode", ["source", "clock", "log", "reduction"])
+    def test_replay_rejections(private, tmp_path, monkeypatch, mode):
+        """SCENARIO-VERIFY-8694-REPLAY: original clocks, logs and arithmetic stay bound."""
+        _, value = private
+        work = deepcopy(e.read(value["primitive_reference"]))
+        read = e.read
+        if mode == "source":
+            work["code_refs"] = []
+        elif mode == "clock":
+            work["end_ns"] += 1
+        elif mode == "log":
+            work["publication_receipt"]["stdout_sha256"] = "sha256:wrong"
+        monkeypatch.setattr(
+            e, "read", lambda ref: work if ref == value["primitive_reference"] else read(ref)
+        )
+        monkeypatch.setattr(reduction, "reduce", lambda *a: {})
+        path = tmp_path / "candidate.json"
+        e.atomic_json(path, value)
+        with pytest.raises(
+            ValueError,
+            match={
+                "source": "independent_source_seal",
+                "clock": "authority_or_clock_drift",
+                "log": "child_log_drift",
+>               "reduction": "cold_reduction_drift",
+            ^^^^^^^^^^^^^^^^^^^
+            }[mode],
+        ):
+
+tests/python/test_v745_capstone_8694.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v745_capstone.py:231: in replay
+    e.verify(ref)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'exists': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py', 'sha25.../1793533850196921926/code/377e10b04f6730dc9c2463b39b8b34c7f18ed06031fca315373780b187e00bd1/test_v745_capstone_8694.py'}
+
+    def verify(ref: Json) -> None:
+        """A copied operand cannot replace the independently named source bytes."""
+        if not Path(ref["path"]).is_file():
+            if ref.get("exists", True):
+                raise ValueError("missing_operand:" + ref["path"])
+            return
+        if sha256_file(Path(ref["path"])) != ref["sha256"]:
+>           raise ValueError("original_hash:" + ref["path"])
+E           ValueError: original_hash:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py
+
+python/carnot/reporting/v743_capstone_inputs.py:41: ValueError
+
+During handling of the above exception, another exception occurred:
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/test_replay_rejections_reducti0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4c2cddf770>
+mode = 'reduction'
+
+            e.locate(task)
+    
+    
+    @pytest.mark.parametrize("mode", ["source", "clock", "log", "reduction"])
+    def test_replay_rejections(private, tmp_path, monkeypatch, mode):
+        """SCENARIO-VERIFY-8694-REPLAY: original clocks, logs and arithmetic stay bound."""
+        _, value = private
+        work = deepcopy(e.read(value["primitive_reference"]))
+        read = e.read
+        if mode == "source":
+            work["code_refs"] = []
+        elif mode == "clock":
+            work["end_ns"] += 1
+        elif mode == "log":
+            work["publication_receipt"]["stdout_sha256"] = "sha256:wrong"
+        monkeypatch.setattr(
+            e, "read", lambda ref: work if ref == value["primitive_reference"] else read(ref)
+        )
+>       monkeypatch.setattr(reduction, "reduce", lambda *a: {})
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'cold_reduction_drift'
+E         Actual message: 'original_hash:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v745_capstone_8694.py'
+
+tests/python/test_v745_capstone_8694.py:193: AssertionError
+______________________ test_reducer_rejections[inventory] ______________________
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4dd84340e0>
+mode = 'inventory'
+
+        assert runner.validate(tmp_path) == [{"passed": True}]
+    
+    
+    @pytest.mark.parametrize("mode", ["arc", "producer", "inventory", "checkpoint"])
+    def test_reducer_rejections(private, monkeypatch, mode):
+        """SCENARIO-REPORT-8694-REDUCTION: missing rows and inconsistent producers reject."""
+        numerical = dict(
+            primitive_reference="numeric",
+            validation_receipts=[],
+            publication_output="/var/tmp/numeric.json",
+        )
+        items = dict(
+            history=dict(primitive_reference="old"),
+            old=dict(slots=[dict(experiment_id=8678, primary_reference="panel")]),
+            panel=dict(work_reference="episodes", complete_horizon_count=0),
+            episodes=dict(references=[]),
+            producer=numerical,
+            hardware={},
+        )
+        work = dict(
+            history_reference="history",
+            slots=[
+                dict(experiment_id=n, producer_executed=True, primary_reference=r)
+                for n, r in [(8692, "producer"), (8693, "hardware")]
+            ],
+        )
+        items["numeric"] = dict(precision_rows=[], trajectory_rows=[], rows=[])
+        monkeypatch.setattr(e, "read", lambda ref: deepcopy(items[ref]))
+        monkeypatch.setattr(reduction.arc, "reduce", lambda episodes: {"complete_horizon_count": 0})
+        monkeypatch.setattr(reduction.precision, "build", lambda *a: numerical)
+        if mode == "arc":
+            monkeypatch.setattr(
+                reduction.arc, "reduce", lambda episodes: {"complete_horizon_count": 999}
+            )
+        elif mode == "producer":
+            monkeypatch.setattr(reduction.precision, "build", lambda *a: {})
+        elif mode == "checkpoint":
+            for bits in [16, 24, 32]:
+                items["numeric"]["rows"].append(dict(bits=bits, saturation=0, overflow=0))
+>               items["numeric"]["precision_rows"].extend(
+            ^^^^^^^^^^^^^^^^^^^^^^
+                    dict(
+                        bits=bits,
+                        head_index=h,
+                        sequence=seq,
+                        update_index=i,
+                        probability_error=0,
+                        decision="accept",
+                        float64_decision="accept",
+                        decision_parity=True,
+                        finite=True,
+                        local_writes=37,
+                        fallback=False,
+                    )
+                    for h in range(5)
+                    for seq, count in [
+                        ("one_step", 512),
+                        ("a", 256),
+                        ("b", 256),
+                        ("c", 256),
+                        ("d", 256),
+                    ]
+                    for i in range(count)
+                )
+
+tests/python/test_v745_capstone_8694.py:250: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'code_refs': [{'exists': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v745_caps...ctionary': True, 'gate_keys': True, ...}, ...}, ...], ...}, 'duration_s': 21.520179942, 'end_ns': 214368929328535, ...}
+
+    def reduce(work: Json) -> Json:
+        """Re-read sealed per-update and episode rows; unexecuted branches have no metric."""
+        history = e.read(work["history_reference"])
+        old = e.read(history["primitive_reference"])
+        producer = next(r for r in old["slots"] if r["experiment_id"] == 8678)
+        panel = e.read(producer["primary_reference"])
+        panel_work = e.read(panel["work_reference"])
+        episodes = [e.read(ref) for ref in panel_work["references"]]
+        horizons = arc.reduce(episodes)
+        if any(panel[k] != v for k, v in horizons.items()):
+            raise ValueError("original_arc_reduction")
+        values = {
+            str(r["experiment_id"]): e.read(r["primary_reference"])
+            for r in work["slots"]
+            if r["producer_executed"]
+        }
+        numerical = values["8692"]
+        primitives = e.read(numerical["primitive_reference"])
+        if (
+            precision.build(
+                primitives, numerical["validation_receipts"], Path(numerical["publication_output"])
+            )
+            != numerical
+        ):
+>           raise ValueError("numerical_producer_construction")
+E           ValueError: numerical_producer_construction
+
+python/carnot/reporting/v745_capstone_reduce.py:39: ValueError
+
+During handling of the above exception, another exception occurred:
+
+private = (PosixPath('/var/tmp/exp8666-validation-ec7l94bg/suite-0/v7450/experiment_8694_v745_capstone.json'), {'G1': {'detail':...eproducibility_checksum=True', 'pass': True, 'source': 'experiment_2850_fover_dual_condition_integrity_v4.json'}, ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4dd84340e0>
+mode = 'inventory'
+
+        assert runner.validate(tmp_path) == [{"passed": True}]
+    
+    
+    @pytest.mark.parametrize("mode", ["arc", "producer", "inventory", "checkpoint"])
+    def test_reducer_rejections(private, monkeypatch, mode):
+        """SCENARIO-REPORT-8694-REDUCTION: missing rows and inconsistent producers reject."""
+        numerical = dict(
+            primitive_reference="numeric",
+            validation_receipts=[],
+            publication_output="/var/tmp/numeric.json",
+        )
+        items = dict(
+            history=dict(primitive_reference="old"),
+            old=dict(slots=[dict(experiment_id=8678, primary_reference="panel")]),
+            panel=dict(work_reference="episodes", complete_horizon_count=0),
+            episodes=dict(references=[]),
+            producer=numerical,
+            hardware={},
+        )
+        work = dict(
+            history_reference="history",
+            slots=[
+                dict(experiment_id=n, producer_executed=True, primary_reference=r)
+                for n, r in [(8692, "producer"), (8693, "hardware")]
+            ],
+        )
+        items["numeric"] = dict(precision_rows=[], trajectory_rows=[], rows=[])
+        monkeypatch.setattr(e, "read", lambda ref: deepcopy(items[ref]))
+        monkeypatch.setattr(reduction.arc, "reduce", lambda episodes: {"complete_horizon_count": 0})
+        monkeypatch.setattr(reduction.precision, "build", lambda *a: numerical)
+>       if mode == "arc":
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'numerical_row_inventory'
+E         Actual message: 'numerical_producer_construction'
+
+tests/python/test_v745_capstone_8694.py:241: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v745_capstone_8694.py::test_tampering[missing] - Fil...
+FAILED tests/python/test_v745_capstone_8694.py::test_gate_states_and_custody
+FAILED tests/python/test_v745_capstone_8694.py::test_replay_rejections[clock]
+FAILED tests/python/test_v745_capstone_8694.py::test_replay_rejections[log]
+FAILED tests/python/test_v745_capstone_8694.py::test_replay_rejections[reduction]
+FAILED tests/python/test_v745_capstone_8694.py::test_reducer_rejections[inventory]
+6 failed, 11 passed, 1 warning in 192.05s (0:03:12)

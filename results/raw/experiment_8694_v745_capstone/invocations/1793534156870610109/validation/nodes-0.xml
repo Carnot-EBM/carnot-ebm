@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="10" failures="0" skipped="0" tests="19" time="60.508" timestamp="2026-11-01T06:56:49.179698-05:00" hostname="icbfl1"><testcase classname="tests.python.test_v745_capstone_8694" name="test_accounting" time="53.847"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_tampering[rows]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_tampering[primitive]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_tampering[receipts]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_tampering[missing]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_rejection_and_owned_failure" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_gate_states_and_custody" time="0.026" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_resolution_and_primary_identity" time="0.003" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_replay_rejections[source]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_replay_rejections[clock]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_replay_rejections[log]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_replay_rejections[reduction]" time="0.000"><error message="failed on setup with &quot;AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0&#10;  [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14&#10;  [exp8694] phase=preconditions_before completed=0 pending=14&#10;  [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14&#10;  [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13&#10;  [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13&#10;  [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12&#10;  [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12&#10;  [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11&#10;  [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11&#10;  [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10&#10;  [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10&#10;  [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9&#10;  [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9&#10;  [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8&#10;  [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8&#10;  [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7&#10;  [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7&#10;  [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6&#10;  [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6&#10;  [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5&#10;  [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5&#10;  [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4&#10;  [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4&#10;  [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3&#10;  [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3&#10;  [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2&#10;  [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2&#10;  [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1&#10;  [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0&#10;  [exp8694] phase=measurement_complete completed=13 pending=1&#10;  [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_adversarial completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_adversarial completed=1 pending=0&#10;  [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1&#10;  [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0&#10;  [exp8694] error=candidate_rejected&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-rl_txk1z/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-VERIFY-8694-REPLAY: publish a real private candidate once."""
+        path = tmp_path_factory.mktemp("v745") / (e.NAME + ".json")
+        result = cli("--output", path, "--private-control", "--date", "20261101")
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8694] phase=start no_model_load current_language_model_calls=0
+E         [exp8694] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14
+E         [exp8694] phase=preconditions_before completed=0 pending=14
+E         [exp8694] phase=slot_before_exp8681-contract-methods completed=0 pending=14
+E         [exp8694] phase=slot_after_exp8681-contract-methods completed=1 pending=13
+E         [exp8694] phase=slot_before_exp8682-frozen-learning-core completed=1 pending=13
+E         [exp8694] phase=slot_after_exp8682-frozen-learning-core completed=2 pending=12
+E         [exp8694] phase=slot_before_exp8683-learning-union-qualification completed=2 pending=12
+E         [exp8694] phase=slot_after_exp8683-learning-union-qualification completed=3 pending=11
+E         [exp8694] phase=slot_before_exp8684-relational-evidence-controls completed=3 pending=11
+E         [exp8694] phase=slot_after_exp8684-relational-evidence-controls completed=4 pending=10
+E         [exp8694] phase=slot_before_exp8685-causal-brier-stream completed=4 pending=10
+E         [exp8694] phase=slot_after_exp8685-causal-brier-stream completed=5 pending=9
+E         [exp8694] phase=slot_before_exp8686-learning-benefit-audit completed=5 pending=9
+E         [exp8694] phase=slot_after_exp8686-learning-benefit-audit completed=6 pending=8
+E         [exp8694] phase=slot_before_exp8687-relational-feature-audit completed=6 pending=8
+E         [exp8694] phase=slot_after_exp8687-relational-feature-audit completed=7 pending=7
+E         [exp8694] phase=slot_before_exp8688-installed-batch-prototype completed=7 pending=7
+E         [exp8694] phase=slot_after_exp8688-installed-batch-prototype completed=8 pending=6
+E         [exp8694] phase=slot_before_exp8689-installed-batch-cost completed=8 pending=6
+E         [exp8694] phase=slot_after_exp8689-installed-batch-cost completed=9 pending=5
+E         [exp8694] phase=slot_before_exp8690-qwen-symbolic-canary completed=9 pending=5
+E         [exp8694] phase=slot_after_exp8690-qwen-symbolic-canary completed=10 pending=4
+E         [exp8694] phase=slot_before_exp8691-arc-censoring-decision completed=10 pending=4
+E         [exp8694] phase=slot_after_exp8691-arc-censoring-decision completed=11 pending=3
+E         [exp8694] phase=slot_before_exp8692-spline-precision-feasibility completed=11 pending=3
+E         [exp8694] phase=slot_after_exp8692-spline-precision-feasibility completed=12 pending=2
+E         [exp8694] phase=slot_before_exp8693-hardware-operation-boundary completed=12 pending=2
+E         [exp8694] phase=slot_after_exp8693-hardware-operation-boundary completed=13 pending=1
+E         [exp8694] phase=sources_inputs_frozen_before_reduction completed=13 pending=1
+E         [exp8205] phase=before_subprocess_publication_gate completed=0 pending=1
+E         [exp8205] phase=after_subprocess_publication_gate completed=1 pending=0
+E         [exp8694] phase=measurement_complete completed=13 pending=1
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+E         [exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+E         [exp8694] error=candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...\n[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0\n', stderr='[exp8694] error=candidate_rejected\n').returncode
+
+tests/python/test_v745_capstone_8694.py:37: AssertionError</error></testcase><testcase classname="tests.python.test_v745_capstone_8694" name="test_validation_wrapper" time="0.001" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_reducer_rejections[arc]" time="0.001" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_reducer_rejections[producer]" time="0.001" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_reducer_rejections[inventory]" time="0.001" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_reducer_rejections[checkpoint]" time="0.581" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_measure_failure_paths[publication]" time="0.159" /><testcase classname="tests.python.test_v745_capstone_8694" name="test_measure_failure_paths[deadline]" time="0.004" /></testsuite></testsuites>
