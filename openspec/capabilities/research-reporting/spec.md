@@ -103627,3 +103627,21 @@ child budget before the 3600-second measurement boundary. Retain real exits,
 durations, configuration, sources and coverage before combining copies. Missing
 external files/fields, observed zero and changed bytes have distinct gate rows.
 Failed owned checks disqualify even when an external prerequisite also fails.
+
+## REQ-REPORT-8697: Exact causal learning execution union
+
+Authenticate the fresh Exp8696 producer, its bound terminal validation and frozen
+transitive source bundle. Independently read the V746 full-object contract and
+pinned original methods, checkpoint and data. Join disjoint original39 and25
+nodes into exactly64. Require all27 causal runner nodes and all83 executable
+runner statements from actual producer SQLite. Consumer coverage grants no
+producer readiness. Preserve original objectives, deadlines, private inputs,
+historical quarantines and V733/V735/V737/V743 nulls. Make zero model calls.
+
+### SCENARIO-REPORT-8697-UNION
+
+Missing files, missing fields, observed zero and changed bytes have distinct
+external gate rows. A flagged producer cannot grant readiness. External absence
+blocks; failed owned execution disqualifies. Learning execution readiness is1
+only after the exact union, original semantics, private E2E-020 and owned checks
+pass. Readiness grants no scientific benefit or physical hardware claim.

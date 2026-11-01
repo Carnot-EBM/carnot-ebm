@@ -57165,3 +57165,20 @@ location and these two clocks may differ. Keep original cells, coefficients,
 labels, restart receipts and original fixture hash unchanged. A failed invocation
 with a negative resumed duration remains disqualified; the corrected adapter
 requires a new complete invocation and cannot reuse its passing nodes.
+
+## REQ-VERIFY-8697: Retained original union and cold reconstruction
+
+Collect the original inventory once. Admit bounded disjoint children before the
+3600-second measurement boundary with900 seconds reserved for validation. Check
+the shared original source seal before and after execution. Retain SQLite,
+JUnit, sources, configuration, commands, real exits and clocks before combining
+copies. Killed children fail qualification. Reconstruct exact original node
+outcomes and executable statements separately from100 percent new statements.
+
+### SCENARIO-VERIFY-8697-REPLAY
+
+Exercise actual private CLI publication and rejection, unchanged primary
+publication, adversarial and strict row validation, private E2E-018/020/021 and
+fresh bounded cold replay. Reject absent operands and rehashed primitive changes
+against an independent invocation seal. Keep flushed parent heartbeats within60
+seconds. Publish only checked final bytes. Ops reconciliation is conductor-owned.

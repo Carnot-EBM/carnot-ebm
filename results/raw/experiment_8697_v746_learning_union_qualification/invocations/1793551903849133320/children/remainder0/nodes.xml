@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="10" time="1097.371" timestamp="2026-11-01T11:52:24.776772-05:00" hostname="icbfl1"><testcase classname="tests.python.test_deadline_edge_8603" name="test_real_deadline_edges[3599.0-2-None]" time="372.625"><failure message="ValueError: candidate_rejected">prepared = {'checkpoint_reference': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8431_v726_criter...ier_evidence_8582.py', 'sha256': 'sha256:95f964e4961367eba503e52dbd11a3a23bc3e82bef66b91786e594e6fc197e45'}, ...], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261101T165209-1093247-936c6b04/test_real_deadline_edges_3599_0')
+elapsed = 3599.0, reads = 2, observed = None
+
+    @pytest.mark.parametrize(
+        "elapsed,reads,observed", [(3599.0, 2, None), (3600.0, 3, 3600.25), (3601.0, 3, 3601.25)]
+    )
+    def test_real_deadline_edges(prepared, tmp_path, elapsed, reads, observed):
+        """SCENARIO-VERIFY-8603-EDGE: the real runner executes the diagnostic read."""
+        directory = Path(os.environ.get("CARNOT_8603_CASE_ROOT", str(tmp_path))) / f"case-{elapsed:g}"
+&gt;       row = e.deadline_case(prepared["mechanics_fixture"], directory, elapsed)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_deadline_edge_8603.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/deadline_edge_8603.py:65: in deadline_case
+    exit_code = old.runner.run(output, private=True, measurement=Path(fixture["path"]))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/causal_brier_runner_8582.py:113: in run
+    publication = publish_primary(output, value, lambda path: terminal(path, raw))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8697_v746_learning_union_qualification/invocations/1793551903849133320/deadline_cases/case-3599/experiment_8582_v737_causal_brier_stream.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'admission_identity': True, 'causal_histories': False, 'count_proof_validation': False, 'current_owned_validation': False, ...}, 'admission_count': 800, 'admission_events': 2400, ...}
+validator = &lt;function run.&lt;locals&gt;.&lt;lambda&gt; at 0x7ffacfc7d620&gt;
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -&gt; dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+&gt;               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError</failure></testcase><testcase classname="tests.python.test_deadline_edge_8603" name="test_real_deadline_edges[3600.0-3-3600.25]" time="344.869"><failure message="ValueError: candidate_rejected">prepared = {'checkpoint_reference': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8431_v726_criter...ier_evidence_8582.py', 'sha256': 'sha256:95f964e4961367eba503e52dbd11a3a23bc3e82bef66b91786e594e6fc197e45'}, ...], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261101T165209-1093247-936c6b04/test_real_deadline_edges_3600_0')
+elapsed = 3600.0, reads = 3, observed = 3600.25
+
+    @pytest.mark.parametrize(
+        "elapsed,reads,observed", [(3599.0, 2, None), (3600.0, 3, 3600.25), (3601.0, 3, 3601.25)]
+    )
+    def test_real_deadline_edges(prepared, tmp_path, elapsed, reads, observed):
+        """SCENARIO-VERIFY-8603-EDGE: the real runner executes the diagnostic read."""
+        directory = Path(os.environ.get("CARNOT_8603_CASE_ROOT", str(tmp_path))) / f"case-{elapsed:g}"
+&gt;       row = e.deadline_case(prepared["mechanics_fixture"], directory, elapsed)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_deadline_edge_8603.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/deadline_edge_8603.py:65: in deadline_case
+    exit_code = old.runner.run(output, private=True, measurement=Path(fixture["path"]))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/causal_brier_runner_8582.py:113: in run
+    publication = publish_primary(output, value, lambda path: terminal(path, raw))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8697_v746_learning_union_qualification/invocations/1793551903849133320/deadline_cases/case-3600/experiment_8582_v737_causal_brier_stream.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'admission_identity': True, 'causal_histories': False, 'count_proof_validation': False, 'current_owned_validation': False, ...}, 'admission_count': 800, 'admission_events': 2400, ...}
+validator = &lt;function run.&lt;locals&gt;.&lt;lambda&gt; at 0x7ffacfcd9e40&gt;
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -&gt; dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+&gt;               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError</failure></testcase><testcase classname="tests.python.test_deadline_edge_8603" name="test_real_deadline_edges[3601.0-3-3601.25]" time="347.762"><failure message="ValueError: candidate_rejected">prepared = {'checkpoint_reference': {'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8431_v726_criter...ier_evidence_8582.py', 'sha256': 'sha256:95f964e4961367eba503e52dbd11a3a23bc3e82bef66b91786e594e6fc197e45'}, ...], ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261101T165209-1093247-936c6b04/test_real_deadline_edges_3601_0')
+elapsed = 3601.0, reads = 3, observed = 3601.25
+
+    @pytest.mark.parametrize(
+        "elapsed,reads,observed", [(3599.0, 2, None), (3600.0, 3, 3600.25), (3601.0, 3, 3601.25)]
+    )
+    def test_real_deadline_edges(prepared, tmp_path, elapsed, reads, observed):
+        """SCENARIO-VERIFY-8603-EDGE: the real runner executes the diagnostic read."""
+        directory = Path(os.environ.get("CARNOT_8603_CASE_ROOT", str(tmp_path))) / f"case-{elapsed:g}"
+&gt;       row = e.deadline_case(prepared["mechanics_fixture"], directory, elapsed)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_deadline_edge_8603.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/deadline_edge_8603.py:65: in deadline_case
+    exit_code = old.runner.run(output, private=True, measurement=Path(fixture["path"]))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/causal_brier_runner_8582.py:113: in run
+    publication = publish_primary(output, value, lambda path: terminal(path, raw))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8697_v746_learning_union_qualification/invocations/1793551903849133320/deadline_cases/case-3601/experiment_8582_v737_causal_brier_stream.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'admission_identity': True, 'causal_histories': False, 'count_proof_validation': False, 'current_owned_validation': False, ...}, 'admission_count': 800, 'admission_events': 2400, ...}
+validator = &lt;function run.&lt;locals&gt;.&lt;lambda&gt; at 0x7ffacfc7eca0&gt;
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -&gt; dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+&gt;               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError</failure></testcase><testcase classname="tests.python.test_deadline_edge_8603" name="test_replay_controls_on_sealed_case_rows" time="0.033" /><testcase classname="tests.python.test_deadline_edge_8603" name="test_clock_cannot_replace_or_feed_kernel" time="0.217" /><testcase classname="tests.python.test_deadline_edge_8603" name="test_replay_and_rehashed_rejections" time="3.305" /><testcase classname="tests.python.test_deadline_edge_8603" name="test_cli_controls_and_private_publication" time="20.146" /><testcase classname="tests.python.test_deadline_edge_8603" name="test_normal_dispatch_without_recursive_controller" time="4.210" /><testcase classname="tests.python.test_deadline_edge_8603" name="test_plan_and_owned_rejections" time="0.001" /><testcase classname="tests.python.test_deadline_edge_8603" name="test_bounded_plan_requires_every_anchor" time="0.214" /></testsuite></testsuites>
