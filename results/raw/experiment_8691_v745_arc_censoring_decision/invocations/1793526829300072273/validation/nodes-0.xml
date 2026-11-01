@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="11" failures="0" skipped="0" tests="25" time="248.454" timestamp="2026-11-01T04:55:20.810189-05:00" hostname="icbfl1"><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[censored-censored]" time="0.005" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[no_progress_within_horizon-no_progress]" time="0.003" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[level_progress_observed-positive]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[missing-missing]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[promotion]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[count]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[callback]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[horizon]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[level]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[duplicate]" time="0.002" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_private_decision_and_replay" time="240.130"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[promotion]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[primitive]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[local_seal]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[missing]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_gate_operand_states" time="0.018" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_authentication_failures" time="0.050" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_owned_failure_and_cli_guards" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_blocked_measurement" time="4.124" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[source]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[operand]" time="0.001"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[clock]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[receipts]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[log]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-douaban9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8691: use real original inputs without changing public artifacts."""
+        path = tmp_path_factory.mktemp("arc8691") / (e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261101")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_censoring_decision_8691.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_arc_censoring_decision_8691.py:105: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 207661.16945307, orig_timeout = 240
+stdout_seq = [b'[exp8691] phase=start no_model_load MODEL_SPECS=[] language_model_calls=0\n', b'[exp8691] phase=start_no_model_load...ns_before completed=0 pending=16\n', b'[exp8691] phase=inputs_authenticated_before_reduction completed=16 pending=0\n']
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8691_v745_arc_censoring_decision.py', '--output', '/var/tmp/exp8666-validation-douaban9/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json', '--private-control', '--date', '20261101']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_unknown_and_fabricated_positive" time="0.001" /></testsuite></testsuites>

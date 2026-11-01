@@ -103534,3 +103534,21 @@ registered ARC source path and digest to its retained snapshot. Ordinary pytest
 and direct CLI runs share this check with the private adapter. Live source,
 original assertions and historical artifacts remain intact; missing or changed
 snapshots fail authentication.
+## REQ-REPORT-8691: Closed ARC ledger supervisor decision
+
+Exp8691 SHALL authenticate original Exp8677/8678 bytes, producer construction,
+terminal validation and registry precheck before reducing retained public streams.
+Four games, eight seed pairs and sixteen episodes remain the fixed panel. Keep
+120-action horizons and join callback ownership and reset requests by action index.
+Missing, censored, complete no-progress and positive outcomes remain distinct.
+Seeds and recorder twins are dependent. Descriptive censoring times are actions,
+not an efficacy estimate. No live replay, model load, adapter or solve is allowed.
+
+### SCENARIO-REPORT-8691-DECISION
+
+Private positive, negative, censored, missing and contradictory fixtures qualify
+only the reducer. Reject promotion from censorship. Without uncensored cross-game
+support emit no_supported_policy_change, freeze unchanged policy, close the ledger
+once and require distinguishing policy resets from environment termination before
+a new curated intervention. Preserve all historical quarantines and nulls; the
+generalization floor is satisfied by this evidence-based decision without change.

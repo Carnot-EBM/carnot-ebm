@@ -2,6 +2,22 @@
 
 **Last Updated:** 2026-11-01
 
+## Exp8691 private output and failed-child repair — 2026-11-01
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-8691 / SCENARIO-VERIFY-8691-PRIVATE-OUTPUT | Resolve output paths and reject private checkout destinations inside the runner before measurement | Direct calls, symlink aliases, both control flags and a real failed-child receipt; all original assertions preserved |
+| REQ-REPORT-8691 / SCENARIO-REPORT-8691-DECISION | Original authenticated ledger reduction and unchanged-policy decision preserved | 37 focused tests and 37 E2E-018/021 and publication-reader tests pass without skips |
+
+Repair receipts: `/tmp/carnot-8691-repair/`. Final standalone qualification
+passes all 13 validation receipts and all three terminal checks (cold replay,
+unchanged adversarial verification and strict row consistency), plus both
+publication readers. Genuine unit/CLI subprocess coverage covers all 265
+statements in the three owned modules and CLI at 100 percent. Scoped Ruff,
+strict mypy and spec tracing pass. The 74 distinct tests retain all original
+assertions and use zero skips. Global reconciliation retains the existing
+1,142 missing spec references and stale architecture date; no full suite ran.
+
 ## Exp8681 standalone original-input authentication — 2026-11-01
 
 | Requirement / scenario | Implementation | Verification |

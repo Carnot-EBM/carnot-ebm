@@ -2,6 +2,22 @@
 
 **Last Updated:** 2026-11-01
 
+## 2026-11-01 — Exp8691 private output and failed-child repair
+
+The runner rejects resolved private output paths inside the checkout before
+measurement, including direct calls and symlink aliases. The failing regression
+now patches the delegated validator and imports its runner during collection;
+all original assertions remain. Added real failed-child and output-boundary
+controls pass. Focused and E2E-018/021/publication-reader suites pass all 74
+distinct tests with zero skips. The final standalone invocation passes all 13
+qualification receipts, cold replay, adversarial verification, strict row
+consistency and both publication readers. Actual unit/CLI subprocess coverage
+is 100 percent across all 265 statements in four owned implementation files.
+Scoped Ruff, strict mypy and spec tracing pass. Receipts:
+`/tmp/carnot-8691-repair/`. Historical results and the conductor are unchanged.
+Global reconciliation retains 1,142 existing missing spec references and the
+stale architecture date. The full repository suite was not run.
+
 ## 2026-11-01 — Exp8681 standalone original-input authentication
 
 Original V744 contract tests failed outside the private pytest plugin because

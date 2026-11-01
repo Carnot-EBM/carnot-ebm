@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="25" time="123.175" timestamp="2026-11-01T05:04:22.271117-05:00" hostname="icbfl1"><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[censored-censored]" time="0.001" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[no_progress_within_horizon-no_progress]" time="0.001" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[level_progress_observed-positive]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_outcome_fixtures[missing-missing]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[promotion]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[count]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[callback]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[horizon]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[level]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_contradictory_receipts[duplicate]" time="0.000" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_private_decision_and_replay" time="57.018" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[promotion]" time="8.292" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[primitive]" time="6.105" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[local_seal]" time="6.060" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_rehashed_rejections[missing]" time="5.796" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_gate_operand_states" time="0.004" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_authentication_failures" time="0.012" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_owned_failure_and_cli_guards" time="33.385"><failure message="AssertionError: assert [{'name': 'ba...ssed': False}] == [{'passed': True}]&#10;  &#10;  At index 0 diff: {'name': 'bad', 'passed': False} != {'passed': True}&#10;  Use -v to get more diff">private = (PosixPath('/var/tmp/exp8666-validation-cglrxkhr/suite-0/arc86910/experiment_8691_v745_arc_censoring_decision.json'), ...ored_promotion': True, 'owned_validation': True, ...}, 'adversarial_findings': [], 'arc_decision_ready_score': 1, ...})
+tmp_path = PosixPath('/var/tmp/exp8666-validation-cglrxkhr/suite-0/test_owned_failure_and_cli_gua0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f2a88178380&gt;
+
+    def test_owned_failure_and_cli_guards(private, tmp_path, monkeypatch):
+        """REQ-VERIFY-8691: an actual failed child disqualifies; private mode cannot write public results."""
+        from carnot.reporting import arc_censoring_runner_8691 as runner
+    
+        path, value = private
+        work = e.read(value["primitive_reference"])
+        assert e.build(work, [], path)["verdict_class"] == "disqualified"
+        for args in [
+            ("--date", "123"),
+            ("--date", "20260230"),
+            ("--private-control",),
+            ("--cold-replay", tmp_path / "absent"),
+        ]:
+            assert cli(*args).returncode == 1
+        monkeypatch.setattr(runner, "measure", lambda *a: work)
+        monkeypatch.setattr(runner, "validate", lambda *a: [dict(name="bad", passed=False)])
+        monkeypatch.setattr(runner, "publish_primary", lambda *a: {})
+        monkeypatch.setattr(runner, "reader_receipt", lambda *a, **kw: dict(passed=True))
+        assert runner.run(tmp_path / (e.NAME + ".json"), "20261101", False, True) == 1
+        monkeypatch.setattr(runner.validation, "validate", lambda *a: [dict(passed=True)])
+&gt;       assert runner.validate(tmp_path) == [dict(passed=True)]
+E       AssertionError: assert [{'name': 'ba...ssed': False}] == [{'passed': True}]
+E         
+E         At index 0 diff: {'name': 'bad', 'passed': False} != {'passed': True}
+E         Use -v to get more diff
+
+tests/python/test_arc_censoring_decision_8691.py:283: AssertionError</failure></testcase><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_blocked_measurement" time="0.063" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[source]" time="0.038" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[operand]" time="0.043" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[clock]" time="1.415" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[receipts]" time="1.359" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_replay_boundaries[log]" time="1.358" /><testcase classname="tests.python.test_arc_censoring_decision_8691" name="test_unknown_and_fabricated_positive" time="0.002" /></testsuite></testsuites>

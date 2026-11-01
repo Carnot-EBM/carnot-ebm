@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-11-01 — Repair Exp8691 private output and failed-child qualification
+
+Move the private output check into the runner and resolve filesystem aliases
+before measurement. Correct the regression's validator patch target and import
+timing while preserving every original assertion. Add direct-call, symlink and
+actual failed-child controls. All 74 distinct focused, E2E-018/021 and
+publication-reader tests pass without skips. Final standalone qualification
+passes every validation receipt, cold replay, unchanged adversarial/strict-row
+scanners and both publication readers. Genuine unit/CLI subprocess coverage
+is 100 percent for all 265 statements across four implementation files. Scoped
+Ruff, strict mypy and spec tracing pass. Receipts: `/tmp/carnot-8691-repair/`.
+Preserve historical results and `scripts/research_conductor.py`. Existing
+global spec-reference and architecture-age issues remain; no full suite ran.
+
 ## 2026-11-01 — Fix standalone V744/V745 contract authentication
 
 Resolve the original ARC input's exact registered path and digest to its retained

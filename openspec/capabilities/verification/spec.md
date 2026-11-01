@@ -57041,3 +57041,28 @@ original nodes, 18 V745 cases and private E2E-018/021. Genuine unit, plugin and
 standalone CLI executions cover all 638 statements in the seven affected files
 at 100 percent. Scoped Ruff, strict mypy and spec tracing pass. Existing global
 spec-reference and architecture-age reconciliation failures remain separate.
+## REQ-VERIFY-8691: Bounded immutable censoring reader qualification
+
+Freeze sources, tests, configuration and inputs before reduction. Retain raw
+SQLite, JUnit, exact nodes, commands, exits, hashes and clocks from bounded
+disjoint children. Require100 percent newly owned statements, private CLI success
+and rejection, scoped Ruff/strict mypy/spec tracing and private E2E-018/021.
+No full repository suite or recursive historical controllers. Accept --date20261101.
+
+### SCENARIO-VERIFY-8691-REPLAY
+
+Fresh cold replay reconstructs the report from immutable primitives and rejects
+missing operands, false promotions and self-consistently rehashed local changes
+against an independent seal. Failed or killed owned checks disqualify; external
+absence blocks with exact path/hash/field/operator/expected/observed receipts.
+Use unchanged primary publication, adversarial and strict-row validators on final
+bytes before atomic publication. Model calls are zero. Ops reconciliation is
+conductor-owned.
+
+### SCENARIO-VERIFY-8691-PRIVATE-OUTPUT
+
+Private-control and failed-child invocations SHALL reject both lexical checkout
+paths and resolved checkout destinations before measurement or publication,
+including directory aliases, public output symlinks to external files and direct
+runner calls. Failed-child controls SHALL retain the actual child exit and
+disqualify readiness.
