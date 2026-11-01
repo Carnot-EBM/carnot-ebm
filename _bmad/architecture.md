@@ -692,3 +692,21 @@ measures horizon support and censoring, with no new solve credit. Optional bound
 Qwen3.8 generation requires changed authenticated runtime evidence. Hardware
 mapping and capstone readers run independently of blocked scientific branches.
 All changes here are planned; V744 implementation and results remain pending.
+
+## Planned V745 evidence boundaries — 2026-11-01
+
+V745 stages fourteen tasks, Exp8681–Exp8694, in four phases. Immutable report
+construction qualifies fresh methods before the original frozen learning cohorts.
+The existing nine-input head and delayed-feedback objective remain unchanged.
+Independent future-loss and joint-retention audits qualify any learning claim.
+
+Structured-world SQL controls expose relational information lost by lexical
+features. A separate bounded Qwen canary measures source-to-record fidelity;
+query execution cannot certify extraction. Installed batching reuses the current
+vectorized evaluator and retains equal-work complete costs.
+
+A CPU integer emulator tests local spline arithmetic, with host nonlinear and
+storage work explicit. It changes no production numerical path. Board support
+remains operation-specific. The qualified, fully censored ARC panel stays closed;
+its new ledger supports one supervisor continuation decision without another run.
+All items here are planned studies, not implemented capabilities or new findings.

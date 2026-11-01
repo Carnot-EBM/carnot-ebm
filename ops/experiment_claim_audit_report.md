@@ -15,38 +15,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | NO_CLAIM | 5 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8659_v743_complete_source_comparison.json
+## experiment_8667_v744_contract_methods.json
 
-**CLAIM_SUPPORTED**
+**SKIPPED_ALREADY_FLAGGED**
 
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Streaming extraction increases complete source coverage over the original capped extractor on this fixed roster while preserving existing features and meeting resource bounds.
-
-## WHAT WOULD REFUTE IT
-Zero completed recoveries among the 55 former abstentions, missing source spans, changed features on previously usable responses, chunk-dependent results, or resource-limit violations.
-
-## WAS THAT CHECKED
-Yes, as reported by the recovery counts, parity checks, window custody, paired resource measurements, and acceptance gates. The artifact reports 55 recoveries and exact feature parity on 135 previously usable responses. That tie establishes preservation; it does not contradict increased coverage.
-
-The capped extractor is the relevant baseline for this limited comparison. No verifier-value or generalization claim is needed. No invalid-row inclusion or wrong-key contradiction is shown, although most individual rows are elided.
-
-## EVIDENCE
-
-- `coverage_gate`: `no missing source spans and at least one of55 former abstentions becomes complete`
-- `recovered_count`: `55`
-- `old_domain_parity`: `exact eight feature values on all135 originally usable rows`
-- `common_parity`: `true`; `chunk_parity`: `true`; `complete_window_custody`: `true`; `resource_bounds`: `true`
-- `coverage_benefit_score`: `Absolute engineering reach improvement only; never changed-denominator detector benefit.`
-- `independent_generalization_score`: `0`
-- `excluded_count`: `0`; `failed_count`: `0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8660_v743_installed_compatibility.json
+## experiment_8668_frozen_learning_core.json
 
 **NO_CLAIM**
 
@@ -57,88 +30,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative value claim is made. The limited deployment receipt would be invalidated by an installed response disagreeing with its baseline, an export-contract violation, or failed recovery or cleanup.
+Not applicable: this is a blocked-gate receipt with no claim of successful qualification or comparative value.
 
 ## WAS THAT CHECKED
-Yes, for deployment compatibility: installed parity, export compatibility, rejection and cleanup rows provide opportunities for failure, and the displayed checks pass. Matching the baseline is the compatibility objective; it does not claim superiority. The oracle flag therefore does not establish a circular added-value claim here.
+Yes, the prerequisites were checked in `gates_evaluated`: the methods readiness gate failed with actual 0 against expected 1. The artifact explicitly reports blockage.
 
 ## EVIDENCE
-
-- `exposure_scope`: `Exposed compatibility operands and synthetic public verification smoke; deployment only`
-- `Bind actual immutable invocation evidence; ownership and packaging grant no scientific benefit.`
-- `generalized_learning_benefit_score`: `0`
-- `independent_generalization_score`: `0`
-- `installed_measurement_ready_score`: `1`
-- `installed_parity_rows`, `baseline_response`, `response`, `passed`
-- `honest_verdict`: `complete_circular_positive_v743_installed_compatibility`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8661_v743_installed_complete_cost.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-On the exposed original64 workload, installed native execution meets packaging noninferiority but fails the 10× NFR-01 complete-operation throughput requirement.
-
-## WHAT WOULD REFUTE IT
-At L16, packaging throughput lower95 below 0.95, p95 latency ratio above 1.05, or a decision mismatch would defeat packaging qualification; installed-native/installed-Python throughput lower95 reaching 10 would contradict the reported NFR-01 failure.
-
-## WAS THAT CHECKED
-Yes. The paired throughput intervals report packaging lower95 of 0.9918997155865926 and p95 latency ratio of 1.002628040443349. The arithmetic interval is approximately 1.197–1.225, far below 10.
-
-These timing comparisons could fail independently of the verifier’s decisions. The oracle flag therefore does not make this timing claim circular. The artifact explicitly limits exposure and makes no generalization claim. Private native and installed Python are relevant comparators; a packaging tie is consistent with noninferiority.
-
-The artifact reports all 120 cells completed without failures, censoring, or exclusions. Displayed session rows report exact decisions; most individual rows are elided, limiting direct inspection.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_null_v743_installed_complete_cost`; `verdict_class`: `null`
-- `Only L16 installed_native/installed_python lower95>=10 satisfies NFR-01.`
-- `L16 installed_native/private_native lower95>=0.95, p95<=1.05 and exact decisions.`
-- `packaging`: `lower95`: `0.9918997155865926`; `p95_latency_ratio`: `1.002628040443349`
-- `arithmetic`: `lower95`: `1.197007408532037`; `upper95`: `1.2247656009276773`
-- `exposure_scope`: `original64 exposed development requests; original checkpoint; no independent generalization or hardware claim`
-- `completed_count`: `120`; `failed_count`: `0`; `censored_count`: `0`; `excluded_count`: `0`
-- `exact_decisions`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8662_qwen_evidence_canary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No method-value claim is made. The blocking diagnosis would be contradicted if all evaluated prerequisite gates passed.
-
-## WAS THAT CHECKED
-Yes. The gate rows show runtime readiness failed while input readiness passed, consistent with blocking. This is a gate-check receipt, not an experimental result.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`  
 `status`: `blocked`  
 `honest_verdict`: `blocked_gate_check_failed`  
-`artifact_field`: `runtime_repair_ready_score`  
-`reason`: `actual=0 == expected=1`  
-`artifact_field`: `canary_inputs_ready_score`  
-`reason`: `actual=1 == expected=1`  
+`failed_field`: `methods_ready_score`  
+`blocked_reason`: `actual=0 == expected=1`  
 `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8663_v743_arc_reset_provenance.json
+## experiment_8670_relational_evidence_controls.json
 
 **NO_CLAIM**
 
@@ -149,27 +56,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative scientific claim to refute. The bounded engineering witness could fail if an enabled reset lacked its provenance join or enabling instrumentation changed actions, observations, RNG, SDK calls, or termination.
+No method-performance claim is made. The blockage diagnosis would be contradicted if both prerequisite gates passed.
 
 ## WAS THAT CHECKED
-Yes, within the bounded witness: the enabled arm reports one reset and one join, both arms pass, and the action-parity checks all pass. The equal action counts do not establish policy benefit; none is claimed.
+Yes, for the blockage diagnosis: `gates_evaluated` shows methods readiness failed while extraction-input readiness passed. No comparative experiment is reported.
 
 ## EVIDENCE
-
-- `methodology_note`: `Bounded engineering witness only. Historical disqualification and quarantines remain unchanged. No solve, policy benefit or transfer-panel qualification. Exp8664 owns the full panel.`
-- `honest_verdict`: `complete_null_arc_reset_provenance`
-- `independent_scientific_questions`: `0`
-- In `sdk_witness_rows`: `arm` = `on`, `reset_count` = `1`, `joined_count` = `1`, `passed` = `true`.
-- In `action_parity_rows`: `actions`, `observations`, `rng`, `sdk_calls`, and `termination` are `true`.
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"artifact_field": "methods_ready_score"`; `"expected": 1`; `"actual": 0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8664_v743_arc_reset_transfer.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_8665_v743_hardware_operation_evidence.json
+## experiment_8674_installed_batch_prototype.json
 
 **NO_CLAIM**
 
@@ -180,48 +78,133 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative benefit claim to falsify. An admitted, authenticated compatible hardware execution with complete costs would contradict the reported blocked evidence status.
+No experimental claim is asserted. The blocked-gate report would be contradicted if all required gate rows passed.
 
 ## WAS THAT CHECKED
-No hardware benefit test was performed. This is an evidence audit: execution gates remain false, failed source checks are recorded, and speedup estimates remain null. These limitations are reflected in the blocked verdict.
+Yes. The gate rows show methods_ready_score failing with actual 0 against expected 1, while deployment_inputs_ready_score passes. This is a prerequisite-check receipt; no batch qualification result is reported.
+
+## EVIDENCE
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `artifact_field`: `methods_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`
+- `artifact_field`: `deployment_inputs_ready_score`; `expected`: `1`; `actual`: `1`; `passed`: `true`
+- `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8677_v744_arc_observation_ownership.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Observation-delivery ownership passes diagnostic controls and preserves behavior on the tested pairs, without establishing solve, promotion, or generalization benefit.
+
+## WHAT WOULD REFUTE IT
+Any paired difference in actions, observations, final state, resets, RNG, termination, or legacy behavior; repeated callbacks advancing the observation horizon; or a conflicting duplicate being accepted without rejection.
+
+## WAS THAT CHECKED
+Yes. All eight action-parity rows report equality across those dimensions. Constructed controls exercise repeated callbacks, conflicting duplicates, full horizons, resets, and termination, and report passing results. These checks could have failed.
+
+The recorder-off comparator ties, supporting behavioral preservation rather than added performance. Constructed controls establish diagnostic behavior only; the artifact expressly withholds broader benefit credit.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_arc_observation_ownership`
+- `methodology_note`: `Single delivery ownership is diagnostic readiness only. Constructed horizon controls establish no natural supervisor benefit. Seeds and recorder twins are dependent; no solve, policy promotion or generalization credit.`
+- `equality`: `actions`, `final_state`, `legacy`, `observations`, `reset_requests`, `rng`, `termination`; each `true`
+- `case`: `repeated_is_done`; `observed_horizon`: `3`
+- `reason`: `conflicting_duplicate`; `horizon_status`: `censored`
+- `headline_solve_credit`: `0`; `independent_generalization_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8678_v744_arc_observer_transfer.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Across four development games, recorder off/on execution matched exactly, while all 16 live observer windows were censored and established no transfer benefit.
+
+## WHAT WOULD REFUTE IT
+Any recorder off/on pair differing in actions, observations, RNG, or final state; or any completed live observation horizon contradicting the all-censored accounting.
+
+## WAS THAT CHECKED
+Yes. Eight action-parity rows check execution equality across four games and two seeds. Live horizon accounting reports 16 censored windows and zero complete horizons; constructed controls exercise completion, reset, and conflict handling.
+
+The recorder-off comparator ties exactly, supporting the parity claim. Censoring leaves efficacy unresolved, and the artifact makes no positive efficacy or generalization claim.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_blocked_v743_hardware_operation_evidence`
-- `compatible_physical_execution`: `false`
+- `honest_verdict`: `complete_null_arc_observer_transfer`.
+- All eight `action_parity_rows` report `passed`: `true`, with `actions`, `observations`, `final_state`, and `rng` each `true`.
+- `censored_count`: `16`; `complete_horizon_count`: `0`.
+- `diagnostic_disposition`: `closed_censored_under_unchanged_protocol`.
+- `population_efficacy_claim`: `false`.
+- `generalized_learning_benefit_score`: `0`; `independent_generalization_score`: `0`; `headline_solve_credit`: `0`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8679_v744_hardware_operation_boundary.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative claim to falsify. A qualified compatible hardware execution with complete cost measurements would contradict the narrower recorded blocked status.
+
+## WAS THAT CHECKED
+No physical performance test was performed. The gate summary records missing upstream cost artifacts, and board status rows report no physical execution. This is an evidence aggregation and readiness receipt; it asserts no hardware speedup, verifier benefit, or generalization result.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_v744_hardware_operation_boundary`
+- `inference_substrate`: `aggregation_from_upstream_artifacts`
+- `physical_execution_this_invocation`: `false`
 - `complete_new_cost_boundaries`: `false`
-- `device_commands_executed`: `0`
 - `achieved_speedup`: `null`
-- `missing_reason`: `binding_residual_does_not_isolate_spline_arithmetic`
-- `generalized_learning_benefit_score`: `0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8666_v743_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No headline claim of comparative efficacy is advanced. Qualified current learning evidence, independent generalization results, and authenticated physical execution could overturn the blocked readiness assessment.
-
-## WAS THAT CHECKED
-Yes, as readiness checks: learning lacks a current producer, learning and reset qualification are false, and every listed board reports no physical execution. These limitations remain reflected in the blocked verdict; administrative completion is not promoted into demonstrated benefit.
-
-## EVIDENCE
-- `exposure_scope`: `Previously exposed registered evidence only; administrative reconciliation`
-- `honest_verdict`: `complete_blocked_v743_capstone`
-- `current_producer_present`: `false`
 - `generalized_learning_benefit_score`: `0`
 - `independent_generalization_score`: `0`
-- `physical_execution_this_invocation`: `false`
-- `promotion_ready_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8680_v744_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative efficacy claim to falsify. Qualified measurements establishing benefit within these rows would contradict the reported unmeasured status; unmeasured benefit does not imply ineffectiveness.
+
+## WAS THAT CHECKED
+No comparative efficacy test was completed here. This aggregation records failed or missing gate operands, censored ARC horizons, and unexecuted deployment comparisons. It does not promote those rows into efficacy or generalization evidence.
+
+## EVIDENCE
+- `exposure_scope`: `Exposed upstream evidence and deterministic constructed registration; no independent generalization`
+- `status`: `diagnostic_completed_efficacy_unmeasured`
+- `complete_horizon_count`: `0`
+- `population_efficacy_claim`: `false`
+- `supervisor_benefit`: `null`
+- `missing_reason`: `Exp8674/8675 never executed`
+- `operand_state`: `missing_field`
+- `verdict_class`: `disqualified`
 
 ## RECOMMENDATION
 KEEP

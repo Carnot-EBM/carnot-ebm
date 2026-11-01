@@ -285,3 +285,5 @@ of truth, not this line.)
 | 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_is_arc_generation_or_exploration_artifact | SILENT_NON_FIRING | OPEN | |
 | 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_archive_zero_reasons | SILENT_NON_FIRING | OPEN | |
 | 2026-10-19 | qa_layer_authenticity_audit | adversarial_verify.py::_shape_dims | REAL_BUG | OPEN | |
+| 2026-11-01 | qa_layer_authenticity_audit | adversarial_verify.py::_lever_exercise_severity | REAL_BUG | OPEN | |
+| 2026-11-01 | qa_layer_authenticity_audit | adversarial_verify.py::check_value_routing_cost_control_overclaim | SILENT_NON_FIRING | OPEN | |

@@ -9,26 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| CANNOT_DETERMINE | 4 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_8659_v743_complete_source_comparison.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The artifact reports a complete positive source comparison, with all acceptance gates passed and a coverage-benefit score of 1.
-
-## WHAT IS MISSING
-Per-source paired coverage outcomes supporting "coverage_benefit_score" are not visible. "complete_extraction_cost_rows" contains per-unit costs, but the supplied artifact ends mid-row, so whether coverage rows appear later is unknown.
-
-## THE CHECK A READER CANNOT DO
-Is the claimed coverage benefit spread across sources or driven by a single source?
-
-## experiment_8660_v743_installed_compatibility.json
+## experiment_8667_v744_contract_methods.json
 
 **CHECKABLE**
 
@@ -36,7 +20,7 @@ Is the claimed coverage benefit spread across sources or driven by a single sour
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports passed compatibility and measurement-readiness checks, with no comparative learning-benefit claim or blocked verdict.
+Administrative contract readiness is not established: `methods_ready_score` is 0, and `gate_check_summary` records failed checks and observed values.
 
 ## WHAT IS MISSING
 nothing
@@ -44,23 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8661_v743_installed_complete_cost.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The artifact reports qualified measurement and packaging noninferiority passed, while NFR-01 failed.
-
-## WHAT IS MISSING
-The remainder of the artifact: it ends mid-"cell_id" inside "complete_operation_spans". Per-cell timing rows are present, and "acceptance_gates" plus "branch_gate_values.nfr01_score" identify the failed check and score, but the complete comparison and its decision criteria are unavailable.
-
-## THE CHECK A READER CANNOT DO
-Do the complete per-cell results satisfy the criterion used to mark "packaging_noninferiority" as passed?
-
-## experiment_8662_qwen_evidence_canary.json
+## experiment_8668_frozen_learning_core.json
 
 **CHECKABLE**
 
@@ -68,7 +36,7 @@ Do the complete per-cell results satisfy the criterion used to mark "packaging_n
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked because `runtime_repair_ready_score` was 0, while the gate required 1.
+Execution was blocked because upstream `exp8667-contract-methods.methods_ready_score` was 0, failing the required value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -76,43 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8663_v743_arc_reset_provenance.json
-
-**CHECKABLE**
-
-## VERDICT
-
-CHECKABLE
-
-## WHAT THE CLAIM IS
-
-The bounded reset-provenance engineering witness completed with readiness score 1, claiming no solve, policy benefit, or generalization.
-
-## WHAT IS MISSING
-
-nothing
-
-## THE CHECK A READER CANNOT DO
-
-none
-
-## experiment_8664_v743_arc_reset_transfer.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible excerpt reports passing acceptance gates and action parity for eight game–seed pairs, but the overall headline claim is unavailable.
-
-## WHAT IS MISSING
-The remainder of the artifact: it cuts off mid-string inside "callback_sequence_rows". "acceptance_gates" and per-unit "action_parity_rows" are present, but the overall verdict and any subsequent diagnostics are unavailable.
-
-## THE CHECK A READER CANNOT DO
-Does the overall verdict report a blocker, and if so, which check failed and what value did it observe?
-
-## experiment_8665_v743_hardware_operation_evidence.json
+## experiment_8670_relational_evidence_controls.json
 
 **CHECKABLE**
 
@@ -120,7 +52,7 @@ Does the overall verdict report a blocker, and if so, which check failed and wha
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Acquisition priority remains unchanged because no compatible physical kernel or complete new cost boundary has been established.
+The task was blocked because `exp8667-contract-methods.methods_ready_score` was 0, failing the requirement that it equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -128,7 +60,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8666_v743_capstone.json
+## experiment_8674_installed_batch_prototype.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked because upstream `methods_ready_score` was 0, while the gate required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8677_v744_arc_observation_ownership.json
 
 **CANNOT_DETERMINE**
 
@@ -136,10 +84,58 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion reports unmet learning and physical-execution gates and a successful FoVer headline reproduction.
+The recorded acceptance gates passed, including exact policy parity across eight game/seed units.
 
 ## WHAT IS MISSING
-The artifact ends mid-value inside "cold_reductions.hardware.complete_boundary_rows", leaving the remaining evidence unavailable. "G2" reports aggregate AUROC and learning-contribution results without corresponding unit-level metrics in the visible portion. "branch_evidence_limit" supplies blocker diagnostics.
+The artifact ends mid-value inside "callback_ownership_rows", leaving the remainder unavailable; "action_parity_rows" provides eight per-unit parity results, but supporting results for the other "acceptance_gates" are not visible.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted remainder provide per-condition metrics supporting the FoVer learning-contribution PASS reported in "G2"?
+What per-condition results establish that "acceptance_gates.horizon_controls" passed?
+
+## experiment_8678_v744_arc_observer_transfer.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Exact policy parity passed for all eight game–seed pairs, with per-unit results recorded in "action_parity_rows".
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8679_v744_hardware_operation_boundary.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible fragment reports no compatible physical execution, incomplete new cost boundaries, and unchanged acquisition priority.
+
+## WHAT IS MISSING
+The artifact ends mid-path inside "cited_upstream_artifacts"; the headline verdict and any subsequent measurements are unavailable. "acceptance_gates" and "board_status_rows" do record failed checks and board-specific prerequisites, so BLOCKED_WITHOUT_DIAGNOSTIC is not supported.
+
+## THE CHECK A READER CANNOT DO
+Does the missing remainder assert a comparative result without recording per-unit metrics?
+
+## experiment_8680_v744_capstone.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+“G2.detail” claims the FoVer headline reproduced within published AUROC and positive learning-contribution intervals.
+
+## WHAT IS MISSING
+FoVer per-unit production/control metrics are absent from the visible text; “arc_decision_rows.horizon_rows” records ARC observations instead. The artifact cuts off mid-“observation_sha256”, so whether supporting FoVer rows appear later is unknown.
+
+## THE CHECK A READER CANNOT DO
+Was the positive FoVer learning contribution broadly supported across units or driven by a few outliers?

@@ -4213,3 +4213,14 @@ V743 authority is preserved at
 Its prior staged entries are historical; V744 replaces only the next-plan slot.
 The dated literature scan is in `research-references.md`. No scientific result
 or implemented capability is claimed by this planning record.
+
+## V745 staged planning traceability — 2026-11-01
+
+| Requirement | Planned scope | Status | Evidence |
+|---|---|---|---|
+| REQ-REPORT-745-1 / SCENARIO-REPORT-745-1 | Fourteen matching tasks, Exp8681–Exp8694, full objects and exact gates | Planned | research-roadmap-next.yaml; openspec/change-proposals/research-roadmap-vNEXT.md |
+| REQ-REPORT-745-2 / SCENARIO-REPORT-745-2 | Immutable report repair, original learning qualification, FR-11 future/retention study, symbolic controls and bounded Qwen | Planned | Exp8681–Exp8687; Exp8690 |
+| REQ-REPORT-745-3 / SCENARIO-REPORT-745-3 | Installed batches, numerical hardware feasibility, closed ARC ledger decision and unconditional reconciliation | Planned | Exp8688/8689; Exp8691–Exp8694 |
+
+V744's preserved design remains historical authority. Planning changes no runtime
+behavior, generator weights, scientific result or publication status.

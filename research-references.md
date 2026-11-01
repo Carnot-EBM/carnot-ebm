@@ -54000,3 +54000,91 @@ information its features retain. Finish the unmeasured causal learning protocol
 under immutable execution. Test a concrete service-overhead change rather than
 repeat the closed batch-one timing study. Optional model work must wait for
 changed causal CUDA evidence. Keep the new taxonomy as a bounded diagnostic.
+
+## V745 planning scan — 2026-11-01
+
+This scan precedes experiment design for milestone 2026.11.745. It follows
+the terminal V744 artifacts, including the contract quarantine and closed
+ARC horizon diagnostic. Papers below supply methods to test, not local results.
+
+### New leads and decisions
+
+- **Symbolic grounding with an extraction audit.** [Leveraging Low-Level
+  Symbolic Competences for Unsupervised Grounding in Hallucination Detection,
+  arXiv:2609.05025v2](https://arxiv.org/html/2609.05025v2), revised October 19,
+  builds SQL databases from reference text. It combines executable queries
+  with a text-based check. The full text explicitly examines information lost
+  during database construction. Adopt a bounded relation-record extraction
+  experiment with source spans and an independent truth evaluator. Compare
+  direct decisions with decisions through extracted records. Separate missing
+  records, incorrect relations and query errors. Successful SQL execution
+  cannot certify that extraction preserved the source. This is an adaptation,
+  not a reproduction of the paper's complete pipeline or benchmark.
+- **Continuous-state probabilistic hardware.** [First hardware demonstration
+  of a continuous-state probabilistic computer with programmable energy-defined
+  sampling, arXiv:2610.31339](https://arxiv.org/abs/2610.31339), October 22,
+  reports finite-precision conditional sampling on an FPGA. Its factorization
+  comparison measures core solving time on a small case. The abstract was
+  read; implementation details were not independently reproduced. File as a
+  future compatibility lead. A spline evaluator is not thereby a supported
+  sampler, and the paper does not qualify Carnot's KV260 image.
+- **Sparse hardware representation.** [Precision meets speed through an
+  FPGA-based natively sparse Ising machine](https://www.nature.com/articles/s41467-026-75119-0),
+  July 11, describes tiled sparse storage and integer quantization for simulated
+  bifurcation. Adopt operation and precision accounting in a CPU fixed-point
+  feasibility study. Defer new RTL. Neither Max-Cut optimization nor sparse
+  matrix storage proves distributional sampling or faster spline learning.
+
+### Rechecked methods and primary-topic coverage
+
+| Topic | Primary source and date | Planning decision |
+|---|---|---|
+| EBM verification and reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), July 2, 2025; [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605), revised May 25, 2026 | Retain compatibility scoring and probability correspondence as context. No generator training or claim that low energy establishes natural truth. |
+| Neural constraint satisfaction | [Efficient Constraint Handling in Neural Solvers for Routing, 2602.16012](https://arxiv.org/abs/2602.16012), February 17, 2026 | Keep feasibility checking separate from learned scores. Defer a new routing solver. |
+| Ising applications in ML | Sparse Ising implementation and continuous-state hardware above | Compare supported operations, numerical precision and complete costs. Do not transfer device speed ratios. |
+| Hallucination detection and mitigation | Symbolic-grounding paper above; [HalluScoring 2026, 2609.38355](https://arxiv.org/abs/2609.38355), September 29 | Audit representation fidelity; preserve distinct question and generator shifts. No new Arabic benchmark without label and language qualification. |
+| Kolmogorov–Arnold networks | [Ultrafast On-Chip Online Learning via Spline Locality, 2602.02056v4](https://arxiv.org/abs/2602.02056), revised June 19, 2026 | Test finite-precision sparse updates of the existing small head on CPU. Measure saturation, decision changes and durable-update cost before an FPGA proposal. |
+| Energy-guided decoding | [Energy-Based Decoding, 2605.28020](https://arxiv.org/abs/2605.28020), May 27, 2026 | Defer generation steering until the verifier has qualified utility. The new extraction canary is not guided decoding. |
+| Hardware-accelerated sampling | Continuous-state FPGA paper above; [Extropic Z1T](https://extropic.ai/writing/z1t/), September 4, 2026 | Keep sampler compatibility, forward evaluation and physical execution separate. |
+| Continual/online constraint systems | [Capacity-Constrained Online Learning with Delays, 2503.19856v2](https://arxiv.org/abs/2503.19856), revised June 26, 2025; [Online Learning with Unknown Constraints](https://proceedings.mlr.press/v267/sridharan25a.html), ICML 2025 | Preserve delayed feedback and bounded memory. Measure future loss and retention; no transfer of convex regret or safety guarantees to Carnot's learner. |
+
+The sparse KAN paper studies local B-spline writes and fixed-point online
+training. This motivates numerical qualification, not an assumption that any
+word width works. Keep the registered floating-point Brier study unchanged.
+Any quantized arm belongs to a separate feasibility experiment. Its evidence
+cannot retroactively alter that study's acceptance thresholds.
+
+### Secondary-source checks and limits
+
+- **OpenReview:** searched 2025–2026 NeurIPS/ICML/ICLR EBM and verification
+  work. The indexed [EBT conference manuscript](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  was found. Its [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned
+  a browser challenge. Search also returned irrelevant indexed pages. No
+  unread review, new acceptance decision or result is inferred from them.
+- **Semantic Scholar:** both [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  returned retrieval errors. Exact-ID domain searches did not recover a
+  reliable citing-paper list. Citation coverage remains incomplete; no zero
+  citation count or exhaustive literature claim follows.
+- **Hugging Face Papers:** opened [HalluScoring](https://huggingface.co/papers/2609.38355)
+  and searched recent verification work. The symbolic-grounding paper's feed
+  page was unavailable. Primary papers supply method evidence.
+- **GitHub Trending:** opened [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned snapshots
+  were marked crawled last month. No fresh EBM/KAN repository ranking is
+  asserted. The [author EBT repository](https://github.com/alexiglad/EBT)
+  was also opened; no dependency was installed or execution reproduced.
+- **Extropic:** reopened [Writing](https://extropic.ai/writing) and Z1T.
+  Z1T describes projected chip costs and excludes final dense vocabulary
+  readout from its headline comparison. It notes GPU batching changes the
+  comparator efficiency. Use equal-work complete costs in Carnot. Do not
+  treat projections as local TSU measurements or proof of availability.
+- **Logical Intelligence:** reopened [Kona 1.0](https://logicalintelligence.com/kona).
+  The retrieved page positions a constraint reasoning layer below AI systems.
+  It supplies no reproducible architecture change sufficient to adopt here.
+
+Planning inference: complete the unmeasured causal and batching studies after
+repairing the measured report-input mutation. Test relational information loss
+with explicit extraction controls. Advance hardware readiness through numerical
+range evidence. Preserve the closed, fully censored ARC panel; use its actual
+ledger for a bounded continuation decision instead of another identical run.

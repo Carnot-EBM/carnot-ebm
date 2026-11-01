@@ -103444,3 +103444,57 @@ historical primitives, byte-bounded constructed registrations, fresh ARC parity
 and censoring, and hardware clocks. The terminal artifact records this invocation's
 actual qualification and stable publication gate. Blocked studies stay unmeasured;
 old quarantines and nulls remain original. Ops reconciliation is conductor-owned.
+
+## REQ-REPORT-745-1: Matching staged V745 planning authority
+
+Status: Planned; no experiment is executed by this documentation change.
+Milestone 2026.11.745 SHALL contain exactly fourteen tasks, Exp8681–Exp8694,
+in four phases. The vNEXT visible table and full task objects SHALL match
+research-roadmap-next.yaml in order, identifiers, titles, phases, deliverables,
+models, substrates, gates, failure lineage and prompts. Preserve the complete
+V744 design before replacing vNEXT. Keep the active roadmap and conductor unchanged.
+
+### SCENARIO-REPORT-745-1: Reject planning drift
+
+Schema, full-object comparison, canonical digest and negative mutations reject
+changed IDs, order, prompts, models, fields and dependencies. Every gate references
+an earlier same-roadmap task and an exact REQUIRED ARTIFACT FIELDS name. Every
+prompt requires flushed phase and operation progress, inner-loop heartbeats,
+chunked file writes, real duration and terminal blocked diagnostics.
+
+## REQ-REPORT-745-2: Planned learning and symbolic evidence boundaries
+
+Status: Planned. Exp8681 SHALL qualify the measured report-input mutation and
+retained-shard replay before publishing new methods readiness. Exp8682/8683
+SHALL preserve original frozen learning cohorts and the complete original union.
+Exp8685/8686 SHALL preserve registered causal Brier updates, future-loss controls
+and joint retention. Exposed evidence cannot establish independent generalization.
+
+Exp8684/8687 SHALL distinguish lexical collisions, equivalent wording and exact
+structured-world query controls. Exp8690 SHALL use mandated Qwen3.8 bounded
+GPU generation only after causal runtime evidence and qualified controls. It SHALL
+audit record fidelity separately from query correctness and direct decisions.
+
+### SCENARIO-REPORT-745-2: Preserve scientific and provenance limits
+
+Future labels, retention training, omitted question rows, weakened original tests,
+source drift and oracle-based moat claims fail qualification. Missing runtime
+blocks only the canary. Stamped historical flags remain attached. The fixed
+36-call/128-token canary uses model_bounded_generation; no duration padding occurs.
+
+## REQ-REPORT-745-3: Planned deployment and hardware evidence
+
+Status: Planned. Exp8688/8689 SHALL qualify bounded installed batches and compare
+complete equal-work costs. Same-batch native/Python performance SHALL remain
+separate from batch transport gains. Exp8692 SHALL test explicit integer formats,
+saturation, accumulation, sparse writes and decision errors on CPU. Host nonlinear
+and persistent operations SHALL remain visible. No emulation result is device timing.
+
+### SCENARIO-REPORT-745-3: Preserve terminal decisions
+
+Exp8691 SHALL analyze the new qualified ARC censoring ledger once, without
+repeating the closed panel or promoting arms from missing outcomes. Exp8693 SHALL
+map independently admitted operations to KV260, PolarFire and GateMate with their
+physical limits intact. Exp8694 SHALL account for fourteen slots, retain literal
+classes and use stable publication G1–G4. External missing science is blocked;
+unexecuted hypotheses are not retired as scientific negatives.
