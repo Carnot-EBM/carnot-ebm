@@ -21061,3 +21061,4 @@ code |
 | 2026-11-01 18:15 UTC | Measure continuous Brier learning after prediction | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8697-learning-union-qualification.learning_execution_ready_score (actual=0 == expected=1) |
 | 2026-11-01 18:17 UTC | Audit future proper-loss benefit and simultaneous | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8699-causal-brier-stream) |
 | 2026-11-01 19:09 UTC | Separate lexical collisions from symbolic groundin | OK | 92 passed, 1 warning in 546.67s (0:09:06) |
+| 2026-11-01 20:34 UTC | Qualify installed bounded batches from independent | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 111 passed, 1 warning in 82.45s (0:01:22) |
