@@ -21023,3 +21023,7 @@ code |
 | 2026-11-01 03:02 UTC | Bind fourteen tasks and freeze independent researc | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 158 passed, 1 warning in 247.36s (0:04:07) |
 | 2026-11-01 03:04 UTC | Qualify fresh learning core execution after freezi | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8667-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-11-01 03:06 UTC | Qualify original deadline controls and the complet | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8668-frozen-learning-core) |
+| 2026-11-01 03:06 UTC | Build span-bound relational worlds and independent | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8667-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-11-01 03:08 UTC | Measure continuous small-head learning with sealed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8669-learning-union-qualification) |
+| 2026-11-01 03:08 UTC | Audit later proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8671-causal-brier-stream) |
+| 2026-11-01 03:08 UTC | Test semantic collisions and equivalent-wording in | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8670-relational-evidence-controls) |
