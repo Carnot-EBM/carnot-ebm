@@ -103379,3 +103379,40 @@ conductor-owned.
 Accept --date20261101. Run actual private CLI success, rejection and child
 paths. An independent measurement seal rejects replacement work even when the
 candidate's hashes are updated. Failed or killed children cannot qualify.
+
+## REQ-REPORT-8679: Authenticated hardware operation boundaries
+
+Exp8679 SHALL run as a bounded no-model reader. Locally adapt only original
+boolean-map and unique named-list acceptance gates; reject unknown/ambiguous
+shapes and preserve every failure. Reproduce the Exp8665 extraction-admission
+TypeError using private real-shaped fixtures. Admit original Exp8659 extraction,
+Exp8671 learning and Exp8675 batching costs independently at exact producer
+paths through terminal readers. A failed NFR-01 remains a measured scientific
+null; failed owned checks or stamped serious findings exclude claim use.
+
+### SCENARIO-REPORT-8679-ADMISSION
+
+Missing files, missing fields, zero gates and changed bytes stay distinct.
+Learning absence cannot veto batching. Preserve disjoint spans per workload,
+arm and repeat. Opaque binding_residual never becomes isolated spline time.
+Only measured compatible fractions with an implemented compatible operation
+permit the conditional bound 1/(1-f); otherwise name the missing operand and
+leave the bound null. Transfer, updates, store costs and uncertainty remain
+visible. Transport batching cannot establish device arithmetic acceleration.
+
+### SCENARIO-REPORT-8679-HARDWARE
+
+Authenticate historical KV260 quadratic Ising k_max<=5, PolarFire Linux CPU
+scope and GateMate's dated change, IDCODE and ordered n16 smoke prerequisites.
+Preserve NPU/TSU and historical quarantines. Map sparse learning to CPU now
+and potential fixed-point FPGA after numerical parity, implemented kernel,
+complete host/device costs and durable updates. Mapping readiness differs
+from physical readiness; no current board commands or 100x benefit claim.
+
+Implementation20261101: hardware_operation_boundary_8679 and its local cost
+adapter implement independent admission, original source-clock reduction and
+conditional hardware mapping. The thin CLI and requirement tests exercise
+private producer forms and preserve historical findings. Invocation outcomes,
+source pins and readiness are recorded in the Exp8679 terminal artifact; no
+physical acceleration or new learning benefit is inferred. Ops reconciliation
+is conductor-owned.

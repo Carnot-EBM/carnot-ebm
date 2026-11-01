@@ -56949,3 +56949,29 @@ Actual private CLI and cold replay accept sealed evidence and reject missing
 operands, changed sources and rehashed substitutions. E2E-018/021 and unchanged
 terminal readers qualify publication. Keep Exp8664 flagged and preserve all
 prior quarantines. Ops reconciliation remains conductor-owned.
+
+## REQ-VERIFY-8679: Sealed bounded hardware reader qualification
+
+Accept --date 20261101. Freeze immutable primitives and independent measurement
+seal. Cold replay in a fresh bounded child rejects missing operands and
+self-consistently rehashed tampering. Preserve original producer authority
+without rerunning historical controllers. Require 100 percent newly owned
+statement coverage, real private CLI/child/rejection paths, retained original
+SQLite/JUnit/commands/exits/clocks, Ruff, strict mypy and scoped spec tracing.
+Run private E2E-018/021 and unchanged primary/adversarial/strict-row readers.
+
+### SCENARIO-VERIFY-8679-REPLAY
+
+Collect scoped nodes once, run disjoint bounded children with -n 0 -o addopts=
+--no-cov and instrument consumers for their own sources. Preserve raw databases
+before combining copies. Failed or killed owned children disqualify; unchanged
+external absence blocks. Flushed progress and <=60-second parent heartbeats
+keep silence below600 seconds. No model, hardware probe or external mutation.
+Ops/status/changelog/traceability reconciliation is conductor-owned.
+
+Implementation20261101: the Exp8679 runner reuses bounded child supervision,
+retained original SQLite/JUnit, separate consumer instrumentation and unchanged
+terminal publication consumers. Cold replay compares the independent measurement
+seal and original producers, including a rehashed local-seal substitution test.
+The terminal artifact contains this invocation's actual qualification receipts.
+Ops/status/changelog/traceability reconciliation remains conductor-owned.
