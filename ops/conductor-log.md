@@ -21031,3 +21031,4 @@ code |
 | 2026-11-01 03:11 UTC | Measure complete installed batching costs under eq | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8674-installed-batch-prototype) |
 | 2026-11-01 03:11 UTC | Measure bounded Qwen claim decisions and uncertain | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8670-relational-evidence-controls) |
 | 2026-11-01 04:23 UTC | Qualify single-owner ARC observation delivery whil | OK | 120 passed, 1 warning in 65.91s (0:01:05) |
+| 2026-11-01 04:54 UTC | Measure fresh cross-game horizons through the qual | OK | 90 passed, 1 warning in 50.19s |
