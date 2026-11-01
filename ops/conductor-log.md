@@ -21049,3 +21049,4 @@ code |
 | 2026-11-01 09:44 UTC | Compare direct Qwen decisions with source-grounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8687-relational-feature-audit) |
 | 2026-11-01 10:28 UTC | Derive a cross-game supervisor decision from the c | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 118 passed, 1 warning in 104.79s (0:01:44) |
 | 2026-11-01 11:10 UTC | Test integer arithmetic limits for sparse Brier up | OK | 99 passed, 1 warning in 102.39s (0:01:42) |
+| 2026-11-01 11:38 UTC | Map qualified integer operations and complete cost | OK | 88 passed, 1 warning in 47.22s |
