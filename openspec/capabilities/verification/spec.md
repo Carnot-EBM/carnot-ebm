@@ -57198,3 +57198,22 @@ all complete text features and numerical work. Match Python/native features,
 probabilities within1e-12 and exact typed decisions for every admitted item.
 Exercise stale/duplicate envelope IDs, expired deadlines, truncated frames,
 reset sessions and state isolation using actual installed child processes.
+
+## REQ-VERIFY-8705: Fresh qualification of repaired ARC controls
+
+Freeze the repaired reducer, runner, tests, transitive sources and exact operands
+before measurement. Run unchanged original assertions and actual private CLI
+success, child exit failure and missing/corrupt operand rejection. Private output
+controls reject lexical and resolved checkout paths before writes. Keep the real
+validation adapter while patching only its delegated dependency in unit controls.
+Collect once; retain disjoint child nodes, raw SQLite, JUnit, source hashes,
+commands, exits and clocks before combining copies. Require100 percent owned
+statements and private E2E-018/021. No full repository suite is required.
+
+### SCENARIO-VERIFY-8705-SEAL
+
+Fresh bounded cold replay rejects missing operands and consistently rehashed
+replacement primitives against an independently located seal. Final bytes pass
+unchanged primary publication, adversarial and strict row validators before
+atomic publication. Owned failed or killed checks disqualify; external absence
+blocks with exact gate receipts. Private controls grant no production readiness.

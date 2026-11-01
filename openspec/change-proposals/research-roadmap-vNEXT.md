@@ -311,10 +311,13 @@ Exactly **14 tasks, Exp8695 through Exp8708**, in conductor execution order.
 
 Canonical full-task SHA-256: `5c635232bc3e986e64593a6f42606d90e73491aa82c813541bbb84c5e88067ab`
 
+Canonical task SHA256: `43132b7a0dad4165413d7bcce82bdc9aa5602d17fc1a5144a960edb9d01c3c97`
+
 <!-- V746_TASK_CONTRACT_START -->
 ```json
 {
   "milestone": "2026.11.746",
+  "canonical_tasks_sha256": "43132b7a0dad4165413d7bcce82bdc9aa5602d17fc1a5144a960edb9d01c3c97",
   "tasks": [
     {
       "id": "exp8695-retained-contract-authority",

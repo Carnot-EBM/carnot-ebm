@@ -103745,3 +103745,20 @@ measurement; retain disjoint child SQLite, JUnit, commands and real exits before
 combining copies. Require full newly owned statement coverage. Cold replay must
 reject missing and consistently rehashed altered operands. Publish only checked
 final bytes through unchanged validators, preserving historical failures.
+
+## REQ-REPORT-8705: Qualify the repaired closed ARC decision
+
+Exp8705 SHALL bind all fourteen V746 task objects, the visible table and an
+independent canonical digest through the existing roadmap reader. Authenticate
+original Exp8677/8678 ledger bytes, producer construction, terminal validation,
+registry and numerical checkpoint independently of Exp8681 and Exp8691 readiness.
+Preserve the original reducer and assertions, four games, eight pairs, sixteen
+episodes and120-action horizon. Preserve all historical flags and nulls.
+
+### SCENARIO-REPORT-8705-CLOSED
+
+All sixteen historical windows are censored. Qualified owned validation supports
+arc_decision_ready_score=1 and no_supported_policy_change, with the curated
+supervisor unchanged. Close this diagnostic. Future work requires a distinct
+intervention and uncensored cross-game support. No live game, model, new solve,
+independent generalization or hardware acceleration is claimed.
