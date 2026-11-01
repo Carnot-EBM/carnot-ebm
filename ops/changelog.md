@@ -22694,3 +22694,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-01: Derive a cross-game supervisor decision from the closed horizon ledger (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_censoring_decision; results/experiment_8691_v745_arc_censoring_decision.json
 - 2026-11-01: Test integer arithmetic limits for sparse Brier updates (⚠️ Research Finding) — honest_verdict=complete_circular_positive_spline_precision_feasibility; results/experiment_8692_v745_spline_precision_feasibility.json
 - 2026-11-01: Map qualified integer operations and complete costs to the three FPGA boards (⚠️ Blocked) — honest_verdict=complete_blocked_v745_hardware_operation_boundary; results/experiment_8693_v745_hardware_operation_boundary.json
+- 2026-11-01: Reconcile fourteen outcomes and close unchanged scientific scopes (⚠️ Blocked) — honest_verdict=complete_blocked_v745_capstone; results/experiment_8694_v745_capstone.json
