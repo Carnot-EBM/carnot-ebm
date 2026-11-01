@@ -57244,3 +57244,21 @@ Exp8707 follows REQ-VERIFY-8707 and SCENARIO-VERIFY-8707-REPLAY in
 `../hardware-operation-boundary/spec.md`. Retain child SQLite before combining
 copies. Consumer coverage never qualifies producers. Ops reconciliation belongs
 to the conductor.
+
+## REQ-VERIFY-8708: Sealed capstone validation and cold replay
+
+Freeze transitive source, original inputs, tests and configuration before
+measurement. Collect focused nodes once, run bounded disjoint serial children,
+retain SQLite, JUnit, source hashes, commands, exits and durations before
+combining copies. Require100 percent newly owned statement coverage, Ruff,
+strict mypy, scoped spec coverage and private E2E-018/021. Preserve unchanged
+primary publication, adversarial and strict row validation on final bytes.
+Ops and traceability reconciliation belongs to the conductor.
+
+### SCENARIO-VERIFY-8708-REPLAY
+
+Actual private CLI success and rejection paths must run. Independently located
+measurement and validation seals reject missing operands and consistently
+rehashed tampering in a fresh bounded process. Owned failed/killed checks
+disqualify; unchanged external incompleteness remains complete_blocked. Private
+controls reject lexical and resolved checkout paths before writing evidence.

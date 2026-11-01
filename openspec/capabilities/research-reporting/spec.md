@@ -103794,3 +103794,24 @@ the whole-format37-product bound exceeds signed64 and is not a global proof.
 Exp8707 follows REQ-REPORT-8707 and SCENARIO-REPORT-8707-OPERATIONS in
 `../hardware-operation-boundary/spec.md`. Authenticate each declared operand
 independently. Preserve historical failures and unknown complete acceleration.
+
+## REQ-REPORT-8708: V746 terminal reconciliation without scientific promotion
+
+Bind fourteen complete task objects, the visible table and canonical digest with
+ the existing roadmap reader and immutable V746 authority. Read declared paths
+before conductor fallback paths, including bare experiment IDs. Authenticate
+producer primitives and terminal acceptance before admitting scores. Preserve
+historical flags, V733 source-information, V735 cold-cost, V737 supervisor and
+V743 batch-one nulls. Skipped slots have no scientific null. Publish stable
+G1/G2/G3/G4, their conjunction and unmet gates. Keep learning, extraction,
+same-batch Rust, batching, bounded Qwen, closed ARC, numerical lifecycle and
+operation-specific board conclusions separate. Record actual prior verdicts,
+exact-scope retirement candidates and causal reopening conditions for all slots.
+
+### SCENARIO-REPORT-8708-ACCOUNTING
+
+All fourteen slots include self-reconciliation with measured owned validation.
+Missing file, missing field, observed zero and changed bytes remain distinct.
+Flagged or failed producers cannot grant readiness. No current model is loaded;
+MODEL_SPECS is empty and current language-model calls are zero. Reconciliation
+readiness never implies learning benefit, activation or physical acceleration.
