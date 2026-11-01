@@ -7562,4 +7562,10 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 5 synthesis-only experiments completed in 49.9 wall-time minutes (50 minutes / 0.8 hours, averaging 10 minutes per experiment) led by qualifying single-owner ARC observation delivery while retaining conflict checks (16.34 min), binding fourteen tasks and freezing independent research and execution operands (13.34 min), measuring fresh cross-game horizons through the qualified live observation path (11.63 min), mapping new batch and learning costs to authenticated hardware operations (7.99 min), and reconciling fourteen outcomes and closing exact research and deployment scopes (0.59 min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks recorded as null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 46C) reflecting expected idle state for non-GPU synthesis workloads.
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.745
+- exp_range: no data available this milestone
+- theme: Operational execution analysis of 5 synthesis-only experiments (0 compute-bound) across 15.8 minutes (16 minutes / 0.3 hours) of milestone wall time.
+- key result: honest operational negative — 5 synthesis-only experiments completed in 15.8 wall-time minutes (16 minutes / 0.3 hours, averaging 3 minutes per experiment) led by deriving a cross-game supervisor decision from the closed horizon ledger (7.41 min / 7min) and mapping qualified integer operations and complete costs to the three FPGA boards (7.41 min / 7min), followed by testing integer arithmetic limits for sparse Brier updates (0.54 min / 1min), reconciling fourteen outcomes and closing unchanged scientific scopes (0.33 min / 0min), and binding fourteen tasks after qualifying immutable report construction (0.1 min / 0min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks set to null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 47C) reflecting expected behavior for synthesis-only tasks.
+- acceptance: no data available this milestone
+
 

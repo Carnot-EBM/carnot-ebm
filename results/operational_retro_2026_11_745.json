@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.745",
+  "generated_at": "2026-11-01T12:16:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 15.8,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Derive a cross-game supervisor decision from the closed horizon ledger",
+      "duration_minutes": 7.41,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map qualified integer operations and complete costs to the three FPGA boards",
+      "duration_minutes": 7.41,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Test integer arithmetic limits for sparse Brier updates",
+      "duration_minutes": 0.54,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and close unchanged scientific scopes",
+      "duration_minutes": 0.33,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks after qualifying immutable report construction",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.745 completed 5 experiments (0 compute-bound) in 15.8 wall-time minutes via disk-mtime reconstruction. Duration was led by the synthesis-only tasks 'Derive a cross-game supervisor decision from the closed horizon ledger' (7.41 minutes) and 'Map qualified integer operations and complete costs to the three FPGA boards' (7.41 minutes), while 'Test integer arithmetic limits for sparse Brier updates' (0.54 minutes), 'Reconcile fourteen outcomes and close unchanged scientific scopes' (0.33 minutes), and 'Bind fourteen tasks after qualifying immutable report construction' (0.1 minutes) finished in under a minute each. With 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null.",
+  "bottlenecks_identified": [
+    "All 15.8 minutes (16 minutes / 0.3 hours, averaging 3 minutes per experiment across 5 synthesis-only experiments) were spent in non-GPU synthesis workloads, led by 'Derive a cross-game supervisor decision from the closed horizon ledger' (7.41 minutes / 7min) and 'Map qualified integer operations and complete costs to the three FPGA boards' (7.41 minutes / 7min).",
+    "The remaining synthesis-only tasks—'Test integer arithmetic limits for sparse Brier updates' (0.54 minutes / 1min), 'Reconcile fourteen outcomes and close unchanged scientific scopes' (0.33 minutes / 0min), and 'Bind fourteen tasks after qualifying immutable report construction' (0.1 minutes / 0min)—completed quickly, concentrating execution latency in cross-game horizon ledger derivation and three-board FPGA operation mapping.",
+    "Live git-log timing discovery found 0 commits, requiring retro_timing_fallback disk-mtime reconstruction rather than direct commit or artifact lifecycle timestamps."
+  ],
+  "improvements_suggested": [
+    "Instrument 'Derive a cross-game supervisor decision from the closed horizon ledger' (7.41 minutes) and 'Map qualified integer operations and complete costs to the three FPGA boards' (7.41 minutes) with sub-step phase timers to isolate validation and I/O costs.",
+    "Memoize unchanged closed horizon ledger inputs and qualified integer operation cost tables so repeated synthesis runs skip redundant verification work.",
+    "Persist explicit start and completion timestamps in each experiment artifact so operational retrospectives do not rely on disk-mtime fallback when the live git-log path finds 0 commits.",
+    "Keep DualGPURunner scoped exclusively to compute-bound workloads loading 2+ models in parallel rather than synthesis-only tasks or single-model runs."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase-level timing breakdowns to 'Derive a cross-game supervisor decision from the closed horizon ledger' (7.41 minutes) and 'Map qualified integer operations and complete costs to the three FPGA boards' (7.41 minutes).",
+    "Cache verified horizon ledger snapshots and three-board FPGA operation mappings keyed by input digest across synthesis runs.",
+    "Write explicit execution start and end timestamps into experiment JSON receipts to remove dependence on disk-mtime fallback when live git-log finds 0 commits."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Because 0 compute-bound experiments ran across the 5 completed synthesis-only tasks (15.8 minutes total, averaging 3 minutes per experiment), gpu_idle_on_compute_bound_tasks is null, no 2+ model task failed to engage DualGPURunner, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB allocated, 47C) is expected behavior rather than a bottleneck. Operational improvements for the next milestone should focus on sub-phase timing and input memoization for the two 7.41-minute synthesis tasks while recording native task timestamps to avoid disk-mtime fallback."
+}
