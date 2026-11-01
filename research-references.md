@@ -54088,3 +54088,92 @@ repairing the measured report-input mutation. Test relational information loss
 with explicit extraction controls. Advance hardware readiness through numerical
 range evidence. Preserve the closed, fully censored ARC panel; use its actual
 ledger for a bounded continuation decision instead of another identical run.
+
+
+## V746 planning scan — 2026-11-01
+
+Read before designing milestone 2026.11.746. This scan checked all eight primary
+topics and the six requested secondary channels. The last milestone supplies
+one qualified constructed fixed-point result; skipped studies remain unmeasured.
+Literature is motivation, not evidence that Carnot already has these results.
+
+### Promising methods and explicit limits
+
+- **Grounding and abstention:** [VeriFin, arXiv:2608.10213v3](https://arxiv.org/abs/2608.10213),
+  revised October 23, 2026, grounds operands in filing facts and establishes the
+  formula independently of the proposed answer. It abstains when evidence is
+  insufficient. Read the primary abstract after discovery on Hugging Face Papers.
+  Adopt answer-independent relation queries and explicit missing-evidence outcomes
+  in the pending symbolic extraction diagnostic. Do not import its financial
+  benchmark, precision figures or domain claims into Carnot.
+- **Translation versus reasoning failure:** [SymDiag, arXiv:2608.08786](https://arxiv.org/abs/2608.08786),
+  August 9, 2026, distinguishes errors introduced by symbolic translation from
+  reasoning defects using symbolic checks. Abstract read. Adopt separate error
+  categories and disagreement controls. A shared translator cannot independently
+  certify its own records; dual encoding is a future mechanism, not assumed truth.
+- **Text-to-record information loss:** [TeQHallu, arXiv:2609.05025v2](https://arxiv.org/html/2609.05025v2),
+  revised October 19, 2026, includes an explicit database-completeness audit and a
+  reference-text fallback. Read the method and error-propagation sections. Retain
+  source spans, test missing/reversed records, and compare direct and extracted
+  decisions on the same questions. Executable queries alone do not prove faithful
+  extraction. [Author code](https://github.com/renatovukovic/teqhallu) was inspected
+  as a discovery source; nothing was installed or reproduced.
+- **Fixed-point online KAN lifecycle:** [Hoang et al., arXiv:2602.02056v4](https://arxiv.org/html/2602.02056v4),
+  June 19 revision, separates input, parameter/accumulator and output formats and
+  specifies rounding and saturation. Read fixed-point and implementation sections.
+  Carnot's passing short CPU arithmetic study motivates long-horizon decay,
+  renormalization and restart checks before any device kernel. Retain nonlinear
+  host operations and durable writes in the cost boundary. Paper device timings
+  do not qualify Carnot hardware or establish beneficial learning.
+- **Delayed learning:** [Capacity-Constrained Online Learning with Delays,
+  arXiv:2503.19856](https://arxiv.org/abs/2503.19856), March 2025, motivates bounded
+  pending-feedback storage. Preserve the already registered causal loss and
+  retention study. Its theoretical assumptions do not establish guarantees for
+  Carnot's nonlinear head.
+
+### Other primary-topic coverage
+
+| Topic | Source checked | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605v4](https://arxiv.org/html/2512.15605v4); [latent trajectory negative, 2603.28248](https://arxiv.org/abs/2603.28248) | Compatibility and lower energy are not sufficient correctness evidence. Keep generator weights fixed. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461); [FSNet, 2506.00362](https://arxiv.org/abs/2506.00362) | Separate feasibility from learned scores. No new optimizer or reopening of the retired repair-stack family. |
+| Ising in ML | [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752) | Parameter learning and efficient sampling have different limits; no universal speed or convergence inference. |
+| Hallucination detection | VeriFin, SymDiag and TeQHallu above | Audit grounding and missing information before accuracy claims. |
+| KAN | Fixed-point locality paper above | Advance numerical lifecycle qualification, not another short precision sweep. |
+| Guided/constrained generation | [Energy-Based Decoding, 2605.28020](https://arxiv.org/abs/2605.28020); [energy-guided visual decoding, 2507.07731](https://arxiv.org/abs/2507.07731) | Defer steering and multimodal expansion until verifier utility is qualified. |
+| Hardware sampling | [Continuous-state FPGA computer, 2610.31339](https://arxiv.org/abs/2610.31339), October 22, 2026 | Abstract-level lead; small core-solving comparisons do not establish complete spline service performance. |
+| Continual/online systems | Delayed-learning and spline-locality papers above | Measure prediction-before-feedback, future proper loss, retention and bounded state. |
+
+### Secondary checks and retrieval limits
+
+- **OpenReview:** searched 2025–2026 NeurIPS/ICML/ICLR EBM work. Retrieved the
+  indexed [EBT manuscript](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf).
+  Its [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser challenge.
+  Do not infer reviewer opinions or a new result from inaccessible pages.
+- **Semantic Scholar:** attempted citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both failed retrieval. Exact-ID site searches did not recover reliable citation
+  inventories. Citation coverage is incomplete, not zero.
+- **Hugging Face Papers:** searched verification and found
+  [VeriFin](https://huggingface.co/papers/2608.10213) and
+  [SymDiag](https://huggingface.co/papers/2608.08786); opened their primary papers.
+  The TeQHallu feed page failed retrieval.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Returned pages were
+  marked crawled last month. No current rank, dependency choice or new EBM trend
+  is inferred. The author TeQHallu repository is a verified relevant code lead.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/), September 4, 2026. The latter labels
+  efficiency figures as projections and excludes final dense vocabulary readout.
+  Keep matched complete costs and actual operation support; no local TSU access
+  or device speedup follows.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  It describes a constraint reasoning layer but provides no new reproducible
+  architecture or benchmark method sufficient to adopt.
+
+Planning inference: preserve the original unmeasured learning protocol; qualify
+its real retained execution evidence. Let independent extraction and deployment
+branches authenticate their own original operands. Study answer-independent
+symbolic grounding and long-run numerical state, while keeping constructed,
+exposed-data and physical-device claims separate.

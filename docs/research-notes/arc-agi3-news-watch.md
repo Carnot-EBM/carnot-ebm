@@ -778,3 +778,21 @@ Additional official ARC-AGI-3 Semi-Private evaluations absent from your supplied
 | [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | 0.5% | 2.8% |
 | [Muse Spark Open](https://arcprize.org/results/meta-muse-spark-open) | 0.1% | 0.4% |
 
+## 2026-11-01 14:11 UTC -- NEW
+
+- **October 31 — New public gold entrant:** “All your GPU are belong to us” climbed from **31st to 14th**, reaching **41.81%**, up **4.01 points**. [Leaderboard report](https://arc.markbarney.net/news/wire)
+- **October 31 — Further gold-place movement:** rellik13 rose from Thursday’s **29th to 18th**; insuperabilehart advanced from **20th to 15th**. [Report](https://arc.markbarney.net/news)
+
+Additional official ARC-AGI-3 Semi-Private evaluations absent from your prior findings:
+
+| Model / source | Standard | Provider Adapter |
+|---|---:|---:|
+| [GPT-6 Astra](https://arcprize.org/results/openai-gpt-6-astra) | 62.7% | 99.9% |
+| [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8% | 97.5% |
+| [Claude Sonnet 5.5](https://arcprize.org/results/anthropic-claude-sonnet-5-5) | 24.3% | 72.4% |
+| [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+
+Gemini 4 Argon’s Standard evaluation suffered API failures: its best-scoring configuration completed **42 of 55 tasks**; the reported score includes all 55, retaining partial credit from incomplete runs. [Official evaluation details](https://arcprize.org/results/google-gemini-4-argon)
+

@@ -11,15 +11,15 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
+| CLAIM_SUPPORTED | 1 |
 | NO_CLAIM | 5 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
-## experiment_8667_v744_contract_methods.json
+## experiment_8681_v745_contract_methods.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_8668_frozen_learning_core.json
+## experiment_8682_frozen_learning_core.json
 
 **NO_CLAIM**
 
@@ -30,22 +30,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-gate receipt with no claim of successful qualification or comparative value.
+This is a blocked-gate receipt, not an experimental result. All evaluated gates passing would contradict its blocking diagnosis.
 
 ## WAS THAT CHECKED
-Yes, the prerequisites were checked in `gates_evaluated`: the methods readiness gate failed with actual 0 against expected 1. The artifact explicitly reports blockage.
+Yes. The methods readiness gate records actual 0 against expected 1 and fails; the learning operands gate passes. The receipt reports the resulting block without claiming successful qualification.
 
 ## EVIDENCE
-`status`: `blocked`  
-`honest_verdict`: `blocked_gate_check_failed`  
-`failed_field`: `methods_ready_score`  
-`blocked_reason`: `actual=0 == expected=1`  
-`blocked_at_layer`: `conductor_pre_gate`
+`blocked_gate_check_v1`, `blocked`, `blocked_gate_check_failed`, `gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8681-contract-methods.methods_ready_score (actual=0 == expected=1)`, `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8670_relational_evidence_controls.json
+## experiment_8684_relational_evidence_controls.json
 
 **NO_CLAIM**
 
@@ -56,18 +52,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No method-performance claim is made. The blockage diagnosis would be contradicted if both prerequisite gates passed.
+Not applicable: this is a blocked-run receipt, with no comparative result or claim of added value.
 
 ## WAS THAT CHECKED
-Yes, for the blockage diagnosis: `gates_evaluated` shows methods readiness failed while extraction-input readiness passed. No comparative experiment is reported.
+Only prerequisite gates were checked. Methods readiness was 0 against required 1, blocking the experiment before evaluation.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"artifact_field": "methods_ready_score"`; `"expected": 1`; `"actual": 0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`.
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `methods_ready_score`; `blocked_reason`: `actual=0 == expected=1`; `blocked_at_layer`: `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8674_installed_batch_prototype.json
+## experiment_8688_installed_batch_prototype.json
 
 **NO_CLAIM**
 
@@ -78,22 +74,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No experimental claim is asserted. The blocked-gate report would be contradicted if all required gate rows passed.
+Not applicable: this artifact records a prerequisite failure and makes no claim that batch qualification succeeded or that the evaluator adds value.
 
 ## WAS THAT CHECKED
-Yes. The gate rows show methods_ready_score failing with actual 0 against expected 1, while deployment_inputs_ready_score passes. This is a prerequisite-check receipt; no batch qualification result is reported.
+No experimental claim was tested. Prerequisite gates were checked; methods readiness failed with an observed 0 against a required 1, blocking evaluation.
 
 ## EVIDENCE
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `artifact_field`: `methods_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`
-- `artifact_field`: `deployment_inputs_ready_score`; `expected`: `1`; `actual`: `1`; `passed`: `true`
-- `blocked_at_layer`: `conductor_pre_gate`
+`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `methods_ready_score`; `blocked_reason`: `actual=0 == expected=1`; `blocked_at_layer`: `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8677_v744_arc_observation_ownership.json
+## experiment_8691_v745_arc_censoring_decision.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_8692_v745_spline_precision_feasibility.json
 
 **CLAIM_SUPPORTED**
 
@@ -101,58 +97,28 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Observation-delivery ownership passes diagnostic controls and preserves behavior on the tested pairs, without establishing solve, promotion, or generalization benefit.
+The 32-bit format with 24 fractional bits passes CPU numerical-feasibility checks against float64 on the constructed controls.
 
 ## WHAT WOULD REFUTE IT
-Any paired difference in actions, observations, final state, resets, RNG, termination, or legacy behavior; repeated callbacks advancing the observation horizon; or a conflicting duplicate being accepted without rejection.
+A primary-format row failing numerical acceptance, showing nonfinite arithmetic or overflow, or disagreeing with float64 outside fallback would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. All eight action-parity rows report equality across those dimensions. Constructed controls exercise repeated callbacks, conflicting duplicates, full horizons, resets, and termination, and report passing results. These checks could have failed.
+Yes, at the reported-control level: numerical errors, arithmetic failures and acceptance outcomes are recorded, and the primary-format gate passes. The 16-bit failure shows that numerical acceptance could fail; it does not contradict the specified primary format.
 
-The recorder-off comparator ties, supporting behavioral preservation rather than added performance. Constructed controls establish diagnostic behavior only; the artifact expressly withholds broader benefit credit.
+Fallback decisions reuse float64, so their parity is guaranteed and supplies no independent evidence. The numerical-error measurements remain falsifiable. Float64 is an appropriate fidelity baseline: agreement supports this feasibility claim without establishing verifier advantage. No generalization benefit is claimed. Most detailed rows and the acceptance tolerances are not shown.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_arc_observation_ownership`
-- `methodology_note`: `Single delivery ownership is diagnostic readiness only. Constructed horizon controls establish no natural supervisor benefit. Seeds and recorder twins are dependent; no solve, policy promotion or generalization credit.`
-- `equality`: `actions`, `final_state`, `legacy`, `observations`, `reset_requests`, `rng`, `termination`; each `true`
-- `case`: `repeated_is_done`; `observed_horizon`: `3`
-- `reason`: `conflicting_duplicate`; `horizon_status`: `censored`
-- `headline_solve_credit`: `0`; `independent_generalization_score`: `0`
+- `primary_format`: `32`, `24`; `primary_32_24`: `true`.
+- `bits`: `32`; `fractional`: `24`; `passed`: `true`; `maximum_probability_error`: `1.036318339919795e-06`; `overflow`: `0`.
+- `bits`: `16`; `passed`: `false`; `decay_underflow`: `1536`.
+- `fallback`: `original_float64`; `decision_parity`: `true`.
+- `verifier_is_oracle`: `true`; `independent_generalization_score`: `0`.
+- `methodology_note`: `CPU fixed-point numerical controls; no causal stream, retention labels, FPGA synthesis, deployment or device performance measured.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8678_v744_arc_observer_transfer.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Across four development games, recorder off/on execution matched exactly, while all 16 live observer windows were censored and established no transfer benefit.
-
-## WHAT WOULD REFUTE IT
-Any recorder off/on pair differing in actions, observations, RNG, or final state; or any completed live observation horizon contradicting the all-censored accounting.
-
-## WAS THAT CHECKED
-Yes. Eight action-parity rows check execution equality across four games and two seeds. Live horizon accounting reports 16 censored windows and zero complete horizons; constructed controls exercise completion, reset, and conflict handling.
-
-The recorder-off comparator ties exactly, supporting the parity claim. Censoring leaves efficacy unresolved, and the artifact makes no positive efficacy or generalization claim.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_null_arc_observer_transfer`.
-- All eight `action_parity_rows` report `passed`: `true`, with `actions`, `observations`, `final_state`, and `rng` each `true`.
-- `censored_count`: `16`; `complete_horizon_count`: `0`.
-- `diagnostic_disposition`: `closed_censored_under_unchanged_protocol`.
-- `population_efficacy_claim`: `false`.
-- `generalized_learning_benefit_score`: `0`; `independent_generalization_score`: `0`; `headline_solve_credit`: `0`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8679_v744_hardware_operation_boundary.json
+## experiment_8693_v745_hardware_operation_boundary.json
 
 **NO_CLAIM**
 
@@ -163,24 +129,24 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. A qualified compatible hardware execution with complete cost measurements would contradict the narrower recorded blocked status.
+No comparative claim is asserted to falsify. This is an evidence-aggregation and readiness report; its blocked status does not assert that hardware acceleration is impossible.
 
 ## WAS THAT CHECKED
-No physical performance test was performed. The gate summary records missing upstream cost artifacts, and board status rows report no physical execution. This is an evidence aggregation and readiness receipt; it asserts no hardware speedup, verifier benefit, or generalization result.
+Not applicable to comparative value. Readiness checks record missing cost inputs and failed physical-execution gates, and the verdict remains blocked.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_v744_hardware_operation_boundary`
+- `honest_verdict`: `complete_blocked_v745_hardware_operation_boundary`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `physical_execution_this_invocation`: `false`
+- `compatible_physical_execution`: `false`
 - `complete_new_cost_boundaries`: `false`
+- `physical_hardware_ready_score`: `0`
 - `achieved_speedup`: `null`
-- `generalized_learning_benefit_score`: `0`
-- `independent_generalization_score`: `0`
+- `target_met`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8680_v744_capstone.json
+## experiment_8694_v745_capstone.json
 
 **NO_CLAIM**
 
@@ -191,20 +157,17 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative efficacy claim to falsify. Qualified measurements establishing benefit within these rows would contradict the reported unmeasured status; unmeasured benefit does not imply ineffectiveness.
+Not applicable: this aggregation asserts no comparative performance advantage. Missing qualification is not an empirical finding that the method fails.
 
 ## WAS THAT CHECKED
-No comparative efficacy test was completed here. This aggregation records failed or missing gate operands, censored ARC horizons, and unexecuted deployment comparisons. It does not promote those rows into efficacy or generalization evidence.
+No comparative refutation test is established here. The displayed gate rows record failed qualification and missing fields; quarantined producers remain ineligible, and censored ARC observations receive no efficacy estimate or solve credit. These limitations are reflected in the reported outcomes.
 
 ## EVIDENCE
-- `exposure_scope`: `Exposed upstream evidence and deterministic constructed registration; no independent generalization`
-- `status`: `diagnostic_completed_efficacy_unmeasured`
-- `complete_horizon_count`: `0`
-- `population_efficacy_claim`: `false`
-- `supervisor_benefit`: `null`
-- `missing_reason`: `Exp8674/8675 never executed`
-- `operand_state`: `missing_field`
-- `verdict_class`: `disqualified`
+- `eligible`: `false`; `producer_qualified`: `false`; `scientific_result_measured`: `false`
+- `operand_state`: `missing_field`; `observed`: `null`; `passed`: `false`
+- `complete_horizon_count`: `0`; `efficacy_estimate`: `null`
+- `headline_solve_credit`: `0`; `hidden_generalization_established`: `false`
+- `exposure_scope`: `Exposed cached observations and constructed integer controls; no unexposed natural generalization`
 
 ## RECOMMENDATION
 KEEP
