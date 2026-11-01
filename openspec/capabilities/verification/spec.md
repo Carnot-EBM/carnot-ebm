@@ -57237,3 +57237,10 @@ check final bytes before atomic publication. Owned failed/killed checks disquali
 External absence is blocked with exact field/hash/operator/expected/observed gates.
 Private fixtures grant no production readiness. Historical quarantines and the
 V733/V735/V737/V743 nulls remain unchanged. Ops reconciliation is conductor-owned.
+
+## REQ-VERIFY-8707: Original operands and independent seals
+
+Exp8707 follows REQ-VERIFY-8707 and SCENARIO-VERIFY-8707-REPLAY in
+`../hardware-operation-boundary/spec.md`. Retain child SQLite before combining
+copies. Consumer coverage never qualifies producers. Ops reconciliation belongs
+to the conductor.

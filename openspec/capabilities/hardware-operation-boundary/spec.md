@@ -33,3 +33,38 @@ and independent seals. Owned failures disqualify; external absence blocks.
 Validate exact final bytes with primary publication and unchanged adversarial
 and strict row readers. No historical controller, model load or device probe.
 Ops/status/changelog/traceability reconciliation remains conductor-owned.
+
+## REQ-REPORT-8707: Lifecycle and complete-service operation mapping
+
+Bind all fourteen V746 full task objects, the visible table and canonical digest
+with the existing roadmap reader. Authenticate original board and method bytes,
+producer identity and terminal validation independently. Read Exp8699 and Exp8703
+only at declared deliverables; conductor skips describe scheduling only. Admit
+Exp8706 lifecycle and numerical scores separately, preserving original checkpoint,
+method, primitive and validation seals. Flagged producers grant no readiness.
+
+### SCENARIO-REPORT-8707-OPERATIONS
+
+Retain one supported, unsupported or missing-evidence row per operation per board.
+Separate signed32/24 local arithmetic, dense109 renormalization, nonlinear host
+work, complete features, transfer, serialization/fsync and restart. CPU evidence
+can qualify mapping while physical readiness stays zero. Only a measured disjoint
+compatible fraction permits a conditional1/(1-f) ceiling. Unknown costs stay null.
+Keep KV260 quadratic energy k_max<=5, PolarFire Linux CPU dispatch and GateMate
+0xffffffff pending dated change, IDCODE0x20000001 and ordered n16 smoke. No model,
+probe or flash runs. Preserve all quarantines, closed nulls and original G1–G4.
+
+## REQ-VERIFY-8707: Immutable operation-map publication
+
+Freeze transitive sources, tests, configuration and original operands before
+measurement. Retain raw SQLite, JUnit, source hashes, commands, real exits and
+clocks for disjoint bounded children. Require100 percent newly owned statements,
+private CLI success/rejection, scoped lint/types/spec and private E2E018/021.
+
+### SCENARIO-VERIFY-8707-REPLAY
+
+Fresh bounded replay rejects missing operands and consistently rehashed tampering
+against independent invocation seals. Validate final bytes with unchanged primary
+publication, adversarial and strict row validators. Owned failure disqualifies;
+external incompleteness blocks with exact path/hash/field/operator/value receipts.
+Optional devices cannot veto CPU evidence. Reconciliation remains conductor-owned.

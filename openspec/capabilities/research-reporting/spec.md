@@ -103788,3 +103788,9 @@ is null with its first failing state; missing external authority is blocked.
 No constructed control proves learning, independent generalization or hardware.
 Report supported-domain bounds and reject checked overflow outside the envelope;
 the whole-format37-product bound exceeds signed64 and is not a global proof.
+
+## REQ-REPORT-8707: Qualified lifecycle-to-board boundaries
+
+Exp8707 follows REQ-REPORT-8707 and SCENARIO-REPORT-8707-OPERATIONS in
+`../hardware-operation-boundary/spec.md`. Authenticate each declared operand
+independently. Preserve historical failures and unknown complete acceleration.

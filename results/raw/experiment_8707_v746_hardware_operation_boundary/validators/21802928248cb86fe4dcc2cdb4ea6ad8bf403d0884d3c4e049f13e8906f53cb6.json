@@ -1,0 +1,112 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8707_v746_hardware_operation_boundary.json",
+  "primary_sha256": "sha256:21802928248cb86fe4dcc2cdb4ea6ad8bf403d0884d3c4e049f13e8906f53cb6",
+  "report": {
+    "actual_findings": {
+      "flagged_count": 0,
+      "reports": [
+        {
+          "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/terminal_candidate.json",
+          "exp_id": 8707,
+          "flag_count": 0,
+          "flags": [],
+          "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+          "honest_verdict": "complete_blocked_missing_complete_cost_or_physical_execution",
+          "loaded": true,
+          "max_severity": -1,
+          "title": ""
+        }
+      ]
+    },
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8707_v746_hardware_operation_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8707_v746_hardware_operation_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/terminal_candidate.json",
+        "deadline_s": 180,
+        "duration_s": 3.570968567,
+        "ended_monotonic_ns": 251452255368302,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/cold_replay.stdout",
+        "log_sha256": "sha256:c79b7d133f7c61df2383da89c579f448ed8ba37ccd02b6586d6173b5a6f52471",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 251448684399735,
+        "started_wall_ns": 1793570951472218454,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/cold_replay.stdout",
+        "stdout_sha256": "sha256:c79b7d133f7c61df2383da89c579f448ed8ba37ccd02b6586d6173b5a6f52471",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/terminal_candidate.json",
+        "deadline_s": 180,
+        "duration_s": 1.166652885,
+        "ended_monotonic_ns": 251453423777236,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/adversarial.stdout",
+        "log_sha256": "sha256:f8081ca7afbfe03a94536b6d4f028e19136ea3b6d78309c03319f77654bf74c9",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 251452257124351,
+        "started_wall_ns": 1793570955044942669,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/adversarial.stdout",
+        "stdout_sha256": "sha256:f8081ca7afbfe03a94536b6d4f028e19136ea3b6d78309c03319f77654bf74c9",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/terminal_candidate.json",
+        "deadline_s": 180,
+        "duration_s": 0.064963614,
+        "ended_monotonic_ns": 251453490876522,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 251453425912908,
+        "started_wall_ns": 1793570956213732659,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8707_v746_hardware_operation_boundary/invocations/1793570669481487758/terminal/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ]
+  }
+}
