@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.746",
+  "generated_at": "2026-11-01T22:50:14Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 129.4,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify original deadline controls and the complete causal learning union",
+      "duration_minutes": 34.17,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Execute the frozen original learning core with retained producer authority",
+      "duration_minutes": 23.98,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify installed bounded batches from independently authenticated deployment in",
+      "duration_minutes": 21.43,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify retained child evidence and bind fourteen branch contracts",
+      "duration_minutes": 15.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Separate lexical collisions from symbolic grounding and missing-record errors",
+      "duration_minutes": 12.65,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.746 completed 10 experiments (0 compute-bound, 10 synthesis-only) in 129.4 wall-time minutes (129 minutes / 2.2 hours, averaging 13 minutes per experiment) reconstructed via disk-mtime fallback after live git-log found 0 commits. The five slowest synthesis-only tasks were 'Qualify original deadline controls and the complete causal learning union' (34.17 minutes / 34min), 'Execute the frozen original learning core with retained producer authority' (23.98 minutes / 24min), 'Qualify installed bounded batches from independently authenticated deployment in' (21.43 minutes / 21min), 'Qualify retained child evidence and bind fourteen branch contracts' (15.2 minutes / 15min), and 'Separate lexical collisions from symbolic grounding and missing-record errors' (12.65 minutes / 13min). Because 0 compute-bound tasks ran, gpu_idle_on_compute_bound_tasks is null and the 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 44C) reflects expected behavior for synthesis-only workloads.",
+  "bottlenecks_identified": [
+    "Prolonged synthesis-only execution in 'Qualify original deadline controls and the complete causal learning union' at 34.17 minutes (34min) and 'Execute the frozen original learning core with retained producer authority' at 23.98 minutes (24min).",
+    "Extended synthesis-only runtime across 'Qualify installed bounded batches from independently authenticated deployment in' (21.43 minutes / 21min), 'Qualify retained child evidence and bind fourteen branch contracts' (15.2 minutes / 15min), and 'Separate lexical collisions from symbolic grounding and missing-record errors' (12.65 minutes / 13min).",
+    "Timing telemetry relied on disk-mtime reconstruction (retro_timing_fallback) because the live git-log path found 0 commits."
+  ],
+  "improvements_suggested": [
+    "Partition and parallelize independent verification sub-cohorts within 'Qualify original deadline controls and the complete causal learning union' (34.17 minutes / 34min) and 'Execute the frozen original learning core with retained producer authority' (23.98 minutes / 24min).",
+    "Add incremental receipt caching and pre-validation fast-fail checks for 'Qualify installed bounded batches from independently authenticated deployment in' (21.43 minutes / 21min), 'Qualify retained child evidence and bind fourteen branch contracts' (15.2 minutes / 15min), and 'Separate lexical collisions from symbolic grounding and missing-record errors' (12.65 minutes / 13min).",
+    "Emit explicit start and end timestamps in experiment deliverables so milestone timing does not depend on disk-mtime fallback when git-log finds 0 commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Decompose and parallelize independent sub-checks in the 34.17-minute deadline-control/causal-learning-union qualification and 23.98-minute frozen learning core execution tasks.",
+    "Reuse cached child-evidence receipts and authenticated deployment inputs across the 21.43-minute bounded-batch qualification, 15.2-minute branch-contract binding, and 12.65-minute lexical-collision separation tasks.",
+    "Write authoritative task start and finish timestamps directly into experiment JSON outputs to eliminate retro_timing_fallback disk-mtime reconstruction when 0 git commits are present."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "All 10 completed experiments in milestone 2026.11.746 were synthesis-only (0 compute-bound) across 129.4 minutes (129 minutes / 2.2 hours, 13 minutes average), so 0% GPU utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 44C) is expected behavior rather than a GPU bottleneck, and DualGPURunner was not applicable. Reducing the 34.17-minute, 23.98-minute, and 21.43-minute synthesis qualification tasks offers the highest leverage for shortening future milestone wall time."
+}

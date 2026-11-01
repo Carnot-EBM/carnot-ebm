@@ -7568,4 +7568,11 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 5 synthesis-only experiments completed in 15.8 wall-time minutes (16 minutes / 0.3 hours, averaging 3 minutes per experiment) led by deriving a cross-game supervisor decision from the closed horizon ledger (7.41 min / 7min) and mapping qualified integer operations and complete costs to the three FPGA boards (7.41 min / 7min), followed by testing integer arithmetic limits for sparse Brier updates (0.54 min / 1min), reconciling fourteen outcomes and closing unchanged scientific scopes (0.33 min / 0min), and binding fourteen tasks after qualifying immutable report construction (0.1 min / 0min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks set to null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 47C) reflecting expected behavior for synthesis-only tasks.
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.746
+- exp_range: no data available this milestone
+- theme: Operational execution analysis of 10 synthesis-only experiments (0 compute-bound) across 129.4 minutes (129 minutes / 2.2 hours) of milestone wall time.
+- key result: honest operational negative — 10 synthesis-only experiments completed in 129.4 wall-time minutes (129 minutes / 2.2 hours, averaging 13 minutes per experiment) led by qualifying original deadline controls and the complete causal learning union (34.17 min / 34min), executing the frozen original learning core with retained producer authority (23.98 min / 24min), qualifying installed bounded batches from independently authenticated deployment in (21.43 min / 21min), qualifying retained child evidence and binding fourteen branch contracts (15.2 min / 15min), and separating lexical collisions from symbolic grounding and missing-record errors (12.65 min / 13min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks set to null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 44C) reflecting expected behavior for synthesis-only tasks.
+- acceptance: no data available this milestone
+
+
 
