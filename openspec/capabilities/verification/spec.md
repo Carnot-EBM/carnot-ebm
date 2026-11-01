@@ -56935,3 +56935,17 @@ tampering using a seal outside the candidate envelope. Validate exact final
 bytes through primary_publication and unchanged adversarial/strict-row readers.
 Failed owned checks disqualify; external incompleteness blocks. Ops status,
 changelog and traceability reconciliation remain conductor-owned.
+
+## REQ-VERIFY-8678: Qualified live ARC transfer replay
+
+Exp8678 SHALL retain independently sealed immutable action/callback/reset
+primitives and exact upstream source identity. Require eight recorder parity
+pairs, zero observer conflicts/errors and100 percent newly owned statements.
+Bound children and preserve raw SQLite, JUnit, command, exit and duration.
+
+### SCENARIO-VERIFY-8678-REPLAY
+
+Actual private CLI and cold replay accept sealed evidence and reject missing
+operands, changed sources and rehashed substitutions. E2E-018/021 and unchanged
+terminal readers qualify publication. Keep Exp8664 flagged and preserve all
+prior quarantines. Ops reconciliation remains conductor-owned.

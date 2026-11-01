@@ -103339,3 +103339,43 @@ shapes. A constructed120-action horizon completes; a reset censors. Matched
 recorder off/on episodes retain exact actions, transitions, causes and final
 states. Registry precheck precedes the frozen four-game panel. Diagnostic
 readiness grants no supervisor benefit, generalization or headline solve credit.
+
+## REQ-REPORT-8678: Fresh qualified ARC observer transfer diagnostic
+
+Authenticate Exp8677 observer_delivery_ready_score=1, unchanged qualified source
+identity and Exp8667 arc_inputs_ready_score=1 before fresh work. Preserve all
+prior quarantines, especially Exp8664 flagged_adversarial=true. Enter the actual
+submitted wrapper with AVO and capability masking unchanged, observer enabled,
+no LLM, stored routes, adapters, per-game models or game source inspection.
+Run four registered games, seeds11/23, reset recorder off/on: sixteen episodes,
+eight exact action-parity pairs, at most512 actions/120 seconds each and2400
+seconds cumulative work. Keep120-action horizons. Repeated callbacks deduplicate
+by action identity; conflicts and observer errors disqualify. Retain action,
+callback ownership, reset cause, redirect, overlap and censorship primitives.
+
+### SCENARIO-REPORT-8678-TRANSFER
+
+A genuine reset can censor a qualified horizon; censorship is never a negative
+outcome. Report each supervisor arm with games as independent units. Four games
+support no population efficacy claim. Keep live_agent_self_discovery provenance,
+zero headline solve credit and zero promotion/benefit scores. If horizons remain
+censored, close this exact diagnostic without extending or repeating the panel.
+
+## REQ-VERIFY-8678: Immutable transfer evidence and terminal publication
+
+Freeze this invocation's operands before fresh stepping. Distinguish missing
+file, missing field, observed zero and changed bytes. Retain source hashes,
+commands, actual exits, JUnit and raw SQLite before combining copies. Require
+100 percent newly owned statements, original observer assertions, private CLI,
+E2E-018/021, Ruff, strict mypy and scoped spec coverage. Supervise bounded
+children with flushed heartbeats at most60 seconds. Cold replay rejects missing
+operands and self-consistently rehashed tampering; final bytes pass unchanged
+primary publication, adversarial and strict-row readers. Owned failures
+ disqualify; unchanged external incompleteness blocks. Ops reconciliation is
+conductor-owned.
+
+### SCENARIO-VERIFY-8678-REPLAY
+
+Accept --date20261101. Run actual private CLI success, rejection and child
+paths. An independent measurement seal rejects replacement work even when the
+candidate's hashes are updated. Failed or killed children cannot qualify.
