@@ -103645,3 +103645,33 @@ external gate rows. A flagged producer cannot grant readiness. External absence
 blocks; failed owned execution disqualifies. Learning execution readiness is1
 only after the exact union, original semantics, private E2E-020 and owned checks
 pass. Readiness grants no scientific benefit or physical hardware claim.
+
+## REQ-REPORT-8698: Answer-independent relational world qualification
+
+Authenticate the original V744 protocol, integer evaluator, 120 worlds, admissible
+corpus inputs, source producers and their terminal validation independently of
+Exp8681. Bind the fourteen full V746 task objects through the existing reader.
+Compile parameterized predicates from the question before opening candidate
+answers. Preserve all 480 original view labels and UTF-8 source/claim spans.
+Require every truth, query and span check before corpus_ready_score can be one.
+Missing premises remain unknown. Constructed capacity establishes no natural
+extraction, independent generalization, learning benefit or physical execution.
+Optional CUDA evidence uses the existing reader and current validator custody;
+its exact runtime_repair_ready_score cannot veto CPU corpus qualification.
+
+### SCENARIO-REPORT-8698-WORLDS
+
+Forty worlds per directed-role, negation-scope and temporal-order family each
+retain supported, equivalent, contradicted and uncertain views. Sixty worlds
+place decisive source evidence after sentence65. Reversed roles, changed scope,
+changed order, missing facts, wording equivalence, answer contamination and label
+permutation must be checked against an evaluator that receives no answer text.
+
+### SCENARIO-REPORT-8698-CUSTODY
+
+Distinguish missing files, missing fields, observed zero and changed bytes.
+Flagged producers cannot authorize readiness. Freeze transitive sources before
+measurement; retain disjoint child SQLite, JUnit, commands and real exits before
+combining copies. Require full newly owned statement coverage. Cold replay must
+reject missing and consistently rehashed altered operands. Publish only checked
+final bytes through unchanged validators, preserving historical failures.
