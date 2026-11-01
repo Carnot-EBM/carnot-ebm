@@ -103552,3 +103552,20 @@ support emit no_supported_policy_change, freeze unchanged policy, close the ledg
 once and require distinguishing policy resets from environment termination before
 a new curated intervention. Preserve all historical quarantines and nulls; the
 generalization floor is satisfied by this evidence-based decision without change.
+## REQ-REPORT-8692: Precision feasibility without a device claim
+
+Authenticate the original Exp8431 nine-input109-coefficient head, scaler and
+temperature against preserved V744 protocol bytes and its qualified producer
+and terminal receipt. Authenticate the Brier update rule separately. Missing
+resources block with exact path/hash/field/operator/expected/observed gates;
+optional hardware cannot block CPU work. Flagged producers cannot grant readiness.
+
+### SCENARIO-REPORT-8692-TERMINAL
+
+Publish only final bytes accepted by owned replay, primary_publication and the
+unchanged adversarial and strict row validators. Emit all invocation, substrate,
+unit-count, primitive-hash, validation and arithmetic fields. Precision readiness
+is numeric1 only when primary arithmetic and owned validation pass. A numerical
+null concerns this format only. All operations remain on CPU; no physical FPGA,
+synthesis, deployment, sub-microsecond or acceleration claim follows. Preserve
+historical quarantine and null records. Ops reconciliation is conductor-owned.

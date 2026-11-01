@@ -57066,3 +57066,30 @@ paths and resolved checkout destinations before measurement or publication,
 including directory aliases, public output symlinks to external files and direct
 runner calls. Failed-child controls SHALL retain the actual child exit and
 disqualify readiness.
+## REQ-VERIFY-8692: Sparse Brier integer arithmetic diagnostic
+
+Emulate signed total/fractional widths16/12,24/18 and preregistered32/24 on CPU.
+Use ties-to-even rounding, explicit saturation and checked signed64 accumulators.
+Preserve the original clamped cubic basis, bias regularization, global decay
+scale and temperature. Count underflow and renormalization separately. Never
+wrap integers or send these states to Exp8685. Model loads and LLM calls are zero.
+
+### SCENARIO-VERIFY-8692-ARITHMETIC
+
+Compare local basis values and sparse Brier updates to independent float64
+operations. Exercise ties, negative values, saturation, accumulator overflow,
+decay underflow, finite-state rejection and local writes<=37. Primary32/24
+requires zero saturation/overflow, probability error<=0.001 throughout and exact
+typed decisions outside that margin. Inside it use counted float64 fallback.
+
+### SCENARIO-VERIFY-8692-CUSTODY
+
+Freeze256 label-independent vectors(seed7458692):128 interior,64 knot/clip
+boundaries and64 typed-threshold points, recording unreachable thresholds.
+For every original head and width compare both one-step labels and four256-step
+sequences. Freeze sources/tests/configuration/inputs before measurement. Retain
+per-vector/update rows, disjoint CPU timings, state sizes and operation counts.
+Cold replay in a bounded fresh child rejects missing operands and consistently
+rehashed tampering against an independent seal. Private CLI destinations must
+remain outside the checkout. Keep raw SQLite and JUnit; newly owned statement
+coverage must equal100 percent. Failed owned validation disqualifies readiness.
