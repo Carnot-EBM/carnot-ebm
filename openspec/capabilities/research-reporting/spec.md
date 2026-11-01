@@ -103594,3 +103594,19 @@ CPU integer feasibility never grants physical execution or independent learning.
 Recompute numerical error/parity from original per-update rows and preserve each
 format. Reject omitted rows, inconsistent summaries and changed bytes. Exposed,
 constructed and independent natural evidence remain distinct. No fresh model call.
+
+## REQ-REPORT-8695: Retained V746 branch authority
+
+Bind all fourteen complete V746 task objects, the visible table, both markers
+and the independent canonical digest. Authenticate original V744 objectives,
+cohort partition, head and data without borrowing Exp8681 readiness. Branches
+qualify their own inputs; optional devices cannot veto CPU registration. Preserve
+historical flags and closed V733/V735/V737/V743 nulls. Readiness is administrative,
+with zero model loads and no claim of independent generalization or device speed.
+
+### SCENARIO-REPORT-8695-AUTHORITY
+
+Reject count, order, identity, title, phase, path, model, substrate, prompt, gate,
+prior-failure, marker, table and digest mutations, including coordinated rehashes.
+Construct reports without mutating nested inputs. Publish only validated final
+bytes through unchanged primary_publication and retain terminal scanner results.

@@ -57112,3 +57112,29 @@ Run original private E2E-018/021 nodes separately from owned qualification.
 Successful private CLI publication replays; changed source, rows, clocks, child
 logs, receipts and a locally rehashed primitive cannot pass independent seals.
 Invalid dates and private destinations are rejected. A failed child disqualifies.
+
+## REQ-VERIFY-8695: Immutable child evidence precedes combination
+
+Collect the unchanged original77 nodes once. Retain each completed child's raw
+SQLite, JUnit, exact nodes, source hashes, command, exit and clocks before combine.
+Aggregate immutable receipts, never final mutable scratch. Separate producer and
+consumer combination roots. Resolve rejection line113 against the pinned original
+source and execute that unchanged rejection control in a fresh producer child.
+Qualify original execution independently from100 percent newly owned statements.
+
+### SCENARIO-VERIFY-8695-RETENTION
+
+Two real coverage children survive intervening combination and scratch replacement.
+Reject absent or changed shards, duplicate nodes, source drift, killed/failed
+children and self-consistently rehashed receipt replacements against frozen seals.
+Reproduce Exp8681's77 collected nodes, saved child SQLite, empty final retention
+and false original rejection execution without clearing its historical flag.
+
+### SCENARIO-VERIFY-8695-CLI
+
+Private success, failure, invalid dates and lexical/resolved checkout destinations
+use the actual CLI. Fresh bounded cold replay reconstructs immutable primitives
+and rejects missing or rehashed operands. Keep disk-backed scratch, flushed phase
+counts and parent heartbeats within60 seconds. Run private E2E-018/021 separately.
+External incompleteness blocks; owned failures disqualify. Ops reconciliation is
+conductor-owned.
