@@ -21064,3 +21064,4 @@ code |
 | 2026-11-01 20:34 UTC | Qualify installed bounded batches from independent | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 111 passed, 1 warning in 82.45s (0:01:22) |
 | 2026-11-01 20:38 UTC | Measure matched complete batch throughput and same | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8702-installed-batch-prototype.batch_service_ready_score (actual=0 == expected=1) |
 | 2026-11-01 20:41 UTC | Compare bounded Qwen decisions with source-grounde | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8698-relational-evidence-controls.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-11-01 21:03 UTC | Qualify the repaired cross-game censoring decision | OK | 98 passed, 1 warning in 126.47s (0:02:06) |
