@@ -21044,3 +21044,6 @@ code |
 | 2026-11-01 09:41 UTC | Measure continuous typed-decision learning with de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8683-learning-union-qualification) |
 | 2026-11-01 09:41 UTC | Audit future Brier benefit and joint retention | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8685-causal-brier-stream) |
 | 2026-11-01 09:41 UTC | Test lexical collisions against executable relatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8684-relational-evidence-controls) |
+| 2026-11-01 09:42 UTC | Qualify bounded batches through the installed nume | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8681-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-11-01 09:44 UTC | Measure equal-work complete batch throughput and l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8688-installed-batch-prototype) |
+| 2026-11-01 09:44 UTC | Compare direct Qwen decisions with source-grounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8687-relational-feature-audit) |
