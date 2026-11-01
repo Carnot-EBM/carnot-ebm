@@ -21066,3 +21066,4 @@ code |
 | 2026-11-01 20:41 UTC | Compare bounded Qwen decisions with source-grounde | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8698-relational-evidence-controls.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-01 21:03 UTC | Qualify the repaired cross-game censoring decision | OK | 98 passed, 1 warning in 126.47s (0:02:06) |
 | 2026-11-01 21:48 UTC | Test long-run decay renormalization and restart of | OK | 96 passed, 1 warning in 70.32s (0:01:10) |
+| 2026-11-01 22:13 UTC | Map lifecycle and complete service operations to a | OK | 101 passed, 1 warning in 59.94s |
