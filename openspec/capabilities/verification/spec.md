@@ -56975,3 +56975,31 @@ terminal publication consumers. Cold replay compares the independent measurement
 seal and original producers, including a rehashed local-seal substitution test.
 The terminal artifact contains this invocation's actual qualification receipts.
 Ops/status/changelog/traceability reconciliation remains conductor-owned.
+
+## REQ-VERIFY-8680: Bounded immutable capstone qualification
+
+Exp8680 SHALL accept --date 20261101, retain source hashes and immutable raw
+primitives, and cold-replay in a fresh bounded process. Reject missing operands,
+changed original bytes and self-consistently rehashed candidate/local-seal
+substitutions against independently located authority. Preserve child command,
+exit, duration, JUnit and original SQLite before combining copies. Require100
+percent newly owned statements, real private CLI and rejection paths, private
+E2E-018/021, Ruff, strict mypy and scoped spec tracing. Owned failures disqualify;
+external incompleteness blocks. Validate final bytes through unchanged primary,
+adversarial and strict-row readers before atomic publication. No full repository
+suite, recursive historical controller, conductor edit or external publication.
+
+### SCENARIO-VERIFY-8680-REPLAY
+
+Private publication and cold replay pass; altered aggregates, source/validation
+operands, relocated/rehashed local seals and failed/killed children reject or
+receive zero readiness. Supervise children with <=60-second flushed heartbeats.
+Stop measurement by3600 seconds and reserve900 within4800. Ops/status/changelog
+and traceability reconciliation remain conductor-owned.
+
+Implementation20261101: test_v744_capstone_8680.py covers real standalone private
+publication, replay, rehashed substitutions, absent operands, bounds rejection,
+real failed/killed children and bounded measurement failures. Qualification uses
+the existing disjoint collector, separate consumer instrumentation and retained
+raw SQLite/JUnit. Final-byte cold/adversarial/strict-row readers precede atomic
+publication. The result retains actual receipts; no historical assertion changes.

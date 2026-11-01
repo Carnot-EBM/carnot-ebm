@@ -1,0 +1,71 @@
+# Keep model weights OUT of Docker build contexts.
+#
+# Weights belong in a volume-mounted HuggingFace cache, never baked into an
+# image.  These patterns exist so that `docker build` never accidentally ships
+# hundreds of GB of checkpoints even if a Dockerfile author forgets to scope
+# their COPY lines.  Adding a new directory that could hold weights?  Add it
+# here too.
+
+# HuggingFace / transformers caches (if anyone symlinks them into the repo)
+.cache/
+**/.cache/huggingface/
+**/.cache/torch/
+**/.cache/jax/
+**/__pycache__/
+
+# Weight file types — any COPY . or COPY ./* would otherwise pick these up.
+**/*.gguf
+**/*.safetensors
+**/*.bin
+**/*.pth
+**/*.pt
+**/*.ckpt
+**/*.onnx
+**/*.tflite
+**/*.h5
+**/*.msgpack
+**/*.flax
+
+# Local snapshot / downloaded checkpoint dirs used by experiments
+results/*_weights/
+results/*_checkpoint/
+results/*_model/
+results/*.safetensors
+models/
+checkpoints/
+
+# Python build / env artefacts that inflate build context for no reason
+.venv/
+venv/
+env/
+**/*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Rust build artefacts — the webgpu-gateway Dockerfile uses a multi-stage
+# build but keeping target/ out of the initial context still speeds things up.
+target/
+**/*.rs.bk
+
+# Editor / OS noise
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# Secrets — never ship these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*_rsa
+*_ed25519
+
+# Local state the conductor writes
+.claude/scheduled_tasks.lock
+/tmp/conductor.log

@@ -1,0 +1,136 @@
+# Carnot Infrastructure Services
+#
+# Usage:
+#   make up       # start all services
+#   make down     # stop all services
+#   make logs     # tail logs
+#   make status   # check health
+#
+# Or directly:
+#   docker compose up -d
+#   docker compose down
+#
+# MODEL-WEIGHT POLICY (MANDATORY):
+#   No Carnot service bakes model checkpoints into its image.  Weights live in
+#   the host HuggingFace cache (~/.cache/huggingface, typically hundreds of GB
+#   of GGUFs / safetensors) and are bind-mounted into containers read-only.
+#   The named volume `hf-cache` below points to that host dir — any new service
+#   that loads a model MUST declare `- hf-cache:/hf-cache:ro` under `volumes:`
+#   and `HF_HOME=/hf-cache` / `HF_HUB_OFFLINE=1` under `environment:`.
+#
+#   See the commented-out `local-inference` stanza at the bottom for the
+#   canonical pattern.  See `.dockerignore` for defense-in-depth against
+#   accidental weight bundling during `docker build`.
+
+# ---------------------------------------------------------------------------
+# Named volumes
+# ---------------------------------------------------------------------------
+volumes:
+  # Read-only projection of the host HuggingFace hub cache.  Any service that
+  # loads a model reads from this volume rather than downloading at runtime
+  # (which would be slow, wasteful, and — for air-gapped sandboxes — impossible).
+  # The default path can be overridden by HF_CACHE_DIR in `.env`.
+  hf-cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HF_CACHE_DIR:-${HOME}/.cache/huggingface}
+
+services:
+  # Claude Code API Bridge — OpenAI-compatible endpoint wrapping `claude -p`
+  # Used by autoresearch hypothesis generator and LLM solver
+  claude-api-bridge:
+    build: tools/claude-api-bridge
+    image: claude-api-bridge:latest
+    container_name: carnot-claude-bridge
+    ports:
+      - "${BRIDGE_PORT:-8080}:8080"
+    volumes:
+      - ${CLAUDE_CONFIG_DIR:-~/.claude}:/root/.claude:ro
+    environment:
+      - CLAUDE_BIN=${CLAUDE_BIN:-claude}
+      - MCP_CONFIG_PATH=${MCP_CONFIG_PATH:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Gemini CLI API Bridge — OpenAI-compatible endpoint wrapping `gemini -p`
+  gemini-api-bridge:
+    build: tools/gemini-api-bridge
+    image: gemini-api-bridge:latest
+    container_name: carnot-gemini-bridge
+    ports:
+      - "${GEMINI_BRIDGE_PORT:-8081}:8081"
+    volumes:
+      - ${GEMINI_CONFIG_DIR:-~/.gemini}:/root/.gemini:ro
+    environment:
+      - GEMINI_BIN=${GEMINI_BIN:-gemini}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8081/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # WebGPU Distributed Compute Gateway — browsers as GPU nodes
+  # Browsers visit http://<host>:3000 to contribute GPU compute
+  webgpu-gateway:
+    build:
+      context: .
+      dockerfile: crates/carnot-webgpu-gateway/Dockerfile
+    image: carnot-webgpu-gateway:latest
+    container_name: carnot-webgpu-gateway
+    ports:
+      - "${GATEWAY_PORT:-3000}:3000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget -q -O- http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Canonical pattern for a local-inference service that loads GGUF weights.
+  # Commented out because no such service exists yet — added as a template so
+  # the next author doesn't reinvent the cache-mount contract.  When you
+  # uncomment, make sure your Dockerfile does NOT `COPY *.gguf` anything.
+  # ---------------------------------------------------------------------------
+  # local-inference:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.local-inference
+  #   image: carnot-local-inference:latest
+  #   container_name: carnot-local-inference
+  #   # --gpus all requires nvidia-container-toolkit on the host; gVisor
+  #   # (runsc) intercepts syscalls in userspace and plays nicely with it.
+  #   runtime: runsc
+  #   gpus: all
+  #   volumes:
+  #     # READ-ONLY host HF cache — NEVER bake weights into the image.
+  #     - hf-cache:/hf-cache:ro
+  #     # If the service writes generation traces, give it a writable scratch:
+  #     - ${RESULTS_DIR:-./results}:/results
+  #   environment:
+  #     # Point every HF-aware library at the mounted cache.
+  #     - HF_HOME=/hf-cache
+  #     - TRANSFORMERS_CACHE=/hf-cache
+  #     - HF_HUB_CACHE=/hf-cache/hub
+  #     # Refuse network fetches — if a weight isn't in the cache, fail loud.
+  #     - HF_HUB_OFFLINE=1
+  #     # Which model to load.  Resolve to a concrete GGUF path via
+  #     # python -c "from carnot.inference.sota_models import resolve_cached_gguf;
+  #     #            print(resolve_cached_gguf('unsloth/Qwen3.6-35B-A3B-GGUF'))"
+  #     - CARNOT_MODEL_HF_ID=${CARNOT_MODEL_HF_ID:-unsloth/gemma-4-26B-A4B-it-GGUF}
+  #   ports:
+  #     - "${INFERENCE_PORT:-8088}:8088"
+  #   restart: unless-stopped

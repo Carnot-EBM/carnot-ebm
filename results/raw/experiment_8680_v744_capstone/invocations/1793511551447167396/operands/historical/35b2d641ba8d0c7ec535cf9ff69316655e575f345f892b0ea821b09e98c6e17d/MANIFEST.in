@@ -1,0 +1,31 @@
+# Carnot-EBM sdist contents — see .gitattributes for the actual exclude
+# mechanism (setuptools-scm uses git ls-files / git archive, which
+# respects .gitattributes export-ignore, not MANIFEST.in).
+#
+# This file is preserved for explicit documentation only.
+
+# Source tree
+graft python
+include README.md
+include LICENSE
+include pyproject.toml
+
+# Exclude bulky research artifacts (also export-ignore'd via .gitattributes)
+prune results
+prune output
+prune hardware
+prune docs
+prune _bmad
+prune ops
+prune openspec
+prune epics
+prune scripts
+prune tests
+prune crates
+prune rtl
+prune .github
+prune .claude
+
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .DS_Store

@@ -103416,3 +103416,31 @@ private producer forms and preserve historical findings. Invocation outcomes,
 source pins and readiness are recorded in the Exp8679 terminal artifact; no
 physical acceleration or new learning benefit is inferred. Ops reconciliation
 is conductor-owned.
+
+## REQ-REPORT-8680: Exact fourteen-slot V744 reconciliation
+
+Exp8680 SHALL bind the independently sealed fourteen complete V744 task objects,
+resolve declared producers before exact conductor receipts, and retain literal
+verdicts, flags and failed/missing operands. Scheduling completion grants no
+scientific credit. Recompute admitted primitive reductions; retain unexecuted
+learning, relational and batching hypotheses as unmeasured. Keep constructed,
+exposed, natural coverage and independent generalization separate. Preserve
+V733/V735/V737/V743 nulls and every stamped quarantine. Retire only authenticated
+literal repeats explicitly registered retire_if_same_verdict=true. Close executed
+new diagnostics at their registered scope. Use unchanged publication G1-G4 and
+complete_blocked for successful reconciliation with externally blocked science.
+
+### SCENARIO-REPORT-8680-ACCOUNTING
+
+All fourteen slots, gate edges, three PRD gaps, learning, semantic, deployment,
+ARC, hardware, literature and reopening decisions survive private publication.
+Missing file, missing field, zero and changed bytes remain distinct. No model
+loads or current language-model calls occur; numerical checkpoints authenticate
+separately. Optional device absence cannot block independent CPU reconciliation.
+
+Implementation20261101: v744_capstone inputs/reduce/report/runner and the thin
+Exp8680 CLI reconcile sealed authority, exact scheduling dispositions, original
+historical primitives, byte-bounded constructed registrations, fresh ARC parity
+and censoring, and hardware clocks. The terminal artifact records this invocation's
+actual qualification and stable publication gate. Blocked studies stay unmeasured;
+old quarantines and nulls remain original. Ops reconciliation is conductor-owned.

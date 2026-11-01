@@ -1,0 +1,70 @@
+# Carnot-EBM .gitattributes
+#
+# `export-ignore` excludes paths from `git archive` and setuptools-scm
+# sdists. Used to trim the sdist below PyPI's 100MB project limit.
+#
+# Filed 2026-05-16 after v0.1.0b1 sdist hit 111MB and PyPI rejected
+# upload with "400 File too large".
+
+# Research artifacts (results, outputs) — biggest contributors
+results export-ignore
+results/** export-ignore
+output export-ignore
+output/** export-ignore
+
+# Hardware (FPGA bitstreams, sim outputs, RTL)
+hardware export-ignore
+hardware/** export-ignore
+rtl export-ignore
+rtl/** export-ignore
+
+# Documentation (not needed for pip install)
+docs export-ignore
+docs/** export-ignore
+_bmad export-ignore
+_bmad/** export-ignore
+openspec export-ignore
+openspec/** export-ignore
+epics export-ignore
+epics/** export-ignore
+
+# Operational state
+ops export-ignore
+ops/** export-ignore
+
+# Test fixtures + research scripts
+scripts export-ignore
+scripts/** export-ignore
+tests export-ignore
+tests/** export-ignore
+
+# Rust crates (shipped separately)
+crates export-ignore
+crates/** export-ignore
+
+# CI/automation/agents config
+.github export-ignore
+.github/** export-ignore
+.claude export-ignore
+.claude/** export-ignore
+
+# Top-level research-tracking files
+research-*.yaml export-ignore
+research-*.md export-ignore
+append_*.py export-ignore
+run_experiment_*.py export-ignore
+experiment_*.py export-ignore
+add_*.py export-ignore
+verify_load.py export-ignore
+test_hf.py export-ignore
+
+# Embedded research tarball
+python_carnot.tar.gz export-ignore
+
+# Vivado / lock outputs
+vivado.* export-ignore
+*.lock export-ignore
+
+# Local-only files
+.gitattributes export-ignore
+MANIFEST.in export-ignore
