@@ -57217,3 +57217,23 @@ replacement primitives against an independently located seal. Final bytes pass
 unchanged primary publication, adversarial and strict row validators before
 atomic publication. Owned failed or killed checks disqualify; external absence
 blocks with exact gate receipts. Private controls grant no production readiness.
+
+## REQ-VERIFY-8706: Immutable lifecycle restart and publication custody
+
+Freeze transitive source, tests, configuration and original operands before
+measurement. Checkpoint every256 updates; use bounded children, genuine process
+exit at committed2048, exact acknowledgement/state resume and flushed progress.
+Private controls reject lexical and resolved checkout outputs. Preserve raw
+SQLite, source hashes, JUnit, commands, exits and durations for disjoint collected
+nodes before combining copies; require100 percent newly owned statements.
+Run focused tests, Ruff, strict mypy, scoped spec coverage and private E2E018/021.
+
+### SCENARIO-VERIFY-8706-REPLAY
+
+Fresh bounded cold replay reconstructs immutable numerical primitives and rejects
+missing operands and consistently rehashed tampering against an independent seal.
+Unchanged primary publication, adversarial verification and strict row validation
+check final bytes before atomic publication. Owned failed/killed checks disqualify.
+External absence is blocked with exact field/hash/operator/expected/observed gates.
+Private fixtures grant no production readiness. Historical quarantines and the
+V733/V735/V737/V743 nulls remain unchanged. Ops reconciliation is conductor-owned.

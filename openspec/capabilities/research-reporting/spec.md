@@ -103762,3 +103762,29 @@ arc_decision_ready_score=1 and no_supported_policy_change, with the curated
 supervisor unchanged. Close this diagnostic. Future work requires a distinct
 intervention and uncensored cross-game support. No live game, model, new solve,
 independent generalization or hardware acceleration is claimed.
+
+## REQ-REPORT-8706: Qualified fixed-point lifecycle controls
+
+Bind all fourteen full V746 objects, visible table and both canonical digests
+through the existing roadmap reader. Independently authenticate Exp8692, its
+immutable primitives, terminal validation and original five-head checkpoint.
+Retain signed32/24 ties-to-even arithmetic, checked signed64 intermediates,
+saturation, original scaling/temperature and Brier updates without retuning.
+Freeze the original256 vectors and four label/order sequences. Measure4096
+updates per head/sequence (81920 pairs), plus five marked64-update boundary
+controls (320). Actual process exit after committed2048 and serialized resume
+must match uninterrupted state and acknowledgement; replay adds no questions.
+
+### SCENARIO-REPORT-8706-LIFECYCLE
+
+Require finite values, zero overflow/saturation, probability error<=0.001 at
+every ordinary step, decision parity outside the margin and counted float64
+fallback inside. Probe before/at/after the original decay trigger and effective
+coefficient continuity. Retain dense109 renormalization writes, local<=37 writes,
+global decay,109 host copies, nonlinear CPU, serialization and durable costs.
+Publish lifecycle_rows_ready_score for complete qualified rows separately from
+numerical_lifecycle_ready_score for all numerical criteria. A numerical failure
+is null with its first failing state; missing external authority is blocked.
+No constructed control proves learning, independent generalization or hardware.
+Report supported-domain bounds and reject checked overflow outside the envelope;
+the whole-format37-product bound exceeds signed64 and is not a global proof.
