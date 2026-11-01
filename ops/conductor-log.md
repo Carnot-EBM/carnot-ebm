@@ -21021,3 +21021,5 @@ code |
 | 2026-11-01 02:07 UTC | Plan milestone 2026.11.744 | OK | 14 tasks proposed |
 | 2026-11-01 02:20 UTC | Milestone 2026.11.744 activated | OK | 14 tasks queued |
 | 2026-11-01 03:02 UTC | Bind fourteen tasks and freeze independent researc | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 158 passed, 1 warning in 247.36s (0:04:07) |
+| 2026-11-01 03:04 UTC | Qualify fresh learning core execution after freezi | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8667-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-11-01 03:06 UTC | Qualify original deadline controls and the complet | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8668-frozen-learning-core) |
