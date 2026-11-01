@@ -21030,3 +21030,4 @@ code |
 | 2026-11-01 03:09 UTC | Qualify bounded installed batches using the existi | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8667-contract-methods.methods_ready_score (actual=0 == expected=1) |
 | 2026-11-01 03:11 UTC | Measure complete installed batching costs under eq | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8674-installed-batch-prototype) |
 | 2026-11-01 03:11 UTC | Measure bounded Qwen claim decisions and uncertain | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8670-relational-evidence-controls) |
+| 2026-11-01 04:23 UTC | Qualify single-owner ARC observation delivery whil | OK | 120 passed, 1 warning in 65.91s (0:01:05) |
