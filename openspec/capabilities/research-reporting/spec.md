@@ -103282,3 +103282,42 @@ publication G1–G4. External absence is blocked, never retryable partial.
 
 Planning status20261101: specified in the V744 design and staged queue;
 implementation and scientific outcomes remain pending conductor execution.
+
+## REQ-REPORT-8667: Freeze V744 authority and independent scientific operands
+
+Exp8667 SHALL bind fourteen complete task objects, Exp8667 through Exp8680,
+against independently parsed table, JSON, digest and V744 end marker. Accept
+staging beside V743 and genuine V744 activation. Reject mutations of every
+contract field and self-consistently rehashed authority. Seal V743 authority,
+objective_updates/objective_audit, the original 39/25 partition, all 27 runner
+nodes, checkpoint, labels, seeds and count-validator receipts independently.
+Register 120 constructed relational worlds with four byte-bound views before
+extraction; register 60 installed batch cells and 61440 evaluations; freeze
+observation ownership from actual repeated callbacks and four ten-prompt Qwen
+cases. Branch readiness SHALL authenticate original producers separately from
+failed execution. No model load, device probe, fitting or natural-truth claim.
+
+### SCENARIO-REPORT-8667-AUTHORITY
+
+Staged and activated V744 accept exactly fourteen complete objects. Changed
+count, order, identity, title, phase, path, prompt, model, substrate, gate,
+prior-failure, visible table, digest or end marker rejects. Original V743 bytes
+and readers remain unchanged and independent of mutable vNEXT.
+
+### SCENARIO-REPORT-8667-OPERANDS
+
+Missing file, missing field, observed zero and changed bytes remain distinct.
+Failed Exp8654 does not block fresh qualification when scientific operands
+qualify. Exp8656/8659 and Exp8660/8661 authenticate separately; failed Exp8664
+remains quarantined while its callback evidence can authorize an ownership
+repair. Runtime absence pre-skips only Exp8676. Constructed/exposed data cannot
+establish independent generalization or learning benefit.
+
+Implementation20261101: the thin Exp8667 CLI and v744_contract methods, inputs,
+report and runner modules implement this registration. Focused requirement tests
+cover complete-object mutations, independent integer truth, branch custody,
+validator receipts and genuine private CLI publication/rejection. The immutable
+protocol contains the original cohort, relational, batching, ARC and Qwen
+registrations. The terminal artifact records current validation and qualification;
+registration does not establish scientific benefit. Ops reconciliation is
+conductor-owned.

@@ -56893,3 +56893,29 @@ aggregate/operand substitutions, bounded failures and source custody. The runner
 collects scoped nodes once, preserves child SQLite/JUnit and measures consumers
 separately. An empty collection cannot invoke an unscoped suite. Final primary
 bytes require fresh cold replay and unchanged adversarial and strict-row readers.
+
+## REQ-VERIFY-8667: Bound V744 validation and immutable cold replay
+
+Retain real clocks, child commands, exits, JUnit, original SQLite shards and
+source hashes before combining copies. Collect scoped nodes once and execute
+disjoint bounded children with -n 0 -o addopts= --no-cov. Require100 percent
+new statements, actual private CLI rejection paths, private E2E-018/021, Ruff,
+strict mypy and scoped spec tracing. Instrument consumers for executed code.
+Use disk-backed /var/tmp, flushed progress and <=60-second child heartbeats.
+Stop measurements by3600 seconds, reserve900 within4800 seconds. Cold replay,
+unchanged adversarial and strict-row readers validate final bytes before atomic
+publication. Owned failures disqualify; unchanged external incompleteness blocks.
+
+### SCENARIO-VERIFY-8667-REPLAY
+
+Fresh-process replay accepts immutable primitives and rejects missing operands,
+source drift and rehashed summary/primitive substitutions. A killed child fails
+qualification. Preserve actual severity and historical stamped quarantines.
+Ops status, changelog and traceability reconciliation are conductor-owned.
+
+Implementation20261101: Exp8667 reuses bounded child supervision and locked
+primary publication. Its invocation collects the two owned suites and private
+E2E-018/021 consumers once, preserves original SQLite/JUnit and combines copies.
+Consumer subprocesses receive their own source instrumentation. Only newly
+owned statements determine the100 percent producer-coverage gate. Cold children
+reject missing operands and rehashed claims before final-byte validation.

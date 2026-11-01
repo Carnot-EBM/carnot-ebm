@@ -6716,3 +6716,19 @@ with zero complete horizons. Learning retains39 core-node outcomes but changed
 source identity and a pre-gated25-node cohort prevent current benefit/retention
 claims. Reopen only with the concrete changed operands and stop conditions in
 Exp8666. No new architecture, generator training or hardware claim follows.
+
+## 2026-11-01 Exp8667 — V744 methods scan — INGESTED
+
+The dated V744 scan in research-references.md is an input, not new experimental
+results. RT4CHART claim binding is adopted as exact claim/source byte spans.
+CCHD motivates separate label-preserving paraphrases and truth-changing role
+controls; consistency alone does not establish truth. The October28 uncertainty
+taxonomy motivates separate correctness, abstention, uncertainty and finite
+prompt recovery; intrinsic knowledge labels are deferred. Proper-loss learning
+retains sealed predictions, delayed feedback and the original Brier/log-loss
+objectives; convex regret transfer is deferred. Sparse KAN work motivates the
+existing109-coefficient head and explicit write/cost accounting, with physical
+speedup deferred. Operation-specific Ising support remains quadratic with
+k_max<=5 on qualified KV260 work; general spline hardware mapping is deferred.
+The protocol freezes120 constructed worlds and60 batch cells before outputs.
+These controls establish no natural entailment or independent generalization.
