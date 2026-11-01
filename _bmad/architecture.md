@@ -671,3 +671,24 @@ ARC provenance panel. Policy, horizons and solve credit remain unchanged.
 Optional bounded Qwen3.8 generation requires causal CUDA evidence. Hardware
 mapping uses only qualified complete costs and actual supported operations.
 This is planned work, not deployed behavior or a new scientific result.
+
+## Planned V744 execution boundaries — 2026-11-01 UTC
+
+Milestone 2026.11.744 stages fourteen tasks, Exp8667–Exp8680. The original
+39-node core and 25-node deadline cohorts run against frozen transitive source
+bundles before any delayed-feedback learning. Fresh source identity, the full
+64-node union and original semantic controls qualify the existing nine-input,
+109-coefficient typed-decision head; no generator weights change.
+
+An independent constructed relation study tests whether complete eight-feature
+lexical evidence loses role, negation or temporal information. It does not feed
+new inputs into the historical learner. The installed protocol gains a planned
+bounded batch operation using its existing vectorized evaluator, with equal-work
+complete costs and same-batch native speed claims kept separate.
+
+The live ARC boundary assigns one owner to each step observation while retaining
+conflict checks, original assertions and actions. A fresh adapter-withheld panel
+measures horizon support and censoring, with no new solve credit. Optional bounded
+Qwen3.8 generation requires changed authenticated runtime evidence. Hardware
+mapping and capstone readers run independently of blocked scientific branches.
+All changes here are planned; V744 implementation and results remain pending.

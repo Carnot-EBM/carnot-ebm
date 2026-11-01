@@ -11,99 +11,105 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 7 |
+| CLAIM_SUPPORTED | 2 |
+| NO_CLAIM | 5 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8645_complete_source_comparison.json
+## experiment_8659_v743_complete_source_comparison.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+Streaming extraction increases complete source coverage over the original capped extractor on this fixed roster while preserving existing features and meeting resource bounds.
 
 ## WHAT WOULD REFUTE IT
-Not applicable. The title states a measurement objective; this blocked receipt asserts no coverage, cost, or comparative performance result.
+Zero completed recoveries among the 55 former abstentions, missing source spans, changed features on previously usable responses, chunk-dependent results, or resource-limit violations.
 
 ## WAS THAT CHECKED
-Only prerequisite gates were checked. Streaming readiness was 0 against a required 1, so the experiment was blocked before comparative measurement.
+Yes, as reported by the recovery counts, parity checks, window custody, paired resource measurements, and acceptance gates. The artifact reports 55 recoveries and exact feature parity on 135 previously usable responses. That tie establishes preservation; it does not contradict increased coverage.
+
+The capped extractor is the relevant baseline for this limited comparison. No verifier-value or generalization claim is needed. No invalid-row inclusion or wrong-key contradiction is shown, although most individual rows are elided.
 
 ## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `streaming_extractor_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `blocked_at_layer`: `conductor_pre_gate`
+
+- `coverage_gate`: `no missing source spans and at least one of55 former abstentions becomes complete`
+- `recovered_count`: `55`
+- `old_domain_parity`: `exact eight feature values on all135 originally usable rows`
+- `common_parity`: `true`; `chunk_parity`: `true`; `complete_window_custody`: `true`; `resource_bounds`: `true`
+- `coverage_benefit_score`: `Absolute engineering reach improvement only; never changed-denominator detector benefit.`
+- `independent_generalization_score`: `0`
+- `excluded_count`: `0`; `failed_count`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8646_v742_installed_compatibility.json
+## experiment_8660_v743_installed_compatibility.json
 
 **NO_CLAIM**
 
 ## VERDICT
-
 NO_CLAIM
 
 ## THE HEADLINE CLAIM
-
 no claim
 
 ## WHAT WOULD REFUTE IT
-
-A failed required compatibility or node-union check would defeat positive installed qualification. The artifact reports disqualification, not a comparative benefit.
+No comparative value claim is made. The limited deployment receipt would be invalidated by an installed response disagreeing with its baseline, an export-contract violation, or failed recovery or cleanup.
 
 ## WAS THAT CHECKED
-
-Yes. The exact-node-union gate and original-node-union result fail; the terminal verdict remains disqualified and readiness remains zero. Oracle-defined correctness and baseline parity serve compatibility checks here. Exposed operands are disclosed, generalization is not claimed, and historical timing results remain null. The failed checks are not promoted into a positive qualification.
+Yes, for deployment compatibility: installed parity, export compatibility, rejection and cleanup rows provide opportunities for failure, and the displayed checks pass. Matching the baseline is the compatibility objective; it does not claim superiority. The oracle flag therefore does not establish a circular added-value claim here.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_disqualified_v742_installed_compatibility`
-- `acceptance_gates`: `name` = `exact_node_union`, `passed` = `false`
-- `original_node_union`: `passed` = `false`
-- `installed_measurement_ready_score`: `0`
 - `exposure_scope`: `Exposed compatibility operands and synthetic public verification smoke; deployment only`
-- `preserved_historical_nulls`: `new_timing_comparison` = `false`, `verdict_class` = `null`
+- `Bind actual immutable invocation evidence; ownership and packaging grant no scientific benefit.`
+- `generalized_learning_benefit_score`: `0`
+- `independent_generalization_score`: `0`
+- `installed_measurement_ready_score`: `1`
+- `installed_parity_rows`, `baseline_response`, `response`, `passed`
+- `honest_verdict`: `complete_circular_positive_v743_installed_compatibility`
 
 ## RECOMMENDATION
-
 KEEP
 
-## experiment_8647_installed_complete_cost.json
+## experiment_8661_v743_installed_complete_cost.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+On the exposed original64 workload, installed native execution meets packaging noninferiority but fails the 10× NFR-01 complete-operation throughput requirement.
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact reports a blocked prerequisite check, without asserting successful inference measurement or comparative value.
+At L16, packaging throughput lower95 below 0.95, p95 latency ratio above 1.05, or a decision mismatch would defeat packaging qualification; installed-native/installed-Python throughput lower95 reaching 10 would contradict the reported NFR-01 failure.
 
 ## WAS THAT CHECKED
-No inference outcome was tested. The prerequisite checks in `gates_evaluated` detected failed installed readiness and blocked execution.
+Yes. The paired throughput intervals report packaging lower95 of 0.9918997155865926 and p95 latency ratio of 1.002628040443349. The arithmetic interval is approximately 1.197–1.225, far below 10.
+
+These timing comparisons could fail independently of the verifier’s decisions. The oracle flag therefore does not make this timing claim circular. The artifact explicitly limits exposure and makes no generalization claim. Private native and installed Python are relevant comparators; a packaging tie is consistent with noninferiority.
+
+The artifact reports all 120 cells completed without failures, censoring, or exclusions. Displayed session rows report exact decisions; most individual rows are elided, limiting direct inspection.
 
 ## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `installed_measurement_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `blocked_at_layer`: `conductor_pre_gate`
+
+- `honest_verdict`: `complete_null_v743_installed_complete_cost`; `verdict_class`: `null`
+- `Only L16 installed_native/installed_python lower95>=10 satisfies NFR-01.`
+- `L16 installed_native/private_native lower95>=0.95, p95<=1.05 and exact decisions.`
+- `packaging`: `lower95`: `0.9918997155865926`; `p95_latency_ratio`: `1.002628040443349`
+- `arithmetic`: `lower95`: `1.197007408532037`; `upper95`: `1.2247656009276773`
+- `exposure_scope`: `original64 exposed development requests; original checkpoint; no independent generalization or hardware claim`
+- `completed_count`: `120`; `failed_count`: `0`; `censored_count`: `0`; `excluded_count`: `0`
+- `exact_decisions`: `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8648_qwen_evidence_canary.json
+## experiment_8662_qwen_evidence_canary.json
 
 **NO_CLAIM**
 
@@ -114,24 +120,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-run receipt, with no comparative or effectiveness claim to falsify.
+No method-value claim is made. The blocking diagnosis would be contradicted if all evaluated prerequisite gates passed.
 
 ## WAS THAT CHECKED
-No experimental claim was tested. The prerequisite gate was checked and failed: runtime readiness was 0 against a required 1.
+Yes. The gate rows show runtime readiness failed while input readiness passed, consistent with blocking. This is a gate-check receipt, not an experimental result.
 
 ## EVIDENCE
 `schema`: `blocked_gate_check_v1`  
 `status`: `blocked`  
 `honest_verdict`: `blocked_gate_check_failed`  
-`failed_field`: `runtime_repair_ready_score`  
-`failed_expected`: `1`  
-`failed_observed`: `0`  
+`artifact_field`: `runtime_repair_ready_score`  
+`reason`: `actual=0 == expected=1`  
+`artifact_field`: `canary_inputs_ready_score`  
+`reason`: `actual=1 == expected=1`  
 `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8649_v742_arc_reset_provenance.json
+## experiment_8663_v743_arc_reset_provenance.json
 
 **NO_CLAIM**
 
@@ -142,30 +149,27 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A changed action, observation, or RNG trace, or missing or ambiguous reset attribution, would refute the narrower recording qualification. This artifact makes no comparative benefit claim.
+There is no comparative scientific claim to refute. The bounded engineering witness could fail if an enabled reset lacked its provenance join or enabling instrumentation changed actions, observations, RNG, SDK calls, or termination.
 
 ## WAS THAT CHECKED
-Yes, within the fixture scope: all three action-parity rows pass, the displayed requester-ownership rows report unique attribution, and the missing-cause list is empty. These checks could reveal recording failures; they establish no learning or generalization benefit.
+Yes, within the bounded witness: the enabled arm reports one reset and one join, both arms pass, and the action-parity checks all pass. The equal action counts do not establish policy benefit; none is claimed.
 
 ## EVIDENCE
 
-- `methodology_note`: `Passive recording qualification only. Fixtures are not real outcomes; Exp8650 owns diagnostic transfer. No reset timing, supervisor priority or horizon changes.`
+- `methodology_note`: `Bounded engineering witness only. Historical disqualification and quarantines remain unchanged. No solve, policy benefit or transfer-panel qualification. Exp8664 owns the full panel.`
 - `honest_verdict`: `complete_null_arc_reset_provenance`
-- `verdict_class`: `null`
-- `headline_solve_credit`: `0`
-- `independent_count`: `0`
-- `action_parity_rows`, `passed`: `true`
-- `requester_ownership_rows`, `status`: `unique`
-- `missing_cause_rows`: `[]`
+- `independent_scientific_questions`: `0`
+- In `sdk_witness_rows`: `arm` = `on`, `reset_count` = `1`, `joined_count` = `1`, `passed` = `true`.
+- In `action_parity_rows`: `actions`, `observations`, `rng`, `sdk_calls`, and `termination` are `true`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8650_v742_arc_reset_transfer.json
+## experiment_8664_v743_arc_reset_transfer.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_8651_v742_hardware_operation_evidence.json
+## experiment_8665_v743_hardware_operation_evidence.json
 
 **NO_CLAIM**
 
@@ -176,26 +180,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative benefit claim to falsify. An authenticated, qualified complete-cost workload in the artifact would contradict its narrower report that none qualified.
+There is no comparative benefit claim to falsify. An admitted, authenticated compatible hardware execution with complete costs would contradict the reported blocked evidence status.
 
 ## WAS THAT CHECKED
-Yes, for evidence admission: all three entries in source_admission_rows are unqualified, and their corresponding cost rows are censored with null values. This is a blocked evidence receipt; it does not establish a performance null or hardware advantage.
+No hardware benefit test was performed. This is an evidence audit: execution gates remain false, failed source checks are recorded, and speedup estimates remain null. These limitations are reflected in the blocked verdict.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_hardware_operation_evidence`
-- `methodology_note`: `Read-only authenticated cost mapping. No language model, board, or benchmark runs. Qualified complete primitive closures are reduced separately; unavailable costs remain null.`
-- `completed_count`: `0`
-- `censored_count`: `3`
-- `qualified`: `false`
-- `status`: `censored`
-- `value`: `null`
+
+- `honest_verdict`: `complete_blocked_v743_hardware_operation_evidence`
 - `compatible_physical_execution`: `false`
 - `complete_new_cost_boundaries`: `false`
+- `device_commands_executed`: `0`
+- `achieved_speedup`: `null`
+- `missing_reason`: `binding_residual_does_not_isolate_spline_arithmetic`
+- `generalized_learning_benefit_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8652_v742_capstone.json
+## experiment_8666_v743_capstone.json
 
 **NO_CLAIM**
 
@@ -206,20 +209,19 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative benefit is asserted. Unequal paired actions or mismatched reproduced values would refute the narrower parity or evidence-reproduction assertions.
+No headline claim of comparative efficacy is advanced. Qualified current learning evidence, independent generalization results, and authenticated physical execution could overturn the blocked readiness assessment.
 
 ## WAS THAT CHECKED
-Yes, those narrower checks appear in the action-parity and reproduction samples. Scientific qualification failures remain explicit, and benefit/generalization readiness stays zero. Oracle-defined correctness, exposed data, and unqualified timing rows are not promoted into comparative value claims.
+Yes, as readiness checks: learning lacks a current producer, learning and reset qualification are false, and every listed board reports no physical execution. These limitations remain reflected in the blocked verdict; administrative completion is not promoted into demonstrated benefit.
 
 ## EVIDENCE
-- `administrative_complete`: `true`
-- `learning_benefit_ready_score`: `0`
+- `exposure_scope`: `Previously exposed registered evidence only; administrative reconciliation`
+- `honest_verdict`: `complete_blocked_v743_capstone`
+- `current_producer_present`: `false`
+- `generalized_learning_benefit_score`: `0`
 - `independent_generalization_score`: `0`
-- `action_parity_rows`; `passed`: `true`
-- `matches_original`: `true`
-- `qualified`: `false`
-- `qualified_complete_cost`: `false`
-- `exposure_scope`: `Previously exposed development responses and engineering fixtures; historical exposure remains unknown`
+- `physical_execution_this_invocation`: `false`
+- `promotion_ready_score`: `0`
 
 ## RECOMMENDATION
 KEEP

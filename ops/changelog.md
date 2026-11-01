@@ -22631,3 +22631,21 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - GPU monitor report recorded GPU 0 (NVIDIA GeForce RTX 3090) at 0% utilization (4/24576MB allocated, 46C); `gpu_idle_on_compute_bound_tasks` is `null` because 0 compute-bound tasks ran, and 0% utilization on GPU 0 is expected behavior for CPU-only synthesis tasks.
 - Recommended improvements: parallelize independent fixture-aware sub-cohorts and reuse validated historical checkout fixtures across the 33.88-minute and 30.64-minute qualification tasks; memoize unchanged contract digests, hardware operation limit mappings, and live-game reset trace inputs across the 9.14–11.11 minute tasks; and record explicit start/end timestamps in experiment deliverables to avoid disk-mtime fallback when git-log discovery finds 0 commits.
 
+
+## 2026-11-01 UTC — Stage research milestone 2026.11.744
+
+- Created the matching fourteen-task design and staged YAML for Exp8667–Exp8680
+  across four phases. Preserved the previous vNEXT document as
+  `openspec/change-proposals/research-roadmap-v743-preserved-20261101.md`.
+- Recorded the 2025–2026 literature scan before design, including relational
+  controls, uncertainty/recovery separation, delayed proper-loss learning,
+  sparse KAN and operation-specific hardware limits; recorded unavailable
+  citation inventory and stale trending results without inferring evidence.
+- Planned frozen learning qualification, continuous Brier updates and retention,
+  relational feature diagnostics, installed bounded batching, optional mandated
+  Qwen3.8 canary, live ARC observation ownership and unconditional reconciliation.
+- Bound full task objects, exact gate field names and failure lineage. Every prompt
+  requires flushed inner-loop progress, parent heartbeats and chunked file writes.
+  OpenSpec, architecture, traceability and status entries are explicitly planned.
+- No experiment was executed by planning. Active `research-roadmap.yaml`,
+  `scripts/research_conductor.py` and the exclusion manifest remain unchanged.

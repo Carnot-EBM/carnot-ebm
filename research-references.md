@@ -53914,3 +53914,89 @@ cleanliness assertion still fails. Learning cohort B, future benefit and retenti
 remain absent. Keep prior source-information, cold-cost and supervisor nulls
 closed. See docs/research-notes/v743-capstone.md and the primary result's exact
 reopening operands; no theorem, unexposed generalization or hardware gain transfers.
+
+## V744 planning scan — 2026-11-01 UTC / 2026-10-31 America/New_York
+
+This scan precedes the new experiment design. The UTC calendar makes the next
+milestone 2026.11.744. Local evidence is V743's terminal producers and capstone,
+read through `scripts/summarize_artifact.py`. Scheduling completion is separate
+from qualified science. The following are research leads, not Carnot results.
+
+### Selected and newly checked findings
+
+- **New lead: distinguish error from uncertainty.** [What Hallucinations Have
+  We Measured?, 2610.38520v1](https://arxiv.org/html/2610.38520v1), October 28,
+  proposes separate expressed-uncertainty and incorrectness categories. Its
+  re-elicitation labels depend on the tested prompt set. A failed finite set
+  cannot establish absent knowledge. Adopt separate correctness, abstention,
+  uncertainty and observed-recovery fields in a bounded Qwen canary. Do not
+  assign intrinsic confabulation labels from one answer or a tiny prompt set.
+- **Revisited: semantic invariance needs a label-preservation check.**
+  [CCHD, 2606.08158v1](https://arxiv.org/html/2606.08158v1), June 6, constrains
+  agreement across paraphrases while anchoring predictions to labels. The
+  paper uses trained language backbones and back-translation. For Carnot,
+  test representation collisions under controlled role changes separately
+  from invariance under equivalent wording. Consistency alone is not truth.
+- **Revisited: evidence must bind to individual claims.** [RT4CHART,
+  2603.27752v2](https://arxiv.org/html/2603.27752v2), revised July 20, uses
+  claim decomposition, overlapping local evidence and global verification.
+  Adopt explicit claim/source offsets and a test of relational information
+  lost by lexical aggregation. This does not reproduce its learned verifier.
+  V743's complete-source coverage gain cannot establish semantic entailment.
+- **Continual-learning methods retained.** [Calibeating Made Simple,
+  2603.22167](https://arxiv.org/abs/2603.22167), March 23, motivates proper-loss
+  comparisons. [Capacity-Constrained Delayed OCO,
+  2606.11711](https://arxiv.org/abs/2606.11711), June 10, makes missing and
+  delayed feedback explicit. Finish the registered causal small-head study
+  with prediction sealing, delayed updates and separate retention; do not
+  transfer convex regret guarantees to the spline learner.
+- **KAN revision checked.** [Spline-local online learning,
+  2602.02056v4](https://arxiv.org/abs/2602.02056v4), revised June 19, supports
+  investigating sparse writes and fixed-point learning. Preserve the current
+  basis; measure complete inference/update costs before proposing a device
+  implementation. The paper's hardware result is not a Carnot speedup.
+
+### Coverage of the requested primary topics
+
+| Topic | Source checked | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, 2512.15605](https://arxiv.org/abs/2512.15605) | Input/candidate compatibility and probability correspondence are foundations; neither certifies language extraction. |
+| Neural constraint satisfaction | [Efficient Constraint Handling in Neural Solvers, 2602.16012](https://arxiv.org/abs/2602.16012), February 17 | Preserve exact feasibility checks; defer another routing solver. |
+| Ising applications in ML | [Probabilistic Algorithms for Ising Machines, 2610.03972](https://arxiv.org/abs/2610.03972), October 2 | Keep evaluation, optimization and distribution sampling as different operations. |
+| Hallucination detection/mitigation | Taxonomy, CCHD and RT4CHART above; [Labeling Problem, 2610.08026](https://arxiv.org/abs/2610.08026), October 6 | Keep source support, factual correctness and uncertainty distinct. Existing exposed labels do not become fresh. |
+| Kolmogorov–Arnold networks | Spline-local online learning v4 above | Sparse online updates remain the selected small-model path. |
+| Energy-guided decoding | [Energy-Based Decoding, 2605.28020](https://arxiv.org/abs/2605.28020), May 27 | Defer steering until verifier utility and current runtime qualify. No generator training. |
+| Hardware sampling | Ising review above; [Extropic Z1T](https://extropic.ai/writing/z1t/), September 4 | Account for orchestration, final readout and transfer. Projected device arithmetic does not establish complete-service benefit. |
+| Continual/online constraints | Calibeating and delayed-capacity work above | Keep causal learning and future benefit as separate gates. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** searched 2026 EBM submissions and found the indexed
+  [EBT manuscript](https://openreview.net/pdf/f9139bb41c8b7a03e09be518a71426bcbd061a3f.pdf).
+  The [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser
+  challenge. No unread reviews or acceptance decision are adopted.
+- **Semantic Scholar:** attempted citation lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20),
+  plus exact-ID searches. Both API opens failed. Citation coverage is incomplete;
+  this says nothing about the number of citing papers.
+- **Hugging Face Papers:** checked [RT4CHART](https://huggingface.co/papers/2603.27752).
+  The primary paper above supplies method evidence; feed text is discovery only.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Both returned snapshots
+  marked crawled last month. No current ranking or new dependency is claimed.
+  The [EBT author repository](https://github.com/alexiglad/EBT) surfaced in search;
+  its minimal example explicitly does not reproduce the paper's results.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and the Z1T method
+  page. The latter distinguishes estimated probabilistic hardware costs from
+  measured GPU costs and excludes final dense logits from headline comparisons.
+  This does not supply local TSU access or a compatible spline kernel.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The retrieved page describes product intent but provides no reproducible new
+  architecture or benchmark protocol to adopt.
+
+Planning inference: use the now-qualified full-source extractor to test what
+information its features retain. Finish the unmeasured causal learning protocol
+under immutable execution. Test a concrete service-overhead change rather than
+repeat the closed batch-one timing study. Optional model work must wait for
+changed causal CUDA evidence. Keep the new taxonomy as a bounded diagnostic.

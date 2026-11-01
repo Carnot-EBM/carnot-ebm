@@ -4198,3 +4198,18 @@ The active V740 roadmap, conductor and exclusion manifest remain unchanged.
 The prior V742 design is preserved at
 `openspec/change-proposals/research-roadmap-v742-preserved-20261018.md`.
 These entries register planned obligations, not scientific outcomes.
+
+## V744 staged planning traceability — 2026-11-01 UTC
+
+| Requirement | Planned scope | Status | Authority |
+|---|---|---|---|
+| REQ-REPORT-V744-PLAN | Fourteen identical complete task objects, Exp8667–Exp8680, in four phases | Planned | openspec/change-proposals/research-roadmap-vNEXT.md; research-roadmap-next.yaml |
+| SCENARIO-REPORT-V744-EXECUTION | Frozen original 39+25 learning cohorts, exact gates and mandatory progress/chunking | Planned | Exp8667–Exp8669; all fourteen prompts |
+| REQ-REPORT-V744-STUDIES | FR-11 delayed typed-decision learning/retention, relational evidence controls, installed batching and separate NFR-01 | Planned | Exp8670–Exp8676 task prompts |
+| SCENARIO-REPORT-V744-CLAIMS | Live ARC observation ownership and transfer, operation-specific hardware and unconditional G1–G4 capstone | Planned | Exp8677–Exp8680 task prompts |
+
+V743 authority is preserved at
+`openspec/change-proposals/research-roadmap-v743-preserved-20261101.md`.
+Its prior staged entries are historical; V744 replaces only the next-plan slot.
+The dated literature scan is in `research-references.md`. No scientific result
+or implemented capability is claimed by this planning record.

@@ -103242,3 +103242,43 @@ scopes. Original JUnit, source windows, installed frames and reset callbacks are
 cold-reduced. Learning absence and failed observer qualification remain distinct
 from newly qualified coverage and installed-cost findings. Ops reconciliation
 is conductor-owned; terminal receipts determine owned qualification.
+
+## REQ-REPORT-V744-PLAN: Exact staged research authority
+
+The planned milestone 2026.11.744 SHALL contain exactly fourteen tasks,
+Exp8667 through Exp8680, in the same order in the visible design table,
+embedded complete JSON contract and research-roadmap-next.yaml. The digest
+SHALL bind all task fields, including prompts, gates and failure lineage.
+Original V743 authority SHALL be preserved separately. Current source changes
+SHALL NOT authenticate old execution receipts. This is a planning requirement;
+no experiment result or runtime implementation is claimed by this entry.
+
+## REQ-REPORT-V744-STUDIES: Distinguish evidence, learning and deployment
+
+The planned research SHALL separate lexical representation collisions from
+natural entailment, causal small-head training from future-loss benefit, and
+batch transport gains from same-batch Python/native speedups. Predictions SHALL
+precede delayed labels; retention labels SHALL NOT train the head. Constructed
+relational worlds SHALL remain development controls. Optional Qwen generation
+SHALL use unsloth/Qwen3.8-27B-GGUF, model_bounded_generation and changed causal
+CUDA evidence. Finite prompt recovery SHALL NOT certify absent model knowledge.
+
+### SCENARIO-REPORT-V744-EXECUTION
+
+Fresh core and deadline receipts cover the unchanged original 64-node union
+under frozen transitive sources. A post-seal edit invalidates the affected
+cohort. Every task demands flushed phase and inner-loop progress, parent
+heartbeats, bounded tool calls and chunked writes above about 200 lines.
+Readiness fields are top-level numeric 0/1 and match all same-roadmap gates.
+
+### SCENARIO-REPORT-V744-CLAIMS
+
+Live ARC callback ownership is tested without suppressing duplicate-conflict
+checks or changing actions. A model-free adapter-withheld panel reports actual
+outcomes and censoring; no repeated registered solve receives credit. Hardware
+readers preserve operation limits and missing spans. The capstone runs even
+when science is blocked, retains all fourteen dispositions and uses stable
+publication G1–G4. External absence is blocked, never retryable partial.
+
+Planning status20261101: specified in the V744 design and staged queue;
+implementation and scientific outcomes remain pending conductor execution.

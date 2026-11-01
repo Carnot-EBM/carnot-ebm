@@ -18519,3 +18519,25 @@ Update 2026-10-20 (llm_on pairing, partial):
 - The status update above this one (25 paired cells, 1 against 5 wins) is not reproduced by the current cells. See the changelog correction.
 - Still open: v3 goal-frame leak; shipped `models/arc_verifier_cross_game*.json` use the old label; vocabulary-violation warnings (`actions [7]`, GAP-6260) continue and may lower llm_on wins; killed processes 1249, 512407, 512411 unidentified; NCM note commit `c1880a17e4` unpushed.
 
+
+## 2026-11-01 UTC — V744 research milestone staged
+
+Planned `2026.11.744` in `research-roadmap-next.yaml`, with the matching full
+contract in `openspec/change-proposals/research-roadmap-vNEXT.md`: fourteen tasks,
+Exp8667–Exp8680, four phases. The UTC calendar rollover determines November;
+local planning date was October 31. Active V743 and the conductor remain unchanged.
+
+The three priorities are qualified causal typed-decision learning and relational
+verification, complete installed batch costs, and trustworthy live ARC horizons.
+The plan freezes transitive learning sources before fresh 39+25-node execution;
+uses 120 constructed relational worlds; exposes the existing vectorized evaluator
+through bounded batches; and repairs observation ownership before fresh cross-game
+measurement. Optional Qwen3.8 bounded generation requires changed CUDA evidence.
+Hardware mapping and capstone always run, with independent branch admission.
+
+V743's learning source drift and flagged ARC transfer remain disqualified.
+Complete-source recovery and installed compatibility remain qualified; batch-one
+NFR-01 remains null. No new experiment result, hidden-game solve, semantic verifier
+moat or hardware speedup is claimed. Literature findings were recorded before
+experiment design. V743 design bytes are preserved in the versioned archive.
+Planning validation is recorded with the corresponding changelog entry.
