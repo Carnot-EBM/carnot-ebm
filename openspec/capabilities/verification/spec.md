@@ -56919,3 +56919,19 @@ E2E-018/021 consumers once, preserves original SQLite/JUnit and combines copies.
 Consumer subprocesses receive their own source instrumentation. Only newly
 owned statements determine the100 percent producer-coverage gate. Cold children
 reject missing operands and rehashed claims before final-byte validation.
+## REQ-VERIFY-8677: Invocation-bound observation delivery qualification
+
+Authenticate upstream branch fields and immutable historical authority before
+CPU work. Distinguish missing file, missing field, zero and changed bytes. Use
+no_model_load, no language-model calls and separately authenticate the numerical
+head. Retain bounded child commands, exits, clocks, raw SQLite, JUnit and source
+hashes. Require100 percent new statement coverage, original observer families,
+private CLI rejection controls, E2E-018/021, Ruff, strict mypy and spec tracing.
+
+### SCENARIO-VERIFY-8677-REPLAY
+
+Cold replay in a fresh bounded child rejects missing operands and rehashed
+tampering using a seal outside the candidate envelope. Validate exact final
+bytes through primary_publication and unchanged adversarial/strict-row readers.
+Failed owned checks disqualify; external incompleteness blocks. Ops status,
+changelog and traceability reconciliation remain conductor-owned.

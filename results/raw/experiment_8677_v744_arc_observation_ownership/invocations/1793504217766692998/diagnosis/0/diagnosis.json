@@ -1,0 +1,30 @@
+{
+  "actual_wrapper": {
+    "cascade": true,
+    "choose_action": 512,
+    "factory": "make_carnot_agent",
+    "is_done": 512,
+    "policy": "E3AgentPolicy"
+  },
+  "callback_order": [
+    "E3AgentPolicy.is_done",
+    "CarnotAgent.choose_action",
+    "E3AgentPolicy.next_move",
+    "SDK.reset_or_step",
+    "collector_final"
+  ],
+  "duplicate_observation_count": 1022,
+  "episode_id": "ar25-0c556536:11:off",
+  "expected": 1022,
+  "game": "ar25-0c556536",
+  "original_source_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8664_v743_arc_reset_transfer/invocations/1792402162190427259/current_source_closure/python/carnot/agentic/arc_competition_agent.py",
+    "sha256": "sha256:49ef8d079585454de40cc2b92600a2be5c4d12dbc69fc5e95f21b20de01cd58c"
+  },
+  "passed": true,
+  "primitive_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8677_v744_arc_observation_ownership/invocations/1793504217766692998/diagnosis/0/public_stream.json",
+    "sha256": "sha256:e61bd0f02ce758922232b14b512a0c98181b7232933e2fdaeeb5a639cd756f0a"
+  },
+  "seed": 11
+}

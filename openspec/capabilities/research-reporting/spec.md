@@ -103321,3 +103321,21 @@ protocol contains the original cohort, relational, batching, ARC and Qwen
 registrations. The terminal artifact records current validation and qualification;
 registration does not establish scientific benefit. Ops reconciliation is
 conductor-owned.
+## REQ-REPORT-8677: One observation owner per applied action
+
+The live wrapper SHALL admit each action result once to ArcOutcomeObserver.
+Ingress SHALL record callback owner, action identity and complete public-frame
+digest. Identical repeat callbacks SHALL NOT advance a horizon. Conflicting
+bytes for the same action SHALL fail qualification and censor pending horizons.
+Equal pixels at successive actions remain separate observations. Preserve the
+original observer assertions, historical failed receipts, policy actions,
+reset causes, quotas, supervisor priorities and generator configuration.
+
+### SCENARIO-REPORT-8677-OWNERSHIP
+
+Reproduce1022 duplicate issues from the sealed original callback path. Test
+repeated is_done, choose_action, reset and terminal delivery with real SDK frame
+shapes. A constructed120-action horizon completes; a reset censors. Matched
+recorder off/on episodes retain exact actions, transitions, causes and final
+states. Registry precheck precedes the frozen four-game panel. Diagnostic
+readiness grants no supervisor benefit, generalization or headline solve credit.

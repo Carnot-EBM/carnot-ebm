@@ -7312,7 +7312,7 @@ class E3AgentPolicy:
         which is the pre-instrument `next_move` with constant-string branch labels added at
         its return sites.
         """
-        self.observe_action_outcome(latest)
+        self.observe_action_outcome(latest, owner="E3AgentPolicy.next_move")
         decision_telemetry = getattr(
             self,
             "_decision_telemetry",
@@ -8091,11 +8091,13 @@ class E3AgentPolicy:
         """
         return self._provenance
 
-    def observe_action_outcome(self, frame: Any) -> None:
+    def observe_action_outcome(
+        self, frame: Any, *, owner: str = "E3AgentPolicy.observe_action_outcome"
+    ) -> None:
         """SCENARIO-ARC-WMTE-10016-PROVENANCE: attach the resulting real level."""
-        from carnot.agentic.arc_outcome_observer import notify
+        from carnot.agentic.arc_observation_delivery import deliver
 
-        notify(self, "observation", frame)
+        deliver(self, frame, owner)
         recorder = getattr(self, "_provenance", None)
         if recorder is None or frame is None:
             return
@@ -9975,7 +9977,7 @@ class E3AgentPolicy:
         return row
 
     def is_done(self, frames, latest):
-        self.observe_action_outcome(latest)
+        self.observe_action_outcome(latest, owner="E3AgentPolicy.is_done")
         return self.explorer.is_done(frames, latest) and self.phase == "explore"
 
 
@@ -10496,18 +10498,21 @@ def make_carnot_agent(
         def choose_action(self, frames, latest_frame):
             from arcengine import GameAction
             from carnot.agentic.arc_outcome_observer import notify
+            from carnot.agentic.arc_observation_delivery import deliver
             from carnot.agentic import arc_reset_provenance as reset_provenance
 
             reset_provenance.prepare(self._policy, latest_frame)
 
-            notify(self._policy, "observation", latest_frame)
+            deliver(self._policy, latest_frame, "CarnotAgent.choose_action")
             kind, data = self._policy.next_move(frames, latest_frame)
             from carnot.agentic.arc_effect_receipts import bind_action
 
             bind_action(self._policy, kind, data)
             if kind == "RESET" or kind is None:
                 if kind is None:
-                    reset_provenance.request(self._policy, "CarnotAgent.choose_action.none_fallback")
+                    reset_provenance.request(
+                        self._policy, "CarnotAgent.choose_action.none_fallback"
+                    )
                 act = GameAction.RESET
             else:
                 act = getattr(GameAction, f"ACTION{kind}")

@@ -1,0 +1,32 @@
+.......................F.                                                [100%]
+=================================== FAILURES ===================================
+__________________________ test_exact_upstream_gates ___________________________
+
+tmp_path = PosixPath('/var/tmp/carnot8677-bili5iui/validation/original_families/test_exact_upstream_gates0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f34688ec1d0>
+
+    def test_exact_upstream_gates(tmp_path, monkeypatch):
+        """REQ-VERIFY-8664: missing files, missing fields and zero remain distinct."""
+>       source = e.authenticate(e.ROOT)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_reset_transfer_8664.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_reset_transfer_8664.py:112: in authenticate
+    checked_bytes(ROOT / name.split("/source_closure/", 1)[1], digest)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py')
+digest = 'sha256:49ef8d079585454de40cc2b92600a2be5c4d12dbc69fc5e95f21b20de01cd58c'
+
+    def checked_bytes(path: Path, digest: str) -> bytes:
+        """Authenticate non-JSON authority and original transition streams too."""
+        data = path.read_bytes()
+        if sha256_file(path) != digest:
+>           raise ValueError("original_hash:" + str(path))
+E           ValueError: original_hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py
+
+python/carnot/reporting/arc_observer_8624.py:118: ValueError
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_reset_transfer_8664.py::test_exact_upstream_gates
+1 failed, 24 passed in 5.02s
