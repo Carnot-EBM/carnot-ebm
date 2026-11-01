@@ -551,3 +551,230 @@ Additional official ARC-AGI-3 Semi-Private results absent from your supplied his
 
 Gemini’s Standard evaluation encountered API failures: its best-scoring configuration completed 42 of 55 tasks; the reported score includes all 55, retaining partial credit from incomplete runs. [Official evaluation notes](https://arcprize.org/results/google-gemini-4-argon).
 
+## 2026-10-19 13:13 UTC -- NEW
+
+**Milestone #2 results, announced October 1:** Daniel Franzen won with **27.9% ($25K)**; Lord Han Solo placed second with **23.8% ($7.5K)**; Lohit Siriki placed third with **22.5% ($5K)**. All three open-sourced their solutions. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734).
+
+**Leaderboard shakeup:** On October 13, Tufa Labs reclaimed first place on the Kaggle public leaderboard with **68.91%**, up from approximately 56%. [ARC Prize announcement](https://x.com/arcprize/status/2110031207601979715).
+
+Additional official ARC-AGI-3 Semi-Private results absent from your supplied history, showing each harness’s best score:
+
+| Model / official source | Standard | Provider Adapter |
+|---|---:|---:|
+| [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | 30.2% | — |
+| [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+| [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | 0.5% | 2.8% |
+| [Grok 4.5](https://arcprize.org/results/xai-grok-4-5) | 0.3% | — |
+
+## 2026-10-20 13:11 UTC -- NEW
+
+Additional official ARC-AGI-3 Semi-Private results absent from your history, showing each harness’s best score:
+
+| Date (2026) | Model / official source | Standard | Provider Adapter |
+|---|---|---:|---:|
+| Oct 13 | [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8%* | 97.5% |
+| Sep 22 | [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+| Sep 10 | [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| Sep 2 | [GPT-6 Astra](https://arcprize.org/results/openai-gpt-6-astra) | 62.7% | 99.9% |
+| Sep 2 | [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| Aug 11 | [Grok 4.6](https://arcprize.org/results/xai-grok-4-6) | 2.1% | — |
+
+*Argon’s best Standard run completed 42/55 tasks because of API issues; its reported score includes all 55 tasks and partial credit from incomplete runs. [Official evaluation](https://arcprize.org/results/google-gemini-4-argon).
+
+**September 3:** ARC Prize reported that Astra at maximum reasoning with the Provider Adapter used fewer actions than the median successful human on **96% of levels**, averaging **51.7% fewer actions per level**. [Official blog announcement](https://arcprize.org/blog/astra).
+
+## 2026-10-21 13:12 UTC -- NEW
+
+**October 1 — Milestone #2 winners announced:** Daniel Franzen scored **27.9%**, winning **$25,000**; Lord Han Solo scored **23.8%**, winning **$7,500**; Lohit Siriki scored **22.5%**, winning **$5,000**. All three open-sourced their solutions. [Official announcement](https://x.com/arcprize/status/2105737436450201734).
+
+**October 13 — Tufa Labs reclaimed first place** on the ARC-AGI-3 competition leaderboard with **68.91%**, up from approximately 56%. [Official announcement](https://x.com/arcprize/status/2110031207601979715).
+
+Additional official ARC-AGI-3 results absent from your prior findings, showing each harness’s best score:
+
+| Date (2026) | Model / official source | Standard | Provider Adapter |
+|---|---|---:|---:|
+| Oct 7 | [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | 0.5% | 2.8% |
+| Sep 29 | [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| Sep 22 | [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| Sep 21 | [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+| Jul 24 | [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | 30.2% | — |
+| Jul 16 | [Grok 4.5](https://arcprize.org/results/xai-grok-4-5) | 0.3% | — |
+
+## 2026-10-22 13:11 UTC -- NEW
+
+Additional official ARC-AGI-3 results absent from your prior findings, showing each harness’s best score:
+
+| Result-page date (2026) | Model / official source | Standard | Provider Adapter |
+|---|---|---:|---:|
+| Oct 13 | [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8% | 97.5% |
+| Sep 28 | [Claude Sonnet 5.5](https://arcprize.org/results/anthropic-claude-sonnet-5-5) | 24.3% | 72.4% |
+| Sep 22 | [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+| Sep 10 | [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| Sep 2 | [GPT-6 Astra](https://arcprize.org/results/openai-gpt-6-astra) | 62.7% | 99.9% |
+| Sep 2 | [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| Aug 11 | [Grok 4.6](https://arcprize.org/results/xai-grok-4-6) | 2.1% | — |
+
+Gemini 4 Argon’s standard-harness evaluation encountered API failures: only 42/55 low-reasoning runs completed. Its reported 49.8% includes all 55 environments, retaining partial credit from incomplete runs. [Official evaluation notes](https://arcprize.org/results/google-gemini-4-argon).
+
+## 2026-10-23 13:11 UTC -- NEW
+
+- **Milestone #2 winners, announced October 1:** Daniel Franzen — **27.9%, $25,000**; Lord Han Solo — **23.8%, $7,500**; Lohit Siriki — **22.5%, $5,000**. [Official announcement](https://x.com/arcprize/status/2105737436450201734), [archived text](https://postcutoff.com/p/x-arcprize-2105737436450201734/).
+- **October 13 leaderboard change:** Tufa Labs reclaimed first place with **68.91%**, up from approximately 56%. [Official announcement](https://x.com/arcprize/status/2110031207601979715), [mirrored post](https://www.techtwitter.com/tweet/d29c3bd7-419a-4478-abf7-dda52182804a).
+
+Additional official ARC-AGI-3 results absent from your supplied findings, showing each harness’s best score:
+
+| Result-page date (2026) | Model / source | Standard or sole reported harness | Provider Adapter |
+|---|---|---:|---:|
+| Oct 7 | [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | 0.5% | 2.8% |
+| Sep 29 | [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| Sep 22 | [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| Sep 21 | [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+| Jul 24 | [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | 30.2% | — |
+| Jul 16 | [Grok 4.5](https://arcprize.org/results/xai-grok-4-5) | 0.3% | — |
+
+## 2026-10-24 13:13 UTC -- NEW
+
+Additional official ARC-AGI-3 **Semi-Private benchmark results** absent from your prior findings, showing each harness’s best score:
+
+| Result-page date (2026) | Model / source | Standard or sole harness | Provider Adapter |
+|---|---|---:|---:|
+| Oct 13 | [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8%* | 97.5% |
+| Sep 28 | [Claude Sonnet 5.5](https://arcprize.org/results/anthropic-claude-sonnet-5-5) | 24.3% | 72.4% |
+| Sep 22 | [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+| Sep 10 | [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| Sep 2 | [GPT-6 Astra](https://arcprize.org/results/openai-gpt-6-astra) | 62.7% | 99.9% |
+| Sep 2 | [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| Aug 11 | [Grok 4.6](https://arcprize.org/results/xai-grok-4-6) | 2.1% | — |
+
+*Gemini 4 Argon’s standard-harness evaluation encountered API failures: its best run completed 42/55 games; the reported score includes all 55, retaining partial credit from incomplete runs. [Official results](https://arcprize.org/results/google-gemini-4-argon).
+
+The **September 3 official blog** additionally reports that Astra at max reasoning with Provider Adapter used fewer actions than the human baseline on **96% of levels**, averaging **51.7% fewer actions per level**. [Official announcement](https://arcprize.org/blog/astra).
+
+## 2026-10-25 13:13 UTC -- NEW
+
+- **Milestone #2 winners, announced October 1:** Daniel Franzen — **27.9%, $25,000**; Lord Han Solo — **23.8%, $7,500**; Lohit Siriki — **22.5%, $5,000**. All three open-sourced their solutions. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734), [announcement mirror](https://site.twstalker.com/arcprize/status/2105737436450201734).
+
+- **Kaggle leaderboard lead changes:** ARC Prize announced Yi-Chia Chen taking first with **59.17% on October 9**, followed by Tufa Labs reclaiming first with **68.91% on October 13**. [Chen announcement](https://x.com/arcprize/status/2108577347192676612), [Tufa announcement](https://x.com/arcprize/status/2110031207601979715).
+
+Additional official **Semi-Private benchmark results** absent from your supplied findings, showing each harness’s best score:
+
+| Result-page date (2026) | Model / source | Standard or sole harness | Provider Adapter |
+|---|---|---:|---:|
+| Oct 7 | [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | 0.5% | 2.8% |
+| Sep 29 | [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| Sep 22 | [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| Sep 21 | [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+| Jul 24 | [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | 30.2% | — |
+| Jul 16 | [Grok 4.5](https://arcprize.org/results/xai-grok-4-5) | 0.3% | — |
+
+## 2026-10-26 13:12 UTC -- NEW
+
+Official ARC-AGI-3 **Semi-Private results missing from the supplied findings**, showing each harness’s best score:
+
+| Result-page date (2026) | Model / official source | Standard | Provider Adapter |
+|---|---|---:|---:|
+| Oct 13 | [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8% | 97.5% |
+| Sep 28 | [Claude Sonnet 5.5](https://arcprize.org/results/anthropic-claude-sonnet-5-5) | 24.3% | 72.4% |
+| Sep 22 | [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+| Sep 10 | [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| Sep 2 | [GPT-6 Astra](https://arcprize.org/results/openai-gpt-6-astra) | 62.7% | 99.9% |
+| Sep 2 | [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| Aug 11 | [Grok 4.6](https://arcprize.org/results/xai-grok-4-6) | 2.1% | — |
+
+**September 3 — action-efficiency milestone:** ARC Prize announced that GPT-6 Astra, at max reasoning with the Provider Adapter, used fewer actions than the human median on **96% of levels**, averaging **51.7% fewer actions per level**. [Official blog](https://arcprize.org/blog/astra)
+
+**Gemini 4 Argon evaluation limitation:** API issues left Standard-harness runs incomplete: low reasoning completed 42/55 games, medium 46/55, and high 19/55. Published scores retain partial credit across all 55 games; no high-reasoning Standard score was published. [Official results](https://arcprize.org/results/google-gemini-4-argon)
+
+## 2026-10-27 13:12 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen won with **27.9% ($25,000)**; Lord Han Solo placed second with **23.8% ($7,500)**; Lohit Siriki placed third with **22.5% ($5,000)**. All three released their solutions. [Official announcement](https://x.com/arcprize/status/2105737436450201734)
+
+- **October 26 — leaderboard lead changes:** ARC Prize announced Yi-Chia Chen @ Fields Model reclaiming first place at **71.48%**. Tufa Labs follows at **68.91%**, then Team Turducken at **56.02%**. [Announcement mirror](https://teapaw.org/arcprize), [standings](https://clist.by/standings/arc-prize-2026-arc-agi-3-general-knowledge-and-reasoning-artificial-intelligence-custom-metric-66453356/)
+
+Additional official ARC-AGI-3 evaluations absent from the supplied findings, using result-page dates:
+
+| Date (2026) | Model / official source | Best published scores |
+|---|---|---|
+| Oct 7 | [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | Standard **0.5%**; Provider Adapter **2.8%** |
+| Sep 29 | [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | Standard **52.7%**; Provider Adapter **96.4%** |
+| Sep 22 | [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | Standard **4.6%**; Provider Adapter **23.0%** |
+| Sep 21 | [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | Standard **1.8%**; Provider Adapter **10.0%** |
+| Jul 24 | [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | **30.2%**, High reasoning |
+| Jul 16 | [Grok 4.5](https://arcprize.org/results/xai-grok-4-5) | **0.3%** |
+
+## 2026-10-28 13:14 UTC -- NEW
+
+- **October 27 — Leader improves:** Yi-Chia Chen @ Fields Model raised its public leaderboard score from 71.48% to **75.56%**. [Dated leaderboard report](https://arc.markbarney.net/news/2026-10-27-evening-arc-3)
+- **October 22–26 — Evaluation infrastructure incident:** The ARC Daily Digest reports Kaggle staff acknowledged dataset-cache failures causing slow loading and startup timeouts. Some rescores began October 24; a broader investigation remained open October 26. [Reporting quoting staff updates](https://arc.markbarney.net/news)
+
+Additional official ARC-AGI-3 evaluations absent from your supplied findings, showing the best published score per harness:
+
+| Date (2026) | Model / official source | Standard | Provider Adapter |
+|---|---|---:|---:|
+| Oct 13 | [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8%* | 97.5% |
+| Sep 28 | [Claude Sonnet 5.5](https://arcprize.org/results/anthropic-claude-sonnet-5-5) | 24.3% | 72.4% |
+| Sep 22 | [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+| Sep 10 | [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| Sep 2 | [GPT-6 Astra](https://arcprize.org/results/openai-gpt-6-astra) | 62.7% | 99.9% |
+| Sep 2 | [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| Aug 11 | [Grok 4.6](https://arcprize.org/results/xai-grok-4-6) | 2.11% | — |
+
+*Gemini 4 Argon’s Standard evaluation was incomplete because of API issues; its reported score includes partial credit across all 55 environments. [Official explanation](https://arcprize.org/results/google-gemini-4-argon)
+
+## 2026-10-29 13:13 UTC -- NEW
+
+- **October 29 — Leaderboard movement:** Tufa Labs improved from **68.91% to 70.02%**, retaining second place. **Xz jumped from 28.41% to 52.95%**, reaching fourth. [Dated leaderboard report](https://arc.markbarney.net/news/2026-10-29-morning-arc-3)
+- **October 1 — Milestone #2 winners announced:** Daniel Franzen won **$25,000** with **27.9%**; Lord Han Solo won **$7,500** with **23.8%**; Lohit Siriki won **$5,000** with **22.5%**. All three open-sourced their agents. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734), [results report](https://competopia.ai/news/arc-prize-announces-milestone-2-winners-for-arc-agi-3-kaggle-competition/)
+
+Additional official ARC-AGI-3 evaluations absent from your baseline and prior findings, showing the best published score per harness:
+
+| Date (2026) | Model / official source | Standard | Provider Adapter |
+|---|---|---:|---:|
+| Oct 15 | [Muse Spark Open](https://arcprize.org/results/meta-muse-spark-open) | 0.1% | 0.4% |
+| Oct 7 | [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | 0.5% | 2.8% |
+| Sep 29 | [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| Sep 22 | [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| Sep 21 | [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+| Jul 24 | [Claude Opus 5](https://arcprize.org/results/anthropic-claude-opus-5) | 30.2% | — |
+| Jul 16 | [Grok 4.5](https://arcprize.org/results/xai-grok-4-5) | 0.3% | — |
+
+## 2026-10-30 13:12 UTC -- NEW
+
+- **October 29, later update — Xz takes third:** Now named “faster machine is all you need,” the entry improved from **52.95% to 58.59%**, overtaking Team Turducken at **56.02%**. [Leaderboard report](https://arc.markbarney.net/news)
+
+- **October 24–26 — Submission failures and rescoring:** Kaggle staff acknowledged dataset-cache/run problems, confirmed some rescores had begun, and continued investigating broader platform issues. [Staff-update reporting](https://arc.markbarney.net/news)
+
+Additional official ARC-AGI-3 evaluations absent from your prior findings, showing the best published Semi-Private score per harness:
+
+| Model / official source | Standard | Provider Adapter |
+|---|---:|---:|
+| [Gemini 4 Argon](https://arcprize.org/results/google-gemini-4-argon) | 49.8%* | 97.5% |
+| [Claude Sonnet 5.5](https://arcprize.org/results/anthropic-claude-sonnet-5-5) | 24.3% | 72.4% |
+| [GPT-6 Luna](https://arcprize.org/results/openai-gpt-6-luna) | 0.2% | 0.6% |
+| [DeepSeek V4.1 Flash](https://arcprize.org/results/deepseek-v4-1-flash) | 0.9% | 3.3% |
+| [GPT-6 Astra](https://arcprize.org/blog/astra) | 62.7% | 99.9% |
+| [Gemini 3.8 Flash](https://arcprize.org/results/google-gemini-3-8-flash) | 10.4% | 35.0% |
+| [Grok 4.6](https://arcprize.org/results/xai-grok-4-6) | 2.1% | — |
+
+*Argon’s Standard evaluation suffered API failures; the published score includes all 55 tasks and retains partial credit from incomplete runs. [Official explanation](https://arcprize.org/results/google-gemini-4-argon)
+
+## 2026-10-31 13:13 UTC -- NEW
+
+- **October 30 — No deadline extension:** The ARC Daily Digest reports that an ARC Prize Discord moderator confirmed the deadline will hold despite scoring queues and GPU slowdowns, urging competitors to submit final runs early. [Report](https://arc.markbarney.net/news)
+
+- **October 30 — New public gold positions:** pensukesan climbed from 28th to 13th at **42.27%**, paul from 64th to 16th at **40.75%**, and Lord Han Solo from 31st to 17th at **39.94%**. [Leaderboard reporting](https://arc.markbarney.net/news/wire)
+
+- **October 1 — Milestone #2 results:** Daniel Franzen won with **27.9% ($25,000)**; Lord Han Solo placed second with **23.8% ($7,500)**; Lohit Siriki placed third with **22.5% ($5,000)**. These are the qualifying open-source prize placements. [ARC Prize announcement, mirrored](https://site.twstalker.com/arcprize/status/2105737436450201734)
+
+Additional official ARC-AGI-3 Semi-Private evaluations absent from your supplied findings, showing the best score per harness:
+
+| Model / official source | Standard | Provider Adapter |
+|---|---:|---:|
+| [GPT-6.1 Sol](https://arcprize.org/results/openai-gpt-6-1-sol) | 52.7% | 96.4% |
+| [GPT-6 Sol](https://arcprize.org/results/openai-gpt-6-sol) | 4.6% | 23.0% |
+| [Grok 4.7](https://arcprize.org/results/xai-grok-4-7) | 1.8% | 10.0% |
+| [Claude Haiku 5.5](https://arcprize.org/results/anthropic-claude-haiku-5-5) | 0.5% | 2.8% |
+| [Muse Spark Open](https://arcprize.org/results/meta-muse-spark-open) | 0.1% | 0.4% |
+

@@ -22623,3 +22623,11 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - Deleted the scratch audio (`loops/loops.webm`, the old `vid/` audio and raw files) and the copy at `/tmp/loops.webm` on nassy. No video file was ever downloaded. Only audio was fetched. No media file was ever tracked in git (`git ls-files` showed none).
 - Added audio and video extensions to `.gitignore`. This stops `git add -A` and the conductor checkpoint path.
 - Added the `forbid-audio-video-files` pre-commit hook. It refuses a staged file by extension. The existing 50 MB size hook passes small files, so it did not cover this case.
+
+## 2026-10-31 — Operational retrospective for milestone 2026.10.743
+
+- Completed `results/operational_retro_2026_10_743.json` (schema `carnot.operational_retro.v64`) for milestone `2026.10.743` (user request: operational retrospective for milestone 2026.10.743). Authoritative disk-mtime fallback timing data records 10 completed experiments (0 compute-bound, 10 synthesis-only) across 112.4 total wall-time minutes (1.9 hours, averaging 11 minutes per experiment).
+- Slowest synthesis-only tasks were: 'Execute the original learning core with fixture-aware bounded cohorts' (33.88 minutes), 'Qualify installed inference with owned historical checkout cleanup' (30.64 minutes), 'Measure corrected reset-cause transfer across adapter-withheld live games' (11.11 minutes), 'Bind fourteen tasks and freeze bounded execution and unchanged scientific method' (10.4 minutes), and 'Map new complete costs to actual KV260 PolarFire and GateMate operation limits' (9.14 minutes).
+- GPU monitor report recorded GPU 0 (NVIDIA GeForce RTX 3090) at 0% utilization (4/24576MB allocated, 46C); `gpu_idle_on_compute_bound_tasks` is `null` because 0 compute-bound tasks ran, and 0% utilization on GPU 0 is expected behavior for CPU-only synthesis tasks.
+- Recommended improvements: parallelize independent fixture-aware sub-cohorts and reuse validated historical checkout fixtures across the 33.88-minute and 30.64-minute qualification tasks; memoize unchanged contract digests, hardware operation limit mappings, and live-game reset trace inputs across the 9.14–11.11 minute tasks; and record explicit start/end timestamps in experiment deliverables to avoid disk-mtime fallback when git-log discovery finds 0 commits.
+

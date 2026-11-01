@@ -547,3 +547,51 @@ Their concrete memory-saving stack is **4-bit QLoRA + FSDP2 + PLE CPU offload**,
 
 ## 2026-10-18 13:32 UTC -- checked, nothing new
 
+## 2026-10-19 13:35 UTC -- NEW
+
+**New merged top-five contender: Team Turducken**, currently **#3 at 52.82**. ARC Slayers and Son & Mark & Ronen merged on October 18 into a seven-member team. [Team announcement](https://arc.markbarney.net/news#2026-10-18-arc3-superteam-merger-official), [current Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard).
+
+No newly disclosed technique is tied to its current scoring submission; **source-exploit versus general-purpose classification remains unknown**.
+
+## 2026-10-20 13:33 UTC -- checked, nothing new
+
+## 2026-10-21 13:33 UTC -- checked, nothing new
+
+## 2026-10-22 13:31 UTC -- checked, nothing new
+
+## 2026-10-23 13:34 UTC -- checked, nothing new
+
+## 2026-10-24 13:32 UTC -- checked, nothing new
+
+## 2026-10-25 13:34 UTC -- checked, nothing new
+
+## 2026-10-26 13:31 UTC -- check failed
+
+CODEX_EXIT_1: 
+web search: site:kaggle.com "richardcsaky" "arc" "October" ...
+mcp: codex_apps/github.search_repositories started
+mcp: codex_apps/github.search_repositories (failed)
+web search: 
+web search: site:github.com/tufalabs "ARC" "Duck" ...
+web search: 
+web search: site:kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion after:2026-10-19 ...
+ERROR: Selected model is at capacity. Please try a different model.
+ERROR: Selected model is at capacity. Please try a different model.
+tokens used
+85,698
+
+
+## 2026-10-27 13:35 UTC -- checked, nothing new
+
+## 2026-10-28 13:30 UTC -- NEW
+
+**New top-five entrant: yktori — #5 at 51.04**, in the October 28, 08:18 EDT [Kaggle standings mirror](https://arc.markbarney.net/arc-leaderboards).
+
+No submission-linked public code or technique writeup was found. **Classification: unknown**—insufficient evidence to distinguish game-source exploitation/per-game hardcoding from a general-purpose method.
+
+## 2026-10-29 13:34 UTC -- checked, nothing new
+
+## 2026-10-30 13:30 UTC -- checked, nothing new
+
+## 2026-10-31 13:33 UTC -- checked, nothing new
+

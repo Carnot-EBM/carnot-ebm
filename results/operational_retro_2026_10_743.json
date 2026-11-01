@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.743",
+  "generated_at": "2026-11-01T00:17:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 112.4,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Execute the original learning core with fixture-aware bounded cohorts",
+      "duration_minutes": 33.88,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify installed inference with owned historical checkout cleanup",
+      "duration_minutes": 30.64,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure corrected reset-cause transfer across adapter-withheld live games",
+      "duration_minutes": 11.11,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and freeze bounded execution and unchanged scientific method",
+      "duration_minutes": 10.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map new complete costs to actual KV260 PolarFire and GateMate operation limits",
+      "duration_minutes": 9.14,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.743 completed 10 synthesis-only experiments (0 compute-bound) in 112.4 wall-time minutes (1.9 hours, averaging 11 minutes per experiment) via disk-mtime fallback reconstruction after the live git-log path found 0 commits. Wall-clock execution was dominated by 'Execute the original learning core with fixture-aware bounded cohorts' (33.88 minutes) and 'Qualify installed inference with owned historical checkout cleanup' (30.64 minutes), followed by 'Measure corrected reset-cause transfer across adapter-withheld live games' (11.11 minutes), 'Bind fourteen tasks and freeze bounded execution and unchanged scientific method' (10.4 minutes), and 'Map new complete costs to actual KV260 PolarFire and GateMate operation limits' (9.14 minutes). Because 0 compute-bound tasks ran, gpu_idle_on_compute_bound_tasks is null and the 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB allocated, 46C) reflects expected idle behavior for non-GPU synthesis tasks.",
+  "bottlenecks_identified": [
+    "Two synthesis-only verification workloads—'Execute the original learning core with fixture-aware bounded cohorts' (33.88 minutes) and 'Qualify installed inference with owned historical checkout cleanup' (30.64 minutes)—accounted for 64.52 minutes (57.4% of the 112.4-minute milestone wall time).",
+    "The top five synthesis-only experiments consumed 95.17 minutes (84.7% of total milestone wall time), whereas the remaining 5 completed synthesis experiments required 17.23 minutes combined (averaging 3.45 minutes per experiment).",
+    "Secondary synthesis tasks—measuring corrected reset-cause transfer across adapter-withheld live games (11.11 minutes), binding fourteen tasks and freezing bounded execution and unchanged scientific methods (10.4 minutes), and mapping new complete costs to KV260 PolarFire and GateMate operation limits (9.14 minutes)—totaled 30.65 minutes without cross-step artifact memoization.",
+    "Live git-log timing discovery found 0 commits during the milestone window, requiring retro_timing_fallback reconstruction from filesystem mtimes instead of direct per-task start and completion timestamps."
+  ],
+  "improvements_suggested": [
+    "Add fine-grained sub-cohort checkpointing and cached fixture state reuse to the bounded learning-core execution runner (33.88 minutes) and installed-inference historical checkout cleanup qualification runner (30.64 minutes) to cut repeated setup and subprocess overhead.",
+    "Cache validated contract-binding digests, unchanged hardware operation limit tables, and invariant live-game reset trace inputs across the 9.14–11.11 minute synthesis tasks when upstream artifacts have not changed.",
+    "Write explicit ISO-8601 start_time, end_time, and phase duration fields directly into each experiment deliverable JSON so operational retrospectives do not depend on disk-mtime fallback when git-log commit discovery returns 0 commits.",
+    "Emit per-phase wall-clock breakdown metrics inside synthesis runners to separate subprocess test execution, checkout cleanup I/O, and artifact validation costs."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize independent fixture-aware cohorts and reuse validated historical checkout fixtures across the 33.88-minute learning-core and 30.64-minute installed-inference qualification tasks.",
+    "Embed explicit start and completion timestamps plus per-phase timing breakdowns in every experiment output artifact to eliminate retro_timing_fallback mtime reconstruction.",
+    "Memoize unchanged input hash verifications and hardware limit mappings across the 9.14–11.11 minute contract-binding, cost-mapping, and reset-transfer synthesis steps."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "All 10 completed experiments in milestone 2026.10.743 were synthesis-only CPU tasks totaling 112.4 minutes (11 minutes average), with 0 compute-bound experiments executed, gpu_idle_on_compute_bound_tasks set to null, and 0% utilization on GPU 0 (4/24576MB, 46C) representing normal behavior rather than a GPU bottleneck or DualGPURunner issue. Concentrating optimization on the two 30+ minute cohort and checkout qualification tasks (64.52 minutes combined) and embedding native task timestamps offers the highest operational leverage for the next milestone."
+}
