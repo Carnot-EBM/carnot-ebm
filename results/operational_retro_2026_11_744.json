@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.744",
+  "generated_at": "2026-11-01T05:59:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 49.9,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify single-owner ARC observation delivery while retaining conflict checks",
+      "duration_minutes": 16.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and freeze independent research and execution operands",
+      "duration_minutes": 13.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure fresh cross-game horizons through the qualified live observation path",
+      "duration_minutes": 11.63,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map new batch and learning costs to authenticated hardware operations",
+      "duration_minutes": 7.99,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile fourteen outcomes and close exact research and deployment scopes",
+      "duration_minutes": 0.59,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.744 completed 5 synthesis-only experiments (0 compute-bound) in 49.9 wall-time minutes (50 minutes / 0.8 hours, averaging 10 minutes per experiment) via disk-mtime fallback reconstruction after live git-log found 0 commits. Wall time was led by 'Qualify single-owner ARC observation delivery while retaining conflict checks' (16.34 minutes), 'Bind fourteen tasks and freeze independent research and execution operands' (13.34 minutes), 'Measure fresh cross-game horizons through the qualified live observation path' (11.63 minutes), 'Map new batch and learning costs to authenticated hardware operations' (7.99 minutes), and 'Reconcile fourteen outcomes and close exact research and deployment scopes' (0.59 minutes). Because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB allocated, 46C) reflects expected idle behavior for synthesis-only tasks rather than a GPU bottleneck.",
+  "bottlenecks_identified": [
+    "All 49.9 minutes of milestone wall time across the 5 completed experiments occurred in synthesis-only tasks, with 'Qualify single-owner ARC observation delivery while retaining conflict checks' (16.34 minutes), 'Bind fourteen tasks and freeze independent research and execution operands' (13.34 minutes), and 'Measure fresh cross-game horizons through the qualified live observation path' (11.63 minutes) accounting for the longest durations.",
+    "Task-binding and operand-freezing ('Bind fourteen tasks and freeze independent research and execution operands' at 13.34 minutes) and hardware cost-mapping ('Map new batch and learning costs to authenticated hardware operations' at 7.99 minutes) executed full synthesis validation passes without incremental memoization of unchanged operands.",
+    "Milestone timing relied on disk-mtime fallback reconstruction because the live git-log path found 0 commits, leaving sub-experiment phase durations unmeasured beyond file modification intervals."
+  ],
+  "improvements_suggested": [
+    "Decompose 'Qualify single-owner ARC observation delivery while retaining conflict checks' (16.34 minutes) and 'Measure fresh cross-game horizons through the qualified live observation path' (11.63 minutes) into phase-timed sub-checks with fast-fail validation boundaries.",
+    "Cache validated contract bindings and immutable hardware cost tables so 'Bind fourteen tasks and freeze independent research and execution operands' (13.34 minutes) and 'Map new batch and learning costs to authenticated hardware operations' (7.99 minutes) can skip redundant checks when inputs are unchanged.",
+    "Write explicit start and completion timestamps directly into each experiment artifact so retrospective timing does not depend on disk-mtime fallback when git-log finds 0 commits.",
+    "Retain DualGPURunner strictly for compute-bound tasks loading 2+ models in parallel, avoiding GPU harness overhead during synthesis-only milestones."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add intra-task phase timers and modular sub-check boundaries to ARC observation delivery qualification (16.34 minutes) and live observation horizon measurement (11.63 minutes).",
+    "Implement content-addressed memoization for fourteen-task contract binding (13.34 minutes) and hardware operation cost mapping (7.99 minutes) when upstream operands are unchanged.",
+    "Record synchronous start and end timestamps in experiment receipts to eliminate reliance on disk-mtime fallback reconstruction when live git-log finds 0 commits."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Zero compute-bound experiments ran in milestone 2026.11.744, so gpu_idle_on_compute_bound_tasks is null, no multi-model task failed to engage DualGPURunner, and 0% utilization on GPU 0 (4/24576MB, 46C) is normal for synthesis-only work. With 5 synthesis-only experiments completing in 49.9 minutes (averaging 10 minutes per experiment) and outcome reconciliation taking 0.59 minutes, the primary operational leverage for the next milestone is phase-level instrumentation and input memoization across ARC observation qualification, fourteen-task binding, cross-game horizon measurement, and hardware cost mapping."
+}
