@@ -21038,3 +21038,5 @@ code |
 | 2026-11-01 07:51 UTC | Plan milestone 2026.11.745 | OK | 14 tasks proposed |
 | 2026-11-01 08:07 UTC | Milestone 2026.11.745 activated | OK | 14 tasks queued |
 | 2026-11-01 09:33 UTC | Bind fourteen tasks after qualifying immutable rep | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 99 passed, 1 warning in 192.54s (0:03:12) |
+| 2026-11-01 09:36 UTC | Qualify frozen original learning core after report | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8681-contract-methods.methods_ready_score (actual=0 == expected=1) |
+| 2026-11-01 09:38 UTC | Qualify original deadlines and the complete learni | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8682-frozen-learning-core) |
