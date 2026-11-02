@@ -104545,3 +104545,21 @@ Nested spans, negative time, mixed parent totals and absent timings cannot earn
 a fraction. Feature-reuse gains retain their CPU producer and boundary without
 any device attribution. Missing compatible kernels leave ceilings unknown.
 The conductor owns ops/status/changelog and traceability reconciliation.
+## REQ-REPORT-8748: Reconcile the twelve sealed V749 dispositions
+
+Bind all twelve complete tasks, their visible order and the independent V749
+digest before reading outcomes. Authenticate producer primaries and conductor
+pre-gates separately. Skips supply no executed science. Reconstruct admitted
+future Brier/retention, frozen verifier transfer, complete feature-reuse costs
+and bounded durable costs from original rows; missing operands remain blocked.
+Keep V748 circular verification, same-batch 10x null, quarantines and the design
+archive intact. Compare every registered prior failure's actual verdict and
+literal scope before proposing retirement. Changed mechanisms are required to
+reopen unchanged questions. No model operations or hardware execution are allowed.
+
+### SCENARIO-REPORT-8748-ACCOUNTING
+
+Twelve disposition rows include this capstone. Readiness is administrative;
+blocked science is not partial work. Stable G1–G4 and paper_ready retain their
+original publication definitions. Missing file, missing field, observed zero
+and failed authentication remain distinct. Ops/traceability are conductor-owned.

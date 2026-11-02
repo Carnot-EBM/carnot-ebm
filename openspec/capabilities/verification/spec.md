@@ -57688,3 +57688,18 @@ Reject changed sources, invalid dates, private checkout output, absent original
 methods, readiness substitution and rehashed primitive edits. Preserve historical
 bytes. Full-suite failures remain visible in their original receipt. Reconciliation
 of ops and traceability is conductor-owned.
+## REQ-VERIFY-8748: Validate exact terminal capstone bytes
+
+Use private test artifact roots, unchanged private E2E-018/021 controls, real
+child exits, JUnit and SQLite coverage of every added executable statement.
+Run scoped Ruff, formatting, strict types and spec tracing. Record the full
+Python suite's actual outcome without weakening assertions or shared validators.
+Publish only bytes accepted by adversarial, strict-row and fresh-process replay
+checks. Keep independent measurement and validation seals and original hashes.
+
+### SCENARIO-VERIFY-8748-REPLAY
+
+Reject full-task prompt/routing/gate/reorder/omission changes, changed rows,
+receipts, rehashed primitives and missing source bytes. Valid terminal replay
+must preserve the exact producer and twelve-slot accounting. No private control
+can grant production readiness. Missing upstreams are terminal blocked.
