@@ -104109,3 +104109,58 @@ run unconditionally and distinguish skips, nulls and failed producer checks.
 A fast resident kernel with slower complete lifecycle earns no complete speedup.
 Missing physical evidence remains blocked even when a CPU cost map qualifies.
 The capstone preserves all fourteen dispositions and stable G1 through G4.
+
+## REQ-REPORT-8723: Bind V748 collection and independent branch methods
+
+Authenticate exactly fourteen complete V748 objects, their visible table and the
+fixed canonical digest. Bind original scientific methods separately. Retain the
+pinned Exp8695 execution without rerunning its historical producers. Contract
+eligibility grants no scientific benefit; Exp8724 owns learning-core execution.
+Independent verifier, native and reader branches require only their own operands.
+Keep V747 failures, unequal verifier costs, same-batch null and compiled parity
+qualifiers intact. Missing external operands block with precise path/hash gates.
+
+### SCENARIO-REPORT-8723-AUTHORITY
+
+Accept activated or staged V748; reject every object dimension, marker, table,
+foreign milestone and consistently rehashed replacement. Seal current sources,
+methods, child SQLite/JUnit, exact node IDs, exits and clocks. Rebuild the final
+result in a fresh process before unchanged publication and scanner validation.
+
+## REQ-VERIFY-8723: Validate collection before allocating owned scratch
+
+Validate the entire collected inventory before creating scratch or coverage
+configuration. Reject absent, duplicate, malformed and foreign nodes, preserving
+missing_collection_nodes. Each valid collection owns a distinct directory;
+collisions reject without changing a pre-existing sentinel or stale coverage.
+Invalid collection leaves no partial scratch/configuration effects. Require all
+new statements, real private CLI success/rejection and private E2E-018/021.
+
+### SCENARIO-VERIFY-8723-COLLECTION
+
+Repeat successful collection in the same parent, then repeat incomplete
+collection: both incomplete calls reject missing nodes without FileExistsError.
+Pre-existing private/0 and coverage sentinels remain byte-identical. Failed
+collection cannot qualify tests or consume any previous invocation's coverage.
+Conductor owns ops/status/changelog/traceability reconciliation after exit.
+
+V748 branch objects without historical prior_failures remain exact absent
+fields. Do not invent historical failures for new independent methods. Original
+contracts retain their stricter prior requirements; full-object equality and the
+fixed V748 digest still reject removal or fabrication of any prior record.
+
+### SCENARIO-REPORT-8723-PROMPT-ENCODING
+
+Accept the conductor's exact literal-brace escaping in staged and activated YAML
+prompts. Compare those task objects with the independently pinned design after
+decoding only that known encoding. Preserve raw source hashes and canonical task
+objects. Reject changed prompt content, escaped project_root/date placeholders,
+extra escaping and any other changed task field. Repeated validation must leave
+the source bytes unchanged; private CLI publication and cold replay must still
+reject rehashed contract tampering after activation.
+
+Implementation status: collection ownership, isolated V748 bindings and exact
+conductor prompt encoding are implemented. The final 43 focused tests and 171
+distinct scoped tests pass, including private E2E-018/021 and fix-gate controls.
+Unit/subprocess statement coverage is 373/373 across the five affected files,
+without exclusions. Evidence: `/var/tmp/carnot-fix-8723-v8b24069/`.

@@ -32,73 +32,9 @@ def binding() -> Iterator[None]:
 
 def collect(private: Path, raw: Path) -> tuple[list[Json], Json]:
     """Collect current owned and private consumer nodes once, excluding historical producers."""
-    suites = m.TESTS + old.CONSUMERS
-    receipt = child(
-        "collect_once",
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            "-n",
-            "0",
-            "-o",
-            "addopts=",
-            "--no-cov",
-            "--collect-only",
-            "-q",
-            *suites,
-        ],
-        raw / "collection",
-        deadline=60,
-    )
-    nodes = [
-        line
-        for line in Path(receipt["stdout_path"]).read_text().splitlines()
-        if any(line.startswith(s + "::") for s in suites)
-    ]
-    if not receipt["passed"] or not nodes or len(nodes) != len(set(nodes)):
-        raise ValueError("single_exact_collection_failed")
-    plan = []
-    for i, suite in enumerate(suites):
-        group = [n for n in nodes if n.startswith(suite + "::")]
-        if not group:
-            raise ValueError("missing_collection_nodes:" + suite)
-        scratch = private / str(i)
-        scratch.mkdir()
-        config = raw / f"coverage-{i}.ini"
-        config.write_text(
-            f"[run]\nparallel=true\npatch=subprocess\ndata_file={scratch}/.coverage\n[report]\nexclude_lines=\n"
-        )
-        plan.append(
-            dict(
-                name=f"child_{i}",
-                role="owned" if suite in m.TESTS else "consumer",
-                nodes=group,
-                scratch=str(scratch),
-                config=m.e.reference(config),
-                deadline=600,
-                argv=[
-                    sys.executable,
-                    "-m",
-                    "coverage",
-                    "run",
-                    "--rcfile=" + str(config),
-                    "-m",
-                    "pytest",
-                    "-n",
-                    "0",
-                    "-o",
-                    "addopts=",
-                    "--no-cov",
-                    "-q",
-                    *group,
-                    "--basetemp=" + str(scratch / "tmp"),
-                    "--junitxml=" + str(scratch / "junit.xml"),
-                ],
-            )
-        )
-    m.e.atomic_json(raw / "collection_inventory.json", dict(node_ids=nodes, receipt=receipt))
-    return plan, receipt
+    from carnot.reporting.collection_contract import collect as owned_collect
+
+    return owned_collect(private, raw, m.TESTS + old.CONSUMERS, m.TESTS, child)
 
 
 def replay(path: Path) -> bool:
@@ -172,17 +108,20 @@ def main(argv: list[str] | None = None) -> int:
             parser.error(str(error))
     previous = signal.setitimer(signal.ITIMER_REAL, 4800)
     try:
-        with TemporaryDirectory(prefix="exp8709-", dir="/var/tmp") as directory, binding():
+        with TemporaryDirectory(prefix=m.NAME + "-", dir="/var/tmp") as directory, binding():
             private = Path(directory)
             start, wall = time.monotonic_ns(), time.time_ns()
             raw = output.parent / "raw" / m.NAME / "invocations" / str(wall)
             raw.mkdir(parents=True)
             m.progress("preconditions")
             pre = old.preconditions(private)
-            plan, collected = ([], None) if private_mode else collect(private, raw)
-            sources = old.source_hashes() + [s["config"] for s in plan] + pre["tools"]
+            sources = old.source_hashes() + pre["tools"]
             retained = m.retained()
             methods = m.methods()
+            contract = m.authority(args.root)
+            m.progress("preconditions_authenticated")
+            plan, collected = ([], None) if private_mode else collect(private, raw)
+            sources += [s["config"] for s in plan]
             work = dict(
                 root=str(args.root.absolute()),
                 run_date=args.date,
@@ -194,7 +133,7 @@ def main(argv: list[str] | None = None) -> int:
                 source_hashes=sources,
                 preconditions=pre,
                 precondition_failures=list(retained["gate_check_summary"]),
-                contract=m.authority(args.root),
+                contract=contract,
                 methods_manifest=methods,
                 authority_mutation_rows=m.mutations(),
                 retained_authority=retained,

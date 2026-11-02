@@ -2,6 +2,25 @@
 
 **Last Updated:** 2026-11-02
 
+## 2026-11-02 UTC — Exp8723 activated prompt encoding repair
+
+The authority reader accepts the conductor's exact literal-brace encoding of
+complete pinned task prompts in activated or staged YAML. Canonical task objects,
+the independent V748 digest, raw source hashes and rejection of substantive edits
+remain enforced. This fixes activated authority rejection and restores the private
+CLI's rehashed-contract rejection control. Historical bindings remain separate.
+The conductor, active roadmap and existing test assertions were preserved.
+
+Validation receipts: `/var/tmp/carnot-fix-8723-v8b24069/`. All 171 distinct
+scoped tests pass without skips, including the final 43-test focused run, private
+E2E-018/021, publication readers and ten fix-gate tests. Genuine unit/subprocess
+coverage is 373/373 statements across the five affected files, with zero
+exclusions. Scoped Ruff, strict mypy and spec tracing pass. Global reconciliation
+retains 1,142 existing missing spec references and the stale architecture date;
+the full repository suite was not run. The mutation guard's warning names only
+the three documentation files authored by this repair during pytest; its exact
+marker and authorship resolution are archived with the validation receipts.
+
 ## 2026-11-02 UTC — Exp8716 standalone CLI import repair
 
 The standalone launcher binds its checkout's `python/` and root before loading

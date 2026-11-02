@@ -2,6 +2,16 @@
 
 **Last Updated:** 2026-11-02
 
+## Exp8723 activated prompt encoding repair — 2026-11-02 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8723 / SCENARIO-REPORT-8723-PROMPT-ENCODING | Canonicalize only the exact conductor encoding of complete pinned task prompts; retain raw source hashes and independent digest | Activated/staged/both controls preserve source bytes; escaped placeholders, extra braces, altered content and routing reject |
+| REQ-VERIFY-8723 / SCENARIO-VERIFY-8723-COLLECTION | Retain invocation-owned collection and original historical rejection assertions under current bindings | All 171 distinct scoped tests pass, including final 43 focused tests, private E2E-018/021 and ten fix-gate tests; 373/373 affected statements covered with zero exclusions |
+
+The isolated binding regression checks both historical and current ownership and
+progress output. No scientific result or readiness is granted by this repair.
+
 ## Exp8716 standalone CLI import repair — 2026-11-02 UTC
 
 | Requirement / scenario | Implementation | Verification |

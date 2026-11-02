@@ -1,0 +1,115 @@
+FF..FF                                                                   [100%]
+=================================== FAILURES ===================================
+____________________ test_repeated_collection_and_sentinel _____________________
+
+inventory = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_repeated_collection_and_s0/private'...on/test_primary_publication_7928.py::test_actual', 'tests/python/test_restricted_decision_audit_8210.py::test_actual'])
+
+    def test_repeated_collection_and_sentinel(inventory):
+        """SCENARIO-VERIFY-8723-COLLECTION: no invocation inherits another's files."""
+        private, raw, _, _ = inventory
+        sentinel = private / "0"
+        sentinel.mkdir()
+        (sentinel / ".coverage").write_bytes(b"stale coverage must not qualify")
+>       first, _ = runner.collect(private, raw)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_collection_8723.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v747_contract_runner.py:67: in collect
+    scratch.mkdir()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_repeated_collection_and_s0/private/0')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileExistsError: [Errno 17] File exists: '/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_repeated_collection_and_s0/private/0'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileExistsError
+___________ test_inventory_rejected_without_partial_effects[missing] ___________
+
+inventory = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_inventory_rejected_withou0/private'...on/test_primary_publication_7928.py::test_actual', 'tests/python/test_restricted_decision_audit_8210.py::test_actual'])
+mode = 'missing'
+
+    @pytest.mark.parametrize("mode", ["missing", "duplicate", "empty", "malformed", "foreign"])
+    def test_inventory_rejected_without_partial_effects(inventory, mode):
+        """REQ-VERIFY-8723: the original second collection must preserve its error."""
+        private, raw, stream, nodes = inventory
+        contents = {
+            "missing": nodes[:1],
+            "duplicate": nodes + nodes[:1],
+            "empty": [],
+            "malformed": nodes[:-1] + [nodes[-1].split("::")[0] + "::"],
+            "foreign": nodes + ["tests/python/test_foreign.py::test_stale"],
+        }[mode]
+        stream.write_text("\n".join(contents))
+        before = sorted(p.relative_to(raw) for p in raw.rglob("*"))
+        for _ in range(2):
+            with pytest.raises(ValueError, match="missing_collection_nodes" if mode == "missing" else "collection"):
+                runner.collect(private, raw)
+>           assert not list(private.iterdir())
+E           AssertionError: assert not [PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_inventory_rejected_withou0/private/0')]
+E            +  where [PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_inventory_rejected_withou0/private/0')] = list(<generator object Path.iterdir at 0x7fc2f0329970>)
+E            +    where <generator object Path.iterdir at 0x7fc2f0329970> = iterdir()
+E            +      where iterdir = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_inventory_rejected_withou0/private').iterdir
+
+tests/python/test_v748_collection_8723.py:55: AssertionError
+__________ test_inventory_rejected_without_partial_effects[malformed] __________
+
+inventory = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_inventory_rejected_withou1/private'...on/test_primary_publication_7928.py::test_actual', 'tests/python/test_restricted_decision_audit_8210.py::test_actual'])
+mode = 'malformed'
+
+    @pytest.mark.parametrize("mode", ["missing", "duplicate", "empty", "malformed", "foreign"])
+    def test_inventory_rejected_without_partial_effects(inventory, mode):
+        """REQ-VERIFY-8723: the original second collection must preserve its error."""
+        private, raw, stream, nodes = inventory
+        contents = {
+            "missing": nodes[:1],
+            "duplicate": nodes + nodes[:1],
+            "empty": [],
+            "malformed": nodes[:-1] + [nodes[-1].split("::")[0] + "::"],
+            "foreign": nodes + ["tests/python/test_foreign.py::test_stale"],
+        }[mode]
+        stream.write_text("\n".join(contents))
+        before = sorted(p.relative_to(raw) for p in raw.rglob("*"))
+        for _ in range(2):
+>           with pytest.raises(ValueError, match="missing_collection_nodes" if mode == "missing" else "collection"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_v748_collection_8723.py:53: Failed
+___________ test_inventory_rejected_without_partial_effects[foreign] ___________
+
+inventory = (PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T102359-1707659-930f22a5/test_inventory_rejected_withou2/private'...on/test_primary_publication_7928.py::test_actual', 'tests/python/test_restricted_decision_audit_8210.py::test_actual'])
+mode = 'foreign'
+
+    @pytest.mark.parametrize("mode", ["missing", "duplicate", "empty", "malformed", "foreign"])
+    def test_inventory_rejected_without_partial_effects(inventory, mode):
+        """REQ-VERIFY-8723: the original second collection must preserve its error."""
+        private, raw, stream, nodes = inventory
+        contents = {
+            "missing": nodes[:1],
+            "duplicate": nodes + nodes[:1],
+            "empty": [],
+            "malformed": nodes[:-1] + [nodes[-1].split("::")[0] + "::"],
+            "foreign": nodes + ["tests/python/test_foreign.py::test_stale"],
+        }[mode]
+        stream.write_text("\n".join(contents))
+        before = sorted(p.relative_to(raw) for p in raw.rglob("*"))
+        for _ in range(2):
+>           with pytest.raises(ValueError, match="missing_collection_nodes" if mode == "missing" else "collection"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_v748_collection_8723.py:53: Failed
+=========================== short test summary info ============================
+FAILED tests/python/test_v748_collection_8723.py::test_repeated_collection_and_sentinel
+FAILED tests/python/test_v748_collection_8723.py::test_inventory_rejected_without_partial_effects[missing]
+FAILED tests/python/test_v748_collection_8723.py::test_inventory_rejected_without_partial_effects[malformed]
+FAILED tests/python/test_v748_collection_8723.py::test_inventory_rejected_without_partial_effects[foreign]
+4 failed, 2 passed in 1.64s

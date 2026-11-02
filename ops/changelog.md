@@ -22801,3 +22801,22 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   runtime substrates, failure lineage, heartbeats and chunked-write requirements.
 - Aligned planned OpenSpec requirements, BMAD traceability, architecture and status.
   No experiment, activation, push, conductor change or active-roadmap edit occurred.
+
+## 2026-11-02 — Repair V748 authority after conductor prompt escaping
+
+- Accept only the conductor's exact literal-brace encoding of an otherwise
+  identical complete pinned task. Keep canonical task objects, fixed digest,
+  raw YAML hashes and all substantive mutation rejection checks.
+- Preserve the collector repair and all existing test assertions. Add staged
+  and active encoding controls, prompt-tamper controls, unchanged historical
+  rejection controls under V748 bindings and historical-binding isolation.
+- All 171 distinct scoped tests pass without skips, including the final 43-test
+  focused run, private E2E-018/021, publication readers and ten fix-gate tests.
+  Genuine unit/subprocess coverage is 373/373 statements across five affected
+  files, with zero exclusions. Scoped lint, strict types and spec tracing pass.
+- Receipts: `/var/tmp/carnot-fix-8723-v8b24069/`. The global spec audit retains
+  1,142 existing missing references and the stale architecture date. The mutation
+  warning for three concurrent documentation edits was reviewed as this repair's
+  authored work; its exact marker and resolution were archived without reverting
+  the documents. No conductor or active-roadmap edit was made by this repair,
+  and no full repository suite or research producer ran.

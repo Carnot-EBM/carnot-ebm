@@ -5,6 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
+import re
 from tempfile import TemporaryDirectory
 from typing import Any
 from unittest.mock import patch
@@ -35,6 +36,8 @@ CLI = f"scripts/experiments/{NAME}.py"
 OWNED = [
     f"python/carnot/reporting/v747_contract_{s}.py" for s in ["methods", "report", "runner"]
 ] + [CLI]
+REQUIRE_PRIORS = True
+FIRST_ID, VERSION, PREVIOUS_MILESTONE = 8709, "747", "2026.11.746"
 original = previous.original
 
 
@@ -54,28 +57,53 @@ def authority(root: Path) -> Json:
     refs, failures = [], []
     try:
         text = (root / DESIGN).read_text()
+        tasks = parse_design(text, milestone=MILESTONE)[1]
         chosen = root / STAGED if (root / STAGED).is_file() else root / ACTIVE
         planned = yaml.safe_load(chosen.read_bytes())
         active = yaml.safe_load((root / ACTIVE).read_bytes())
+        for roadmap in (planned, active):
+            for supplied, expected in zip(roadmap["tasks"], tasks):
+                template = re.sub(
+                    r"(?<!\{)\{([^{}]+)\}(?!\})",
+                    lambda match: (
+                        match[0] if match[1] in {"project_root", "date"} else "{{" + match[1] + "}}"
+                    ),
+                    expected["prompt"],
+                )
+                # Only the conductor's exact encoding of the complete pinned task qualifies.
+                if supplied == dict(expected, prompt=template):
+                    supplied["prompt"] = expected["prompt"]
         actual = (
-            planned if chosen == root / STAGED and active["milestone"] == "2026.11.746" else active
+            planned
+            if chosen == root / STAGED and active["milestone"] == PREVIOUS_MILESTONE
+            else active
         )
         result = compare_contract(
-            text, planned, actual, milestone=MILESTONE, first_id=8709, count=14
+            text,
+            planned,
+            actual,
+            milestone=MILESTONE,
+            first_id=FIRST_ID,
+            count=14,
         )
-        tasks = parse_design(text, milestone=MILESTONE)[1]
         envelope = json.loads(
-            text.split("<!-- V747_TASK_CONTRACT_START -->")[1].split("```json")[1].split("```")[0]
+            text.split(f"<!-- V{VERSION}_TASK_CONTRACT_START -->")[1]
+            .split("```json")[1]
+            .split("```")[0]
         )
         for i, row in enumerate(result["rows"]):
             full = (
                 i < min(len(tasks), len(planned["tasks"]), len(actual["tasks"]))
                 and tasks[i] == planned["tasks"][i] == actual["tasks"][i]
             )
+            if full and not REQUIRE_PRIORS and "prior_failures" not in tasks[i]:
+                row["checks"]["prior"] = True
             row["checks"]["full_object"] = full
             row["task_object"] = deepcopy(tasks[i]) if i < len(tasks) else None
             matched = all(row["checks"].values())
             row.update(
+                raw_numerator=sum(row["checks"].values()),
+                raw_denominator=len(row["checks"]),
                 matched=matched,
                 censored=not matched,
                 excluded=False,
@@ -90,20 +118,20 @@ def authority(root: Path) -> Json:
             and previous.original.tasks_digest(tasks) == PIN
             and envelope == dict(milestone=MILESTONE, tasks=tasks)
             and f"Canonical full-task SHA-256: `{PIN}`" in text
-            and "<!-- V747_TASK_CONTRACT_END -->" in text
+            and f"<!-- V{VERSION}_TASK_CONTRACT_END -->" in text
         )
         refs = [e.reference(root / DESIGN), e.reference(chosen), e.reference(root / ACTIVE)]
         if not ready:
             failures.append(
                 gate(root / DESIGN, "fourteen_complete_sealed_objects", True, False, TASK)
             )
-    except (OSError, ValueError, KeyError, TypeError, IndexError) as error:
+    except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError) as error:
         ready = False
-        failures.append(gate(root / DESIGN, "v747_authority", MILESTONE, str(error), TASK))
+        failures.append(gate(root / DESIGN, f"v{VERSION}_authority", MILESTONE, str(error), TASK))
     if not rows:
         rows = [
             dict(
-                unit_id=f"exp{8709 + i}",
+                unit_id=f"exp{FIRST_ID + i}",
                 order=i + 1,
                 matched=False,
                 absolute_metric=0,
@@ -174,7 +202,7 @@ def mutations() -> list[Json]:
             elif mode == "prior_failures":
                 value["tasks"][0]["prior_failures"][0]["retire_if_same_verdict"] = False
             elif mode in {"start", "end"}:
-                changed = changed.replace(f"<!-- V747_TASK_CONTRACT_{mode.upper()} -->", "")
+                changed = changed.replace(f"<!-- V{VERSION}_TASK_CONTRACT_{mode.upper()} -->", "")
             elif mode == "table":
                 changed = changed.replace("| 1 |", "| 99 |", 1)
             elif mode == "digest":
@@ -193,7 +221,7 @@ def mutations() -> list[Json]:
                 stage.write_text(yaml.safe_dump(value))
                 (root / ACTIVE).write_text(
                     "milestone: "
-                    + ("2026.11.746" if mode == "staged" else "2026.11.745")
+                    + (PREVIOUS_MILESTONE if mode == "staged" else "2026.11.745")
                     + "\ntasks: []\n"
                 )
             else:
