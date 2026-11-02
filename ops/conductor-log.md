@@ -21150,3 +21150,4 @@ code |
 | 2026-11-02 20:15 UTC | Test future proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8740-causal-brier-stream) |
 | 2026-11-02 20:16 UTC | Test frozen verifier probes on composition defects | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8737-contract-methods.verifier_transfer_methods_ready_score (actual=0 == expected=1) |
 | 2026-11-02 21:20 UTC | Reuse each request feature vector for scoring and  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 120 passed, 1 warning in 73.36s (0:01:13) |
+| 2026-11-02 21:24 UTC | Measure complete installed costs after qualified f | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8743-single-extraction-prototype.feature_reuse_ready_score (actual=0 == expected=1) |
