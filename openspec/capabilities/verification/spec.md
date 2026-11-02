@@ -57654,3 +57654,20 @@ changed hashes, invalid clocks and consistently rehashed outer aggregates.
 Private tests use private artifact roots. A historical absence of required
 renormalization is a blocked prerequisite, not incomplete owned measurement.
 The conductor owns ops, changelog and traceability reconciliation.
+
+
+## REQ-VERIFY-8746: Validate the current reader without reopening old science
+
+Retain current child exits, JUnit, raw SQLite coverage, source/input hashes and
+invocation clocks. Require 100 percent added executable statements, scoped Ruff,
+strict types and requirement tracing. Reuse private E2E-018/021 reader checks.
+Cold replay and unchanged adversarial and strict row validators must accept
+only sealed terminal bytes before atomic publication. Shared validators and
+original assertions remain unchanged. Use private artifact roots in tests.
+
+### SCENARIO-VERIFY-8746-SEAL
+
+Reject changed retained readiness, registry, source hashes or frontier identities,
+duplicate receipt rewrites, invalid dates and rehashed credit promotion. Private
+controls grant no production readiness. Distinguish missing files, missing
+fields and measured zero. Preserve historical artifacts and quarantines.

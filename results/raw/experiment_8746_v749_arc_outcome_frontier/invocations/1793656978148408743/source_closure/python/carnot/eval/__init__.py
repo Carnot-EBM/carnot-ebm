@@ -1,0 +1,17 @@
+"""carnot.eval — canonical metric implementations for experiment scripts.
+
+Per-experiment copy-paste of metric helpers (the prior antipattern in
+`scripts/experiment_*.py`) created two real production bugs in 2026-04: the
+inverted-AUROC `_roc_auc_score` shipped in `exp995` and `exp1003` returned
+`1 − AUROC` for ~24h before being caught. This module hosts a canonical,
+property-tested set of implementations. Experiment scripts import from
+here rather than re-implement.
+
+Spec: REQ-EVAL-001 (canonical metric implementations).
+"""
+
+__version__ = "1.0"
+
+from carnot.eval.metrics import auroc, f1_score, precision_recall
+
+__all__ = ["__version__", "auroc", "f1_score", "precision_recall"]

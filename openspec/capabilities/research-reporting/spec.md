@@ -104492,3 +104492,25 @@ original dense writes, so all90 cells remain censored. The fresh four-update
 XFS probe projects2582.5793901 seconds including measured process overhead and
 25 percent reserve, below3000 seconds. Resource admission does not repair the
 missing renormalization boundary. No window ratio or benefit is established.
+
+
+## REQ-REPORT-8746: Read only beyond the qualified live supervisor frontier
+
+Authenticate exact Exp8734 bytes, bound terminal receipts, owned source hashes
+and its full high-water mark independently of learning and hardware branches.
+Before interpreting outcomes, precheck registered levels and existing
+arc_loop_solve artifacts. Reuse the unchanged native receipt reader and frozen
+arm rules. Preserve game, arm, selected/applied status, reset cause, horizon,
+censoring, resolved_by_levelup and actions_to_levelup. Source-derived solves,
+development_proxy, outer_loop_re and off-path receipts earn no live credit.
+No model, game execution, closed-panel replay or policy edit is authorized.
+
+### SCENARIO-REPORT-8746-FRONTIER
+
+Only receipt identities beyond Exp8734 may enter new_event_rows. An unchanged
+authenticated ledger produces complete_null_no_new_supervisor_outcomes with
+identical before/after frontiers, no supported policy change and zero level
+credit. This satisfies the standing generalization slot without new science.
+Keep unresolved and censored exposure separate from failures. Recommendations
+remain observational. Missing external operands block; owned failures disqualify.
+The conductor owns ops, changelog and traceability reconciliation.
