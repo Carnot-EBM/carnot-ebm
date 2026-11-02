@@ -753,3 +753,23 @@ cost attribution, not a new throughput claim. ARC reads only new live outcomes.
 Hardware support stays operation-specific. Independent branches and an
 unconditional capstone preserve results when another prerequisite is blocked.
 These are planned studies; no production behavior changes in this planning task.
+
+## Planned V749 execution and feature ownership — 2026-11-02
+
+V749 retains the nine-input, 109-coefficient learner and original delayed-label
+objective. Its deadline-smoke diagnostic measures the failed child before any
+repair. The original execution union can reuse normally exited child evidence
+only with matching source, test, fixture and configuration identities.
+Scientific learning and retention remain behind complete execution qualification.
+
+An opt-in installed path will share one validated request feature vector between
+scoring and its digest. Request-local ownership and all existing rejection
+semantics precede matched Python/native timing. Separate fixed integer lifecycle
+windows preserve per-feedback durability; omitted prefix costs forbid full-run
+service claims. Verifier probes stay frozen before new composition-defect tests.
+
+ARC work reads only new live outcomes. Hardware mapping targets KV260, PolarFire
+and GateMate without inferring device execution. No generator weights, live ARC
+policy, shared validator or conductor change is part of this plan. This describes
+planned research, not a deployed capability. The twelve-task contract is in
+openspec/change-proposals/research-roadmap-vNEXT.md and research-roadmap-next.yaml.

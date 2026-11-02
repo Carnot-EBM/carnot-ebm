@@ -4326,3 +4326,18 @@ Implementation and scientific acceptance remain pending execution.
 Design: openspec/change-proposals/research-roadmap-vNEXT.md.
 Queue: research-roadmap-next.yaml. Exactly fourteen tasks, Exp8723–Exp8736.
 No experiment implementation or result is claimed by this planning entry.
+
+## Planned V749 research traceability — 2026-11-02
+
+| PRD requirement | Tasks | OpenSpec requirement | State |
+|---|---|---|---|
+| FR-09/FR-10 | Exp8737–8739 | REQ-REPORT-749-1 | Planned: exact twelve-task contract, measured deadline diagnosis, original execution union |
+| FR-11 | Exp8740/8741 | REQ-REPORT-749-2 | Planned: unchanged causal typed-decision learning, realized feedback delays and joint retention |
+| FR-12 | Exp8737/8742 | REQ-REPORT-749-2 | Planned: frozen probes, independent truth and new composition-defect families |
+| FR-05/FR-08/NFR-01 | Exp8743–8745 | REQ-REPORT-749-3 | Planned: one feature extraction, equal-work installed timing, bounded durable windows |
+| FR-11/FR-12 and hardware path | Exp8746–8748 | REQ-REPORT-749-3 | Planned: new live outcomes, all three board boundaries, unconditional reconciliation |
+
+Design: openspec/change-proposals/research-roadmap-vNEXT.md.
+Queue: research-roadmap-next.yaml. Exactly twelve tasks, Exp8737–Exp8748.
+V748 design bytes remain in research-roadmap-v748-preserved-20261102.md.
+Planning changes no implementation or scientific result.

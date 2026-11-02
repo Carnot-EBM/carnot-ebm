@@ -104325,3 +104325,70 @@ Retain fourteen scheduling rows including this reader, complete task objects,
 gate edges, exact-repeat comparisons and branch-specific reopening conditions.
 No skip is a scientific zero. No model load, future activation or external
 publication occurs. Conductor owns ops/status/changelog/traceability updates.
+
+## REQ-REPORT-749-1: Bind the staged V749 plan and qualify original execution
+
+Status: Planned; this section does not claim an implementation or experiment run.
+Milestone 2026.11.749 SHALL contain exactly twelve tasks, Exp8737–Exp8748,
+in identical order in the design document and staged YAML. Complete task objects,
+including prompts, failure lineage and routing, SHALL share a canonical digest.
+Every structured gate SHALL reference an earlier task and an identically named
+required artifact field. Every prompt SHALL require flushed phase progress,
+before/after long-call output, inner-loop heartbeats and chunked file writes.
+
+Exp8738 SHALL diagnose the original deadline-smoke timeout before changing its
+execution. Retained passed children require exact relevant source/test/fixture
+identity. Exp8739 SHALL require the original 64-node union, 27 runner nodes and
+83 executable anchors plus new owned statements. A killed child cannot qualify.
+Neither a historical disqualified primary nor consumer coverage grants readiness.
+
+### SCENARIO-REPORT-749-1: Contract mutation and incomplete union
+
+Omitted/reordered tasks, changed prompts, mismatched gate fields, source drift
+and absent child evidence SHALL fail the corresponding checks. The existing
+conductor brace encoding is accepted only for otherwise identical complete tasks.
+Unknown timeout causes SHALL not authorize speculative repairs or learning.
+
+## REQ-REPORT-749-2: Preserve causal learning and test verifier method transfer
+
+Status: Planned. Exp8740 SHALL preserve the fixed nine-input, 109-coefficient
+learner, four arms, five seeds, 100 independent groups and 6000 predictions.
+Predictions precede released feedback; actual updates and acknowledgments remain
+atomic. Pending capacity and realized delays are observations, not a new scheduler.
+Exp8741 SHALL retain future proper-loss and simultaneous retention thresholds.
+
+Exp8742 SHALL test the frozen five-call schedules on a sealed 60-world panel,
+six variants and two arms, including two composition defects excluded from probe
+design. Independent truth evaluation, correct alternatives, false rejection and
+true/false/unknown distinctions SHALL remain visible. Constructed positives are
+circular; natural-language generalization remains unproved.
+
+### SCENARIO-REPORT-749-2: Missing science and correct nulls
+
+Missing external rows SHALL be terminal blocked. A complete below-threshold study
+SHALL be null and close its unchanged question. New defects cannot tune the
+already frozen schedules. Repetitions, siblings and seeds cannot inflate the
+independent sample count.
+
+## REQ-REPORT-749-3: Measure equivalent work and preserve physical boundaries
+
+Status: Planned. Exp8743 SHALL qualify per-request feature reuse with identical
+scoring, digests and rejection semantics before Exp8744 measures complete installed
+costs. Optimized native/Python comparisons SHALL share the optimization.
+Exp8745 SHALL preserve per-feedback durability in three fixed 32-update lifecycle
+windows, ten repeats and three arms: 90 processes, 2880 measured durable updates.
+Authenticated starting states and excluded prefix costs SHALL forbid long-run
+service claims. Admission requires an observed time bound before full execution.
+
+Exp8746 SHALL read only new reachable ARC supervisor outcomes. Empty deltas require
+no replay or policy change. Exp8747 SHALL target KV260, PolarFire and GateMate
+with operation-specific support, independently admitted cost boundaries and no
+inferred physical execution. Exp8748 SHALL reconcile all twelve outcomes and the
+stable G1–G4 publication gate without converting old results into new evidence.
+
+### SCENARIO-REPORT-749-3: Cost, reachability and publication scope
+
+Stale features, configuration mutation, malformed requests, missing fsync,
+over-budget work, overlapping clock spans and off-path solve credit SHALL fail
+the relevant acceptance checks. A bounded window cannot fill a missing complete
+learning cost. No current CUDA repair or physical device access is assumed.

@@ -18666,3 +18666,26 @@ verifier budgets, conditionally test Qwen support scoring, measure resident nati
 updates and attribute installed costs. The ARC slot reads only new supervisor
 outcomes. The literature scan was recorded before design, including new EBT
 citation leads and partial Semantic Scholar coverage. No research run is claimed.
+
+## 2026-11-02 — V749 research milestone staged
+
+Planned 2026.11.749 contains exactly twelve tasks, Exp8737–Exp8748, in four
+phases. The design and staged YAML bind the same complete task objects. V748's
+full design is preserved before replacing vNEXT. The active roadmap and conductor
+remain unchanged; no experiment or activation was performed by this planning task.
+
+V748 qualified collection, equal-call verifier detection on constructed worlds,
+resident integer parity and installed cost attribution. Its core learning tests
+passed, but a 300-second deadline-smoke timeout still blocked the full union.
+The full durable cost study projected at least 71507.5 seconds and did not run.
+Installed duplicate feature extraction consumed 45.63% of native child-service
+time, making request-local feature reuse a concrete next optimization.
+
+V749 diagnoses that timeout before a causal repair, preserves the fixed learning
+and retention protocols, tests frozen probes on new composition defects, and
+qualifies feature reuse before equal-work installed timing. A separate bounded
+window study preserves per-feedback durability and excludes long-run claims.
+ARC reads only new live supervisor outcomes. Hardware mapping includes all three
+boards. The unchanged CUDA canary is deferred until causal repair evidence exists.
+The literature scan precedes experiment design. Planning validation is recorded
+in the design and changelog; scientific results remain pending execution.

@@ -12,103 +12,45 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 4 |
-| CLAIM_OVERSTATED | 1 |
 | NO_CLAIM | 3 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_8715_v747_verifier_completeness.json
+## experiment_8729_v748_equal_budget_verifier.json
 
-**CLAIM_OVERSTATED**
+**CANNOT_DETERMINE**
+
+> Audit-integrity guard: quoted evidence ['; both have '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
 
 ## VERDICT
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-The extended verifier demonstrates added verification value, warranting a positive verifier-completeness verdict.
+Targeted verification adds defect-detection value over baseline at an equal five-call budget.
 
 ## WHAT WOULD REFUTE IT
-Independent correctness judgments show that the ten additional detections are false alarms, or that the baseline detects the same genuine defects. Merely avoiding worse detection cannot establish value because the extended suite includes the baseline.
+Using independently established correctness, targeted verification detects no more defects than baseline, or gains detections by rejecting valid alternatives or mishandling unknowns. The cheapest serious rival is direct use of the defining oracle, with its cost counted; a tie would undermine added value.
 
 ## WAS THAT CHECKED
-No, for independent value. The artifact reports 130 versus 120 detections, so the reported baseline does not tie. However, the verifier itself defines correctness; labels independent of tested variants do not resolve that circularity. The count increase can stand as a constructed execution result, but cannot establish the verifier’s added value.
+No for independent verifier value; yes for the narrower oracle-relative schedule comparison. The arm summaries report 130/150 versus 120/150 detections, zero errors on the correct variants’ alternatives and unknowns, and a positive paired interval.
 
-The suite costs eleven probes versus five and explicitly disclaims equal-budget superiority. Reserved worlds and no fitting provide no remedy for the oracle issue.
+However, the verifier itself defines correctness. Those measurements therefore cannot independently establish its added value. No independent adjudication or direct-oracle comparator is shown. The artifact explicitly disclaims generalization, so exposure is not an additional finding. The displayed failing defective variants are detection outcomes, not evidence of invalid rows.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_circular_positive_v747_verifier_completeness`
-- `verdict_class`: `circular_positive`
+- `honest_verdict`: `complete_circular_positive_v748_equal_budget_verifier`
 - `verifier_is_oracle`: `true`
-- `baseline_detected_defect_count`: `120`
-- `extended_detected_defect_count`: `130`
-- `incremental_detected_defect_count`: `10`
-- `Labels are independent of tested variants.`
-- `Extended suite includes baseline probes and costs more; no equal-budget superiority claim.`
+- `inference_substrate`: `deterministic_verifier`
+- `cost_matched_detection_gain_score`: `1`
+- `baseline`: `defects_detected` = `120`; `targeted`: `defects_detected` = `130`; both have `defective_denominator` = `150`.
+- Both schedules have `budget` = `5`.
+- Both arms have `correct_valid_alternative_rejections` = `0` and `correct_unknown_to_false_errors` = `0`.
+- `lower95`: `0.03333333333333333`
+- `exposure_scope`: `All original120 worlds are exposed-development; retain original90 development/30 evaluation IDs; no independent generalization`
 
 ## RECOMMENDATION
 NARROW_CLAIM
 
-## experiment_8716_v747_installed_import_isolation.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Import isolation preserves the export assertions without increasing the measured parent peak memory, while maintaining installed-worker parity on the fixed deployment corpus.
-
-## WHAT WOULD REFUTE IT
-Failure of the unchanged assertions in the isolated child, an unreaped child, increased parent peak memory, or an installed-worker output mismatch against the reference implementation. These outcomes were possible; correctness of packaging and process isolation does not follow automatically from using the verifier as oracle.
-
-## WAS THAT CHECKED
-Yes. The original guard failure was reproduced, then identical assertions passed in a reaped child with unchanged parent peak memory. The artifact reports 2,048 completed parity evaluations and zero failures.
-
-Python/native agreement tests implementation preservation; it does not demonstrate added verifier value. The exposed corpus is explicitly identified, and generalization scores are zero. The displayed rows show no invalid measurement being counted as valid; expected rejection errors and the reproduced guard failure are intentional controls.
-
-## EVIDENCE
-
-- `guard_reproduction`: `assertions_identical` = `true`; `observed_delta_mb` = `579`; `actual_exit` = `1`; `expected_exit` = `1`.
-- `memory_lifecycle_rows`: `assertions_passed` = `true`; `actual_exit` = `0`; `reaped` = `true`; `parent_peak_before_kib` = `515744`; `parent_peak_after_kib` = `515744`.
-- `intended_count` = `2048`; `completed_count` = `2048`; `failed_count` = `0`.
-- `exposure_scope` = `original exposed fixed deployment corpus`.
-- `verifier_is_oracle` = `true`; `generalized_learning_benefit_score` = `0`; `independent_generalization_score` = `0`.
-- `batch_service_ready_score` = `1`; displayed `parity_rows` have `passed` = `true`, `excluded` = `false`, and `censored` = `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8717_v747_installed_batch_cost.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Native B16 batching improves complete-process throughput over native B1 on the fixed exposed workload.
-
-## WHAT WOULD REFUTE IT
-B16 taking at least as long as B1 for the same completed work, or batching changing the computed outputs.
-
-## WAS THAT CHECKED
-Yes. Randomized paired process measurements include setup through shutdown, with output-parity checks. Across ten paired repeats, the batching speedup is 1.1382×, with a 95% interval entirely above 1.
-
-The serious comparator, equal-batch Python, is statistically indistinguishable from native at B16. That limits attribution to native implementation advantages; it does not contradict the within-native batching benefit. The artifact explicitly records failure of the separate 10× target. Exposed requests support this timing comparison without establishing generalization.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_positive_v747_installed_batch_cost`
-- `exposure_scope`: `fixed exposed original64 requests; timings only`
-- `inference_boundary`: `launch through clean shutdown; setup included; offline environment installation reported separately`
-- `contrast`: `batching`; `estimate`: `1.1382345321809237`; `lower95`: `1.1218473605571395`; `upper95`: `1.1600777873719108`; `paired_repeats`: `10`
-- `parity_rows`: `passed`: `true`; `probability_error`: `0.0`
-- `contrast`: `native_python_B16`; `estimate`: `1.0053949467902554`; `lower95`: `0.998091298984346`; `upper95`: `1.0138702202694783`
-- `NFR-01_same_batch_B16`: `passed`: `false`; `same_batch_10x_score`: `0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8718_qwen_symbolic_canary.json
+## experiment_8730_qwen_self_score_canary.json
 
 **NO_CLAIM**
 
@@ -119,18 +61,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no claimed comparative advantage to falsify; this artifact records a blocked prerequisite check.
+Not applicable: the artifact records a blocked prerequisite check and asserts no comparative outcome.
 
 ## WAS THAT CHECKED
-No comparison ran. In gates_evaluated, runtime readiness was 0 against the required 1, blocking execution. Symbolic-control readiness passed, but that establishes no comparative result.
+No comparison results are reported. The prerequisite checks detected a failed runtime-readiness gate and recorded the block.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `duration_s`: `0.0`; `failed_field`: `runtime_repair_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `runtime_repair_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8719_v747_compiled_sparse_update.json
+## experiment_8731_v748_resident_sparse_prototype.json
 
 **CLAIM_SUPPORTED**
 
@@ -138,33 +80,27 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The compiled sparse update matches its reference on the tested lifecycle inputs, supporting CPU port readiness within the stated domain.
+The resident sparse prototype preserves reference arithmetic, counters, and restart state on the tested lifecycle inputs within its stated domain.
 
 ## WHAT WOULD REFUTE IT
-Any native/reference disagreement in integer state, historical outputs, counters, rejection behavior, or resumed checkpoint bytes on an included test case would refute exact parity.
+Any native/reference arithmetic, integer-state, counter, or historical-state mismatch within that domain, or a restarted run producing different state, acknowledgements, or checkpoint bytes.
 
 ## WAS THAT CHECKED
-Yes—in the native-parity, boundary, rejection, and restart rows. Displayed checks pass, and the summary reports zero failures, exclusions, or censored cases.
+Yes—in the native parity, boundary, Python/native arithmetic, and restart comparisons. The displayed rows pass, including restarts after actual process exits. Implementation divergence could have failed these checks.
 
-Comparing separately executed native and Python implementations gives implementation errors a real chance to surface. Python is the relevant serious baseline; a tie establishes the claimed equivalence.
-
-The verifier defines reference conformance here. That supports an execution claim without establishing verifier added value. The artifact explicitly confines its claim to exposed-input language-port parity and reports zero generalization benefit. No displayed validity flag or missing-key contradiction undermines that claim.
+Reference ties support the claimed equivalence. The verifier defines the reference target, but the artifact makes no claim about its added value. Elided rows limit direct inspection of the complete results.
 
 ## EVIDENCE
-
-- `acceptance_gates`: `exact_native_parity`: `true`; `loaded_extension`: `true`.
-- `native_parity_rows` and `boundary_rows`: `integer_state_identical`: `true`; `historical_identical`: `true`; `counters_identical`: `true`.
-- `rejection_rows`: `native` and `python` each report `value`: `-4` in the first displayed comparison.
-- `restart_rows`: `state_acknowledgement_and_bytes_identical`: `true`.
-- `failed_count`: `0`; `excluded_count`: `0`; `censored_count`: `0`.
-- `exposure_scope`: `same_original_exposed_lifecycle_inputs_language_port_parity_only`.
-- `verifier_is_oracle`: `true`; `independent_generalization_score`: `0`; `speedup_claim`: `null`.
-- `Bind this field to sealed exact parity evidence; CPU port readiness grants no learning, hardware or throughput claim.`
+- `exposure_scope`: `same_original_exposed_lifecycle_inputs_language_port_parity_only`
+- `native_parity_rows` and `boundary_rows`: `integer_state_identical`, `counters_identical`, and `historical_identical` are `true`.
+- `rejection_rows`: matching `native` and `python` values include `-4` and `-2`.
+- `restart_rows`: `real_exit` is `73`; `state_acknowledgement_and_bytes_identical` is `true`.
+- `Bind eligibility to exact sequential arithmetic, resident counters and durable restart; no learning or performance claim.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8720_v747_arc_supervisor_frontier.json
+## experiment_8732_v748_resident_update_cost.json
 
 **NO_CLAIM**
 
@@ -175,56 +111,117 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A newly authenticated supervisor event outside the retained closed frontier would contradict the empty-delta receipt. The artifact makes no comparative claim about supervisor effectiveness.
+No comparative claim is asserted. A resident-benefit claim would be refuted by valid matched lifecycle timings showing resident_native tying or losing to json_native; speedup below 10× would refute a 10× claim.
 
 ## WAS THAT CHECKED
-Yes, for the receipt: the methodology specifies exact event-identity comparison, the reported before/after frontiers match, and the event delta is empty. No new episodes were run; this records an absence of new evidence, rather than an experimental finding of no benefit.
+No comparative measurement completed: all 30 planned rows were censored. The budget gate was checked and failed, with projected measurement time of 71,507.5252224 seconds against a 3,600-second cap. The artifact reports a blocked run and asserts no resident benefit. The verifier’s oracle role therefore creates no circular value claim here.
 
 ## EVIDENCE
-
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `honest_verdict`: `complete_null_no_new_supervisor_outcomes`
-- `new_event_rows`: `[]`
-- `rows`: `[]`
-- `new_events`: `0`; `new_live_episodes`: `0`
-- `decision`: `retain_unchanged`; `usable_cross_game_support`: `0`
-- `no_policy_change`: `true`; `new_level_credit`: `0`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8721_v747_hardware_operation_boundary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. Authenticated compatible physical execution with precision parity and complete learning-cost measurements would overturn the blocked readiness status; those observations alone would not establish acceleration.
-
-## WAS THAT CHECKED
-Yes, for evidence availability: source-admission checks explicitly identify the missing, unqualified learning-cost source, and the physical-execution gate observes zero. The missing source remains censored. This is a qualification report, with no claimed measured speedup, generalization benefit, or verifier added value.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_blocked_missing_complete_cost_or_physical_execution`
+- `honest_verdict`: `complete_blocked_durability_budget`
 - `verdict_class`: `blocked`
+- `completed_count`: `0`
+- `censored_count`: `30`
+- `resident_benefit`: `false`
+- `complete_10x`: `false`
+- `check`: `complete_roster_fits_measurement_cap`
+- `observed`: `71507.5252224`
+- `expected`: `3600`
+- `passed`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8733_v748_installed_cost_attribution.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Installed B16 runtime costs can be attributed with low instrumentation overhead while preserving same-arm outputs on the fixed exposed panel.
+
+## WHAT WOULD REFUTE IT
+Instrumented runs taking twice as long as matched uninstrumented runs, changing scientific outputs, or failing to complete would refute this claim.
+
+## WAS THAT CHECKED
+Yes. Instrumented and uninstrumented runs provide a real timing comparator across ten paired repeats per arm. The reported overhead upper confidence bounds are approximately 2.89% for Python and 3.57% for native. The displayed Python pair has identical request and output digests; the methodology reports exact same-arm outputs throughout.
+
+All forty processes reportedly completed without failures or exclusions. Timing overhead could have been large independently of output correctness, so success was not guaranteed by construction. The numerical overhead acceptance cutoff is not visible in this excerpt. The claim concerns runtime diagnostics, with no generalization or measured optimization benefit asserted.
+
+## EVIDENCE
+- `honest_verdict`: `complete_positive_installed_cost_attribution`
+- `low_overhead_attribution`; `passed`: `true`
+- `instrumentation_overhead_interval`; `paired_repeats`: `10`; `upper95`: `0.0356792380507134`
+- `instrumented`: `false`; `instrumented`: `true`; matching `output_digest`: `sha256:894dd4674ae5d127fb05d76a0ebd5b857c2e26120e4dfbed5dd42d08b7abefcf`
+- `completed_count`: `40`; `failed_count`: `0`; `excluded_count`: `0`
+- `exposure_scope`: `fixed exposed original64 panel; runtime diagnostic only`
+- `measured_improvement`: `false`
+- `verifier_is_oracle`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8734_v748_arc_outcome_frontier.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The ledger update contains no new supervisor outcomes and supplies no new support for changing policy.
+
+## WHAT WOULD REFUTE IT
+An authenticated supervisor outcome with an event identity outside the retained frontier would refute the no-new-outcomes finding. Qualifying uncensored cross-game intervention results would contradict the reported absence of usable policy-change support.
+
+## WAS THAT CHECKED
+Yes, within the ledger’s scope. The stated method compares exact event identities; the before/after frontiers match, the new-event list is empty, and all four decision rows report zero usable cross-game support. This supports the narrow reporting null, without establishing supervisor effectiveness or ineffectiveness.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_no_new_supervisor_outcomes`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
+- `new_event_rows`: `[]`
+- `new_events`: `0`
+- `usable_cross_game_support`: `0`
+- `policy_decision`: `no_supported_policy_change`
+- `generalized_learning_benefit_score`: `0`
+- `solve_provenance_scope`: `reader_credits_no_live_outcomes`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8735_v748_hardware_cost_boundary.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative claim to falsify. Authenticated compatible physical execution with qualified complete learning and update costs would overturn the reported blocked readiness status.
+
+## WAS THAT CHECKED
+Yes, as readiness checks in gate_check_summary and source_admission_rows: learning evidence is missing, update evidence is unqualified, and physical readiness fails. Those producers remain censored rather than supporting a positive result. This aggregation asserts neither measured acceleration nor verifier added value nor generalization, so the oracle flag creates no circular value claim here.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_hardware_cost_or_physical_execution`
+- `inference_substrate`: `aggregation_from_upstream_artifacts`
+- `physical_hardware_ready_score`: `0`
 - `operand_state`: `missing_file`
 - `qualified`: `false`
-- `status`: `censored`
-- `compatible_physical_execution`; `operand_state`: `observed_zero`
+- `censored_count`: `2`
 - `achieved_speedup`: `null`
-- `interpretation`: `Conditional1/(1-f); neither observed speed nor a100x complete-learning result`
+- `complete_100x_learning_ready_score`: `0`
+- `independent_generalization_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8722_v747_capstone.json
+## experiment_8736_v748_capstone.json
 
 **CLAIM_SUPPORTED**
 
@@ -232,24 +229,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V747 capstone remains blocked because required evidence is insufficient to authorize activation.
+The available evidence leaves the capstone blocked, without establishing complete 10× acceleration or independent generalized learning benefit.
 
 ## WHAT WOULD REFUTE IT
-Qualified measurements satisfying all outstanding acceptance requirements—including independent semantics, future loss and retention, physical execution, and same-batch 10× performance—would contradict the blocked conclusion.
+Qualified, authenticated measurements meeting the unmet acceptance gates—for example, a same-batch speedup with a paired 95% lower bound of at least 10× contradicting that gate’s reported failure.
 
 ## WAS THAT CHECKED
-Yes, as an evidence-sufficiency decision. The acceptance gates and gate-edge rows record failed requirements and distinguish missing evidence from observed zero. The deployment comparison also falls short of 10×. Disqualified production is explicitly marked scientifically unmeasured.
-
-This supports withholding activation; it does not establish that unexecuted studies would find no benefit.
+Yes, for this limited conclusion. Deployment rows compare measured intervals against explicit thresholds; the B16 native/Python interval spans parity. Gate rows reject an upstream positive score when its producer is disqualified and distinguish missing files from observed zeros. Exposed evidence is explicitly excluded from independent-generalization claims. These rows support withholding qualification, rather than concluding benefits are impossible.
 
 ## EVIDENCE
-
-- `honest_verdict`: `complete_blocked_v747_capstone`; `activation_authorized`: `false`.
-- `future_loss_and_retention`: `false`; `independent_semantics`: `false`; `physical_execution`: `false`; `same_batch_10x`: `false`.
-- `field`: `learning_authority_ready_score`; `expected`: `1`; `observed`: `0`; `passed`: `false`.
-- `operand_state`: `missing_file`; `observed`: `null`.
-- `producer_qualified`: `false`; `scientific_result_measured`: `false`.
-- `same_batch_threshold`: `paired lower95 >= 10`; `contrast`: `native_python_B16`; `upper95`: `1.0138702202694783`.
+- `same_batch_threshold`: `paired lower95 >= 10`
+- `contrast`: `native_python_B16`; `lower95`: `0.998091298984346`; `upper95`: `1.0138702202694783`
+- `complete_10x_score`: `0`; `generalized_learning_benefit_score`: `0`; `activation_authorized`: `false`
+- In `gate_edge_rows`: `observed`: `1`; `producer_qualified`: `false`; `passed`: `false`
+- `operand_state`: `missing_file`; `observed`: `null`
+- `exposure_scope`: `Constructed and exposed upstream evidence; no natural independent generalization`
 
 ## RECOMMENDATION
 KEEP

@@ -22837,3 +22837,21 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-02: Read new live cross-game supervisor outcomes without reopening the closed panel (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_8734_v748_arc_outcome_frontier.json
 - 2026-11-02: Map measured resident costs to supported FPGA operations (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_cost_or_physical_execution; results/experiment_8735_v748_hardware_cost_boundary.json
 - 2026-11-02: Reconcile fourteen outcomes and close unchanged scientific questions (⚠️ Blocked) — honest_verdict=complete_blocked_v748_capstone; results/experiment_8736_v748_capstone.json
+
+## 2026-11-02 — Stage research milestone 2026.11.749
+
+- Created the matching twelve-task V749 design and staged YAML, Exp8737–Exp8748,
+  across four phases. Preserved the complete V748 design before replacing vNEXT.
+- Added the requested primary and secondary literature scan before design,
+  including RT4CHART v2, new delayed-capacity OCO work and HSRM. Recorded both
+  Semantic Scholar HTTP 429 responses, OpenReview access limits and stale trending.
+- Planned measured deadline-smoke diagnosis, the unchanged causal learning and
+  retention study, frozen-probe composition tests, request-local feature reuse,
+  complete installed timing and separately bounded durable lifecycle costs.
+- Preserved live ARC and all three FPGA operation boundaries. Deferred the
+  unchanged CUDA canary rather than schedule another unsupported repeat.
+- Aligned planned OpenSpec requirements, architecture, traceability and status.
+  Every prompt has numbered progress/heartbeat and chunked-write requirements,
+  closed verdict classes, per-unit evidence and exact upstream gate fields.
+- Planning only: no experiment, activation, conductor edit, active-roadmap edit,
+  exclusion-manifest edit, deployment, external publication or push.
