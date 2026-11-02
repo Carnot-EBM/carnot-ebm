@@ -22878,3 +22878,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-02: Measure matched durable update costs in fixed lifecycle windows (⚠️ Research Finding) — honest_verdict=complete_disqualified_original_window_prerequisite; results/experiment_8745_v749_bounded_durable_cost.json
 - 2026-11-02: Read only new live supervisor outcomes for cross-game refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_8746_v749_arc_outcome_frontier.json
 - 2026-11-02: Map new feature and durable-window costs to each board operation (⚠️ Research Finding) — honest_verdict=complete_disqualified_hardware_cost_or_physical_execution; results/experiment_8747_v749_hardware_cost_boundary.json
+- 2026-11-02: Reconcile twelve outcomes and close exact learning verification and cost scopes (⚠️ Research Finding) — honest_verdict=complete_disqualified_v749_capstone; results/experiment_8748_v749_capstone.json
