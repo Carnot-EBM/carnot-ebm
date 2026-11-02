@@ -21132,3 +21132,4 @@ code |
 | 2026-11-02 12:25 UTC | Freeze equal-budget verifier probes and the Qwen s | OK | 86 passed, 1 warning in 132.72s (0:02:12) |
 | 2026-11-02 12:27 UTC | Measure continuous typed-decision learning from de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8725-learning-union) |
 | 2026-11-02 12:27 UTC | Test future proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8727-causal-brier-stream) |
+| 2026-11-02 12:41 UTC | Measure relational defect detection at equal probe | OK | 85 passed, 1 warning in 55.52s |
