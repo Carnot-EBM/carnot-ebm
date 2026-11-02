@@ -57534,3 +57534,17 @@ Private CLI success, blocked inputs, failed children, invalid dates, unsafe
 outputs and rehashed replay rejection use unchanged publication validators.
 Cold replay and adversarial and strict row checks precede atomic publication.
 Zero model calls and zero new solve credit remain explicit on every path.
+## REQ-VERIFY-8736: Seal and cold-replay the V748 capstone
+
+Reuse isolated version bindings for retained custody and validation controllers.
+Freeze sources, tests, inputs and methods before reduction. Retain real child
+exits, node IDs, SQLite coverage, JUnit, hashes and clocks. Require100 percent
+new owned statement coverage, focused tests, Ruff, strict mypy and spec tracing.
+Unchanged primary, adversarial and strict row validators precede atomic publication.
+
+### SCENARIO-VERIFY-8736-REPLAY
+
+Private CLI controls exercise valid publication, failed child, unsafe output,
+invalid date, cold replay, missing operands and consistently rehashed tampering.
+Failed owned checks disqualify; missing external evidence blocks once without
+retrying upstream producers. Original result and validator bytes remain intact.

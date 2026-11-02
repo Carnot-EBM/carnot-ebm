@@ -104308,3 +104308,20 @@ The existing fourteen ledger identities yield zero new events. Preserve the
 frontier exactly and report no supported policy change. Missing or changed
 external operands block with their exact path and hash. Readiness grants no
 independent generalization. Conductor owns ops and traceability reconciliation.
+## REQ-REPORT-8736: Reconcile fourteen V748 dispositions without extending science
+
+Bind all fourteen complete V748 tasks, visible table and pinned canonical digest
+independently of scientific readiness. Authenticate exact declared producer bytes
+and original methods. Distinguish failed owned checks, pre-gate receipts, cascade
+skips and absent measurements. Recompute matched-call verifier, resident parity,
+durability projection and installed attribution from admitted per-unit primitives.
+Preserve V747 batching, same-batch10x null, exposed oracle scope, missing model
+probabilities, absent learning, CUDA repair and physical execution. Stable G1-G4
+cannot certify new science. External incompleteness is terminal blocked.
+
+### SCENARIO-REPORT-8736-ACCOUNTING
+
+Retain fourteen scheduling rows including this reader, complete task objects,
+gate edges, exact-repeat comparisons and branch-specific reopening conditions.
+No skip is a scientific zero. No model load, future activation or external
+publication occurs. Conductor owns ops/status/changelog/traceability updates.
