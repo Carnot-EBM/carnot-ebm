@@ -1,0 +1,1040 @@
+.FFFFFFFFFFFFFFFF.FF.........F.F                                         [100%]
+=================================== FAILURES ===================================
+__________________ test_branch_authority_and_original_methods __________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_branch_authority_and_orig0')
+
+    def test_branch_authority_and_original_methods(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: every branch binds its own unchanged operands."""
+        m = api.m
+        authority = m.authority(m.ROOT)
+>       assert authority["ready"] and len(authority["rows"]) == 14
+E       assert (False)
+
+tests/python/test_v748_contract_8723.py:37: AssertionError
+__________________ test_full_contract_dimensions[agent_type] ___________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_full_contract_dimensions_0')
+field = 'agent_type'
+
+    @pytest.mark.parametrize(
+        "field", ["agent_type", "routing", "prompt", "gated_on", "deliverable", "MODEL_SPECS"]
+    )
+    def test_full_contract_dimensions(tmp_path, field):
+        """REQ-REPORT-8723: even fields outside the visible table require exact equality."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+____________________ test_full_contract_dimensions[routing] ____________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_full_contract_dimensions_1')
+field = 'routing'
+
+    @pytest.mark.parametrize(
+        "field", ["agent_type", "routing", "prompt", "gated_on", "deliverable", "MODEL_SPECS"]
+    )
+    def test_full_contract_dimensions(tmp_path, field):
+        """REQ-REPORT-8723: even fields outside the visible table require exact equality."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+____________________ test_full_contract_dimensions[prompt] _____________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_full_contract_dimensions_2')
+field = 'prompt'
+
+    @pytest.mark.parametrize(
+        "field", ["agent_type", "routing", "prompt", "gated_on", "deliverable", "MODEL_SPECS"]
+    )
+    def test_full_contract_dimensions(tmp_path, field):
+        """REQ-REPORT-8723: even fields outside the visible table require exact equality."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+___________________ test_full_contract_dimensions[gated_on] ____________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_full_contract_dimensions_3')
+field = 'gated_on'
+
+    @pytest.mark.parametrize(
+        "field", ["agent_type", "routing", "prompt", "gated_on", "deliverable", "MODEL_SPECS"]
+    )
+    def test_full_contract_dimensions(tmp_path, field):
+        """REQ-REPORT-8723: even fields outside the visible table require exact equality."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+__________________ test_full_contract_dimensions[deliverable] __________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_full_contract_dimensions_4')
+field = 'deliverable'
+
+    @pytest.mark.parametrize(
+        "field", ["agent_type", "routing", "prompt", "gated_on", "deliverable", "MODEL_SPECS"]
+    )
+    def test_full_contract_dimensions(tmp_path, field):
+        """REQ-REPORT-8723: even fields outside the visible table require exact equality."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+__________________ test_full_contract_dimensions[MODEL_SPECS] __________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_full_contract_dimensions_5')
+field = 'MODEL_SPECS'
+
+    @pytest.mark.parametrize(
+        "field", ["agent_type", "routing", "prompt", "gated_on", "deliverable", "MODEL_SPECS"]
+    )
+    def test_full_contract_dimensions(tmp_path, field):
+        """REQ-REPORT-8723: even fields outside the visible table require exact equality."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+____________________ test_conductor_prompt_encoding[active] ____________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_conductor_prompt_encoding0')
+source = 'active'
+
+    @pytest.mark.parametrize("source", ["active", "staged", "both"])
+    def test_conductor_prompt_encoding(tmp_path, source):
+        """SCENARIO-REPORT-8723-PROMPT-ENCODING: bind encoding without changing authority."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+____________________ test_conductor_prompt_encoding[staged] ____________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_conductor_prompt_encoding1')
+source = 'staged'
+
+    @pytest.mark.parametrize("source", ["active", "staged", "both"])
+    def test_conductor_prompt_encoding(tmp_path, source):
+        """SCENARIO-REPORT-8723-PROMPT-ENCODING: bind encoding without changing authority."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_____________________ test_conductor_prompt_encoding[both] _____________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_conductor_prompt_encoding2')
+source = 'both'
+
+    @pytest.mark.parametrize("source", ["active", "staged", "both"])
+    def test_conductor_prompt_encoding(tmp_path, source):
+        """SCENARIO-REPORT-8723-PROMPT-ENCODING: bind encoding without changing authority."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+__________________ test_prompt_encoding_rejects_changes[date] __________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_prompt_encoding_rejects_c0')
+mode = 'date'
+
+    @pytest.mark.parametrize("mode", ["date", "project_root", "extra_braces", "content", "field"])
+    def test_prompt_encoding_rejects_changes(tmp_path, mode):
+        """REQ-REPORT-8723: template encoding cannot conceal changes to the sealed task."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______________ test_prompt_encoding_rejects_changes[project_root] ______________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_prompt_encoding_rejects_c1')
+mode = 'project_root'
+
+    @pytest.mark.parametrize("mode", ["date", "project_root", "extra_braces", "content", "field"])
+    def test_prompt_encoding_rejects_changes(tmp_path, mode):
+        """REQ-REPORT-8723: template encoding cannot conceal changes to the sealed task."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______________ test_prompt_encoding_rejects_changes[extra_braces] ______________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_prompt_encoding_rejects_c2')
+mode = 'extra_braces'
+
+    @pytest.mark.parametrize("mode", ["date", "project_root", "extra_braces", "content", "field"])
+    def test_prompt_encoding_rejects_changes(tmp_path, mode):
+        """REQ-REPORT-8723: template encoding cannot conceal changes to the sealed task."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+________________ test_prompt_encoding_rejects_changes[content] _________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_prompt_encoding_rejects_c3')
+mode = 'content'
+
+    @pytest.mark.parametrize("mode", ["date", "project_root", "extra_braces", "content", "field"])
+    def test_prompt_encoding_rejects_changes(tmp_path, mode):
+        """REQ-REPORT-8723: template encoding cannot conceal changes to the sealed task."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+_________________ test_prompt_encoding_rejects_changes[field] __________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_prompt_encoding_rejects_c4')
+mode = 'field'
+
+    @pytest.mark.parametrize("mode", ["date", "project_root", "extra_braces", "content", "field"])
+    def test_prompt_encoding_rejects_changes(tmp_path, mode):
+        """REQ-REPORT-8723: template encoding cannot conceal changes to the sealed task."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+______________________ test_private_cli_and_sealed_replay ______________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_private_cli_and_sealed_re0')
+
+    def test_private_cli_and_sealed_replay(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: real children keep private readiness at zero."""
+        m = api.m
+        output = tmp_path / "results" / (m.NAME + ".json")
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("cold", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+            ("date", ["--date", "20261101"], 2),
+            ("unsafe", ["--private-control"], 2),
+            ("error", ["--deliberate-error"], 7),
+        ]:
+            receipt = child(name, command + args, tmp_path / "logs", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8723_v748_collection_contract.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v747_contract_runner.py", line 138, in main
+E                 authority_mutation_rows=m.mutations(),
+E                                         ^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v747_contract_methods.py", line 151, in mutations
+E                 tasks = parse_design(text, milestone=MILESTONE)[1]
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/roadmap_contract.py", line 55, in parse_design
+E                 raise ValueError(f"V{version} JSON contract missing")
+E             ValueError: V748 JSON contract missing
+E             
+E           assert False
+
+tests/python/test_v748_contract_8723.py:146: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+__________________ test_absent_priors_are_bound_not_invented ___________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_absent_priors_are_bound_n0')
+
+    def test_absent_priors_are_bound_not_invented(tmp_path):
+        """REQ-REPORT-8723: a new branch may have no recorded failure; its exact object binds."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+__________________ test_original_assertions_and_failed_child ___________________
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_original_assertions_and_f0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd1d8577950>
+
+    def test_original_assertions_and_failed_child(tmp_path, monkeypatch):
+        """REQ-VERIFY-8723: execute the original full-path assertions under current bindings."""
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original["test_collection_and_full_path"]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        with monkeypatch.context() as nested:
+>           check(tmp_path, nested)
+
+tests/python/test_v748_contract_8723.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v747_contract_8709.py:165: in test_collection_and_full_path
+    assert runner.main(["--output", str(output)]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_runner.py:138: in main
+    authority_mutation_rows=m.mutations(),
+                            ^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_methods.py:151: in mutations
+    tasks = parse_design(text, milestone=MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_collect_once completed=0 pending=1
+[exp8205] phase=waiting_collect_once completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_once completed=1 pending=0
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8723] phase=preconditions_authenticated completed=0 pending=0
+______ test_original_rejection_controls[test_direct_replay_controls-None] ______
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_original_rejection_contro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd1d867e0c0>
+name = 'test_direct_replay_controls', mode = None
+
+    @pytest.mark.parametrize(
+        "name,mode",
+        [
+            ("test_retained_rejection", mode)
+            for mode in ["missing", "changed", "field", "zero", "flagged", "terminal"]
+        ]
+        + [("test_retained_deep_identity", mode) for mode in ["source", "qualification", "seal"]]
+        + [
+            (name, None)
+            for name in [
+                "test_direct_replay_controls",
+                "test_missing_original_methods",
+                "test_replay_rejects_historical_child_substitution",
+            ]
+        ],
+    )
+    def test_original_rejection_controls(tmp_path, monkeypatch, name, mode):
+        """REQ-VERIFY-8723: preserve unchanged historical rejection assertions under V748 bindings."""
+        import inspect
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original[name]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        arguments = dict(tmp_path=tmp_path, monkeypatch=monkeypatch, mode=mode)
+>       check(**{key: arguments[key] for key in inspect.signature(check).parameters})
+
+tests/python/test_v748_contract_8723.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v747_contract_8709.py:178: in test_direct_replay_controls
+    assert runner.main(["--private-control", "--failed-child", "--output", str(output)]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_runner.py:138: in main
+    authority_mutation_rows=m.mutations(),
+                            ^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_methods.py:151: in mutations
+    tasks = parse_design(text, milestone=MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8723] phase=preconditions_authenticated completed=0 pending=0
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] [--date {20261102}] [--root ROOT] [--output OUTPUT]
+                   [--private-control] [--failed-child]
+                   [--cold-replay COLD_REPLAY] [--deliberate-error]
+__main__.py: error: private outputs must remain outside the checkout
+_ test_original_rejection_controls[test_replay_rejects_historical_child_substitution-None] _
+
+tmp_path = PosixPath('/tmp/exp8737-checks-bxqkufdj/collection-a8cf51f79ed440c88f99cb81265ed4e3/5/tmp/test_original_rejection_contro1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd1d82865a0>
+name = 'test_replay_rejects_historical_child_substitution', mode = None
+
+    @pytest.mark.parametrize(
+        "name,mode",
+        [
+            ("test_retained_rejection", mode)
+            for mode in ["missing", "changed", "field", "zero", "flagged", "terminal"]
+        ]
+        + [("test_retained_deep_identity", mode) for mode in ["source", "qualification", "seal"]]
+        + [
+            (name, None)
+            for name in [
+                "test_direct_replay_controls",
+                "test_missing_original_methods",
+                "test_replay_rejects_historical_child_substitution",
+            ]
+        ],
+    )
+    def test_original_rejection_controls(tmp_path, monkeypatch, name, mode):
+        """REQ-VERIFY-8723: preserve unchanged historical rejection assertions under V748 bindings."""
+        import inspect
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original[name]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        arguments = dict(tmp_path=tmp_path, monkeypatch=monkeypatch, mode=mode)
+>       check(**{key: arguments[key] for key in inspect.signature(check).parameters})
+
+tests/python/test_v748_contract_8723.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v747_contract_8709.py:243: in test_replay_rejects_historical_child_substitution
+    assert runner.main(["--private-control", "--output", str(output)]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_runner.py:138: in main
+    authority_mutation_rows=m.mutations(),
+                            ^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_methods.py:151: in mutations
+    tasks = parse_design(text, milestone=MILESTONE)[1]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V749: Causal Learning, Verifier Transfer, and Feature Reuse\n\n**Created:** 2026-11-02\n**M...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V749_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8723] phase=preconditions_authenticated completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_v748_contract_8723.py::test_branch_authority_and_original_methods
+FAILED tests/python/test_v748_contract_8723.py::test_full_contract_dimensions[agent_type]
+FAILED tests/python/test_v748_contract_8723.py::test_full_contract_dimensions[routing]
+FAILED tests/python/test_v748_contract_8723.py::test_full_contract_dimensions[prompt]
+FAILED tests/python/test_v748_contract_8723.py::test_full_contract_dimensions[gated_on]
+FAILED tests/python/test_v748_contract_8723.py::test_full_contract_dimensions[deliverable]
+FAILED tests/python/test_v748_contract_8723.py::test_full_contract_dimensions[MODEL_SPECS]
+FAILED tests/python/test_v748_contract_8723.py::test_conductor_prompt_encoding[active]
+FAILED tests/python/test_v748_contract_8723.py::test_conductor_prompt_encoding[staged]
+FAILED tests/python/test_v748_contract_8723.py::test_conductor_prompt_encoding[both]
+FAILED tests/python/test_v748_contract_8723.py::test_prompt_encoding_rejects_changes[date]
+FAILED tests/python/test_v748_contract_8723.py::test_prompt_encoding_rejects_changes[project_root]
+FAILED tests/python/test_v748_contract_8723.py::test_prompt_encoding_rejects_changes[extra_braces]
+FAILED tests/python/test_v748_contract_8723.py::test_prompt_encoding_rejects_changes[content]
+FAILED tests/python/test_v748_contract_8723.py::test_prompt_encoding_rejects_changes[field]
+FAILED tests/python/test_v748_contract_8723.py::test_private_cli_and_sealed_replay
+FAILED tests/python/test_v748_contract_8723.py::test_absent_priors_are_bound_not_invented
+FAILED tests/python/test_v748_contract_8723.py::test_original_assertions_and_failed_child
+FAILED tests/python/test_v748_contract_8723.py::test_original_rejection_controls[test_direct_replay_controls-None]
+FAILED tests/python/test_v748_contract_8723.py::test_original_rejection_controls[test_replay_rejects_historical_child_substitution-None]
+20 failed, 12 passed in 61.35s (0:01:01)

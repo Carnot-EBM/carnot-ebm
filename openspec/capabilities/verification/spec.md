@@ -57548,3 +57548,22 @@ Private CLI controls exercise valid publication, failed child, unsafe output,
 invalid date, cold replay, missing operands and consistently rehashed tampering.
 Failed owned checks disqualify; missing external evidence blocks once without
 retrying upstream producers. Original result and validator bytes remain intact.
+
+## REQ-VERIFY-8737: Freeze independent verifier transfer methods before outcomes
+
+Seal 60 constructed worlds, 20 per role, temporal and two-premise family, split
+30 development and 30 evaluation. Freeze six variants, two unchanged five-call
+schedules, ten timed repetitions and world-cluster analysis: 720 rows, 3600
+unique invocations, 150 defective evaluation units per arm including 60 new-family
+units. New join and missing-premise defects never select probes. Retain answer
+spans, complete premises, correct record-order/entity-renaming alternatives and
+true/false/unknown labels from an independent truth enumerator. No variant is
+executed during methods registration; repetitions cannot increase sample size.
+
+### SCENARIO-VERIFY-8737-TRUTH
+
+Explicit contradiction is false, missing required evidence is unknown, and shared
+variables must bind consistently. The enumerator imports no tested verifier.
+RT4CHART v2, VerifierBench and delayed OCO assumptions are source-bound; neither
+convex regret nor natural-language generalization transfers to this constructed
+protocol. Verifier method readiness is independent of learning readiness.

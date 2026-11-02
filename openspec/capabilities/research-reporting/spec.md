@@ -104392,3 +104392,21 @@ Stale features, configuration mutation, malformed requests, missing fsync,
 over-budget work, overlapping clock spans and off-path solve credit SHALL fail
 the relevant acceptance checks. A bounded window cannot fill a missing complete
 learning cost. No current CUDA repair or physical device access is assumed.
+
+## REQ-REPORT-8737: Seal twelve V749 tasks and independent method gates
+
+Bind all twelve complete task objects, the visible table, deliverables and the
+independent canonical digest. Accept only the existing conductor literal-brace
+encoding of an otherwise identical task. Never change active or historical
+queues. Authenticate Exp8723 collection and Exp8724 successful children separately
+from failed deadline smoke. Learning method readiness requires complete original
+V744 input custody, 64 nodes, 27 runner nodes and 83 anchors, not learning success.
+Freeze Exp8743–8745 comparisons against authenticated installed and durable costs.
+
+### SCENARIO-REPORT-8737-CONTRACT
+
+Prompt, routing, gates, omission, reorder and self-rehashed design changes fail.
+A valid encoded copy passes without rewriting any source. Private E2E-018/021
+readers, original rejection controls, real child/JUnit/coverage receipts and cold
+replay authenticate terminal bytes. Zero model calls and separate branch gates
+remain explicit. Conductor owns ops and traceability reconciliation.

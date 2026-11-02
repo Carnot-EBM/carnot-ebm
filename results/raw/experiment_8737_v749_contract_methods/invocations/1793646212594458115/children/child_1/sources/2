@@ -1,0 +1,356 @@
+"""REQ-REPORT-8737: bounded no-model children and terminal-byte replay."""
+
+from __future__ import annotations
+
+import argparse
+from collections.abc import Callable
+from datetime import datetime, UTC
+import json
+from pathlib import Path
+import shutil
+import sys
+from tempfile import TemporaryDirectory
+import time
+from typing import Any
+
+from coverage import Coverage
+import yaml
+
+from carnot.reporting import v749_contract_methods as m
+from carnot.reporting import v749_contract_report as report
+from carnot.reporting import v749_verifier_protocol as verifier
+from carnot.reporting import v746_retained_evidence as evidence
+from carnot.reporting.collection_contract import collect
+from carnot.reporting.current_work_receipt import atomic_json
+from carnot.reporting.primary_publication import publish_primary, reader_receipt
+from carnot.reporting.v709_execution import child
+
+Json = dict[str, Any]
+CLI = "scripts/experiments/experiment_8737_v749_contract_methods.py"
+OWNED = [
+    f"python/carnot/reporting/v749_{part}.py"
+    for part in ["contract_methods", "contract_report", "contract_runner", "verifier_protocol"]
+] + [CLI]
+TESTS = ["tests/python/test_v749_contract_methods_8737.py"]
+CONSUMERS = [
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+    "tests/python/test_restricted_decision_audit_8210.py",
+    "tests/python/test_primary_publication_7928.py",
+    "tests/python/test_v748_collection_8723.py",
+    "tests/python/test_v748_contract_8723.py",
+]
+
+
+def custody(call: Callable[[], Json], path: Path) -> Json:
+    """Unavailable external operands block only their own method branch."""
+    try:
+        return call()
+    except (OSError, ValueError, KeyError, TypeError, StopIteration) as error:
+        gate = m.inspect(path, "custody_complete", True)
+        gate["diagnostic"] = str(error)
+        return dict(
+            ready=False,
+            references=[],
+            gate_check_summary=[gate],
+            durability_limit=None,
+            installed_profile=None,
+        )
+
+
+def prepare(root: Path, raw: Path) -> Json:
+    """Seal all method inputs before any future producer can inspect new outcomes."""
+    start = datetime.now(UTC).isoformat()
+    raw.mkdir(parents=True, exist_ok=True)
+    contract = m.authority(root)
+    learning = custody(m.learning, m.ROOT / m.original.PROTOCOL)
+    upstream = custody(
+        m.upstreams, m.ROOT / "results/experiment_8723_v748_collection_contract.json"
+    )
+    panel = verifier.freeze()
+    methods = m.cost_methods(contract["tasks"], upstream)
+    refs = {}
+    for name, value in [
+        ("learning_protocol", learning),
+        ("verifier_transfer_protocol", panel),
+        ("cost_protocol", methods),
+    ]:
+        atomic_json(raw / (name + ".json"), value)
+        refs[name + "_reference"] = m.reference(raw / (name + ".json"))
+    scan = (
+        (m.ROOT / "research-references.md")
+        .read_text()
+        .split("## V749 planning scan — 2026-11-02")[1]
+    )
+    (raw / "v749-reference-scan.md").write_text(scan)
+    retrieval_path = m.ROOT / "results/raw" / m.NAME / "literature/retrievals.json"
+    retrievals = json.loads(retrieval_path.read_bytes())
+    literature = [
+        dict(
+            arxiv=number,
+            url="https://arxiv.org/abs/" + number,
+            transferred=method,
+            assumptions_not_transferred=limit,
+            source_reference=m.reference(raw / "v749-reference-scan.md"),
+            primary_retrieval=next(r for r in retrievals if r["url"].endswith(number)),
+        )
+        for number, method, limit in [
+            (
+                "2603.27752v2",
+                "answer spans, all supporting premises and entailed/contradicted/unsupported truth; local and joint evidence",
+                "no RAG benchmark reproduction or LLM extraction benefit",
+            ),
+            (
+                "2610.28679",
+                "correct alternatives, false rejection and defects excluded from probe selection",
+                "no hidden benchmark or natural-language generalization",
+            ),
+            (
+                "2606.11711",
+                "observe pending capacity, admission, expiration, realized delay and lost feedback",
+                "no scheduler changes or convex regret guarantee for nonlinear Brier learner",
+            ),
+        ]
+    ]
+    manifest = m.ROOT / "ops/exclusion_manifest.yaml"
+    exclusions = yaml.safe_load(manifest.read_bytes())
+    retired = exclusions["retired"] + exclusions.get("retired_experiments", [])
+    retired_ids = {
+        int(r["experiment_id"])
+        for r in retired
+        if isinstance(r, dict) and str(r.get("experiment_id", "")).isdigit()
+    }
+    exclusion = dict(
+        path=str(manifest),
+        sha256=m.reference(manifest)["sha256"],
+        field="retired_experiment_ids",
+        operator="not_contains",
+        expected=8737,
+        observed=sorted(retired_ids),
+        passed=8737 not in retired_ids,
+    )
+    sources = [
+        m.reference(m.ROOT / p)
+        for p in OWNED
+        + TESTS
+        + [
+            "scripts/adversarial_verify.py",
+            "scripts/verdict_row_consistency_lint.py",
+            "scripts/experiment_template.py",
+        ]
+    ]
+    work = dict(
+        raw=str(raw.absolute()),
+        root=str(root.absolute()),
+        invocation_id=str(time.time_ns()),
+        started_at_utc=start,
+        ended_at_utc=datetime.now(UTC).isoformat(),
+        contract=contract,
+        learning=learning,
+        verifier=panel,
+        upstream=upstream,
+        mutations=m.mutations(),
+        exclusion=exclusion,
+        sources=sources,
+        references=contract["references"]
+        + learning["references"]
+        + upstream["references"]
+        + [m.reference(manifest)],
+        literature=literature,
+        **refs,
+    )
+    atomic_json(raw / "work.json", work)
+    return work
+
+
+def coverage_summary(raw: Path, children: list[Json]) -> Json:
+    """Count real executable statements using original SQLite; never exclude lines."""
+    combined = evidence.combine(children, raw / "combined")
+    target = Path(combined["combined_reference"]["path"])
+    shutil.copyfile(raw / "producer.sqlite", target.parent / ".coverage.producer")
+    cov = Coverage(data_file=str(target), config_file=False)
+    cov.load()
+    cov.combine(keep=True)
+    cov.save()
+    files = []
+    for name in OWNED:
+        _, statements, excluded, missing, _ = cov.analysis2(str(m.ROOT / name))
+        files.append(
+            dict(path=name, statements=len(statements), excluded=excluded, missing=missing)
+        )
+    total = sum(r["statements"] for r in files)
+    missing_count = sum(len(r["missing"]) for r in files)
+    return dict(
+        complete=total > 0 and missing_count == 0 and not any(r["excluded"] for r in files),
+        percent=100 * (total - missing_count) / total,
+        files=files,
+        combined_reference=m.reference(target),
+    )
+
+
+def validate(raw: Path, tracer: Coverage) -> Json:
+    """Use unchanged consumers and rejection controls with private child roots."""
+    with TemporaryDirectory(prefix="exp8737-checks-") as directory:
+        plan, collected = collect(Path(directory), raw, TESTS + CONSUMERS, TESTS, child)
+        full_path = m.ROOT / "results/raw" / m.NAME / "startup/full_python_suite.receipt.json"
+        full_receipt = m.load(m.reference(full_path))
+        receipts, children = [collected, full_receipt], []
+        for spec in plan:
+            receipt = child(spec["name"], spec["argv"], raw / "checks", deadline=180)
+            receipts.append(receipt)
+            children.append(
+                evidence.retain(
+                    receipt,
+                    spec["nodes"],
+                    Path(spec["scratch"]),
+                    raw / "children" / spec["name"],
+                    [m.reference(m.ROOT / p) for p in OWNED + TESTS],
+                    spec["role"],
+                )
+            )
+        for name, argv in [
+            ("ruff", [".venv/bin/ruff", "check", *OWNED, *TESTS]),
+            ("format", [".venv/bin/ruff", "format", "--check", *OWNED, *TESTS]),
+            ("types", [".venv/bin/mypy", "--strict", "--follow-imports=silent", *OWNED]),
+            ("spec", [sys.executable, "scripts/check_spec_coverage.py", *TESTS]),
+        ]:
+            receipts.append(child(name, argv, raw / "checks", deadline=120))
+        union = evidence.aggregate(children, [n for s in plan for n in s["nodes"]])
+        tracer.stop()
+        tracer.save()
+        coverage = coverage_summary(
+            raw, [r for r in children if evidence.load(r)["role"] == "owned"]
+        )
+        return dict(
+            receipts=receipts,
+            retained_child_rows=children,
+            child_union=union,
+            coverage=coverage,
+            passed=all(r["passed"] for r in receipts) and union["passed"],
+            ended_at_utc=datetime.now(UTC).isoformat(),
+        )
+
+
+def replay(path: Path) -> bool:
+    """Rebuild terminal fields from independently sealed operands and reject rehashing."""
+    try:
+        value = json.loads(path.read_bytes())
+        raw = Path(value["primitive_reference"]["path"]).parent
+        seal = json.loads((raw / "independent_seal.json").read_bytes())
+        if seal != {k: value[k] for k in ["primitive_reference", "validation_reference"]}:
+            return False
+        work = m.load(value["primitive_reference"])
+        refs = (
+            work["sources"]
+            + work["references"]
+            + [
+                work[k]
+                for k in [
+                    "learning_protocol_reference",
+                    "verifier_transfer_protocol_reference",
+                    "cost_protocol_reference",
+                ]
+            ]
+        )
+        if any(m.reference(Path(r["path"]))["sha256"] != r["sha256"] for r in refs):
+            return False
+        if (
+            m.authority(Path(work["root"])) != work["contract"]
+            or verifier.freeze() != work["verifier"]
+        ):
+            return False
+        return bool(
+            value
+            == report.build(work, value["validation_reference"], Path(value["publication_output"]))
+        )
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+def terminal(candidate: Path, raw: Path) -> Json:
+    """Run unchanged validators and a fresh replay on the exact candidate bytes."""
+    receipts = [
+        child(
+            "adversarial",
+            [sys.executable, "scripts/adversarial_verify.py", str(candidate), "--json"],
+            raw / "terminal_checks",
+            deadline=60,
+        ),
+        child(
+            "row_consistency",
+            [sys.executable, "scripts/verdict_row_consistency_lint.py", "--strict", str(candidate)],
+            raw / "terminal_checks",
+            deadline=60,
+        ),
+        child(
+            "cold_replay",
+            [sys.executable, CLI, "--cold-replay", str(candidate)],
+            raw / "terminal_checks",
+            deadline=60,
+        ),
+    ]
+    result = dict(passed=all(r["passed"] for r in receipts), receipts=receipts)
+    atomic_json(raw / "terminal_validation.json", result)
+    return result
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Publish only terminal validated bytes; private controls never qualify a branch."""
+    m.progress("start_no_model_load")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", choices=["20261102"], default="20261102")
+    parser.add_argument("--output", type=Path, default=m.ROOT / "results" / (m.NAME + ".json"))
+    parser.add_argument("--root", type=Path, default=m.ROOT)
+    parser.add_argument("--private-control", action="store_true")
+    parser.add_argument("--cold-replay", type=Path)
+    args = parser.parse_args(argv)
+    if args.cold_replay:
+        passed = replay(args.cold_replay)
+        m.progress("replay_passed" if passed else "replay_rejected")
+        return int(not passed)
+    output = args.output.absolute()
+    if args.private_control and (
+        output.is_relative_to(m.ROOT) or output.resolve().is_relative_to(m.ROOT.resolve())
+    ):
+        parser.error("private outputs must remain outside the checkout")
+    raw = output.parent / "raw" / m.NAME / "invocations" / str(time.time_ns())
+    raw.mkdir(parents=True)
+    tracer = Coverage(data_file=str(raw / "producer.sqlite"), config_file=False)
+    tracer.start()
+    m.progress("authenticate_and_freeze")
+    work = prepare(args.root, raw)
+    m.progress("methods_sealed", 12, 0)
+    if args.private_control:
+        receipt = child(
+            "private_control",
+            [sys.executable, "-c", "print('private no-model control')"],
+            raw / "checks",
+            deadline=10,
+        )
+        tracer.stop()
+        tracer.save()
+        validation = dict(
+            receipts=[receipt],
+            coverage=dict(complete=False),
+            passed=False,
+            ended_at_utc=datetime.now(UTC).isoformat(),
+        )
+    else:
+        validation = validate(raw, tracer)
+    atomic_json(raw / "validation.json", validation)
+    validation_ref = m.reference(raw / "validation.json")
+    atomic_json(
+        raw / "independent_seal.json",
+        dict(
+            primitive_reference=m.reference(raw / "work.json"), validation_reference=validation_ref
+        ),
+    )
+    value = report.build(work, validation_ref, output)
+    m.progress("before_terminal_validation")
+    published = publish_primary(output, value, lambda p: terminal(p, raw))
+    atomic_json(raw / "publication_receipt.json", published)
+    reader = reader_receipt(
+        m.TASK, output.parent, field="contract_ready_score", expected=value["contract_ready_score"]
+    )
+    atomic_json(raw / "reader_receipt.json", reader)
+    m.progress("published_" + value["verdict_class"], 12, 0)
+    return 0

@@ -1,0 +1,229 @@
+{
+  "durable_cost": {
+    "admission_probe_updates": 4,
+    "arms": 3,
+    "bootstrap_draws": 10000,
+    "budget_s": 3000,
+    "cluster": "ten paired repeats retaining all arms and windows",
+    "complete_122880_update_workload": "blocked; bounded study cannot replace it",
+    "durability": [
+      "file fsync",
+      "atomic replace",
+      "directory fsync",
+      "acknowledgment after commit"
+    ],
+    "equal_window_weight": true,
+    "measured_updates": 2880,
+    "offsets": [
+      0,
+      2032,
+      4064
+    ],
+    "p95_regression_lte": 0.05,
+    "prefix_costs_excluded_but_reported": true,
+    "processes": 90,
+    "repeats": 10,
+    "reserve_fraction": 0.25,
+    "restart_after_update": 2048,
+    "start_states": "qualified original 4096-update parity trajectory",
+    "throughput_lower95_gt": 1.05,
+    "window_updates": 32
+  },
+  "evidence": {
+    "durability_limit": {
+      "filesystem": "xfs",
+      "latencies_ns": [
+        581929730,
+        603059165,
+        605328147,
+        608409046
+      ],
+      "minimum_complete_update_ns": 581929730,
+      "observed_updates": 4,
+      "projected_minimum_measurement_s": 71507.5252224,
+      "projection_excludes_launch_restart_and_dense_controls": true
+    },
+    "installed_profile": {
+      "largest_components": [
+        {
+          "arm": "native",
+          "clock_domain": "child_serve",
+          "estimate": 0.46456360570792604,
+          "lower95": 0.46001730555835735,
+          "operation": "scoring_feature_extraction",
+          "upper95": 0.46752863781135834
+        },
+        {
+          "arm": "native",
+          "clock_domain": "child_serve",
+          "estimate": 0.45628422029939814,
+          "lower95": 0.4554850712683607,
+          "operation": "duplicate_feature_digest_extraction",
+          "upper95": 0.45721947556488785
+        }
+      ],
+      "measured_improvement": false,
+      "qualified": true,
+      "recommendation": "Remove redundant feature extraction in a future parity-tested change."
+    }
+  },
+  "feature_reuse": {
+    "batch_sizes": [
+      1,
+      4,
+      16
+    ],
+    "ownership": "request-local validated feature vector reused for score and digest",
+    "preserve": [
+      "mutation rejection",
+      "configuration identity",
+      "malformed frames",
+      "stale success rejection",
+      "installed extension",
+      "original imports"
+    ],
+    "providers": [
+      "python",
+      "native"
+    ]
+  },
+  "installed_cost": {
+    "batch": 16,
+    "benefit_lower95_gt": 1.05,
+    "bootstrap_draws": 10000,
+    "boundary": "parent startup through shutdown",
+    "cells": 40,
+    "compare_matching_optimization": true,
+    "instrumentation": false,
+    "nfr01_lower95_gte": 10,
+    "p95_ms_lte": 50,
+    "p95_regression_lte": 0.05,
+    "panels": 16,
+    "repeat_cluster": "paired process repeat",
+    "repeats": 10,
+    "requests_per_panel": 64
+  },
+  "measured_this_invocation": false,
+  "task_objects": [
+    {
+      "MODEL_SPECS": [],
+      "agent_type": "codex",
+      "deliverable": "results/experiment_8743_v749_single_extraction_prototype.json",
+      "estimated_wall_time_min": 60,
+      "gated_on": [],
+      "id": "exp8743-single-extraction-prototype",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 50,
+      "milestone": "2026.11.749",
+      "model": "gpt-6.1-sol",
+      "per_unit_rows": true,
+      "phase": 3,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp8716 qualified compatibility and Exp8733 measured duplicate feature extraction as 45.63% of native child-service time. This changes that specific redundant operation while preserving the original installed boundary, rather than repeating an unchanged throughput test.",
+          "experiment_id": "exp8635-installed-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp8716 qualified compatibility and Exp8733 measured duplicate feature extraction as 45.63% of native child-service time. This changes that specific redundant operation while preserving the original installed boundary, rather than repeating an unchanged throughput test.",
+          "experiment_id": "exp8647-installed-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp8716 qualified compatibility and Exp8733 measured duplicate feature extraction as 45.63% of native child-service time. This changes that specific redundant operation while preserving the original installed boundary, rather than repeating an unchanged throughput test.",
+          "experiment_id": "exp8703-installed-batch-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. V748 ran ten producers and skipped four studies. Exp8723 qualified collection; Exp8724 passed its 39 core nodes but its deadline_smoke child timed out at 300 seconds, leaving readiness zero. Exp8729 gained 0.0667 defect detection at equal calls on exposed constructed worlds, CI95 [0.0333,0.1000]; this is circular evidence. Exp8731 qualified resident integer parity. Exp8732 projected 71507.5 seconds for 122880 durable updates and stopped. Exp8733 attributes 45.63% of native child-service time to duplicate feature extraction. No useful learning, current CUDA repair, new ARC outcome or physical acceleration was established. V749 contains exactly twelve tasks, Exp8737 through Exp8748. Preserve all historical bytes, quarantines and scientific nulls.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/research-roadmap-v748-preserved-20261102.md; research-references.md; python/carnot/inference/resident_batch.py; python/carnot/inference/resident_energy.py; python/carnot/inference/resident_protocol.py; python/carnot/inference/installed_profile_8733.py; python/carnot/reporting/installed_batch_8702.py; tests/python/test_installed_batch_8702.py; tests/python/test_installed_cost_attribution_8733.py; results/experiment_8733_v748_installed_cost_attribution.json; results/experiment_8716_v747_installed_import_isolation.json\n\nTASK:\nReuse each request feature vector for scoring and its digest. Deliver results/experiment_8743_v749_single_extraction_prototype.json. Use thin runner scripts/experiments/experiment_8743_v749_single_extraction_prototype.py, raw evidence results/raw/experiment_8743_v749_single_extraction_prototype/ and notes docs/research-notes/v749-single-extraction-prototype.md. No LLM is needed or authorized by this task. If a new model operation is necessary, report that changed prerequisite rather than substitute a model.\n\nCONCRETE STEPS:\n1. Print a flushed progress line at every phase boundary, before and after each model load, generation, benchmark or subprocess that can take minutes. Emit inner-loop counts and a parent heartbeat at least every 60 seconds during long calls; keep every silence gap below 600 seconds. Poll long processes in tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between calls; do not compose one huge file in one tool call. A silent task can die at 1200 seconds despite the 4800-second cap.\n2. Read the listed sources, authenticate prior evidence and check the exclusion manifest. Write or extend the task REQ-* and SCENARIO-* requirements and failing tests before implementation. Reuse existing mechanisms and thin runners. Freeze methods before looking at new outcomes; distinguish old execution evidence from new science.\n3. Authenticate Exp8733 installed_attribution_ready_score and the measured duplicate_feature_digest_extraction span (native child-service fraction 0.4562842). Reproduce the duplicate extraction call count through the installed B16 path. Do not attribute its fraction to total parent time or infer speedup.\n4. Implement the smallest opt-in internal path that extracts and validates each request feature vector once, then uses that identical vector for numerical scoring and the existing feature digest. Keep immutable per-request ownership; no cross-request cache, stale vector reuse, dropped validation, format change, or altered arithmetic. Preserve baseline execution for matched comparison and do not switch the production default.\n5. Test batch sizes 1/4/16, the original 64-item panel and malformed/truncated/oversized frames, duplicate IDs, mixed valid/invalid batches, nonfinite features, changed head/extension/config hashes and feature mutation between preparation and use. Assert byte-identical same-arm wire decisions and digests, identical error paths and exactly one successful extraction per request. No failure may inherit a previous success payload.\n6. Build the actual wheel/extension, run from an isolated installed root and retain the original historical import compatibility assertions. Cover both Python and native providers. Run E2E-003/004 across the loaded extension and private E2E-018/021 for the study. feature_reuse_ready_score=1 requires original compatibility plus parity and new mutation controls; timing claims belong to Exp8744.\n7. Freeze the qualified wheel, source, extension and head identities for Exp8744. Capture all owned coverage and parser boundaries. Stop prototype work by 3000 seconds, with validation time reserved; preserve a terminal null if behavior cannot be preserved.\n8. Run scoped unit tests, Ruff lint/format, strict types, relevant spec coverage and the named applicable E2E checks. Require genuine 100% coverage of new executable statements and retain real child/JUnit/coverage evidence; do not weaken tests, skip original assertions, synthesize coverage or edit shared validators to pass. Use private artifact roots for tests and inspect git status afterward. Publish only terminal validated bytes; run adversarial_verify.py, verdict_row_consistency_lint.py --strict and fresh-process cold replay against those bytes. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md with measured outcomes. Do not alter active research-roadmap.yaml, the exclusion manifest, generator weights, or the ARC policy.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind a claim to its actual producer.\nhonest_verdict, verdict_class: principle: Start honest_verdict with complete_; verdict_class is positive | circular_positive | null | blocked | disqualified | partial. Only incomplete owned work that a retry can finish is partial; missing or retired external inputs are blocked.\ngate_check_summary: principle: Every blocked result names the upstream, path/hash, failed check, field, operator, expected and observed values; distinguish missing file, missing field and measured zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts: principle: These tasks use no_model_load, MODEL_SPECS=[], zero LLM calls. Declare cached-verifier scoring or upstream aggregation as actually performed; record numerical training separately. Never claim GPU inference from a model name.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count: principle: Store each intended unit and arm, raw metrics, denominators and cost; repeats and siblings do not multiply independent cases.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Oracle-dependent positives are circular_positive; constructed or exposed data do not prove natural or hidden-game generalization.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Execution readiness differs from scientific benefit; a failed acceptance_gate_* cannot yield a positive verdict_class.\npreconditions_checked, started_at_utc, ended_at_utc, duration_s, phase_spans, random_seed, reproducibility_checksum: principle: Retain current invocation clocks and actual measured time, never old monotonic epochs or padding sleeps.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind imported fields to exact bytes and identify numerical kernels, source versions and raw observations.\nfeature_reuse_ready_score, installed_wheel_reference, loaded_extension_reference, feature_extraction_count_rows, wire_parity_rows, invalid_input_rows, ownership_mutation_rows, original_import_contract_rows: principle: Reusing already computed features is valid only when decisions, evidence digests and rejection behavior retain their original meaning.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8743_v749_single_extraction_prototype.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Reuse each request feature vector for scoring and its digest",
+      "track": "infrastructure"
+    },
+    {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8744_v749_single_extraction_cost.json",
+      "estimated_wall_time_min": 45,
+      "gated_on": [
+        {
+          "artifact_field": "feature_reuse_ready_score",
+          "op": "==",
+          "upstream": "exp8743-single-extraction-prototype",
+          "value": 1
+        }
+      ],
+      "id": "exp8744-single-extraction-cost",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 30,
+      "milestone": "2026.11.749",
+      "per_unit_rows": true,
+      "phase": 3,
+      "prior_failures": [
+        {
+          "addressed_by": "This comparison follows the new qualified single-extraction mechanism in Exp8743. It changes the measured dominant duplicate work from Exp8733 while matching both language arms; historical no-10x results remain intact.",
+          "experiment_id": "exp8635-installed-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "This comparison follows the new qualified single-extraction mechanism in Exp8743. It changes the measured dominant duplicate work from Exp8733 while matching both language arms; historical no-10x results remain intact.",
+          "experiment_id": "exp8647-installed-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "This comparison follows the new qualified single-extraction mechanism in Exp8743. It changes the measured dominant duplicate work from Exp8733 while matching both language arms; historical no-10x results remain intact.",
+          "experiment_id": "exp8703-installed-batch-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. V748 ran ten producers and skipped four studies. Exp8723 qualified collection; Exp8724 passed its 39 core nodes but its deadline_smoke child timed out at 300 seconds, leaving readiness zero. Exp8729 gained 0.0667 defect detection at equal calls on exposed constructed worlds, CI95 [0.0333,0.1000]; this is circular evidence. Exp8731 qualified resident integer parity. Exp8732 projected 71507.5 seconds for 122880 durable updates and stopped. Exp8733 attributes 45.63% of native child-service time to duplicate feature extraction. No useful learning, current CUDA repair, new ARC outcome or physical acceleration was established. V749 contains exactly twelve tasks, Exp8737 through Exp8748. Preserve all historical bytes, quarantines and scientific nulls.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/research-roadmap-v748-preserved-20261102.md; research-references.md; python/carnot/reporting/installed_batch_cost_8717.py; python/carnot/reporting/installed_batch_cost_measure_8717.py; python/carnot/reporting/installed_cost_attribution_8733.py; python/carnot/inference/resident_batch.py; tests/python/test_installed_batch_cost_8717.py; results/experiment_8717_v747_installed_batch_cost.json; results/experiment_8733_v748_installed_cost_attribution.json\n\nTASK:\nMeasure complete installed costs after qualified feature reuse. Deliver results/experiment_8744_v749_single_extraction_cost.json. Use thin runner scripts/experiments/experiment_8744_v749_single_extraction_cost.py, raw evidence results/raw/experiment_8744_v749_single_extraction_cost/ and notes docs/research-notes/v749-single-extraction-cost.md. No LLM is needed or authorized by this task. If a new model operation is necessary, report that changed prerequisite rather than substitute a model.\n\nCONCRETE STEPS:\n1. Print a flushed progress line at every phase boundary, before and after each model load, generation, benchmark or subprocess that can take minutes. Emit inner-loop counts and a parent heartbeat at least every 60 seconds during long calls; keep every silence gap below 600 seconds. Poll long processes in tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between calls; do not compose one huge file in one tool call. A silent task can die at 1200 seconds despite the 4800-second cap.\n2. Read the listed sources, authenticate prior evidence and check the exclusion manifest. Write or extend the task REQ-* and SCENARIO-* requirements and failing tests before implementation. Reuse existing mechanisms and thin runners. Freeze methods before looking at new outcomes; distinguish old execution evidence from new science.\n3. Require Exp8743.feature_reuse_ready_score=1 and its actual installed binary identities. Before timing, verify equal request bytes, numerical work, batch 16, full response digests and exact same-arm parity with baseline. Freeze ten paired repeats, Python/native providers and original/reuse paths: 40 process cells, each 16 panels of the original 64 items (1024 requests). Rotate the four-arm order deterministically within each repeat.\n4. Measure complete parent startup, configuration, requests, shutdown and failures with the profiler disabled. Keep steady-state p50/p95 as separate metrics. Include feature extraction, digest construction, validation, transport and serialization. Feedback storage is outside this inference boundary and must be stated. Retain each process and request row; correctness or early-exit failures cannot count as fast observations.\n5. Use 10000 paired process-repeat bootstrap draws. Primary feature-reuse benefit is native original/reuse complete throughput ratio lower95>1.05 with steady native B16 p95<=50ms and no >5% p95 regression versus baseline. Report Python benefit separately. Report optimized native/Python same-batch ratio with its CI; only lower95>=10 meets NFR-01. Do not compare optimized native to unoptimized Python for the 10x claim.\n6. Retain Exp8717 original batching result and same-batch null as historical facts. A complete null here closes feature-reuse performance under this workload. No fresh scientific learner, GPU or FPGA result is implied. Run private E2E-018/021 and the installed E2E-003/004 parity smoke before timing, then stop measurements by 3000 seconds.\n7. Run scoped unit tests, Ruff lint/format, strict types, relevant spec coverage and the named applicable E2E checks. Require genuine 100% coverage of new executable statements and retain real child/JUnit/coverage evidence; do not weaken tests, skip original assertions, synthesize coverage or edit shared validators to pass. Use private artifact roots for tests and inspect git status afterward. Publish only terminal validated bytes; run adversarial_verify.py, verdict_row_consistency_lint.py --strict and fresh-process cold replay against those bytes. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md with measured outcomes. Do not alter active research-roadmap.yaml, the exclusion manifest, generator weights, or the ARC policy.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind a claim to its actual producer.\nhonest_verdict, verdict_class: principle: Start honest_verdict with complete_; verdict_class is positive | circular_positive | null | blocked | disqualified | partial. Only incomplete owned work that a retry can finish is partial; missing or retired external inputs are blocked.\ngate_check_summary: principle: Every blocked result names the upstream, path/hash, failed check, field, operator, expected and observed values; distinguish missing file, missing field and measured zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts: principle: These tasks use no_model_load, MODEL_SPECS=[], zero LLM calls. Declare cached-verifier scoring or upstream aggregation as actually performed; record numerical training separately. Never claim GPU inference from a model name.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count: principle: Store each intended unit and arm, raw metrics, denominators and cost; repeats and siblings do not multiply independent cases.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Oracle-dependent positives are circular_positive; constructed or exposed data do not prove natural or hidden-game generalization.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Execution readiness differs from scientific benefit; a failed acceptance_gate_* cannot yield a positive verdict_class.\npreconditions_checked, started_at_utc, ended_at_utc, duration_s, phase_spans, random_seed, reproducibility_checksum: principle: Retain current invocation clocks and actual measured time, never old monotonic epochs or padding sleeps.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind imported fields to exact bytes and identify numerical kernels, source versions and raw observations.\ninstalled_cost_ready_score, feature_reuse_benefit_score, optimized_same_batch_10x_score, process_rows, request_rows, paired_intervals, startup_shutdown_rows, steady_latency_rows, correctness_failures, cost_boundary: principle: A speed claim needs equal installed work and complete parent time; optimized native and Python arms must share the same optimization.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8744_v749_single_extraction_cost.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Measure complete installed costs after qualified feature reuse",
+      "track": "research"
+    },
+    {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8745_v749_bounded_durable_cost.json",
+      "estimated_wall_time_min": 65,
+      "gated_on": [],
+      "id": "exp8745-bounded-durable-cost",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 50,
+      "milestone": "2026.11.749",
+      "per_unit_rows": true,
+      "phase": 3,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp8732 measured a 71507.5-second lower bound for the full durable workload. This preregisters a separate 2880-update, three-window estimand with the same per-feedback durability, parity, renormalization and restart, plus a measured admission bound. It cannot close the original long-run throughput claim.",
+          "experiment_id": "exp8573-resident-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp8732 measured a 71507.5-second lower bound for the full durable workload. This preregisters a separate 2880-update, three-window estimand with the same per-feedback durability, parity, renormalization and restart, plus a measured admission bound. It cannot close the original long-run throughput claim.",
+          "experiment_id": "exp8610-lean-resident-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp8732 measured a 71507.5-second lower bound for the full durable workload. This preregisters a separate 2880-update, three-window estimand with the same per-feedback durability, parity, renormalization and restart, plus a measured admission bound. It cannot close the original long-run throughput claim.",
+          "experiment_id": "exp8732-resident-update-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_durability_budget"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. V748 ran ten producers and skipped four studies. Exp8723 qualified collection; Exp8724 passed its 39 core nodes but its deadline_smoke child timed out at 300 seconds, leaving readiness zero. Exp8729 gained 0.0667 defect detection at equal calls on exposed constructed worlds, CI95 [0.0333,0.1000]; this is circular evidence. Exp8731 qualified resident integer parity. Exp8732 projected 71507.5 seconds for 122880 durable updates and stopped. Exp8733 attributes 45.63% of native child-service time to duplicate feature extraction. No useful learning, current CUDA repair, new ARC outcome or physical acceleration was established. V749 contains exactly twelve tasks, Exp8737 through Exp8748. Preserve all historical bytes, quarantines and scientific nulls.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; scripts/experiment_template.py; python/carnot/reporting/primary_publication.py; openspec/change-proposals/research-roadmap-vNEXT.md; openspec/change-proposals/research-roadmap-v748-preserved-20261102.md; research-references.md; python/carnot/verify/resident_sparse_8731.py; python/carnot/verify/resident_update_cost_8732.py; python/carnot/reporting/resident_update_cost_8732.py; python/carnot/reporting/resident_update_runner_8732.py; python/carnot/verify/spline_lifecycle_8706.py; tests/python/test_resident_update_cost_8732.py; results/experiment_8731_v748_resident_sparse_prototype.json; results/experiment_8732_v748_resident_update_cost.json\n\nTASK:\nMeasure matched durable update costs in fixed lifecycle windows. Deliver results/experiment_8745_v749_bounded_durable_cost.json. Use thin runner scripts/experiments/experiment_8745_v749_bounded_durable_cost.py, raw evidence results/raw/experiment_8745_v749_bounded_durable_cost/ and notes docs/research-notes/v749-bounded-durable-cost.md. No LLM is needed or authorized by this task. If a new model operation is necessary, report that changed prerequisite rather than substitute a model.\n\nCONCRETE STEPS:\n1. Print a flushed progress line at every phase boundary, before and after each model load, generation, benchmark or subprocess that can take minutes. Emit inner-loop counts and a parent heartbeat at least every 60 seconds during long calls; keep every silence gap below 600 seconds. Poll long processes in tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between calls; do not compose one huge file in one tool call. A silent task can die at 1200 seconds despite the 4800-second cap.\n2. Read the listed sources, authenticate prior evidence and check the exclusion manifest. Write or extend the task REQ-* and SCENARIO-* requirements and failing tests before implementation. Reuse existing mechanisms and thin runners. Freeze methods before looking at new outcomes; distinguish old execution evidence from new science.\n3. Authenticate Exp8731 resident_update_ready_score and exact loaded native binary plus Exp8732 durability probe. Preserve its full-workload blocked verdict: four observed durable updates took 0.582\u20130.608 seconds and the 122880-update design projected at least 71507.5 seconds. Do not rerun that design, disable fsync, use tmpfs, batch acknowledgments or silently reduce its claim.\n4. Freeze a different bounded estimand: three 32-update windows beginning at update offsets 0, 2032 and 4064 of the original 4096-update trajectory; ten paired repeats of Python integer/original JSON native/resident native per window. This is 90 process rows and 2880 measured durable updates. Authenticate each starting state against the original parity trace; build any arithmetic-only prefix outside the window, report its cost and forbid whole-service extrapolation from a prewarmed state.\n5. The middle window must cross actual renormalization and a real process restart after update 2048. Each measured feedback update retains full state serialization, file fsync, atomic replace, directory fsync and acknowledgment. Include host feature/nonlinear work, copies, dense and sparse arithmetic, launch, init, shutdown and restart. Verify coefficients, counters and acknowledgment identities against the matched Python path for every update.\n6. Before all windows, run one four-update durability probe on the actual filesystem. Use its maximum observed latency plus measured process overhead with a 25% reserve to admit the fixed 90-cell plan within 3000 seconds. If it does not fit, block with the actual value and retain the probe; do not choose an easier window or shrink n after outcomes. Emit progress within update loops and heartbeat across fsync/subprocess waits.\n7. Compute 10000 bootstrap draws resampling the ten matched repeat blocks with all arms and windows kept together. Primary result is equal-window-weighted resident/original-native complete throughput ratio; benefit needs lower95>1.05 and <=5% p95 regression. Report each window separately and matched native/Python ratios. Claims cover these windows only, not uninterrupted long-run throughput, useful learning or physical hardware. Run E2E-003/004 and the existing actual hard-exit/resume durability controls; never invent a new weaker persistence protocol.\n8. Run scoped unit tests, Ruff lint/format, strict types, relevant spec coverage and the named applicable E2E checks. Require genuine 100% coverage of new executable statements and retain real child/JUnit/coverage evidence; do not weaken tests, skip original assertions, synthesize coverage or edit shared validators to pass. Use private artifact roots for tests and inspect git status afterward. Publish only terminal validated bytes; run adversarial_verify.py, verdict_row_consistency_lint.py --strict and fresh-process cold replay against those bytes. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md with measured outcomes. Do not alter active research-roadmap.yaml, the exclusion manifest, generator weights, or the ARC policy.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind a claim to its actual producer.\nhonest_verdict, verdict_class: principle: Start honest_verdict with complete_; verdict_class is positive | circular_positive | null | blocked | disqualified | partial. Only incomplete owned work that a retry can finish is partial; missing or retired external inputs are blocked.\ngate_check_summary: principle: Every blocked result names the upstream, path/hash, failed check, field, operator, expected and observed values; distinguish missing file, missing field and measured zero.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts: principle: These tasks use no_model_load, MODEL_SPECS=[], zero LLM calls. Declare cached-verifier scoring or upstream aggregation as actually performed; record numerical training separately. Never claim GPU inference from a model name.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count: principle: Store each intended unit and arm, raw metrics, denominators and cost; repeats and siblings do not multiply independent cases.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Oracle-dependent positives are circular_positive; constructed or exposed data do not prove natural or hidden-game generalization.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Execution readiness differs from scientific benefit; a failed acceptance_gate_* cannot yield a positive verdict_class.\npreconditions_checked, started_at_utc, ended_at_utc, duration_s, phase_spans, random_seed, reproducibility_checksum: principle: Retain current invocation clocks and actual measured time, never old monotonic epochs or padding sleeps.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind imported fields to exact bytes and identify numerical kernels, source versions and raw observations.\nbounded_update_cost_ready_score, bounded_resident_benefit_score, starting_state_rows, window_process_rows, durable_update_rows, durability_probe, resource_projection, restart_rows, paired_window_intervals, excluded_prefix_cost_rows, long_run_claim_allowed: principle: Bounded matched lifecycle measurements preserve durability and scope; omitted durable prefixes forbid full-trajectory claims.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8745_v749_bounded_durable_cost.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Measure matched durable update costs in fixed lifecycle windows",
+      "track": "research"
+    }
+  ]
+}
