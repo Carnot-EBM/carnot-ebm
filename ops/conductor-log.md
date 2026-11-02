@@ -21107,3 +21107,5 @@ code |
 | 2026-11-02 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_value_routing_cost_control_overclaim age-week 0: OP |
 | 2026-11-02 00:03 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_bool_leaf_values age-week 0: OPEN 1 days: SILENT_NON_FIR |
 | 2026-11-02 00:20 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-02 00:52 UTC | Plan milestone 2026.11.747 | OK | 14 tasks proposed |
+| 2026-11-02 01:06 UTC | Milestone 2026.11.747 activated | OK | 14 tasks queued |
