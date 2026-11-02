@@ -21112,3 +21112,6 @@ code |
 | 2026-11-02 01:45 UTC | Bind fourteen tasks to retained authority and inde | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 97 passed, 1 warning in 108.47s (0:01:48) |
 | 2026-11-02 01:49 UTC | Separate replay clocks and qualify the frozen orig | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8709-contract-methods.learning_authority_ready_score (actual=0 == expected=1) |
 | 2026-11-02 01:51 UTC | Qualify original deadline publication and the comp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8710-invocation-clock-core) |
+| 2026-11-02 02:38 UTC | Measure lexical collisions and symbolic capacity w | OK | 90 passed, 1 warning in 477.98s (0:07:57) |
+| 2026-11-02 02:40 UTC | Measure continuous typed-decision learning after s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8711-learning-union) |
+| 2026-11-02 02:40 UTC | Test future proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8713-causal-brier-stream) |
