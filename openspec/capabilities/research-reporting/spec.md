@@ -104041,3 +104041,21 @@ model calls and new level credit unchanged at zero.
 An unchanged authenticated ledger yields zero new rows and unchanged exact event
 identities. New receipts deduplicate run/event identities. Missing, censored and
 completed-no-progress remain separate. Flagged producers grant no readiness.
+
+## REQ-REPORT-8722: Reconcile fourteen V747 scheduling outcomes
+
+Exp8722 SHALL independently bind the fourteen complete V747 task objects, visible
+order and canonical digest. Read exact deliverables and distinguish qualified
+producers, failed producer checks, conductor skips and absent scientific rows.
+Reconstruct lexical collisions, verifier detections, paired batch costs and
+compiled integer parity from authenticated operands and original thresholds.
+Preserve the closed ARC panel separately from new outcome identities, historical
+quarantines, missing probabilities and operation-specific physical blocks.
+
+### SCENARIO-REPORT-8722-ACCOUNTING
+
+All fourteen dispositions include the capstone's own measured checks. Failed
+producer readiness cannot propagate. Valid nulls close; unchanged blocked scopes
+stop until a stated mechanism changes. G1 through G4 retain their existing
+publication meanings and grant no new scientific acceptance. No model loads,
+language-model calls, push, activation or external publication occur.

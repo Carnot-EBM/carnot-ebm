@@ -1,0 +1,112 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8722_v747_capstone.json",
+  "primary_sha256": "sha256:5e1e8710b3747577f78704ad5fb30f80b6c86d4baeed1603615a5c7c02d22a9c",
+  "report": {
+    "actual_findings": {
+      "flagged_count": 0,
+      "reports": [
+        {
+          "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/terminal_candidate.json",
+          "exp_id": 8722,
+          "flag_count": 0,
+          "flags": [],
+          "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+          "honest_verdict": "complete_blocked_v747_capstone",
+          "loaded": true,
+          "max_severity": -1,
+          "title": ""
+        }
+      ]
+    },
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8722_v747_capstone.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8722_v747_capstone.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/terminal_candidate.json",
+        "deadline_s": 180,
+        "duration_s": 5.574809664,
+        "ended_monotonic_ns": 285961919911076,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/cold_replay.stdout",
+        "log_sha256": "sha256:80594c73c839c49d75957d24a13b7918df130bd5e34b50809d64c6357a39abcb",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 285956345101412,
+        "started_wall_ns": 1793605459132920131,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/cold_replay.stdout",
+        "stdout_sha256": "sha256:80594c73c839c49d75957d24a13b7918df130bd5e34b50809d64c6357a39abcb",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/terminal_candidate.json",
+        "deadline_s": 180,
+        "duration_s": 7.126164348,
+        "ended_monotonic_ns": 285969047647718,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/adversarial.stdout",
+        "log_sha256": "sha256:49f32095684b383eec27d3732a1d214418dc8e5f279a0f84bb5e35bc1ad35100",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 285961921483370,
+        "started_wall_ns": 1793605464709302339,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/adversarial.stdout",
+        "stdout_sha256": "sha256:49f32095684b383eec27d3732a1d214418dc8e5f279a0f84bb5e35bc1ad35100",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/terminal_candidate.json",
+        "deadline_s": 180,
+        "duration_s": 0.065200257,
+        "ended_monotonic_ns": 285969115093222,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 285969049892965,
+        "started_wall_ns": 1793605471837712105,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8722_v747_capstone/invocations/1793605187395089630/terminal/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ]
+  }
+}

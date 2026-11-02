@@ -57396,3 +57396,21 @@ grant production readiness. Failed owned checks disqualify the reader.
 Real private CLI success, rejection, blocked and failed-child paths retain honest
 receipts. A fresh process reconstructs final bytes from independently sealed
 primitives. A changed candidate, primitive, code/input/log or clock fails replay.
+
+## REQ-VERIFY-8722: Reuse sealed capstone custody for V747
+
+Freeze sources, tests, inputs and configuration before reduction. Reuse the
+versioned V746 bounded serial collector in an isolated module namespace with
+V747 dependencies. Preserve disjoint child SQLite, JUnit, nodes, source hashes,
+actual exits and clocks. Require 100 percent newly owned statements, real private
+CLI success and rejection, E2E-018/021, Ruff, strict types and scoped spec tracing.
+Do not run the full repository suite or historical experiment controllers.
+
+### SCENARIO-VERIFY-8722-REPLAY
+
+Fresh bounded replay checks independent primitive and validation seals and
+reconstructs final bytes. Missing operands and consistently rehashed tampering
+fail. Unchanged primary publication, adversarial and strict-row validators check
+final bytes before atomic publication. External incompleteness is terminal
+blocked; failed owned validation disqualifies. Ops and traceability reconciliation
+remain conductor-owned after exit.
