@@ -21153,3 +21153,4 @@ code |
 | 2026-11-02 21:24 UTC | Measure complete installed costs after qualified f | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8743-single-extraction-prototype.feature_reuse_ready_score (actual=0 == expected=1) |
 | 2026-11-02 21:55 UTC | Measure matched durable update costs in fixed life | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 98 passed, 1 warning in 50.73s |
 | 2026-11-02 22:13 UTC | Read only new live supervisor outcomes for cross-g | OK | 90 passed, 1 warning in 43.57s |
+| 2026-11-02 22:35 UTC | Map new feature and durable-window costs to each b | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 92 passed, 1 warning in 23.63s |
