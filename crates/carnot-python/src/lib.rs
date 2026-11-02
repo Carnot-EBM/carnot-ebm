@@ -28,6 +28,8 @@ mod radial_8105;
 mod s2kan;
 mod safety_net;
 mod schedule;
+#[cfg(feature = "spline-fixed-8719")]
+mod spline_fixed_8719;
 mod spectral_k_block;
 mod verification_learning;
 
@@ -499,6 +501,8 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     numerical_update_8027::register(m)?;
     radial_8105::register(m)?;
+    #[cfg(feature = "spline-fixed-8719")]
+    spline_fixed_8719::register(m)?;
     #[cfg(feature = "direct-spline-8379")]
     direct_spline_8379::register(m)?;
 

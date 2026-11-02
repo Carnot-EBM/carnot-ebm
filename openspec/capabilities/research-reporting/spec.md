@@ -104002,3 +104002,24 @@ Missing files, missing fields, changed bytes and observed zero remain distinct.
 A flagged producer cannot grant readiness. No model loads or physical FPGA claim.
 
 Verification 2026-11-02, Exp8717: 60/60 process cells and 61440/61440 evaluations complete, with zero failed or censored cells. Cost readiness1; batching benefit1; same-batch10x0. Native B16/B1 complete throughput 1.1382x (95% interval 1.1218–1.1601), steady item p95 18.420ms. Native/Python B16 throughput 1.0054x (95% interval 0.9981–1.0139); NFR-01 is null. Eleven owned tests and two private E2E-018/021 reader tests pass. All394 newly owned statements are covered without exclusions; scoped Ruff, strict mypy, spec tracing, cold replay, missing/rehashed rejection, adversarial and strict row checks pass. This positive result concerns batching on one fixed CPU workload; it establishes no learning, independent generalization or FPGA acceleration.
+
+## REQ-REPORT-8719: Exact opt-in compiled sparse arithmetic
+
+Port the qualified signed32/24 lifecycle into an opt-in Rust module and actual
+PyO3 extension. Bind all fourteen V747 task objects independently. Authenticate
+Exp8706, its terminal validation, original five heads, vectors and label orders.
+Compare all twenty 4096-update jobs and five 64-update boundary jobs with Python
+and authenticated historical state hashes. Count repeats as zero independent
+questions. Preserve host scaling, offsets, sigmoid, label admission and durable
+storage. Count host calls and coefficient copies. Keep production defaults.
+
+### SCENARIO-REPORT-8719-PARITY
+
+Require exact integer states, operation counters, serialized coefficient order,
+probabilities and decisions. Preserve signed floor division and ties to even.
+Check signed64 intermediates, saturation, zero denominator, NaN and supported
+bounds before native wraparound. Record genuine process exits and resumes at
+update2048, with identical state and acknowledgement. Replay work is separate.
+Readiness requires loaded-extension identity and all owned validation. Native CPU
+arithmetic establishes no physical FPGA execution, learning benefit or speedup.
+The on-chip KAN paper supplies locality motivation only.

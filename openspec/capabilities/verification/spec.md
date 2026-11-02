@@ -57361,3 +57361,23 @@ checks disqualify; external incompleteness blocks. Preserve historical bytes and
 shared validators. Ops and BMAD reconciliation belong to the conductor.
 
 Verification 2026-11-02, Exp8717: 60/60 process cells and 61440/61440 evaluations complete, with zero failed or censored cells. Cost readiness1; batching benefit1; same-batch10x0. Native B16/B1 complete throughput 1.1382x (95% interval 1.1218–1.1601), steady item p95 18.420ms. Native/Python B16 throughput 1.0054x (95% interval 0.9981–1.0139); NFR-01 is null. Eleven owned tests and two private E2E-018/021 reader tests pass. All394 newly owned statements are covered without exclusions; scoped Ruff, strict mypy, spec tracing, cold replay, missing/rehashed rejection, adversarial and strict row checks pass. This positive result concerns batching on one fixed CPU workload; it establishes no learning, independent generalization or FPGA acceleration.
+
+## REQ-VERIFY-8719: Sealed compiled parity and bounded validation
+
+Freeze sources, tests, configuration and original operands before measurement.
+Use disk-backed private scratch, flushed phase boundaries and parent heartbeats.
+Require focused Python tests, real private CLI success and rejection, owned Rust
+unit tests, formatting, scoped clippy, Ruff, strict mypy and spec tracing.
+Retain disjoint child nodes, SQLite, JUnit, hashes, exits and clocks. Require100
+percent newly owned Python statements, including subprocess and rejection paths.
+Run private E2E-018/021 and actual native E2E-003/004. No full repository suite.
+
+### SCENARIO-VERIFY-8719-CUSTODY
+
+Cold-replay original sealed jobs through the loaded extension in a fresh bounded
+process. Verify separate measurement and validation seals before rebuilding the
+report. Reject missing operands, source drift and consistently rehashed tampering.
+Run unchanged primary publication, adversarial validation and strict row checking
+before atomic publication. Failed owned checks disqualify. External absence is
+terminal blocked with exact missing/changed/zero diagnostics. Ops and traceability
+reconciliation belong to the conductor after exit.
