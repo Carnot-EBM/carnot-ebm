@@ -110,3 +110,37 @@ verification and strict row readers validate final bytes before atomic replace.
 Owned failure disqualifies; external incompleteness is complete_blocked with
 path/hash/check/field/operator/expected/observed diagnostics. Ops, changelog and
 BMAD reconciliation remain conductor-owned. Historical evidence is immutable.
+
+## REQ-REPORT-8735: Map resident costs to authenticated board operations
+
+Bind all fourteen complete V748 tasks, visible table and canonical digest separately
+from the original scientific protocol. Independently admit Exp8727 learning costs,
+Exp8732 resident lifecycle costs and Exp8733 installed attribution. A missing or
+blocked sibling cannot suppress qualified costs. Preserve missing versus zero,
+constructed update versus inference versus causal learning denominators, historical
+results and unchanged board prerequisites. Emit every measured operation for KV260,
+PolarFire and GateMate; CPU arithmetic does not authenticate FPGA compatibility.
+Only complete disjoint timing and authenticated compatible operations permit a
+conditional1/(1-f) ceiling. Unknown compatibility and timing remain null. Ideal
+10x/100x require compatible fractions0.9/0.99 including measured host and transfer
+costs. Mapping readiness and physical readiness are independent. No model, probe,
+flash, purchase, NPU or TSU execution. Future KV260 access uses SSH/scp/xmutil.
+
+### SCENARIO-REPORT-8735-INDEPENDENT
+
+Absent Exp8727 and blocked Exp8732 retain their exact diagnostics while qualified
+Exp8733 inference spans remain visible. No old missing-cost conclusion replaces
+new timing. KV260 quadratic k_max<=5 does not support spline updates; PolarFire is
+Linux CPU dispatch; GateMate retains0xffffffff until dated physical change,
+IDCODE0x20000001 and ordered n16 smoke. Acquisition prerequisites remain unchanged.
+
+## REQ-VERIFY-8735: Reuse sealed reader validation
+
+Use isolated version bindings of existing readers, bounded validation and atomic
+publication. Freeze source/test/input/method identities before execution. Require
+100 percent new statements, private CLI and replay controls, Ruff, strict mypy,
+spec tracing and private E2E018/021. Preserve SQLite, JUnit, nodes, exits and clocks.
+No historical controller runs. Cold replay rejects missing operands and rehashed
+tampering using independent seals. Unchanged primary, adversarial and strict row
+validators inspect final bytes. External incompleteness is complete_blocked;
+failed owned checks disqualify. Conductor owns ops and traceability reconciliation.
