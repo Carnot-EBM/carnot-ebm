@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="14" time="103.958" timestamp="2026-11-01T20:17:10.624279-05:00" hostname="icbfl1"><testcase classname="tests.python.test_v747_contract_8709" name="test_authority_and_controls" time="11.467" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_methods" time="2.943" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_rejection[missing]" time="0.210" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_rejection[changed]" time="0.212" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_rejection[zero]" time="0.244" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_rejection[flagged]" time="0.260" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_rejection[terminal]" time="0.259" /><testcase classname="tests.python.test_v747_contract_8709" name="test_private_cli_and_cold_rejection" time="31.712" /><testcase classname="tests.python.test_v747_contract_8709" name="test_collection_and_full_path" time="26.270"><failure message="FileExistsError: [Errno 17] File exists: '/var/tmp/exp8709-s2aorfb4/0/tmp/test_collection_and_full_path0/private/0'">tmp_path = PosixPath('/var/tmp/exp8709-s2aorfb4/0/tmp/test_collection_and_full_path0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7ff34c4c5d00&gt;
+
+    def test_collection_and_full_path(tmp_path, monkeypatch):
+        """REQ-VERIFY-8709: current collection is disjoint; real failed coverage disqualifies."""
+        private, raw = tmp_path / "private", tmp_path / "raw"
+        private.mkdir()
+        raw.mkdir()
+        plan, receipt = runner.collect(private, raw)
+        nodes = [n for s in plan for n in s["nodes"]]
+        assert receipt["passed"] and len(nodes) == len(set(nodes))
+        assert all(s["role"] != "producer" for s in plan)
+        stream = tmp_path / "empty"
+        stream.write_text("")
+        original_child = runner.child
+        monkeypatch.setattr(
+            runner, "child", lambda *a, **k: dict(passed=False, stdout_path=str(stream))
+        )
+        with pytest.raises(ValueError, match="collection"):
+            runner.collect(private, raw)
+        monkeypatch.setattr(runner, "child", lambda *a, **k: dict(passed=True, stdout_path=str(stream)))
+        stream.write_text(m.TESTS[0] + "::test_fake\n")
+        with pytest.raises(ValueError, match="missing_collection_nodes"):
+&gt;           runner.collect(private, raw)
+
+tests/python/test_v747_contract_8709.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v747_contract_runner.py:67: in collect
+    scratch.mkdir()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/var/tmp/exp8709-s2aorfb4/0/tmp/test_collection_and_full_path0/private/0')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileExistsError: [Errno 17] File exists: '/var/tmp/exp8709-s2aorfb4/0/tmp/test_collection_and_full_path0/private/0'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileExistsError</failure></testcase><testcase classname="tests.python.test_v747_contract_8709" name="test_direct_replay_controls" time="28.491" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_deep_identity[source]" time="0.039" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_deep_identity[qualification]" time="0.041" /><testcase classname="tests.python.test_v747_contract_8709" name="test_retained_deep_identity[seal]" time="0.043" /><testcase classname="tests.python.test_v747_contract_8709" name="test_missing_original_methods" time="0.002" /></testsuite></testsuites>

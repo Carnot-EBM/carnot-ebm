@@ -1,0 +1,328 @@
+"""REQ-VERIFY-8709: supervise current checks and authenticate retained execution separately."""
+
+from __future__ import annotations
+
+import argparse
+from contextlib import contextmanager
+from collections.abc import Iterator
+from datetime import datetime, UTC
+import json
+from pathlib import Path
+import signal
+import sys
+from tempfile import TemporaryDirectory
+import time
+from typing import Any
+from unittest.mock import patch
+
+from carnot.reporting import v746_contract_runner as old
+from carnot.reporting import v747_contract_methods as m
+from carnot.reporting import v747_contract_report as report
+from carnot.reporting.v709_execution import child
+
+Json = dict[str, Any]
+
+
+@contextmanager
+def binding() -> Iterator[None]:
+    """Restore shared helper identities after each current or private invocation."""
+    with patch.multiple(old, a=m, report=report):
+        yield
+
+
+def collect(private: Path, raw: Path) -> tuple[list[Json], Json]:
+    """Collect current owned and private consumer nodes once, excluding historical producers."""
+    suites = m.TESTS + old.CONSUMERS
+    receipt = child(
+        "collect_once",
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-n",
+            "0",
+            "-o",
+            "addopts=",
+            "--no-cov",
+            "--collect-only",
+            "-q",
+            *suites,
+        ],
+        raw / "collection",
+        deadline=60,
+    )
+    nodes = [
+        line
+        for line in Path(receipt["stdout_path"]).read_text().splitlines()
+        if any(line.startswith(s + "::") for s in suites)
+    ]
+    if not receipt["passed"] or not nodes or len(nodes) != len(set(nodes)):
+        raise ValueError("single_exact_collection_failed")
+    plan = []
+    for i, suite in enumerate(suites):
+        group = [n for n in nodes if n.startswith(suite + "::")]
+        if not group:
+            raise ValueError("missing_collection_nodes:" + suite)
+        scratch = private / str(i)
+        scratch.mkdir()
+        config = raw / f"coverage-{i}.ini"
+        config.write_text(
+            f"[run]\nparallel=true\npatch=subprocess\ndata_file={scratch}/.coverage\n[report]\nexclude_lines=\n"
+        )
+        plan.append(
+            dict(
+                name=f"child_{i}",
+                role="owned" if suite in m.TESTS else "consumer",
+                nodes=group,
+                scratch=str(scratch),
+                config=m.e.reference(config),
+                deadline=600,
+                argv=[
+                    sys.executable,
+                    "-m",
+                    "coverage",
+                    "run",
+                    "--rcfile=" + str(config),
+                    "-m",
+                    "pytest",
+                    "-n",
+                    "0",
+                    "-o",
+                    "addopts=",
+                    "--no-cov",
+                    "-q",
+                    *group,
+                    "--basetemp=" + str(scratch / "tmp"),
+                    "--junitxml=" + str(scratch / "junit.xml"),
+                ],
+            )
+        )
+    m.e.atomic_json(raw / "collection_inventory.json", dict(node_ids=nodes, receipt=receipt))
+    return plan, receipt
+
+
+def replay(path: Path) -> bool:
+    """Reconstruct exact final bytes from sealed operands in a fresh bounded process."""
+    try:
+        value = json.loads(path.read_bytes())
+        raw = Path(value["terminal_validation_sidecar_path"]).parent
+        seal = json.loads((raw / "independent_seal.json").read_bytes())
+        if seal != {k: value[k] for k in ["primitive_reference", "validation_reference"]}:
+            return False
+        work, validation = (
+            m.e.load(value["primitive_reference"]),
+            m.e.load(value["validation_reference"]),
+        )
+        refs = (
+            work["source_hashes"]
+            + work["methods_manifest"]["references"]
+            + work["retained_authority"]["references"]
+            + validation["raw_references"]
+        )
+        if any(m.e.sha256_file(Path(r["path"])) != r["sha256"] for r in refs):
+            return False
+        if (
+            m.authority(Path(work["root"])) != work["contract"]
+            or m.methods() != work["methods_manifest"]
+            or m.retained() != work["retained_authority"]
+        ):
+            return False
+        if (
+            validation["retained_child_rows"]
+            and m.e.aggregate(
+                validation["retained_child_rows"], [n for s in work["plan"] for n in s["nodes"]]
+            )
+            != validation["all_child_aggregate"]
+        ):
+            return False
+        return bool(
+            value
+            == report.build(
+                work, value["validation_reference"], raw, Path(value["publication_output"])
+            )
+        )
+    except (OSError, ValueError, KeyError, TypeError, IndexError):
+        return False
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Use current clocks and bounded children; private controls cannot claim qualification."""
+    m.progress("start_no_model_load_calls_0")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", choices=["20261102"], default="20261102")
+    parser.add_argument("--root", type=Path, default=m.ROOT)
+    parser.add_argument("--output", type=Path, default=m.ROOT / "results" / (m.NAME + ".json"))
+    parser.add_argument("--private-control", action="store_true")
+    parser.add_argument("--failed-child", action="store_true")
+    parser.add_argument("--cold-replay", type=Path)
+    parser.add_argument("--deliberate-error", action="store_true")
+    args = parser.parse_args(argv)
+    if args.deliberate_error:
+        return 7
+    if args.cold_replay:
+        passed = replay(args.cold_replay)
+        m.progress("replay_passed" if passed else "replay_rejected", int(passed), 0)
+        return int(not passed)
+    output = args.output.absolute()
+    private_mode = args.private_control or args.failed_child
+    if private_mode:
+        try:
+            old.private_output(output)
+        except ValueError as error:
+            parser.error(str(error))
+    previous = signal.setitimer(signal.ITIMER_REAL, 4800)
+    try:
+        with TemporaryDirectory(prefix="exp8709-", dir="/var/tmp") as directory, binding():
+            private = Path(directory)
+            start, wall = time.monotonic_ns(), time.time_ns()
+            raw = output.parent / "raw" / m.NAME / "invocations" / str(wall)
+            raw.mkdir(parents=True)
+            m.progress("preconditions")
+            pre = old.preconditions(private)
+            plan, collected = ([], None) if private_mode else collect(private, raw)
+            sources = old.source_hashes() + [s["config"] for s in plan] + pre["tools"]
+            retained = m.retained()
+            methods = m.methods()
+            work = dict(
+                root=str(args.root.absolute()),
+                run_date=args.date,
+                invocation_id=str(wall),
+                started_monotonic_ns=start,
+                started_at_utc=datetime.fromtimestamp(wall / 1e9, UTC).isoformat(),
+                private_control=private_mode,
+                plan=plan,
+                source_hashes=sources,
+                preconditions=pre,
+                precondition_failures=retained["gate_check_summary"],
+                contract=m.authority(args.root),
+                methods_manifest=methods,
+                authority_mutation_rows=m.mutations(),
+                retained_authority=retained,
+                historical_failure=retained["historical_failure"],
+                original_node_ids=retained["qualification"].get("original_node_ids", []),
+            )
+            if (
+                not pre["disk_backed"]
+                or pre["free_memory_kib"] < 131072
+                or pre["free_disk_bytes"] < 67108864
+            ):
+                work["precondition_failures"].append(
+                    m.gate(private, "cpu_resources", True, pre, m.TASK)
+                )
+            measured_end = time.monotonic_ns()
+            work["phase_spans"] = [
+                dict(
+                    phase="preconditions_and_registration",
+                    start_monotonic_ns=start,
+                    end_monotonic_ns=measured_end,
+                    duration_s=(measured_end - start) / 1e9,
+                )
+            ]
+            m.e.atomic_json(raw / "measurement.json", work)
+            m.progress("source_sealed", len(sources), 0)
+            receipts, children = old.execute(
+                plan,
+                raw,
+                [m.e.reference(m.ROOT / p) for p in m.OWNED + m.TESTS],
+                start / 1e9 + 3600,
+            )
+            if collected is not None:
+                receipts.insert(0, collected)
+            if private_mode:
+                receipts.append(
+                    child(
+                        "private_child",
+                        [
+                            sys.executable,
+                            "-c",
+                            "raise SystemExit(3)"
+                            if args.failed_child
+                            else "print('private CPU control')",
+                        ],
+                        raw / "checks",
+                        deadline=10,
+                    )
+                )
+            m.progress("qualify_current_children", len(children), 0)
+            union = m.e.aggregate(children, [n for s in plan for n in s["nodes"]])
+            coverage = (
+                old.coverage_summary(
+                    [r for r in children if m.e.load(r)["role"] == "owned"], raw / "owned_combine"
+                )
+                if children and union["passed"]
+                else dict(complete=False, files=[], percent=0)
+            )
+            if not private_mode:
+                commands = [
+                    ("ruff_check", [".venv/bin/ruff", "check", *m.OWNED, *m.TESTS]),
+                    ("ruff_format", [".venv/bin/ruff", "format", "--check", *m.OWNED, *m.TESTS]),
+                    (
+                        "strict_mypy",
+                        [".venv/bin/mypy", "--strict", "--follow-imports=silent", *m.OWNED],
+                    ),
+                    (
+                        "spec_coverage",
+                        [sys.executable, "scripts/check_spec_coverage.py", "--files", *m.TESTS],
+                    ),
+                ]
+                for name, command in commands:
+                    receipts.append(child(name, command, raw / "checks", deadline=120))
+                for name, passed in [
+                    ("exact_current_child_union", union["passed"]),
+                    ("owned_statement_coverage", coverage["complete"]),
+                    (
+                        "source_seal",
+                        all(m.e.sha256_file(Path(r["path"])) == r["sha256"] for r in sources),
+                    ),
+                ]:
+                    receipts.append(
+                        dict(
+                            name=name,
+                            passed=passed,
+                            expected_exit=0,
+                            actual_exit=int(not passed),
+                            stdout_path=str(raw / "measurement.json"),
+                        )
+                    )
+            end = time.monotonic_ns()
+            refs = children + [
+                ref for row in children for ref in m.e.load(row)["sqlite_references"]
+            ]
+            refs += [
+                dict(path=r[s + "_path"], sha256=r[s + "_sha256"])
+                for r in receipts
+                for s in ["stdout", "stderr"]
+                if s + "_sha256" in r
+            ]
+            validation = dict(
+                receipts=receipts,
+                retained_child_rows=children,
+                producer_qualification=retained["qualification"],
+                all_child_aggregate=union,
+                owned_coverage=coverage,
+                raw_references=refs,
+                ended_monotonic_ns=end,
+                ended_wall_ns=time.time_ns(),
+                phase_spans=[
+                    dict(
+                        phase="bounded_validation",
+                        start_monotonic_ns=measured_end,
+                        end_monotonic_ns=end,
+                        duration_s=(end - measured_end) / 1e9,
+                    )
+                ],
+            )
+            m.e.atomic_json(raw / "validation.json", validation)
+            validation_ref = m.e.reference(raw / "validation.json")
+            m.e.atomic_json(
+                raw / "independent_seal.json",
+                dict(
+                    primitive_reference=m.e.reference(raw / "measurement.json"),
+                    validation_reference=validation_ref,
+                ),
+            )
+            value = report.build(work, validation_ref, raw, output)
+            old.publish(value, output, raw)
+            return 0
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, *previous)

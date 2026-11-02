@@ -103878,3 +103878,20 @@ a mapped operation is not measured acceleration. A valid below-threshold cost or
 learning result is null. Missing costs or upstream qualification are blocked,
 never retryable partial. Every physical claim requires actual compatible device
 evidence; no purchase, probe, flash, deployment or activation is scheduled here.
+
+## REQ-REPORT-8709: Bind V747 methods to retained producer authority
+
+Authenticate fourteen full task objects, table order, markers and the fixed V747
+canonical digest. Reuse Exp8695 only through its pinned primary, sealed primitives,
+terminal acceptance and original child receipts. Preserve the V746 design bytes,
+V744 objectives, original39+25 node partition, numerical and cost thresholds.
+Register the five explicit V747 branch changes without granting scientific benefit.
+Historical clock and memory-guard failures remain immutable diagnostics.
+
+### SCENARIO-REPORT-8709-AUTHORITY
+
+Accept staged or activated V747. Reject changes to counts, IDs, text, routes,
+models, gates, priors and consistently rehashed replacements. Each branch owns
+its eligible inputs; independent work has no unrelated readiness prerequisite.
+Missing external operands block with precise gate rows; failed owned checks
+disqualify. Readiness scores require complete owned checks and retained authority.

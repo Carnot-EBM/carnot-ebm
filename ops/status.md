@@ -2,6 +2,21 @@
 
 **Last Updated:** 2026-11-02
 
+## 2026-11-02 UTC — Exp8709 retained authority isolation repair
+
+The V747 runner copies retained authority failures before recording current
+resource failures. A resource failure cannot change the retained historical
+authority, so disqualified reports still pass fresh-process reconstruction.
+The original collection and failed-coverage regression passes unchanged.
+Validation receipts: `/var/tmp/carnot-8709-repair/`.
+
+All 63 distinct relevant tests pass without skips, including private E2E-018/021,
+publication readers, the added rehashed historical-child substitution control
+and 10 fix-gate tests. Genuine unit/subprocess coverage is 297/297 statements
+across four V747 implementation files, with zero exclusions. Scoped Ruff,
+strict mypy and spec tracing pass. Global reconciliation retains the existing
+1,142 missing spec references and stale architecture date; no full suite ran.
+
 ## 2026-11-02 UTC — V747 staged research plan
 
 Milestone `2026.11.747` proposes fourteen tasks, Exp8709–Exp8722, in four

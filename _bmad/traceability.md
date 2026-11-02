@@ -1,6 +1,21 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-11-01
+**Last Updated:** 2026-11-02
+
+## Exp8709 retained authority isolation repair — 2026-11-02 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-8709 / SCENARIO-VERIFY-8709-REPLAY | Copy retained authority failures before appending current resource failures | The unchanged `test_collection_and_full_path` passes: incomplete owned coverage disqualifies and the published report cold-replays |
+| REQ-REPORT-8709 / SCENARIO-REPORT-8709-AUTHORITY | Preserve independently sealed historical authority and its diagnostics | Current resource failures no longer mutate retained authority; historical results, original assertions and the conductor remain unchanged |
+
+Validation: 53 distinct unit, publication-reader and private E2E-018/021 tests,
+plus all 10 fix-gate tests, pass without skips. Rehashed historical child
+substitution rejects independently. Genuine unit/subprocess coverage covers all
+297 statements across the four V747 implementation files at 100 percent, with
+zero exclusions. Scoped Ruff, strict mypy and spec tracing pass. Repair receipts:
+`/var/tmp/carnot-8709-repair/`. Global reconciliation retains the existing 1,142
+missing spec references and stale architecture date; no full repository suite ran.
 
 ## Exp8691 private output and failed-child repair — 2026-11-01
 

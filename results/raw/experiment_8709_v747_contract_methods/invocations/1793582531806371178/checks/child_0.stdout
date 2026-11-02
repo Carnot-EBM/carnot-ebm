@@ -1,0 +1,188 @@
+.........F.....                                                          [100%]
+=================================== FAILURES ===================================
+________________________ test_collection_and_full_path _________________________
+
+tmp_path = PosixPath('/var/tmp/exp8709-a97y82vz/0/tmp/test_collection_and_full_path0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff710c309e0>
+
+    def test_collection_and_full_path(tmp_path, monkeypatch):
+        """REQ-VERIFY-8709: current collection is disjoint; real failed coverage disqualifies."""
+        private, raw = tmp_path / "private", tmp_path / "raw"
+        private.mkdir()
+        raw.mkdir()
+        plan, receipt = runner.collect(private, raw)
+        nodes = [n for s in plan for n in s["nodes"]]
+        assert receipt["passed"] and len(nodes) == len(set(nodes))
+        assert all(s["role"] != "producer" for s in plan)
+        stream = tmp_path / "empty"
+        stream.write_text("")
+        original_child = runner.child
+        monkeypatch.setattr(
+            runner, "child", lambda *a, **k: dict(passed=False, stdout_path=str(stream))
+        )
+        with pytest.raises(ValueError, match="collection"):
+            runner.collect(private, raw)
+        monkeypatch.setattr(runner, "child", lambda *a, **k: dict(passed=True, stdout_path=str(stream)))
+        stream.write_text(m.TESTS[0] + "::test_fake\n")
+        negative_private = tmp_path / "negative-private"
+        negative_private.mkdir()
+        with pytest.raises(ValueError, match="missing_collection_nodes"):
+            runner.collect(negative_private, raw)
+        monkeypatch.setattr(runner, "child", original_child)
+        tiny = tmp_path / "test_tiny.py"
+        tiny.write_text("def test_actual():\n    assert True\n")
+    
+        def tiny_plan(private, raw):
+            specs, collection = plan[:1], deepcopy(receipt)
+            spec = deepcopy(specs[0])
+            scratch = private / "child"
+            scratch.mkdir()
+            cfg = raw / "config.ini"
+            cfg.write_text(f"[run]\nparallel=true\ndata_file={scratch}/.coverage\n")
+            spec.update(
+                name="tiny",
+                scratch=str(scratch),
+                nodes=[str(tiny) + "::test_actual"],
+                config=m.e.reference(cfg),
+            )
+            spec["argv"] = [
+                sys.executable,
+                "-m",
+                "coverage",
+                "run",
+                "--rcfile=" + str(cfg),
+                "-m",
+                "pytest",
+                "-c",
+                "/dev/null",
+                "-n",
+                "0",
+                "-o",
+                "addopts=",
+                "--no-cov",
+                "-q",
+                *spec["nodes"],
+                "--junitxml=" + str(scratch / "junit.xml"),
+            ]
+            return [spec], collection
+    
+        monkeypatch.setattr(runner, "collect", tiny_plan)
+        preconditions = runner.old.preconditions
+        monkeypatch.setattr(
+            runner.old, "preconditions", lambda p: dict(preconditions(p), disk_backed=False)
+        )
+        output = tmp_path / "full" / (m.NAME + ".json")
+>       assert runner.main(["--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v747_contract_8709.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v747_contract_runner.py:325: in main
+    old.publish(value, output, raw)
+python/carnot/reporting/v746_contract_runner.py:312: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/exp8709-a97y82vz/0/tmp/test_collection_and_full_path0/full/experiment_8709_v747_contract_methods.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authority_mutations': True, 'complete_fourteen_objects': True, 'newly_owned_...erved': False, 'passed': True}, {'expected': False, 'mutation': 'title', 'observed': False, 'passed': True}, ...], ...}
+validator = <function publish.<locals>.validate at 0x7ff710d53740>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_collect_once completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_once completed=1 pending=0
+[exp8709] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8709] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8709] phase=mutation_activated completed=1 pending=21
+[exp8709] phase=mutation_staged completed=2 pending=20
+[exp8709] phase=mutation_count completed=3 pending=19
+[exp8709] phase=mutation_order completed=4 pending=18
+[exp8709] phase=mutation_id completed=5 pending=17
+[exp8709] phase=mutation_title completed=6 pending=16
+[exp8709] phase=mutation_phase completed=7 pending=15
+[exp8709] phase=mutation_deliverable completed=8 pending=14
+[exp8709] phase=mutation_track completed=9 pending=13
+[exp8709] phase=mutation_priority completed=10 pending=12
+[exp8709] phase=mutation_model completed=11 pending=11
+[exp8709] phase=mutation_MODEL_SPECS completed=12 pending=10
+[exp8709] phase=mutation_inference_substrate_class completed=13 pending=9
+[exp8709] phase=mutation_prompt completed=14 pending=8
+[exp8709] phase=mutation_gated_on completed=15 pending=7
+[exp8709] phase=mutation_prior_failures completed=16 pending=6
+[exp8709] phase=mutation_start completed=17 pending=5
+[exp8709] phase=mutation_end completed=18 pending=4
+[exp8709] phase=mutation_table completed=19 pending=3
+[exp8709] phase=mutation_digest completed=20 pending=2
+[exp8709] phase=mutation_rehashed completed=21 pending=1
+[exp8709] phase=mutation_foreign_active completed=22 pending=0
+[exp8709] phase=source_sealed completed=10323 pending=0
+[exp8709] phase=child completed=0 pending=1
+[exp8205] phase=before_subprocess_tiny completed=0 pending=1
+[exp8205] phase=after_subprocess_tiny completed=1 pending=0
+[exp8709] phase=qualify_current_children completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_check completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_check completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_format completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_format completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_mypy completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_mypy completed=1 pending=0
+[exp8205] phase=before_subprocess_spec_coverage completed=0 pending=1
+[exp8205] phase=after_subprocess_spec_coverage completed=1 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['ops/dogfood-memory.json']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v747_contract_8709.py::test_collection_and_full_path
+1 failed, 14 passed, 1 warning in 132.00s (0:02:11)

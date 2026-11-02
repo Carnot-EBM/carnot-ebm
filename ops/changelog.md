@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-11-02 UTC — Fix Exp8709 retained authority mutation
+
+Copy the retained authority's failure list before appending current resource
+diagnostics. This preserves independently sealed historical evidence and lets
+the unchanged failed-coverage regression publish and cold-replay a disqualified
+report. Original test assertions, historical artifacts and
+`scripts/research_conductor.py` remain unchanged. Add a regression rejecting
+historical child receipts substituted into rehashed current validation.
+Validation receipts: `/var/tmp/carnot-8709-repair/`.
+
+Verified 63 distinct relevant tests without skips, including private E2E-018/021,
+publication readers and 10 fix-gate tests. Unit/subprocess coverage is 297/297
+statements across four V747 implementation files with zero exclusions. Scoped
+Ruff, strict mypy and spec tracing pass. Existing global traceability and
+architecture-age issues remain; no full repository suite ran.
+
 ## 2026-11-02 UTC — Plan milestone 2026.11.747
 
 Stage matching design and YAML contracts for fourteen tasks, Exp8709–Exp8722,

@@ -57262,3 +57262,23 @@ measurement and validation seals reject missing operands and consistently
 rehashed tampering in a fresh bounded process. Owned failed/killed checks
 disqualify; unchanged external incompleteness remains complete_blocked. Private
 controls reject lexical and resolved checkout paths before writing evidence.
+
+## REQ-VERIFY-8709: Qualify the current binding without replaying old producers
+
+Freeze source, input, test and configuration identities before measurement.
+Collect scoped tests once; retain bounded disjoint child SQLite, JUnit, exact nodes,
+commands, actual exits and clocks before combining copies. Require100 percent new
+statements, private CLI success/rejection, private E2E-018/021, Ruff, strict types
+and spec tracing. Use current clocks, disk-backed private scratch and heartbeats.
+Current resource failures must use an independent failure list and leave retained
+authority diagnostics unchanged, so disqualified reports remain cold-replayable.
+
+### SCENARIO-VERIFY-8709-REPLAY
+
+Fresh-process reconstruction rejects missing operands, changed bytes and rehashed
+claims. Substituting a sealed historical child receipt into current validation
+must fail aggregate reconstruction even after the validation reference and
+independent seal are rehashed. Unchanged primary publication, adversarial and
+strict-row validators check
+final bytes before atomic publication. No model loads, historical controller runs
+or physical hardware claims occur. Ops reconciliation remains conductor-owned.
