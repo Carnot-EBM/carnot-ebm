@@ -22820,3 +22820,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   authored work; its exact marker and resolution were archived without reverting
   the documents. No conductor or active-roadmap edit was made by this repair,
   and no full repository suite or research producer ran.
+- 2026-11-02: Repair collection scratch ownership and bind fourteen branch methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v748_collection_contract; results/experiment_8723_v748_collection_contract.json
