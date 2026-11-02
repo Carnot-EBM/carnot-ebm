@@ -104514,3 +104514,34 @@ credit. This satisfies the standing generalization slot without new science.
 Keep unresolved and censored exposure separate from failures. Recommendations
 remain observational. Missing external operands block; owned failures disqualify.
 The conductor owns ops, changelog and traceability reconciliation.
+
+## REQ-REPORT-8747: Map independent costs to retained board operations
+
+Exp8747 shall authenticate Exp8740 learning_cost_ready_score, Exp8744
+installed_cost_ready_score and Exp8745 bounded_update_cost_ready_score separately.
+Bind each declared path, hash, failed comparison and absence state. Scheduling
+skips are administrative evidence. Freeze methods before reduction. Preserve
+causal_learning, installed_inference_only and bounded_durable_window boundaries;
+windows cannot replace a complete learning or service denominator.
+Retain KV260 quadratic Ising k_max<=5, PolarFire Linux CPU dispatch and GateMate
+0xffffffff until dated physical change and IDCODE0x20000001. Map every operation
+on each board. Integer parity and feature reuse imply no fabric support.
+Only disjoint measured compatible fractions in one named parent and clock may
+produce conditional Amdahl ceilings. Host extraction, transfer and per-feedback
+persistence remain unaccelerated. Ideal10x requires f>=0.9;100x requires f>=0.99.
+No model, board command, purchase or SDK installation is authorized.
+
+### SCENARIO-REPORT-8747-INDEPENDENT
+
+A missing learning branch cannot censor qualified inference or bounded windows.
+Missing file, missing field and observed zero have separate diagnostics. Preserve
+all historical quarantines and nulls. Emit mapping, physical and complete100x
+learning readiness separately. Acquisition requires a supported operation,
+complete relevant workload, measured transfer and actual device execution.
+
+### SCENARIO-REPORT-8747-CLOCKS
+
+Nested spans, negative time, mixed parent totals and absent timings cannot earn
+a fraction. Feature-reuse gains retain their CPU producer and boundary without
+any device attribution. Missing compatible kernels leave ceilings unknown.
+The conductor owns ops/status/changelog and traceability reconciliation.

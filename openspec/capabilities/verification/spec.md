@@ -57671,3 +57671,20 @@ Reject changed retained readiness, registry, source hashes or frontier identitie
 duplicate receipt rewrites, invalid dates and rehashed credit promotion. Private
 controls grant no production readiness. Distinguish missing files, missing
 fields and measured zero. Preserve historical artifacts and quarantines.
+
+## REQ-VERIFY-8747: Seal model-free hardware mapping and private readers
+
+Retain real child exits, JUnit and SQLite coverage for all added statements,
+scoped Ruff, strict types and spec tracing. Run private E2E-018/021 controls.
+Original assertions and shared validators remain unchanged. Authenticate prior
+terminal bytes, source closures and independent measurement/validation seals.
+Publish only bytes accepted by fresh-process replay, adversarial verification
+and strict row consistency. Missing external evidence blocks; owned failures
+disqualify. Test artifacts use private roots and cannot grant public readiness.
+
+### SCENARIO-VERIFY-8747-SEAL
+
+Reject changed sources, invalid dates, private checkout output, absent original
+methods, readiness substitution and rehashed primitive edits. Preserve historical
+bytes. Full-suite failures remain visible in their original receipt. Reconciliation
+of ops and traceability is conductor-owned.
