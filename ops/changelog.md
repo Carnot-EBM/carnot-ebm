@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-02 UTC — Operational retrospective for milestone 2026.11.749
+
+- Updated `results/operational_retro_2026_11_749.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.749`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 7 completed experiments (0 compute-bound, 7 synthesis-only) across 35.5 wall-time minutes (36 minutes / 0.6 hours, averaging 5 minutes per experiment).
+- The five slowest experiments were all synthesis-only: `Reuse each request feature vector for scoring and its digest` (25.99 minutes / 26min), `Bind twelve tasks and freeze independent learning and verifier-transfer methods` (7.55 minutes / 8min), `Locate deadline-smoke work and qualify bounded original deadline controls` (1.65 minutes / 2min), `Reconcile twelve outcomes and close exact learning verification and cost scopes` (0.17 minutes / 0min), and `Measure matched durable update costs in fixed lifecycle windows` (0.11 minutes / 0min).
+- GPU monitor report (`2026-11-02T22:58:43.842342+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 2866/24576MB (12%), 0% utilization, and 49C with 1 python process (`PID 1913316`, 2856MB, 293.2s CPU / 16545s wall); because 0 compute-bound experiments ran, `gpu_idle_on_compute_bound_tasks` is `null` and 0% GPU utilization is expected behavior for synthesis-only tasks.
+- Suggested improvements: parallelize independent scoring and digest checks in the 25.99-minute feature-vector reuse task, cache contract schema bindings and deadline-smoke lookups across the 7.55-minute and 1.65-minute tasks, and emit explicit start/end timestamps in experiment artifacts to avoid `retro_timing_fallback` when git-log has 0 commits.
+
 ## 2026-11-02 UTC — Fix Exp8738 external coverage imports
 
 Pass both checkout import roots through the deadline supervisor's child

@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.749",
+  "generated_at": "2026-11-02T22:58:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 35.5,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Reuse each request feature vector for scoring and its digest",
+      "duration_minutes": 25.99,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind twelve tasks and freeze independent learning and verifier-transfer methods",
+      "duration_minutes": 7.55,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Locate deadline-smoke work and qualify bounded original deadline controls",
+      "duration_minutes": 1.65,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile twelve outcomes and close exact learning verification and cost scopes",
+      "duration_minutes": 0.17,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure matched durable update costs in fixed lifecycle windows",
+      "duration_minutes": 0.11,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "In milestone 2026.11.749, 7 synthesis-only experiments (0 compute-bound) finished in 35.5 wall-time minutes (36 minutes / 0.6 hours, averaging 5 minutes per experiment) under disk-mtime fallback reconstruction (retro_timing_fallback, 0 commits in live git-log). Runtime was concentrated in 'Reuse each request feature vector for scoring and its digest' (25.99 minutes / 26min) and 'Bind twelve tasks and freeze independent learning and verifier-transfer methods' (7.55 minutes / 8min), followed by 'Locate deadline-smoke work and qualify bounded original deadline controls' (1.65 minutes / 2min), 'Reconcile twelve outcomes and close exact learning verification and cost scopes' (0.17 minutes / 0min), and 'Measure matched durable update costs in fixed lifecycle windows' (0.11 minutes / 0min). With 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 49C, 1 python process PID 1913316 at 2856MB with 293.2s CPU / 16545s wall time) is expected synthesis-only behavior.",
+  "bottlenecks_identified": [
+    "Single-task wall-time concentration in 'Reuse each request feature vector for scoring and its digest' at 25.99 minutes (26min) out of 35.5 total milestone minutes (36 minutes / 0.6 hours).",
+    "Secondary synthesis-only latency in 'Bind twelve tasks and freeze independent learning and verifier-transfer methods' (7.55 minutes / 8min) and 'Locate deadline-smoke work and qualify bounded original deadline controls' (1.65 minutes / 2min), compared with sub-minute execution in 'Reconcile twelve outcomes and close exact learning verification and cost scopes' (0.17 minutes / 0min) and 'Measure matched durable update costs in fixed lifecycle windows' (0.11 minutes / 0min).",
+    "Reliance on disk-mtime fallback timing (retro_timing_fallback) because the live git-log path recorded 0 commits."
+  ],
+  "improvements_suggested": [
+    "Stage and run independent scoring and digest checks concurrently inside 'Reuse each request feature vector for scoring and its digest' (25.99 minutes / 26min) to trim its share of the 35.5-minute milestone.",
+    "Pre-index contract schemas and reuse validated inputs during 'Bind twelve tasks and freeze independent learning and verifier-transfer methods' (7.55 minutes / 8min) and 'Locate deadline-smoke work and qualify bounded original deadline controls' (1.65 minutes / 2min).",
+    "Write start and completion timestamps directly into each experiment's JSON artifact so milestone timing does not fall back to disk-mtime reconstruction when git-log has 0 commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize independent feature-vector scoring and digest verification test suites in the 25.99-minute (26min) 'Reuse each request feature vector for scoring and its digest' task.",
+    "Cache validated contract bindings and deadline-smoke lookup tables for the 7.55-minute (8min) task-binding and 1.65-minute (2min) deadline-control qualification tasks.",
+    "Emit direct start/end timestamps in experiment artifacts to remove dependence on retro_timing_fallback when live git-log finds 0 commits."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Because all 7 completed experiments in milestone 2026.11.749 were synthesis-only (0 compute-bound) across 35.5 minutes (36 minutes / 0.6 hours, 5 minutes average), the 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 49C) is normal for non-GPU synthesis work rather than a GPU bottleneck, and DualGPURunner did not apply. Reducing the 25.99-minute runtime of 'Reuse each request feature vector for scoring and its digest' offers the largest operational speedup for the next milestone."
+}
