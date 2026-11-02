@@ -19,7 +19,7 @@ Json = dict[str, Any]
 
 
 def evaluate(
-    head: Json, rows: Any, native: Any, limit: Any
+    head: Json, rows: Any, native: Any, limit: Any, *, reuse_features: bool = False
 ) -> tuple[list[Json], list[Json], list[str]]:
     """Reject the whole envelope before work can leak a successful partial answer."""
     if type(limit) is not int or not 1 <= limit <= 16:
@@ -41,10 +41,18 @@ def evaluate(
         q = row["q"]
         if type(q) not in {int, float} or not math.isfinite(q) or not 0 <= q <= 1:
             raise ValueError("probability_input")
-    features = [numeric.extract(row["public"]) for row in rows]
-    results, spans = numeric.batch(head, rows, native)
+    if reuse_features:
+        from .resident_features_8743 import prepare
+
+        prepared = tuple(prepare(row) for row in rows)
+        results, spans = numeric.batch(head, rows, native, prepared=prepared)
+        hashes = [f.feature_hash for f in prepared]
+    else:
+        features = [numeric.extract(row["public"]) for row in rows]
+        results, spans = numeric.batch(head, rows, native)
+        hashes = [f["feature_hash"] for f in features]
     return (
         [json.loads(row["response"]) for row in results],
         spans,
-        [f["feature_hash"] for f in features],
+        hashes,
     )

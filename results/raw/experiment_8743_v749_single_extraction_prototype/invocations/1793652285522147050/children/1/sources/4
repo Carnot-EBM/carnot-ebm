@@ -1,0 +1,215 @@
+"""REQ-VERIFY-8743: reuse bounded publication and retain genuine owned coverage.
+
+Separate module namespaces keep historical bindings unchanged. Added-statement
+coverage uses the qualified pre-prototype wheel as its independent baseline.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+import signal
+import sys
+from typing import Any
+from unittest.mock import patch
+
+from coverage import Coverage
+
+from carnot.reporting import single_extraction_8743 as e
+from carnot.reporting import single_extraction_measure_8743 as m
+from carnot.reporting import installed_batch_runner_8702 as original
+from carnot.reporting import v748_collection_contract as binding
+from carnot.reporting import v746_retained_evidence as retained
+from carnot.verify import native_nine_input_8533 as native
+from carnot.reporting.v709_execution import child, progress
+
+Json = dict[str, Any]
+runtime = binding.namespace(original, "reuse8743_runtime")
+runtime.e, runtime.measurement = e, m
+runtime.shared = binding.namespace(runtime.shared, "reuse8743_sources")
+BASE_VALIDATE = runtime.validate
+BASE_TERMINAL = runtime.terminal
+
+
+def source_hashes() -> list[Json]:
+    """Seal owned code, shared numerical helpers, requirements and original validators."""
+    return [
+        e.reference(e.ROOT / p)
+        for p in e.OWNED
+        + native.SOURCES
+        + ["python/carnot/verify/native_nine_input_8533.py"]
+        + e.MODIFIED
+        + e.TESTS
+        + [
+            "python/carnot/verify/source_alignment.py",
+            "python/carnot/reporting/installed_batch_measure_8702.py",
+            "python/carnot/reporting/installed_batch_runner_8702.py",
+            "python/carnot/reporting/primary_publication.py",
+            "scripts/adversarial_verify.py",
+            "scripts/verdict_row_consistency_lint.py",
+            "openspec/capabilities/research-reporting/spec.md",
+            "openspec/capabilities/verification/spec.md",
+            "ops/exclusion_manifest.yaml",
+        ]
+    ]
+
+
+def validate(raw: Path, scratch: Path, sources: list[Json], original_nodes: list[str]) -> Json:
+    """Run original compatibility nodes, owned checks and private named E2E readers."""
+    result: Json = BASE_VALIDATE(raw, scratch, sources, original_nodes)
+    combined = result["coverage"]["combined"]["combined_reference"]
+    cov = Coverage(data_file=combined["path"], config_file=False)
+    cov.load()
+    for name in e.MODIFIED[:2]:
+        _, statements, _, missing, _ = cov.analysis2(str(e.ROOT / name))
+        added = e.added_lines(name)
+        row = dict(
+            path=name, statements=len(set(statements) & added), missing=sorted(set(missing) & added)
+        )
+        result["coverage"]["files"].append(row)
+        result["coverage"]["complete"] &= bool(row["statements"] and not row["missing"])
+    for label, selected in [
+        (
+            "private_e2e018_021",
+            [
+                "tests/python/test_experiment_7891_v685_authority_lifecycle.py::test_cli_private_success_failure_and_replay",
+                "tests/python/test_restricted_decision_audit_8210.py::test_private_cli_and_rehashed_mutations",
+            ],
+        ),
+    ]:
+        receipt = child(
+            label,
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                *original.OPTIONS,
+                *selected,
+                "--basetemp=" + str(scratch / label),
+                "--junitxml=" + str(raw / (label + ".xml")),
+            ],
+            raw / "checks",
+            deadline=180,
+        )
+        result["receipts"].append(receipt)
+        result["checks"].append(dict(name=label, passed=receipt["passed"]))
+    result["checks"].append(
+        dict(name="new_statement_coverage", passed=result["coverage"]["complete"])
+    )
+    private = scratch / "full-suite"
+    private.mkdir()
+    prefix = runtime.private_namespace(
+        ["bwrap", "--bind", "/", "/", "--dev-bind", "/dev", "/dev", "--proc", "/proc", "--"],
+        private,
+    )
+    receipt = child(
+        "full_python_suite",
+        [
+            *prefix,
+            str(e.ROOT / ".venv/bin/pytest"),
+            "tests/python",
+            "-q",
+            "--basetemp=" + str(private / "tmp"),
+            "--junitxml=" + str(raw / "full-python.xml"),
+        ],
+        raw / "checks",
+        deadline=180,
+    )
+    result["receipts"].append(receipt)
+    result["checks"].append(dict(name="full_python_suite", passed=receipt["passed"]))
+    return result
+
+
+def replay(path: Path, authority: Json | None = None) -> bool:
+    """Rebuild parity/counts from sealed frames before applying the existing custody reader."""
+    try:
+        value = json.loads(path.read_bytes())
+        if authority is None or value["primitive_reference"] != authority:
+            return False
+        work = e.load(authority)
+        if e.load(work["seal_reference"]) != {
+            k: v for k, v in work.items() if k != "seal_reference"
+        }:
+            return False
+        measured = work["measurement"]
+        if measured:
+            reduced = m.reduce(measured["cell_primitives"], work["inputs"])
+            if any(measured[k] != v for k, v in reduced.items()):
+                return False
+        missing = {
+            (r["path"], r.get("sha256"))
+            for r in work["inputs"]["gate_check_summary"]
+            if r.get("observed_state") == "missing_file"
+        }
+        refs = work["sources"] + work["inputs"]["references"] + measured.get("traces", [])
+        refs += [
+            measured[k]
+            for k in [
+                "installed_wheel_reference",
+                "loaded_extension_reference",
+                "installed_identity_reference",
+            ]
+            if measured.get(k)
+        ]
+        receipts = work["validation"]["receipts"] + measured.get("receipts", [])
+        receipts += [r["receipt"] for r in measured.get("ownership_mutation_rows", [])]
+        refs += [
+            dict(path=r[s + "_path"], sha256=r[s + "_sha256"])
+            for r in receipts
+            for s in ["stdout", "stderr"]
+        ]
+        for ref in refs:
+            operand = Path(ref["path"])
+            if not operand.is_file() and (ref["path"], ref.get("sha256")) in missing:
+                continue
+            if e.reference(operand) != ref:
+                return False
+        children = work["validation"]["children"]
+        if children:
+            nodes = [n for ref in children for n in e.load(ref)["node_ids"]]
+            if not retained.aggregate(children, nodes)["passed"]:
+                return False
+        return bool(e.build(work, Path(work["output"])) == value)
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Reject ambiguous dates and private output aliases before doing any work."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", default="20261102")
+    parser.add_argument("--root", type=Path, default=e.ROOT)
+    parser.add_argument("--private-output", type=Path)
+    parser.add_argument("--cold-replay", type=Path)
+    parser.add_argument("--authority", nargs=2)
+    args = parser.parse_args(argv)
+    progress("8743_no_model_load_MODEL_SPECS=[]_language_model_calls=0")
+    if (
+        args.date != "20261102"
+        or args.private_output
+        and (
+            args.private_output.absolute().is_relative_to(e.ROOT)
+            or args.private_output.resolve().is_relative_to(e.ROOT)
+        )
+    ):
+        return 2
+    if args.cold_replay:
+        authority = dict(zip(["path", "sha256"], args.authority)) if args.authority else None
+        return int(not replay(args.cold_replay, authority))
+    previous = signal.setitimer(signal.ITIMER_REAL, 4800)
+    try:
+        with patch.object(runtime.shared, "source_hashes", source_hashes):
+            return int(
+                runtime.run(
+                    args.private_output or e.ROOT / "results" / (e.NAME + ".json"),
+                    root=args.root,
+                    private=bool(args.private_output),
+                )
+            )
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, *previous)
+
+
+e.protocol_added_lines = lambda: e.added_lines(e.MODIFIED[2])
+runtime.validate, runtime.replay = validate, replay

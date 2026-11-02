@@ -104440,3 +104440,26 @@ incomplete-coverage rejection passes with a real successful coverage child;
 missing statements still deny coverage qualification. This repair changes no
 historical deadline receipt or scientific readiness claim. See
 SCENARIO-VERIFY-8738-CHILD-IMPORTS for regression and custody validation.
+
+## REQ-REPORT-8743: Qualify one extraction per installed request
+
+Exp8743 SHALL authenticate Exp8733 and Exp8716 by exact producer bytes and bound
+terminal receipts. The historical duplicate fraction 0.45628422029939814 has the
+native child-service denominator. It SHALL NOT imply parent cost or speedup.
+Freeze two providers, baseline and opt-in reuse, batch sizes 1/4/16 and the
+original 64-item panel before measurement. Retain all twelve process cells,
+extraction counts, complete wire decisions and digests, rejections, immutable
+ownership controls, current wheel/extension/head identities and original import
+assertions. Production defaults and arithmetic SHALL remain unchanged.
+Readiness requires parity, mutation controls, original compatibility, real child
+receipts and complete new-statement coverage. This study makes no timing claim.
+Missing external evidence blocks; failed owned checks disqualify. No model is
+loaded. The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-8743-INSTALLED
+
+Each successful baseline item extracts twice; each opt-in item extracts once.
+Same-arm serialized decisions and feature digests SHALL match exactly. Native
+and Python providers retain the original numerical tolerance. Freeze qualified
+wheel, source, extension and head identities for Exp8744. Preserve scientific
+nulls and historical bytes. Exposed repeats create no independent questions.

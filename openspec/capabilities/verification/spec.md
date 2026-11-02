@@ -57609,3 +57609,30 @@ formatting, strict mypy and spec tracing pass. Global spec tracing retains
 1,142 existing missing references and the architecture date remains stale;
 the full repository suite was not rerun. Validation receipts are retained at
 `/var/tmp/carnot-8738-repair-znkkvfwh/`.
+
+## REQ-VERIFY-8743: Preserve owned features and rejection boundaries
+
+Prepare an immutable per-request feature vector. Use that vector for scoring
+and its existing digest. Bind ownership to the original request and its complete
+contents. Reject changed requests or feature contents before scoring. Do not
+cache across requests, drop validation or inherit a previous success payload.
+Cover sizes 1/4/16, the original64 panel, duplicate IDs, mixed valid/invalid rows,
+nonfinite features, malformed/truncated/oversized frames and changed head,
+extension and config hashes. Run E2E-003/004 through the loaded extension and
+private E2E-018/021. Retain JUnit, actual child exits and SQLite coverage.
+Require genuine100 percent of newly added executable statements, scoped Ruff,
+strict types and spec tracing. Publish terminal validated bytes with unchanged
+adversarial/strict-row validators and independently bound fresh-process replay.
+
+### SCENARIO-VERIFY-8743-OWNERSHIP
+
+A mutated public source, probability or identifier cannot consume prepared
+features. A distinct request cannot borrow them. Immutable vectors reject direct
+mutation; altered feature/digest pairs fail validation. Invalid batches expose
+fresh errors only. Baseline and reuse retain identical error spellings.
+
+### SCENARIO-VERIFY-8743-CUSTODY
+
+Private CLI checks cover date/path rejection, missing upstreams, valid sealed
+replay, aggregate tampering and changed raw evidence. Coverage measures added
+statements only; original import assertions and shared validators stay intact.

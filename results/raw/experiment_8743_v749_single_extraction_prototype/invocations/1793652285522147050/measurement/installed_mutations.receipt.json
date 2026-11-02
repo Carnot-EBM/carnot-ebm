@@ -1,0 +1,31 @@
+{
+  "actual_exit": 0,
+  "argv": [
+    "env",
+    "-u",
+    "PYTHONPATH",
+    "/var/tmp/installed8702-kd5gy407/installed/environment/bin/python",
+    "-u",
+    "-c",
+    "import os,runpy,tempfile,json;from pathlib import Path;import pytest;os.chdir('/var/tmp/installed8702-kd5gy407');s=runpy.run_path('/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_single_extraction_8743.py');h=s['head'].__wrapped__();r=s['row'].__wrapped__();s['test_immutable_ownership'](h,r);s['test_abstention_preserved'](h,s['row'].__wrapped__());cases=['ids','mixed','public','q_nan','q_inf','too_many','empty','fields','config','deadline','operation'];[s['test_fresh_identical_errors'](h,s['row'].__wrapped__(),c) for c in cases];context=pytest.MonkeyPatch();[s['test_nonfinite_features'](h,s['row'].__wrapped__(),context,v) for v in [float('nan'),float('inf'),-float('inf')]];context.undo();s['test_changed_configuration'](h,r,Path(tempfile.mkdtemp(dir='/var/tmp/installed8702-kd5gy407')),context);context.undo();print(json.dumps([dict(unit_id=c,passed=True) for c in ['ownership','abstention','nonfinite_features','head_extension_config']+cases]))"
+  ],
+  "command": "env -u PYTHONPATH /var/tmp/installed8702-kd5gy407/installed/environment/bin/python -u -c 'import os,runpy,tempfile,json;from pathlib import Path;import pytest;os.chdir('\"'\"'/var/tmp/installed8702-kd5gy407'\"'\"');s=runpy.run_path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_single_extraction_8743.py'\"'\"');h=s['\"'\"'head'\"'\"'].__wrapped__();r=s['\"'\"'row'\"'\"'].__wrapped__();s['\"'\"'test_immutable_ownership'\"'\"'](h,r);s['\"'\"'test_abstention_preserved'\"'\"'](h,s['\"'\"'row'\"'\"'].__wrapped__());cases=['\"'\"'ids'\"'\"','\"'\"'mixed'\"'\"','\"'\"'public'\"'\"','\"'\"'q_nan'\"'\"','\"'\"'q_inf'\"'\"','\"'\"'too_many'\"'\"','\"'\"'empty'\"'\"','\"'\"'fields'\"'\"','\"'\"'config'\"'\"','\"'\"'deadline'\"'\"','\"'\"'operation'\"'\"'];[s['\"'\"'test_fresh_identical_errors'\"'\"'](h,s['\"'\"'row'\"'\"'].__wrapped__(),c) for c in cases];context=pytest.MonkeyPatch();[s['\"'\"'test_nonfinite_features'\"'\"'](h,s['\"'\"'row'\"'\"'].__wrapped__(),context,v) for v in [float('\"'\"'nan'\"'\"'),float('\"'\"'inf'\"'\"'),-float('\"'\"'inf'\"'\"')]];context.undo();s['\"'\"'test_changed_configuration'\"'\"'](h,r,Path(tempfile.mkdtemp(dir='\"'\"'/var/tmp/installed8702-kd5gy407'\"'\"')),context);context.undo();print(json.dumps([dict(unit_id=c,passed=True) for c in ['\"'\"'ownership'\"'\"','\"'\"'abstention'\"'\"','\"'\"'nonfinite_features'\"'\"','\"'\"'head_extension_config'\"'\"']+cases]))'",
+  "deadline_s": 120,
+  "duration_s": 0.416293601,
+  "ended_monotonic_ns": 332836094586646,
+  "exit_code": 0,
+  "expected_exit": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8743_v749_single_extraction_prototype/invocations/1793652285522147050/measurement/installed_mutations.stdout",
+  "log_sha256": "sha256:24f9913be71ac76c109e777285947334b40fa07bc056439a362f439111e12ab3",
+  "name": "installed_mutations",
+  "normal_exit": true,
+  "passed": true,
+  "scope": "owned",
+  "started_monotonic_ns": 332835678293045,
+  "started_wall_ns": 1793652338466111273,
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8743_v749_single_extraction_prototype/invocations/1793652285522147050/measurement/installed_mutations.stderr",
+  "stderr_sha256": "sha256:610e7a3ef39d7558e53dc409379fe82956f3115078470afe78645c0db8ad780f",
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8743_v749_single_extraction_prototype/invocations/1793652285522147050/measurement/installed_mutations.stdout",
+  "stdout_sha256": "sha256:24f9913be71ac76c109e777285947334b40fa07bc056439a362f439111e12ab3",
+  "timed_out": false
+}

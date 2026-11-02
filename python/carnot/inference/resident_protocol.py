@@ -151,8 +151,11 @@ def decide(
                 from . import resident_batch
             else:
                 import resident_batch
-            responses, spans, features = resident_batch.evaluate(
-                config["head"], value.get("rows"), native, config.get("max_batch_size")
+            operands = (config["head"], value.get("rows"), native, config.get("max_batch_size"))
+            responses, spans, features = (
+                resident_batch.evaluate(*operands, reuse_features=True)
+                if config.get("reuse_request_features") is True
+                else resident_batch.evaluate(*operands)
             )
             if time.monotonic_ns() >= deadline:
                 raise ValueError("evaluation_deadline")

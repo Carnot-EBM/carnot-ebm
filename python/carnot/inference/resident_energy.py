@@ -132,8 +132,10 @@ def predict(head: Json, raw: Array) -> Array:
     return np.asarray(weights[:, 1] / weights.sum(axis=1), dtype=float)
 
 
-def batch(head: Json, rows: list[Json], native: Any = None) -> tuple[list[Json], list[Json]]:
-    """Recompute every text feature before numerical work; cached vectors are unused."""
+def batch(
+    head: Json, rows: list[Json], native: Any = None, *, prepared: Any = None
+) -> tuple[list[Json], list[Json]]:
+    """Use complete text features; an internal opt-in binds immutable request operands."""
     began = time.monotonic_ns()
     spans: list[Json] = []
 
@@ -144,10 +146,17 @@ def batch(head: Json, rows: list[Json], native: Any = None) -> tuple[list[Json],
             dict(operation=name, start_ns=spans[-1]["end_ns"] if spans else began, end_ns=end)
         )
 
-    features = [extract(r["public"])["values"] for r in rows]
+    if prepared is None:
+        features = [extract(r["public"])["values"] for r in rows]
+    else:
+        if len(prepared) != len(rows):
+            raise ValueError("feature_count")
+        features = [f.values_for(r) for f, r in zip(prepared, rows, strict=True)]
     if any(x is None or r["q"] is None for r, x in zip(rows, features, strict=True)):
         raise ValueError("request_features")
     raw = np.asarray([[r["q"], *x] for r, x in zip(rows, features, strict=True)], dtype=float)
+    if not np.isfinite(raw).all():
+        raise ValueError("request_features")
     mark("public_text_features")
     scaled, _ = scale(raw, head["scaler"])
     mark("scaling")
