@@ -68,3 +68,45 @@ against independent invocation seals. Validate final bytes with unchanged primar
 publication, adversarial and strict row validators. Owned failure disqualifies;
 external incompleteness blocks with exact path/hash/field/operator/value receipts.
 Optional devices cannot veto CPU evidence. Reconciliation remains conductor-owned.
+
+## REQ-REPORT-8721: Map compiled operations to actual board support
+
+Bind the fourteen complete V747 task objects, visible table and canonical digest.
+Authenticate Exp8713 learning_cost_ready_score, Exp8717 batch_cost_ready_score and
+Exp8719 native_update_ready_score independently at their declared deliverables.
+Verify original producer construction, source/input hashes and terminal receipts.
+Use exact frozen producer document snapshots when later requirements were appended;
+executable source, test and configuration identities must still match.
+Missing files, missing fields, changed bytes and observed zero remain distinct.
+Scheduling skips provide no numerical operands. Flagged producers grant no readiness.
+
+### SCENARIO-REPORT-8721-MAPPING
+
+Emit each operation for KV260, PolarFire and GateMate, including signed32/24
+arithmetic, checked signed64 accumulators, native crossings, dense renormalization,
+sigmoid/scaling, complete features, transfer, serialization/fsync and recovery.
+Keep KV260 quadratic Ising support at k_max<=5, PolarFire Linux CPU dispatch and
+GateMate blocked at0xffffffff until dated change, IDCODE0x20000001 and ordered n16
+smoke. No device probes, flashes or model calls. NPU/TSU remain unqualified.
+CPU port counts do not supply durations. Only disjoint complete measured costs
+and an implemented compatible board kernel permit conditional1/(1-f) ceilings.
+Unknown costs remain null. Mapping readiness is separate from physical readiness
+and complete100x learning; missing one cost branch cannot suppress another.
+
+## REQ-VERIFY-8721: Seal and publish the independent operation reader
+
+Freeze source, tests, configuration and inputs before reduction. Accept --date
+20261102 and retain actual current invocation clocks. Check disk-backed private
+scratch, memory and tools; print flushed boundaries and a parent heartbeat within
+60seconds. Reuse bounded disjoint validation children, retaining original SQLite,
+JUnit, nodes, hashes and exits before combining copies. Require100 percent new
+statements, private CLI success/rejection, scoped lint/types/spec and E2E018/021.
+
+### SCENARIO-VERIFY-8721-REPLAY
+
+Fresh bounded cold replay rejects absent operands and consistently rehashed
+tampering against independent seals. Unchanged primary publication, adversarial
+verification and strict row readers validate final bytes before atomic replace.
+Owned failure disqualifies; external incompleteness is complete_blocked with
+path/hash/check/field/operator/expected/observed diagnostics. Ops, changelog and
+BMAD reconciliation remain conductor-owned. Historical evidence is immutable.
