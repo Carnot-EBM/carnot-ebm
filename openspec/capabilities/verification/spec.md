@@ -57506,3 +57506,18 @@ rejects missing operands, changed sources and consistently rehashed tampering.
 Exercise actual private CLI workers, restart, cold replay, bad dates, unsafe
 private output, altered rows, absent operands and failed owned validation.
 No model loads occur. Conductor owns ops/status/changelog/traceability updates.
+
+## REQ-VERIFY-8733: Seal and replay installed profiling primitives
+
+Freeze source, tests, inputs and methods before measurement. Reuse bounded
+validation controllers with isolated version bindings; preserve historical code
+and results. Retain actual exits, node IDs, SQLite coverage and JUnit. Require
+100 percent newly owned statements, focused tests, Ruff, strict mypy and spec
+tracing. Cold replay SHALL reconstruct spans and aggregates from independently
+bound sealed primitives and reject rehashed tampering, changed sources and
+missing operands before unchanged primary, adversarial and strict row checks.
+
+### SCENARIO-VERIFY-8733-CUSTODY
+
+Private CLI controls SHALL cover valid, blocked, wrong-date, unsafe-output and
+cold-replay rejection paths without recursively running historical controllers.

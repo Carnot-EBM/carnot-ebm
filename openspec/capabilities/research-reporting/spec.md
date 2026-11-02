@@ -104271,3 +104271,25 @@ If even the fastest observed update projects beyond the3600-second measurement
 budget for122880 updates, terminate complete_blocked_durability_budget. Record
 the observed minimum, projection, exact probe hash and filesystem. No throughput
 ratio or measured-zero cost may replace the missing complete lifecycle rows.
+
+## REQ-REPORT-8733: Attribute installed inference costs without changing behavior
+
+Exp8733 SHALL independently bind all fourteen V748 task objects and the original
+V744 scientific method, pinned qualified Exp8716 and Exp8717 receipts, wheel,
+extension, head and original64 panel. Preserve Exp8717 batching and same-batch10x
+null. Run forty B16 process cells: Python/native, instrumentation off/on, ten
+paired repeats, sixteen panels of64 items. Pair identical request bytes and exact
+same-arm scientific outputs with rotated order and one wheel/source identity.
+Measure disjoint child spans for transport, duplicate feature-digest extraction,
+validation, serialization and numerical work; report parent startup/shutdown and
+end-to-end residual separately without subtracting overlapping child clocks.
+Only paired process-bootstrap overhead upper95<=0.05 permits production fractions
+and installed_attribution_ready_score1. Retain unexplained residual and evidence
+for a concrete future optimization; profiling alone establishes no improvement.
+
+### SCENARIO-REPORT-8733-ATTRIBUTION
+
+Require nonnegative local spans and sum<=their own parent, exact frame parity,
+complete clean child exits and process-cluster intervals. Missing operands block;
+owned failures and excessive overhead disqualify attribution. Emit no model
+loads, MODEL_SPECS=[], zero generalization and no hardware or learning claim.
