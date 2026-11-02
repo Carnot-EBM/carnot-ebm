@@ -104410,3 +104410,33 @@ A valid encoded copy passes without rewriting any source. Private E2E-018/021
 readers, original rejection controls, real child/JUnit/coverage receipts and cold
 replay authenticate terminal bytes. Zero model calls and separate branch gates
 remain explicit. Conductor owns ops and traceability reconciliation.
+## REQ-REPORT-8738: Bound the original deadline diagnosis
+
+Exp8738 SHALL authenticate the Exp8724 timeout receipt and empty logs before
+measurement. The old exit -9 at 300 seconds establishes timeout only. Preserve
+the historical disqualified primary. Freeze the original three deadline node
+IDs, assertions and 420-second diagnostic cap before new outcomes. Record setup,
+inspect, fixture copy, cases, publication and replay with real stage clocks.
+Unknown causes yield a terminal null and zero deadline readiness, without retry.
+Retained 39-node eligibility is separate and requires exact source/input identity.
+
+### SCENARIO-REPORT-8738-BOUNDED
+
+The original 3599/3600/3601 controls retain two/three deadline reads, separate
+numerical clocks, 3600.25/3601.25 observations and private disqualified outputs.
+Only measured repeated immutable work can authorize retained fixture reuse.
+No model operation, historical rewrite or full learning-union claim is allowed.
+
+Measured Exp8738 disposition (2026-11-02): the one instrumented diagnostic
+exited -11 after 148.406120203 seconds during original inspection, without
+finishing a deadline case. This was not a timeout and does not establish the
+historical timeout's internal cause. No causal repair is supported. Both
+deadline readiness and retained-core eligibility remain zero; changed roadmap
+input hashes prevent retained-core qualification. Old primary bytes are intact.
+
+Exp8738 child-import repair (2026-11-02): the supervisor supplies both checkout
+import roots to external drivers while preserving inherited paths. The original
+incomplete-coverage rejection passes with a real successful coverage child;
+missing statements still deny coverage qualification. This repair changes no
+historical deadline receipt or scientific readiness claim. See
+SCENARIO-VERIFY-8738-CHILD-IMPORTS for regression and custody validation.

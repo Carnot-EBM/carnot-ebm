@@ -2,6 +2,22 @@
 
 **Last Updated:** 2026-11-02
 
+## 2026-11-02 UTC — Exp8738 coverage-child import repair
+
+The deadline supervisor supplies this checkout's `python/` and repository root
+to child `PYTHONPATH`, preserving inherited entries. External coverage drivers
+now resolve `scripts.conductor_gates`; the original failed-receipt assertion
+passes and incomplete coverage still rejects qualification. The conductor,
+original test assertions and historical evidence are preserved.
+
+All 65 relevant tests pass without skips: eighteen Exp8738 tests and 47 private
+E2E-018/021, publication and fix-gate compatibility tests. Fresh unit/subprocess
+SQLite covers all 309 module/CLI statements with zero exclusions. Scoped Ruff,
+formatting, strict mypy and spec tracing pass. Global reconciliation retains
+the existing 1,142 missing spec references and stale architecture date; the full
+repository suite was not rerun. Receipts: `/var/tmp/carnot-8738-repair-znkkvfwh/`.
+This repair grants no deadline or scientific readiness.
+
 ## 2026-11-02 UTC — Exp8723 activated prompt encoding repair
 
 The authority reader accepts the conductor's exact literal-brace encoding of

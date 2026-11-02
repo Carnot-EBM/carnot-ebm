@@ -4341,3 +4341,15 @@ Design: openspec/change-proposals/research-roadmap-vNEXT.md.
 Queue: research-roadmap-next.yaml. Exactly twelve tasks, Exp8737–Exp8748.
 V748 design bytes remain in research-roadmap-v748-preserved-20261102.md.
 Planning changes no implementation or scientific result.
+
+## Exp8738 external coverage imports repair — 2026-11-02
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8738 / REQ-VERIFY-8738 / SCENARIO-VERIFY-8738-CHILD-IMPORTS | `deadline_cost_8738.supervise` passes both checkout import roots and preserves inherited `PYTHONPATH` | All eighteen Exp8738 tests pass, including the original incomplete-coverage rejection and external drivers with absent/inherited paths; real SQLite covers all 309 module/CLI statements with no exclusions |
+| REQ-CONDUCTOR-FIXGATE-1 | Existing assertions and conductor preserved; no skips or reversions | All ten fix-gate tests pass; private E2E-018/021 and publication tests also pass (47 compatibility tests total) |
+
+Scoped Ruff, formatting, strict mypy and spec tracing pass. Global tracing retains
+1,142 existing missing references; the architecture date remains stale. No full
+repository suite rerun or deadline readiness is claimed. Validation receipts:
+`/var/tmp/carnot-8738-repair-znkkvfwh/`.

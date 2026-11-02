@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-11-02 UTC — Fix Exp8738 external coverage imports
+
+Pass both checkout import roots through the deadline supervisor's child
+environment, preserving inherited `PYTHONPATH` entries. This fixes the original
+coverage driver's `ModuleNotFoundError: scripts.conductor_gates` and failed
+receipt assertion. Add external-driver regressions with absent and inherited
+paths; preserve existing tests, coverage rejection and historical receipts.
+`scripts/research_conductor.py` is unchanged.
+
+All 65 relevant tests pass without skips, including private E2E-018/021,
+publication readers and ten fix-gate tests. Fresh unit/subprocess coverage is
+309/309 statements across the module and CLI, with zero exclusions. Scoped
+Ruff, formatting, strict mypy and spec tracing pass. Existing global spec
+traceability and architecture freshness failures remain; no full repository
+suite rerun or new deadline readiness is claimed.
+Receipts: `/var/tmp/carnot-8738-repair-znkkvfwh/`.
+
 ## 2026-11-02 UTC — Operational retrospective for milestone 2026.11.748
 
 - Updated `results/operational_retro_2026_11_748.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.748`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 10 completed experiments (0 compute-bound, 10 synthesis-only) across 53.5 wall-time minutes (53 minutes / 0.9 hours, averaging 5 minutes per experiment).

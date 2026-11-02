@@ -57567,3 +57567,45 @@ variables must bind consistently. The enumerator imports no tested verifier.
 RT4CHART v2, VerifierBench and delayed OCO assumptions are source-bound; neither
 convex regret nor natural-language generalization transfers to this constructed
 protocol. Verifier method readiness is independent of learning readiness.
+## REQ-VERIFY-8738: Retain bounded diagnostic custody
+
+The task SHALL retain real child exits, JUnit, SQLite coverage, source hashes,
+stage observations and parent heartbeats. On the single 420-second diagnostic
+timeout, capture the active stage and owned process tree and terminate descendants.
+Source, fixture and hash tampering, missing SQLite, killed children and cleanup
+controls SHALL reject readiness. Newly owned executable statements require actual
+100 percent coverage; original source changes invalidate affected retained nodes
+for Exp8739. Private E2E-018/021 and unchanged terminal validators are required.
+
+### SCENARIO-VERIFY-8738-CUSTODY
+
+Fresh replay reconstructs the terminal result from a separately sealed primitive,
+authenticates retained files and rejects consistently rehashed candidate changes.
+Missing evidence differs from measured zero. No failed owned validation can grant
+deadline readiness. The conductor owns ops and traceability reconciliation.
+
+Measured Exp8738 validation (2026-11-02): sixteen current owned tests pass;
+retained real SQLite measures all 303 module and six CLI statements, without
+missing or excluded lines. The full default suite displayed failures and ended
+at its 180-second bound, so it is not qualified. Diagnostic crash and full-suite
+failure keep the terminal verdict disqualified. No deadline or full-suite retry
+is used to turn these observations into passing execution evidence.
+
+### SCENARIO-VERIFY-8738-CHILD-IMPORTS
+
+The deadline supervisor SHALL bind this checkout's `python/` and repository
+root in each child's `PYTHONPATH`, preserving inherited entries. A coverage
+driver located outside the checkout SHALL import the reporting module and
+`scripts.conductor_gates` both with and without an inherited `PYTHONPATH`.
+Its actual exit, logs and SQLite remain the authority for validation; import
+success SHALL NOT grant missing statements coverage or deadline readiness.
+
+Implemented and verified (2026-11-02): all eighteen current Exp8738 tests pass,
+including the original failure and both external-driver environment cases.
+Fresh unit/subprocess SQLite measures 303/303 module and 6/6 CLI statements,
+with zero exclusions. All 47 compatibility tests pass, including private
+E2E-018/021, publication readers and the ten fix-gate controls. Scoped Ruff,
+formatting, strict mypy and spec tracing pass. Global spec tracing retains
+1,142 existing missing references and the architecture date remains stale;
+the full repository suite was not rerun. Validation receipts are retained at
+`/var/tmp/carnot-8738-repair-znkkvfwh/`.

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="16" time="27.314" timestamp="2026-11-02T14:46:37.900103-05:00" hostname="icbfl1"><testcase classname="tests.python.test_deadline_cost_8738" name="test_original_timeout_is_not_a_cause" time="0.298" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_stage_reduction_requires_complete_pairs" time="0.001" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_owned_process_timeout_and_cleanup" time="0.159" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_claim_and_operand_tampering" time="0.208" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_cli_rejections" time="0.003" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_historical_mutation_rejections" time="2.278" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_real_private_publication_and_replay" time="19.535" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_real_sqlite_and_source_fixture_hash_controls" time="0.131"><failure message="ValueError: zero_real_child_coverage">tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T194617-2038026-804c7da7/test_real_sqlite_and_source_fi0')
+
+    def test_real_sqlite_and_source_fixture_hash_controls(tmp_path):
+        """REQ-VERIFY-8738: actual SQLite and killed receipts cannot be replaced by summaries."""
+        namespace = tmp_path / "sqlite"
+        namespace.mkdir()
+        source = namespace / "probe.py"
+        source.write_text("print('measured original control')\n")
+        config = namespace / "coverage.ini"
+        config.write_text(f"[run]\ndata_file={namespace / '.coverage'}\ninclude={source}\n")
+        receipt = e.supervise(
+            "sqlite",
+            [sys.executable, "-m", "coverage", "run", "--rcfile=" + str(config), str(source)],
+            namespace,
+            30,
+        )
+&gt;       manifest = e.c.seal_child(namespace, [e.c.ref(source)], receipt, ["probe"], "control")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_deadline_cost_8738.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+namespace = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261102T194617-2038026-804c7da7/test_real_sqlite_and_source_fi0/sqlite')
+sources = [{'path': '/var/tmp/pytest-carnot-ianblenke/20261102T194617-2038026-804c7da7/test_real_sqlite_and_source_fi0/sqlite/probe.py', 'sha256': 'sha256:64b5ae13e71b6c99f443a3048363b9e8a15e5cc1c5c1dd31adc4d3a31790e2ce'}]
+receipt = {'argv': ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcfile=/var/tmp/...ce_fi0/sqlite/probe.py'], 'cleanup_passed': True, 'duration_s': 0.11530999, 'ended_monotonic_ns': 329321646340465, ...}
+nodes = ['probe'], kind = 'control'
+
+    def seal_child(
+        namespace: Path, sources: list[Json], receipt: Json, nodes: list[str], kind: str
+    ) -&gt; Json:
+        """Copy every actual data file immediately after exit and bind a separate immutable seal."""
+        if not receipt["passed"] or receipt["timed_out"] or receipt["exit_code"] != 0:
+            raise ValueError("failed_child")
+        retained = namespace / "sealed"
+        retained.mkdir(exist_ok=True)
+        files = []
+        for path in sorted(namespace.iterdir()):
+            if path.is_file() and (
+                path.read_bytes()[:16] == b"SQLite format 3\x00" or path.name.startswith(".coverage")
+            ):
+                measured = inventory(path, sources, allow_empty=True)
+                target = retained / path.name
+                shutil.copyfile(path, target)
+                target.chmod(0o444)
+                measured["observed_path"] = str(path)
+                measured["reference"] = ref(target)
+                files.append(measured)
+        if not files or not any(any(row["lines"].values()) for row in files):
+&gt;           raise ValueError("zero_real_child_coverage")
+E           ValueError: zero_real_child_coverage
+
+python/carnot/reporting/learning_custody_8641.py:136: ValueError</failure></testcase><testcase classname="tests.python.test_deadline_cost_8738" name="test_profile_boundaries_and_opt_in" time="0.001" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_diagnostic_plan_and_terminal_accounting[False-True]" time="0.003" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_diagnostic_plan_and_terminal_accounting[False-False]" time="0.005" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_diagnostic_plan_and_terminal_accounting[True-False]" time="0.007" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_cleanup_handles_already_exited_child" time="0.245" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_validation_uses_real_coverage_and_never_grants_missing_lines" time="0.112" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_replay_checks_child_and_changed_history" time="0.277" /><testcase classname="tests.python.test_deadline_cost_8738" name="test_retained_terminal_diagnostic_never_reexecutes" time="0.006" /></testsuite></testsuites>

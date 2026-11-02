@@ -1,0 +1,23 @@
+INTERNALERROR> Traceback (most recent call last):
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py", line 314, in wrap_session
+INTERNALERROR>     config._do_configure()
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py", line 1165, in _do_configure
+INTERNALERROR>     self.hook.pytest_configure.call_historic(kwargs=dict(config=self))
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_hooks.py", line 534, in call_historic
+INTERNALERROR>     res = self._hookexec(self.name, self._hookimpls.copy(), kwargs, False)
+INTERNALERROR>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_manager.py", line 120, in _hookexec
+INTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+INTERNALERROR>            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py", line 167, in _multicall
+INTERNALERROR>     raise exception
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py", line 121, in _multicall
+INTERNALERROR>     res = hook_impl.function(*args)
+INTERNALERROR>           ^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/tests/python/conftest.py", line 306, in pytest_configure
+INTERNALERROR>     _install_experiment_artifact_root(config)
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/tests/python/conftest.py", line 205, in _install_experiment_artifact_root
+INTERNALERROR>     validate_artifact_output_root(previous)
+INTERNALERROR>   File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_artifacts.py", line 59, in validate_artifact_output_root
+INTERNALERROR>     raise ArtifactPathError(f"{ARTIFACT_ROOT_ENV} must exist and be a directory: {resolved}")
+INTERNALERROR> carnot.experiment_artifacts.ArtifactPathError: CARNOT_EXPERIMENT_ARTIFACT_ROOT must exist and be a directory: /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8738_v749_deadline_cost_diagnosis/invocations/1793648384445069201/diagnostic/private_artifacts
