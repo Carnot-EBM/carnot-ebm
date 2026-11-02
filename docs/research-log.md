@@ -7574,5 +7574,9 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 10 synthesis-only experiments completed in 129.4 wall-time minutes (129 minutes / 2.2 hours, averaging 13 minutes per experiment) led by qualifying original deadline controls and the complete causal learning union (34.17 min / 34min), executing the frozen original learning core with retained producer authority (23.98 min / 24min), qualifying installed bounded batches from independently authenticated deployment in (21.43 min / 21min), qualifying retained child evidence and binding fourteen branch contracts (15.2 min / 15min), and separating lexical collisions from symbolic grounding and missing-record errors (12.65 min / 13min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks set to null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 44C) reflecting expected behavior for synthesis-only tasks.
 - acceptance: no data available this milestone
 
-
+### Milestone 2026.11.747
+- exp_range: no data available this milestone
+- theme: Operational execution analysis of 9 synthesis-only experiments (0 compute-bound) across 74.4 minutes (74 minutes / 1.2 hours) of milestone wall time.
+- key result: honest operational negative — 9 synthesis-only experiments completed in 74.4 wall-time minutes (74 minutes / 1.2 hours, averaging 8 minutes per experiment) led by qualifying installed batching with isolated legacy export execution (25.41 min / 25min), measuring lexical collisions and symbolic capacity without invented model probabil (17.24 min / 17min), testing valid alternatives and behavioral perturbations against relational verifier (9.44 min / 9min), qualifying a compiled fixed-point sparse update against the lifecycle emulator (8.78 min / 9min), and measuring complete batching throughput and same-batch native speed (8.27 min / 8min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks set to null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 48C) reflecting expected behavior for synthesis-only tasks.
+- acceptance: no data available this milestone
 

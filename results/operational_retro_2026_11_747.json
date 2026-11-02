@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.747",
+  "generated_at": "2026-11-02T07:55:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 74.4,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify installed batching with isolated legacy export execution",
+      "duration_minutes": 25.41,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure lexical collisions and symbolic capacity without invented model probabil",
+      "duration_minutes": 17.24,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Test valid alternatives and behavioral perturbations against relational verifier",
+      "duration_minutes": 9.44,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify a compiled fixed-point sparse update against the lifecycle emulator",
+      "duration_minutes": 8.78,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure complete batching throughput and same-batch native speed",
+      "duration_minutes": 8.27,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.747 completed 9 experiments (0 compute-bound, 9 synthesis-only) in 74.4 wall-time minutes (74 minutes / 1.2 hours, averaging 8 minutes per experiment) reconstructed via disk-mtime fallback after the live git-log path found 0 commits. The five slowest synthesis-only tasks were 'Qualify installed batching with isolated legacy export execution' (25.41 minutes / 25min), 'Measure lexical collisions and symbolic capacity without invented model probabil' (17.24 minutes / 17min), 'Test valid alternatives and behavioral perturbations against relational verifier' (9.44 minutes / 9min), 'Qualify a compiled fixed-point sparse update against the lifecycle emulator' (8.78 minutes / 9min), and 'Measure complete batching throughput and same-batch native speed' (8.27 minutes / 8min). Because 0 compute-bound tasks ran, gpu_idle_on_compute_bound_tasks is null and the 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 48C) reflects expected behavior for synthesis-only workloads.",
+  "bottlenecks_identified": [
+    "Extended synthesis-only runtime in 'Qualify installed batching with isolated legacy export execution' (25.41 minutes / 25min) and 'Measure lexical collisions and symbolic capacity without invented model probabil' (17.24 minutes / 17min).",
+    "Multi-minute synthesis-only verification and measurement passes across 'Test valid alternatives and behavioral perturbations against relational verifier' (9.44 minutes / 9min), 'Qualify a compiled fixed-point sparse update against the lifecycle emulator' (8.78 minutes / 9min), and 'Measure complete batching throughput and same-batch native speed' (8.27 minutes / 8min).",
+    "Milestone timing telemetry fell back to disk-mtime reconstruction (retro_timing_fallback) because the live git-log path found 0 commits."
+  ],
+  "improvements_suggested": [
+    "Split and parallelize isolated legacy export execution checks inside 'Qualify installed batching with isolated legacy export execution' (25.41 minutes / 25min) and lexical/symbolic capacity scans in 'Measure lexical collisions and symbolic capacity without invented model probabil' (17.24 minutes / 17min).",
+    "Cache intermediate verification receipts and pre-validate inputs for 'Test valid alternatives and behavioral perturbations against relational verifier' (9.44 minutes / 9min), 'Qualify a compiled fixed-point sparse update against the lifecycle emulator' (8.78 minutes / 9min), and 'Measure complete batching throughput and same-batch native speed' (8.27 minutes / 8min).",
+    "Record explicit task start and completion timestamps directly in experiment output artifacts so milestone timing does not rely on disk-mtime fallback when git-log finds 0 commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize isolated legacy export sub-runs in the 25.41-minute installed batching qualification task and partition the 17.24-minute lexical collision and symbolic capacity measurement task.",
+    "Introduce reusable receipt memoization across the 9.44-minute relational verifier perturbation test, 8.78-minute compiled fixed-point sparse update qualification, and 8.27-minute batching throughput measurement tasks.",
+    "Persist direct start and finish timestamps in experiment JSON deliverables to avoid retro_timing_fallback disk-mtime reconstruction when 0 commits are present in git-log."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "All 9 completed experiments in milestone 2026.11.747 were synthesis-only (0 compute-bound) across 74.4 minutes (74 minutes / 1.2 hours, 8 minutes average), so 0% GPU utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 48C) is expected synthesis-only behavior rather than a GPU bottleneck, and DualGPURunner was not applicable. Optimizing the 25.41-minute batching export qualification and 17.24-minute lexical collision measurement tasks provides the highest leverage for reducing future milestone duration."
+}

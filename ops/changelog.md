@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-02 UTC — Operational retrospective for milestone 2026.11.747
+
+- Updated `results/operational_retro_2026_11_747.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.747`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 9 completed experiments (0 compute-bound, 9 synthesis-only) across 74.4 wall-time minutes (74 minutes / 1.2 hours, averaging 8 minutes per experiment).
+- The five slowest experiments were all synthesis-only: `Qualify installed batching with isolated legacy export execution` (25.41 minutes / 25min), `Measure lexical collisions and symbolic capacity without invented model probabil` (17.24 minutes / 17min), `Test valid alternatives and behavioral perturbations against relational verifier` (9.44 minutes / 9min), `Qualify a compiled fixed-point sparse update against the lifecycle emulator` (8.78 minutes / 9min), and `Measure complete batching throughput and same-batch native speed` (8.27 minutes / 8min).
+- GPU monitor report (`2026-11-02T07:55:43.561570+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 4/24576MB (0%), 0% utilization, and 48C; because 0 compute-bound experiments ran, `gpu_idle_on_compute_bound_tasks` is `null` and 0% GPU utilization is expected behavior for synthesis-only tasks.
+- Suggested improvements: parallelize isolated legacy export execution in the 25.41-minute batching qualification task and lexical/symbolic scans in the 17.24-minute measurement task, memoize intermediate verification receipts across the 9.44-minute, 8.78-minute, and 8.27-minute tasks, and emit explicit start/finish timestamps in experiment artifacts to avoid `retro_timing_fallback` when git-log has 0 commits.
+
 ## 2026-11-02 UTC — Fix Exp8716 standalone imports
 
 Bootstrap both checkout import roots before the installed-import runner loads
