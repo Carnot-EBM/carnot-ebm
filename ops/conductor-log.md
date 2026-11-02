@@ -21137,3 +21137,4 @@ code |
 | 2026-11-02 14:04 UTC | Keep fixed-point update state resident across the  | OK | 89 passed, 1 warning in 72.25s (0:01:12) |
 | 2026-11-02 14:42 UTC | Measure complete resident sparse-update costs agai | OK | 92 passed, 1 warning in 151.58s (0:02:31) |
 | 2026-11-02 15:13 UTC | Locate the installed inference cost that limits sa | OK | 90 passed, 1 warning in 78.00s (0:01:17) |
+| 2026-11-02 15:28 UTC | Read new live cross-game supervisor outcomes witho | OK | 86 passed, 1 warning in 42.81s |
