@@ -21115,3 +21115,4 @@ code |
 | 2026-11-02 02:38 UTC | Measure lexical collisions and symbolic capacity w | OK | 90 passed, 1 warning in 477.98s (0:07:57) |
 | 2026-11-02 02:40 UTC | Measure continuous typed-decision learning after s | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8711-learning-union) |
 | 2026-11-02 02:40 UTC | Test future proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8713-causal-brier-stream) |
+| 2026-11-02 03:11 UTC | Test valid alternatives and behavioral perturbatio | OK | 87 passed, 1 warning in 203.93s (0:03:23) |
