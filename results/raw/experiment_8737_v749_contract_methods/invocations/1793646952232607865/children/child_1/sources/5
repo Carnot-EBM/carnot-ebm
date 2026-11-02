@@ -1,0 +1,308 @@
+"""REQ-REPORT-8737 / REQ-VERIFY-8737: method custody precedes science."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import re
+
+import pytest
+import yaml
+
+from carnot.reporting import v749_contract_methods as m
+from carnot.reporting import v749_verifier_protocol as v
+
+
+def test_contract_mutations(tmp_path):
+    """SCENARIO-REPORT-8737-CONTRACT: exact objects, encoding and digest bind."""
+    text = (m.ROOT / m.DESIGN).read_text()
+    table, tasks = m.parse_design(text, milestone=m.MILESTONE)
+    target = tmp_path / m.DESIGN
+    target.parent.mkdir(parents=True)
+    for mode in [
+        "valid",
+        "encoded",
+        "prompt",
+        "routing",
+        "gated_on",
+        "omit",
+        "order",
+        "table",
+        "digest",
+        "rehashed",
+    ]:
+        changed, body = deepcopy(tasks), text
+        if mode == "encoded":
+            for task in changed:
+                task["prompt"] = m.encode(task["prompt"])
+        elif mode in {"prompt", "routing", "gated_on"}:
+            changed[0][mode] = "forged"
+        elif mode == "omit":
+            changed.pop()
+        elif mode == "order":
+            changed.reverse()
+        elif mode == "table":
+            body = body.replace("| 1 |", "| 99 |", 1)
+        elif mode == "digest":
+            body = body.replace(m.PIN, "0" * 64)
+        elif mode == "rehashed":
+            changed[0]["prompt"] += "forged"
+            body = re.sub(
+                r"(```json\s*).*?(\s*```)",
+                lambda x: x[1] + json.dumps(dict(milestone=m.MILESTONE, tasks=changed)) + x[2],
+                body,
+                count=1,
+                flags=re.S,
+            ).replace(m.PIN, m.digest(changed))
+        target.write_text(body)
+        (tmp_path / m.ACTIVE).write_text(yaml.safe_dump(dict(milestone=m.MILESTONE, tasks=changed)))
+        assert m.authority(tmp_path)["ready"] == (mode in {"valid", "encoded"})
+    assert len(table) == 12
+    assert not m.authority(tmp_path / "missing")["ready"]
+    assert m.authority(m.ROOT)["ready"]
+    assert all(r["passed"] for r in m.mutations())
+
+
+def test_truth_and_roster(monkeypatch):
+    """SCENARIO-VERIFY-8737-TRUTH: labels do not call the tested verifier."""
+    from carnot.reporting import verifier_completeness_8715 as old
+
+    monkeypatch.setattr(old, "verifier", lambda *a: pytest.fail("truth called tested verifier"))
+    facts = [["a", "r", "b", True], ["b", "s", "c", True], ["a", "s", "c", False]]
+    assert v.truth(facts, [["a", "r", "?x"], ["?x", "s", "c"]]) == "true"
+    assert v.truth(facts, [["a", "s", "c"]]) == "false"
+    assert v.truth(facts, [["b", "r", "c"]]) == "unknown"
+    assert v.truth(facts, None) == "unknown"
+    panel = v.freeze()
+    assert len(panel["worlds"]) == 60 and len(panel["rows"]) == 720
+    assert len({r["world_id"] for r in panel["rows"] if r["partition"] == "evaluation"}) == 30
+    assert (
+        sum(r["partition"] == "evaluation" and r["variant"] != "correct" for r in panel["rows"])
+        == 300
+    )
+    assert (
+        sum(r["partition"] == "evaluation" and r["variant"] in v.NEW for r in panel["rows"]) == 120
+    )
+    assert panel["unique_probe_invocations"] == 3600
+    assert set(panel["schedules"]) == {"baseline", "targeted"}
+    assert all(len(s) == 5 for s in panel["schedules"].values())
+    assert {p["expected"] for w in panel["worlds"] for p in w["probes"]} == {
+        "true",
+        "false",
+        "unknown",
+    }
+    assert all(w["answer_spans"] and w["supporting_premises"] for w in panel["worlds"])
+
+
+def test_learning_and_upstream():
+    """REQ-REPORT-8737: execution failures cannot erase complete method custody."""
+    learning = m.learning()
+    assert learning["ready"]
+    assert learning["original_node_count"] == 64
+    assert len(learning["original_runner_node_ids"]) == 27
+    assert learning["statement_anchor_count"] == 83
+    prior = m.upstreams()
+    assert prior["ready"]
+    assert prior["core"]["passed_node_count"] == 39
+    assert prior["core"]["deadline_smoke_passed"] is False
+    assert prior["core"]["learning_execution_ready_score"] == 0
+    assert m.PIN != m.historical.m.PIN
+    assert m.historical.m.PIN == "88a6e9a1c4822285e86c9b089047d4383f6e34d63430bdaff72c33beb979a07a"
+
+
+def test_gate_distinguishes_absence(tmp_path):
+    """REQ-REPORT-8737: missing file, field and measured zero stay distinct."""
+    p = tmp_path / "input.json"
+    assert m.inspect(p, "x", 1)["observed"] == "missing_file"
+    p.write_text("{}")
+    assert m.inspect(p, "x", 1)["observed"] == "missing_field"
+    p.write_text('{"x":0}')
+    assert m.inspect(p, "x", 1)["observed"] == 0
+
+
+def test_private_cli_and_replay(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8737-CONTRACT: fresh private CLI rejects altered bytes."""
+    from carnot.reporting.v709_execution import child
+    from carnot.reporting import v749_contract_runner as runner
+    from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+    import sys
+
+    out = tmp_path / (m.NAME + ".json")
+    argv = [sys.executable, "-u", str(m.ROOT / runner.CLI)]
+    if os.environ.get("COVERAGE_RCFILE"):
+        argv = [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "--rcfile=" + os.environ["COVERAGE_RCFILE"],
+            str(m.ROOT / runner.CLI),
+        ]
+    good = child(
+        "private",
+        [*argv, "--private-control", "--output", str(out)],
+        tmp_path / "logs",
+        deadline=120,
+    )
+    assert good["passed"]
+    assert runner.replay(out)
+    original_value = json.loads(out.read_bytes())
+    raw = Path(original_value["primitive_reference"]["path"]).parent
+    seal_path = raw / "independent_seal.json"
+    saved_seal = seal_path.read_bytes()
+    seal_path.write_text("{}")
+    assert not runner.replay(out)
+    seal_path.write_bytes(saved_seal)
+    original_reference = m.reference
+    with monkeypatch.context() as isolated:
+        isolated.setattr(
+            m, "reference", lambda path: dict(original_reference(path), sha256="forged")
+        )
+        assert not runner.replay(out)
+    with monkeypatch.context() as isolated:
+        isolated.setattr(m, "authority", lambda root: {})
+        assert not runner.replay(out)
+    assert child("replay", [*argv, "--cold-replay", str(out)], tmp_path / "logs", deadline=60)[
+        "passed"
+    ]
+    value = json.loads(out.read_bytes())
+    value["full_task_objects"][0]["prompt"] += "forged"
+    value.pop("reproducibility_checksum")
+    value["reproducibility_checksum"] = canonical_hash(value)
+    atomic_json(out, value)
+    assert not runner.replay(out)
+    assert child(
+        "negative_replay",
+        [*argv, "--cold-replay", str(out)],
+        tmp_path / "logs",
+        expected=1,
+        deadline=60,
+    )["passed"]
+    assert child(
+        "bad_date", [*argv, "--date", "20260101"], tmp_path / "logs", expected=2, deadline=60
+    )["passed"]
+    assert child(
+        "unsafe", [*argv, "--private-control"], tmp_path / "logs", expected=2, deadline=60
+    )["passed"]
+    assert not runner.replay(tmp_path / "missing.json")
+
+
+def test_report_branches(tmp_path):
+    """REQ-REPORT-8737: each branch is independent and gates cannot imply benefit."""
+    from carnot.reporting import v749_contract_runner as runner
+    from carnot.reporting import v749_contract_report as report
+    from carnot.reporting.current_work_receipt import atomic_json
+
+    work = runner.prepare(m.ROOT, tmp_path)
+    checks = dict(receipts=[], coverage=dict(complete=False), passed=False)
+    atomic_json(tmp_path / "validation.json", checks)
+    value = report.build(
+        work, m.reference(tmp_path / "validation.json"), tmp_path / (m.NAME + ".json")
+    )
+    assert value["verdict_class"] == "disqualified"
+    assert value["learning_execution_ready_score"] == 0
+    assert len(value["full_task_objects"]) == 12
+    work["learning"]["ready"] = False
+    atomic_json(tmp_path / "work.json", work)
+    value = report.build(
+        work, m.reference(tmp_path / "validation.json"), tmp_path / (m.NAME + ".json")
+    )
+    assert value["verdict_class"] == "blocked"
+    assert value["learning_protocol_ready_score"] == 0
+    assert value["verifier_transfer_methods_ready_score"] == 0
+    assert value["gate_check_summary"]
+
+
+def test_disconnected_composition_is_unknown():
+    """REQ-VERIFY-8737: separate witnesses cannot satisfy a shared-variable join."""
+    facts = [["a", "r", "b", True], ["c", "s", "d", True]]
+    assert v.truth(facts, [["a", "r", "?join"], ["?join", "s", "d"]]) == "unknown"
+    for world in v.freeze()["worlds"]:
+        if world["family"] == "two_premise_composition":
+            probe = next(p for p in world["probes"] if p["transform"] == "invalid")
+            assert len(probe["query"]) == 2 and probe["expected"] == "unknown"
+
+
+def test_coverage_reader_uses_real_sqlite(tmp_path):
+    """REQ-REPORT-8737: partial real execution must report actual missing statements."""
+    from coverage import Coverage
+    from carnot.reporting import v749_contract_runner as runner
+    from carnot.reporting.current_work_receipt import atomic_json
+
+    measured = Coverage(data_file=str(tmp_path / "producer.sqlite"), config_file=False)
+    measured.start()
+    assert m.digest([])
+    measured.stop()
+    measured.save()
+    atomic_json(
+        tmp_path / "child.json", dict(sqlite_references=[m.reference(tmp_path / "producer.sqlite")])
+    )
+    result = runner.coverage_summary(tmp_path, [m.reference(tmp_path / "child.json")])
+    assert not result["complete"]
+    assert any(r["missing"] for r in result["files"])
+
+
+def test_external_absence_stays_blocked(tmp_path):
+    """REQ-REPORT-8737: missing retired operands are reported instead of crashing."""
+    from carnot.reporting import v749_contract_runner as runner
+
+    def absent():
+        raise FileNotFoundError("retired operand")
+
+    value = runner.custody(absent, tmp_path / "absent.json")
+    assert not value["ready"]
+    assert value["gate_check_summary"][0]["observed"] == "missing_file"
+
+
+def test_staged_contract_keeps_historical_binding(tmp_path):
+    """REQ-REPORT-8737: staging V749 cannot silently replace historical V748."""
+    text = (m.ROOT / m.DESIGN).read_text()
+    tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+    design = tmp_path / m.DESIGN
+    design.parent.mkdir(parents=True)
+    design.write_text(text)
+    historical = m.parse_design(
+        (
+            m.ROOT / "openspec/change-proposals/research-roadmap-v748-preserved-20261102.md"
+        ).read_text(),
+        milestone="2026.11.748",
+    )[1]
+    (tmp_path / m.STAGED).write_text(yaml.safe_dump(dict(milestone=m.MILESTONE, tasks=tasks)))
+    (tmp_path / m.ACTIVE).write_text(
+        yaml.safe_dump(dict(milestone="2026.11.748", tasks=historical))
+    )
+    assert m.authority(tmp_path)["ready"]
+    historical[0]["prompt"] += "forged"
+    (tmp_path / m.ACTIVE).write_text(
+        yaml.safe_dump(dict(milestone="2026.11.748", tasks=historical))
+    )
+    assert not m.authority(tmp_path)["ready"]
+
+
+def test_empty_child_union_never_qualifies(tmp_path, monkeypatch):
+    """REQ-REPORT-8737: failed original union cannot be replaced by consumer passes."""
+    from types import SimpleNamespace
+    from carnot.reporting import v749_contract_runner as runner
+
+    monkeypatch.setattr(runner, "collect", lambda *a: ([], dict(passed=False)))
+    monkeypatch.setattr(runner, "coverage_summary", lambda *a: dict(complete=False))
+    result = runner.validate(tmp_path, SimpleNamespace(stop=lambda: None, save=lambda: None))
+    assert not result["passed"] and not result["child_union"]["passed"]
+
+
+def test_owned_validation_failure_dispatch(tmp_path, monkeypatch):
+    """REQ-REPORT-8737: production dispatch preserves a failed owned check."""
+    from types import SimpleNamespace
+    from carnot.reporting import v749_contract_runner as runner
+
+    monkeypatch.setattr(runner, "Coverage", lambda **k: SimpleNamespace(start=lambda: None))
+    monkeypatch.setattr(
+        runner,
+        "validate",
+        lambda *a: dict(receipts=[], coverage=dict(complete=False), passed=False),
+    )
+    out = tmp_path / (m.NAME + ".json")
+    assert runner.main(["--output", str(out)]) == 0
+    value = json.loads(out.read_bytes())
+    assert value["verdict_class"] == "disqualified"
+    assert value["contract_ready_score"] == 0
