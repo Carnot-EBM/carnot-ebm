@@ -1,0 +1,259 @@
+{
+  "cached": {
+    "diagnosis": {
+      "api_returns": {
+        "cuInit": 999
+      },
+      "causal_trace_line": null,
+      "correction": null,
+      "cuda_context_ready_score": 0,
+      "failure_layer": "driver_initialization",
+      "root_cause_status": "cause_unproved",
+      "runtime_changed_score": 0
+    },
+    "historical_model_provenance": {
+      "current_calls_imported": false,
+      "failure_layer": [
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {
+            "cuInit": 101
+          },
+          "layer": "driver",
+          "native_stderr": null
+        },
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {
+            "cudaGetDeviceCount": 101
+          },
+          "layer": "runtime",
+          "native_stderr": null
+        },
+        {
+          "binding": "inherited",
+          "error": null,
+          "failed_api": {},
+          "layer": "native",
+          "native_stderr": "0.00.003.924 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {
+            "cuInit": 101
+          },
+          "layer": "driver",
+          "native_stderr": null
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {
+            "cudaGetDeviceCount": 101
+          },
+          "layer": "runtime",
+          "native_stderr": null
+        },
+        {
+          "binding": "explicit_uuid",
+          "error": null,
+          "failed_api": {},
+          "layer": "native",
+          "native_stderr": "0.00.003.361 E ggml_cuda_init: failed to initialize CUDA: invalid device ordinal\n"
+        }
+      ],
+      "imported_from": "results/experiment_8307_v717_runtime_change_boundary.json",
+      "model_invocation_counts": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0
+      }
+    },
+    "previous": {
+      "boot_identity": null,
+      "device_nodes": [
+        {
+          "gid": 0,
+          "mode": "0o40755",
+          "path": "/dev/nvidia-caps",
+          "read_write": false,
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o20666",
+          "path": "/dev/nvidia-modeset",
+          "read_write": true,
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o20666",
+          "path": "/dev/nvidia-uvm",
+          "read_write": true,
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o20666",
+          "path": "/dev/nvidia-uvm-tools",
+          "read_write": true,
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o20666",
+          "path": "/dev/nvidia0",
+          "read_write": true,
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o20666",
+          "path": "/dev/nvidia1",
+          "read_write": true,
+          "uid": 0
+        },
+        {
+          "gid": 0,
+          "mode": "0o20666",
+          "path": "/dev/nvidiactl",
+          "read_write": true,
+          "uid": 0
+        }
+      ],
+      "driver_library": "libcuda.so.1",
+      "environment": {
+        "CUDA_PATH": "/opt/cuda"
+      },
+      "kernel_driver": "NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  615.71.09  Release Build  (root@icbfl1)  \nGCC version:  Found HIP installation: /opt/rocm, version 7.2.53211\n",
+      "libraries": [
+        {
+          "path": "/usr/lib/libcuda.so.615.71.09",
+          "sha256": "sha256:85a8cc8cf00419ceb295ec62c481d05b4cdbdab10f25c5375d6d24bdbe00b4d9"
+        }
+      ],
+      "namespaces": null,
+      "permitted_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    },
+    "refs": [
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8396_v723_cuda_failure_cause.json",
+        "role": "primary",
+        "sha256": "sha256:ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8729_v748_equal_budget_verifier/invocations/1793622767407513030/runtime/cached/primary-ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b.bin",
+        "snapshot_sha256": "sha256:ca568e7525204e9f68600076cf42fbc6ed395b48c78ec5f7a1bed30646b42e0b",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8396_v723_cuda_failure_cause.json"
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/measurement.json",
+        "role": "measurement",
+        "sha256": "sha256:759d7dde070b0a82f453cae81d527ec78eb5acb1a0b699df7a40a5e8268996d2",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8729_v748_equal_budget_verifier/invocations/1793622767407513030/runtime/cached/measurement-759d7dde070b0a82f453cae81d527ec78eb5acb1a0b699df7a40a5e8268996d2.bin",
+        "snapshot_sha256": "sha256:759d7dde070b0a82f453cae81d527ec78eb5acb1a0b699df7a40a5e8268996d2",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/measurement.json"
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/diagnosis/children/inherited_init.stdout",
+        "role": "stdout",
+        "sha256": "sha256:3d247a5986c10bfcb345803a08b32c2bcdb05f930e9aa74997aca3fcb0faa15c",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8729_v748_equal_budget_verifier/invocations/1793622767407513030/runtime/cached/stdout-3d247a5986c10bfcb345803a08b32c2bcdb05f930e9aa74997aca3fcb0faa15c.bin",
+        "snapshot_sha256": "sha256:3d247a5986c10bfcb345803a08b32c2bcdb05f930e9aa74997aca3fcb0faa15c",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/diagnosis/children/inherited_init.stdout"
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/diagnosis/driver.strace",
+        "role": "trace",
+        "sha256": "sha256:99a59aaeb40f9a65078a03c3ad0d36a4a769ecd0ecc858089aec82fa66c19128",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8729_v748_equal_budget_verifier/invocations/1793622767407513030/runtime/cached/trace-99a59aaeb40f9a65078a03c3ad0d36a4a769ecd0ecc858089aec82fa66c19128.bin",
+        "snapshot_sha256": "sha256:99a59aaeb40f9a65078a03c3ad0d36a4a769ecd0ecc858089aec82fa66c19128",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/diagnosis/driver.strace"
+      }
+    ],
+    "trace_manifest": {
+      "bounded": true,
+      "cap_bytes": 10485760,
+      "complete": true,
+      "device_returns": [
+        "2911029 openat(AT_FDCWD</home/ianblenke/github.com/ianblenke/carnot>, \"/dev/nvidiactl\", O_RDWR) = 10</dev/nvidiactl<char 195:255>>",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xd6, 0x8), 0x7ffcac2a5ec0) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xc8, 0x900), 0x7f396dfa5000) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2b, 0x30), 0x7ffcac2a6010) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcac2a4f20) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x29, 0x10), 0x7ffcac2a6000) = 0",
+        "2911029 openat(AT_FDCWD</home/ianblenke/github.com/ianblenke/carnot>, \"/dev/nvidiactl\", O_RDWR) = 10</dev/nvidiactl<char 195:255>>",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xd6, 0x8), 0x7ffcac2a6480) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xc8, 0x900), 0x7f396dfa5000) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2b, 0x30), 0x7ffcac2a65d0) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcac2a54a0) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcac2a54a0) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2b, 0x30), 0x7ffcac2a65d0) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcac2a54b0) = 0",
+        "2911029 openat(AT_FDCWD</home/ianblenke/github.com/ianblenke/carnot>, \"/dev/nvidia-uvm\", O_RDWR|O_CLOEXEC) = -1 EIO (Input/output error)",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x29, 0x10), 0x7ffcac2a6530) = 0",
+        "2911029 ioctl(10</dev/nvidiactl<char 195:255>>, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x29, 0x10), 0x7ffcac2a6530) = 0"
+      ],
+      "ref": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/diagnosis/driver.strace",
+        "role": "trace",
+        "sha256": "sha256:99a59aaeb40f9a65078a03c3ad0d36a4a769ecd0ecc858089aec82fa66c19128",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8729_v748_equal_budget_verifier/invocations/1793622767407513030/runtime/cached/trace-99a59aaeb40f9a65078a03c3ad0d36a4a769ecd0ecc858089aec82fa66c19128.bin",
+        "snapshot_sha256": "sha256:99a59aaeb40f9a65078a03c3ad0d36a4a769ecd0ecc858089aec82fa66c19128",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8396_v723_cuda_failure_cause/invocations/1791674546434675094/diagnosis/driver.strace"
+      },
+      "size_bytes": 1966880
+    }
+  },
+  "supplied": {
+    "current_device_probe_count": 0,
+    "failures": [
+      {
+        "artifact_field": "supplied_causal_runtime_repair",
+        "artifact_hash": null,
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/cuda-runtime-repair-receipt.json",
+        "check": "supplied_causal_runtime_repair",
+        "expected": true,
+        "observed": null,
+        "op": "==",
+        "passed": false,
+        "upstream_id": "exp8416-contract-methods"
+      }
+    ],
+    "inspection_duration_s": 3.737001679837704e-05,
+    "ready": false,
+    "receipt": null
+  },
+  "validator": {
+    "gate_check_summary": [],
+    "passed": true,
+    "references": [
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8580_v737_current_validator_qualification.json",
+        "sha256": "sha256:7656f6f49b69237528263cd6dc38ac9503e853b1f53d1b5b1037f6510d2892f4"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8580_v737_current_validator_qualification/invocations/1792168387783809980/terminal_validation.json",
+        "sha256": "sha256:f03c421fcd6c4ee1acf691421f701e412ce92b1bf2211e2c5c7b75de5f2a7207"
+      },
+      {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8580_v737_current_validator_qualification/validators/7656f6f49b69237528263cd6dc38ac9503e853b1f53d1b5b1037f6510d2892f4.json",
+        "sha256": "sha256:25364fe08a16b6734caf21ed4b7ded52372fee2d8e2304322984f376e5b9ccc8"
+      }
+    ]
+  }
+}

@@ -57450,3 +57450,29 @@ Supplement original assertions with a cross-epoch regression. Cover every new
 owned statement, including actual CLI and error paths. Cold replay must reject
 missing evidence and consistently rehashed tampering. Use unchanged publication,
 adversarial and strict row validators before atomic publication.
+
+## REQ-VERIFY-8729: Equal-call relational defect audit
+
+Execute Exp8726's two frozen five-probe schedules on all120 original worlds and
+six variants, retaining1440 units and7200 invocations without short circuit.
+Preserve original90/30 partitions as exposed data. Independent explicit-membership
+labels retain complete-premise and unknown semantics. Correct, reject-all,
+accept-all, omitted-predicate, reversed-argument and missing-as-false controls
+remain visible. Report150 defective evaluation units per arm, correct valid
+alternative rejection, unknown-to-false errors, predicate input work and wall
+time. Bootstrap10000 paired draws clustered by evaluation world. A gain requires
+lower95>0 and no increased correct-verifier false rejection. Preserve missed
+units; never tune schedules. Claim no equal-wall-time advantage.
+
+### SCENARIO-VERIFY-8729-BUDGET
+
+Tests assert exact budgets, valid alternatives and unknowns, failure of both
+ degenerate verifiers, null/tradeoff reductions and100 percent new owned statement
+coverage including real CLI and rejection paths. Reuse bounded disjoint children,
+SQLite, JUnit, source hashes, clocks and private E2E-018/021 checks.
+
+Exp8729 measurement, 2026-11-02:1440 units and7200 probes complete. Evaluation
+baseline120/150 versus targeted130/150; paired world-cluster bootstrap95 percent
+interval3.33–10.00 percentage points. Correct alternative rejection and unknown
+to false errors are zero. Targeted predicate input work is25 percent higher;
+no equal-wall-time benefit or independent generalization is claimed.

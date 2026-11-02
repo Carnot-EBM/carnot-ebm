@@ -104204,3 +104204,24 @@ Measured Exp8724 outcome: all 39 original core nodes passed in three normally
 exiting children. The separate deadline smoke child timed out at its owned
 300-second bound with exit -9. This invocation cannot grant core readiness.
 See `docs/research-notes/v748-invocation-clock-core.md`; conductor owns ops updates.
+
+## REQ-REPORT-8729: Publish sealed equal-budget verifier evidence
+
+Authenticate qualified Exp8726, original scientific operands and fourteen full
+V748 task objects, table and independent digest separately. Freeze sources,
+tests and methods before measurement. Publish model-free rows and scores with
+readiness independent of measured gain. Constructed oracle wins are
+circular_positive; independent generalization remains zero. Missing external
+operands block with exact diagnostics; failed owned checks disqualify.
+
+### SCENARIO-REPORT-8729-REPLAY
+
+Cold replay rejects missing operands and consistently rehashed edits before
+unchanged primary publication, adversarial and strict-row checks. Private CLI
+success/rejection cannot grant public readiness. Preserve V747 qualifiers and
+historical bytes. Ops/status/traceability reconciliation is conductor-owned.
+
+Exp8729 retains the exposed120-world scope and separate audit/gain scores in
+results/experiment_8729_v748_equal_budget_verifier.json. The matched-call gain
+is oracle-dependent constructed evidence; validation receipts and statement
+coverage remain bound to the actual invocation under results/raw/.
