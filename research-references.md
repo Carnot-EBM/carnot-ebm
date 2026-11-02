@@ -54255,3 +54255,83 @@ Planning inference: isolate current invocation clocks from retained measurements
 finish the fixed causal study after genuine qualification. Separate model-free
 relational evidence from unavailable generator probabilities. Test verifier
 completeness and compiled numeric parity while preserving closed scientific nulls.
+
+
+## V748 planning scan — 2026-11-02
+
+Recorded before experiment design. Read primary abstracts unless a fuller scope
+is stated. External results motivate tests; they are not Carnot measurements.
+
+### New leads and methods to carry forward
+
+- [P(Yes), arXiv:2610.25474](https://arxiv.org/abs/2610.25474), October 18, was
+  found in Semantic Scholar's EBT citation list. Frozen models score proposed
+  answers and search over alternatives. The paper reports a Qwen3.8-27B result.
+  This is a relevant self-verification comparator for Carnot, not proof of
+  calibrated correctness. Test candidate-score discrimination at a fixed call
+  budget, record invalid answers with high scores, and keep selection separate
+  from calibration. Do not adopt the headline multiplier or train the generator.
+- [Certified Access, arXiv:2610.39073](https://arxiv.org/abs/2610.39073), October
+  29, distinguishes structural certificates from benchmark gains in a specific
+  Hamiltonian memory. File as a scope-discipline example. Its mechanics do not
+  apply to Carnot's sparse head without a new model; defer implementation.
+- [VerifierBench, arXiv:2610.28679](https://arxiv.org/abs/2610.28679), October 19,
+  motivates valid-alternative tests alongside invalid-answer rejection. V747
+  found ten extra defects with more probes. The unresolved question is equal-cost
+  detection, so compare fixed probe budgets and preserve the old unequal-cost
+  result. The [Hugging Face page](https://huggingface.co/papers/2610.28679) was
+  checked; method claims come from the primary paper.
+- [Verification Without Sufficiency, arXiv:2608.00585](https://arxiv.org/abs/2608.00585),
+  August 1, shows how local evidence checks can lose multi-hop premises. Retain
+  complete premise sets and explicit unknown outcomes. Source translation and
+  joint logical sufficiency remain separate failure modes.
+- [Ultrafast On-Chip Online Learning, arXiv:2602.02056v4](https://arxiv.org/html/2602.02056v4)
+  motivates exploiting spline locality in fixed precision. Read the hardware
+  implementation, interface and limitations sections. After V747's exact native
+  parity, test whether retaining state across calls removes interface cost while
+  preserving sequential updates, host nonlinear work and durable feedback.
+- [Capacity-Constrained Online Learning with Delays, arXiv:2503.19856](https://arxiv.org/abs/2503.19856)
+  motivates measuring pending feedback, queue admission and delayed updates.
+  Preserve the frozen delayed-learning study. No regret theorem transfers to the
+  nonlinear head or exposed development data.
+
+### Requested-topic coverage and deferred alternatives
+
+| Topic | Primary source checked | Planning implication |
+|---|---|---|
+| EBM verification and reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605) | Compatibility energy and function-space equivalence are not semantic correctness guarantees. Retain the verifier role. |
+| Neural constraint satisfaction | [Convex-SKM-Net, 2610.38197](https://arxiv.org/abs/2610.38197), October 28 | Convex halfspace corrections have assumptions absent from text verification. Defer; do not reopen retired repair variants. |
+| Ising in ML | [Probabilistic Algorithms for Ising Machines, 2610.03972](https://arxiv.org/abs/2610.03972); [learning-to-sample threshold, 2605.24752](https://arxiv.org/abs/2605.24752) | Scoring, parameter learning and sampling are different operations with different costs and guarantees. |
+| Hallucination detection | VerifierBench and sufficiency study above | Measure both false rejection and false acceptance, at matched cost. |
+| KAN | On-chip locality paper above | Test state residency and full host cost after exact numerical parity. |
+| Energy-guided generation | [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731) | The object-hallucination method uses VLM layer selection. No text-GGUF transfer or guided decoding claim is justified. |
+| Accelerated sampling | Ising review; [Extropic Z1T](https://extropic.ai/writing/z1t/), September 4 | Distinguish supported operations, I/O and estimated device efficiency from complete measured learning cost. |
+| Continual learning | Delayed-capacity paper above; [ADAPT-Z, 2509.03810](https://arxiv.org/abs/2509.03810) | Feature adaptation is a later alternative; finish the fixed proper-loss study before changing its objective. |
+
+### Secondary sources and retrieval limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. Read the indexed
+  [ICLR 2026 EBT manuscript](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf).
+  The EBT forum returned a browser challenge. Indexed Cross-Regression workshop
+  material concerns a different model architecture; it is not a GGUF drop-in.
+- **Semantic Scholar:** the web tool could not access either citation endpoint.
+  A direct, unauthenticated HTTP request then returned the first 20 EBT citations
+  (`offset=0`, `next=20`), including P(Yes) and Certified Access. Their arXiv
+  pages were checked. ARM–EBM returned HTTP429. This is partial citation coverage,
+  not a complete inventory and not a claim of zero ARM–EBM citations.
+- **Hugging Face Papers:** checked the verification feed and VerifierBench page.
+  Feed summaries are discovery aids; the primary paper governs method claims.
+- **GitHub Trending:** checked [weekly](https://github.com/trending?since=weekly)
+  and [monthly Python](https://github.com/trending/python?since=monthly). Retrieved
+  snapshots were marked last month. No current rank or new dependency is inferred.
+- **Extropic:** the writing index timed out; the Z1T article was readable. It
+  describes sparse hardware and a heterogeneous FPGA/TSU path. Its time breakdown
+  is explicitly estimated. It supplies neither local TSU access nor Carnot timing.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and the home page. Product architecture claims supplied no reproducible new
+  implementation that closes Carnot's extraction or learning gaps.
+
+Selection principle: finish the unchanged causal learning question after fixing
+its observed execution defect; test verifier benefit at equal cost; measure the
+new compiled update boundary. Keep inaccessible runtime and physical devices as
+explicit prerequisites, not assumed experimental evidence.

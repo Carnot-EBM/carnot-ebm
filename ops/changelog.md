@@ -22785,3 +22785,19 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-02: Inspect only new cross-game supervisor outcomes after the closed horizon decision (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_8720_v747_arc_supervisor_frontier.json
 - 2026-11-02: Map new compiled operations and complete costs to actual board support (⚠️ Blocked) — honest_verdict=complete_blocked_missing_complete_cost_or_physical_execution; results/experiment_8721_v747_hardware_operation_boundary.json
 - 2026-11-02: Reconcile fourteen outcomes and stop unchanged failed research scopes (⚠️ Blocked) — honest_verdict=complete_blocked_v747_capstone; results/experiment_8722_v747_capstone.json
+
+
+## 2026-11-02 — Stage research milestone 2026.11.748
+
+- Created the matching fourteen-task V748 design and staged YAML, Exp8723–Exp8736,
+  across four phases. Preserved the complete V747 design before replacing vNEXT.
+- Added the requested2025–2026 literature scan before experiment design. New
+  P(Yes) and Certified Access leads came from the first20 EBT citations; ARM–EBM
+  returned HTTP429. Retrieval limits and external-result boundaries are explicit.
+- Planned the diagnosed collection scratch repair, invocation clocks, unchanged
+  causal learning/retention, equal-budget verifier tests, conditional Qwen scoring,
+  resident integer state/costs, installed attribution and new-only ARC outcomes.
+- Declared exact upstream gate fields, per-unit rows, closed verdict classes,
+  runtime substrates, failure lineage, heartbeats and chunked-write requirements.
+- Aligned planned OpenSpec requirements, BMAD traceability, architecture and status.
+  No experiment, activation, push, conductor change or active-roadmap edit occurred.

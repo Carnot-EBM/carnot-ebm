@@ -18625,3 +18625,25 @@ NFR-01 remains null. No new experiment result, hidden-game solve, semantic verif
 moat or hardware speedup is claimed. Literature findings were recorded before
 experiment design. V743 design bytes are preserved in the versioned archive.
 Planning validation is recorded with the corresponding changelog entry.
+
+
+## 2026-11-02 — V748 research milestone staged
+
+The next plan is 2026.11.748: exactly fourteen tasks, Exp8723–Exp8736, in four
+phases. The YAML and design bind complete task objects and identical structured
+gates. V747 design bytes are preserved in the versioned archive. Activation has
+not occurred; the active roadmap and conductor are unchanged.
+
+V747 produced nine primary results and skipped five studies. Its observed
+collection scratch collision blocked learning. Installed batching gained1.1382x
+(CI95[1.1218,1.1601]), while same-batch B16 native/Python remained1.0054x and failed
+the10x target. Exact compiled integer parity qualified. Extra verifier detections
+used more probes. CUDA repair, useful future learning and physical acceleration
+remain unproved.
+
+V748 repairs scratch/clock ownership, qualifies the original causal union, then
+measures continuous learning and retention. Independent branches compare equal
+verifier budgets, conditionally test Qwen support scoring, measure resident native
+updates and attribute installed costs. The ARC slot reads only new supervisor
+outcomes. The literature scan was recorded before design, including new EBT
+citation leads and partial Semantic Scholar coverage. No research run is claimed.

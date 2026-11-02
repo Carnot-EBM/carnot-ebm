@@ -732,3 +732,24 @@ work remains visible. Board support is operation-specific. The closed ARC panel
 stays closed; a new-event reader can finish immediately with an empty-delta null.
 Independent branches and unconditional readers limit cascading gate failures.
 These are planned studies, not new runtime behavior or implemented capabilities.
+
+
+## Planned V748 execution and cost boundaries — 2026-11-02
+
+V748 stages fourteen tasks, Exp8723–Exp8736. Collection validates complete node
+inventories before scratch allocation. Current invocation clocks and the original
+39+25-node union qualify the existing nine-input delayed-feedback learner.
+Scientific objectives, data, durability and retention thresholds stay fixed.
+
+The relational branch compares two five-probe schedules, with valid alternatives
+and unknown evidence. A separate48-call Qwen3.8 support-score pilot requires an
+externally repaired CUDA runtime and real logits. It supplies no natural-language
+extraction result or missing historical generator probabilities.
+
+An opt-in resident PyO3 state object preserves the qualified fixed-point kernel
+while reducing full-state JSON transport. Exact parity and restart precede full
+lifecycle timing at equal durability. Installed inference receives non-overlapping
+cost attribution, not a new throughput claim. ARC reads only new live outcomes.
+Hardware support stays operation-specific. Independent branches and an
+unconditional capstone preserve results when another prerequisite is blocked.
+These are planned studies; no production behavior changes in this planning task.

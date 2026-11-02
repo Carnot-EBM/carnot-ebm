@@ -104059,3 +104059,53 @@ producer readiness cannot propagate. Valid nulls close; unchanged blocked scopes
 stop until a stated mechanism changes. G1 through G4 retain their existing
 publication meanings and grant no new scientific acceptance. No model loads,
 language-model calls, push, activation or external publication occur.
+
+
+## REQ-REPORT-748-1: Exact staged milestone contract (planned 2026-11-02)
+
+The V748 design and staged YAML SHALL describe exactly fourteen ordered tasks,
+Exp8723 through Exp8736, with identical complete objects, deliverables, phases,
+routing, model declarations and gates. A canonical full-object digest and visible
+table SHALL bind the two files. Preserve V747 design bytes before replacement.
+Planning SHALL NOT activate the queue or modify the conductor, active roadmap or
+exclusion manifest. Every task SHALL require flushed progress at phase boundaries,
+before/after long calls and within loops, plus chunked writes above200 lines.
+
+### SCENARIO-REPORT-748-CONTRACT
+
+A missing task, changed prompt, reordered task or gate to an absent/later upstream
+fails planning validation. Each gated field occurs with identical spelling in
+its upstream REQUIRED ARTIFACT FIELDS. A task that invokes Qwen declares the
+mandated unsloth/Qwen3.8-27B-GGUF and the actual bounded-generation substrate.
+
+## REQ-REPORT-748-2: Causal qualification and matched verification (planned)
+
+The collection repair SHALL validate the full inventory before scratch mutation
+and preserve the original missing-node rejection. Current clocks SHALL measure
+current invocations; historical clocks remain provenance. Original39+25 learning
+nodes and statement anchors SHALL qualify before the unchanged delayed-feedback
+study. Future Brier benefit and simultaneous retention remain distinct criteria.
+Verifier comparisons SHALL use predeclared equal probe counts, retain valid
+alternatives and unknown semantics, and disclose exposed constructed evidence.
+
+### SCENARIO-REPORT-748-CAUSAL
+
+Repeated collection preserves existing sentinel data and cannot reuse stale
+coverage. A rejected collection leaves no partial child state. Delayed learning
+seals predictions before feedback. A valid null releases no benefit claim.
+Equal-call verifier results retain actual wall time and independent world counts.
+
+## REQ-REPORT-748-3: Resident cost and independent evidence boundaries (planned)
+
+Resident native state SHALL preserve exact sequential fixed-point arithmetic,
+errors, counters and restart before timing. Complete costs SHALL include host
+work and matched persistence. Installed attribution SHALL account for profiler
+overhead. CPU parity SHALL NOT imply physical FPGA support. ARC SHALL read only
+new live outcomes; an empty authenticated delta is terminal. Reconciliation SHALL
+run unconditionally and distinguish skips, nulls and failed producer checks.
+
+### SCENARIO-REPORT-748-COST
+
+A fast resident kernel with slower complete lifecycle earns no complete speedup.
+Missing physical evidence remains blocked even when a CPU cost map qualifies.
+The capstone preserves all fourteen dispositions and stable G1 through G4.

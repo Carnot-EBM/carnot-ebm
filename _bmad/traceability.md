@@ -4301,3 +4301,18 @@ V746 authority is preserved at
 The staged document replaces the next-plan slot, not the active V746 queue.
 The V747 literature scan precedes experiment design in research-references.md.
 Implementation and scientific acceptance remain pending execution.
+
+
+## Planned V748 research traceability — 2026-11-02
+
+| PRD requirement | Planned task range | OpenSpec requirement | State |
+|---|---|---|---|
+| FR-09/FR-10 | Exp8723–8726 and exact full-object queue checks | REQ-REPORT-748-1 | Planned; static contract validation only |
+| FR-11 | Exp8724/8725/8727/8728 | REQ-REPORT-748-2 | Original causal qualification then continuous typed-decision learning and retention |
+| FR-12 | Exp8726/8729/8730 | REQ-REPORT-748-2 | Equal-budget verifier audit and optional mandated-Qwen support scoring |
+| FR-05/FR-08/NFR-01 | Exp8731–8733 | REQ-REPORT-748-3 | Resident integer parity, complete costs and installed attribution |
+| FR-11/FR-12 and hardware path | Exp8734–8736 | REQ-REPORT-748-3 | Live outcome frontier, operation support and unconditional reconciliation |
+
+Design: openspec/change-proposals/research-roadmap-vNEXT.md.
+Queue: research-roadmap-next.yaml. Exactly fourteen tasks, Exp8723–Exp8736.
+No experiment implementation or result is claimed by this planning entry.

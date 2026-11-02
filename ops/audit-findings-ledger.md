@@ -288,3 +288,4 @@ of truth, not this line.)
 | 2026-11-01 | qa_layer_authenticity_audit | adversarial_verify.py::_lever_exercise_severity | REAL_BUG | OPEN | |
 | 2026-11-01 | qa_layer_authenticity_audit | adversarial_verify.py::check_value_routing_cost_control_overclaim | SILENT_NON_FIRING | OPEN | |
 | 2026-11-01 | qa_layer_authenticity_audit | adversarial_verify.py::_bool_leaf_values | SILENT_NON_FIRING | OPEN | |
+| 2026-11-02 | experiment_claim_audit | experiment_8715_v747_verifier_completeness.json | CLAIM_OVERSTATED | OPEN | |
