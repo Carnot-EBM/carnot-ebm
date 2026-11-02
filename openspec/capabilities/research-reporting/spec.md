@@ -104463,3 +104463,32 @@ Same-arm serialized decisions and feature digests SHALL match exactly. Native
 and Python providers retain the original numerical tolerance. Freeze qualified
 wheel, source, extension and head identities for Exp8744. Preserve scientific
 nulls and historical bytes. Exposed repeats create no independent questions.
+
+## REQ-REPORT-8745: Fixed durable windows require the original trajectory
+
+Freeze offsets0/2032/4064,32 updates, ten matched repeat blocks and Python,
+JSON-native and resident-native arms before new timings. Preserve all90 cells
+and2880 intended durable updates. Authenticate Exp8731 readiness, its loaded
+binary and original parity trace, and Exp8732's blocked122880-update design.
+Reconstruct arithmetic prefixes against every original state and acknowledgement;
+report excluded prefix cost and forbid full-service extrapolation. The middle
+window must contain actual dense renormalization and restart after update2048.
+An original trace with zero middle-window dense writes is a blocked external
+prerequisite. Never force a boundary, change jobs, windows or sample size.
+
+### SCENARIO-REPORT-8745-ADMISSION
+
+Before any windows, retain one four-update probe using the original Store on
+the actual disk filesystem. Project2880 times the maximum latency plus120
+measured process overheads, with25 percent reserve, against3000 seconds.
+An over-budget plan remains blocked. Keep intended cells censored, not measured
+zeros. Pre-register10000 matched-block bootstrap draws, equal window weights,
+resident/native lower95>1.05 and at most5 percent p95 regression. No ratios are
+computed for unexecuted windows. No model or physical hardware claim is allowed.
+
+Exp8745 measured prerequisite disposition (2026-11-02): every original4096
+parity state and acknowledgement replays exactly. The middle window has zero
+original dense writes, so all90 cells remain censored. The fresh four-update
+XFS probe projects2582.5793901 seconds including measured process overhead and
+25 percent reserve, below3000 seconds. Resource admission does not repair the
+missing renormalization boundary. No window ratio or benefit is established.

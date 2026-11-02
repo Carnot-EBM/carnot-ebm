@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="8.376" timestamp="2026-11-02T16:45:02.372379-05:00" hostname="icbfl1"><testcase classname="tests.python.test_block_feedback_state_8433" name="test_real_crashes_and_future_decisions" time="4.996"><failure message="assert False&#10; +  where False = all(&lt;generator object test_real_crashes_and_future_decisions.&lt;locals&gt;.&lt;genexpr&gt; at 0x7f1d6d3d3850&gt;)">evidence = ({'authority': {'activated': False, 'authority_snapshots': {'active': {'exists': True, 'path': '/home/ianblenke/github...ded_monotonic_ns': 336403470780109, ...}, PosixPath('/var/tmp/exp8666-validation-2vm5ps6p/suite-2/8433-evidence0/raw'))
+
+    def test_real_crashes_and_future_decisions(evidence):
+        """SCENARIO-VERIFY-8433-VALIDATION: exits are real children, including lost delivery."""
+        work, _ = evidence
+        assert len(work["rows"]) == 40
+&gt;       assert all(r["passed"] for r in work["rows"])
+E       assert False
+E        +  where False = all(&lt;generator object test_real_crashes_and_future_decisions.&lt;locals&gt;.&lt;genexpr&gt; at 0x7f1d6d3d3850&gt;)
+
+tests/python/test_block_feedback_state_8433.py:102: AssertionError</failure></testcase></testsuite></testsuites>

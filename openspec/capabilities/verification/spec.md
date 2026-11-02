@@ -57636,3 +57636,21 @@ fresh errors only. Baseline and reuse retain identical error spellings.
 Private CLI checks cover date/path rejection, missing upstreams, valid sealed
 replay, aggregate tampering and changed raw evidence. Coverage measures added
 statements only; original import assertions and shared validators stay intact.
+
+## REQ-VERIFY-8745: Authenticate blocked window prerequisites and terminal bytes
+
+Bind historical producer pins, raw parity rows, numerical sources, binary and
+original durable Store to exact bytes. Retain real probe child exits, JUnit and
+SQLite coverage. Run E2E-003/004 and existing hard-exit/resume controls. Require
+100 percent new executable statements, scoped Ruff, strict types and spec
+tracing. Fresh-process replay must rebuild the report from separately sealed
+measurement and validation references before unchanged terminal validators
+allow atomic publication. A failed owned check disqualifies execution.
+
+### SCENARIO-VERIFY-8745-CUSTODY
+
+Reject missing fields, missing files, zero readiness, altered trace states,
+changed hashes, invalid clocks and consistently rehashed outer aggregates.
+Private tests use private artifact roots. A historical absence of required
+renormalization is a blocked prerequisite, not incomplete owned measurement.
+The conductor owns ops, changelog and traceability reconciliation.
