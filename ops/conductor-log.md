@@ -21145,3 +21145,6 @@ code |
 | 2026-11-02 18:45 UTC | Milestone 2026.11.749 activated | OK | 12 tasks queued |
 | 2026-11-02 19:21 UTC | Bind twelve tasks and freeze independent learning  | OK | 93 passed, 1 warning in 42.05s |
 | 2026-11-02 20:09 UTC | Locate deadline-smoke work and qualify bounded ori | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 99 passed, 1 warning in 30.22s |
+| 2026-11-02 20:13 UTC | Qualify the original causal union from authenticat | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8737-contract-methods.learning_protocol_ready_score (actual=0 == expected=1) |
+| 2026-11-02 20:15 UTC | Measure continuous typed-decision learning and rea | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8739-learning-union) |
+| 2026-11-02 20:15 UTC | Test future proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8740-causal-brier-stream) |
