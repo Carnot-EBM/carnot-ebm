@@ -21120,3 +21120,4 @@ code |
 | 2026-11-02 05:53 UTC | Measure complete batching throughput and same-batc | OK | 92 passed, 1 warning in 181.65s (0:03:01) |
 | 2026-11-02 05:56 UTC | Compare bounded Qwen decisions and source-grounded | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8712-relational-capacity.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-02 06:48 UTC | Qualify a compiled fixed-point sparse update again | OK | 99 passed, 1 warning in 133.13s (0:02:13) |
+| 2026-11-02 07:08 UTC | Inspect only new cross-game supervisor outcomes af | OK | 115 passed, 1 warning in 47.99s |
