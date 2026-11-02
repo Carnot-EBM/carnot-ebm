@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="9" time="476.834" timestamp="2026-11-01T21:04:06.591166-05:00" hostname="icbfl1"><testcase classname="tests.python.test_relational_capacity_8712" name="test_capacity" time="29.505" /><testcase classname="tests.python.test_relational_capacity_8712" name="test_failed_and_absent_controls" time="0.230" /><testcase classname="tests.python.test_relational_capacity_8712" name="test_input_custody" time="1.337" /><testcase classname="tests.python.test_relational_capacity_8712" name="test_private_cli_replay_and_guards" time="68.934"><failure message="assert False">tmp_path = PosixPath('/var/tmp/relational8712-1anyijqh/0/tmp/test_private_cli_replay_and_gu0')
+
+    def test_private_cli_replay_and_guards(tmp_path):
+        """SCENARIO-REPORT-8712-CUSTODY: private success and rehashed claims get real exits."""
+        output = tmp_path / (e.NAME + ".json")
+        args = [sys.executable, "-u", e.CLI, "--date", "20261102"]
+&gt;       assert child("private", args + ["--private-output", str(output)], tmp_path / "logs")["passed"]
+E       assert False
+
+tests/python/test_relational_capacity_8712.py:74: AssertionError</failure></testcase><testcase classname="tests.python.test_relational_capacity_8712" name="test_build_classes_and_gates" time="71.521"><failure message="ValueError: candidate_rejected">tmp_path = PosixPath('/var/tmp/relational8712-1anyijqh/0/tmp/test_build_classes_and_gates0')
+
+    def test_build_classes_and_gates(tmp_path):
+        """SCENARIO-REPORT-8712-CUSTODY: each gate fails independently and owned faults disqualify."""
+        output = tmp_path / (e.NAME + ".json")
+&gt;       assert r.run(output, private=True) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_relational_capacity_8712.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/relational_capacity_runner_8712.py:345: in run
+    publication = publish_primary(output, value, lambda path: terminal(path, raw))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/relational8712-1anyijqh/0/tmp/test_build_classes_and_gates0/experiment_8712_v747_relational_capacity.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'full_v747_contract': True, 'original_branch_inputs': True, 'owned_validation...e_values': {'relational_rows_ready_score': 0, 'runtime_repair_ready_score': 0, 'symbolic_control_ready_score': 0}, ...}
+validator = &lt;function run.&lt;locals&gt;.&lt;lambda&gt; at 0x7f41b5d10680&gt;
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -&gt; dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+&gt;               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError</failure></testcase><testcase classname="tests.python.test_relational_capacity_8712" name="test_registered_rows_cannot_be_replaced" time="0.884" /><testcase classname="tests.python.test_relational_capacity_8712" name="test_validation_retention_and_replay" time="298.827"><failure message="AssertionError: assert False&#10; +  where False = &lt;function replay at 0x7f41623387c0&gt;(PosixPath('/var/tmp/relational8712-1anyijqh/0/tmp/test_validation_retention_and_0/experiment_8712_v747_relational_capacity.json'))&#10; +    where &lt;function replay at 0x7f41623387c0&gt; = r.replay">tmp_path = PosixPath('/var/tmp/relational8712-1anyijqh/0/tmp/test_validation_retention_and_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f41628f6600&gt;
+
+        assert not result["passed"]
+        assert any(g["check"] == "original_480_rows" for g in result["failures"])
+    
+    
+    def test_validation_retention_and_replay(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8712-CUSTODY: exercise real children without recursive producer runs."""
+        monkeypatch.setattr(e, "TESTS", ["tests/python/test_primary_publication_7928.py"])
+        raw, scratch = tmp_path / "checks", tmp_path / "scratch"
+        scratch.mkdir()
+        result = r.validate(raw, scratch, [e.reference(e.ROOT / e.OWNED[0])])
+        assert result["custody"]["passed"], result["custody"]
+        assert all(x["passed"] for x in result["receipts"])
+        assert not result["coverage"]["complete"]
+        output = tmp_path / (e.NAME + ".json")
+        r.run(output, private=True)
+        value = json.loads(output.read_bytes())
+        work = e.load(value["primitive_reference"])
+        work.update(private_control=False, validation=result)
+    
+        def save():
+            seal = tmp_path / "seal.json"
+            e.atomic_json(seal, {k: v for k, v in work.items() if k != "seal_reference"})
+            work["seal_reference"] = e.reference(seal)
+&gt;           e.atomic_json(Path(value["primitive_reference"]["path"]), work)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert False
+E            +  where False = &lt;function replay at 0x7f41623387c0&gt;(PosixPath('/var/tmp/relational8712-1anyijqh/0/tmp/test_validation_retention_and_0/experiment_8712_v747_relational_capacity.json'))
+E            +    where &lt;function replay at 0x7f41623387c0&gt; = r.replay
+
+tests/python/test_relational_capacity_8712.py:173: AssertionError</failure></testcase><testcase classname="tests.python.test_relational_capacity_8712" name="test_replay_early_boundaries" time="0.004" /><testcase classname="tests.python.test_relational_capacity_8712" name="test_measurement_cap" time="1.584" /></testsuite></testsuites>

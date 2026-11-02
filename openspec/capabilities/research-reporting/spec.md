@@ -103879,6 +103879,38 @@ learning result is null. Missing costs or upstream qualification are blocked,
 never retryable partial. Every physical claim requires actual compatible device
 evidence; no purchase, probe, flash, deployment or activation is scheduled here.
 
+## REQ-REPORT-8712: Measure model-free relational representation capacity
+
+Exp8712 authenticates the qualified Exp8698 primary, terminal custody and original
+120 worlds with 480 views. Bind the full fourteen-task V747 contract independently.
+The eight unchanged complete-source lexical features form a separate estimand.
+Run chunks 1/32/128 for 1440 lexical rows and retain opposite-truth equal-feature
+witnesses plus equivalent-wording changes grouped by world. Run fixed bound SQL
+on complete, deleted-required and reversed records for 1440 symbolic rows.
+Ground the query space before reading candidate claims. Compare with the independent
+world evaluator; incorrect controls disqualify. Keep all intended censored slots.
+
+### SCENARIO-REPORT-8712-CAPACITY
+
+All complete controls match original truth; missing premises return unknown.
+Exact lexical collisions refute representation sufficiency only. Preserve spans,
+late evidence, families and 120 independent constructed worlds. No population
+accuracy, natural extraction, learning or physical acceleration claim follows.
+The absent p2 probability remains absent on all 480 views; never call the learned
+head or invent its ninth input. Oracle capacity positives are circular_positive.
+
+### SCENARIO-REPORT-8712-CUSTODY
+
+Freeze sources, tests, configuration and operands before measurement. Require
+100 percent newly owned statements, real private CLI success/rejection, bounded
+disjoint retained child SQLite/JUnit/node custody, private E2E-018/021, Ruff,
+strict mypy and scoped spec coverage. Cold replay rejects missing operands and
+consistently rehashed tampering before unchanged atomic publication and scanners.
+External absence blocks; failed owned checks disqualify. Read changed CUDA
+evidence once through cuda_reader_8410 and current validator custody. Its separate
+runtime gate never vetoes relational readiness and is consumed only by Exp8718.
+The conductor owns ops and BMAD reconciliation after this task exits.
+
 ## REQ-REPORT-8709: Bind V747 methods to retained producer authority
 
 Authenticate fourteen full task objects, table order, markers and the fixed V747
