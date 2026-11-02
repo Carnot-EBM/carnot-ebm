@@ -22822,3 +22822,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   and no full repository suite or research producer ran.
 - 2026-11-02: Repair collection scratch ownership and bind fourteen branch methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v748_collection_contract; results/experiment_8723_v748_collection_contract.json
 - 2026-11-02: Qualify current invocation clocks and the original learning core (⚠️ Research Finding) — honest_verdict=complete_disqualified_v748_invocation_clock_core; results/experiment_8724_v748_invocation_clock_core.json
+- 2026-11-02: Freeze equal-budget verifier probes and the Qwen self-score comparator (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v748_verification_methods; results/experiment_8726_v748_verification_methods.json
