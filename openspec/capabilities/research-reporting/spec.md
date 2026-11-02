@@ -104023,3 +104023,21 @@ update2048, with identical state and acknowledgement. Replay work is separate.
 Readiness requires loaded-extension identity and all owned validation. Native CPU
 arithmetic establishes no physical FPGA execution, learning benefit or speedup.
 The on-chip KAN paper supplies locality motivation only.
+## REQ-REPORT-8720: Read only the supervisor outcome frontier
+
+Exp8720 SHALL independently bind the fourteen full V747 task objects and visible
+table. Authenticate pinned Exp8705 and its bound producer/terminal receipts once.
+Keep its closed sixteen-event panel and the versioned live ledger identities as
+the high-water mark. Inspect only new ledger identities; never replay the panel.
+An authenticated empty delta SHALL emit complete_null_no_new_supervisor_outcomes.
+Missing ledger authority SHALL block, with explicit missing/changed/zero operands.
+Preserve curated arm order, selected/applied state, reset causes and censoring.
+Require distinct intervention, separated reset causes and uncensored cross-game
+support before a separately authorized future policy experiment. Keep policy,
+model calls and new level credit unchanged at zero.
+
+### SCENARIO-REPORT-8720-FRONTIER
+
+An unchanged authenticated ledger yields zero new rows and unchanged exact event
+identities. New receipts deduplicate run/event identities. Missing, censored and
+completed-no-progress remain separate. Flagged producers grant no readiness.

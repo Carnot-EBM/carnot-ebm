@@ -57381,3 +57381,18 @@ Run unchanged primary publication, adversarial validation and strict row checkin
 before atomic publication. Failed owned checks disqualify. External absence is
 terminal blocked with exact missing/changed/zero diagnostics. Ops and traceability
 reconciliation belong to the conductor after exit.
+## REQ-VERIFY-8720: Seal the bounded frontier reader
+
+Freeze source, test, configuration and input hashes before measurement. Preserve
+actual invocation clocks. Collect focused nodes once, retain disjoint child
+SQLite/JUnit/log evidence, and require 100 percent newly owned statements.
+Use private E2E-018/021 and unchanged publication/scanner/strict-row consumers.
+Cold replay SHALL reject missing operands and consistently rehashed tampering.
+Private CLI controls SHALL reject checkout aliases before writes and cannot
+grant production readiness. Failed owned checks disqualify the reader.
+
+### SCENARIO-VERIFY-8720-SEAL
+
+Real private CLI success, rejection, blocked and failed-child paths retain honest
+receipts. A fresh process reconstructs final bytes from independently sealed
+primitives. A changed candidate, primitive, code/input/log or clock fails replay.
