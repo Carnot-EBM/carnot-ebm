@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.748",
+  "generated_at": "2026-11-02T16:21:00Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 53.5,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify current invocation clocks and the original learning core",
+      "duration_minutes": 27.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Keep fixed-point update state resident across the native boundary",
+      "duration_minutes": 6.89,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Repair collection scratch ownership and bind fourteen branch methods",
+      "duration_minutes": 6.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Freeze equal-budget verifier probes and the Qwen self-score comparator",
+      "duration_minutes": 4.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Locate the installed inference cost that limits same-batch native throughput",
+      "duration_minutes": 4.28,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.748 completed 10 experiments (0 compute-bound, 10 synthesis-only) in 53.5 wall-time minutes (53 minutes / 0.9 hours, averaging 5 minutes per experiment) reconstructed via disk-mtime fallback after the live git-log path found 0 commits. The five slowest synthesis-only tasks were 'Qualify current invocation clocks and the original learning core' (27.01 minutes / 27min), 'Keep fixed-point update state resident across the native boundary' (6.89 minutes / 7min), 'Repair collection scratch ownership and bind fourteen branch methods' (6.34 minutes / 6min), 'Freeze equal-budget verifier probes and the Qwen self-score comparator' (4.9 minutes / 5min), and 'Locate the installed inference cost that limits same-batch native throughput' (4.28 minutes / 4min). Because 0 compute-bound tasks ran, gpu_idle_on_compute_bound_tasks is null and the 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 50C) reflects expected behavior for synthesis-only workloads.",
+  "bottlenecks_identified": [
+    "Synthesis-only runtime was dominated by 'Qualify current invocation clocks and the original learning core' at 27.01 minutes (27min) out of 53.5 total wall-time minutes (53 minutes / 0.9 hours).",
+    "Secondary synthesis-only execution latency spanned 'Keep fixed-point update state resident across the native boundary' (6.89 minutes / 7min), 'Repair collection scratch ownership and bind fourteen branch methods' (6.34 minutes / 6min), 'Freeze equal-budget verifier probes and the Qwen self-score comparator' (4.9 minutes / 5min), and 'Locate the installed inference cost that limits same-batch native throughput' (4.28 minutes / 4min).",
+    "Milestone timing telemetry fell back to disk-mtime reconstruction (retro_timing_fallback) because the live git-log path found 0 commits."
+  ],
+  "improvements_suggested": [
+    "Decompose and parallelize independent verification checks within 'Qualify current invocation clocks and the original learning core' (27.01 minutes / 27min).",
+    "Memoize intermediate validation receipts and pre-validate inputs across 'Keep fixed-point update state resident across the native boundary' (6.89 minutes / 7min), 'Repair collection scratch ownership and bind fourteen branch methods' (6.34 minutes / 6min), 'Freeze equal-budget verifier probes and the Qwen self-score comparator' (4.9 minutes / 5min), and 'Locate the installed inference cost that limits same-batch native throughput' (4.28 minutes / 4min).",
+    "Record explicit task start and completion timestamps directly in experiment output artifacts so milestone timing does not rely on disk-mtime fallback when git-log finds 0 commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Partition and parallelize independent invocation-clock and learning-core qualification checks in the 27.01-minute 'Qualify current invocation clocks and the original learning core' task.",
+    "Introduce reusable receipt memoization across the 6.89-minute native-boundary fixed-point state task, 6.34-minute scratch ownership and branch binding task, 4.9-minute verifier probe freeze task, and 4.28-minute installed inference cost localization task.",
+    "Persist direct start and finish timestamps in experiment JSON deliverables to avoid retro_timing_fallback disk-mtime reconstruction when 0 commits are present in git-log."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "All 10 completed experiments in milestone 2026.11.748 were synthesis-only (0 compute-bound) across 53.5 minutes (53 minutes / 0.9 hours, 5 minutes average), so 0% GPU utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 50C) is expected synthesis-only behavior rather than a GPU bottleneck, and DualGPURunner was not applicable. Optimizing the 27.01-minute invocation-clock and learning-core qualification task provides the highest leverage for reducing future milestone duration."
+}

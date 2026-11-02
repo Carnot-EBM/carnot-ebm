@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-02 UTC — Operational retrospective for milestone 2026.11.748
+
+- Updated `results/operational_retro_2026_11_748.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.748`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 10 completed experiments (0 compute-bound, 10 synthesis-only) across 53.5 wall-time minutes (53 minutes / 0.9 hours, averaging 5 minutes per experiment).
+- The five slowest experiments were all synthesis-only: `Qualify current invocation clocks and the original learning core` (27.01 minutes / 27min), `Keep fixed-point update state resident across the native boundary` (6.89 minutes / 7min), `Repair collection scratch ownership and bind fourteen branch methods` (6.34 minutes / 6min), `Freeze equal-budget verifier probes and the Qwen self-score comparator` (4.9 minutes / 5min), and `Locate the installed inference cost that limits same-batch native throughput` (4.28 minutes / 4min).
+- GPU monitor report (`2026-11-02T16:21:00.172879+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 4/24576MB (0%), 0% utilization, and 50C; because 0 compute-bound experiments ran, `gpu_idle_on_compute_bound_tasks` is `null` and 0% GPU utilization is expected behavior for synthesis-only tasks.
+- Suggested improvements: partition and parallelize independent checks in the 27.01-minute invocation-clock and learning-core qualification task, memoize intermediate verification receipts across the 6.89-minute, 6.34-minute, 4.9-minute, and 4.28-minute tasks, and emit explicit start/finish timestamps in experiment artifacts to avoid `retro_timing_fallback` when git-log has 0 commits.
+
 ## 2026-11-02 UTC — Operational retrospective for milestone 2026.11.747
 
 - Updated `results/operational_retro_2026_11_747.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.747`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 9 completed experiments (0 compute-bound, 9 synthesis-only) across 74.4 wall-time minutes (74 minutes / 1.2 hours, averaging 8 minutes per experiment).

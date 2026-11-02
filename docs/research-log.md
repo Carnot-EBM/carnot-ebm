@@ -7580,3 +7580,10 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 9 synthesis-only experiments completed in 74.4 wall-time minutes (74 minutes / 1.2 hours, averaging 8 minutes per experiment) led by qualifying installed batching with isolated legacy export execution (25.41 min / 25min), measuring lexical collisions and symbolic capacity without invented model probabil (17.24 min / 17min), testing valid alternatives and behavioral perturbations against relational verifier (9.44 min / 9min), qualifying a compiled fixed-point sparse update against the lifecycle emulator (8.78 min / 9min), and measuring complete batching throughput and same-batch native speed (8.27 min / 8min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks set to null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 48C) reflecting expected behavior for synthesis-only tasks.
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.748
+- exp_range: no data available this milestone
+- theme: Operational execution analysis of 10 synthesis-only experiments (0 compute-bound) across 53.5 minutes (53 minutes / 0.9 hours) of milestone wall time.
+- key result: honest operational negative — 10 synthesis-only experiments completed in 53.5 wall-time minutes (53 minutes / 0.9 hours, averaging 5 minutes per experiment) led by qualifying current invocation clocks and the original learning core (27.01 min / 27min), keeping fixed-point update state resident across the native boundary (6.89 min / 7min), repairing collection scratch ownership and binding fourteen branch methods (6.34 min / 6min), freezing equal-budget verifier probes and the Qwen self-score comparator (4.9 min / 5min), and locating the installed inference cost that limits same-batch native throughput (4.28 min / 4min); 0 compute-bound experiments ran with gpu_idle_on_compute_bound_tasks set to null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, 50C) reflecting expected behavior for synthesis-only tasks.
+- acceptance: no data available this milestone
+
+
