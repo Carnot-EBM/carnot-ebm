@@ -796,3 +796,9 @@ Additional official ARC-AGI-3 Semi-Private evaluations absent from your prior fi
 
 Gemini 4 Argon’s Standard evaluation suffered API failures: its best-scoring configuration completed **42 of 55 tasks**; the reported score includes all 55, retaining partial credit from incomplete runs. [Official evaluation details](https://arcprize.org/results/google-gemini-4-argon)
 
+## 2026-11-02 14:13 UTC -- NEW
+
+- **November 1 — NVARC3 jumps to fourth:** Rose from **8th to 4th**, improving **49.89% → 56.15%** (+6.26 points), overtaking Team Turducken at **56.02%** on the public leaderboard. [Report](https://arc.markbarney.net/news)
+
+- **October 1 — Milestone #2 winners announced:** **Daniel Franzen:** 27.9%, $25,000; **Lord Han Solo:** 23.8%, $7,500; **Lohit Siriki:** 22.5%, $5,000. All three open-sourced their agents. [Results report](https://competopia.ai/news/arc-prize-announces-milestone-2-winners-for-arc-agi-3-kaggle-competition/)
+

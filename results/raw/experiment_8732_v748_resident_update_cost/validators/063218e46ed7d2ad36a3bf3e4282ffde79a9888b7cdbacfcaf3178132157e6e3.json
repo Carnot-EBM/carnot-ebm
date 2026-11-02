@@ -1,0 +1,112 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8732_v748_resident_update_cost.json",
+  "primary_sha256": "sha256:063218e46ed7d2ad36a3bf3e4282ffde79a9888b7cdbacfcaf3178132157e6e3",
+  "report": {
+    "actual_findings": {
+      "flagged_count": 0,
+      "reports": [
+        {
+          "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/terminal_candidate.json",
+          "exp_id": 8732,
+          "flag_count": 0,
+          "flags": [],
+          "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+          "honest_verdict": "complete_blocked_durability_budget",
+          "loaded": true,
+          "max_severity": -1,
+          "title": ""
+        }
+      ]
+    },
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8732_v748_resident_update_cost.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8732_v748_resident_update_cost.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/terminal_candidate.json",
+        "deadline_s": 300,
+        "duration_s": 3.069750061,
+        "ended_monotonic_ns": 310627764809079,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/cold_replay.stdout",
+        "log_sha256": "sha256:05f131d05d40e82ae56d17efeb9d13b9ef239d8c883c48c73c7eb0c737ba0db0",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 310624695059018,
+        "started_wall_ns": 1793630127482877015,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/cold_replay.stdout",
+        "stdout_sha256": "sha256:05f131d05d40e82ae56d17efeb9d13b9ef239d8c883c48c73c7eb0c737ba0db0",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/terminal_candidate.json",
+        "deadline_s": 300,
+        "duration_s": 0.214699989,
+        "ended_monotonic_ns": 310627981538020,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/adversarial.stdout",
+        "log_sha256": "sha256:8937c0828b0f3b7bd564e9b77f806a63268d31cd481153b5b2118ecab0ca0312",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 310627766838031,
+        "started_wall_ns": 1793630130554658183,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/adversarial.stdout",
+        "stdout_sha256": "sha256:8937c0828b0f3b7bd564e9b77f806a63268d31cd481153b5b2118ecab0ca0312",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/terminal_candidate.json",
+        "deadline_s": 300,
+        "duration_s": 0.065491858,
+        "ended_monotonic_ns": 310628064821833,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 310627999329975,
+        "started_wall_ns": 1793630130787148975,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8732_v748_resident_update_cost/invocations/1793629760117178847/terminal/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ]
+  }
+}

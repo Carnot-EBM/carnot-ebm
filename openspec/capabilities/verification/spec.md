@@ -57491,3 +57491,18 @@ Preserve raw child SQLite, JUnit, nodes, exits, clocks and source hashes. Cold
 replay must reject missing operands and consistently rehashed tampering before
 unchanged validators permit atomic publication. External absence is terminal
 blocked; failed owned checks disqualify. No model load or generation occurs.
+
+## REQ-VERIFY-8732: Sealed complete cost evidence
+
+Authenticate original methods separately from all fourteen V748 task objects.
+Missing or disqualified external operands terminate blocked with exact gates.
+Retain real child exits, clocks, node IDs, JUnit and SQLite coverage. Require
+100 percent owned statement coverage and unchanged terminal validators before
+atomic publication. Cold replay reconstructs aggregates from sealed rows and
+rejects missing operands, changed sources and consistently rehashed tampering.
+
+### SCENARIO-VERIFY-8732-REPLAY
+
+Exercise actual private CLI workers, restart, cold replay, bad dates, unsafe
+private output, altered rows, absent operands and failed owned validation.
+No model loads occur. Conductor owns ops/status/changelog/traceability updates.

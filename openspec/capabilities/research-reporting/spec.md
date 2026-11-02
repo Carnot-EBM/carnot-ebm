@@ -104242,3 +104242,32 @@ renormalization and serialization order. The supported accumulator bound is
 1333066761011986432;170632382681813352448 remains unsupported. Record crossings,
 typed payload bytes and diagnostic coefficient copies separately. Readiness
 proves numerical and lifecycle eligibility only; Exp8732 owns performance.
+
+## REQ-REPORT-8732: Matched complete resident update costs
+
+Freeze Python integer, JSON native and resident native arms with seed7488732.
+Use ten paired repeats of the original4096-update prefix and restart at2048.
+Include the original64-update dense boundary control inside each lifecycle cost,
+reported separately from the122880 primary updates. Never alter original jobs.
+All arms seal predictions before feedback and use the original store's durable
+snapshot, pointer fsync, directory fsync and acknowledgement for every feedback.
+Include launch, imports, input preparation, nonlinear host work, arithmetic,
+copies, serialization, restart and shutdown in parent-observed process cost.
+Bind qualified Exp8731 source and binary identities and fourteen V748 objects.
+
+### SCENARIO-REPORT-8732-COST
+
+Report10000 paired process bootstrap draws, complete update p50/p95, separate
+arithmetic timing and exact state/decision parity. Resident benefit requires
+lower95>1.05 over JSON native without a p95 regression. Complete native/Python
+lower95>=10 is a separate target. Qualified nulls are terminal. Readiness grants
+no natural accuracy, future learning benefit or physical FPGA execution.
+
+### SCENARIO-REPORT-8732-DURABILITY-BUDGET
+
+Before the full roster, time four original Python updates with both original
+store barriers. Preserve probe rows outside the intended process roster.
+If even the fastest observed update projects beyond the3600-second measurement
+budget for122880 updates, terminate complete_blocked_durability_budget. Record
+the observed minimum, projection, exact probe hash and filesystem. No throughput
+ratio or measured-zero cost may replace the missing complete lifecycle rows.
