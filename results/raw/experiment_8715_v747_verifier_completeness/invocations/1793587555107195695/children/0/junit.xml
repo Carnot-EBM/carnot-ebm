@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="6" time="349.481" timestamp="2026-11-01T21:46:26.751561-05:00" hostname="icbfl1"><testcase classname="tests.python.test_verifier_completeness_8715" name="test_semantics_and_probes" time="1.116" /><testcase classname="tests.python.test_verifier_completeness_8715" name="test_inputs" time="1.099" /><testcase classname="tests.python.test_verifier_completeness_8715" name="test_private_cli_and_replay" time="103.344" /><testcase classname="tests.python.test_verifier_completeness_8715" name="test_report_verdicts_and_empty_measurement" time="66.084"><failure message="AssertionError: assert 'disqualified' == 'circular_positive'&#10;  &#10;  - circular_positive&#10;  + disqualified">tmp_path = PosixPath('/var/tmp/verifier8715-ygafc8wz/0/tmp/test_report_verdicts_and_empty0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f4d5ee444d0&gt;
+
+    def test_report_verdicts_and_empty_measurement(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8715-SEMANTICS: readiness survives zero gain but never failed checks."""
+        output = tmp_path / (e.NAME + ".json")
+        assert r.run(output, private=True) == 0
+        value = json.loads(output.read_bytes())
+        work = e.load(value["primitive_reference"])
+        work["private_control"] = False
+        assert e.build(work, output)["verdict_class"] == "disqualified"
+        work["validation"] = dict(
+            receipts=[dict(passed=True)],
+            coverage=dict(complete=True),
+            custody=dict(passed=True),
+            raw_shard_hashes=[],
+        )
+&gt;       assert e.build(work, output)["verdict_class"] == "circular_positive"
+E       AssertionError: assert 'disqualified' == 'circular_positive'
+E         
+E         - circular_positive
+E         + disqualified
+
+tests/python/test_verifier_completeness_8715.py:123: AssertionError</failure></testcase><testcase classname="tests.python.test_verifier_completeness_8715" name="test_validation_custody_replay" time="107.168"><failure message="AssertionError: {'errors': ['incomplete_child'], 'node_ids': ['tests/python/test_primary_publication_7928.py::test_nested_reports_and_...dation/children/1/receipt.json', 'sha256': 'sha256:5703206a93845c03241d39b3b10efa8fd3a56b87f25bd76be710098cce41f027'}]}&#10;assert False">tmp_path = PosixPath('/var/tmp/verifier8715-ygafc8wz/0/tmp/test_validation_custody_replay0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f4cedcaf4a0&gt;
+
+        assert len(blocked["rows"]) == 720
+        assert not blocked["verifier_audit_ready_score"]
+        monkeypatch.setattr(r, "run", lambda *args, **kwargs: 0)
+        assert r.main([]) == 0
+    
+    
+&gt;   def test_validation_custody_replay(tmp_path, monkeypatch):
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: {'errors': ['incomplete_child'], 'node_ids': ['tests/python/test_primary_publication_7928.py::test_nested_reports_and_...dation/children/1/receipt.json', 'sha256': 'sha256:5703206a93845c03241d39b3b10efa8fd3a56b87f25bd76be710098cce41f027'}]}
+E   assert False
+
+tests/python/test_verifier_completeness_8715.py:146: AssertionError</failure></testcase><testcase classname="tests.python.test_verifier_completeness_8715" name="test_measurement_and_caps" time="66.734"><failure message="ValueError: candidate_rejected">tmp_path = PosixPath('/var/tmp/verifier8715-ygafc8wz/0/tmp/test_measurement_and_caps0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f4cedcaf800&gt;
+
+    save()
+    assert not r.replay(output)
+    monkeypatch.setattr(r.shared, "CONSUMERS", ["absent::node"])
+&gt;   assert not r.validate(tmp_path / "empty", tmp_path, [])["custody"]["passed"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_verifier_completeness_8715.py:179: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/verifier_completeness_runner_8715.py:165: in run
+    publication = publish_primary(output, value, lambda path: shared.terminal(path, raw))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/verifier8715-ygafc8wz/0/tmp/test_measurement_and_caps0/experiment_8715_v747_verifier_completeness.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'complete_constructed_controls': True, 'full_v747_contract': True, 'original_...kely a bug than a finding.', 'kind': 'TAUTOLOGY', 'severity': 'critical'}], 'baseline_detected_defect_units': 120, ...}
+validator = &lt;function run.&lt;locals&gt;.&lt;lambda&gt; at 0x7f4cec14dd00&gt;
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -&gt; dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+&gt;               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError</failure></testcase></testsuite></testsuites>

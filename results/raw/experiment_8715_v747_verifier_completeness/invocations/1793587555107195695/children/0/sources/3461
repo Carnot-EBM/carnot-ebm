@@ -1,0 +1,624 @@
+"""Warm multi-model inference server and deterministic benchmark helpers.
+
+Spec: REQ-VERIFY-036, REQ-VERIFY-037, REQ-VERIFY-038,
+SCENARIO-VERIFY-036, SCENARIO-VERIFY-037, SCENARIO-VERIFY-038
+"""
+
+from __future__ import annotations
+
+import gc
+import os
+import threading
+from collections import deque
+from collections.abc import Callable, Sequence
+from contextlib import nullcontext
+from dataclasses import dataclass, field
+from queue import Empty, Queue
+from time import perf_counter
+from typing import Any, cast
+
+import carnot.inference.model_loader as model_loader_module
+from carnot.inference.model_loader import (
+    _model_device,
+    _render_generation_prompt,
+    _strip_thinking_tokens,
+    generate,
+    load_model,
+)
+from carnot.inference.tensorrt_backend import load_trt_backend
+
+LoaderFn = Callable[[str], tuple[Any, Any]]
+BatchGenerateFn = Callable[[Any, Any, list[str], int], list[str]]
+
+
+@dataclass(frozen=True)
+class WarmServerBenchmarkResult:
+    """Deterministic cold-load versus warm-server timing summary."""
+
+    model_name: str
+    n_questions: int
+    cold_elapsed_seconds: float
+    warm_elapsed_seconds: float
+    speedup: float
+
+
+@dataclass
+class _QueuedRequest:
+    model_name: str
+    prompts: tuple[str, ...]
+    max_new_tokens: int
+    done: threading.Event = field(default_factory=threading.Event)
+    responses: list[str] | None = None
+    error: BaseException | None = None
+
+
+@dataclass
+class _BatchStats:
+    total_requests: int = 0
+    total_batches: int = 0
+    max_observed_batch_size: int = 0
+
+    def record(self, batch_size: int) -> None:
+        self.total_requests += batch_size
+        self.total_batches += 1
+        self.max_observed_batch_size = max(self.max_observed_batch_size, batch_size)
+
+    def snapshot(self) -> dict[str, float | int]:
+        average = self.total_requests / self.total_batches if self.total_batches > 0 else 0.0
+        return {
+            "total_requests": self.total_requests,
+            "total_batches": self.total_batches,
+            "average_batch_size": average,
+            "max_observed_batch_size": self.max_observed_batch_size,
+        }
+
+
+def _default_batch_generate(
+    model: Any,
+    tokenizer: Any,
+    prompts: list[str],
+    max_new_tokens: int,
+) -> list[str]:
+    if model is tokenizer and hasattr(model, "generate_batch"):
+        return cast("list[str]", model.generate_batch(prompts, max_new_tokens=max_new_tokens))
+    if model is None or tokenizer is None:
+        raise RuntimeError(
+            "_default_batch_generate() called with model=None or tokenizer=None. "
+            "Warm loading must succeed before batched generation."
+        )
+    if not prompts:
+        return []
+
+    rendered_prompts = [_render_generation_prompt(tokenizer, prompt) for prompt in prompts]
+    device = _model_device(model)
+
+    if (
+        getattr(tokenizer, "pad_token_id", None) is None
+        and getattr(tokenizer, "eos_token", None) is not None
+    ):
+        tokenizer.pad_token = tokenizer.eos_token
+
+    inputs = tokenizer(
+        rendered_prompts,
+        return_tensors="pt",
+        padding=True,
+    )
+    inputs = {key: value.to(device) for key, value in inputs.items()}
+    input_length = int(inputs["input_ids"].shape[1])
+
+    torch_module = getattr(model_loader_module, "torch", None)
+    no_grad = torch_module.no_grad if torch_module is not None else nullcontext
+    with no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
+            pad_token_id=tokenizer.eos_token_id,
+        )
+
+    responses: list[str] = []
+    for index in range(len(prompts)):
+        decoded = tokenizer.decode(
+            outputs[index, input_length:],
+            skip_special_tokens=True,
+        )
+        responses.append(_strip_thinking_tokens(decoded))
+    return responses
+
+
+def _default_loader(model_name: str, *, batch_size: int = 8) -> tuple[Any, Any]:
+    """Prefer TensorRT-LLM and otherwise request CUDA through the HF loader."""
+    backend, status = load_trt_backend(
+        model_name,
+        max_batch_size=batch_size,
+    )
+    if backend is not None:
+        return backend, backend
+    del status
+    return load_model(model_name, device="cuda")
+
+
+class ModelServer:
+    """Warm, queued multi-model inference server with deterministic batching."""
+
+    def __init__(
+        self,
+        model_names: Sequence[str],
+        *,
+        batch_size: int = 8,
+        loader: LoaderFn | None = None,
+        batch_generate_fn: BatchGenerateFn = _default_batch_generate,
+        torch_module: Any | None = None,
+        clock: Callable[[], float] = perf_counter,
+    ) -> None:
+        if batch_size < 1 or batch_size > 16:
+            raise ValueError("batch_size must be within the inclusive range 1..16")
+
+        self.model_names = tuple(model_names)
+        self.batch_size = batch_size
+        self._loader = loader or (
+            lambda model_name: _default_loader(model_name, batch_size=batch_size)
+        )
+        self._batch_generate_fn = batch_generate_fn
+        self._torch = torch_module
+        self._clock = clock
+
+        self._running = False
+        self._loaded_models: dict[str, tuple[Any, Any]] = {}
+        self._request_queue: Queue[_QueuedRequest | None] = Queue()
+        self._deferred_requests: deque[_QueuedRequest] = deque()
+        self._stop_event = threading.Event()
+        self._worker: threading.Thread | None = None
+        self._stats = _BatchStats()
+        self._state_lock = threading.Lock()
+
+    def __enter__(self) -> ModelServer:
+        return self.start()
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: Any,
+    ) -> None:
+        del exc_type, exc, tb
+        self.shutdown()
+
+    def start(self) -> ModelServer:
+        """Load configured models and start the batching worker."""
+        if self._running:
+            return self
+
+        loaded_models: dict[str, tuple[Any, Any]] = {}
+        for model_name in self.model_names:
+            model, tokenizer = self._loader(model_name)
+            if model is None or tokenizer is None:
+                raise RuntimeError(f"Failed to warm-load model '{model_name}'")
+            loaded_models[model_name] = (model, tokenizer)
+
+        with self._state_lock:
+            self._loaded_models = loaded_models
+            self._running = True
+            self._stats = _BatchStats()
+            self._deferred_requests.clear()
+
+        self._stop_event.clear()
+        self._worker = threading.Thread(
+            target=self._worker_loop,
+            name="carnot-model-server",
+            daemon=True,
+        )
+        self._worker.start()
+        return self
+
+    def shutdown(self) -> None:
+        """Stop the worker, release warm models, and clear CUDA cache when available."""
+        with self._state_lock:
+            was_running = self._running
+            self._running = False
+
+        if was_running:
+            self._stop_event.set()
+            self._request_queue.put(None)
+
+        worker = self._worker
+        if worker is not None and worker.is_alive():
+            worker.join(timeout=5.0)
+        self._worker = None
+
+        self._fail_pending_requests(RuntimeError("ModelServer shut down before request completion"))
+
+        with self._state_lock:
+            self._loaded_models.clear()
+            self._deferred_requests.clear()
+
+        gc.collect()
+        self._maybe_empty_cuda_cache()
+
+    def serves_model(self, model_name: str) -> bool:
+        """Return whether this running server currently serves the requested model."""
+        with self._state_lock:
+            return self._running and model_name in self._loaded_models
+
+    def generate(self, prompt: str, *, model: str, max_new_tokens: int = 256) -> str:
+        """Generate a single response through the warm server."""
+        return self.generate_batch([prompt], model=model, max_new_tokens=max_new_tokens)[0]
+
+    def generate_batch(
+        self,
+        prompts: Sequence[str],
+        *,
+        model: str,
+        max_new_tokens: int = 256,
+    ) -> list[str]:
+        """Queue prompts for batched generation and preserve caller-visible order."""
+        with self._state_lock:
+            running = self._running
+            loaded = model in self._loaded_models
+
+        if not running:
+            raise RuntimeError("ModelServer is not running")
+        if not loaded:
+            raise KeyError(model)
+        if not prompts:
+            return []
+
+        responses: list[str] = []
+        for start in range(0, len(prompts), self.batch_size):
+            request = _QueuedRequest(
+                model_name=model,
+                prompts=tuple(prompts[start : start + self.batch_size]),
+                max_new_tokens=max_new_tokens,
+            )
+            self._request_queue.put(request)
+            # RETRO (.52 Exp 679): unbounded wait() made a worker-thread stall
+            # (CUDA deadlock, OOM that caught torch but left done.set() unreached)
+            # invisible to the caller — observed 130 min at 0% GPU utilisation
+            # before the experiment watchdog fired at 180 min.  Bound the wait
+            # with a per-batch timeout so a worker stall surfaces within minutes
+            # rather than hours.  Tunable via CARNOT_MODELSERVER_BATCH_TIMEOUT_S
+            # (default 120 s, ~4x a realistic 10-30 s batch generation on a 3090
+            # for Qwen3.5-0.8B at batch_size=8 / max_new_tokens=256).
+            timeout_s = float(os.environ.get("CARNOT_MODELSERVER_BATCH_TIMEOUT_S", "120"))
+            if not request.done.wait(timeout=timeout_s):
+                worker = self._worker
+                worker_alive = worker is not None and worker.is_alive()
+                raise TimeoutError(
+                    f"ModelServer batch generation stalled: no response within "
+                    f"{timeout_s:.0f}s (model={request.model_name}, "
+                    f"batch_size={len(request.prompts)}, "
+                    f"max_new_tokens={request.max_new_tokens}, "
+                    f"worker_alive={worker_alive}, "
+                    f"queue_depth={self._request_queue.qsize()}). "
+                    f"Tune via CARNOT_MODELSERVER_BATCH_TIMEOUT_S."
+                )
+            if request.error is not None:
+                raise RuntimeError(str(request.error)) from request.error
+            assert request.responses is not None
+            responses.extend(request.responses)
+        return responses
+
+    def health_check(self) -> dict[str, Any]:
+        """Return the current running state, queue depth, batch stats, and GPU snapshot."""
+        with self._state_lock:
+            loaded_models = list(self._loaded_models)
+            running = self._running
+            deferred_depth = len(self._deferred_requests)
+            batch_stats = self._stats.snapshot()
+
+        return {
+            "running": running,
+            "loaded_models": loaded_models,
+            "queue_depth": self._request_queue.qsize() + deferred_depth,
+            "batch_stats": batch_stats,
+            "gpu_memory": self._gpu_memory_snapshot(),
+        }
+
+    def _worker_loop(self) -> None:
+        while True:
+            if self._stop_event.is_set():
+                return
+
+            request = self._next_request()
+            if request is None:
+                continue
+
+            batch_requests = [request]
+            batch_prompt_count = len(request.prompts)
+
+            while batch_prompt_count < self.batch_size:
+                queued = self._next_request(non_blocking=True)
+                if queued is None:
+                    break
+                if self._compatible_with(batch_requests[0], queued) and (
+                    batch_prompt_count + len(queued.prompts) <= self.batch_size
+                ):
+                    batch_requests.append(queued)
+                    batch_prompt_count += len(queued.prompts)
+                else:
+                    with self._state_lock:
+                        self._deferred_requests.append(queued)
+
+            self._execute_batch(batch_requests)
+
+    def _next_request(self, *, non_blocking: bool = False) -> _QueuedRequest | None:
+        if not non_blocking:
+            with self._state_lock:
+                if self._deferred_requests:
+                    return self._deferred_requests.popleft()
+
+        try:
+            item = (
+                self._request_queue.get_nowait()
+                if non_blocking
+                else self._request_queue.get(timeout=0.05)
+            )
+        except Empty:
+            return None
+
+        if item is None:
+            self._stop_event.set()
+            return None
+        return item
+
+    @staticmethod
+    def _compatible_with(first: _QueuedRequest, other: _QueuedRequest) -> bool:
+        return first.model_name == other.model_name and first.max_new_tokens == other.max_new_tokens
+
+    def _execute_batch(self, requests: list[_QueuedRequest]) -> None:
+        first = requests[0]
+        with self._state_lock:
+            model, tokenizer = self._loaded_models[first.model_name]
+
+        prompts: list[str] = []
+        for request in requests:
+            prompts.extend(request.prompts)
+
+        try:
+            outputs = self._batch_generate_fn(model, tokenizer, prompts, first.max_new_tokens)
+            cursor = 0
+            for request in requests:
+                prompt_count = len(request.prompts)
+                request.responses = outputs[cursor : cursor + prompt_count]
+                cursor += prompt_count
+                request.done.set()
+
+            with self._state_lock:
+                self._stats.record(len(prompts))
+        except BaseException as exc:
+            for request in requests:
+                request.error = exc
+                request.done.set()
+
+    def _fail_pending_requests(self, error: BaseException) -> None:
+        with self._state_lock:
+            deferred = list(self._deferred_requests)
+
+        for request in deferred:
+            request.error = error
+            request.done.set()
+
+        while True:
+            try:
+                queued = self._request_queue.get_nowait()
+            except Empty:
+                break
+            if queued is None:
+                continue
+            queued.error = error
+            queued.done.set()
+
+    def _gpu_memory_snapshot(self) -> dict[str, int | bool]:
+        cuda = getattr(self._torch, "cuda", None) if self._torch is not None else None
+        cuda_available = bool(cuda is not None and cuda.is_available())
+        allocated_bytes = int(cuda.memory_allocated()) if cuda_available and cuda is not None else 0
+        reserved_bytes = int(cuda.memory_reserved()) if cuda_available and cuda is not None else 0
+        return {
+            "cuda_available": cuda_available,
+            "allocated_bytes": allocated_bytes,
+            "reserved_bytes": reserved_bytes,
+        }
+
+    def _maybe_empty_cuda_cache(self) -> None:
+        cuda = getattr(self._torch, "cuda", None) if self._torch is not None else None
+        if cuda is not None and cuda.is_available():
+            cuda.empty_cache()
+
+
+def benchmark_cold_load_vs_warm_server(
+    model_name: str,
+    questions: Sequence[str],
+    *,
+    batch_size: int = 8,
+    load_model_fn: LoaderFn = load_model,
+    generate_fn: Callable[[Any, Any, str, int], str] = generate,
+    server_factory: Callable[[], ModelServer] | None = None,
+    clock: Callable[[], float] = perf_counter,
+    max_new_tokens: int = 256,
+) -> WarmServerBenchmarkResult:
+    """Compare repeated cold-load generation against a warm batching server."""
+    cold_start = clock()
+    for question in questions:
+        model, tokenizer = load_model_fn(model_name)
+        generate_fn(model, tokenizer, question, max_new_tokens)
+    cold_elapsed = clock() - cold_start
+
+    factory = server_factory or (lambda: ModelServer([model_name], batch_size=batch_size))
+    warm_start = clock()
+    with factory() as server:
+        server.generate_batch(
+            list(questions),
+            model=model_name,
+            max_new_tokens=max_new_tokens,
+        )
+    warm_elapsed = clock() - warm_start
+
+    speedup = cold_elapsed / warm_elapsed if warm_elapsed > 0 else float("inf")
+    return WarmServerBenchmarkResult(
+        model_name=model_name,
+        n_questions=len(questions),
+        cold_elapsed_seconds=cold_elapsed,
+        warm_elapsed_seconds=warm_elapsed,
+        speedup=speedup,
+    )
+
+
+@dataclass(frozen=True)
+class ThreeWayBenchmarkResult:
+    """Cold-load vs warm-server vs warm-server-with-TRT timing comparison.
+
+    Why three tiers instead of two: Exp 224a proved warm caching alone gives
+    2-3x speedup; Exp 224c showed TRT adds another 2-4x on top.  Tracking all
+    three lets researchers confirm each tier is contributing independently and
+    identify which bottleneck to address next.
+
+    Fields
+    ------
+    model_name : str
+        HuggingFace model identifier.
+    n_questions : int
+        Number of questions each tier was evaluated on.
+    cold_elapsed_seconds : float
+        Wall-clock time for N cold-load + generate cycles.
+    warm_elapsed_seconds : float
+        Wall-clock time for N questions through a warm ModelServer (no TRT).
+    trt_elapsed_seconds : float
+        Wall-clock time for N questions through a warm ModelServer with TRT.
+        Equals ``warm_elapsed_seconds`` when TRT is unavailable.
+    warm_speedup : float
+        ``cold / warm`` ratio — purely from warm caching + batching.
+    trt_speedup : float
+        ``cold / trt`` ratio — full pipeline speedup including TRT.
+    trt_available : bool
+        True iff TensorRT-LLM was used for the TRT tier.
+    """
+
+    model_name: str
+    n_questions: int
+    cold_elapsed_seconds: float
+    warm_elapsed_seconds: float
+    trt_elapsed_seconds: float
+    warm_speedup: float
+    trt_speedup: float
+    trt_available: bool
+
+
+def benchmark_three_way(
+    model_name: str,
+    questions: Sequence[str],
+    *,
+    batch_size: int = 8,
+    load_model_fn: LoaderFn = load_model,
+    generate_fn: Callable[[Any, Any, str, int], str] = generate,
+    hf_server_factory: Callable[[], ModelServer] | None = None,
+    trt_server_factory: Callable[[], ModelServer] | None = None,
+    clock: Callable[[], float] = perf_counter,
+    max_new_tokens: int = 256,
+) -> ThreeWayBenchmarkResult:
+    """Benchmark cold-load, warm-server, and warm-server-with-TRT on *questions*.
+
+    This implements the three-tier measurement recommended after Exps 224a/b/c:
+    - **Cold-load tier**: reload the model from disk before every question.
+    - **Warm-server tier**: a running ``ModelServer`` with HuggingFace backend.
+    - **TRT tier**: a ``ModelServer`` that prefers a TensorRT-LLM engine when one
+      is available; falls back to the HuggingFace server when TRT is absent so the
+      result is always valid.
+
+    The returned ``trt_available`` flag distinguishes the two TRT cases so callers
+    know whether they measured real TRT or just measured the HF server twice.
+
+    Parameters
+    ----------
+    model_name : str
+        HuggingFace model ID to benchmark.
+    questions : Sequence[str]
+        Prompts to run through each tier.  Typically 10 questions is sufficient
+        to measure steady-state throughput without a long wall-clock run.
+    batch_size : int
+        Server batch size (default 8, matching Exp 218 defaults).
+    load_model_fn : callable
+        Override for the cold-load step (injected in tests).
+    generate_fn : callable
+        Override for the cold-load generate step (injected in tests).
+    hf_server_factory : callable | None
+        Factory that returns a warm ``ModelServer`` using the HuggingFace backend.
+        Defaults to a plain ``ModelServer([model_name])``.
+    trt_server_factory : callable | None
+        Factory that returns a ``ModelServer`` with TRT preferred.  Defaults to
+        the same as *hf_server_factory* (TRT will be auto-detected at load time
+        via ``_default_loader``).
+    clock : callable
+        Monotonic clock (injected in tests for determinism).
+    max_new_tokens : int
+        Token budget per generation.
+
+    Returns
+    -------
+    ThreeWayBenchmarkResult
+    """
+    # --- Tier 1: Cold-load ---
+    # Each question triggers a fresh model load from disk.  This is the worst-case
+    # baseline that experiments ran before the Exp 224a/b/c GPU-acceleration work.
+    cold_start = clock()
+    for question in questions:
+        model, tokenizer = load_model_fn(model_name)
+        generate_fn(model, tokenizer, question, max_new_tokens)
+    cold_elapsed = clock() - cold_start
+
+    # --- Tier 2: Warm server (HuggingFace backend) ---
+    # Model loaded once; all questions routed through the batching worker.
+    hf_factory = hf_server_factory or (lambda: ModelServer([model_name], batch_size=batch_size))
+    warm_start = clock()
+    with hf_factory() as hf_server:
+        hf_server.generate_batch(
+            list(questions),
+            model=model_name,
+            max_new_tokens=max_new_tokens,
+        )
+    warm_elapsed = clock() - warm_start
+
+    # --- Tier 3: Warm server with TRT preference ---
+    # The default ModelServer loader tries TRT first (_default_loader).  When TRT
+    # is not installed the factory degrades to plain HuggingFace, making the TRT
+    # tier identical to warm but always producing a valid result.
+    trt_factory = trt_server_factory or hf_factory
+    trt_start = clock()
+    trt_available = False
+    with trt_factory() as trt_server:
+        # Check whether TRT actually loaded (server stores (backend, backend) tuples
+        # when TRT succeeds — the backend object has generate_batch but is not a
+        # (model, tokenizer) pair).
+        with trt_server._state_lock:
+            for _model_obj, _tok_obj in trt_server._loaded_models.values():
+                if _model_obj is _tok_obj and hasattr(_model_obj, "generate_batch"):
+                    trt_available = True
+                    break
+        trt_server.generate_batch(
+            list(questions),
+            model=model_name,
+            max_new_tokens=max_new_tokens,
+        )
+    trt_elapsed = clock() - trt_start
+
+    warm_speedup = cold_elapsed / warm_elapsed if warm_elapsed > 0 else float("inf")
+    trt_speedup = cold_elapsed / trt_elapsed if trt_elapsed > 0 else float("inf")
+
+    return ThreeWayBenchmarkResult(
+        model_name=model_name,
+        n_questions=len(questions),
+        cold_elapsed_seconds=cold_elapsed,
+        warm_elapsed_seconds=warm_elapsed,
+        trt_elapsed_seconds=trt_elapsed,
+        warm_speedup=warm_speedup,
+        trt_speedup=trt_speedup,
+        trt_available=trt_available,
+    )
+
+
+__all__ = [
+    "ModelServer",
+    "ThreeWayBenchmarkResult",
+    "WarmServerBenchmarkResult",
+    "benchmark_cold_load_vs_warm_server",
+    "benchmark_three_way",
+]

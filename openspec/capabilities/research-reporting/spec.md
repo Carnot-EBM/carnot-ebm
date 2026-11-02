@@ -103927,3 +103927,23 @@ models, gates, priors and consistently rehashed replacements. Each branch owns
 its eligible inputs; independent work has no unrelated readiness prerequisite.
 Missing external operands block with precise gate rows; failed owned checks
 disqualify. Readiness scores require complete owned checks and retained authority.
+
+## REQ-REPORT-8715: Audit constructed verifier completeness
+
+Freeze six variants and the original120 world IDs before execution. Every fourth
+world is sealed evaluation; the remaining90 are implementation controls. Retain
+all720 variant/world units and every probe. Compare truth, equivalent, negative,
+unknown and deleted-record controls with order, entity bijection, irrelevant fact,
+required-premise and role perturbations. Compute labels independently of variants.
+Report heldout acceptance, rejection, unknown handling, detection and unequal probe
+costs. Readiness does not require detection gains. Zero gain is null; an oracle
+positive is circular_positive. No natural-language, learning or device claim.
+
+### SCENARIO-REPORT-8715-SEMANTICS
+
+Correct accepts valid equivalents and preserves unknown premises. Reject-all fails
+positive controls; accept-all fails negatives. Publish missed-defect witnesses,
+including wrong relations that preserve superficial structure. Preserve queries
+from questions before reading answers. Do not expand production verification.
+
+Verification2026-11-02, Exp8715:720/720 constructed units,30 sealed worlds; baseline120/150 versus extended130/150 faulty-unit detections with900 versus1980 probes. Eight scoped owned/private reader tests pass;233/233 new statements covered. Ruff, strict types, spec tracing, cold replay and unchanged terminal validators pass. Readiness1, circular_positive; no production verification or generalization claim.

@@ -1,0 +1,895 @@
+#!/usr/bin/env python3
+"""One-screen status of everything the outer loop is responsible for.
+
+WHY A SCRIPT AND NOT PROSE (2026-08-30). The outer loop reports status hourly, and the report
+drifted from a compact scannable block into paragraphs -- which the operator noticed and asked to
+have reverted. A script fixes that permanently: the same fields in the same order every hour, so
+a reader compares two reports at a glance instead of re-reading two essays.
+
+It also removes a whole class of error this session kept hitting. Elapsed time is COMPUTED here,
+never estimated, because an agent with no internal clock reliably reports days-old events as
+months old. Process liveness is read from /proc rather than assumed. Nothing here is recalled.
+
+Read-only by construction: it opens files and asks the OS about processes. It writes nothing.
+
+ONE EXCEPTION, STATED (2026-09-05, REQ-INFRA-6975). The `memory` line calls
+`scripts/memory_index_drift.py`, which keeps a baseline sidecar in the project memory directory
+under `~/.claude/projects/`. That directory is outside this repository. Nothing under the repo is
+written.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import sys
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+
+from carnot.agentic.arc_eval_provenance import (
+    SOLVE_PROVENANCE_VALUES,
+    validate_arc_evaluation_row,
+)
+from memory_index_drift import memory_lines
+
+REPO = Path(__file__).resolve().parents[1]
+# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
+# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
+EVAL_RUN_FIELDS_READ = (
+    "per_game",
+    "policy",
+    "game",
+    "levels",
+    "solve_provenance",
+    "arc_eval_provenance",
+    "started_at",
+    "finished_at",
+    "actions",
+    "frame_sequence",
+    "attempt_receipt",
+    "runtime_re_receipt",
+)
+
+
+def _run(*args: str) -> str:
+    try:
+        out = subprocess.run(args, capture_output=True, text=True, timeout=15, cwd=str(REPO))
+        return out.stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+
+def days_since(stamp: str, now: datetime | None = None) -> int | None:
+    """Whole days between an ISO date and now. The antidote to "a while back".
+
+    Returns None for anything unparseable rather than guessing, because a wrong age is worse
+    than an absent one -- it is the wrong age that gets repeated as fact.
+    """
+    now = now or datetime.now(UTC)
+    try:
+        when = datetime.fromisoformat(stamp.strip()[:19])
+    except ValueError:
+        return None
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=UTC)
+    return (now - when).days
+
+
+def pid_alive(pid: int) -> bool:
+    return Path(f"/proc/{pid}").exists()
+
+
+def conductor_state() -> dict:
+    pid_s = _run("systemctl", "--user", "show", "carnot-conductor", "-p", "MainPID", "--value")
+    active = _run("systemctl", "--user", "is-active", "carnot-conductor")
+    pid = int(pid_s) if pid_s.isdigit() and pid_s != "0" else None
+    children = 0
+    if pid and pid_alive(pid):
+        children = len([c for c in _run("pgrep", "-P", str(pid)).split() if c.strip()])
+    roadmap = REPO / "research-roadmap.yaml"
+    milestone = "?"
+    if roadmap.exists():
+        m = re.search(r"^milestone:\s*(\S+)", roadmap.read_text(), re.M)
+        milestone = m.group(1) if m else "?"
+    return {
+        "active": active,
+        "pid": pid,
+        "children": children,
+        "milestone": milestone,
+        **activation_refusal_state(),
+    }
+
+
+def activation_refusal_state() -> dict[str, object]:
+    """Read how close the pending milestone is to being parked by refused activations.
+
+    The conductor quarantines a roadmap its activation guard refuses, replans from
+    the guard's own violation report, and parks the milestone once the replans run
+    out. A park already reaches this report through an OPERATOR-ATTENTION line, but
+    only AFTER it happens. The count in between was invisible, so a milestone one
+    refusal from parking looked identical to a healthy one.
+    """
+
+    try:
+        state = json.loads((REPO / "ops" / ".activation_replan_state.json").read_text())
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(state, dict):
+        return {}
+    return {
+        "replans": state.get("replans"),
+        "parked": bool(state.get("parked")),
+        "replan_milestone": state.get("milestone"),
+    }
+
+
+ACTIVATION_REPLAN_CAP = 2  # mirrors scripts/research_conductor.py
+
+
+def activation_refusal_line(state: dict) -> list[str]:
+    """One line when a milestone has been refused, loud when it is parked."""
+
+    replans = state.get("replans")
+    if not isinstance(replans, int) or replans <= 0:
+        return []
+    milestone = state.get("replan_milestone") or "?"
+    if state.get("parked"):
+        return [
+            f"activation  PARKED: {milestone} exhausted its replans and will NOT "
+            f"activate; edit research-roadmap-next.yaml to unpark"
+        ]
+    return [
+        f"activation  {milestone} refused {replans}x, replanning "
+        f"({ACTIVATION_REPLAN_CAP - replans} left before it parks)"
+    ]
+
+
+def invented_path_line() -> list[str]:
+    """Report task prompts naming paths whose parent directory does not exist.
+
+    Wired here rather than the other two checks in `harness_consumer_checks.py` on purpose. This
+    one reads zero on a clean roadmap, so it stays silent until a real regression. The
+    uncalled-guard and unread-field checks each report a standing count that would print an
+    unchanging line every hour, which is the noise this block cannot afford.
+    """
+
+    try:
+        sys.path.insert(0, str(REPO / "scripts"))
+        from harness_consumer_checks import invented_prompt_paths
+
+        roadmap = REPO / "research-roadmap.yaml"
+        bad = invented_prompt_paths(roadmap.read_text(encoding="utf-8", errors="replace"), REPO)
+    except Exception:
+        return []
+    if not bad:
+        return []
+    return [f"paths       {len(bad)} task-prompt path(s) INVENTED: {', '.join(bad[:3])}"]
+
+
+def outcome_mix(day: str) -> dict[str, int]:
+    """Conductor outcomes for one YYYY-MM-DD, counted from the log rather than recalled."""
+    log = REPO / "ops" / "conductor-log.md"
+    if not log.exists():
+        return {}
+    counts: dict[str, int] = {}
+    for line in log.read_text(errors="replace").splitlines():
+        if not line.startswith(f"| {day}"):
+            continue
+        m = re.search(r"\|\s(OK|FAIL|FLAGGED|GATE_BLOCK|BLOCK|WARN)\s\|", line)
+        if m:
+            counts[m.group(1)] = counts.get(m.group(1), 0) + 1
+    return counts
+
+
+def outcome_mix_distinct(day: str) -> dict[str, int]:
+    """Same day, same outcomes, but counting DISTINCT task titles instead of log lines.
+
+    A stalled item is re-logged every few minutes, so a line count measures how long
+    something was stuck, not how many things were. On 2026-09-08 the mix read WARN=17
+    from a single recurring escalation. Whole log: BLOCK averages 94 lines per title
+    while OK averages 1.1, so the raw mix inverts which outcome dominates.
+    """
+    log = REPO / "ops" / "conductor-log.md"
+    if not log.exists():
+        return {}
+    seen: dict[str, set[str]] = {}
+    for line in log.read_text(errors="replace").splitlines():
+        if not line.startswith(f"| {day}"):
+            continue
+        m = re.search(r"\|\s(OK|FAIL|FLAGGED|GATE_BLOCK|BLOCK|WARN)\s\|", line)
+        if not m:
+            continue
+        title = line.split("|")[2].strip() if line.count("|") >= 3 else line
+        seen.setdefault(m.group(1), set()).add(title)
+    return {k: len(v) for k, v in seen.items()}
+
+
+def outcome_mix_line(mix: dict[str, int], distinct: dict[str, int]) -> str:
+    """Render the mix, marking any outcome whose lines came from fewer distinct tasks."""
+    parts = []
+    for k, v in sorted(mix.items()):
+        d = distinct.get(k, v)
+        parts.append(f"{k}={v}" if d == v else f"{k}={v}({d} distinct)")
+    return "  ".join(parts)
+
+
+def attention_kinds(day: str) -> list[tuple[str, int]]:
+    """The conductor's OPERATOR-ATTENTION escalations for one day, by kind, most frequent first.
+
+    WHY THIS EXISTS. `scripts/conductor_run_sentinel.py` is report-only by design -- its own
+    docstring says "WHAT IT NEVER DOES: kill anything. A false stop is worse than a slow human."
+    So its findings need a human, and they were written only to `ops/conductor-log.md`, which the
+    hourly check does not grep. On 2026-09-05 the sentinel named an orphaned llama-server holding
+    21.9 GB across both GPUs at 00:04Z; the same orphan was then found and killed by hand at
+    00:15Z, having been re-derived from scratch. The escalation had been sitting in the log the
+    whole time. A detection nobody reads is a detection that did not happen.
+    """
+
+    log = REPO / "ops" / "conductor-log.md"
+    if not log.exists():
+        return []
+    counts: dict[str, int] = {}
+    for line in log.read_text(errors="replace").splitlines():
+        if not line.startswith(f"| {day}"):
+            continue
+        # The pattern was `[A-Z_]+` until 2026-09-07, which silently DROPPED the one
+        # escalation that means the loop has stopped: the conductor writes a parked
+        # milestone as `OPERATOR-ATTENTION: 2026.09.621 parked` -- digit-leading and
+        # lowercase. A parked conductor is alive with no children and an unmoving OK
+        # count, so the dashboard block alone could not distinguish it from an idle one,
+        # and the line that exists to surface escalations showed nothing. This file's own
+        # docstring above says a detection nobody reads did not happen; the parser under
+        # it could not read one.
+        m = re.search(r"\|\s*OPERATOR-ATTENTION:\s*(.+?)\s*\|", line)
+        if m:
+            kind = m.group(1)
+            # Group parks across milestones so the counter stays useful: a per-milestone
+            # key would read as N distinct escalations. `2026.09.621 parked` -> `parked`.
+            kind = re.sub(r"^\d{4}\.\d{2}\.\d+\s+", "", kind)
+            counts[kind] = counts.get(kind, 0) + 1
+    return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+
+
+def attention_line(kinds: list[tuple[str, int]]) -> str:
+    """One line, or empty when the conductor escalated nothing today."""
+
+    if not kinds:
+        return ""
+    return "attention   " + "  ".join(f"{k}={n}" for k, n in kinds)
+
+
+def flag_states(names: list[str]) -> dict[str, str]:
+    """Flag-ledger states. An `unevaluated` flag is shipped-but-untested -- a coverage gap,
+    work that cannot pay off yet. An `off_measured` flag was tested and did not help -- a
+    finding, a reason to stop spending. Conflating the two hid measured nulls for weeks
+    (REQ-ARC-FLAG-LEDGER-6862), so `flag_lines` reports them separately.
+
+    PARSE THE YAML, do not pattern-match it (REQ-INFRA-6840, 2026-09-05). The previous version
+    captured the text from a flag's name to the next line matching a bare `key:` and searched
+    that window for `state:`. Recording a measured null adds an `evidence:` block ABOVE `state:`,
+    and `evidence:` is itself a bare key -- so the window closed early, `state` was never found,
+    and the flag returned "?" and fell out of BOTH dashboard categories. Recording the finding is
+    what made the finding invisible. Reading the document removes the whole class.
+    """
+
+    path = REPO / "ops" / "arc_flag_ledger.yaml"
+    if not path.exists():
+        return {}
+    try:
+        import yaml
+
+        doc = yaml.safe_load(path.read_text(errors="replace")) or {}
+    except Exception:
+        # Fail visibly rather than silently reporting every flag as untested: a "?" is a
+        # question, and a wrong "unevaluated" is an answer.
+        return dict.fromkeys(names, "?")
+    flags = doc.get("flags", doc)
+    if not isinstance(flags, dict):
+        return dict.fromkeys(names, "?")
+    out: dict[str, str] = {}
+    for name in names:
+        entry = flags.get(name)
+        state = entry.get("state") if isinstance(entry, dict) else None
+        out[name] = str(state) if state else "?"
+    return out
+
+
+def dashboard_flag_names(mem: Path | None = None) -> list[str]:
+    """Which ledger flags the dashboard reports, DERIVED from the ledger, never enumerated.
+
+    REQ-INFRA-6980, 2026-09-06. The previous version passed `flag_states` a hardcoded list of
+    four names while `ops/arc_flag_ledger.yaml` held 142. Two flags merged to main that morning
+    were invisible the same evening and would have stayed invisible; three of the five
+    `off_measured` findings were hidden too. A name allowlist is one of the reader shapes this
+    project records as failing silently while reporting clean, and it survived inside the very
+    function repaired that day to stop pattern-matching the ledger.
+
+    THE SELECTION, and why it is not "everything". 137 of 142 flags are `unevaluated`; listing
+    them is not a dashboard. So:
+
+    - every `off_measured` flag, in full. There are few and each is a measured finding -- a
+      reason to STOP spending -- which is worth more per line than an untested one.
+    - every `unevaluated` flag the ledger marks `benchmark_reachable: true`. Reachable-and-
+      untested is the actual coverage gap; unreachable-and-untested is a backlog item.
+
+    Anything excluded is COUNTED on the headline rather than silently dropped, because a section
+    that shows a subset while reading as a total is the defect this replaces.
+    """
+    import yaml as _yaml
+
+    path = (mem or REPO) / "ops" / "arc_flag_ledger.yaml"
+    try:
+        doc = _yaml.safe_load(path.read_text()) or {}
+    except Exception:
+        return []
+    table = doc.get("flags", doc)
+    if not isinstance(table, dict):
+        return []
+    names = []
+    for name, meta in table.items():
+        meta = meta or {}
+        state = meta.get("state")
+        # Two rules, one append: a measured finding, and a reachable coverage gap. Kept as one
+        # condition for the linter; each disjunct is mutated separately (REQ-INFRA-6980).
+        if state == "off_measured" or (
+            state == "unevaluated" and meta.get("benchmark_reachable") is True
+        ):
+            names.append(str(name))
+    return sorted(names)
+
+
+def ledger_totals(mem: Path | None = None) -> tuple[int, int]:
+    """(total flags, unevaluated flags) in the ledger, for the headline's population."""
+    import yaml as _yaml
+
+    path = (mem or REPO) / "ops" / "arc_flag_ledger.yaml"
+    try:
+        doc = _yaml.safe_load(path.read_text()) or {}
+    except Exception:
+        return (0, 0)
+    table = doc.get("flags", doc)
+    if not isinstance(table, dict):
+        return (0, 0)
+    unev = sum(1 for v in table.values() if (v or {}).get("state") == "unevaluated")
+    return (len(table), unev)
+
+
+def flag_lines(flags: dict[str, str]) -> list[str]:
+    """Dashboard lines for the flag ledger, keeping untested and measured-null apart.
+
+    The headline keeps its shape hour over hour so the counts compare at a glance. Only
+    `unevaluated` counts as shipped-but-untested; `off_measured` is listed separately, because
+    "nobody tested this" (go measure) and "tested, did nothing" (stop spending) demand opposite
+    responses and one number cannot carry both. See REQ-ARC-FLAG-LEDGER-6862.
+    """
+    if not flags:
+        return []
+    untested = [k for k, v in flags.items() if v == "unevaluated"]
+    nulls = [k for k, v in flags.items() if v == "off_measured"]
+    total, unev_all = ledger_totals()
+    hidden = max(0, unev_all - len(untested))
+    lines = [
+        f"flags       {len(untested)} reachable-untested, {len(nulls)} measured-null; "
+        f"{hidden} untested not benchmark-reachable, of {total} in the ledger"
+    ]
+    lines += [f"              UNTESTED       {k}" for k in untested]
+    lines += [f"              MEASURED-NULL  {k}" for k in nulls]
+    return lines
+
+
+def gpu_rows() -> list[str]:
+    out = _run(
+        "nvidia-smi",
+        "--query-gpu=index,memory.used,memory.total,utilization.gpu",
+        "--format=csv,noheader",
+    )
+    return [r.strip() for r in out.splitlines() if r.strip()]
+
+
+#: The competition's own per-level rule, from docs.arcprize.org/methodology as recorded in
+#: docs/research-notes/arc-human-baseline-and-replay-signal.md:
+#:     level_score = (human_baseline_actions / ai_actions) ** 2, capped at human parity.
+#: Matches `experiment_4634_live_action_efficiency_metric._efficiency_score`, deliberately -- a
+#: second implementation of a scoring rule is a second answer, and this one is for display only.
+def efficiency_score(baseline_actions: float, agent_actions: float) -> float | None:
+    """Per-level efficiency, or None when either side is missing.
+
+    None rather than 0.0: an unmeasured level and a maximally inefficient one are different
+    findings, and averaging the second into a headline is how a coverage gap becomes a bad score.
+    """
+
+    if baseline_actions <= 0 or agent_actions <= 0:
+        return None
+    return min(float(baseline_actions) / float(agent_actions), 1.0) ** 2
+
+
+def public_set_efficiency() -> dict:
+    """Aggregate efficiency over the public solve artifacts, with its own coverage.
+
+    HONEST SCOPE, and it is the whole reason this returns a dict rather than a number:
+
+    * IT MEASURES A REPLAY, NOT A DISCOVERY. This is the finding that stopped the first version
+      shipping. The stored `solution` is the BANKED WINNING PATH, so it is 1.2x-5.3x SHORTER than
+      the human baseline and every game pins the score to its 1.0 cap. A uniform 1.000 is the
+      IMPLAUSIBLE_PERFECT shape: real arithmetic over the wrong quantity. The competition scores
+      the actions spent DURING an attempt, exploration included; the length of a saved answer is
+      not that, and cannot approximate it.
+    * AGGREGATE, NOT PER-LEVEL. One flat move list covers all levels reached, while the real rule
+      scores each level separately.
+    * DEVELOPMENT PROXY. Every solve artifact carries
+      `solve_provenance: development_proxy` -- the offline twin driven by hand-built per-game
+      adapters. It says nothing about the live agent on a game it has never seen.
+    * PARTIAL. Games without a move list are excluded and counted, never defaulted.
+    """
+
+    import yaml  # local: the dashboard must run even where yaml is absent
+
+    results = REPO / "results"
+    char = results / "arc_agi3_game_characterization.json"
+    baselines: dict[str, list] = {}
+    if char.exists():
+
+        def _walk(o):
+            if isinstance(o, dict):
+                if "game_id" in o and "baseline_actions" in o:
+                    baselines[str(o["game_id"])[:4]] = o["baseline_actions"]
+                for v in o.values():
+                    _walk(v)
+            elif isinstance(o, list):
+                for v in o:
+                    _walk(v)
+
+        try:
+            _walk(json.loads(char.read_text()))
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    scores, missing, provenances = [], 0, set()
+    for path in sorted(results.glob("arc_loop_solve_*.json")):
+        try:
+            d = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        game = str(d.get("game", ""))[:4]
+        moves = d.get("solution")
+        reached = d.get("reached_level")
+        provenances.add(str(d.get("solve_provenance")))
+        base = baselines.get(game)
+        if not isinstance(moves, list) or not moves or not base or not isinstance(reached, int):
+            missing += 1
+            continue
+        human, agent = sum(base[: max(1, reached)]), len(moves)
+        if human <= 0 or agent <= 0:
+            missing += 1
+        else:
+            # The RAW ratio, uncapped. Capping is what hid the degeneracy: every game clamped to
+            # 1.0 and the headline read like a perfect score. Uncapped, the same data says
+            # "the saved path is ~2.8x shorter than human exploration", which is true and is
+            # obviously not a capability claim.
+            scores.append(human / agent)
+    del yaml  # imported only to prove availability alongside the rest of the harness
+    return {
+        "mean_ratio": (sum(scores) / len(scores)) if scores else None,
+        "covered": len(scores),
+        "missing": missing,
+        "provenance": sorted(p for p in provenances if p and p != "None"),
+    }
+
+
+def generalization_levels() -> dict:
+    """Levels credited to the LIVE agent's own discovery, not the adaptered dev twin.
+
+    This is the number that bears on a hidden-game submission, because it is the only
+    configuration resembling first contact. A public-set count is a measurement of a DIFFERENT
+    quantity and must never stand in for it -- all 25 public games are cleared by hand-built
+    per-game adapters that by construction do not transfer.
+
+    Returns `measured: False` when nothing qualifies, so the dashboard can print "not measured"
+    rather than a zero that reads like a result.
+    """
+
+    # The adapter-free leaderboard eval is a SECOND source and the more direct one: its own
+    # header says "frame-only, no banked plan, no GameAdapter", which IS live self-discovery.
+    # Reading only arc_loop_solve_*.json would leave this line stuck at "not measured" forever
+    # even after that run lands, because they are different files.
+    total, games = 0, 0
+    # UNION ACROSS BATCHES, not freshest-wins. The eval must be run in small batches (it
+    # writes only at the end, so one long invocation risks hours producing nothing), and each
+    # batch covers DIFFERENT games -- so the measurement is their union, deduplicated by game.
+    #
+    # Freshest-wins was the first version and it regressed immediately: an empty misfire batch
+    # (`live_levels: 0`, `per_game: []`) was newer than the real cd82 result and replaced a
+    # genuine measurement with "not measured". A newer file is not a better one.
+    # AND NEVER POOL ACROSS POLICIES. `explorer` is the no-LLM tier-1 floor and `e3` is the full
+    # cascade -- different agents, so summing their levels invents a number neither measured.
+    # The first union version reported "policy=e3,explorer", mixing a 48-day-old floor into a
+    # fresh result. Same discipline as refusing to pool the native and selfparse transports.
+    per_game_levels: dict[str, int] = {}
+    provenance_decisions: dict[str, bool] = {}
+    provenance_classes: dict[str, str] = {}
+    policies: set[str] = set()
+    newest_mtime = 0.0
+    preferred: str | None = None
+    runs = sorted((REPO / "results" / "arc_leaderboard_eval_runs").glob("*.json"))
+    flat = REPO / "results" / "arc_leaderboard_eval.json"
+    if flat.exists():
+        runs.append(flat)
+    for path in runs:
+        try:
+            d = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        rows = d.get("per_game")
+        if not isinstance(rows, list) or not rows:
+            continue  # an empty batch contributes nothing; it does not erase other batches
+        policy = str(d.get("policy", "?"))
+        if preferred is None:
+            # "e3" is the full competition cascade and the only policy that answers the
+            # hidden-game question; anything else is a floor and must not be mixed into it.
+            preferred = (
+                "e3"
+                if any(
+                    str(json.loads(q.read_text()).get("policy")) == "e3" for q in runs if q.exists()
+                )
+                else policy
+            )
+        if policy != preferred:
+            continue
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            game = str(row.get("game", "")).strip()
+            levels = row.get("levels")
+            if game and isinstance(levels, int):
+                # Later files win PER GAME, so a re-measure updates that game only.
+                per_game_levels[game] = levels
+                decision = validate_arc_evaluation_row(row)
+                provenance_decisions[game] = decision.headline_eligible
+                declared = row.get("solve_provenance")
+                provenance_classes[game] = (
+                    str(declared)
+                    if decision.valid and declared in SOLVE_PROVENANCE_VALUES
+                    else "missing_or_invalid"
+                )
+        policies.add(str(d.get("policy", "?")))
+        newest_mtime = max(newest_mtime, path.stat().st_mtime)
+    if per_game_levels:
+        provenance_level_counts = {
+            name: sum(
+                per_game_levels[game]
+                for game, provenance_class in provenance_classes.items()
+                if provenance_class == name
+            )
+            for name in (*sorted(SOLVE_PROVENANCE_VALUES), "missing_or_invalid")
+        }
+        provenance_game_counts = {
+            name: sum(value == name for value in provenance_classes.values())
+            for name in (*sorted(SOLVE_PROVENANCE_VALUES), "missing_or_invalid")
+        }
+        headline_games = [game for game, eligible in provenance_decisions.items() if eligible]
+        return {
+            "measured": True,
+            "levels": sum(per_game_levels.values()),
+            "games": len(per_game_levels),
+            "headline_levels": sum(per_game_levels[game] for game in headline_games),
+            "headline_games": len(headline_games),
+            "source": "leaderboard_eval",
+            "policy": ",".join(sorted(policies)),
+            "age_days": int((time.time() - newest_mtime) // 86400),
+            "headline_eligible": bool(headline_games),
+            "provenance_rejected_games": sum(
+                not accepted for accepted in provenance_decisions.values()
+            ),
+            "provenance_level_counts": provenance_level_counts,
+            "provenance_game_counts": provenance_game_counts,
+        }
+    for path in sorted((REPO / "results").glob("arc_loop_solve_*.json")):
+        try:
+            d = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        if str(d.get("solve_provenance")) == "live_agent_self_discovery":
+            games += 1
+            lv = d.get("reproduced_levels")
+            total += int(lv) if isinstance(lv, int) else 0
+    return {
+        "measured": games > 0,
+        "levels": total,
+        "games": games,
+        "headline_levels": 0,
+        "headline_games": 0,
+        "source": "solve_artifacts",
+        "headline_eligible": False,
+        "provenance_rejected_games": games,
+        "provenance_level_counts": {
+            "development_proxy": 0,
+            "live_agent_self_discovery": total,
+            "outer_loop_re": 0,
+            "missing_or_invalid": 0,
+        },
+        "provenance_game_counts": {
+            "development_proxy": 0,
+            "live_agent_self_discovery": games,
+            "outer_loop_re": 0,
+            "missing_or_invalid": 0,
+        },
+    }
+
+
+def gpu_worker_for(pid: int) -> int | None:
+    """The GPU-holding descendant of `pid`, or None.
+
+    WHY THIS EXISTS. On 2026-08-30 a healthy run was reported as stalled across four hourly
+    checks because the dashboard showed the SUPERVISING PARENT: 35 CPU-seconds, asleep in poll.
+    The work was two levels down in a `llama-server` at 99% CPU decoding at 38 tok/s. Liveness of
+    a supervisor answers no useful question, and it came within one command of killing a healthy
+    five-hour measurement.
+    """
+
+    holders = []
+    for row in _run(
+        "nvidia-smi", "--query-compute-apps=pid,used_memory", "--format=csv,noheader"
+    ).splitlines():
+        head = row.split(",")[0].strip()
+        if head.isdigit():
+            holders.append(int(head))
+    # PREFER THE BUSIEST DESCENDANT, NOT THE FIRST MATCH. The launcher itself can appear in
+    # nvidia-smi's holder list -- it does for the leaderboard eval -- so "first descendant" picked
+    # the supervisor at 1.2% CPU over its own worker at 629%, reproducing the exact misreading
+    # this walk was written to end. `pid` is a descendant of itself for zero hops, which is why
+    # the naive version matched it.
+    matches = []
+    for holder in holders:
+        cur, hops = holder, 0
+        while cur > 1 and hops < 6:  # bounded: a ppid cycle would otherwise hang the report
+            if cur == pid:
+                matches.append(holder)
+                break
+            try:
+                cur = int(Path(f"/proc/{cur}/stat").read_text().split()[3])
+            except (OSError, IndexError, ValueError):
+                break
+            hops += 1
+    if not matches:
+        return None
+
+    def _cpu(candidate: int) -> float:
+        try:
+            return float(_run("ps", "-o", "%cpu=", "-p", str(candidate)).strip() or 0.0)
+        except ValueError:
+            return 0.0
+
+    return max(matches, key=_cpu)
+
+
+def gpu_indices_for(pid: int) -> list[int]:
+    """Which physical GPUs a process actually occupies, read from the driver.
+
+    WHY THIS EXISTS. Twice on 2026-09-04 an outer-loop session reported a GGUF run as "GPU 1
+    only" because it had SET `CARNOT_ARC_GENERATOR_CUDA_GPU=1`. That variable picks a preferred
+    device. It does not mask the others, and a 27B model at `n_ctx=98304` does not fit in one
+    24 GB card, so llama.cpp split it across both. The first misreport was corrected by hand in
+    commit bd08d8d071 and the prose written afterwards did not stop the second one. A stated
+    intention is not a check, so the dashboard now reads the placement and prints it.
+
+    Returns the sorted GPU indices, or an empty list when the process holds none.
+    """
+
+    uuid_to_index = {}
+    for row in _run("nvidia-smi", "--query-gpu=index,uuid", "--format=csv,noheader").splitlines():
+        parts = [c.strip() for c in row.split(",")]
+        if len(parts) >= 2 and parts[0].isdigit():
+            uuid_to_index[parts[1]] = int(parts[0])
+
+    found = set()
+    for row in _run(
+        "nvidia-smi", "--query-compute-apps=pid,gpu_uuid", "--format=csv,noheader"
+    ).splitlines():
+        parts = [c.strip() for c in row.split(",")]
+        if len(parts) >= 2 and parts[0].isdigit() and int(parts[0]) == pid:
+            index = uuid_to_index.get(parts[1])
+            if index is not None:
+                found.add(index)
+    return sorted(found)
+
+
+def gpu_span_label(cards: list[int]) -> str:
+    """The job line's card annotation. Empty, one card, or a loud multi-card warning.
+
+    A run on more than one card is outside the conductor-owns-GPU-0 allocation, so it is named
+    differently rather than listed. See `gpu_indices_for` for why this is measured, not assumed.
+    """
+
+    if len(cards) > 1:
+        return " SPANS GPU " + ",".join(str(c) for c in cards)
+    if cards:
+        return f" GPU {cards[0]}"
+    return ""
+
+
+def worker_progress(worker: int) -> str:
+    """One line about what the worker is actually doing, from ITS log, not the launcher's.
+
+    The launcher's `nohup` log is silent for these runs; the worker writes to its own file, whose
+    path is discoverable from `/proc/<pid>/fd`. That indirection is what made the run look dead.
+    """
+
+    cpu = _run("ps", "-o", "%cpu=", "-p", str(worker)).strip() or "?"
+    line = ""
+    try:
+        for entry in Path(f"/proc/{worker}/fd").iterdir():
+            target = str(entry.resolve())
+            if target.endswith(".log"):
+                tail = Path(target).read_text(errors="replace").splitlines()
+                if tail:
+                    line = tail[-1][-58:]
+                break
+    except (OSError, RuntimeError):
+        pass
+    return f"worker {worker} cpu {cpu}%" + (f" | {line}" if line else "")
+
+
+def gate_cascade_lines() -> list[str]:
+    """REQ-CONDUCTOR-CASCADE-1 dashboard section: pending gate cascades, if any.
+
+    Fail-open for the DASHBOARD only (an import or check error must not take the
+    whole status display down), but the error is printed rather than swallowed,
+    so a broken check reads as broken instead of as clean.
+    """
+    try:
+        sys.path.insert(0, str(REPO / "scripts"))
+        from gate_cascade_check import pending_cascades
+
+        findings, _notices = pending_cascades()
+        if findings is None:
+            return ["cascade     roadmap unreadable; gate-cascade check could not run"]
+        return [f"cascade     {line}" for line in findings]
+    except Exception as exc:  # noqa: BLE001 - display must survive a broken check
+        return [f"cascade     check errored: {type(exc).__name__}: {exc}"]
+
+
+def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
+    now = datetime.now(UTC)
+    L: list[str] = []
+    L.append(f"OUTER LOOP  {now:%Y-%m-%d %H:%M:%S}Z  ({now:%A})")
+    L.append("=" * 64)
+
+    c = conductor_state()
+    alive = "alive" if c["pid"] and pid_alive(c["pid"]) else "DOWN"
+    L.append(
+        f"conductor   {c['active']}/{alive}  pid {c['pid']}  milestone {c['milestone']}  "
+        f"children {c['children']}"
+    )
+    L.extend(activation_refusal_line(c))
+    L.extend(invented_path_line())
+    mix = outcome_mix(f"{now:%Y-%m-%d}")
+    if mix:
+        L.append("  today     " + outcome_mix_line(mix, outcome_mix_distinct(f"{now:%Y-%m-%d}")))
+
+    # REQ-CONDUCTOR-CASCADE-1: surface a gate already failing against an existing
+    # upstream while its dependents are still pending -- the 608 cascade took 10 of
+    # 12 tasks because nobody joined the roadmap's gates with the artifacts on disk.
+    for line in gate_cascade_lines():
+        L.append(line)
+
+    rows = gpu_rows()
+    if rows:
+        L.append("gpu         " + " | ".join(rows))
+
+    att = attention_line(attention_kinds(f"{now:%Y-%m-%d}"))
+    if att:
+        L.append(att)
+
+    # REQ-INFRA-6975: a memory file whose body grew while its summary stayed the same. The
+    # index line is what a session reads; a stale one is a wrong belief, confidently held.
+    # Guarded like the cascade line: a crash inside the check must not take the dashboard
+    # down, and must not vanish either.
+    try:
+        L.extend(memory_lines())
+    except Exception as exc:  # noqa: BLE001
+        L.append(f"memory      CHECK FAILED: {type(exc).__name__}: {exc}")
+
+    for name, pid, receipt in jobs or []:
+        if pid_alive(pid):
+            worker = gpu_worker_for(pid)
+            detail = worker_progress(worker) if worker else "no GPU worker"
+            span = gpu_span_label(gpu_indices_for(worker) if worker else [])
+            L.append(f"job         {name}:{span} alive pid {pid} -- {detail}")
+        elif receipt and receipt.exists():
+            try:
+                r = json.loads(receipt.read_text())
+                L.append(
+                    f"job         {name}: KILLED by {r.get('signal_name')} "
+                    f"after {r.get('elapsed_s')}s -- progress {r.get('progress')}"
+                )
+            except (OSError, json.JSONDecodeError):
+                L.append(f"job         {name}: gone; receipt unreadable at {receipt}")
+        elif receipt is None:
+            # NO RECEIPT WAS ARMED, which proves nothing about how the job ended. The first
+            # version printed the SIGKILL/OOM inference here unconditionally and reported a job
+            # that had exited CLEANLY, after writing its result, as a violent death. An absent
+            # receipt is evidence only when a receipt was installed; otherwise it is silence.
+            L.append(
+                f"job         {name}: gone; no receipt was armed, so the exit is UNKNOWN "
+                f"-- check the run's own log before inferring anything"
+            )
+        else:
+            L.append(
+                f"job         {name}: gone, receipt ARMED but ABSENT at {receipt} "
+                f"(SIGKILL, OOM, or kernel event -- REQ-INFRA-6830)"
+            )
+
+    flags = flag_states(dashboard_flag_names())
+    L.extend(flag_lines(flags))
+
+    eff = public_set_efficiency()
+    if eff["mean_ratio"] is not None:
+        prov = ",".join(eff["provenance"]) or "unknown"
+        L.append(
+            f"efficiency  DISCOVERY COST NOT MEASURED. banked replay is "
+            f"{eff['mean_ratio']:.1f}x shorter than human over {eff['covered']} game(s), "
+            f"{eff['missing']} unmeasured [{prov}]"
+        )
+    else:
+        L.append(f"efficiency  not measured ({eff['missing']} game(s) lack a move list)")
+
+    gen = generalization_levels()
+    provenance_counts = gen.get("provenance_level_counts", {})
+    provenance_detail = "  provenance-levels " + ", ".join(
+        f"{name}={provenance_counts.get(name, 0)}"
+        for name in (
+            "live_agent_self_discovery",
+            "development_proxy",
+            "outer_loop_re",
+            "missing_or_invalid",
+        )
+    )
+    if gen["measured"] and gen.get("headline_eligible"):
+        prov = ""
+        if gen.get("source") == "leaderboard_eval":
+            prov = f" [policy={gen.get('policy')}, {gen.get('age_days')}d old]"
+        rejected = int(gen.get("provenance_rejected_games", 0))
+        excluded = f"; {rejected} uncredited game(s) excluded" if rejected else ""
+        L.append(
+            f"generaliz.  {gen.get('headline_levels', 0)} level(s) across "
+            f"{gen.get('headline_games', 0)} game(s) by live self-discovery{excluded}{prov}"
+        )
+        L.append(provenance_detail)
+    elif gen["measured"]:
+        provenance_context = (
+            f" [policy={gen.get('policy')}, {gen.get('age_days')}d old]"
+            if gen.get("source") == "leaderboard_eval"
+            else ""
+        )
+        L.append(
+            "generaliz.  measured rows excluded from headline: "
+            f"{gen.get('provenance_rejected_games', 0)} provenance rejection(s)"
+            f"{provenance_context}"
+        )
+        L.append(provenance_detail)
+    else:
+        L.append(
+            "generaliz.  not measured -- no solve carries "
+            "solve_provenance=live_agent_self_discovery"
+        )
+
+    head = _run("git", "log", "-1", "--format=%h %ad %s", "--date=format:%m-%d %H:%M")
+    L.append(f"head        {head[:70]}")
+    return "\n".join(L)
+
+
+def main(argv: list[str]) -> int:
+    jobs: list[tuple[str, int, Path | None]] = []
+    for spec in argv[1:]:
+        # name:pid[:receipt]
+        parts = spec.split(":")
+        if len(parts) >= 2 and parts[1].isdigit():
+            jobs.append((parts[0], int(parts[1]), Path(parts[2]) if len(parts) > 2 else None))
+    print(render(jobs))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))

@@ -1,0 +1,826 @@
+"""Self-learning relay: Tier 1 + Tier 2 + Tier 3 simultaneous learning loop.
+
+**Researcher summary:**
+    FR-11 (Autonomous Self-Learning Loop) requires that all three learning tiers
+    operate together on real model outputs so we can measure whether accuracy
+    actually improves across batches.
+
+    This module wires the three tiers into a single relay:
+
+        Tier 1 (online weight updates):
+            After each question, ``PerModelFPTracker.update()`` records whether the
+            verification decision was a false positive or true positive for this
+            (model_id, constraint_type) pair.  Over time, constraint types with
+            high FP rates are suppressed for that model — the pipeline becomes
+            more precise without human labeling.
+
+        Tier 2 (constraint addition):
+            For each incorrect response in the batch, ``CaseMemoryTemplateWiring.
+            on_violation_recorded()`` increments the pattern counter in the
+            ``ConstraintTemplateLibrary``.  Once enough carry_error (or sign_error,
+            unit_error, comparison_error) violations accumulate, the corresponding
+            template activates — adding a NEW constraint type to the pipeline for
+            that model automatically.
+
+        Tier 3 (predictive gate):
+            The EORM model scores each (question, response) pair and we compute
+            AUC-ROC of those scores against the ground-truth correctness labels.
+            A rising AUC across batches means the EORM gate is becoming a better
+            fast-path predictor — reducing expensive Ising calls while catching more
+            real violations.
+
+    Primary metric: batch 4 accuracy > batch 1 accuracy (``improved=True``).
+    Secondary metric: any Tier 2 template activates during the run.
+
+**Detailed explanation for engineers:**
+    ``SelfLearningRelay`` is the central coordinator.  It holds references to all
+    three tier components and a growing ``_trajectory`` list of
+    ``SelfLearningBatchResult`` objects — one per batch.
+
+    ``run_batch(questions, ground_truth, model_id)`` is the main entry point.
+    It processes each question in order and, after the batch completes, appends
+    a ``SelfLearningBatchResult`` capturing per-batch and cumulative metrics.
+
+    The AUC computation uses the Wilcoxon-Mann-Whitney form (exact for small
+    batches, O(n²)): AUC = P(score_correct > score_incorrect).  Lower EORM
+    energy means the model thinks the CoT is more reliable; we flip the sign so
+    higher ``score`` predicts correctness.
+
+    ``compute_learning_improvement`` and ``build_relay_artifact`` are standalone
+    utilities for post-hoc analysis and artifact serialization.
+
+CI safety:
+    - The relay itself is CI-safe: all class constructors accept stubs.
+    - The experiment script (experiment_361) uses synthetic questions and
+      ground_truth when ``CARNOT_FORCE_LIVE`` is unset.
+
+Spec: REQ-LEARN-026, REQ-LEARN-027,
+      SCENARIO-LEARN-045, SCENARIO-LEARN-046, SCENARIO-LEARN-047
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any
+
+from carnot.models.eorm import CoTEnergyInput, EORMModel
+from carnot.pipeline.constraint_template_library import (
+    CaseMemoryTemplateWiring,
+    ConstraintTemplateLibrary,
+)
+
+if TYPE_CHECKING:
+    from carnot.models.vjepa_predictor import VariationalJEPAPredictor
+    from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
+    from carnot.pipeline.constraint_addition_engine import ConstraintAdditionEngine
+    from carnot.pipeline.memory_compression import CompressedMemoryBank
+    from carnot.pipeline.three_tier_pipeline import ThreeTierPipeline
+    from carnot.verify.lagrange_ising import LagrangeAdaptiveIsing
+
+
+# ---------------------------------------------------------------------------
+# SelfLearningBatchResult
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class SelfLearningBatchResult:
+    """Per-batch metrics from one round of the three-tier self-learning relay.
+
+    **Detailed explanation for engineers:**
+        Each call to ``SelfLearningRelay.run_batch()`` produces one of these.
+        Together, a list of results forms the ``learning_trajectory()`` — the
+        time-series of learning progress across batches.
+
+        ``batch_id``:
+            Zero-based index of this batch within the run.  Useful for plotting
+            accuracy vs. batch index.
+
+        ``n_questions``:
+            Number of (question, ground_truth) pairs processed in this batch.
+            Should be 25 for standard Exp 361 batches.
+
+        ``accuracy``:
+            Fraction of questions in THIS batch where ``ground_truth == True``
+            (i.e., the simulated or actual model was correct).  Note: in
+            CI-synthetic mode the "model" always produces the right answer for
+            the correct subset, so accuracy is exactly the fraction of ``True``
+            labels in ``ground_truth``.
+
+        ``n_tier1_updates``:
+            Total number of ``PerModelFPTracker.update()`` calls made during
+            this batch — one per question.  Should equal ``n_questions``.
+
+        ``n_tier2_templates_active``:
+            Number of ``ConstraintTemplate`` objects that have crossed their
+            ``min_frequency`` threshold for ``model_id`` after this batch
+            completes.  Starts at 0 and rises as repeated error patterns
+            accumulate across batches.
+
+        ``tier3_gate_auc``:
+            AUC-ROC of the EORM gate on this batch.  Computed using the
+            Wilcoxon-Mann-Whitney rank-sum form: P(energy_correct < energy_wrong).
+            A rising AUC across batches means the EORM is improving as a
+            fast-path predictor.  0.5 = random; 1.0 = perfect.
+
+        ``cumulative_accuracy``:
+            Total correct across ALL batches so far (including this one) divided
+            by total questions.  This is the headline metric: if it rises from
+            batch 1 to batch 4, the relay is demonstrating cross-batch learning.
+
+    Spec: REQ-LEARN-026-1
+    """
+
+    batch_id: int
+    n_questions: int
+    accuracy: float
+    n_tier1_updates: int
+    n_tier2_templates_active: int
+    tier3_gate_auc: float
+    cumulative_accuracy: float
+
+
+# ---------------------------------------------------------------------------
+# AUC helper
+# ---------------------------------------------------------------------------
+
+
+def _compute_auc_roc(energies: list[float], ground_truth: list[bool]) -> float:
+    """Compute AUC-ROC where LOWER energy predicts True (correct response).
+
+    **Detailed explanation for engineers:**
+        The EORM assigns LOWER energy to responses it thinks are correct.
+        We flip the sign so that higher score = more confident the response is
+        correct — making the AUC semantics conventional (higher score → positive).
+
+        We use the Wilcoxon-Mann-Whitney form:
+            AUC = P(score_correct > score_incorrect)
+        This is exact for small batches (25 questions) and numerically stable.
+
+        Edge cases:
+        - All labels True or all False: AUC is undefined; return 0.5 (random).
+        - Ties (equal scores) contribute 0.5 per tie to the expectation.
+
+    Args:
+        energies:     EORM energy for each question in the batch.
+        ground_truth: Parallel correctness labels (True = correct).
+
+    Returns:
+        AUC-ROC in [0, 1].  0.5 = no discrimination; 1.0 = perfect.
+
+    Spec: REQ-LEARN-026-3
+    """
+    # Flip: lower energy → higher score → predicts True
+    scores = [-e for e in energies]
+
+    pos = [s for s, g in zip(scores, ground_truth, strict=False) if g]
+    neg = [s for s, g in zip(scores, ground_truth, strict=False) if not g]
+
+    if not pos or not neg:
+        # AUC is undefined when one class is absent — return random baseline.
+        return 0.5
+
+    # Count pairs where pos_score > neg_score (plus 0.5 for ties)
+    wins: float = 0.0
+    for p in pos:
+        for n in neg:
+            if p > n:
+                wins += 1.0
+            elif p == n:
+                wins += 0.5
+
+    return wins / (len(pos) * len(neg))
+
+
+# ---------------------------------------------------------------------------
+# SelfLearningRelay
+# ---------------------------------------------------------------------------
+
+
+class SelfLearningRelay:
+    """Coordinates Tier 1 + 2 + 3 self-learning on batches of Q&A pairs.
+
+    **Researcher summary:**
+        Instantiate once per experiment run.  Call ``run_batch()`` once per batch
+        of 25 questions.  After 4 batches, call ``learning_trajectory()`` then
+        ``compute_learning_improvement()`` to confirm whether accuracy rose.
+
+    **Detailed explanation for engineers:**
+        The relay holds the three tier components and a growing trajectory list.
+        It does NOT own a CaseMemory instance — it only drives the wiring layer
+        (``CaseMemoryTemplateWiring``) to accumulate pattern counts in the
+        ``ConstraintTemplateLibrary``.
+
+        Tier 1 (PerModelFPTracker):
+            For every question, we call ``fp_tracker.update()`` based on whether
+            the pipeline's verification decision matched ground truth:
+                - verified=True, is_correct=False → FP (false positive).
+                - verified=True, is_correct=True  → TP (true positive).
+                - verified=False in either case   → neither (no FP/TP credit).
+            This lets the tracker learn which constraint types fire incorrectly
+            on this model over time.
+
+        Tier 2 (CaseMemoryTemplateWiring):
+            For every INCORRECT response, we call ``on_violation_recorded()``
+            with a synthetic violation type derived from the batch position.
+            In a real system this would come from the pipeline's actual constraint
+            violations.  The synthetic type cycles through the four canonical
+            arithmetic error types so that templates can activate during the run
+            given enough batches.
+
+        Tier 3 (EORMModel):
+            We score each response with ``eorm_model.energy()`` and compute
+            AUC-ROC against ground_truth.  In CI mode the EORM has random weights
+            (AUC ≈ 0.5), but the code path is fully exercised.
+
+    Args:
+        pipeline:         ``ThreeTierPipeline`` (or any object with a
+                          ``.verify(response, *, question) -> (bool, str, float)``
+                          method) used to obtain verification decisions.
+        template_library: ``ConstraintTemplateLibrary`` accumulating pattern counts.
+        fp_tracker:       ``PerModelFPTracker`` updated after each question.
+        eorm_model:       ``EORMModel`` used to score (question, response) pairs.
+
+    Spec: REQ-LEARN-026-2
+    """
+
+    # Energy variance below this threshold means a constraint type is stable enough
+    # to freeze — self-play updates should not overwrite CD-learned coupling entries
+    # for this constraint type (REQ-PSV-015).
+    FREEZE_THRESHOLD: float = 0.01
+
+    # Minimum Hamming distance between consecutive question samples (REQ-PSV-016 curriculum).
+    # Questions with token-overlap distance < this value vs the last 5 sampled are rejected.
+    MIN_HAMMING_DISTANCE: int = 2
+
+    # Cycle through these violation types for synthetic Tier 2 accumulation.
+    # They map (via CaseMemoryTemplateWiring._KEYWORD_MAP) to the four built-in
+    # template pattern_keys: carry_check, sign_check, unit_consistency,
+    # comparison_direction.
+    _SYNTHETIC_VIOLATION_TYPES: list[str] = [
+        "carry_error",
+        "sign_error",
+        "unit_error",
+        "comparison_error",
+    ]
+
+    # VJEPA violation probability threshold for triggering Tier 3 → Tier 1 relay.
+    # When VJEPA reports prob > this value AND Ising also detects a violation,
+    # we immediately add the violation type to the constraint addition engine.
+    VJEPA_TRIGGER_THRESHOLD: float = 0.70
+
+    def __init__(
+        self,
+        pipeline: ThreeTierPipeline,
+        template_library: ConstraintTemplateLibrary,
+        fp_tracker: PerModelFPTracker,
+        eorm_model: EORMModel,
+        constraint_addition_engine: ConstraintAdditionEngine | None = None,
+        lagrange_ising: LagrangeAdaptiveIsing | None = None,
+        compressed_memory: CompressedMemoryBank | None = None,
+        vjepa_predictor: VariationalJEPAPredictor | None = None,
+    ) -> None:
+        self._pipeline = pipeline
+        self._template_library = template_library
+        self._fp_tracker = fp_tracker
+        self._eorm_model = eorm_model
+        self._wiring = CaseMemoryTemplateWiring(template_library)
+        self._trajectory: list[SelfLearningBatchResult] = []
+
+        # Cumulative counters for cross-batch accuracy computation.
+        self._total_correct: int = 0
+        self._total_questions: int = 0
+
+        # REQ-PSV-015: set of constraint types frozen by _freeze_stable_constraints().
+        # Frozen constraints are skipped in fp_tracker.update() to prevent self-play
+        # from overwriting CD-learned coupling entries that already converged.
+        self._frozen_constraints: set[str] = set()
+
+        # REQ-PSV-016 curriculum diversity: track the last 5 sampled question tokens
+        # to enforce minimum Hamming distance between consecutive samples.
+        self._recent_question_tokens: list[set[str]] = []
+
+        # REQ-LEARN-040: optional ConstraintAdditionEngine for Tier 1 wire-in.
+        # When provided, inject_into_pipeline is called after each batch to wire
+        # new constraints into the active constraint set for subsequent sessions.
+        self._constraint_addition_engine = constraint_addition_engine
+
+        # Cumulative count of constraints injected across all batches (for metrics).
+        self._cumulative_constraints_added: int = 0
+
+        # REQ-LEARN-058: optional Lagrange adaptive Ising for per-constraint
+        # lambda weight updates after each verification decision.
+        self._lagrange_ising = lagrange_ising
+
+        # REQ-LEARN-058: optional CompressedMemoryBank for preventing memory
+        # saturation across sessions via K-medoid compression.
+        self._compressed_memory = compressed_memory
+
+        # REQ-LEARN-059 (Tier 3 → Tier 1 relay): optional VJEPA predictor.
+        # When provided, VJEPA violation probability is computed after each Ising
+        # violation detection.  If VJEPA prob > VJEPA_TRIGGER_THRESHOLD, the
+        # violation type is immediately pushed into the constraint addition engine —
+        # closing the Tier 3 → Tier 1 loop without waiting for the min_count
+        # threshold to fill naturally.
+        self._vjepa_predictor = vjepa_predictor
+
+        # Count of VJEPA-triggered constraint additions across all batches.
+        self._n_vjepa_triggered_additions: int = 0
+
+        # True once at least one VJEPA-triggered addition fires.
+        self._tier3_to_tier1_fired: bool = False
+
+    # ------------------------------------------------------------------
+    # _freeze_stable_constraints (REQ-PSV-015)
+    # ------------------------------------------------------------------
+
+    def _freeze_stable_constraints(self) -> set[str]:
+        """Identify and freeze constraint types whose energy variance has converged.
+
+        **Why freeze low-variance constraints (PPSEBM — arXiv 2512.15658):**
+            During CD (Contrastive Divergence) pre-training, coupling matrix entries
+            converge to values that correctly discriminate correct from incorrect responses.
+            When self-play then runs with a much higher learning rate, these entries get
+            perturbed and can flip — producing the relapse pattern where fp_rate rises
+            again after initial improvement.
+
+            The fix: measure fp_rate variance over the last 30 self-play steps per
+            constraint type. If variance < FREEZE_THRESHOLD (0.01), the constraint type's
+            weights have settled — self-play updates should not touch them. These types
+            are added to _frozen_constraints and skipped in subsequent run_batch() calls.
+
+        **What "variance" means here:**
+            We use the fp_rate time series from the trajectory as a proxy for
+            per-constraint energy variance. A constraint type that has stable fp_rate
+            (low variance) has converged and should be frozen. This is a simplification
+            of the full per-entry coupling variance from the PPSEBM paper, but it
+            captures the same signal without requiring direct access to the coupling matrix.
+
+        Returns:
+            The set of constraint type names now frozen (may include prior frozen types).
+
+        Spec: REQ-PSV-015, REQ-PSV-015-1, REQ-PSV-015-2, REQ-PSV-015-3,
+              SCENARIO-PSV-022
+        """
+        if len(self._trajectory) < 2:
+            return self._frozen_constraints
+
+        # Use the last min(30, len) accuracy values as a proxy for energy variance.
+        window = self._trajectory[-30:]
+        values = [r.accuracy for r in window]
+
+        if len(values) < 2:
+            return self._frozen_constraints
+
+        mean_val = sum(values) / len(values)
+        variance = sum((v - mean_val) ** 2 for v in values) / len(values)
+
+        # If the overall accuracy variance is below threshold, freeze the primary
+        # constraint type ("verification") that drives the fp tracker updates.
+        if variance < self.FREEZE_THRESHOLD:
+            self._frozen_constraints.add("verification")
+
+        return self._frozen_constraints
+
+    # ------------------------------------------------------------------
+    # _is_diverse_enough (REQ-PSV-016 curriculum diversity)
+    # ------------------------------------------------------------------
+
+    def _is_diverse_enough(self, question: str) -> bool:
+        """Return True if question is sufficiently different from the last 5 sampled.
+
+        **Why curriculum diversity matters (hypothesis C in Exp 755):**
+            Self-play loops that re-sample from a narrow question distribution overfit:
+            the constraint weights become highly tuned to the particular error patterns
+            in those few questions, and generalization collapses. When a new question
+            type appears (e.g. at step 35+), the weights are wrong for it and fp_rate
+            rises again — the "relapse" pattern from Exps 697 and 737.
+
+            The Hamming distance check below measures word-level token overlap between
+            the new question and each of the last 5 sampled questions. A distance of
+            |A ∪ B| - |A ∩ B| < MIN_HAMMING_DISTANCE means the new question is too
+            similar to a recent one and should be rejected from the sample.
+
+        **Why word-level tokens (not character-level):**
+            Word tokens capture semantic similarity in arithmetic word problems better
+            than character overlap. Two questions with the same numbers but different
+            operations are character-similar but semantically diverse — word tokens
+            distinguish them.
+
+        Args:
+            question: The candidate question string to evaluate.
+
+        Returns:
+            True if the question has Hamming distance >= MIN_HAMMING_DISTANCE from
+            ALL of the last 5 sampled questions. False if it is too similar to any.
+
+        Spec: REQ-PSV-016, SCENARIO-PSV-023
+        """
+        candidate_tokens = set(question.lower().split())
+        for recent_tokens in self._recent_question_tokens:
+            intersection = candidate_tokens & recent_tokens
+            union = candidate_tokens | recent_tokens
+            if not union:
+                continue
+            hamming = len(union) - len(intersection)
+            if hamming < self.MIN_HAMMING_DISTANCE:
+                return False
+        return True
+
+    def _record_question_sample(self, question: str) -> None:
+        """Record a question as recently sampled, keeping only the last 5.
+
+        Maintaining a bounded window of 5 avoids unbounded memory growth while still
+        preventing immediate re-use of any recently sampled question pattern.
+
+        Spec: REQ-PSV-016
+        """
+        tokens = set(question.lower().split())
+        self._recent_question_tokens.append(tokens)
+        if len(self._recent_question_tokens) > 5:
+            self._recent_question_tokens.pop(0)
+
+    # ------------------------------------------------------------------
+    # run_batch
+    # ------------------------------------------------------------------
+
+    def run_batch(
+        self,
+        questions: list[str],
+        ground_truth: list[bool],
+        model_id: str,
+    ) -> SelfLearningBatchResult:
+        """Process one batch and update all three learning tiers.
+
+        **Detailed explanation for engineers:**
+            Steps per question (in order):
+            1. Score with EORM (collect energy for Tier 3 AUC computation).
+            2. Verify with pipeline (get tier_used and verified flag).
+            3. Update PerModelFPTracker based on (verified, is_correct) (Tier 1).
+            4. If incorrect, notify CaseMemoryTemplateWiring (Tier 2).
+
+            After all questions:
+            5. Count active Tier 2 templates for model_id.
+            6. Compute Tier 3 EORM gate AUC-ROC.
+            7. Compute batch accuracy and cumulative accuracy.
+            8. Append SelfLearningBatchResult to trajectory.
+
+        Args:
+            questions:    List of question strings (25 per batch in Exp 361).
+                          In CI mode these are synthetic placeholder strings.
+            ground_truth: Parallel list of correctness labels (True = correct).
+            model_id:     Identifier for the model being evaluated (e.g.
+                          "gemma4-e4b-it" or "ci_synthetic").
+
+        Returns:
+            SelfLearningBatchResult for this batch.
+
+        Spec: REQ-LEARN-026-3, REQ-LEARN-026-5, SCENARIO-LEARN-045
+        """
+        batch_id = len(self._trajectory)
+        n_questions = len(questions)
+        n_correct = 0
+        n_tier1_updates = 0
+        eorm_energies: list[float] = []
+        violation_idx = 0  # cycles through _SYNTHETIC_VIOLATION_TYPES
+        # Collect per-question violation metadata for CompressedMemoryBank.
+        session_violations: list[dict] = []
+
+        for i, (question, is_correct) in enumerate(zip(questions, ground_truth, strict=False)):
+            # ----------------------------------------------------------------
+            # Curriculum diversity check (REQ-PSV-016): record this question
+            # in the recent-samples window regardless of diversity outcome.
+            # In the relay we process all questions supplied by the caller, but
+            # we record each to enforce diversity in future batches.
+            # ----------------------------------------------------------------
+            self._record_question_sample(question)
+
+            # ----------------------------------------------------------------
+            # Tier 3 prep: score with EORM for gate AUC computation.
+            # ----------------------------------------------------------------
+            # In CI mode the response text equals the question (no real model).
+            response = question
+            cot_input = CoTEnergyInput(question_text=question, response_text=response)
+            energy = float(self._eorm_model.energy(cot_input))
+            eorm_energies.append(energy)
+
+            # ----------------------------------------------------------------
+            # Get pipeline verification decision (used for Tier 1 updates).
+            # ----------------------------------------------------------------
+            verified, _tier_used, _pipeline_energy = self._pipeline.verify(
+                response, question=question
+            )
+
+            # ----------------------------------------------------------------
+            # Tier 1: update PerModelFPTracker based on (verified, is_correct).
+            # Skip updates for frozen constraint types (REQ-PSV-015).
+            # ----------------------------------------------------------------
+            # FP: pipeline said OK but answer was wrong.
+            # TP: pipeline said OK and answer was right.
+            # Anything else is neither FP nor TP (don't credit or penalize).
+            was_fp = bool(verified and not is_correct)
+            was_tp = bool(verified and is_correct)
+            if "verification" not in self._frozen_constraints:
+                self._fp_tracker.update(
+                    model_id,
+                    "verification",
+                    was_fp=was_fp,
+                    was_tp=was_tp,
+                )
+            n_tier1_updates += 1
+
+            # REQ-LEARN-058: update Lagrange lambda for this question's constraint.
+            # constraint_id cycles over n_constraints so each question maps to a
+            # constraint slot — a simple assignment for relay experiments where the
+            # actual constraint topology is synthetic.
+            ising_violation_detected = not is_correct
+            if self._lagrange_ising is not None:
+                constraint_id = i % self._lagrange_ising.n_constraints
+                self._lagrange_ising.update(constraint_id, violated=ising_violation_detected)
+
+            # REQ-LEARN-059 (Tier 3 → Tier 1 relay): if VJEPA predictor is present
+            # AND Ising also detected a violation, ask VJEPA to confirm.
+            # When VJEPA probability exceeds VJEPA_TRIGGER_THRESHOLD (0.70), push
+            # the violation type directly into the constraint addition engine.
+            # This accelerates constraint materialisation for high-confidence violations
+            # without waiting for the natural min_count threshold to fill.
+            if (
+                self._vjepa_predictor is not None
+                and self._constraint_addition_engine is not None
+                and ising_violation_detected
+            ):
+                import jax
+                import jax.numpy as jnp
+
+                # Build a minimal feature vector from the question text.
+                # We use a bag-of-words hash over the question tokens so no vocab
+                # is needed — the VJEPA predictor's in_dim determines the size.
+                in_dim = self._vjepa_predictor.in_dim
+                context_dim = self._vjepa_predictor.context_dim
+                tokens = question.lower().split()
+                feat = [0.0] * in_dim
+                for tok in tokens:
+                    feat[hash(tok) % in_dim] += 1.0 / max(len(tokens), 1)
+                ctx = [0.0] * context_dim
+                x_arr = jnp.array(feat, dtype=jnp.float32)
+                ctx_arr = jnp.array(ctx, dtype=jnp.float32)
+                key = jax.random.PRNGKey(batch_id * 1000 + i)
+                vjepa_prob = self._vjepa_predictor.predict(x_arr, ctx_arr, key)
+                if vjepa_prob > self.VJEPA_TRIGGER_THRESHOLD:
+                    # Pick a synthetic violation type from the cycling sequence.
+                    vtype = self._SYNTHETIC_VIOLATION_TYPES[
+                        violation_idx % len(self._SYNTHETIC_VIOLATION_TYPES)
+                    ]
+                    self._constraint_addition_engine.add_from_violation(vtype, i)
+                    self._n_vjepa_triggered_additions += 1
+                    self._tier3_to_tier1_fired = True
+
+            # Track raw accuracy for this batch.
+            if is_correct:
+                n_correct += 1
+            else:
+                # ----------------------------------------------------------------
+                # Tier 2: notify wiring that a violation of some type was recorded.
+                # ----------------------------------------------------------------
+                # Cycle through synthetic violation types so that after enough
+                # incorrect responses the corresponding templates will activate.
+                violation_type = self._SYNTHETIC_VIOLATION_TYPES[
+                    violation_idx % len(self._SYNTHETIC_VIOLATION_TYPES)
+                ]
+                self._wiring.on_violation_recorded(violation_type, model_id)
+                violation_idx += 1
+
+            # Collect violation record for CompressedMemoryBank (even for correct
+            # answers so the bank reflects all questions, not just errors).
+            session_violations.append(
+                {
+                    "constraint_type": "verification",
+                    "question_idx": i,
+                    "violated": not is_correct,
+                }
+            )
+
+        # --------------------------------------------------------------------
+        # After-batch aggregation
+        # --------------------------------------------------------------------
+
+        # REQ-PSV-015: update the frozen constraints set after each batch.
+        # This must happen after the trajectory has at least some data.
+        self._freeze_stable_constraints()
+
+        # Tier 2: count how many templates are now active for this model.
+        n_tier2_active = len(self._template_library.get_active_templates(model_id))
+
+        # Tier 3: compute EORM gate AUC-ROC for this batch.
+        tier3_auc = _compute_auc_roc(eorm_energies, list(ground_truth))
+
+        # Cross-batch accuracy tracking.
+        self._total_correct += n_correct
+        self._total_questions += n_questions
+        batch_accuracy = n_correct / n_questions if n_questions > 0 else 0.0
+        cumulative_accuracy = (
+            self._total_correct / self._total_questions if self._total_questions > 0 else 0.0
+        )
+
+        # REQ-LEARN-058: compress the session's violation records into the memory bank.
+        # This prevents memory saturation across sessions: as violations accumulate,
+        # the bank stays bounded at k centroids rather than growing without limit.
+        if self._compressed_memory is not None:
+            self._compressed_memory.compress_session(session_violations)
+
+        # REQ-LEARN-040: after each batch, scan session memory for accumulated patterns
+        # and inject new constraints into the pipeline's active constraint set.
+        # This is the "wire-in" that closes the Tier 1 self-learning loop: patterns
+        # that have crossed the min_count threshold materialize as first-class
+        # constraints that future sessions will check.
+        constraints_added_this_batch = 0
+        if self._constraint_addition_engine is not None:
+            constraints_added_this_batch = self._constraint_addition_engine.inject_into_pipeline(
+                self._pipeline
+            )
+            self._cumulative_constraints_added += constraints_added_this_batch
+
+        result = SelfLearningBatchResult(
+            batch_id=batch_id,
+            n_questions=n_questions,
+            accuracy=batch_accuracy,
+            n_tier1_updates=n_tier1_updates,
+            n_tier2_templates_active=n_tier2_active,
+            tier3_gate_auc=tier3_auc,
+            cumulative_accuracy=cumulative_accuracy,
+        )
+        self._trajectory.append(result)
+        return result
+
+    # ------------------------------------------------------------------
+    # learning_trajectory
+    # ------------------------------------------------------------------
+
+    @property
+    def cumulative_constraints_added(self) -> int:
+        """Total number of constraints injected by ConstraintAdditionEngine across all batches.
+
+        Zero when no ConstraintAdditionEngine was provided at construction time.
+
+        Spec: REQ-LEARN-040
+        """
+        return self._cumulative_constraints_added
+
+    @property
+    def n_vjepa_triggered_additions(self) -> int:
+        """Count of VJEPA-triggered constraint additions across all batches.
+
+        Zero when no vjepa_predictor was provided or none fired above the threshold.
+
+        Spec: REQ-LEARN-059
+        """
+        return self._n_vjepa_triggered_additions
+
+    @property
+    def tier3_to_tier1_fired(self) -> bool:
+        """True if at least one VJEPA-triggered addition fired during this relay run.
+
+        Spec: REQ-LEARN-059
+        """
+        return self._tier3_to_tier1_fired
+
+    def learning_trajectory(self) -> list[SelfLearningBatchResult]:
+        """Return all batch results accumulated so far (shallow copy).
+
+        **Detailed explanation for engineers:**
+            Returns a list copy so the caller can iterate without worrying about
+            future ``run_batch()`` calls mutating the list.  The
+            ``SelfLearningBatchResult`` objects themselves are dataclasses
+            (immutable by convention — do not mutate their fields).
+
+        Returns:
+            List of SelfLearningBatchResult, one per completed batch.
+            Empty before the first ``run_batch()`` call.
+
+        Spec: REQ-LEARN-026-4
+        """
+        return list(self._trajectory)
+
+
+# ---------------------------------------------------------------------------
+# compute_learning_improvement
+# ---------------------------------------------------------------------------
+
+
+def compute_learning_improvement(
+    trajectory: list[SelfLearningBatchResult],
+) -> tuple[float, float, bool]:
+    """Compute whether accuracy improved from batch 1 to batch 4.
+
+    **Detailed explanation for engineers:**
+        The primary metric for FR-11 is a simple before/after comparison:
+        did the pipeline get more questions right in the final batch than in
+        the first batch?
+
+        When fewer than 4 batches are present, the last available batch is
+        used as the "final" batch.  When the trajectory is empty, all values
+        are 0.0 and ``improved`` is False.
+
+        ``improved`` uses STRICT greater-than: the final batch must have
+        measurably higher accuracy, not merely equal.
+
+    Args:
+        trajectory: List of SelfLearningBatchResult from a relay run.
+
+    Returns:
+        (batch1_accuracy, batch4_accuracy, improved) tuple where:
+        - batch1_accuracy: accuracy of the first batch (index 0).
+        - batch4_accuracy: accuracy of the last batch (or 4th, index 3).
+        - improved:        True when batch4_accuracy > batch1_accuracy.
+
+    Spec: REQ-LEARN-027-1, SCENARIO-LEARN-047
+    """
+    if not trajectory:
+        return 0.0, 0.0, False
+
+    batch1_accuracy = trajectory[0].accuracy
+    # Use index 3 (batch 4) if available, otherwise the last batch.
+    final_idx = min(3, len(trajectory) - 1)
+    batch4_accuracy = trajectory[final_idx].accuracy
+    improved = batch4_accuracy > batch1_accuracy
+
+    return batch1_accuracy, batch4_accuracy, improved
+
+
+# ---------------------------------------------------------------------------
+# build_relay_artifact
+# ---------------------------------------------------------------------------
+
+
+def build_relay_artifact(
+    trajectory: list[SelfLearningBatchResult],
+    learning_improvement: tuple[float, float, bool],
+    *,
+    inference_mode: str = "cpu_synthetic",
+) -> dict[str, Any]:
+    """Serialize a self-learning relay run to the standard Carnot artifact schema.
+
+    **Detailed explanation for engineers:**
+        The ``honest_verdict`` field is the critical honesty gate:
+        - ``"learning_confirmed"``: ONLY when ``improved=True`` AND
+          ``inference_mode=="live_gpu"``.  This is the only case where we can
+          claim real learning happened on real model outputs.
+        - ``"synthetic_only"``:  When inference_mode != "live_gpu".  Results
+          are real code exercise but cannot prove live-model learning.
+        - ``"no_improvement"``: When improved=False regardless of mode.
+
+        This matches the pattern established in Exps 328/359 where honest
+        verdicts prevent simulation artifacts from being reported as real results.
+
+    Args:
+        trajectory:          List of SelfLearningBatchResult from the relay run.
+        learning_improvement: Tuple from ``compute_learning_improvement()``.
+        inference_mode:      Label: "live_gpu" for real runs, "cpu_synthetic" for CI.
+
+    Returns:
+        Flat dict with schema="carnot.self_learning_relay.v1" and all fields
+        needed for experiment reporting.
+
+    Spec: REQ-LEARN-027-2
+    """
+    batch1_accuracy, batch4_accuracy, improved = learning_improvement
+
+    # Determine honest verdict.
+    if not improved:
+        honest_verdict = "no_improvement"
+    elif inference_mode == "live_gpu":
+        honest_verdict = "learning_confirmed"
+    else:
+        honest_verdict = "synthetic_only"
+
+    # Serialize the trajectory (each SelfLearningBatchResult → dict).
+    trajectory_dicts = [
+        {
+            "batch_id": r.batch_id,
+            "n_questions": r.n_questions,
+            "accuracy": r.accuracy,
+            "n_tier1_updates": r.n_tier1_updates,
+            "n_tier2_templates_active": r.n_tier2_templates_active,
+            "tier3_gate_auc": r.tier3_gate_auc,
+            "cumulative_accuracy": r.cumulative_accuracy,
+        }
+        for r in trajectory
+    ]
+
+    return {
+        "schema": "carnot.self_learning_relay.v1",
+        "trajectory": trajectory_dicts,
+        "batch1_accuracy": batch1_accuracy,
+        "batch4_accuracy": batch4_accuracy,
+        "improved": improved,
+        "inference_mode": inference_mode,
+        "honest_verdict": honest_verdict,
+    }
+
+
+__all__ = [
+    "SelfLearningBatchResult",
+    "SelfLearningRelay",
+    "build_relay_artifact",
+    "compute_learning_improvement",
+]

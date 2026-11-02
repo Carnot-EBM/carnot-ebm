@@ -1,0 +1,1030 @@
+"""Produce the V641 read-only board-continuity receipt.
+
+The task reads authenticated evidence and issues no hardware command. It uses
+the shipped V640 parsers and validators so a continuity report cannot create a
+new authority for older board measurements.
+
+Spec: REQ-ISING-7300 and SCENARIO-ISING-7300-ARTIFACT.
+"""
+
+from __future__ import annotations
+
+import argparse
+from collections.abc import Mapping, Sequence
+from copy import deepcopy
+from dataclasses import dataclass
+from datetime import UTC, datetime
+import json
+from pathlib import Path
+import re
+import time
+from typing import Any, cast
+
+import yaml
+
+from carnot import experiment_7244_v637_board_disposition as quarantine_authority
+from carnot import experiment_7286_v640_board_state as current
+
+
+JsonDict = dict[str, Any]
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+RUN_DATE = "20260914"
+EXPERIMENT_ID = 7300
+TASK_ID = "exp7300-board-continuity"
+MILESTONE = "2026.09.641"
+SCHEMA = "carnot.exp7300.v641.board_continuity.v1"
+RANDOM_SEED = 7300
+
+RESULT_PATH = Path("results/experiment_7300_v641_board_continuity.json")
+CHECKPOINT_PATH = Path("results/checkpoints/experiment_7300_v641_board_continuity.json")
+RAW_DIR = Path("results/raw/experiment_7300")
+CHANGED_STATE_SEARCH_PATH = RAW_DIR / "gatemate_changed_state_receipt_search.json"
+HISTORICAL_MODELS_PATH = RAW_DIR / "historical_model_receipts.json"
+NEGATIVE_FIXTURES_PATH = RAW_DIR / "negative_fixture_receipts.json"
+RAW_ROWS_PATH = RAW_DIR / "board_rows.json"
+TERMINAL_CANDIDATE_PATH = RAW_DIR / "terminal_candidate.json"
+VALIDATION_DIR = RAW_DIR / "validation"
+ENTRYPOINT_PATH = Path("scripts/experiments/experiment_7300_v641_board_continuity.py")
+MODULE_PATH = Path("python/carnot/experiment_7300_v641_board_continuity.py")
+TEST_PATH = Path("tests/python/test_experiment_7300_v641_board_continuity.py")
+SPEC_PATH = current.SPEC_PATH
+ROADMAP_PATH = current.ROADMAP_PATH
+EXCLUSION_PATH = current.EXCLUSION_PATH
+UPSTREAM_PATH = current.RESULT_PATH
+GATEMATE_CUTOFF_PATH = current.GATEMATE_CUTOFF_PATH
+
+KV260_TERMINAL_CRITERION = current.KV260_TERMINAL_CRITERION
+POLARFIRE_TERMINAL_CRITERION = current.POLARFIRE_TERMINAL_CRITERION
+GATEMATE_CUTOFF_DATE = current.GATEMATE_CUTOFF_DATE
+MISSING_RECEIPT = current.MISSING_RECEIPT
+GATEMATE_OPERATOR_ACTION = current.GATEMATE_OPERATOR_ACTION
+GATEMATE_FUTURE_ACTION = current.GATEMATE_FUTURE_ACTION
+
+EXPECTED_TASK_CONTRACT: JsonDict = {
+    "id": TASK_ID,
+    "title": "Record board continuity and changed-state prerequisites",
+    "track": "hardware",
+    "priority": "high",
+    "requires_gpu": False,
+    "max_turns": 20,
+    "estimated_wall_time_min": 15,
+    "per_unit_rows": True,
+    "milestone": MILESTONE,
+    "deliverable": RESULT_PATH.as_posix(),
+    "prior_failure_ids": [
+        "exp5166-hardware-continuity-board-timing-v473",
+        "exp5179-hardware-continuity-board-timing-v474",
+    ],
+    "prompt_sha256": "sha256:c01e40a4c5287a3f819666dbfd35f7f69b06fd40fb01a1d102e502b8b2124f4f",
+}
+
+REQUIRED_SOURCE_PATHS = (
+    Path("AGENTS.md"),
+    Path("CLAUDE.md"),
+    Path("CODEX.md"),
+    Path("research-program.md"),
+    EXCLUSION_PATH,
+    Path("ops/e2e-test-plan.md"),
+    MODULE_PATH,
+    ENTRYPOINT_PATH,
+    TEST_PATH,
+    UPSTREAM_PATH,
+    GATEMATE_CUTOFF_PATH,
+    Path("research-hardware-wishlist.md"),
+    Path("ops/known-issues.md"),
+    SPEC_PATH,
+    ROADMAP_PATH,
+)
+
+FIELD_PRINCIPLES = {
+    **current.FIELD_PRINCIPLES,
+    "schema": "Version the artifact; retain ordinary top-level experiment_id and milestone.",
+    "experiment_id": "Bind this receipt to Exp7300.",
+    "task_id": "Bind this receipt to the exact V641 roadmap task.",
+    "milestone": "Bind this receipt to milestone 2026.09.641.",
+    "spec_refs": "Connect the artifact and tests to REQ-ISING-7300 scenarios.",
+    "status": "Use a terminal complete or blocked record; unfinished own work belongs in separate checkpoints.",
+    "run_date": "Use 20260914, real UTC start/end and monotonic timing.",
+    "field_principles": "Store explanations here while consumer values remain ordinary top-level values.",
+    "preconditions_checked": "Hash actual inputs, authority boundaries, resource ownership and failed checks.",
+    "MODEL_SPECS": "Actual executable local model identities; keep historical models in hashed sidecars.",
+    "model_invoked": "True for any actual attempted model load or generation, including failed and unusable work.",
+    "invocation_counts": "Separate attempted/completed/failed loads and generation; retain in-flight events on timeout.",
+    "inference_substrate": "Use the recognized literal for actual computation; never infer from intended task.",
+    "inference_substrate_class": "Full generation60s, bounded10s, load-only2s, or actual no-LLM class; never pad elapsed time.",
+    "execution_venue": "Host is host; identify actual GPU/native/device execution separately.",
+    "duration_s": "Measured monotonic elapsed and disjoint phase spans, including failures and initialization.",
+    "random_seed": "Freeze development and independent evaluation seeds before observing outcomes.",
+    "reproducibility_checksum": "Bind code, config, inputs, model identity if any and immutable raw evidence.",
+    "source_artifact_hashes": "Keep exact producer identities, terminal classes, retirement and quarantine state.",
+    "rows": "Every comparative unit/arm/seed with metric, cost, error, abstention and censoring; no aggregate-only claim.",
+    "sample_size_budget": "Planned, attempted, complete and censored units plus the frozen stopping rule.",
+    "acceptance_gate_results": "Each completeness/value check names expected, observed, passed and principle.",
+    "gate_check_summary": "Each blocked board names its failed physical check and observed value; no alternate diagnostic field.",
+    "verifier_is_oracle": "Expose shared verifier/evaluator authority; same-authority mechanics are not learned correctness.",
+    "honest_verdict": "Complete findings start complete_ or complete:; external absence starts blocked_; state the actual finding.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive; failed efficacy gates forbid positive. Only own unfinished work is partial; unchanged external failure is terminal blocked.",
+    "validation_receipts": "Command, exit code, elapsed time and log hash; preserve actual failures.",
+    "board_continuity_complete_score": "One for all three authenticated per-board dispositions, independent of individual physical readiness.",
+    "board_rows": "KV260, PolarFire and GateMate evidence hashes, actual venue, capability and next condition.",
+    "hardware_operations_issued": "Exactly zero for this read-only task.",
+    "changed_state_receipt": "Observed dated operator receipt or explicit absent value, never inferred from elapsed time.",
+}
+REQUIRED_ARTIFACT_FIELDS = frozenset(
+    current.REQUIRED_ARTIFACT_FIELDS | {"board_continuity_complete_score", "changed_state_receipt"}
+)
+
+sha256_file = current.sha256_file
+sha256_text = current.sha256_text
+artifact_checksum = current.artifact_checksum
+_read_json = current._read_json
+_atomic_json = current._atomic_json
+_writable_destination = current._writable_destination
+_check = current._check
+_first_failed = current._first_failed
+_gate_summary = current._gate_summary
+_gate_result = current._gate_result
+_display_path = current._display_path
+progress = current.progress
+reference_observation = current.reference_observation
+search_gatemate_operator_receipts = current.search_gatemate_operator_receipts
+write_negative_fixture_receipt = current.write_negative_fixture_receipt
+reduce_board_rows = current.reduce_board_rows
+
+
+@dataclass(frozen=True)
+class ExperimentPaths:
+    """Keep provisional, raw, and terminal outputs in separate locations."""
+
+    artifact: Path
+    checkpoint: Path
+    changed_state_search: Path
+    historical_models: Path
+    negative_fixtures: Path
+    raw_rows: Path
+    terminal_candidate: Path
+    validation_dir: Path
+
+    @classmethod
+    def defaults(cls, root: Path = REPO_ROOT) -> ExperimentPaths:
+        """Resolve all task-owned outputs below one repository root."""
+
+        return cls(
+            root / RESULT_PATH,
+            root / CHECKPOINT_PATH,
+            root / CHANGED_STATE_SEARCH_PATH,
+            root / HISTORICAL_MODELS_PATH,
+            root / NEGATIVE_FIXTURES_PATH,
+            root / RAW_ROWS_PATH,
+            root / TERMINAL_CANDIDATE_PATH,
+            root / VALIDATION_DIR,
+        )
+
+    @classmethod
+    def under(cls, root: Path) -> ExperimentPaths:
+        """Give tests private paths that cannot replace research evidence."""
+
+        return cls.defaults(root)
+
+
+def _task_contract(root: Path) -> JsonDict | None:
+    """Read fields that fix the identity of only the V641 board task."""
+
+    try:
+        roadmap = yaml.safe_load((root / ROADMAP_PATH).read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        return None
+    tasks = roadmap.get("tasks") if isinstance(roadmap, Mapping) else None
+    if not isinstance(tasks, list):
+        return None
+    task = next(
+        (row for row in tasks if isinstance(row, Mapping) and row.get("id") == TASK_ID),
+        None,
+    )
+    if task is None:
+        return None
+    result = {
+        key: deepcopy(task.get(key))
+        for key in EXPECTED_TASK_CONTRACT
+        if key not in {"prior_failure_ids", "prompt_sha256"}
+    }
+    failures = task.get("prior_failures")
+    result["prior_failure_ids"] = (
+        [row.get("experiment_id") for row in failures if isinstance(row, Mapping)]
+        if isinstance(failures, list)
+        else None
+    )
+    prompt = task.get("prompt")
+    result["prompt_sha256"] = sha256_text(prompt) if isinstance(prompt, str) else None
+    return result
+
+
+def _board_row(receipt: Mapping[str, Any], board: str) -> Mapping[str, Any] | None:
+    """Select one named board with the shipped reader."""
+
+    return current._board_row(receipt, board)
+
+
+def collect_preconditions(
+    root: Path, paths: ExperimentPaths
+) -> tuple[list[JsonDict], dict[str, str], dict[str, Any]]:
+    """Authenticate source bytes, evidence scope, and output ownership."""
+
+    print("[phase 0 check start] V641 sources, spec, and task contract", flush=True)
+    checks: list[JsonDict] = []
+    sizes = {
+        path.as_posix(): (root / path).stat().st_size if (root / path).is_file() else None
+        for path in REQUIRED_SOURCE_PATHS
+    }
+    checks.append(
+        _check(
+            "required_source_bytes",
+            "repository",
+            "REQUIRED_SOURCE_PATHS",
+            "all nonempty",
+            sizes,
+            all(size is not None and size > 0 for size in sizes.values()),
+        )
+    )
+    hashes = {
+        path.as_posix(): sha256_file(root / path)
+        for path in REQUIRED_SOURCE_PATHS
+        if sizes[path.as_posix()] not in (None, 0)
+    }
+    spec_text = (
+        (root / SPEC_PATH).read_text(encoding="utf-8") if (root / SPEC_PATH).is_file() else ""
+    )
+    spec_state = {
+        "requirement": "REQ-ISING-7300" in spec_text,
+        "scenarios": "SCENARIO-ISING-7300-" in spec_text,
+    }
+    checks.append(
+        _check(
+            "driving_capability_spec",
+            SPEC_PATH.as_posix(),
+            "REQ-ISING-7300 and scenarios",
+            {"requirement": True, "scenarios": True},
+            spec_state,
+            all(spec_state.values()),
+        )
+    )
+    contract = _task_contract(root)
+    checks.append(
+        _check(
+            "roadmap_task_contract",
+            ROADMAP_PATH.as_posix(),
+            TASK_ID,
+            EXPECTED_TASK_CONTRACT,
+            contract if contract is not None else "missing_task_contract",
+            contract == EXPECTED_TASK_CONTRACT,
+        )
+    )
+
+    print("[phase 0 check start] authority separation and writable outputs", flush=True)
+    resources = {
+        "latest_board_reader": callable(current._board_row),
+        "latest_artifact_validator": callable(current.validate_artifact),
+        "changed_state_parser": callable(search_gatemate_operator_receipts),
+        "row_reducer": callable(reduce_board_rows),
+        "artifact_writable": _writable_destination(paths.artifact),
+        "checkpoint_writable": _writable_destination(paths.checkpoint),
+        "changed_state_search_writable": _writable_destination(paths.changed_state_search),
+        "historical_models_writable": _writable_destination(paths.historical_models),
+        "negative_fixtures_writable": _writable_destination(paths.negative_fixtures),
+        "raw_rows_writable": _writable_destination(paths.raw_rows),
+        "terminal_candidate_writable": _writable_destination(paths.terminal_candidate),
+    }
+    checks.append(
+        _check(
+            "authority_and_output_ownership",
+            "host",
+            "shipped authorities and task-owned outputs",
+            "all available and writable",
+            resources,
+            all(value is True for value in resources.values()),
+        )
+    )
+
+    print("[phase 0 check start] exclusion state and V640 receipt", flush=True)
+    try:
+        manifest = yaml.safe_load((root / EXCLUSION_PATH).read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        manifest = None
+    checks.append(
+        _check(
+            "exclusion_manifest_loaded",
+            EXCLUSION_PATH.as_posix(),
+            "YAML mapping",
+            True,
+            isinstance(manifest, Mapping),
+            isinstance(manifest, Mapping),
+        )
+    )
+    receipt = _read_json(root / UPSTREAM_PATH)
+    quarantine = quarantine_authority._quarantine(receipt, manifest, "7286")
+    checks.append(
+        _check(
+            "exp7286_not_quarantined_or_retired",
+            UPSTREAM_PATH.as_posix(),
+            "quarantined_or_retired",
+            False,
+            quarantine,
+            bool(receipt) and quarantine.get("quarantined") is False,
+        )
+    )
+    upstream_errors = current.validate_artifact(receipt) if receipt else ["not_json"]
+    checks.append(
+        _check(
+            "exp7286_latest_validator",
+            UPSTREAM_PATH.as_posix(),
+            "validator_errors",
+            [],
+            upstream_errors,
+            upstream_errors == [],
+        )
+    )
+    kv260 = _board_row(receipt, "KV260")
+    polarfire = _board_row(receipt, "PolarFire")
+    references = reference_observation(root, kv260, polarfire)
+    checks.append(
+        _check(
+            "graduated_board_reference_hashes",
+            UPSTREAM_PATH.as_posix(),
+            "KV260 and PolarFire evidence paths and hashes",
+            "all current bytes hash-match",
+            references,
+            references["all_match"] is True,
+        )
+    )
+    observed_scope = {
+        "kv260_met": kv260.get("terminal_criterion_met") if kv260 else None,
+        "kv260_processor": kv260.get("processor_class") if kv260 else None,
+        "polarfire_met": polarfire.get("terminal_criterion_met") if polarfire else None,
+        "polarfire_processor": polarfire.get("processor_class") if polarfire else None,
+        "polarfire_fpga_sampling": (
+            polarfire.get("programmable_logic_sampling_observed") if polarfire else None
+        ),
+    }
+    expected_scope = {
+        "kv260_met": True,
+        "kv260_processor": "fpga_fabric",
+        "polarfire_met": True,
+        "polarfire_processor": "cpu",
+        "polarfire_fpga_sampling": False,
+    }
+    checks.append(
+        _check(
+            "graduated_board_execution_scopes",
+            UPSTREAM_PATH.as_posix(),
+            "fabric execution and CPU dispatch boundary",
+            expected_scope,
+            observed_scope,
+            observed_scope == expected_scope,
+        )
+    )
+    changed_state = receipt.get("operator_state_receipt") if receipt else None
+    cutoff_hash = hashes.get(GATEMATE_CUTOFF_PATH.as_posix())
+    cutoff_observed = {
+        "receipt_present": (root / GATEMATE_CUTOFF_PATH).is_file(),
+        "expected_by_exp7286": (
+            changed_state.get("cutoff_source_hash") if isinstance(changed_state, Mapping) else None
+        ),
+        "observed_sha256": cutoff_hash,
+    }
+    checks.append(
+        _check(
+            "exp6559_boundary_authenticated",
+            GATEMATE_CUTOFF_PATH.as_posix(),
+            "presence and hash",
+            {"present": True, "hash_match": True},
+            cutoff_observed,
+            cutoff_observed["receipt_present"] is True
+            and cutoff_observed["expected_by_exp7286"] == cutoff_hash,
+        )
+    )
+    return (
+        checks,
+        hashes,
+        {
+            "receipt": receipt,
+            "kv260_row": kv260,
+            "polarfire_row": polarfire,
+            "manifest": manifest,
+            "upstream_quarantine": quarantine,
+            "reference_observation": references,
+        },
+    )
+
+
+def write_historical_model_receipt(root: Path, path: Path) -> JsonDict:
+    """Keep upstream invocation declarations outside the current identity."""
+
+    source = _read_json(root / UPSTREAM_PATH)
+    receipt = {
+        "schema": "carnot.exp7300.historical_model_receipts.v1",
+        "current_invocation_model_specs": [],
+        "current_invocation_model_count": 0,
+        "source_receipts": [
+            {
+                "source_path": UPSTREAM_PATH.as_posix(),
+                "source_sha256": sha256_file(root / UPSTREAM_PATH),
+                "producer_experiment_id": source.get("experiment_id"),
+                "terminal_status": source.get("status"),
+                "terminal_class": source.get("verdict_class"),
+                "historical_MODEL_SPECS": source.get("MODEL_SPECS"),
+                "historical_model_invoked": source.get("model_invoked"),
+            }
+        ],
+    }
+    _atomic_json(path, receipt)
+    return receipt
+
+
+def _finish_row(row: JsonDict) -> JsonDict:
+    """Hash a row only after the V641 comparison fields are present."""
+
+    return current.current.current._finish_row(row)
+
+
+def build_board_rows(
+    root: Path, upstreams: Mapping[str, Any], changed_state: Mapping[str, Any]
+) -> list[JsonDict]:
+    """Advance three authenticated rows without contacting a board."""
+
+    receipt = cast(Mapping[str, Any], upstreams["receipt"])
+    upstream_hash = sha256_file(root / UPSTREAM_PATH)
+    changed = changed_state.get("exists") is True
+    row_specs = (
+        (
+            "KV260",
+            cast(Mapping[str, Any], upstreams["kv260_row"]),
+            {
+                "observed_venue": "kv260_fpga_fabric",
+                "preserved_capability": KV260_TERMINAL_CRITERION,
+                "prerequisite_check": "authenticated V640 row and fabric evidence hash chain",
+                "failed_value": None,
+                "board_availability": "available_at_preserved_execution",
+                "fabric_execution_completed": True,
+                "host_emulation": False,
+            },
+        ),
+        (
+            "GateMate",
+            cast(Mapping[str, Any], _board_row(receipt, "GateMate")),
+            {
+                "observed_venue": "none_read_only",
+                "preserved_capability": "attached GateMate board; fabric execution not graduated",
+                "prerequisite_check": (
+                    "operator-authored USB/JTAG/cabling/board/power change after Exp6559"
+                ),
+                "failed_value": None if changed else MISSING_RECEIPT,
+                "board_availability": "attached_not_rechecked",
+                "fabric_execution_completed": False,
+                "host_emulation": False,
+            },
+        ),
+        (
+            "PolarFire",
+            cast(Mapping[str, Any], upstreams["polarfire_row"]),
+            {
+                "observed_venue": "polarfire_linux_cpu",
+                "preserved_capability": POLARFIRE_TERMINAL_CRITERION,
+                "prerequisite_check": "authenticated V640 row and CPU dispatch hash chain",
+                "failed_value": None,
+                "board_availability": "available_at_preserved_execution",
+                "fabric_execution_completed": False,
+                "host_emulation": False,
+            },
+        ),
+    )
+    rows: list[JsonDict] = []
+    for board, source, additions in row_specs:
+        row = deepcopy(dict(source))
+        row.pop("row_sha256", None)
+        row.update(additions)
+        if board == "GateMate":
+            row.update(
+                {
+                    "processor_class": "not_executed" if changed else "unavailable",
+                    "latest_receipt_path": changed_state.get("search_receipt_path"),
+                    "latest_receipt_date": RUN_DATE,
+                    "latest_receipt_hash": changed_state.get("search_receipt_hash"),
+                    "latest_receipt_authenticated": True,
+                    "operator_source_path": changed_state.get("source_path"),
+                    "operator_author_evidence": changed_state.get("author_evidence"),
+                    "operator_date_evidence": changed_state.get("date_evidence"),
+                    "operator_evidence_hash": changed_state.get("evidence_hash"),
+                    "operator_changed_conditions": deepcopy(
+                        changed_state.get("changed_conditions", {})
+                    ),
+                    "observed_state": (
+                        "operator_changed_physical_state_recorded"
+                        if changed
+                        else "operator_changed_physical_state_receipt_missing"
+                    ),
+                    "observed_missing_receipt": changed_state.get("observed_missing_receipt"),
+                    "disposition": (
+                        "changed_physical_state_future_action_enabled"
+                        if changed
+                        else "blocked_changed_physical_state"
+                    ),
+                    "exact_next_condition": (
+                        str(changed_state.get("newly_enabled_next_action"))
+                        if changed
+                        else GATEMATE_OPERATOR_ACTION
+                    ),
+                    "metric": changed,
+                    "error": None if changed else MISSING_RECEIPT,
+                    "abstention": not changed,
+                }
+            )
+        else:
+            row.update(
+                {
+                    "latest_receipt_path": UPSTREAM_PATH.as_posix(),
+                    "latest_receipt_date": receipt.get("run_date"),
+                    "latest_receipt_hash": upstream_hash,
+                    "latest_receipt_authenticated": True,
+                    "referenced_evidence": [
+                        {
+                            "path": source.get("latest_receipt_path"),
+                            "sha256": source.get("latest_receipt_hash"),
+                            "run_date": source.get("latest_receipt_date"),
+                        },
+                        *deepcopy(source.get("referenced_evidence", [])),
+                    ],
+                }
+            )
+        row["hardware_operations_issued"] = []
+        row["hardware_command_count"] = 0
+        rows.append(_finish_row(row))
+    return rows
+
+
+def _invocation_counts() -> JsonDict:
+    """Return explicit zero counters for every current model event state."""
+
+    return {
+        "model_loads_attempted": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "generation_calls_attempted": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "usable_answers": 0,
+    }
+
+
+def _base_artifact(
+    *,
+    started_at: str,
+    completed_at: str,
+    duration_s: float,
+    phase_spans: Mapping[str, float],
+    checks: Sequence[Mapping[str, Any]],
+    hashes: Mapping[str, str],
+) -> JsonDict:
+    """Create every required field before selecting a terminal finding."""
+
+    artifact = current._base_artifact(
+        started_at=started_at,
+        completed_at=completed_at,
+        duration_s=duration_s,
+        phase_spans=phase_spans,
+        checks=checks,
+        hashes=hashes,
+    )
+    artifact.update(
+        {
+            "schema": SCHEMA,
+            "experiment_id": EXPERIMENT_ID,
+            "task_id": TASK_ID,
+            "milestone": MILESTONE,
+            "spec_refs": [
+                "REQ-ISING-7300",
+                "SCENARIO-ISING-7300-PREFLIGHT",
+                "SCENARIO-ISING-7300-BOARDS",
+                "SCENARIO-ISING-7300-GATEMATE",
+                "SCENARIO-ISING-7300-ARTIFACT",
+            ],
+            "field_principles": FIELD_PRINCIPLES,
+            "random_seed": RANDOM_SEED,
+            "invocation_counts": _invocation_counts(),
+            "board_continuity_complete_score": 0,
+            "changed_state_receipt": {},
+        }
+    )
+    return artifact
+
+
+def read_validation_receipts(directory: Path) -> list[JsonDict]:
+    """Read command receipts and retain their measured elapsed seconds."""
+
+    rows = current.read_validation_receipts(directory)
+    for row in rows:
+        text = Path(str(row["log_path"])).read_text(encoding="utf-8")
+        match = re.search(r"(?m)^\[elapsed_s\] ([0-9]+(?:\.[0-9]+)?)$", text)
+        row["elapsed_s"] = float(match.group(1)) if match else None
+    return rows
+
+
+def build_artifact(
+    root: Path,
+    paths: ExperimentPaths,
+    *,
+    candidate_paths: Sequence[Path] | None = None,
+) -> JsonDict:
+    """Aggregate immutable board evidence in memory without a board command."""
+
+    started = time.monotonic()
+    started_at = datetime.now(UTC).isoformat()
+    spans: dict[str, float] = {}
+
+    phase_started = time.monotonic()
+    progress(0, "start", "authenticate V641 sources before aggregation")
+    checks, hashes, upstreams = collect_preconditions(root, paths)
+    spans["phase_0_preconditions"] = time.monotonic() - phase_started
+    failed = _first_failed(checks)
+    progress(0, "end", f"preconditions failed={int(failed is not None)}")
+    if failed is not None:
+        artifact = _base_artifact(
+            started_at=started_at,
+            completed_at=datetime.now(UTC).isoformat(),
+            duration_s=time.monotonic() - started,
+            phase_spans=spans,
+            checks=checks,
+            hashes=hashes,
+        )
+        artifact["honest_verdict"] = (
+            f"blocked_{failed['check']}: expected {failed['expected_value']!r}; "
+            f"observed {failed['observed_value']!r}"
+        )
+        artifact["reproducibility_checksum"] = artifact_checksum(artifact)
+        return artifact
+
+    _atomic_json(
+        paths.checkpoint,
+        {
+            "schema": SCHEMA,
+            "experiment_id": EXPERIMENT_ID,
+            "status": "in_progress",
+            "started_at_utc": started_at,
+            "terminal_artifact_path": str(paths.artifact),
+        },
+    )
+
+    phase_started = time.monotonic()
+    progress(1, "start", "write hashed provenance and negative-fixture sidecars")
+    write_historical_model_receipt(root, paths.historical_models)
+    negative = write_negative_fixture_receipt(paths.negative_fixtures)
+    for path in (paths.historical_models, paths.negative_fixtures):
+        hashes[_display_path(root, path)] = sha256_file(path)
+    spans["phase_1_hashed_sidecars"] = time.monotonic() - phase_started
+    progress(1, "end", f"sidecars=2 negative-fixtures={negative['fixture_count']}")
+
+    phase_started = time.monotonic()
+    progress(2, "start", "read later GateMate physical-state receipts")
+    changed_state = search_gatemate_operator_receipts(
+        root, paths.changed_state_search, candidate_paths=candidate_paths
+    )
+    hashes[_display_path(root, paths.changed_state_search)] = changed_state["search_receipt_hash"]
+    spans["phase_2_changed_state_receipt"] = time.monotonic() - phase_started
+    progress(2, "end", f"accepted-receipts={int(changed_state['exists'])} commands=0")
+
+    phase_started = time.monotonic()
+    progress(3, "start", "write and independently reduce three raw board rows")
+    rows = build_board_rows(root, upstreams, changed_state)
+    _atomic_json(paths.raw_rows, {"rows": rows})
+    hashes[_display_path(root, paths.raw_rows)] = sha256_file(paths.raw_rows)
+    raw_rows = _read_json(paths.raw_rows).get("rows", [])
+    reduced = reduce_board_rows(raw_rows)
+    spans["phase_3_board_reducer"] = time.monotonic() - phase_started
+    progress(
+        3,
+        "end",
+        f"completed-units={reduced['board_count']} elapsed={time.monotonic() - started:.6f}s",
+    )
+
+    phase_started = time.monotonic()
+    progress(4, "start", "assemble terminal host aggregation in memory")
+    validation_rows = read_validation_receipts(paths.validation_dir)
+    baseline_rows = read_validation_receipts(paths.validation_dir.parent / "baseline_failures")
+    for row in [*validation_rows, *baseline_rows]:
+        hashes[_display_path(root, Path(str(row["log_path"])))] = str(row["log_hash"])
+    validation_rows.append(
+        {
+            "command": "internal reduce_board_rows(raw board rows)",
+            "exit_code": 0,
+            "elapsed_s": spans["phase_3_board_reducer"],
+            "log_hash": sha256_text(json.dumps(reduced, sort_keys=True)),
+        }
+    )
+    spans["phase_4_artifact_assembly"] = time.monotonic() - phase_started
+    artifact = _base_artifact(
+        started_at=started_at,
+        completed_at=datetime.now(UTC).isoformat(),
+        duration_s=time.monotonic() - started,
+        phase_spans=spans,
+        checks=checks,
+        hashes=hashes,
+    )
+    summary = _gate_summary(checks)
+    summary["board_blocks"] = (
+        []
+        if changed_state["exists"]
+        else [
+            {
+                "verdict": "blocked_changed_physical_state",
+                "upstream": "changed_state_receipt",
+                "field": ("operator-authored USB/JTAG/cabling/board/power change after Exp6559"),
+                "expected_value": GATEMATE_OPERATOR_ACTION,
+                "observed_value": MISSING_RECEIPT,
+            }
+        ]
+    )
+    artifact.update(
+        {
+            "status": "complete",
+            "inference_substrate": "aggregation_from_upstream_artifacts",
+            "inference_substrate_class": "aggregation",
+            "rows": rows,
+            "sample_size_budget": {
+                "planned": 3,
+                "attempted": 3,
+                "complete": 3,
+                "completed": 3,
+                "censored": 0,
+                "independent_units_planned": 3,
+                "independent_units_completed": 3,
+                "stopping_rule": "one authenticated read-only disposition per board",
+            },
+            "acceptance_gate_results": {
+                "source_and_references_authenticated": _gate_result(
+                    "Validate Exp7286 and every preserved evidence hash.",
+                    True,
+                    upstreams["reference_observation"]["all_match"],
+                    upstreams["reference_observation"]["all_match"] is True,
+                ),
+                "kv260_fabric_scope_preserved": _gate_result(
+                    "Distinguish completed fabric execution from availability.",
+                    {"fabric_execution_completed": True, "host_emulation": False},
+                    {
+                        "fabric_execution_completed": rows[0]["fabric_execution_completed"],
+                        "host_emulation": rows[0]["host_emulation"],
+                    },
+                    rows[0]["fabric_execution_completed"] is True
+                    and rows[0]["host_emulation"] is False,
+                ),
+                "polarfire_cpu_scope_preserved": _gate_result(
+                    "CPU dispatch is not FPGA sampling or host emulation.",
+                    {"processor_class": "cpu", "fpga_sampling": False},
+                    {
+                        "processor_class": rows[2]["processor_class"],
+                        "fpga_sampling": rows[2]["programmable_logic_sampling_observed"],
+                    },
+                    rows[2]["processor_class"] == "cpu"
+                    and rows[2]["programmable_logic_sampling_observed"] is False,
+                ),
+                "gatemate_changed_state_disposition": _gate_result(
+                    "Record a valid later change or the exact failed physical check.",
+                    "changed receipt or blocked_changed_physical_state",
+                    rows[1]["disposition"],
+                    rows[1]["disposition"]
+                    in {
+                        "blocked_changed_physical_state",
+                        "changed_physical_state_future_action_enabled",
+                    },
+                ),
+                "negative_receipt_fixtures_fail_closed": _gate_result(
+                    "Missing and malformed receipts authorize no command.",
+                    {"count": 2, "all_failed_closed": True},
+                    {
+                        "count": negative["fixture_count"],
+                        "all_failed_closed": negative["all_failed_closed"],
+                    },
+                    negative["fixture_count"] == 2 and negative["all_failed_closed"] is True,
+                ),
+                "hardware_operations_issued_count": _gate_result(
+                    "This read-only task issues no hardware operation.", 0, 0, True
+                ),
+                "three_continuity_rows_reduce": _gate_result(
+                    "Three authenticated dispositions have exact next conditions.",
+                    1,
+                    reduced["board_disposition_complete_score"],
+                    reduced["board_disposition_complete_score"] == 1,
+                ),
+            },
+            "gate_check_summary": summary,
+            "verdict_class": "positive",
+            "honest_verdict": (
+                "complete: three authenticated board dispositions and exact next conditions "
+                "are recorded. KV260 fabric execution remains preserved. PolarFire "
+                "hash-matched CPU dispatch remains preserved and is not FPGA sampling. "
+                + (
+                    "A later GateMate physical-state receipt names an eligible future "
+                    "integration experiment. "
+                    if changed_state["exists"]
+                    else "GateMate remains blocked_changed_physical_state because the "
+                    "operator receipt is absent. "
+                )
+                + "This invocation issued zero hardware operations."
+            ),
+            "validation_receipts": validation_rows,
+            "baseline_validation_failures": baseline_rows,
+            "board_disposition_complete_score": reduced["board_disposition_complete_score"],
+            "board_continuity_complete_score": reduced["board_disposition_complete_score"],
+            "board_rows": rows,
+            "operator_state_receipt": changed_state,
+            "changed_state_receipt": changed_state,
+            "source_artifact_states": {
+                UPSTREAM_PATH.as_posix(): {
+                    "producer_experiment_id": 7286,
+                    "terminal_status": cast(Mapping[str, Any], upstreams["receipt"]).get("status"),
+                    "terminal_class": cast(Mapping[str, Any], upstreams["receipt"]).get(
+                        "verdict_class"
+                    ),
+                    "quarantine": upstreams["upstream_quarantine"],
+                }
+            },
+        }
+    )
+    artifact["reproducibility_checksum"] = artifact_checksum(artifact)
+    progress(4, "end", "terminal receipt assembled; hardware-operations=0")
+    return artifact
+
+
+def _v640_compatible(artifact: Mapping[str, Any]) -> JsonDict:
+    """Translate only renamed V641 fields for the shipped V640 validator."""
+
+    compatible = deepcopy(dict(artifact))
+    compatible.update(
+        {
+            "schema": current.SCHEMA,
+            "experiment_id": current.EXPERIMENT_ID,
+            "task_id": current.TASK_ID,
+            "milestone": current.MILESTONE,
+            "field_principles": current.FIELD_PRINCIPLES,
+            "board_disposition_complete_score": artifact.get("board_continuity_complete_score"),
+            "operator_state_receipt": artifact.get("changed_state_receipt"),
+        }
+    )
+    compatible["invocation_counts"] = {
+        key: value
+        for key, value in cast(Mapping[str, Any], artifact.get("invocation_counts", {})).items()
+        if key not in {"model_loads_failed", "generation_calls_failed"}
+    }
+    compatible["reproducibility_checksum"] = artifact_checksum(compatible)
+    return compatible
+
+
+def validate_artifact(artifact: Mapping[str, Any], *, root: Path | None = None) -> list[str]:
+    """Check V641 semantics, then delegate older evidence to V640."""
+
+    missing = sorted(REQUIRED_ARTIFACT_FIELDS - set(artifact))
+    if missing:
+        return ["missing_fields:" + ",".join(missing)]
+    errors: list[str] = []
+    if (
+        artifact.get("schema") != SCHEMA
+        or artifact.get("experiment_id") != EXPERIMENT_ID
+        or artifact.get("task_id") != TASK_ID
+        or artifact.get("milestone") != MILESTONE
+    ):
+        errors.append("identity")
+    if artifact.get("field_principles") != FIELD_PRINCIPLES:
+        errors.append("field_principles")
+    if artifact.get("invocation_counts") != _invocation_counts():
+        errors.append("invocation_counts")
+    try:
+        checksum_matches = artifact.get("reproducibility_checksum") == artifact_checksum(artifact)
+    except (TypeError, ValueError):
+        checksum_matches = False
+    if not checksum_matches:
+        errors.append("reproducibility_checksum")
+    rows = artifact.get("board_rows")
+    reduced = reduce_board_rows(rows)
+    if (
+        artifact.get("board_continuity_complete_score")
+        != reduced["board_disposition_complete_score"]
+    ):
+        errors.append("board_continuity_score")
+    required_row_fields = {
+        "observed_venue",
+        "preserved_capability",
+        "prerequisite_check",
+        "failed_value",
+        "exact_next_condition",
+        "fabric_execution_completed",
+        "host_emulation",
+    }
+    if artifact.get("status") == "complete" and (
+        not isinstance(rows, list)
+        or len(rows) != 3
+        or any(not required_row_fields.issubset(row) for row in rows)
+    ):
+        errors.append("board_row_scope")
+    if artifact.get("hardware_operations_issued") != []:
+        errors.append("hardware_operations")
+    if artifact.get("MODEL_SPECS") != [] or artifact.get("model_invoked") is not False:
+        errors.append("model_declaration")
+    if artifact.get("status") == "complete" and (
+        artifact.get("inference_substrate") != "aggregation_from_upstream_artifacts"
+        or artifact.get("inference_substrate_class") != "aggregation"
+        or artifact.get("execution_venue") != "host"
+    ):
+        errors.append("substrate")
+    try:
+        compatible = _v640_compatible(artifact)
+    except (AttributeError, TypeError, ValueError):
+        return errors
+    for error in current.validate_artifact(compatible, root=root):
+        if error not in errors:
+            errors.append(error)
+    return errors
+
+
+def atomic_write(path: Path, artifact: Mapping[str, Any]) -> JsonDict:
+    """Publish only bytes accepted by the validator chain."""
+
+    errors = validate_artifact(artifact)
+    if errors:
+        raise ValueError(f"invalid Exp7300 artifact: {errors}")
+    _atomic_json(path, artifact)
+    return {
+        "path": str(path),
+        "sha256": sha256_file(path),
+        "bytes": path.stat().st_size,
+        "atomic_replace": True,
+    }
+
+
+def run_experiment(root: Path, paths: ExperimentPaths) -> JsonDict:
+    """Build, validate, and atomically publish the read-only receipt."""
+
+    artifact = build_artifact(root, paths)
+    progress(5, "before", "write and validate the measured raw terminal candidate")
+    _atomic_json(paths.terminal_candidate, artifact)
+    errors = validate_artifact(_read_json(paths.terminal_candidate), root=root)
+    progress(5, "after", f"candidate validation errors={len(errors)}")
+    if errors:
+        raise ValueError(f"invalid Exp7300 artifact: {errors}")
+    progress(6, "before", "atomic terminal write")
+    receipt = atomic_write(paths.artifact, artifact)
+    progress(6, "after", f"atomic terminal write bytes={receipt['bytes']}")
+    return artifact
+
+
+def _parser() -> argparse.ArgumentParser:
+    """Keep production and read-only validation on one thin CLI."""
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", default=RUN_DATE)
+    parser.add_argument("--root", type=Path, default=REPO_ROOT)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--validate", type=Path)
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Run the producer or validate existing bytes without mutation."""
+
+    progress(0, "entry", "Exp7300 host aggregation; model-loads=0 hardware-operations=0")
+    args = _parser().parse_args(argv)
+    try:
+        if args.validate is not None:
+            progress(5, "before", f"read-only validation path={args.validate}")
+            artifact = _read_json(args.validate)
+            errors = ["artifact_not_json_object"] if not artifact else validate_artifact(artifact)
+            progress(5, "after", f"read-only validation errors={len(errors)}")
+            if errors:
+                print(f"validation_failed errors={errors}", flush=True)
+                return 2
+            print("validation_passed", flush=True)
+            return 0
+        if args.date != RUN_DATE:
+            raise ValueError(f"run date must be {RUN_DATE}")
+        root = args.root.resolve()
+        paths = ExperimentPaths.defaults(root)
+        if args.output is not None:
+            output = args.output if args.output.is_absolute() else root / args.output
+            paths = ExperimentPaths(
+                output,
+                paths.checkpoint,
+                paths.changed_state_search,
+                paths.historical_models,
+                paths.negative_fixtures,
+                paths.raw_rows,
+                paths.terminal_candidate,
+                paths.validation_dir,
+            )
+        artifact = run_experiment(root, paths)
+        print(
+            f"experiment_complete status={artifact['status']} "
+            f"score={artifact['board_continuity_complete_score']} output={paths.artifact}",
+            flush=True,
+        )
+        return 0
+    except (OSError, TypeError, ValueError) as exc:
+        print(f"experiment_error type={type(exc).__name__} message={exc}", flush=True)
+        return 2

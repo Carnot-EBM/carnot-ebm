@@ -57282,3 +57282,21 @@ independent seal are rehashed. Unchanged primary publication, adversarial and
 strict-row validators check
 final bytes before atomic publication. No model loads, historical controller runs
 or physical hardware claims occur. Ops reconciliation remains conductor-owned.
+
+## REQ-VERIFY-8715: Bind and replay verifier audit evidence
+
+Authenticate original versioned operands and Exp8712 symbolic producer terminal
+acceptance. Bind all14 complete V747 task objects, visible table and canonical
+hash independently. Freeze source, tests, labels and configuration before probes.
+Use no model loads or calls. Missing external operands block; failed owned checks
+disqualify. Retain real bounded child SQLite, JUnit, node union, hashes and clocks.
+Require100 percent owned statements, scoped Ruff, strict types, spec references,
+private E2E-018/021 and unchanged terminal validators before atomic publication.
+
+### SCENARIO-VERIFY-8715-CUSTODY
+
+Private CLI succeeds; unsafe output, missing evidence and consistently rehashed
+primitive or report tampering fail cold replay. Recompute sealed labels without
+calling tested variants. Historical artifacts and shared validators stay unchanged.
+
+Verification2026-11-02, Exp8715:720/720 constructed units,30 sealed worlds; baseline120/150 versus extended130/150 faulty-unit detections with900 versus1980 probes. Eight scoped owned/private reader tests pass;233/233 new statements covered. Ruff, strict types, spec tracing, cold replay and unchanged terminal validators pass. Readiness1, circular_positive; no production verification or generalization claim.
