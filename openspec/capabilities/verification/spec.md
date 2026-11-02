@@ -57340,3 +57340,24 @@ Thirteen bounded serial children retain181 exact nodes; all27 qualification
 checks pass. Genuine coverage is242/242 Exp8716 statements,21/21 added protocol
 statements and451/451 retained producer statements, with zero exclusions.
 Ruff, strict mypy and scoped spec tracing pass. The conductor remains unchanged.
+
+## REQ-VERIFY-8717: Seal and cold replay complete batch measurements
+
+Freeze source, tests, configuration, inputs and randomized roster before timing.
+Use private disk-backed scratch and bounded processes with flushed boundaries,
+panel counts and parent heartbeats within60 seconds. Stop measurements by3600s
+and reserve900s for validation in4800s. Retain actual exits, clocks, raw frames,
+JUnit, node lists and child SQLite before combining copies. Require100 percent
+new statements, focused tests, real private CLI success/rejection, scoped Ruff,
+strict mypy, spec tracing and private E2E-018/021. No full repository suite.
+
+### SCENARIO-VERIFY-8717-CUSTODY
+
+Cold replay requires a separately supplied primitive hash, sealed work, original
+input authority and exact raw hashes. Reject missing operands and consistently
+rehashed report/primitive tampering. Rebuild aggregates from raw sessions before
+unchanged primary publication, adversarial and strict row checks. Failed owned
+checks disqualify; external incompleteness blocks. Preserve historical bytes and
+shared validators. Ops and BMAD reconciliation belong to the conductor.
+
+Verification 2026-11-02, Exp8717: 60/60 process cells and 61440/61440 evaluations complete, with zero failed or censored cells. Cost readiness1; batching benefit1; same-batch10x0. Native B16/B1 complete throughput 1.1382x (95% interval 1.1218–1.1601), steady item p95 18.420ms. Native/Python B16 throughput 1.0054x (95% interval 0.9981–1.0139); NFR-01 is null. Eleven owned tests and two private E2E-018/021 reader tests pass. All394 newly owned statements are covered without exclusions; scoped Ruff, strict mypy, spec tracing, cold replay, missing/rehashed rejection, adversarial and strict row checks pass. This positive result concerns batching on one fixed CPU workload; it establishes no learning, independent generalization or FPGA acceleration.

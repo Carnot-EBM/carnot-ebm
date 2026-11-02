@@ -103977,3 +103977,28 @@ publication and cold replay work outside the checkout without `PYTHONPATH`.
 All27 qualification checks pass; all714 scoped new/retained statements are
 covered with zero exclusions. This import repair grants no scientific benefit
 or new acceptance to historical flagged artifacts.
+
+## REQ-REPORT-8717: Measure complete installed batch costs
+
+Authenticate the pinned Exp8716 primary, terminal acceptance, frozen wheel,
+extension, configuration and original versioned batching protocol. Independently
+bind all fourteen V747 task objects and canonical digest. Preserve sixty cells:
+Python/native, sizes1/4/16, ten paired process repeats, sixteen panels of64 items.
+Use seed7448675 to randomize paired condition blocks while retaining AB/BA arm
+order. Recompute all features for61440 evaluations. Time launch through clean
+shutdown, including imports and configuration, envelope packing, wire transport,
+feature work, scoring and response parsing. State that feedback and durability
+are outside the inference boundary. Repeated items supply no new semantic cases.
+
+### SCENARIO-REPORT-8717-COST
+
+Require per-item feature/probability/typed-decision parity. Bootstrap10000 paired
+process draws for native B16/B1 complete throughput lower95>1.05 and steady item
+completion p95<=50ms. Separately test native/Python lower95>=10 at each equal
+batch size; NFR-01 uses B16. Complete below-threshold measurements are qualified
+nulls. Emit batch_cost_ready_score independently of batching_benefit_score and
+same_batch_10x_score. Preserve failed/censored cells and all intended counts.
+Missing files, missing fields, changed bytes and observed zero remain distinct.
+A flagged producer cannot grant readiness. No model loads or physical FPGA claim.
+
+Verification 2026-11-02, Exp8717: 60/60 process cells and 61440/61440 evaluations complete, with zero failed or censored cells. Cost readiness1; batching benefit1; same-batch10x0. Native B16/B1 complete throughput 1.1382x (95% interval 1.1218–1.1601), steady item p95 18.420ms. Native/Python B16 throughput 1.0054x (95% interval 0.9981–1.0139); NFR-01 is null. Eleven owned tests and two private E2E-018/021 reader tests pass. All394 newly owned statements are covered without exclusions; scoped Ruff, strict mypy, spec tracing, cold replay, missing/rehashed rejection, adversarial and strict row checks pass. This positive result concerns batching on one fixed CPU workload; it establishes no learning, independent generalization or FPGA acceleration.
