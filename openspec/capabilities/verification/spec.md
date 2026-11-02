@@ -57414,3 +57414,19 @@ fail. Unchanged primary publication, adversarial and strict-row validators check
 final bytes before atomic publication. External incompleteness is terminal
 blocked; failed owned validation disqualifies. Ops and traceability reconciliation
 remain conductor-owned after exit.
+# Invocation clock regression (2026-11-02)
+
+## REQ-VERIFY-8724: Invocation-owned clocks and persistent evidence
+
+The actual causal runner must capture a current start and end for resumed work.
+Retained fixture clocks remain historical provenance. Reproduce saved start
+497771539033492 versus end 232478218800900 without clamping, sleeping, changing
+duration floors or modifying old results. Preserve independent label release,
+atomic state and acknowledgement, deadline rejection and private output guards.
+
+### SCENARIO-VERIFY-8724-CLOCK
+
+Supplement original assertions with a cross-epoch regression. Cover every new
+owned statement, including actual CLI and error paths. Cold replay must reject
+missing evidence and consistently rehashed tampering. Use unchanged publication,
+adversarial and strict row validators before atomic publication.

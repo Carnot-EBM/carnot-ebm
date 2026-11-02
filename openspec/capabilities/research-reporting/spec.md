@@ -104164,3 +104164,25 @@ conductor prompt encoding are implemented. The final 43 focused tests and 171
 distinct scoped tests pass, including private E2E-018/021 and fix-gate controls.
 Unit/subprocess statement coverage is 373/373 across the five affected files,
 without exclusions. Evidence: `/var/tmp/carnot-fix-8723-v8b24069/`.
+# Invocation clock core qualification (2026-11-02)
+
+## REQ-REPORT-8724: Current invocation clocks and original core
+
+Bind all fourteen complete V748 task objects and the independent digest separately
+from original V744 learning methods. Execute exactly the original 39 core nodes
+and small original deadline controls under a persistent transitive source seal.
+Retain SQLite, JUnit, node IDs, child exits, source bytes and a reusable fixture.
+Do not execute the remaining 25 nodes. Core readiness grants no learning benefit.
+External absence blocks; failed owned checks or killed children disqualify.
+
+### SCENARIO-REPORT-8724-CORE
+
+Authenticate original producers directly, independent of optional hardware or
+other branch readiness. Missing files and missing fields differ from zero.
+Current invocation duration must be positive and use current monotonic clocks.
+Preserve historical results and scientific operands byte for byte.
+
+Measured Exp8724 outcome: all 39 original core nodes passed in three normally
+exiting children. The separate deadline smoke child timed out at its owned
+300-second bound with exit -9. This invocation cannot grant core readiness.
+See `docs/research-notes/v748-invocation-clock-core.md`; conductor owns ops updates.

@@ -72,6 +72,7 @@ def terminal(path: Path, raw: Path) -> Json:
 def run(output: Path, *, private: bool = False, measurement: Path | None = None) -> int:
     """Finish CPU measurements before validation and atomically publish only checked bytes."""
     start = deadline_clock()
+    invocation_started_ns = time.monotonic_ns()
     raw = output.parent / "raw" / e.NAME / "invocations" / str(time.time_ns())
     with TemporaryDirectory(prefix="carnot-8582-", dir="/var/tmp") as directory:
         e.old.progress("preconditions_before_no_model_load_MODEL_SPECS=[]_current_llm_calls=0")
@@ -88,6 +89,11 @@ def run(output: Path, *, private: bool = False, measurement: Path | None = None)
             work.update(raw=str(raw), receipts=[], owned_ready=False)
         else:
             work = e.measure(e.ROOT, raw, Path(directory))
+        # A retained fixture's clock belongs to its original process and boot.
+        work["original_clock_provenance"] = {
+            key: work[key] for key in ("started_monotonic_ns", "ended_monotonic_ns")
+        }
+        work["started_monotonic_ns"] = invocation_started_ns
         if deadline_clock() - start >= 3600:
             work["failures"].append(
                 e.accounting.old.gate(

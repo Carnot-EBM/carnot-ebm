@@ -17,6 +17,7 @@ from carnot.reporting.primary_publication import publish_primary
 from scripts.adversarial_verify import verify_artifact
 
 Json = dict[str, Any]
+RUN_DATE = "20261101"
 
 
 def freeze(work: Json) -> None:
@@ -157,7 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     """Accept the registered date and keep injected private inputs outside shared evidence."""
     e.progress("start_no_model_load_MODEL_SPECS=[]_current_llm_calls=0")
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--date", default="20261101")
+    parser.add_argument("--date", default=RUN_DATE)
     parser.add_argument("--private-output", type=Path)
     parser.add_argument("--upstream", type=Path, default=e.UPSTREAM)
     parser.add_argument("--private-control", action="store_true")
@@ -169,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError:
         return 2
     if (
-        args.date != "20261101"
+        args.date != RUN_DATE
         or (
             args.private_output
             and (
