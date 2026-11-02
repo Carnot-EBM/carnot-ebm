@@ -57521,3 +57521,16 @@ missing operands before unchanged primary, adversarial and strict row checks.
 
 Private CLI controls SHALL cover valid, blocked, wrong-date, unsafe-output and
 cold-replay rejection paths without recursively running historical controllers.
+## REQ-VERIFY-8734: Reuse sealed reader checks with an isolated version binding
+
+Keep historical implementations, assertions and result bytes unchanged.
+Authenticate the retained reader's production receipts and source/test hashes.
+Run focused current binding tests with complete new statement coverage, Ruff,
+strict mypy and spec tracing. Preserve child SQLite, JUnit, nodes and clocks.
+
+### SCENARIO-VERIFY-8734-SEAL
+
+Private CLI success, blocked inputs, failed children, invalid dates, unsafe
+outputs and rehashed replay rejection use unchanged publication validators.
+Cold replay and adversarial and strict row checks precede atomic publication.
+Zero model calls and zero new solve credit remain explicit on every path.

@@ -104293,3 +104293,18 @@ Require nonnegative local spans and sum<=their own parent, exact frame parity,
 complete clean child exits and process-cluster intervals. Missing operands block;
 owned failures and excessive overhead disqualify attribution. Emit no model
 loads, MODEL_SPECS=[], zero generalization and no hardware or learning claim.
+## REQ-REPORT-8734: Read only the authenticated live supervisor delta
+
+Bind all fourteen V748 task objects independently of other producer readiness.
+Reuse qualified Exp8720 methods, unchanged source/test identities and its exact
+event high-water mark. Check the public solve registry before reading new live
+receipts. An authenticated empty delta ends as
+`complete_null_no_new_supervisor_outcomes`. Keep the closed panel closed.
+No model call, replay, new solve, policy change or level credit follows.
+
+### SCENARIO-REPORT-8734-FRONTIER
+
+The existing fourteen ledger identities yield zero new events. Preserve the
+frontier exactly and report no supported policy change. Missing or changed
+external operands block with their exact path and hash. Readiness grants no
+independent generalization. Conductor owns ops and traceability reconciliation.
