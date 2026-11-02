@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-11-02 UTC — Fix Exp8716 standalone imports
+
+Bootstrap both checkout import roots before the installed-import runner loads
+shared publication helpers. This fixes `ModuleNotFoundError` for
+`scripts.conductor_gates` in the original direct CLI test. Add a regression
+running the script outside the checkout with `PYTHONPATH` removed. Preserve
+all original assertions, import isolation and resource guards; the conductor
+remains unchanged.
+
+All 191 distinct scoped tests pass without skips, including all 122 original
+compatibility nodes, retained batch tests, private E2E-018/021, publication
+readers and ten fix-gate tests. All 27 qualification checks pass; thirteen
+bounded serial children preserve the exact 181-node inventory. Genuine
+unit/subprocess coverage is 242/242 Exp8716 statements, 21/21 added protocol
+statements and 451/451 retained producer statements, with zero exclusions.
+Scoped Ruff, strict mypy and spec tracing pass. Existing global spec-reference
+and architecture freshness issues remain; no full repository suite ran.
+Receipts: `/var/tmp/carnot-8716-repair/`.
+
 ## 2026-11-02 UTC — Fix Exp8709 retained authority mutation
 
 Copy the retained authority's failure list before appending current resource

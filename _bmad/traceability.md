@@ -2,6 +2,23 @@
 
 **Last Updated:** 2026-11-02
 
+## Exp8716 standalone CLI import repair — 2026-11-02 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-8716 / SCENARIO-VERIFY-8716-DIRECT-CLI | Bind checkout `python/` and root before runner imports | Original failing private CLI test and external-directory `--help` regression pass without ambient `PYTHONPATH` |
+| REQ-REPORT-8716 / SCENARIO-REPORT-8716-INSTALLED | Preserve installed parity, child import ownership and checked publication | Real installed wheel, 2,048 parity rows, 26 rejection controls, private publication and fresh-process replay pass |
+
+All 191 distinct scoped tests pass without skips. Thirteen bounded serial
+children retain 181 exact nodes, including all 122 original compatibility
+nodes; ten fix-gate tests also pass. All 27 qualification checks pass, including
+private E2E-018/021, publication readers, scoped Ruff, strict mypy and spec
+tracing. Genuine unit/child coverage is 242/242 Exp8716 statements, 21/21 added
+protocol statements and 451/451 retained producer statements, with zero
+exclusions. Global reconciliation retains the existing 1,142 missing spec
+references and stale architecture date. Receipts:
+`/var/tmp/carnot-8716-repair/`. No full repository suite ran.
+
 ## Exp8709 retained authority isolation repair — 2026-11-02 UTC
 
 | Requirement / scenario | Implementation | Verification |

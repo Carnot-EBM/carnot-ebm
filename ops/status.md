@@ -2,6 +2,24 @@
 
 **Last Updated:** 2026-11-02
 
+## 2026-11-02 UTC — Exp8716 standalone CLI import repair
+
+The standalone launcher binds its checkout's `python/` and root before loading
+the runner. Direct execution now resolves `scripts.conductor_gates` from outside
+the checkout without `PYTHONPATH`. The original failing publication test and
+the added external-directory regression pass. Private missing-operand publication
+and cold replay also pass; this repair grants no scientific readiness.
+
+All 191 distinct scoped tests pass without skips: 181 exact nodes in thirteen
+bounded serial children, including all 122 original compatibility nodes, plus
+ten fix-gate tests. Private E2E-018/021 and publication readers pass. Genuine
+unit/subprocess coverage is 242/242 Exp8716 statements, 21/21 added protocol
+statements and 451/451 retained producer statements, with zero exclusions.
+All 27 qualification checks pass, including scoped Ruff, strict mypy and spec
+tracing. Global reconciliation retains the existing 1,142 missing spec
+references and stale architecture date. No full repository suite ran.
+Receipts: `/var/tmp/carnot-8716-repair/`. The conductor is unchanged.
+
 ## 2026-11-02 UTC — Exp8709 retained authority isolation repair
 
 The V747 runner copies retained authority failures before recording current

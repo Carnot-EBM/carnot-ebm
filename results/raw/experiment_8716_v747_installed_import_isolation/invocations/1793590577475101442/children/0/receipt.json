@@ -1,0 +1,417 @@
+{
+  "command_receipt": {
+    "actual_exit": 0,
+    "argv": [
+      "bwrap",
+      "--bind",
+      "/",
+      "/",
+      "--overlay-src",
+      "/home/ianblenke/github.com/ianblenke/carnot",
+      "--overlay",
+      "/var/tmp/installed8702-c3w58r5x/0/namespace-upper",
+      "/var/tmp/installed8702-c3w58r5x/0/namespace-work",
+      "/home/ianblenke/github.com/ianblenke/carnot",
+      "--dev-bind",
+      "/dev",
+      "/dev",
+      "--proc",
+      "/proc",
+      "--ro-bind",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/historical-overlay/original_resident_protocol.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py",
+      "--",
+      "env",
+      "CARNOT_8660_MATERIALIZATION_LOG=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/materialized",
+      "COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/coverage-0.ini",
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-m",
+      "coverage",
+      "run",
+      "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/coverage-0.ini",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "tests/python/test_lean_qualification_8609.py::test_real_parity_and_lifecycle",
+      "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[legacy_python]",
+      "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[legacy_native]",
+      "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[lean_python]",
+      "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[lean_native]",
+      "tests/python/test_lean_qualification_8609.py::test_verdicts_and_cold_replay",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[completed_count]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[target_model]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[parity_rows]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[receipt]",
+      "tests/python/test_lean_qualification_8609.py::test_checksum_and_missing",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[descriptor]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[operands]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[roster]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[graph]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[loaded]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[partition]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[lifecycle_roster]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[contamination]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[stale_payload]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[failed_lifecycle]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[external_gate]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[fixture_config]",
+      "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[node_union]",
+      "tests/python/test_lean_qualification_8609.py::test_failed_publication_and_missing_readiness",
+      "tests/python/test_lean_qualification_8609.py::test_private_child_failure_and_forced_cleanup",
+      "tests/python/test_lean_qualification_8609.py::test_measurement_owned_failure_and_deadline",
+      "--basetemp=/var/tmp/installed8702-c3w58r5x/0/tmp",
+      "--junitxml=/var/tmp/installed8702-c3w58r5x/0/junit.xml"
+    ],
+    "command": "bwrap --bind / / --overlay-src /home/ianblenke/github.com/ianblenke/carnot --overlay /var/tmp/installed8702-c3w58r5x/0/namespace-upper /var/tmp/installed8702-c3w58r5x/0/namespace-work /home/ianblenke/github.com/ianblenke/carnot --dev-bind /dev /dev --proc /proc --ro-bind /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/historical-overlay/original_resident_protocol.py /home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py -- env CARNOT_8660_MATERIALIZATION_LOG=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/materialized COVERAGE_RCFILE=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/coverage-0.ini /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/coverage-0.ini -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_lean_qualification_8609.py::test_real_parity_and_lifecycle 'tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[legacy_python]' 'tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[legacy_native]' 'tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[lean_python]' 'tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[lean_native]' tests/python/test_lean_qualification_8609.py::test_verdicts_and_cold_replay 'tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[completed_count]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[target_model]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[parity_rows]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[receipt]' tests/python/test_lean_qualification_8609.py::test_checksum_and_missing 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[descriptor]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[operands]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[roster]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[graph]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[loaded]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[partition]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[lifecycle_roster]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[contamination]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[stale_payload]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[failed_lifecycle]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[external_gate]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[fixture_config]' 'tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[node_union]' tests/python/test_lean_qualification_8609.py::test_failed_publication_and_missing_readiness tests/python/test_lean_qualification_8609.py::test_private_child_failure_and_forced_cleanup tests/python/test_lean_qualification_8609.py::test_measurement_owned_failure_and_deadline --basetemp=/var/tmp/installed8702-c3w58r5x/0/tmp --junitxml=/var/tmp/installed8702-c3w58r5x/0/junit.xml",
+    "deadline_s": 420,
+    "duration_s": 251.544366814,
+    "ended_monotonic_ns": 271399064592001,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/checks/tests-0.stdout",
+    "log_sha256": "sha256:e0736d76f7548630d9d471df0c7d13807d3f5f2c238f4ab6d6fbab8b4cb1103c",
+    "name": "tests-0",
+    "normal_exit": true,
+    "passed": true,
+    "scope": "owned",
+    "started_monotonic_ns": 271147520225187,
+    "started_wall_ns": 1793590650308043185,
+    "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/stderr",
+    "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/stdout",
+    "stdout_sha256": "sha256:e0736d76f7548630d9d471df0c7d13807d3f5f2c238f4ab6d6fbab8b4cb1103c",
+    "timed_out": false
+  },
+  "errors": [],
+  "junit_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/junit.xml",
+    "sha256": "sha256:56377629250539f909ae89def0d46a234e94282c7afa84536059a8ab552a9acf"
+  },
+  "node_ids": [
+    "tests/python/test_lean_qualification_8609.py::test_real_parity_and_lifecycle",
+    "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[legacy_python]",
+    "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[legacy_native]",
+    "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[lean_python]",
+    "tests/python/test_lean_qualification_8609.py::test_private_worker_imports_without_pythonpath[lean_native]",
+    "tests/python/test_lean_qualification_8609.py::test_verdicts_and_cold_replay",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[completed_count]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[target_model]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[parity_rows]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_tampering[receipt]",
+    "tests/python/test_lean_qualification_8609.py::test_checksum_and_missing",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[descriptor]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[operands]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[roster]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[graph]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[loaded]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[partition]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[lifecycle_roster]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[contamination]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[stale_payload]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[failed_lifecycle]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[external_gate]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[fixture_config]",
+    "tests/python/test_lean_qualification_8609.py::test_rehashed_primitive_contracts[node_union]",
+    "tests/python/test_lean_qualification_8609.py::test_failed_publication_and_missing_readiness",
+    "tests/python/test_lean_qualification_8609.py::test_private_child_failure_and_forced_cleanup",
+    "tests/python/test_lean_qualification_8609.py::test_measurement_owned_failure_and_deadline"
+  ],
+  "role": "original",
+  "source_hashes": [
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/legacy_import_isolation.py",
+      "original_sha256": "sha256:9594c15bb526c723257d734bd45bf2b549b68de68daec11016701cea2e7f69ea",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/0",
+      "sha256": "sha256:9594c15bb526c723257d734bd45bf2b549b68de68daec11016701cea2e7f69ea"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/installed_import_isolation_8716.py",
+      "original_sha256": "sha256:c945a017d7a1cd1868fe588e4d29a06ed43570178633d81ccf6a1b2e27a2b80a",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/1",
+      "sha256": "sha256:c945a017d7a1cd1868fe588e4d29a06ed43570178633d81ccf6a1b2e27a2b80a"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/installed_import_runner_8716.py",
+      "original_sha256": "sha256:affc6f54c4e4bf4b98fe7bb19a117efafd2ab1c4775cda3495a46bc215ace0a5",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/2",
+      "sha256": "sha256:affc6f54c4e4bf4b98fe7bb19a117efafd2ab1c4775cda3495a46bc215ace0a5"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8716_v747_installed_import_isolation.py",
+      "original_sha256": "sha256:98563b22eb70a285e828e81aba507583ee8c439f2f82947282ce73f5a8ede894",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/3",
+      "sha256": "sha256:98563b22eb70a285e828e81aba507583ee8c439f2f82947282ce73f5a8ede894"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/resident_protocol.py",
+      "original_sha256": "sha256:70ff297dee47a18ed428fbeee71807a275307ff086452dee4e445faa2ac8e5c4",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/4",
+      "sha256": "sha256:70ff297dee47a18ed428fbeee71807a275307ff086452dee4e445faa2ac8e5c4"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_installed_batch_8702.py",
+      "original_sha256": "sha256:f050c156d5ee418684bbdf964d72d597bbbbd2f6c1405341316df658e256cbdc",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/5",
+      "sha256": "sha256:f050c156d5ee418684bbdf964d72d597bbbbd2f6c1405341316df658e256cbdc"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_installed_batch_report_8702.py",
+      "original_sha256": "sha256:7d82467ac920fbd6b5b0eb637851a76cc088e4bd598c1fca36478a17f2e74564",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/6",
+      "sha256": "sha256:7d82467ac920fbd6b5b0eb637851a76cc088e4bd598c1fca36478a17f2e74564"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_installed_import_isolation_8716.py",
+      "original_sha256": "sha256:8700f529b405baf48e1ee6ab63fee2a0bab8087fc114b2fc44611f070fe85b53",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/sources/7",
+      "sha256": "sha256:8700f529b405baf48e1ee6ab63fee2a0bab8087fc114b2fc44611f070fe85b53"
+    }
+  ],
+  "sqlite_references": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-0.sqlite",
+      "sha256": "sha256:a1f3c8f0f3ae9a7ed6d1ca0c3486559821b6954816d733adcf174915afdb6aa9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-1.sqlite",
+      "sha256": "sha256:923c697e07cccbcca823ba0d2ef91e68eb64a8347eedd1106946dfccef0c0780"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-2.sqlite",
+      "sha256": "sha256:721573ac8c477d590db5a9974a378e8b265a6b37aa3931dc5a97d6598f492986"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-3.sqlite",
+      "sha256": "sha256:84307f607a30c392a1ed7f497a5c656db0b8bb22204b21ee03daca4a348fd0e1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-4.sqlite",
+      "sha256": "sha256:071b785dc0a1766e5a6fcdd878665f0c469d1d11faa08659920a6f3edb1441f5"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-5.sqlite",
+      "sha256": "sha256:fe52fdf322351669b3ea29cf908a4c746302bb31fc7cfadc9efa31d8c1674328"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-6.sqlite",
+      "sha256": "sha256:4c34c81ffe5b9ef28e12d865c90e46bb8bc4fee78299f60ac4d4ea3a7f8e5d0c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-7.sqlite",
+      "sha256": "sha256:26b312ae17de4c37560fe4fd8b97de4f94f32883591ebb2db4c790431ccf2ccb"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-8.sqlite",
+      "sha256": "sha256:2521876fa9d26d5059aa4a73fdc9bd6b15c49ccf2fbde2b9066e8a5c5bf76217"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-9.sqlite",
+      "sha256": "sha256:5a4361c2c0debf2f6bea74278f0a18532f7a111755cb6f303714b5aef1befc42"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-10.sqlite",
+      "sha256": "sha256:979c76c5aae16f1e62b1c9c3576075ffcc1d1778b16a42d95faa7aa1ecd3de30"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-11.sqlite",
+      "sha256": "sha256:8cad49600872cdfbbc3726115d15426931a6232eb03a842c4c4946b6b9a9ce6f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-12.sqlite",
+      "sha256": "sha256:32c86fd95ba9912af1e9de9596de984aca107d64c3565c4dd6a00ab995546362"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-13.sqlite",
+      "sha256": "sha256:8a837cf2992f714db70e3f1b8296f981ea90a692df03a873f4365a65e7085851"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-14.sqlite",
+      "sha256": "sha256:071ff37dcb11a85797116f16bda721d54713f26f8b6f43ecc201186531094e37"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-15.sqlite",
+      "sha256": "sha256:f0d54e85073e4ac310ae77e11ac42429f2f3eba9f788999e0f3df54dbe3faec0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-16.sqlite",
+      "sha256": "sha256:8a87437dd6a5006e14f01503a956f550e7eb600b796214fd900f1fa64f7050db"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-17.sqlite",
+      "sha256": "sha256:17315f8c12a31e1233af058d526b5713e6546db0d0ea161f8cad32aef810d1cf"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-18.sqlite",
+      "sha256": "sha256:dc2ee1856d104bed92ceebc44510577d39433de8a2d268624dd1a10022476762"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-19.sqlite",
+      "sha256": "sha256:7a9f002389056a1d0e1e396ed0e989f3416479df06cb01a59e40cbc84d6633c1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-20.sqlite",
+      "sha256": "sha256:94291d6544584781976815c54c1f16449a6809077b3025f1894c3c3d572f3dae"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-21.sqlite",
+      "sha256": "sha256:3f54ca99441d1bd583d5e29e3f8373a5618e816dac2318477aeda021a54a80e4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-22.sqlite",
+      "sha256": "sha256:ab60740f2f3c188fc9a2d08bab33c575fe03c602d73636b2970f7163995f91e2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-23.sqlite",
+      "sha256": "sha256:5f64a6d4c0aba92df0edad952ac9d7d39674ad8f68351c3dc24e1e55783b1878"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-24.sqlite",
+      "sha256": "sha256:4ed4e37803e2044d7a495acf48b5486f8b91629a5c95cd8a27e8361edace4bb7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-25.sqlite",
+      "sha256": "sha256:b413c94768aaa2059c2b150e833e93f9a8862a9640b063fc8acb39f12b07504c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-26.sqlite",
+      "sha256": "sha256:b45b8e8ee371bad082b49a62da97b41dab0235d2b57473b1dda97b35c4173e67"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-27.sqlite",
+      "sha256": "sha256:026409113dcaecb0adc24dfea9991f2295c44f3523fa8829cf018e812bb402fc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-28.sqlite",
+      "sha256": "sha256:633bc1b5892e48618ca83130a835652cf5e2aecb3d993914f9e0a036f3a812fc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-29.sqlite",
+      "sha256": "sha256:fb370d81b45f9bf3ac85b4ea0c8c44baf5144bede4876feea3aa6874621da841"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-30.sqlite",
+      "sha256": "sha256:8e068b12dded9804efb20cd56bb0b8ad63c1824cf732451f338604eaf69e72b5"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-31.sqlite",
+      "sha256": "sha256:cc220289e42f9de6457569ebbc8003fd8e8e5e739077329853b7deb86ab419d2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-32.sqlite",
+      "sha256": "sha256:89d55b20e9befda20df98b70e9cb6166944fa95e7cde65cbc6fc45a4829e0785"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-33.sqlite",
+      "sha256": "sha256:21443f33c79f55ae7911ee06273256e51d73664e2a01948c997b0a0707d74fa5"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-34.sqlite",
+      "sha256": "sha256:87328a5279056126580bb6e85003f708adebe7f92a8ea2368d1279c07488a51e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-35.sqlite",
+      "sha256": "sha256:ca524aea3ccd25ed49c2edaec4248aafd6abe93f7337dfe646b7374d3599f3e4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-36.sqlite",
+      "sha256": "sha256:35ae675ef624c0b87ad8b196c5904c4a9be760353b054cd29d1e62d2554afb7c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-37.sqlite",
+      "sha256": "sha256:75568aedb2fe9e7ae325c455f44e6beba9ed310d25b600941913ee7ec61a4df2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-38.sqlite",
+      "sha256": "sha256:d6235a170833d7d6eae86b4ce06c117166762361034ff4a7c32a1e7946c21e1d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-39.sqlite",
+      "sha256": "sha256:7528b43609cbb00b4c14186ad153ddb61fb025834e199b585f25641c19cc7f40"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-40.sqlite",
+      "sha256": "sha256:c7fe67dc8cb59f5be44c73d0ef8cb3b733171fadb4d422036cdaf3c47489edde"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-41.sqlite",
+      "sha256": "sha256:77160a005280e991769d8ef7b78716416b4b655b5f06d1a4464132b34252e605"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-42.sqlite",
+      "sha256": "sha256:3005e00304608563243df97f84beca9b52c5c514631a589258e7b85a3a0dce4c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-43.sqlite",
+      "sha256": "sha256:5feb9c9b80bd0bcabd9ec5d9a74666039c7a2b1969e6ca7d5889869b00baae35"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-44.sqlite",
+      "sha256": "sha256:7591015696bde6ee5189f02b4c33600e2d963f2c4340603fd2cd44cdd564a912"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-45.sqlite",
+      "sha256": "sha256:6811ac86ea1e761ad1ec1a6a5c17c4ae04211256c7e7e8e2bc25cac8ec098b91"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-46.sqlite",
+      "sha256": "sha256:790b67c37b8485f8000377f9c9bd762a8acab3b454f1a3d13f328203bc826920"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-47.sqlite",
+      "sha256": "sha256:0497b33318a59dd5dfb13b7306ebb2dae3be72ffd48bec8d340aea26808e4926"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-48.sqlite",
+      "sha256": "sha256:8a6e9ceb60ed9741f9558d55f2606041c980d941633e5f8837a2fd92368dd227"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-49.sqlite",
+      "sha256": "sha256:1b47183f5c618f9ee48fc24cf9d6ac3ba6f38447604cffeb5f3efeb312caef3f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-50.sqlite",
+      "sha256": "sha256:718ceed43a4c80cc1984614b96eb3c0822231c446af14bac85f9b40cefebe2ce"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-51.sqlite",
+      "sha256": "sha256:a83eff64a0093fdc61c12e8d03d9caca31d4d79bbf4d83d3926e2aec7d06d66e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-52.sqlite",
+      "sha256": "sha256:5102444f4f75fe37a118dec395cac61d495c305f9570b2332f5ad3b4f2ddaa04"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-53.sqlite",
+      "sha256": "sha256:8ff0d5c8a886f9ce898fb508f2a991a1000328a895a423b39b252cc799f8284d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-54.sqlite",
+      "sha256": "sha256:dbc366f0632f62b09a748845e082048d47394e42cdc08f1028b245d842c76088"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-55.sqlite",
+      "sha256": "sha256:e78494d6c678463a33b193763ff5cc1ccd44fd930b938d452db7e06ac0b80b61"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-56.sqlite",
+      "sha256": "sha256:e4de7e4209606b6a80e53786d791e2eca4bdd6ac437713ee842b11f98f99d11b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-57.sqlite",
+      "sha256": "sha256:4895c2fcb1dd6b4021369bb0ea5e8ced05ed42525db4c5385c24789604ba3891"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-58.sqlite",
+      "sha256": "sha256:70b8dcfc751a4ae59c9ee07804df3d97206bdcd6c5d7fef67f11c4ca81b292fa"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8716_v747_installed_import_isolation/invocations/1793590577475101442/children/0/child-59.sqlite",
+      "sha256": "sha256:d76e7705768d6441663ce1ef7e6c483c6a4c1e54ae907cbdb6120083282448f5"
+    }
+  ]
+}

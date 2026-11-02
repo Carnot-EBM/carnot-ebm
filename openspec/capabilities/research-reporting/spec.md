@@ -103947,3 +103947,33 @@ including wrong relations that preserve superficial structure. Preserve queries
 from questions before reading answers. Do not expand production verification.
 
 Verification2026-11-02, Exp8715:720/720 constructed units,30 sealed worlds; baseline120/150 versus extended130/150 faulty-unit detections with900 versus1980 probes. Eight scoped owned/private reader tests pass;233/233 new statements covered. Ruff, strict types, spec tracing, cold replay and unchanged terminal validators pass. Readiness1, circular_positive; no production verification or generalization claim.
+
+## REQ-REPORT-8716: Qualify installed batches after legacy import isolation
+
+Authenticate original Exp8660/8661 operands and terminal acceptance independently
+of unrelated readiness. Bind all fourteen V747 task objects and the canonical
+digest. Retain Exp8702's five-pass, +553MB teardown diagnostic unchanged and
+reproduce its original export checks in a clean guarded pytest process. Execute
+those exact legacy assertions in a fresh child, retain its peak RSS, actual exit
+and reaping, and leave lean-import checks in their original clean processes.
+Preserve all122 original compatibility nodes and the batch producer tests.
+
+### SCENARIO-REPORT-8716-INSTALLED
+
+Freeze sources, tests, input and configuration before building the installed
+wheel outside the checkout. Preserve batch sizes1-16,65536-byte frames, whole
+envelope rejection, deadlines, reset and single-item semantics. Require original
+Python/native feature, probability and typed-decision parity and exact extension
+identity. Supply the frozen complete-cost workload for Exp8717. Qualification
+establishes deployability only; learning, speed and physical acceleration remain
+unmeasured. No model loads or language-model calls occur.
+
+The Exp8716 standalone launcher must resolve checkout-owned publication helpers
+without an ambient `PYTHONPATH`, including execution outside the checkout.
+
+Verification2026-11-02, Exp8716 repair:191 distinct scoped tests pass, preserving
+all122 original compatibility nodes and every original assertion. Real private
+publication and cold replay work outside the checkout without `PYTHONPATH`.
+All27 qualification checks pass; all714 scoped new/retained statements are
+covered with zero exclusions. This import repair grants no scientific benefit
+or new acceptance to historical flagged artifacts.

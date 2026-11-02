@@ -1,0 +1,376 @@
+"""REQ-VERIFY-8716 / SCENARIO-VERIFY-8716-CUSTODY: isolate retained imports."""
+
+import ast
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[2]
+TEST = ROOT / "tests/python/test_installed_lean_8633.py"
+
+
+def test_exact_original_assertions_and_child_cleanup(tmp_path):
+    """REQ-VERIFY-8716: identical checks leave heavy imports and memory in a reaped child."""
+    from carnot.reporting import installed_import_isolation_8716 as e
+
+    before = subprocess.check_output(
+        ["git", "show", "HEAD:tests/python/test_installed_lean_8633.py"], cwd=ROOT
+    )
+    original = next(
+        n
+        for n in ast.parse(before).body
+        if isinstance(n, ast.FunctionDef) and n.name == "test_legacy_contract_snapshot"
+    )
+    fixed = next(
+        n
+        for n in ast.parse(TEST.read_text()).body
+        if isinstance(n, ast.FunctionDef) and n.name == "_legacy_contract_assertions"
+    )
+    assert [ast.dump(n) for n in original.body] == [ast.dump(n) for n in fixed.body]
+    code = (
+        "import json,sys;from pathlib import Path;"
+        "from carnot.inference.legacy_import_isolation import legacy_contract;"
+        f"r=legacy_contract(Path({str(TEST)!r}));"
+        "assert not any(n.startswith(('torch','carnot.training')) for n in sys.modules);"
+        "print(json.dumps(r))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-u", "-c", code],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+    assert result.returncode == 0, result.stderr
+    row = json.loads(result.stdout.splitlines()[-1])
+    assert row["actual_exit"] == 0 and row["reaped"]
+    assert row["child_peak_rss_kib"] > 0
+    assert row["parent_peak_after_kib"] - row["parent_peak_before_kib"] < 500 * 1024
+    assert "torch" in row["child_import_roots"]
+    assert not Path(f"/proc/{row['child_pid']}").exists()
+
+
+def test_original_authority_and_diagnostic():
+    """REQ-REPORT-8716: the prior flagged result is a diagnostic, never a readiness gate."""
+    from carnot.reporting import installed_import_isolation_8716 as e
+
+    inputs = e.inputs(e.ROOT)
+    assert inputs["passed"], inputs["gate_check_summary"]
+    assert len(inputs["requests"]) == 64 and len(inputs["original_nodes"]) == 122
+    assert inputs["contract"]["ready"]
+    assert len(inputs["contract"]["rows"]) == 14
+    assert inputs["historical_failure"]["retained_delta_mb"] == 553
+    assert inputs["historical_failure"]["producer_flagged"]
+
+
+def test_receipt_and_failed_child(tmp_path, monkeypatch):
+    """REQ-VERIFY-8716: retain real exits and propagate failed assertions without hiding them."""
+    from carnot.inference.legacy_import_isolation import legacy_contract
+
+    destination = tmp_path / "receipts"
+    monkeypatch.setenv("CARNOT_8716_LEGACY_RECEIPTS", str(destination))
+    row = legacy_contract(TEST)
+    assert json.loads(next(destination.glob("*.json")).read_text()) == row
+    bad = tmp_path / "bad.py"
+    pid = tmp_path / "pid"
+    bad.write_text(
+        "def _legacy_contract_assertions():\n"
+        " import os\n from pathlib import Path\n"
+        f" Path({str(pid)!r}).write_text(str(os.getpid()))\n"
+        " raise AssertionError('original child failure')\n"
+    )
+    with pytest.raises(subprocess.CalledProcessError, match="returned non-zero"):
+        legacy_contract(bad)
+    assert not Path("/proc/" + pid.read_text()).exists()
+
+
+@pytest.mark.parametrize("mode", ["terminal", "log_hash", "log_text"])
+def test_diagnostic_rejection(tmp_path, monkeypatch, mode):
+    """SCENARIO-VERIFY-8716-CUSTODY: a diagnostic must retain its exact original custody."""
+    from carnot.reporting import installed_import_isolation_8716 as e
+
+    log = tmp_path / "log"
+    log.write_text("wrong diagnostic")
+    ref = e.reference(log)
+    receipt = dict(name="tests-10", stdout_path=str(log), stdout_sha256=ref["sha256"])
+    if mode == "log_hash":
+        log.write_text("changed")
+    monkeypatch.setattr(
+        e.previous, "inputs", lambda root: dict(references=[], gate_check_summary=[])
+    )
+    monkeypatch.setattr(
+        e.previous,
+        "authenticate",
+        lambda *a: dict(
+            passed=True,
+            references=[{}],
+            failures=[],
+            value=dict(
+                terminal_validation_sidecar_path=str(tmp_path / "side"),
+                validation_receipts=[receipt],
+            ),
+        ),
+    )
+    monkeypatch.setattr(e, "reference", lambda path: ref if path == log else dict(path=str(path)))
+    if mode == "log_hash":
+        monkeypatch.setattr(e, "reference", lambda path: dict(path=str(path), sha256="changed"))
+    monkeypatch.setattr(
+        e, "load", lambda r: dict(publication=dict(sidecar_path=str(tmp_path / "bound")))
+    )
+    monkeypatch.setattr(
+        e, "read_bound_sidecar", lambda *a: dict(report=dict(passed=mode != "terminal"))
+    )
+    assert not e.inputs(tmp_path)["passed"]
+
+
+@pytest.fixture(scope="module")
+def measured(tmp_path_factory):
+    """SCENARIO-REPORT-8716-INSTALLED: qualify actual wheels, pipes and the retained guard."""
+    from carnot.reporting import installed_import_isolation_8716 as e
+    from carnot.reporting import installed_import_runner_8716 as r
+
+    root = tmp_path_factory.mktemp("installed8716")
+    scratch = root / "scratch"
+    scratch.mkdir()
+    inputs = e.inputs(e.ROOT)
+    result = r.measure(root / "measurement", scratch, inputs)
+    assert result["passed"], result["guard_reproduction"]
+    assert len(result["rows"]) == 2048
+    assert len(result["envelope_rejection_rows"]) == 26
+    assert all(x["passed"] and x["reaped"] for x in result["memory_lifecycle_rows"])
+    return root, scratch, inputs, result
+
+
+def make_work(raw, inputs, result):
+    """REQ-REPORT-8716: use actual installed primitives in private reduction controls."""
+    raw.mkdir()
+    return dict(
+        raw=str(raw),
+        output=str(raw.parent / "experiment_8716_v747_installed_import_isolation.json"),
+        invocation_id="private-control",
+        sources=[],
+        inputs=inputs,
+        preconditions={},
+        measurement=result,
+        validation=dict(
+            checks=[dict(name="private", passed=True)],
+            coverage=dict(complete=True),
+            children=[],
+            receipts=[],
+        ),
+        duration_s=1.0,
+        started_at_utc="2026-11-02T00:00:00Z",
+        ended_at_utc="2026-11-02T00:00:01Z",
+        phase_spans=[],
+    )
+
+
+def test_sealed_replay_and_rehashed_tampering(measured, monkeypatch):
+    """SCENARIO-VERIFY-8716-CUSTODY: cold reduction requires independent primitive identity."""
+    from carnot.reporting import installed_import_isolation_8716 as e
+    from carnot.reporting import installed_import_runner_8716 as r
+
+    root, scratch, inputs, result = measured
+    work = make_work(root / "work", inputs, result)
+    raw, output = Path(work["raw"]), Path(work["output"])
+    e.atomic_json(raw / "seal.json", work)
+    work["seal_reference"] = e.reference(raw / "seal.json")
+    e.atomic_json(raw / "work.json", work)
+    value = e.build(work, output)
+    e.atomic_json(output, value)
+    authority = value["primitive_reference"]
+    assert r.replay(output, authority)
+    assert not r.replay(output)
+    assert not r.replay(root / "absent", authority)
+    assert value["complete_cost_protocol"]["task_id"] == "exp8717-installed-batch-cost"
+    assert all(x["status"] == "pending_Exp8717" for x in value["complete_cost_protocol"]["roster"])
+    changed = deepcopy(value)
+    changed["completed_count"] += 1
+    changed["reproducibility_checksum"] = e.canonical_hash(changed)
+    e.atomic_json(output, changed)
+    assert not r.replay(output, authority)
+    e.atomic_json(output, value)
+    original_work = deepcopy(work)
+    work["duration_s"] += 1
+    e.atomic_json(raw / "work.json", work)
+    authority_changed = e.reference(raw / "work.json")
+    claim = dict(value, primitive_reference=authority_changed)
+    e.atomic_json(output, claim)
+    assert not r.replay(output, authority_changed)
+    e.atomic_json(raw / "work.json", original_work)
+    e.atomic_json(output, value)
+    operand = Path(result["isolation_references"][0]["path"])
+    saved = operand.read_bytes()
+    operand.write_text("{}")
+    assert not r.replay(output, authority)
+    operand.write_bytes(saved)
+    operand.rename(operand.with_suffix(".missing"))
+    assert not r.replay(output, authority)
+    operand.with_suffix(".missing").rename(operand)
+    child = raw / "child.json"
+    e.atomic_json(child, dict(node_ids=["fixture::test_one"]))
+    joined = deepcopy(original_work)
+    joined["validation"]["children"] = [e.reference(child)]
+    e.atomic_json(raw / "seal.json", {k: v for k, v in joined.items() if k != "seal_reference"})
+    joined["seal_reference"] = e.reference(raw / "seal.json")
+    e.atomic_json(raw / "work.json", joined)
+    joined_value = e.build(joined, output)
+    e.atomic_json(output, joined_value)
+    monkeypatch.setattr(r.previous.retained, "aggregate", lambda *a: dict(passed=False))
+    assert not r.replay(output, joined_value["primitive_reference"])
+    monkeypatch.setattr(r.previous.retained, "aggregate", lambda *a: dict(passed=True))
+    assert r.replay(output, joined_value["primitive_reference"])
+    for mode in ["checks", "coverage"]:
+        bad = deepcopy(work)
+        if mode == "checks":
+            bad["validation"]["checks"][0]["passed"] = False
+        else:
+            bad["validation"]["coverage"]["complete"] = False
+        assert e.build(bad, output)["batch_service_ready_score"] == 0
+
+
+def test_validation_roles_and_historical_contract(tmp_path, monkeypatch):
+    """REQ-VERIFY-8716: original producer execution supplies its own coverage credit."""
+    from types import SimpleNamespace
+    from carnot.reporting import installed_import_runner_8716 as r
+
+    calls = []
+    monkeypatch.setattr(
+        r, "BASE_CHILD", lambda name, argv, logs, **kw: (calls.append(argv), dict(passed=True))[1]
+    )
+
+    def base(raw, scratch, sources, original):
+        r.previous.child("tests-0", ["pytest", r.e.previous.TESTS[0] + "::test_one"], raw)
+        r.previous.child("collect_once", ["collect"], raw)
+        return dict(
+            coverage=dict(combined=dict(combined_reference=dict(path="unused"))),
+            original_node_union=dict(passed=True),
+            checks=[],
+        )
+
+    monkeypatch.setattr(r, "BASE_VALIDATE", base)
+    monkeypatch.setattr(
+        r,
+        "Coverage",
+        lambda **kw: SimpleNamespace(load=lambda: None, analysis2=lambda p: (p, [1], [], [], "")),
+    )
+    row = r.validate(tmp_path, tmp_path, [], ["original::test_one"])
+    assert row["producer_coverage"]["complete"]
+    assert calls[0][0] == "env" and calls[1] == ["collect"]
+    assert row["original_node_rows"] == [dict(unit_id="original::test_one", passed=True)]
+    monkeypatch.setattr(r.e.contract.previous.original, "tasks_digest", lambda tasks: "changed")
+    with pytest.raises(ValueError, match="historical_schedule_changed"):
+        r.historical_schedule(tmp_path)
+
+
+def test_private_run_and_actual_cli(measured, monkeypatch, tmp_path):
+    """SCENARIO-VERIFY-8716-CUSTODY: actual publication and CLI rejection use final bytes."""
+    from carnot.reporting import installed_import_isolation_8716 as e
+    from carnot.reporting import installed_import_runner_8716 as r
+
+    root, scratch, inputs, result = measured
+    monkeypatch.setattr(r, "BASE_SOURCES", lambda: [])
+    monkeypatch.setattr(r, "measure", lambda *a, **k: result)
+    monkeypatch.setattr(
+        r,
+        "validate",
+        lambda *a: dict(
+            checks=[dict(name="private-validation-control", passed=True)],
+            receipts=[],
+            coverage=dict(complete=True),
+            children=[],
+        ),
+    )
+    output = tmp_path / (e.NAME + ".json")
+    assert r.run(output) == 0
+    value = json.loads(output.read_text())
+    assert r.replay(output, value["primitive_reference"])
+    assert Path(value["terminal_validation_sidecar_path"]).is_file()
+    assert r.main(["--date", "20261101"]) == 2
+    assert r.main(["--private-output", str(e.ROOT / "results/forbidden.json")]) == 2
+    alias = tmp_path / "alias"
+    alias.symlink_to(e.ROOT, target_is_directory=True)
+    assert r.main(["--private-output", str(alias / "results/forbidden.json")]) == 2
+    assert r.main(["--cold-replay", str(tmp_path / "missing")]) == 1
+    assert (
+        r.main(
+            [
+                "--cold-replay",
+                str(output),
+                "--authority",
+                value["primitive_reference"]["path"],
+                value["primitive_reference"]["sha256"],
+            ]
+        )
+        == 0
+    )
+    assert r.main(["--private-output", str(tmp_path / "second" / (e.NAME + ".json"))]) == 0
+    private = tmp_path / "cli" / (e.NAME + ".json")
+    command = [sys.executable, "-u", str(e.ROOT / e.CLI), "--date", "20261102"]
+    process = subprocess.run(
+        command + ["--private-output", str(private), "--root", str(tmp_path / "absent")],
+        cwd=e.ROOT,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert process.returncode == 0, process.stdout + process.stderr
+    artifact = json.loads(private.read_text())
+    assert artifact["batch_service_ready_score"] == 0
+    assert artifact["verdict_class"] in {"blocked", "disqualified"}
+    assert artifact["gate_check_summary"]
+
+
+def test_original_source_rejection(tmp_path, monkeypatch):
+    """REQ-VERIFY-8716: changed original bytes cannot masquerade as a guard reproduction."""
+    from carnot.reporting import installed_import_runner_8716 as r
+
+    monkeypatch.setattr(r.subprocess, "check_output", lambda *a, **k: b"changed")
+    with pytest.raises(ValueError, match="original_legacy_source_changed"):
+        r.reproduce(tmp_path / "reproduction")
+
+
+def test_direct_cli_without_checkout_pythonpath(tmp_path):
+    """SCENARIO-VERIFY-8716-DIRECT-CLI: standalone imports bind the owned checkout."""
+    from carnot.reporting import installed_import_isolation_8716 as e
+
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [sys.executable, str(e.ROOT / e.CLI), "--help"],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "--private-output" in result.stdout and "--cold-replay" in result.stdout
+
+
+def test_private_schedule_keeps_nested_namespace_usable(tmp_path):
+    """REQ-VERIFY-8716: original authority and nested ownership guards both execute."""
+    from types import SimpleNamespace
+    from carnot.reporting import installed_import_runner_8716 as r
+
+    prefix = r.historical_schedule(tmp_path)
+    assert prefix[0] == "env"
+    binding = prefix[1].split("=", 1)[1]
+    with pytest.MonkeyPatch.context() as patcher:
+        patcher.setenv("CARNOT_8716_HISTORICAL_AUTHORITY", binding)
+        config = SimpleNamespace()
+        r.pytest_configure(config)
+        try:
+            assert r.historical_contract.authority(r.e.ROOT)["ready"]
+            scratch = tmp_path / "overlay"
+            scratch.mkdir()
+            command = r.previous.private_namespace(["bwrap", "--bind", "/", "/", "--"], scratch)
+            child = subprocess.run(command + ["true"], capture_output=True, timeout=15)
+            assert child.returncode == 0, child.stderr
+        finally:
+            r.pytest_unconfigure(config)

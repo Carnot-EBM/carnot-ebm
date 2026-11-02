@@ -124,7 +124,7 @@ def test_module_cli_help_and_rejection(tmp_path):
         p.main(["x", "hash", "python", "--idle-timeout", "nan"])
 
 
-def test_legacy_contract_snapshot():
+def _legacy_contract_assertions():
     """REQ-VERIFY-8633: public inference exports retain their exact initial order."""
     from carnot import inference
 
@@ -143,3 +143,10 @@ def test_legacy_contract_snapshot():
         _ = inference.unknown_export
     tree = ast.parse((ROOT / "scripts/experiments/resident_worker_8608.py").read_text())
     assert any(isinstance(n, ast.FunctionDef) and n.name == "main" for n in tree.body)
+
+
+def test_legacy_contract_snapshot():
+    """REQ-VERIFY-8716: preserve exact exports without retaining training in pytest."""
+    from carnot.inference.legacy_import_isolation import legacy_contract
+
+    assert legacy_contract(Path(__file__))["passed"]

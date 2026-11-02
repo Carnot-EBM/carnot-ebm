@@ -57300,3 +57300,43 @@ primitive or report tampering fail cold replay. Recompute sealed labels without
 calling tested variants. Historical artifacts and shared validators stay unchanged.
 
 Verification2026-11-02, Exp8715:720/720 constructed units,30 sealed worlds; baseline120/150 versus extended130/150 faulty-unit detections with900 versus1980 probes. Eight scoped owned/private reader tests pass;233/233 new statements covered. Ruff, strict types, spec tracing, cold replay and unchanged terminal validators pass. Readiness1, circular_positive; no production verification or generalization claim.
+
+## REQ-VERIFY-8716: Preserve assertions and resource guards across processes
+
+Write requirement-linked failing tests before the isolation change. Preserve
+the original500MB memory guard and every original assertion; never warm the
+parent, skip a test or loosen a threshold. Retain parent/child peak RSS, import
+ownership and real child exit/reaping. Collect once and run bounded disjoint
+serial children, preserving SQLite, JUnit, node lists, source hashes and clocks
+before combining copies. Require100 percent newly owned statements, retained
+batch-producer coverage, real private CLI success/rejection, Ruff, strict mypy,
+spec tracing and private E2E-018/021. No full suite or historical controllers.
+
+### SCENARIO-VERIFY-8716-CUSTODY
+
+Cold replay in a fresh bounded process rejects absent operands, changed sources
+and consistently rehashed tampering against separately sealed primitives.
+Unchanged primary publication, adversarial verification and strict row checking
+validate final bytes before atomic publication. Failed owned checks disqualify;
+unchanged external absence blocks with exact field/hash/operator diagnostics.
+The conductor owns ops and traceability reconciliation after task exit.
+
+Exp8716 historical producer tests bind private V746 authority files through a
+pytest plugin. Preserve the complete original task objects and visible table;
+remove only preservation-envelope metadata rejected by the original parser.
+Do not place historical tests inside mounts that invalidate their own nested
+overlay ownership controls. Test the original parser and nested overlay directly.
+
+### SCENARIO-VERIFY-8716-DIRECT-CLI
+
+The script-path CLI resolves its owned Python package and shared `scripts`
+helpers from the same checkout before importing the runner. From a directory
+outside the checkout with `PYTHONPATH` absent, `--help` succeeds and a private
+missing-operand run publishes a blocked or disqualified report that cold-replays.
+
+Verification2026-11-02, Exp8716 repair:191 distinct scoped tests pass without
+skips, including all122 original compatibility nodes and private E2E-018/021.
+Thirteen bounded serial children retain181 exact nodes; all27 qualification
+checks pass. Genuine coverage is242/242 Exp8716 statements,21/21 added protocol
+statements and451/451 retained producer statements, with zero exclusions.
+Ruff, strict mypy and scoped spec tracing pass. The conductor remains unchanged.
