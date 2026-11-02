@@ -21133,3 +21133,4 @@ code |
 | 2026-11-02 12:27 UTC | Measure continuous typed-decision learning from de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8725-learning-union) |
 | 2026-11-02 12:27 UTC | Test future proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8727-causal-brier-stream) |
 | 2026-11-02 12:41 UTC | Measure relational defect detection at equal probe | OK | 85 passed, 1 warning in 55.52s |
+| 2026-11-02 12:44 UTC | Compare bounded Qwen self-scores with source-groun | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8726-verification-methods.runtime_repair_ready_score (actual=0 == expected=1) |
