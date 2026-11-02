@@ -21134,3 +21134,4 @@ code |
 | 2026-11-02 12:27 UTC | Test future proper-loss benefit and simultaneous r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8727-causal-brier-stream) |
 | 2026-11-02 12:41 UTC | Measure relational defect detection at equal probe | OK | 85 passed, 1 warning in 55.52s |
 | 2026-11-02 12:44 UTC | Compare bounded Qwen self-scores with source-groun | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8726-verification-methods.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-11-02 14:04 UTC | Keep fixed-point update state resident across the  | OK | 89 passed, 1 warning in 72.25s (0:01:12) |
