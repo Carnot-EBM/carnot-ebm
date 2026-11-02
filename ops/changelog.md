@@ -22874,3 +22874,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   exclusion-manifest edit, deployment, external publication or push.
 - 2026-11-02: Bind twelve tasks and freeze independent learning and verifier-transfer methods (⚠️ Research Finding) — honest_verdict=complete_disqualified_v749_contract_methods; results/experiment_8737_v749_contract_methods.json
 - 2026-11-02: Locate deadline-smoke work and qualify bounded original deadline controls (⚠️ Research Finding) — honest_verdict=complete_disqualified_v749_deadline_cost_diagnosis; results/experiment_8738_v749_deadline_cost_diagnosis.json
+- 2026-11-02: Reuse each request feature vector for scoring and its digest (⚠️ Research Finding) — honest_verdict=complete_disqualified_single_extraction_prototype; results/experiment_8743_v749_single_extraction_prototype.json
