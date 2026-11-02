@@ -21128,3 +21128,4 @@ code |
 | 2026-11-02 10:18 UTC | Milestone 2026.11.748 activated | OK | 14 tasks queued |
 | 2026-11-02 11:11 UTC | Repair collection scratch ownership and bind fourt | OK | 124 passed, 1 warning in 135.92s (0:02:15) |
 | 2026-11-02 11:55 UTC | Qualify current invocation clocks and the original | OK | 87 passed, 1 warning in 75.46s (0:01:15) |
+| 2026-11-02 11:58 UTC | Qualify original deadline controls and the complet | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8724-invocation-clock-core.learning_core_ready_score (actual=0 == expected=1) |
