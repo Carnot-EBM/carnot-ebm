@@ -54177,3 +54177,81 @@ its real retained execution evidence. Let independent extraction and deployment
 branches authenticate their own original operands. Study answer-independent
 symbolic grounding and long-run numerical state, while keeping constructed,
 exposed-data and physical-device claims separate.
+
+## V747 planning scan — 2026-11-02 UTC
+
+This scan precedes the V747 experiment design. The local date was November 1.
+Primary papers supply methods to test. Their results are not Carnot measurements.
+
+### Promising findings
+
+- [VerifierBench, arXiv:2610.28679](https://arxiv.org/abs/2610.28679), submitted
+  October 19, studies executable verifier generation. Its alternative valid
+  solutions expose verifiers that reject everything while appearing effective
+  against invalid inputs. Read the primary abstract and HTML, after discovery on
+  [Hugging Face Papers](https://huggingface.co/papers/2610.28679). Adopt paired
+  valid-equivalent, invalid and insufficient-evidence controls for Carnot's
+  relational verifier. Freeze mutation families before evaluation. This is a
+  local constructed audit, not a reproduction of the external benchmark.
+- [ReLoop, arXiv:2602.15983v3](https://arxiv.org/html/2602.15983v3), first submitted
+  February 17, separates execution success from semantic correctness. Its
+  behavioral checks perturb parameters to expose missing constraints. The
+  method's scope table also names defects those checks miss. Read the method
+  and detection-scope sections. Adapt relation perturbations with independently
+  evaluated expected responses. Include present-but-wrong relations as negative
+  controls; passing perturbations alone cannot certify complete semantics.
+- [Verification Without Sufficiency, arXiv:2608.00585](https://arxiv.org/abs/2608.00585),
+  August 1, finds a limitation of checking multi-hop evidence one chunk at a
+  time. Read the abstract. Use this as motivation to retain required-premise
+  completeness and unknown outcomes in relational controls. Do not adopt a
+  retrieval system or transfer the paper's benchmark gains.
+- [On-chip KAN learning, arXiv:2602.02056v4](https://arxiv.org/html/2602.02056v4),
+  June revision, motivates sparse updates and explicit fixed-point formats.
+  Rechecked the implementation and precision sections. Carnot now has qualified
+  CPU lifecycle evidence. A small compiled implementation can test portability
+  with exact integer parity. Keep host nonlinear functions, dense renormalization
+  and durable storage explicit. Neither parity nor the paper's FPGA timings
+  establishes local acceleration or useful learning.
+- [Probabilistic Algorithms for Ising Machines, arXiv:2610.03972](https://arxiv.org/abs/2610.03972),
+  October 2, reviews portable algorithms and hardware co-design. Abstract read.
+  File as a compatibility guide. Optimization quality, distributional sampling,
+  forward evaluation and parameter updates require different evidence.
+
+### Coverage of requested primary topics
+
+| Topic | Sources checked | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT conference manuscript](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf); [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605); [distributional verification, 2605.18871](https://arxiv.org/abs/2605.18871) | Preserve exact verification versus learned compatibility. Existing external-text scorer retirement remains binding. |
+| Neural constraint satisfaction | [Differentiable Symbolic Planning, 2604.02350](https://arxiv.org/abs/2604.02350) | Learned feasibility is not an exact certificate. No repair-stack rerun. |
+| Ising in ML | October algorithm review above; [million-p-bit system, 2606.25313](https://arxiv.org/abs/2606.25313) | Communication and sampling quality remain workload-specific. No distributed hardware task without compatible devices. |
+| Hallucination detection | VerifierBench, ReLoop and sufficiency paper above | Test valid alternatives and information loss before claiming semantic reliability. |
+| KAN | On-chip locality paper above | Qualify compiled arithmetic against the current emulator before timing it. |
+| Energy-guided generation | [Energy-Based Decoding, 2605.28020](https://arxiv.org/abs/2605.28020) | Reward-guided generation remains deferred until verifier utility qualifies. The bounded extraction canary is not guided decoding. |
+| Hardware sampling | [continuous-state FPGA computer, 2610.31339](https://arxiv.org/abs/2610.31339); [Extropic Z1T](https://extropic.ai/writing/z1t/) | Preserve supported-operation and complete-cost limits. |
+| Continual learning | [Capacity-Constrained Online Learning with Delays, 2503.19856v2](https://arxiv.org/abs/2503.19856); [neural delayed bandits, 2504.12086](https://arxiv.org/abs/2504.12086) | Preserve bounded delayed feedback and sealed predictions. Their theoretical guarantees do not transfer to the nonlinear Carnot head. |
+
+### Secondary-source checks and limits
+
+- **OpenReview:** searched 2025–2026 EBM submissions and read the indexed EBT
+  manuscript excerpt. The [forum](https://openreview.net/forum?id=ZBj3Qp1bYg)
+  still returned a browser challenge. No reviewer judgment was inferred.
+- **Semantic Scholar:** attempted the citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Both were inaccessible. Exact-ID and title searches did not provide a reliable
+  citation inventory. Citation coverage is incomplete, not zero.
+- **Hugging Face Papers:** verification and symbolic-verification searches led to
+  VerifierBench and ReLoop. Primary papers above supply the method claims.
+- **GitHub Trending:** checked [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Both snapshots were
+  marked crawled last month. No current EBM/KAN ranking or dependency is inferred.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and September 4's
+  Z1T page. Its efficiency estimates exclude final vocabulary readout and note
+  the effect of GPU batching. These projections do not provide local TSU access.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The retrieved product description supplied no reproducible architecture change.
+
+Planning inference: isolate current invocation clocks from retained measurements;
+finish the fixed causal study after genuine qualification. Separate model-free
+relational evidence from unavailable generator probabilities. Test verifier
+completeness and compiled numeric parity while preserving closed scientific nulls.

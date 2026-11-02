@@ -4255,3 +4255,17 @@ or implemented capability is claimed by this planning record.
 
 V744's preserved design remains historical authority. Planning changes no runtime
 behavior, generator weights, scientific result or publication status.
+
+## V747 staged planning traceability — 2026-11-02 UTC
+
+| Requirement / Scenario | PRD and planned scope | Status | Planning evidence |
+|---|---|---|---|
+| REQ-REPORT-747-1 / SCENARIO-REPORT-747-1 | FR-09/10: fourteen matching full objects, exact gates and progress contracts | Planned | research-roadmap-next.yaml; openspec/change-proposals/research-roadmap-vNEXT.md; Exp8709 |
+| REQ-REPORT-747-2 / SCENARIO-REPORT-747-2 | FR-11/12: original causal union, future learning/retention, relational information and verifier completeness | Planned | Exp8710–Exp8715; Exp8718 |
+| REQ-REPORT-747-3 / SCENARIO-REPORT-747-3 | FR-05/08, NFR-01: installed costs, compiled lifecycle parity, new-only ARC evidence and physical-operation limits | Planned | Exp8716/8717; Exp8719–Exp8722 |
+
+V746 authority is preserved at
+`openspec/change-proposals/research-roadmap-v746-preserved-20261102.md`.
+The staged document replaces the next-plan slot, not the active V746 queue.
+The V747 literature scan precedes experiment design in research-references.md.
+Implementation and scientific acceptance remain pending execution.

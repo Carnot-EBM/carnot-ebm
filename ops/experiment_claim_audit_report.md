@@ -11,15 +11,44 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
+| CLAIM_SUPPORTED | 2 |
 | NO_CLAIM | 5 |
-| SKIPPED_ALREADY_FLAGGED | 2 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8681_v745_contract_methods.json
+## experiment_8701_v746_relational_feature_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative performance or verifier-value claim to refute. The reported numerical blockage would be contradicted by authenticated probabilities and completed numerical-head evaluations for the intended rows.
+
+## WAS THAT CHECKED
+Yes, for the blockage: the operand gate reports all 480 required probabilities missing, and the displayed row heads contain null probabilities and decisions. The target model was not evaluated. Complete-record oracle agreement is explicitly limited to constructed capacity; it is not presented as added value or generalization.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_missing_numerical_head_operand`
+- `verdict_class`: `blocked`
+- `expected`: `480 authenticated candidate probabilities`; `missing_count`: `480`
+- `operand_state`: `missing_field`; `probability`: `null`
+- `evaluated_this_invocation`: `false`
+- `numerical_completed_count`: `0`
+- `verifier_is_oracle`: `true`
+- `exposure_scope`: `Fully exposed constructed oracle records; no natural-language extractor is evaluated.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8702_v746_installed_batch_prototype.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_8682_frozen_learning_core.json
+## experiment_8703_installed_batch_cost.json
 
 **NO_CLAIM**
 
@@ -30,18 +59,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-This is a blocked-gate receipt, not an experimental result. All evaluated gates passing would contradict its blocking diagnosis.
+Not applicable: this artifact records a blocked run and makes no comparative throughput or speed claim.
 
 ## WAS THAT CHECKED
-Yes. The methods readiness gate records actual 0 against expected 1 and fails; the learning operands gate passes. The receipt reports the resulting block without claiming successful qualification.
+No throughput or speed comparison was performed. The prerequisite was checked in gates_evaluated and failed: actual 0 versus expected 1.
 
 ## EVIDENCE
-`blocked_gate_check_v1`, `blocked`, `blocked_gate_check_failed`, `gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8681-contract-methods.methods_ready_score (actual=0 == expected=1)`, `conductor_pre_gate`
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `batch_service_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8684_relational_evidence_controls.json
+## experiment_8704_qwen_symbolic_canary.json
 
 **NO_CLAIM**
 
@@ -52,44 +81,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-run receipt, with no comparative result or claim of added value.
+Not applicable: the title describes an intended comparison, and the artifact makes no claim about its outcome.
 
 ## WAS THAT CHECKED
-Only prerequisite gates were checked. Methods readiness was 0 against required 1, blocking the experiment before evaluation.
+No comparative evaluation is reported. Both prerequisite gates failed; this artifact records the resulting block, so the intended comparison had no opportunity to succeed or fail.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `methods_ready_score`; `blocked_reason`: `actual=0 == expected=1`; `blocked_at_layer`: `conductor_pre_gate`.
+`schema`: `blocked_gate_check_v1`  
+`status`: `blocked`  
+`honest_verdict`: `blocked_gate_check_failed`  
+`gate_check_summary`: `gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8698-relational-evidence-controls.runtime_repair_ready_score (actual=0 == expected=1)`  
+`blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8688_installed_batch_prototype.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this artifact records a prerequisite failure and makes no claim that batch qualification succeeded or that the evaluator adds value.
-
-## WAS THAT CHECKED
-No experimental claim was tested. Prerequisite gates were checked; methods readiness failed with an observed 0 against a required 1, blocking evaluation.
-
-## EVIDENCE
-`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `methods_ready_score`; `blocked_reason`: `actual=0 == expected=1`; `blocked_at_layer`: `conductor_pre_gate`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8691_v745_arc_censoring_decision.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_8692_v745_spline_precision_feasibility.json
+## experiment_8705_v746_arc_decision_qualification.json
 
 **CLAIM_SUPPORTED**
 
@@ -97,28 +104,64 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The 32-bit format with 24 fractional bits passes CPU numerical-feasibility checks against float64 on the constructed controls.
+The qualified ledger supports no policy change because intervention efficacy remains unresolved.
 
 ## WHAT WOULD REFUTE IT
-A primary-format row failing numerical acceptance, showing nonfinite arithmetic or overflow, or disagreeing with float64 outside fallback would refute the claim.
+Valid, uncensored outcomes providing independent cross-game support sufficient to retire or reprioritize an intervention arm, contradicting the reported absence of support.
 
 ## WAS THAT CHECKED
-Yes, at the reported-control level: numerical errors, arithmetic failures and acceptance outcomes are recorded, and the primary-format gate passes. The 16-bit failure shows that numerical acceptance could fail; it does not contradict the specified primary format.
-
-Fallback decisions reuse float64, so their parity is guaranteed and supplies no independent evidence. The numerical-error measurements remain falsifiable. Float64 is an appropriate fidelity baseline: agreement supports this feasibility claim without establishing verifier advantage. No generalization benefit is claimed. Most detailed rows and the acceptance tolerances are not shown.
+Yes, for this narrow evidence-status claim: `arm_support_rows` reports zero independent games with uncensored support for every arm, and `per_game_results` reports all 16 episodes censored with zero complete outcomes. Censored observations receive no efficacy estimate or promotion credit. This supports withholding a policy change; it does not establish that interventions are ineffective. No comparative verifier-value or generalization benefit is claimed.
 
 ## EVIDENCE
-- `primary_format`: `32`, `24`; `primary_32_24`: `true`.
-- `bits`: `32`; `fractional`: `24`; `passed`: `true`; `maximum_probability_error`: `1.036318339919795e-06`; `overflow`: `0`.
-- `bits`: `16`; `passed`: `false`; `decay_underflow`: `1536`.
-- `fallback`: `original_float64`; `decision_parity`: `true`.
-- `verifier_is_oracle`: `true`; `independent_generalization_score`: `0`.
-- `methodology_note`: `CPU fixed-point numerical controls; no causal stream, retention labels, FPGA synthesis, deployment or device performance measured.`
+
+- `honest_verdict`: `complete_null_arc_decision_qualification`
+- `policy_decision`: `no_supported_policy_change`
+- `censored_count`: `16`
+- `complete_horizon_count`: `0`
+- `independent_games_with_uncensored_support`: `0`
+- `efficacy_estimate`: `null`
+- `promotion_ready_score`: `0`
+- `independent_generalization_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8693_v745_hardware_operation_boundary.json
+## experiment_8706_v746_spline_lifecycle_stress.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The primary32/24 fixed-point head passed numerical accuracy, renormalization continuity, supported-domain accumulator, and restart checks on the constructed CPU lifecycle runs.
+
+## WHAT WOULD REFUTE IT
+A probability error above 0.001, boundary continuity error above 2.9802322387695312e-08, decision mismatch, supported-domain accumulator violation, or restarted state differing from uninterrupted execution would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The update and boundary rows compare fixed-point results against float64; accumulator rows check the declared envelope; restart rows compare state, serialization, and acknowledgements after an actual process exit. These comparisons could fail; shared inputs do not guarantee numerical agreement.
+
+The summary reports 25 completed runs and zero failures or exclusions, although most rows are elided. Visible rows contain the relevant measurement fields and show no invalidity flags.
+
+The oracle defines numerical correctness here; the artifact makes no claim that the verifier adds predictive value. Float64 execution and uninterrupted execution are appropriate comparators for accuracy and restart fidelity. Generalized learning and acceleration are explicitly outside the claim.
+
+## EVIDENCE
+- `primary_format`: `32`, `24`
+- `probability_error_max`: `0.001`
+- `continuity_error_max`: `2.9802322387695312e-08`
+- `boundary_continuity_error`: `2.918843478028066e-08`
+- `decision_parity`: `true`; `observed_inside_envelope`: `true`
+- `state_identical`: `true`; `serialized_state_identical`: `true`; `acknowledgement_identical`: `true`
+- `real_exit`: `73`; `resume_exit`: `0`
+- `completed_count`: `25`; `failed_count`: `0`; `excluded_count`: `0`
+- `verifier_is_oracle`: `true`
+- `methodology_note`: `CPU emulation with original Brier equation, scaling and temperature; marked boundary states are constructed, not learned. No generalized learning, FPGA execution or acceleration measured.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8707_v746_hardware_operation_boundary.json
 
 **NO_CLAIM**
 
@@ -129,24 +172,23 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative claim is asserted to falsify. This is an evidence-aggregation and readiness report; its blocked status does not assert that hardware acceleration is impossible.
+There is no comparative benefit claim to falsify. Admitted complete-cost evidence and authenticated compatible physical execution would contradict the reported blocked readiness status.
 
 ## WAS THAT CHECKED
-Not applicable to comparative value. Readiness checks record missing cost inputs and failed physical-execution gates, and the verdict remains blocked.
+Yes, readiness was checked in `source_admission_rows` and `gate_check_summary`: both cost inputs are unqualified and censored, and physical readiness is zero. This is an evidence aggregation receipt. It makes no claim of speedup, verifier advantage, or generalization, so the oracle flag does not establish circular overclaiming.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_v745_hardware_operation_boundary`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `compatible_physical_execution`: `false`
-- `complete_new_cost_boundaries`: `false`
-- `physical_hardware_ready_score`: `0`
-- `achieved_speedup`: `null`
-- `target_met`: `false`
+
+- `honest_verdict`: `complete_blocked_missing_complete_cost_or_physical_execution`
+- `methodology_note`: `Read-only reduction of authenticated original board and CPU lifecycle artifacts. No model, numerical benchmark, probe, flash or physical acceleration.`
+- `operand_state`: `missing_file`, `observed_zero`
+- `interpretation`: `Conditional1/(1-f); neither observed speed nor a100x complete-learning result`
+- `g1_g4_separation`: `Original G1–G4 publication conditions remain separate; this map grants none.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8694_v745_capstone.json
+## experiment_8708_v746_capstone.json
 
 **NO_CLAIM**
 
@@ -157,17 +199,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this aggregation asserts no comparative performance advantage. Missing qualification is not an empirical finding that the method fails.
+No comparative efficacy claim is asserted. This is a readiness and qualification aggregation; its blocked status does not establish a measured null effect.
 
 ## WAS THAT CHECKED
-No comparative refutation test is established here. The displayed gate rows record failed qualification and missing fields; quarantined producers remain ineligible, and censored ARC observations receive no efficacy estimate or solve credit. These limitations are reflected in the reported outcomes.
+Administrative qualification was checked in the gate rows, including failed prerequisites and disqualified producers. Comparative benefit testing is not demonstrated: deployment measurements remain unmeasured, and independent generalization is explicitly disclaimed.
 
 ## EVIDENCE
-- `eligible`: `false`; `producer_qualified`: `false`; `scientific_result_measured`: `false`
-- `operand_state`: `missing_field`; `observed`: `null`; `passed`: `false`
-- `complete_horizon_count`: `0`; `efficacy_estimate`: `null`
-- `headline_solve_credit`: `0`; `hidden_generalization_established`: `false`
-- `exposure_scope`: `Exposed cached observations and constructed integer controls; no unexposed natural generalization`
+- `policy_decision`: `no_supported_policy_change`
+- `activation_authorized`: `false`
+- `scientific_result_measured`: `false`
+- `producer_qualified`: `false`
+- `deployment_decision_rows`: `measured`: `false`
+- `exposure_scope`: `Cached exposed and constructed upstream evidence; no independent natural generalization`
 
 ## RECOMMENDATION
 KEEP

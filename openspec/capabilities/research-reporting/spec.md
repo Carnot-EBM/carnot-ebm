@@ -103815,3 +103815,66 @@ Missing file, missing field, observed zero and changed bytes remain distinct.
 Flagged or failed producers cannot grant readiness. No current model is loaded;
 MODEL_SPECS is empty and current language-model calls are zero. Reconciliation
 readiness never implies learning benefit, activation or physical acceleration.
+
+## REQ-REPORT-747-1: Staged V747 full-object planning contract
+
+**Status: Planned.** Milestone2026.11.747 defines exactly fourteen tasks,
+Exp8709–Exp8722, in four phases. The visible five-column contract table, embedded
+full-object JSON and research-roadmap-next.yaml must agree in IDs, order, titles,
+phases, deliverables, prompts, routes, model/substrate declarations, priors and
+gates. Preserve V746 design bytes and leave the active roadmap and conductor
+unchanged during planning. Every structured gate references an earlier current
+task and an identically named top-level REQUIRED ARTIFACT FIELD. Every prompt
+requires flushed phase/call/loop progress, gaps below600 seconds and chunked
+large-file writes. Exact-repeat failure entries retain the mechanical retirement
+flag. Every verdict declares its closed class and blocked diagnostic.
+
+### SCENARIO-REPORT-747-1: Independent branches and explicit limits
+
+Mutating count, order, task text, model, route, substrate, gate or prior must
+invalidate the contract. Missing external evidence blocks once; owned incomplete
+work alone may be partial. Exp8712/8716/8719/8720/8721/8722 have no conductor gate.
+Exp8718 alone uses Qwen3.8-27B-GGUF with bounded-generation substrate. Every
+comparison retains per-unit metrics and censoring; no archived result changes.
+
+## REQ-REPORT-747-2: Causal learning and relational sufficiency studies
+
+**Status: Planned.** Exp8710 separates current invocation clocks from retained
+source measurements, preserving original deadline assertions. Exp8711 qualifies
+the original39+25 nodes,27 runner nodes and83 original statement anchors under
+one source seal. Exp8713 executes real bounded delayed-feedback updates to the
+original nine-input head; Exp8714 preserves registered future-loss and joint
+retention criteria. Exp8712's eight-feature diagnostic is a separate model-free
+estimand; absent model probabilities remain absent. Exp8715 compares valid,
+invalid and unknown verifier controls with independently labeled perturbations.
+Exp8718 measures bounded source-to-record fidelity only after runtime eligibility.
+
+### SCENARIO-REPORT-747-2: No numerical or semantic substitution
+
+A retained monotonic epoch later than current execution cannot produce negative
+invocation duration or be clamped to a floor. Predictions precede labels; crash
+recovery preserves state and acknowledgements. Missing ninth inputs cannot be
+filled by constants, labels or fitted proxies. Reject-all/accept-all controls
+must fail appropriately; valid alternatives remain valid and missing premises
+remain unknown. Constructed controls cannot establish independent generalization.
+
+## REQ-REPORT-747-3: Installed cost, native parity and operation boundaries
+
+**Status: Planned.** Exp8716 isolates heavy legacy-export assertions in a reaped
+child without weakening original memory guards. Exp8717 measures complete paired
+installed costs and separates batching gains from same-batch native10x evidence.
+Exp8719 ports the qualified signed32/24 lifecycle to an opt-in compiled kernel,
+retaining checked arithmetic, exact state parity and host costs. Exp8720 inspects
+only new authenticated ARC supervisor events. Exp8721 preserves per-operation
+board support and missing costs; Exp8722 reconciles every disposition separately
+from stable publication gates. These requirements schedule work, not capability
+implementation or scientific results.
+
+### SCENARIO-REPORT-747-3: Nulls and physical evidence remain separate
+
+An authenticated empty ARC event delta is an immediate null with zero new solve
+credit. The closed panel is not rerun. A compiled CPU kernel is not FPGA execution;
+a mapped operation is not measured acceleration. A valid below-threshold cost or
+learning result is null. Missing costs or upstream qualification are blocked,
+never retryable partial. Every physical claim requires actual compatible device
+evidence; no purchase, probe, flash, deployment or activation is scheduled here.

@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-11-01
+**Last Updated:** 2026-11-02
+
+## 2026-11-02 UTC — V747 staged research plan
+
+Milestone `2026.11.747` proposes fourteen tasks, Exp8709–Exp8722, in four
+phases. The design and full execution queue agree. V746's design is preserved.
+The active V746 roadmap and conductor remain unchanged; planning runs no new
+experiment. The literature scan is recorded in `research-references.md`.
+
+The plan addresses mixed invocation clocks, delayed self-learning and retention,
+model-free relational capacity, verifier completeness, installed import isolation
+and complete costs, and compiled fixed-point parity. The Qwen3.8-27B bounded
+canary requires authenticated runtime evidence. ARC inspects only new supervisor
+outcomes; hardware mapping preserves operation-specific limits. Historical nulls,
+flags and missing probabilities remain authoritative. Validation is pending.
 
 ## 2026-11-01 — Exp8691 private output and failed-child repair
 

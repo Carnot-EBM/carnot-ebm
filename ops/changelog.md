@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-11-02 UTC — Plan milestone 2026.11.747
+
+Stage matching design and YAML contracts for fourteen tasks, Exp8709–Exp8722,
+across four phases. Preserve the V746 document before replacing vNEXT. Add a
+dated primary-source scan, including verifier completeness and compiled KAN
+arithmetic ideas. Reconcile planned requirements, architecture and traceability.
+
+Register causal clock repair and original qualification before delayed learning;
+separate lexical information loss from missing head probabilities; add verifier
+controls, installed cost measurements and compiled parity. Preserve the closed
+ARC panel and per-operation hardware limits. Only the optional Qwen3.8-27B
+canary loads an LLM, using bounded generation. Active roadmap, conductor,
+exclusion manifest and historical result bytes are unchanged. No push or
+activation. Planning validation is pending.
+
 ## 2026-11-01 — Repair Exp8691 private output and failed-child qualification
 
 Move the private output check into the runner and resolve filesystem aliases
@@ -22719,4 +22734,3 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - Slowest synthesis-only experiments were: 'Qualify original deadline controls and the complete causal learning union' (34.17 minutes / 34min), 'Execute the frozen original learning core with retained producer authority' (23.98 minutes / 24min), 'Qualify installed bounded batches from independently authenticated deployment in' (21.43 minutes / 21min), 'Qualify retained child evidence and bind fourteen branch contracts' (15.2 minutes / 15min), and 'Separate lexical collisions from symbolic grounding and missing-record errors' (12.65 minutes / 13min).
 - GPU monitor report at `2026-11-01T22:50:14.283783+00:00` recorded GPU 0 (NVIDIA GeForce RTX 3090) at 0% utilization (4/24576MB allocated, 44C); `gpu_idle_on_compute_bound_tasks` is `null` because 0 compute-bound tasks ran, and 0% utilization on GPU 0 is expected behavior for synthesis-only workloads.
 - Recommended improvements: decompose and parallelize independent sub-cohorts in the 34.17-minute causal learning union qualification and 23.98-minute frozen learning core execution tasks; cache validated child receipts and authenticated deployment inputs across the 21.43-minute bounded batch, 15.2-minute branch contract, and 12.65-minute lexical collision tasks; and write explicit start and finish timestamps into experiment deliverables to avoid reliance on `retro_timing_fallback` disk-mtime reconstruction.
-

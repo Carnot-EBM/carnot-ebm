@@ -710,3 +710,25 @@ storage work explicit. It changes no production numerical path. Board support
 remains operation-specific. The qualified, fully censored ARC panel stays closed;
 its new ledger supports one supervisor continuation decision without another run.
 All items here are planned studies, not implemented capabilities or new findings.
+
+## Planned V747 evidence boundaries — 2026-11-02 UTC
+
+V747 stages fourteen tasks, Exp8709–Exp8722, in four phases. Invocation-owned
+clocks repair the original causal publication path without replacing historical
+measurement timestamps. A freshly sealed original39+25-node union releases the
+unchanged delayed-feedback head study and independent future-loss/retention audit.
+
+The eight-feature lexical collision study runs separately from the unavailable
+nine-input head comparison. Structured-record verification receives explicit
+valid-alternative and perturbation controls, inspired by VerifierBench and
+ReLoop. A bounded Qwen3.8-27B canary measures translation fidelity only after
+current runtime authority qualifies; exact query execution alone proves neither
+extraction nor natural-language correctness.
+
+Installed batching preserves original import assertions through child isolation
+and reports matched complete costs. An opt-in Rust/PyO3 fixed-point kernel tests
+exact parity with the qualified CPU lifecycle. Host nonlinear, dense and durable
+work remains visible. Board support is operation-specific. The closed ARC panel
+stays closed; a new-event reader can finish immediately with an empty-delta null.
+Independent branches and unconditional readers limit cascading gate failures.
+These are planned studies, not new runtime behavior or implemented capabilities.
