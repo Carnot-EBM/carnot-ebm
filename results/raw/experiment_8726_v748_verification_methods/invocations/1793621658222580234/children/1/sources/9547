@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""Publish a versioned authority and method receipt (REQ-REPORT-7903-V686)."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+import sys
+import tempfile
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "python"))
+
+from carnot.reporting.v686_contract_methods import cold_replay  # noqa: E402
+from carnot.reporting.v686_contract_validation import execute  # noqa: E402
+
+MODEL_SPECS: list[str] = []
+
+
+def main() -> int:
+    """Accept explicit authority paths; fixture outputs stay in private temporary space."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", default="20260930", choices=["20260930"])
+    parser.add_argument(
+        "--design", type=Path, default=ROOT / "openspec/change-proposals/research-roadmap-vNEXT.md"
+    )
+    parser.add_argument("--staged", type=Path, default=ROOT / "research-roadmap-next.yaml")
+    parser.add_argument("--active", type=Path, default=ROOT / "research-roadmap.yaml")
+    parser.add_argument(
+        "--source", type=Path, default=ROOT / "results/experiment_7892_v685_source_boundary.json"
+    )
+    parser.add_argument(
+        "--output", type=Path, default=ROOT / "results/experiment_7903_v686_contract_methods.json"
+    )
+    parser.add_argument(
+        "--raw",
+        type=Path,
+        default=ROOT / "results/raw/experiment_7903_v686_contract_methods/rows.json",
+    )
+    parser.add_argument("--cold-replay", type=Path)
+    parser.add_argument("--fixture-e2e", action="store_true")
+    args = parser.parse_args()
+    print("[exp7903] start completed_units=0 elapsed_s=0", flush=True)
+    if args.cold_replay:
+        passed = cold_replay(args.cold_replay, args.raw)
+        print("cold_replay_passed" if passed else "cold_replay_mismatch", flush=True)
+        return 0 if passed else 1
+    if args.fixture_e2e and any(
+        path.resolve().is_relative_to(ROOT / "results") for path in (args.output, args.raw)
+    ):
+        parser.error("fixture outputs must be private and outside results")
+    with tempfile.TemporaryDirectory(prefix="exp7903-") as directory:
+        execute(ROOT, args, Path(directory))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

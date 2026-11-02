@@ -57416,6 +57416,26 @@ blocked; failed owned validation disqualifies. Ops and traceability reconciliati
 remain conductor-owned after exit.
 # Invocation clock regression (2026-11-02)
 
+## REQ-VERIFY-8726: Freeze equal calls and evidence support
+
+Authenticate Exp8715's original 120 worlds, six variants and eleven transforms.
+Freeze ordered budget-five baseline truth/equivalent/invalid/unknown/deleted_records
+and targeted truth/invalid/entity_bijection/required_premise/required_role without
+short circuit. Preserve the original 90/30 IDs as exposed-development. Record
+actual calls, wall time and predicate work independently. Freeze twelve pilot
+worlds (first four IDs per family), four views each. Unknown truth stays unknown;
+binary Yes means sufficient evidence support. Normalize actual first-token
+Yes/No log probabilities; absent logits block scoring. No model is loaded here.
+
+### SCENARIO-VERIFY-8726-PROTOCOL
+
+Tests require exactly five calls per variant and arm, all eleven original
+transforms, 48 unique prompts, preserved missing premises and real timing.
+Missing causal runtime evidence sets runtime readiness zero independently of CPU
+methods. Private CLI, missing/changed operands, rehashed tampering and failed
+owned validation must reject unsafe readiness. Retain bounded child custody and
+100 percent new statement coverage, including subprocess and error paths.
+
 ## REQ-VERIFY-8724: Invocation-owned clocks and persistent evidence
 
 The actual causal runner must capture a current start and end for resumed work.

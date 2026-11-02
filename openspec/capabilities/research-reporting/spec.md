@@ -104166,6 +104166,24 @@ Unit/subprocess statement coverage is 373/373 across the five affected files,
 without exclusions. Evidence: `/var/tmp/carnot-fix-8723-v8b24069/`.
 # Invocation clock core qualification (2026-11-02)
 
+## REQ-REPORT-8726: Publish the frozen V748 verifier methods
+
+Bind fourteen full task objects, visible table and independent V748 digest
+separately from original scientific inputs. Ingest four primary methods and
+sequential linked-code retrieval receipts. Freeze sources, tests and methods
+before execution. Publish no_model_load with zero model calls. CPU protocol
+readiness does not establish generalization, natural extraction, CUDA repair,
+ARC outcomes or acceleration. Cold replay reconstructs from authenticated
+primitives, rejects consistently rehashed tampering and missing operands, and
+uses unchanged primary, adversarial and strict row validators before replacement.
+
+### SCENARIO-REPORT-8726-REPLAY
+
+Private CLI publication and cold replay succeed; rehashed schedule, pilot,
+measurement, source, validation and summary edits fail. Missing external evidence
+is complete_blocked with exact diagnostics; failed owned checks disqualify.
+Ops/status/traceability reconciliation remains conductor-owned after exit.
+
 ## REQ-REPORT-8724: Current invocation clocks and original core
 
 Bind all fourteen complete V748 task objects and the independent digest separately

@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VerifierBench</title>
+<meta name="description" content="VerifierBench: benchmarking the generation of executable verifiers for LLM agents. 222 tasks, 4,993 hidden test cases.">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<meta property="og:title" content="VerifierBench">
+<meta property="og:description" content="Benchmarking the generation of executable verifiers for LLM agents: 222 tasks, 4,993 hidden test cases, 36 model–harness configurations.">
+<meta property="og:image" content="https://verifierbench.github.io/assets/og.png">
+<meta property="og:url" content="https://verifierbench.github.io/">
+<meta name="twitter:image" content="https://verifierbench.github.io/assets/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: HLE-style centered academic page (Inter, slate neutrals, bordered tables), with an Anthropic-style
+   sticky contents rail on the left at wide widths. Chart colors keep the paper's figure palette.
+   Deliberately light-only, like HLE: white ground regardless of the viewer's OS theme. */
+:root{
+  /* Palette taken from the paper's Figure 1: blue-grey V4V panels, green = positive / retained,
+     lavender = negative candidates, pink-red = defects and false rejections, navy title ink. Text stays neutral grey/black. */
+  --bg:#FFFFFF; --surface:#FFFFFF; --pale:#F5F5F5; --line:#E5E5E5; --rule:#D4D4D4;
+  --fg:#171717; --text:#3F3F3F; --muted:#6B6B6B; --faint:#A3A3A3;
+  --title-from:#111111; --title-to:#5C5C5C; --link-hover:#546EAB;
+  --blue:#546EAB; --teal:#127D39; --red:#B72D2D; --lav:#5E4E80; --lav-bg:#EAE7F2;
+  --blue-soft:#E6EDF7; --teal-soft:#E8F1E5; --red-soft:#FDEEEE;
+  --sans:"Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --h-pi:#7E95C6; --h-cc:#DDA36E; --h-codex:#77AE86; --h-ms:#A997C8; --h-oc:#7DB4CF; --h-gem:#9890A8;
+  --c-pos:#9CC9A6; --c-neg:#E2A8A8; --c-lav:#B7ADD0; --c-lav-bg:#EFECF5; --c-bar:#A9B8D9;
+  --n-all:#8F8F8F; --n-ret:#AFAFAF; --n-ast:#93A6D0; --n-state:#8FBCA6; --n-code:#DDB482; --n-exc:#DFA0A0;
+  --t-ast:#546EAB; --t-state:#2E7F5E; --t-code:#C27A2C; --t-exc:#B72D2D; --t-ret:#6B6B6B;
+  --f-neu:rgba(143,143,143,.13); --f-ast:rgba(147,166,208,.28); --f-state:rgba(143,188,166,.28); --f-code:rgba(221,180,130,.30); --f-exc:rgba(223,160,160,.26);
+  --ink:#2B2B2B; --ink-muted:#C9C9C9;
+  --p-blue-bd:#C3D0E8; --p-blue-bg:#EEF2FA; --p-blue-fg:#546EAB;
+  --p-teal-bd:#BFD8BA; --p-teal-bg:#EEF5EC; --p-teal-fg:#127D39;
+  --p-rust-bd:#D8D0E8; --p-rust-bg:#F5F3FA; --p-rust-fg:#5E4E80; --p-rust-hl:#E8E3F2;
+  --v-pass-bg:#D7E6D3; --v-pass-fg:#115C36; --v-fail-bg:#E8E3F2; --v-fail-fg:#5E4E80;
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+img{max-width:100%}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.625;margin:0;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none;border-bottom:1px dashed var(--faint)}
+a:hover{color:var(--link-hover);border-bottom-style:solid}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--fg);outline-offset:2px;border-radius:4px}
+b,strong{color:var(--fg);font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.82em}
+
+.shell{display:grid;grid-template-columns:minmax(0,1fr);gap:56px;max-width:1200px;margin:0 auto;padding-inline:16px;padding-block:0 96px}
+@media (min-width:1080px){.shell{grid-template-columns:220px minmax(0,1fr)}}
+
+/* ---------- contents rail ---------- */
+.toc{display:none}
+@media (min-width:1080px){
+  .toc{display:block;position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-top:48px;padding-bottom:24px;max-height:100vh;overflow-y:auto}
+}
+.toc h2{font-weight:700;font-size:20px;letter-spacing:-.015em;color:var(--muted);margin:0 0 12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.toc a{border:0;border-left:3px solid transparent;color:var(--text);font-weight:400;font-size:13px;line-height:1.35;display:block;padding:3px 8px 3px 10px;margin-left:-13px;border-radius:0 6px 6px 0;transition:color .15s,background-color .15s,border-color .15s}
+.toc a:hover{color:var(--link-hover)}
+.toc a.active{color:var(--blue);font-weight:600;background:var(--blue-soft);border-left-color:var(--blue)}
+.toc hr{width:56px;border:0;border-top:1px solid var(--rule);margin:20px 0 16px}
+.toc .minor a{font-weight:400;color:var(--muted)}
+.toc .minor a.active{color:var(--blue)}
+
+.mtoc{margin-top:8px;border:1px solid var(--line);border-radius:8px;text-align:left;width:100%}
+.mtoc summary{cursor:pointer;padding:10px 14px;font-weight:600;color:var(--fg);font-size:14px}
+.mtoc ol{margin:0;padding:0 14px 14px 32px;display:grid;gap:4px;font-size:14px}
+@media (min-width:1080px){.mtoc{display:none}}
+
+/* ---------- article ---------- */
+main{min-width:0;max-width:800px}
+.hero{padding-top:48px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{width:clamp(40px,6vw,52px);height:auto;flex:none}
+.venue{font-size:12px;color:var(--muted);font-weight:500}
+h1{margin:0;font-weight:800;font-size:clamp(30px,4.6vw,40px);line-height:1.15;letter-spacing:-.025em;text-wrap:balance;
+   background:linear-gradient(90deg,var(--title-from),var(--title-to));-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{font-size:clamp(16px,2vw,19px);font-weight:500;color:var(--muted);margin:0;max-width:40ch;text-wrap:balance;line-height:1.45}
+.authors{font-size:14px;color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:6px;height:40px;font-size:14px;font-weight:500;padding:0 16px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.btn:hover{background:var(--pale);color:var(--fg);border-bottom:1px solid var(--line)}
+.btn[aria-disabled="true"]{opacity:.5;cursor:default}
+.btn[aria-disabled="true"]:hover{background:var(--bg)}
+.btn small{font-weight:400;font-size:12px;color:var(--muted)}
+
+.divider{width:100%;height:1px;background:var(--rule);margin:8px 0 0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%}
+.stats div{padding:10px 4px}
+.stats b{display:block;font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted);line-height:1.35;display:block;margin-top:4px}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+section{padding-top:56px}
+h2.sec{font-weight:700;font-size:24px;line-height:1.25;letter-spacing:-.015em;color:var(--fg);margin:0 0 18px;text-align:center;text-wrap:balance}
+h3{font-size:18px;font-weight:600;color:var(--fg);margin:28px 0 8px}
+p{margin:0 0 16px}
+.lead{font-size:17px}
+.muted{color:var(--muted)}
+.callout{border:1px solid var(--p-blue-bd);background:var(--p-blue-bg);padding:16px 18px;border-radius:8px;margin:22px 0}
+.callout p:last-child{margin:0}
+
+figure{margin:24px 0}
+figure.img img{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px}
+figcaption{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.55}
+
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+th+th,td+td{border-left:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:0}
+th{font-weight:500;color:var(--muted);height:44px}
+tbody tr:hover{background:var(--pale)}
+td.num,th.num{text-align:right}
+tfoot td{font-weight:600;color:var(--fg);border-bottom:0;border-top:1px solid var(--rule)}
+
+/* leaderboard */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:4px 0 12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;padding:3px;background:var(--pale)}
+.seg button{font:inherit;font-size:13px;font-weight:500;border:0;background:transparent;color:var(--muted);padding:5px 12px;border-radius:4px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--bg);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.count{font-size:12px;color:var(--muted)}
+#lb th button{all:unset;cursor:pointer}
+#lb th button:hover{color:var(--fg)}
+#lb th[aria-sort]{color:var(--fg)}
+#lb th[aria-sort] button::after{content:" ↓"}
+#lb td.rank{color:var(--faint);width:2.5em}
+#lb td.model{font-weight:500;color:var(--fg)}
+.chip{display:inline-block;font-size:12px;font-weight:500;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.chip.pi{background:var(--blue-soft);border-color:var(--p-blue-bd);color:var(--blue)}
+.ba{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.ba i{display:block;height:6px;border-radius:3px;background:var(--c-bar);min-width:2px}
+.ba .track{width:96px;height:6px;background:var(--pale);border-radius:3px;display:flex}
+.best{font-weight:700;color:var(--fg)}
+.tnote{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.55}
+
+/* charts */
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-family:var(--sans);font-size:12px}
+.chart .lbl{fill:var(--fg);font-size:12.5px}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .link{stroke:var(--faint);stroke-width:1.5}
+.chart .tpr{fill:var(--blue)}
+.chart .tnr{fill:var(--teal)}
+.chart .conc{fill:var(--c-lav)}
+.chart .rest{fill:var(--c-lav-bg)}
+.chart .pos{fill:var(--c-pos)}
+.chart .neg{fill:var(--c-neg)}
+.chart .zero{stroke:var(--fg);stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;font-size:12px;color:var(--muted);margin:8px 0 4px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* case study */
+.case{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:22px 0}
+.case header{padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.case .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.case .cols>div{padding:14px 18px;font-size:14px;min-width:0}
+.case .cols>div+div{border-left:1px solid var(--line)}
+.case h4{margin:0 0 8px;font-size:13px;font-weight:600}
+.case .ok h4{color:var(--teal)}
+.case .bad h4{color:var(--red)}
+.case ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.case footer{padding:12px 18px;border-top:1px solid var(--line);background:var(--pale);font-size:13px;color:var(--muted)}
+@media (max-width:600px){.case .cols{grid-template-columns:1fr}.case .cols>div+div{border-left:0;border-top:1px solid var(--line)}}
+
+.checks{counter-reset:c;list-style:none;padding:0;margin:16px 0;display:grid;gap:12px}
+.checks li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:4px 12px}
+.checks li::before{counter-increment:c;content:"C" counter(c);font-family:var(--mono);font-size:12px;font-weight:600;color:var(--blue);padding-top:4px}
+.checks b{display:block}
+
+.mech{display:grid;gap:14px;margin:18px 0}
+.mech div{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px}
+.mech span{font-weight:800;font-size:20px;color:var(--red);line-height:1.3}
+
+
+/* ---------- wide figures ---------- */
+.hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.figwrap{position:relative}
+.fig-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:18px 0 6px}
+.tip{position:absolute;z-index:5;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:6px;white-space:nowrap;transform:translate(-50%,calc(-100% - 12px));box-shadow:0 4px 14px rgba(2,8,23,.18)}
+.tip b{color:#fff;font-weight:600}
+.tip .tm{color:var(--ink-muted)}
+
+/* scatter */
+#scatter{min-width:560px}
+.chart .iso{stroke:var(--rule);stroke-width:1;stroke-dasharray:3 4}
+.chart .isol{fill:var(--faint);font-size:11px}
+.chart .diag{stroke:var(--fg);stroke-width:1.2;stroke-dasharray:6 4;opacity:.55}
+.chart .forbid{fill:var(--pale)}
+.chart .forbidl{fill:var(--muted);font-size:12px;font-weight:500}
+.chart .axt{fill:var(--fg);font-size:12px;font-weight:600}
+.chart .conn{stroke:var(--faint);stroke-width:1.2;opacity:.6;transition:opacity .15s}
+.chart .pt{stroke:#fff;stroke-width:1.6;cursor:pointer;transition:opacity .15s}
+.chart .pt:focus{outline:none;stroke:var(--fg);stroke-width:2.4}
+.chart .plbl{fill:var(--fg);font-size:11.5px;font-weight:600;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round;transition:opacity .15s}
+.chart .h-pi{fill:var(--h-pi)} .chart .h-cc{fill:var(--h-cc)} .chart .h-codex{fill:var(--h-codex)}
+.chart .h-ms{fill:var(--h-ms)} .chart .h-oc{fill:var(--h-oc)} .chart .h-gem{fill:var(--h-gem)}
+#scatter.pionly .alt{display:none}
+#scatter.hovering .pt:not(.on),#scatter.hovering .conn:not(.on),#scatter.hovering .plbl:not(.on){opacity:.12}
+#scatter.hovering .conn.on{opacity:1;stroke:var(--fg)}
+#scatter.hl-h .pt:not(.hon){opacity:.12}
+#scatter.hl-h .conn,#scatter.hl-h .plbl{opacity:.12}
+.hlegend{display:flex;flex-wrap:wrap;gap:6px}
+.hlegend button{font:inherit;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:999px;padding:3px 10px;cursor:pointer}
+.hlegend button[aria-pressed="true"]{border-color:var(--fg);color:var(--fg);box-shadow:0 0 0 1px var(--fg)}
+.hlegend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+/* sankey */
+#sankey{min-width:680px}
+.sankey .lnk{transition:opacity .15s}
+.sankey .lnk.neu{fill:var(--f-neu)} .sankey .lnk.ast{fill:var(--f-ast)} .sankey .lnk.state{fill:var(--f-state)} .sankey .lnk.code{fill:var(--f-code)} .sankey .lnk.exc{fill:var(--f-exc)}
+.sankey.hovering .lnk:not(.on){opacity:.25}
+.sankey .node{cursor:default}
+.sankey .node.all{fill:var(--n-all)} .sankey .node.ret{fill:var(--n-ret)} .sankey .node.exc{fill:var(--n-exc)}
+.sankey .node.ast{fill:var(--n-ast)} .sankey .node.state{fill:var(--n-state)} .sankey .node.code{fill:var(--n-code)}
+.sankey .nl{fill:var(--fg);font-size:13px;font-weight:600;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+.sankey .nl tspan.n{font-variant-numeric:tabular-nums}
+.sankey .ns{fill:var(--muted);font-size:11.5px;font-weight:400;paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+
+/* case bar */
+.cbar{margin:30px 0 6px}
+.cbar h3{margin:0 0 10px}
+.cbar .groups{display:flex;gap:2px;font-size:12px;font-weight:600;color:var(--fg);margin-bottom:6px}
+.cbar .groups div{padding-bottom:4px;border-bottom:2px solid var(--c-pos);white-space:nowrap;overflow:hidden}
+.cbar .groups div.neg{border-bottom-color:var(--c-lav)}
+.cbar .bar{display:flex;gap:2px;height:36px;border-radius:6px;overflow:hidden}
+.cbar .bar span{display:flex;align-items:center;justify-content:center;color:var(--fg);font-size:11px;font-weight:600;min-width:0;overflow:hidden;white-space:nowrap;font-variant-numeric:tabular-nums;transition:filter .15s}
+.cbar .bar span:hover{filter:brightness(1.12)}
+.cleg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px 22px;margin-top:16px;font-size:13px}
+.cleg div{display:grid;grid-template-columns:12px minmax(0,1fr);gap:1px 8px;align-content:start}
+.cleg i{width:10px;height:10px;border-radius:2px;margin-top:5px}
+.cleg b{font-weight:600}
+.cleg b em{font-style:normal;color:var(--muted);font-weight:500;margin-left:6px;font-variant-numeric:tabular-nums}
+.cleg span{grid-column:2;color:var(--muted);font-size:12px;line-height:1.45}
+
+/* case gallery */
+.gal-tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 4px;margin-top:18px}
+.gal-tabs button{flex:1 0 148px;text-align:left;font:inherit;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 12px;cursor:pointer;display:grid;gap:3px;align-content:start;color:var(--text);transition:background-color .15s,border-color .15s}
+.gal-tabs button:hover{background:var(--pale)}
+.gal-tabs button[aria-selected="true"]{background:var(--blue-soft);border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.gal-tabs button[aria-selected="true"] .tt,.gal-tabs button[aria-selected="true"] .tn{color:var(--blue)}
+.gal-tabs .tn{font-size:11px;color:var(--faint);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.gal-tabs .tt{font-size:14px;font-weight:600;color:var(--fg);line-height:1.3}
+.gal-tabs .ts{font-size:12px;color:var(--muted);line-height:1.35}
+.gal-tabs .to{font-size:12px;line-height:1.35;color:var(--p-rust-fg);border-top:1px dashed var(--line);padding-top:5px;margin-top:3px}
+.gal{margin-top:12px;border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:10px;overflow:hidden}
+.gal .ink{background:var(--bg);color:var(--fg);padding:16px 20px;display:grid;gap:4px;border-bottom:1px solid var(--line)}
+.gal .ink h3{margin:0;color:var(--fg);font-size:18px;line-height:1.3;text-wrap:balance}
+.gal .ink .meta{font-size:13px;color:var(--muted)}
+.gal .ink code{color:var(--faint);font-size:12px}
+.stepper{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--pale)}
+.stepper .lab{font-size:12px;color:var(--muted);margin-right:4px}
+.stepper button{font:inherit;font-family:var(--mono);font-size:12px;font-weight:500;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:6px;padding:3px 9px;cursor:pointer}
+.stepper button[aria-pressed="true"]{background:var(--blue-soft);color:var(--blue);border-color:var(--p-blue-bd)}
+.stepper .sp{flex:1}
+.stepper .nav{font-family:var(--sans)}
+.cbody{padding:16px;display:grid;gap:12px}
+.ccols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ccol{display:grid;gap:12px;align-content:start;min-width:0}
+.ccol h5{margin:2px 0 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+@media (max-width:720px){.ccols{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:14px;line-height:1.55;min-width:0;transition:opacity .2s,box-shadow .2s}
+.panel.k-agent{border-color:var(--p-blue-bd);background:var(--p-blue-bg)}
+.panel.k-feedback{border-color:var(--p-teal-bd);background:var(--p-teal-bg)}
+.panel.k-hidden{border-color:var(--p-rust-bd);background:var(--p-rust-bg)}
+.panel.k-interp{background:var(--bg)}
+.panel h6{margin:0 0 6px;font-size:13px;font-weight:700;display:flex;gap:8px;align-items:baseline;color:var(--p-blue-fg)}
+.panel h6 .sid{font-family:var(--mono);font-size:11px;font-weight:500;opacity:.8}
+.k-feedback h6{color:var(--p-teal-fg)} .k-hidden h6{color:var(--p-rust-fg)} .k-interp h6{color:var(--fg)}
+.panel p{margin:0 0 6px} .panel p:last-child{margin-bottom:0}
+.panel .note{font-size:12px;color:var(--muted)}
+.panel ol{margin:4px 0 6px;padding-left:20px}
+.panel blockquote{margin:6px 0;padding-left:10px;border-left:2px solid var(--p-teal-bd);font-style:italic}
+.panel pre{margin:6px 0 8px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 0;font-family:var(--mono);font-size:12px;line-height:1.6;overflow-x:auto}
+.panel pre span{display:block;padding:0 10px;white-space:pre;color:var(--fg)}
+.panel pre span.hl{background:var(--p-rust-hl);box-shadow:inset 3px 0 0 var(--p-rust-fg)}
+.panel table{font-size:13px;margin:4px 0 8px}
+.panel th,.panel td{padding:4px 0;border:0;border-bottom:1px dashed var(--line);white-space:normal;height:auto}
+.panel th+th,.panel td+td{border-left:0;text-align:right;padding-left:10px}
+.panel th{font-size:12px}
+.panel tbody tr:hover{background:transparent}
+.panel tr.hl td{color:var(--p-rust-fg);font-weight:600}
+.vd{font-family:var(--mono);font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.vd.pass{background:var(--v-pass-bg);color:var(--v-pass-fg)} .vd.fail{background:var(--v-fail-bg);color:var(--v-fail-fg)}
+.cbody.stepping .panel{opacity:.32}
+.cbody.stepping .panel.cur{opacity:1;box-shadow:0 0 0 2px var(--fg)}
+.cfoot{padding:10px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);background:var(--pale)}
+@media (prefers-reduced-motion:reduce){.panel,.chart .pt,.chart .conn,.sankey .lnk{transition:none}}
+
+.bibwrap{position:relative}
+pre.bib{font-family:var(--mono);font-size:12px;line-height:1.6;background:var(--pale);border-radius:8px;padding:16px;overflow-x:auto;margin:0;color:var(--fg)}
+.copy{position:absolute;right:8px;top:8px;font:inherit;font-size:12px;font-weight:500;border:0;background:var(--line);color:var(--fg);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy:hover{background:var(--rule)}
+.foot{margin-top:72px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);text-align:center}
+</style>
+
+<div class="shell">
+  <nav class="toc" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#benchmark">Benchmark</a></li>
+      <li><a href="#v4v">Reference Validation</a></li>
+      <li><a href="#results">Main Results</a></li>
+      <li><a href="#harness">Native Harnesses</a></li>
+      <li><a href="#concentration">Where Errors Concentrate</a></li>
+      <li><a href="#analysis">Analysis of Generated Verifiers</a></li>
+      <li><a href="#cases">Trajectory Cases</a></li>
+      <li><a href="#implications">Implications</a></li>
+      <li><a href="#limitations">Limitations</a></li>
+      <li><a href="#citation">Citation</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="venue">Under review · anonymous submission</div>
+      <div class="brand"><img src="assets/logo.svg" alt="" width="52" height="52"><h1>VerifierBench</h1></div>
+      <p class="subtitle">Benchmarking the Generation of Executable Verifiers for LLM Agents</p>
+      <div class="authors">Anonymous authors</div>
+      <div class="links">
+        <a class="btn" aria-disabled="true" role="link">Paper <small>soon</small></a>
+        <a class="btn" aria-disabled="true" role="link">Code <small>soon</small></a>
+        <a class="btn" aria-disabled="true" role="link">Data <small>soon</small></a>
+        <a class="btn" href="#results">Leaderboard</a>
+      </div>
+      <div class="divider"></div>
+      <div class="stats">
+        <div><b>222</b><span>tasks from 6 agent benchmarks</span></div>
+        <div><b>4,993</b><span>hidden test cases</span></div>
+        <div><b>36</b><span>model–harness configurations</span></div>
+        <div><b>45</b><span>tasks excluded for source defects</span></div>
+      </div>
+      <details class="mtoc"><summary>Contents</summary>
+        <ol>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#benchmark">Benchmark</a></li>
+          <li><a href="#v4v">Reference Validation</a></li>
+          <li><a href="#results">Main Results</a></li>
+          <li><a href="#harness">Native Harnesses</a></li>
+          <li><a href="#concentration">Where Errors Concentrate</a></li>
+          <li><a href="#analysis">Analysis of Generated Verifiers</a></li>
+          <li><a href="#cases">Trajectory Cases</a></li>
+          <li><a href="#implications">Implications</a></li>
+          <li><a href="#limitations">Limitations</a></li>
+          <li><a href="#citation">Citation</a></li>
+        </ol>
+      </details>
+    </header>
+
+    <section id="intro">
+      <h2 class="sec">Introduction</h2>
+      <p class="lead">An agent that can solve a task cannot necessarily judge whether a solution to that task is correct. VerifierBench measures the second skill: given the same instruction and environment used for solving, the agent writes an executable verifier, and we test that verifier on hidden positive and negative cases.</p>
+      <p>Data-oriented recursive self-improvement needs agents to judge candidate solutions while building their own training data. An incorrect verifier can repeatedly reward a violation or discard a valid solution. A verifier has to tell genuine violations apart from allowed differences in tool use, representation, or implementation.</p>
+      <div class="callout">
+        <p><b>Main finding.</b> Models reject correct solutions far more often than they accept invalid ones. Across 19 models using the pi harness, BA<sub>norm</sub> ranges from 10.6 to 62.1, and every model accepts positives less reliably than it rejects negatives. For nine models, 87.9–96.0% of false rejections come from verifiers that reject every test case for their task.</p>
+      </div>
+      <figure class="img">
+        <img src="assets/fig_overview.png" alt="VerifierBench overview: source tasks and reference verifiers are combined with hidden test suites and screened by V4V; the agent generates one verifier, which is fixed and compared with the reference on positive and negative cases." width="2600" height="1103">
+        <figcaption><b>Overview.</b> Benchmark construction combines source tasks and reference verifiers with hidden test suites, and V4V checks the references and evaluation materials. The agent receives the ordinary task-solving instruction and environment and generates one verifier, which is fixed before comparison with the reference.</figcaption>
+      </figure>
+    </section>
+
+    <section id="benchmark">
+      <h2 class="sec">Benchmark</h2>
+      <p>Tasks come from open-source agent benchmarks that have executable evaluation procedures. They cover three forms of verification: <b>tool-call</b> tasks check functions and arguments, <b>state</b> tasks check interactions or the resulting environment state, and <b>code</b> tasks check proposed software changes.</p>
+      <p>Each task starts from the reference solution (<code>gold</code>) and an unrepaired outcome (<code>base</code>). We then construct further cases and label each one <code>PASS</code> or <code>FAIL</code> from the task requirements before running the source verifier. Positive variations change presentation, implementation, or execution path while still satisfying the task. Negative cases include partial solutions, near misses, regressions, and 798 attacks that target checking omissions or fake success signals.</p>
+      <figure>
+        <div class="hscroll"><svg class="chart sankey" id="sankey" role="img" aria-label="Flow of tasks from 267 initial tasks to 222 retained tasks by source"></svg></div>
+        <figcaption><b>From 267 source tasks to 222.</b> V4V excludes a task when a confirmed defect lies in the source materials (red). Retained tasks split into tool-call, state, and code verification and then into seven source subsets, colored by type. Hover a node to trace its flow.</figcaption>
+      </figure>
+      <div class="cbar" id="categories">
+        <h3>4,993 hidden test cases</h3>
+        <div class="groups" id="cbar-groups"></div>
+        <div class="bar" id="cbar"></div>
+        <div class="cleg" id="cleg"></div>
+      </div>
+
+      <div class="scroll" id="composition">
+        <table>
+          <thead><tr><th>Source</th><th>Type</th><th class="num">Tasks</th><th class="num">PASS</th><th class="num">FAIL</th><th class="num">Alt.</th><th class="num">Attack</th></tr></thead>
+          <tbody>
+            <tr><td>BFCL v4</td><td>Tool-call AST</td><td class="num">45</td><td class="num">390</td><td class="num">1,247</td><td class="num">345</td><td class="num">270</td></tr>
+            <tr><td>ACEBench</td><td>Tool-call AST</td><td class="num">50</td><td class="num">344</td><td class="num">967</td><td class="num">294</td><td class="num">200</td></tr>
+            <tr><td>τ²-bench</td><td>State</td><td class="num">32</td><td class="num">287</td><td class="num">303</td><td class="num">255</td><td class="num">96</td></tr>
+            <tr><td>AppWorld</td><td>State</td><td class="num">28</td><td class="num">216</td><td class="num">278</td><td class="num">188</td><td class="num">56</td></tr>
+            <tr><td>AgentDojo (injection)</td><td>State</td><td class="num">10</td><td class="num">60</td><td class="num">86</td><td class="num">50</td><td class="num">42</td></tr>
+            <tr><td>AgentDojo (user)</td><td>State</td><td class="num">10</td><td class="num">79</td><td class="num">102</td><td class="num">69</td><td class="num">40</td></tr>
+            <tr><td>SWE-bench Verified</td><td>Code</td><td class="num">47</td><td class="num">190</td><td class="num">444</td><td class="num">143</td><td class="num">94</td></tr>
+          </tbody>
+          <tfoot><tr><td>Total</td><td></td><td class="num">222</td><td class="num">1,566</td><td class="num">3,427</td><td class="num">1,344</td><td class="num">798</td></tr></tfoot>
+        </table>
+      </div>
+      <p class="tnote">PASS and FAIL are reference labels. Alt. counts cosmetic variations and valid alternative solutions (a subset of PASS); Attack counts <code>hack</code> and <code>process_violation</code> cases (a subset of FAIL).</p>
+    </section>
+
+    <section id="v4v">
+      <h2 class="sec">Reference Validation (V4V)</h2>
+      <p>Source benchmarks ship reference verifiers and evaluation materials that can themselves be wrong. Before freezing the benchmark, <b>Verifier4Verifier</b> screens every reference verifier and test suite with six checks.</p>
+      <ol class="checks">
+        <li><div><b>Replay</b>The reference verifier's decision on each case matches the label assigned during construction.</div></li>
+        <li><div><b>Repeatability</b>Repeated runs from the same reset state return the same decision.</div></li>
+        <li><div><b>Provenance</b>Each recorded decision is tied to the exact case contents and reference version.</div></li>
+        <li><div><b>Input–label consistency</b>No two cases within a task show the verifier identical information but carry opposite labels.</div></li>
+        <li><div><b>Trivial baselines</b>Always-accept, always-reject, and exact-match verifiers are each exposed by the suite.</div></li>
+        <li><div><b>Mutation testing</b>Weakening a check in the reference changes at least one valid decision; 1,410 task–operator configurations in total.</div></li>
+      </ol>
+      <p>Confirmed defects in source materials led to 45 exclusions from the initial 267 tasks. Evaluation-pipeline errors were corrected without excluding tasks. The frozen records mark all six checks as passed for the 222 retained tasks.</p>
+    </section>
+
+    <section id="results">
+      <h2 class="sec">Main Results</h2>
+      <p>The primary metric is normalized task-averaged balanced accuracy, <b>BA<sub>norm</sub> = TPR + TNR − 100</b>. Each task counts equally and each class counts equally within a task. A constant verifier scores 0 and perfect agreement with the reference scores 100. Missing or invalid outputs stay in the denominator with no credit.</p>
+      <p>Accepting valid solutions is the shared weakness. For all 19 pi-harness models, TPR (21.1–70.2%) is lower than TNR (79.2–96.3%). Explicit <code>FAIL</code> decisions account for 57.1–100% of each model's unaccepted positives; the rest got no valid decision.</p>
+      <div class="fig-head">
+        <div class="hlegend" id="hlegend" role="group" aria-label="Highlight a harness"></div>
+        <div class="seg" role="group" aria-label="Configurations shown">
+          <button type="button" id="sc-all" aria-pressed="true">All 36</button>
+          <button type="button" id="sc-pi" aria-pressed="false">pi harness · 19</button>
+        </div>
+      </div>
+      <figure class="figwrap" id="scatter-wrap">
+        <div class="hscroll"><svg class="chart" id="scatter" role="img" aria-label="TPR against TNR for 36 model and harness configurations"></svg></div>
+        <div class="tip" id="sc-tip" hidden></div>
+        <figcaption><b>Every configuration accepts positives less reliably than it rejects negatives.</b> Each dot is one model–harness configuration; all 36 fall below the dashed TPR = TNR line. Dotted lines are BA<sub>norm</sub> contours. Gray links join the same model across harnesses. Hover or focus a dot for its scores.</figcaption>
+      </figure>
+      <h3 id="leaderboard">Leaderboard</h3>
+      <div class="controls">
+        <div class="seg" id="lb-seg" role="group" aria-label="Filter by harness">
+          <button type="button" id="f-all" data-f="all" aria-pressed="true">All</button>
+          <button type="button" id="f-pi" data-f="pi" aria-pressed="false">pi harness</button>
+          <button type="button" id="f-native" data-f="native" aria-pressed="false">Other harnesses</button>
+        </div>
+        <span class="count" id="lb-count"></span>
+      </div>
+      <div class="scroll">
+        <table id="lb">
+          <thead><tr>
+            <th class="num">#</th><th>Model</th><th>Harness</th>
+            <th class="num" data-k="ba" aria-sort="descending"><button type="button">BA<sub>norm</sub></button></th>
+            <th class="num" data-k="tpr"><button type="button">TPR</button></th>
+            <th class="num" data-k="tnr"><button type="button">TNR</button></th>
+            <th class="num" data-k="fpr"><button type="button">FPR<sub>h</sub></button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="tnote">All configurations are scored on the same 222 tasks. Harnesses differ in prompts, tools, and reasoning settings, so this is a ranking of configurations, not an isolated comparison of models. FPR<sub>h</sub> is the task-averaged acceptance rate on the 798 attack cases; lower is better. Click a column header to sort.</p>
+    </section>
+
+
+    <section id="harness">
+      <h2 class="sec">Native Harnesses</h2>
+      <p>Switching from the pi harness to a model's native harness helps some models and hurts others. Claude Code raises Opus 4.8 by 12.2 points and Gemini CLI raises Gemini 3.5 Flash by 15.0, while Codex lowers all four GPT models by 4.1–26.6 points. In paired traces, some GPT-5.5/Codex verifiers demand particular patch contents or repair locations before running any functional check.</p>
+      <figure><svg class="chart" id="delta" role="img" aria-label="Change in BA_norm when moving from the pi harness to the native harness"></svg>
+        <figcaption><b>Native minus pi harness</b>, in BA<sub>norm</sub> points on the same 222 tasks. These comparisons illustrate harness effects; they do not isolate individual harness components.</figcaption></figure>
+    </section>
+
+    <section id="concentration">
+      <h2 class="sec">Where Errors Concentrate</h2>
+      <p>False rejections are not spread thinly across tasks. For nine models with archived task-level records, verifiers that return <code>FAIL</code> on <em>every</em> case of their task produce 87.9–96.0% of all false rejections. Such a verifier gets a perfect negative-rejection rate on its task and never accepts a correct solution, so a high TNR alone hides it.</p>
+      <div class="legend"><span><i style="background:var(--c-lav)"></i>From verifiers that reject every case</span><span><i style="background:var(--c-lav-bg)"></i>Other false rejections</span></div>
+      <figure><svg class="chart" id="conc" role="img" aria-label="Share of false rejections from all-reject verifiers"></svg>
+        <figcaption><b>Concentration of false rejection.</b> The number on the right is how many of the 222 tasks have an all-reject verifier for that model. The separate reasoning-effort ablation shows the same pattern, at 93.3–95.5%.</figcaption></figure>
+    </section>
+
+    <section id="analysis">
+      <h2 class="sec">Analysis of Generated Verifiers</h2>
+      <p>Tracing the shared checks back to generated code and generation-time self-tests shows three recurring mechanisms.</p>
+      <div class="mech">
+        <div><span>1</span><p><b>Incidental choices become acceptance conditions.</b> One restriction, such as a forbidden file or tool call, rejects every valid solution that differs from the agent's own choice.</p></div>
+        <div><span>2</span><p><b>Self-tests leave restrictions unchallenged.</b> The agent tests with implementations its verifier already permits, so the restriction is never challenged.</p></div>
+        <div><span>3</span><p><b>Verification ends incomplete.</b> Execution feedback or budget runs out before any correct solution is confirmed, so the verifier is fixed without a single confirmed positive.</p></div>
+      </div>
+
+      <h3>Reasoning effort spends the testing budget</h3>
+      <p>Exploration and self-testing share a budget of 20 public environment executions per task. Going from LOW to HIGH effort, runs that hit a blocked environment request rise from 4 to 77 of 127 state and code tasks under the pi harness, and from 21 to 98 under Claude Code. Higher reasoning effort spends the generation budget on exploration and leaves the final verifier without a complete positive test.</p>
+    </section>
+
+    <section id="cases">
+      <h2 class="sec">Trajectory Cases</h2>
+      <p>Five generation trajectories from the paper's appendix, each traced from the task requirement through the agent's own checks and self-tests to the hidden judgments. Blue panels are supplied requirements or agent actions, teal panels are observed execution feedback, and purple panels are hidden evaluation. Step through a case to follow it in order.</p>
+      <div class="gal-tabs" role="tablist" id="gal-tabs" aria-label="Trajectory cases"></div>
+      <div class="gal" id="gal" role="tabpanel"></div>
+      <p class="tnote">The cases explain particular observed failures and one successful paired configuration; they do not estimate how common each mechanism is. Record numbers refer to lines in the decompressed generation trace.</p>
+    </section>
+
+    <section id="implications">
+      <h2 class="sec">Implications</h2>
+      <p><b>Ground every rejection condition.</b> A rule that rejects should follow from the instruction, tool definitions, or environment rules, not from one implementation strategy.</p>
+      <p><b>Test whether a condition is necessary.</b> Self-tests should vary an allowed property while keeping the task satisfied, and separately introduce a real violation.</p>
+      <p><b>Reserve budget for the final verifier.</b> Interpret feedback by what was actually tested. A budget error is not evidence of a violation.</p>
+      <p class="muted">We do not evaluate the effectiveness of these directions.</p>
+    </section>
+
+    <section id="limitations">
+      <h2 class="sec">Limitations</h2>
+      <p>Scores measure agreement with retained references on finite, constructed test suites. The task-level and trace analysis covers one model under four conditions, inside a comparison of 36 configurations whose harnesses differ in prompts, tools, and reasoning settings. We do not evaluate the proposed improvements, downstream training gains, or multi-round self-improvement.</p>
+    </section>
+
+    <section id="citation">
+      <h2 class="sec">Citation</h2>
+      <div class="bibwrap"><button type="button" class="copy" id="copy-bib">Copy BibTeX</button>
+      <pre class="bib" id="bib">@inproceedings{verifierbench2026,
+  title     = {VerifierBench: Benchmarking the Generation of
+               Executable Verifiers for LLM Agents},
+  author    = {Anonymous},
+  booktitle = {Under review},
+  year      = {2026}
+}</pre></div>
+    </section>
+
+    <div class="foot">Numbers from the paper's revision 670 main table. Page preview; links will open after the review period.</div>
+  </main>
+</div>
+
+<script>
+(function(){
+  // [model, harness, BA_norm, TPR, TNR, FPR_h] — Table "Main results", rev 670
+  const R = [
+    ["Claude Opus 4.8","Claude Code",66.2,75.8,90.4,7.8],["GPT-6-astra","pi",62.1,67.4,94.6,7.4],
+    ["GPT-6-astra","Claude Code",61.1,68.0,93.2,9.6],["GPT-6-astra","Codex",58.0,66.2,91.8,9.2],
+    ["GPT-6-astra","mini-swe",54.9,61.9,93.0,9.5],["Claude Opus 4.8","pi",54.0,67.7,86.3,13.5],
+    ["Kimi K3","pi",53.4,70.2,83.2,13.4],["GPT-5.6-sol","pi",52.9,56.8,96.0,0.8],
+    ["GPT-5.6-terra","pi",52.9,56.5,96.3,3.6],["GPT-6-astra","OpenClaw",51.1,63.2,87.9,9.1],
+    ["Gemini 3.5 Flash","Gemini CLI",50.7,59.2,91.5,7.7],["Qwen3.7 Plus","Claude Code",48.9,59.7,89.1,11.5],
+    ["GLM-5.2","pi",48.8,68.1,80.8,12.1],["Doubao Seed 2.1 Pro","pi",46.8,57.0,89.9,11.4],
+    ["GPT-5.5","pi",46.6,61.6,85.1,9.9],["GPT-5.6-sol","Claude Code",46.3,49.0,97.4,2.3],
+    ["DeepSeek V4 Pro","pi",44.8,65.5,79.2,10.1],["DeepSeek V4 Flash","pi",40.5,60.7,79.8,8.0],
+    ["Qwen3.7 Plus","mini-swe",40.5,53.3,87.1,12.7],["Qwen3.7 Plus","pi",40.2,57.6,82.6,13.6],
+    ["Qwen3.7 Plus","OpenClaw",39.9,51.2,88.6,10.7],["GPT-5.6-sol","mini-swe",35.8,38.4,97.4,1.1],
+    ["Gemini 3.5 Flash","pi",35.7,52.4,83.3,13.2],["Kimi K2.6","pi",35.2,52.5,82.7,4.6],
+    ["GPT-5.6-sol","OpenClaw",35.1,38.7,96.4,0.6],["GPT-5.6-terra","Codex",31.0,39.2,91.8,4.7],
+    ["GPT-5.5","Codex",30.3,41.2,89.1,6.2],["Doubao Seed 2.0 Code","pi",29.7,45.0,84.8,12.3],
+    ["Doubao Seed 2.0 Lite","pi",26.8,41.1,85.7,10.5],["GPT-5.6-sol","Codex",26.2,32.3,93.9,1.0],
+    ["Qwen3.7 Plus","Codex",26.1,34.0,92.1,6.5],["Doubao Seed 2.0 Pro","pi",22.8,27.4,95.4,6.8],
+    ["GPT-5.1","pi",22.2,35.2,87.1,9.7],["Gemini 2.5 Pro","pi",14.2,31.7,82.5,4.0],
+    ["Doubao Seed 2.0 Mini","pi",10.6,21.1,89.5,3.7],["Gemini 2.5 Pro","Gemini CLI",5.0,23.7,81.3,3.5]
+  ].map(r=>({model:r[0],h:r[1],ba:r[2],tpr:r[3],tnr:r[4],fpr:r[5]}));
+
+  let filt="all", key="ba";
+  const tb=document.querySelector("#lb tbody");
+  function render(){
+    let rows=R.filter(r=>filt==="all"||(filt==="pi"?r.h==="pi":r.h!=="pi"));
+    rows=rows.slice().sort((a,b)=>key==="fpr"?a.fpr-b.fpr:b[key]-a[key]);
+    const best={ba:Math.max(...rows.map(r=>r.ba)),tpr:Math.max(...rows.map(r=>r.tpr)),tnr:Math.max(...rows.map(r=>r.tnr)),fpr:Math.min(...rows.map(r=>r.fpr))};
+    const f=(r,k)=>`<td class="num${r[k]===best[k]?" best":""}">${r[k].toFixed(1)}</td>`;
+    tb.innerHTML=rows.map((r,i)=>`<tr><td class="num rank">${i+1}</td><td class="model">${r.model}</td>`+
+      `<td><span class="chip${r.h==="pi"?" pi":""}">${r.h}</span></td>`+
+      `<td class="num"><div class="ba"><span class="${r.ba===best.ba?"best":""}">${r.ba.toFixed(1)}</span><span class="track"><i style="width:${r.ba}%"></i></span></div></td>`+
+      f(r,"tpr")+f(r,"tnr")+f(r,"fpr")+`</tr>`).join("");
+    document.getElementById("lb-count").textContent=rows.length+" configurations";
+    document.querySelectorAll("#lb th[data-k]").forEach(th=>{
+      if(th.dataset.k===key) th.setAttribute("aria-sort",key==="fpr"?"ascending":"descending"); else th.removeAttribute("aria-sort");
+    });
+  }
+  document.querySelectorAll("#lb-seg button").forEach(b=>b.addEventListener("click",()=>{
+    filt=b.dataset.f;document.querySelectorAll("#lb-seg button").forEach(x=>x.setAttribute("aria-pressed",x===b));render();}));
+  document.querySelectorAll("#lb th[data-k] button").forEach(b=>b.addEventListener("click",()=>{key=b.parentElement.dataset.k;render();}));
+  render();
+
+  const NS="http://www.w3.org/2000/svg";
+  function el(svg,tag,attrs,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;svg.appendChild(e);return e;}
+
+  // ---------- TPR–TNR scatter (Table 2, all 36 configurations) ----------
+  (function(){
+    const HC={"pi":"h-pi","Claude Code":"h-cc","Codex":"h-codex","mini-swe":"h-ms","OpenClaw":"h-oc","Gemini CLI":"h-gem"};
+    const HV={"pi":"--h-pi","Claude Code":"--h-cc","Codex":"--h-codex","mini-swe":"--h-ms","OpenClaw":"--h-oc","Gemini CLI":"--h-gem"};
+    const svg=document.getElementById("scatter"), wrap=document.getElementById("scatter-wrap"), tip=document.getElementById("sc-tip");
+    const W=760,H=520,L=58,Rm=26,T=14,B=52;
+    svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+    const X=v=>L+(v-50)/50*(W-L-Rm), Y=v=>T+(100-v)/100*(H-T-B);
+    el(svg,"polygon",{points:`${X(50)},${Y(50)} ${X(50)},${Y(100)} ${X(100)},${Y(100)}`,class:"forbid"});
+    el(svg,"text",{x:X(52),y:Y(93),class:"forbidl"},"TPR > TNR");
+    el(svg,"text",{x:X(52),y:Y(93)+16,class:"forbidl",style:"font-weight:400"},"no configuration lands here");
+    for(let v=50;v<=100;v+=10){el(svg,"line",{x1:X(v),x2:X(v),y1:Y(0),y2:Y(100),class:"grid"});el(svg,"text",{x:X(v),y:Y(0)+18,"text-anchor":"middle"},v);}
+    for(let v=0;v<=100;v+=20){el(svg,"line",{x1:X(50),x2:X(100),y1:Y(v),y2:Y(v),class:"grid"});el(svg,"text",{x:X(50)-8,y:Y(v)+4,"text-anchor":"end"},v);}
+    [0,20,40,60,80].forEach(ba=>{
+      const x1=Math.max(50,ba), y1=ba+100-x1;
+      el(svg,"line",{x1:X(x1),y1:Y(y1),x2:X(100),y2:Y(ba),class:"iso"});
+      el(svg,"text",{x:X(100)-5,y:Y(ba)-6,"text-anchor":"end",class:"isol"},"BA "+ba);
+    });
+    el(svg,"line",{x1:X(50),y1:Y(50),x2:X(100),y2:Y(100),class:"diag"});
+    const ang=Math.atan2(Y(100)-Y(50),X(100)-X(50))*180/Math.PI;
+    el(svg,"text",{x:X(72),y:Y(72)-7,class:"axt",transform:`rotate(${ang} ${X(72)} ${Y(72)-7})`,style:"font-weight:500;fill:var(--muted)"},"TPR = TNR");
+    el(svg,"text",{x:(X(50)+X(100))/2,y:H-10,"text-anchor":"middle",class:"axt"},"TNR · rejects negative cases (%)");
+    el(svg,"text",{x:16,y:(Y(0)+Y(100))/2,"text-anchor":"middle",class:"axt",transform:`rotate(-90 16 ${(Y(0)+Y(100))/2})`},"TPR · accepts positive cases (%)");
+
+    const byModel={};R.forEach((r,i)=>{(byModel[r.model]=byModel[r.model]||[]).push(i);});
+    const gConn=el(svg,"g",{}), gPts=el(svg,"g",{}), gLbl=el(svg,"g",{});
+    Object.values(byModel).forEach(ix=>{
+      const p=ix.find(i=>R[i].h==="pi"); if(p==null)return;
+      ix.filter(i=>i!==p).forEach(i=>el(gConn,"line",{x1:X(R[p].tnr),y1:Y(R[p].tpr),x2:X(R[i].tnr),y2:Y(R[i].tpr),class:"conn alt","data-m":R[i].model}));
+    });
+    const pts=R.map((r,i)=>{
+      const c=el(gPts,"circle",{cx:X(r.tnr),cy:Y(r.tpr),r:r.h==="pi"?6.5:6,class:`pt ${HC[r.h]}${r.h==="pi"?"":" alt"}`,"data-m":r.model,"data-i":i,tabindex:0,
+        "aria-label":`${r.model}, ${r.h}: BA ${r.ba}, TPR ${r.tpr}, TNR ${r.tnr}`});
+      return c;
+    });
+    const LBL=[["Claude Opus 4.8","Claude Code",-10,-8,"end"],["GPT-6-astra","pi",-10,-10,"end"],["Doubao Seed 2.0 Mini","pi",-10,14,"end"],["Gemini 2.5 Pro","Gemini CLI",10,4,"start"],["GPT-5.6-sol","Codex",-10,14,"end"]];
+    LBL.forEach(([m,h,dx,dy,a])=>{const r=R.find(z=>z.model===m&&z.h===h);
+      el(gLbl,"text",{x:X(r.tnr)+dx,y:Y(r.tpr)+dy,"text-anchor":a,class:"plbl"+(h==="pi"?"":" alt"),"data-m":m},`${m} · ${h}`);});
+
+    function show(i){
+      const r=R[i]; svg.classList.add("hovering");
+      svg.querySelectorAll("[data-m]").forEach(n=>n.classList.toggle("on",n.dataset.m===r.model));
+      const same=byModel[r.model].length>1?`<br><span class="tm">${byModel[r.model].length} harnesses for this model</span>`:"";
+      tip.innerHTML=`<b>${r.model}</b> · ${r.h}<br>BA<sub>norm</sub> <b>${r.ba.toFixed(1)}</b> · TPR ${r.tpr.toFixed(1)} · TNR ${r.tnr.toFixed(1)}<br><span class="tm">FPR<sub>h</sub> ${r.fpr.toFixed(1)}</span>${same}`;
+      const pr=pts[i].getBoundingClientRect(), wr=wrap.getBoundingClientRect();
+      tip.style.left=(pr.left+pr.width/2-wr.left)+"px"; tip.style.top=(pr.top-wr.top)+"px"; tip.hidden=false;
+    }
+    function hide(){svg.classList.remove("hovering");svg.querySelectorAll(".on").forEach(n=>n.classList.remove("on"));tip.hidden=true;}
+    pts.forEach((c,i)=>{c.addEventListener("mouseenter",()=>show(i));c.addEventListener("mouseleave",hide);
+      c.addEventListener("focus",()=>show(i));c.addEventListener("blur",hide);});
+
+    const leg=document.getElementById("hlegend"); let active=null;
+    Object.keys(HC).forEach(h=>{
+      const b=document.createElement("button");b.type="button";b.setAttribute("aria-pressed","false");
+      b.innerHTML=`<i style="background:var(${HV[h]})"></i>${h}`;
+      b.addEventListener("click",()=>{
+        active=active===h?null:h;
+        leg.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b&&active===h)));
+        svg.classList.toggle("hl-h",!!active);
+        pts.forEach((c,i)=>c.classList.toggle("hon",R[i].h===active));
+      });
+      leg.appendChild(b);
+    });
+    const bAll=document.getElementById("sc-all"), bPi=document.getElementById("sc-pi");
+    function mode(pi){svg.classList.toggle("pionly",pi);bAll.setAttribute("aria-pressed",String(!pi));bPi.setAttribute("aria-pressed",String(pi));hide();}
+    bAll.addEventListener("click",()=>mode(false));bPi.addEventListener("click",()=>mode(true));
+  })();
+
+  // ---------- Sankey: 267 → 222 (Appendix B, Tables 5–6) ----------
+  (function(){
+    const svg=document.getElementById("sankey"), W=900, H=430, T=24, nodeW=14, gap=10, big=30, sgap=26;
+    svg.setAttribute("viewBox",`0 0 ${W} ${H+T+24}`);
+    const COLX=[150,330,540,730];
+    const N=[
+      {id:"all",c:0,v:267,k:"all",l:"Initial tasks"},
+      {id:"ret",c:1,v:222,k:"ret",l:"Retained"},{id:"exc",c:1,v:45,k:"exc",l:"Excluded"},
+      {id:"ast",c:2,v:95,k:"ret",g:"ast",l:"Tool-call AST"},{id:"state",c:2,v:80,k:"ret",g:"state",l:"State"},{id:"code",c:2,v:47,k:"ret",g:"code",l:"Code"},
+      {id:"tb",c:2,v:37,k:"exc",l:"Terminal-Bench",s:"parser false passes (35) · browser (1) · unstable (1)"},
+      {id:"bfx",c:2,v:5,k:"exc",l:"BFCL v4",s:"default-argument conflict with the answer key"},
+      {id:"swx",c:2,v:3,k:"exc",l:"SWE-bench",s:"parser misreads output; empty report gets full credit"},
+      {id:"bfcl",c:3,v:45,k:"ret",g:"ast",l:"BFCL v4"},{id:"ace",c:3,v:50,k:"ret",g:"ast",l:"ACEBench"},
+      {id:"tau",c:3,v:32,k:"ret",g:"state",l:"τ²-bench"},{id:"aw",c:3,v:28,k:"ret",g:"state",l:"AppWorld"},{id:"ad",c:3,v:20,k:"ret",g:"state",l:"AgentDojo",s:"10 user + 10 injection"},
+      {id:"swe",c:3,v:47,k:"ret",g:"code",l:"SWE-bench Verified"}];
+    const Lk=[["all","ret"],["all","exc"],["ret","ast"],["ret","state"],["ret","code"],["exc","tb"],["exc","bfx"],["exc","swx"],
+      ["ast","bfcl"],["ast","ace"],["state","tau"],["state","aw"],["state","ad"],["code","swe"]];
+    const byId={};N.forEach(n=>byId[n.id]=n);
+    const k=(H-(2*gap+big+2*sgap))/267;
+    [0,1,2,3].forEach(c=>{let y=T;N.filter(n=>n.c===c).forEach((n,j,arr)=>{
+      if(j>0)y+=(n.k==="exc"&&arr[j-1].k!=="exc")?big:(n.k==="exc"&&n.s)?sgap:gap;
+      n.y=y;n.h=n.v*k;n.x=COLX[c];y+=n.h;n.out=0;n.in=0;});});
+    const gL=el(svg,"g",{}), gN=el(svg,"g",{}), gT=el(svg,"g",{});
+    const links=Lk.map(([a,b])=>{
+      const s=byId[a],t=byId[b],h=t.v*k, y0=s.y+s.out, y1=t.y+t.in; s.out+=h; t.in+=h;
+      const x0=s.x+nodeW,x1=t.x,xm=(x0+x1)/2;
+      const p=el(gL,"path",{d:`M${x0},${y0} C${xm},${y0} ${xm},${y1} ${x1},${y1} L${x1},${y1+h} C${xm},${y1+h} ${xm},${y0+h} ${x0},${y0+h} Z`,
+        class:"lnk "+(t.k==="exc"?"exc":(t.g||"neu")),"data-a":a,"data-b":b});
+      el(p,"title",{},`${s.l} → ${t.l}: ${t.v} tasks`);return p;});
+    function related(id){const set=new Set([id]);let grew=true;while(grew){grew=false;Lk.forEach(([a,b])=>{if(set.has(a)&&!set.has(b)&&a!=="all"){set.add(b);grew=true;}if(set.has(b)&&!set.has(a)){set.add(a);grew=true;}});}return set;}
+    N.forEach(n=>{
+      const r=el(gN,"rect",{x:n.x,y:n.y,width:nodeW,height:Math.max(n.h,2),rx:2,class:"node "+(n.g||n.k),tabindex:0,"aria-label":`${n.l}: ${n.v} tasks`});
+      el(r,"title",{},`${n.l}: ${n.v} tasks`);
+      const on=()=>{const set=related(n.id);svg.classList.add("hovering");links.forEach(p=>p.classList.toggle("on",set.has(p.dataset.a)&&set.has(p.dataset.b)));};
+      const off=()=>{svg.classList.remove("hovering");links.forEach(p=>p.classList.remove("on"));};
+      r.addEventListener("mouseenter",on);r.addEventListener("mouseleave",off);r.addEventListener("focus",on);r.addEventListener("blur",off);
+      const left=n.c===0, cy=n.y+n.h/2;
+      const tx=left?n.x-10:n.x+nodeW+8, anchor=left?"end":"start";
+      const t=el(gT,"text",{x:tx,y:n.s?cy-2:cy+4,"text-anchor":anchor,class:"nl"});
+      const a=document.createElementNS(NS,"tspan");a.textContent=n.l+" ";t.appendChild(a);
+      const b=document.createElementNS(NS,"tspan");b.setAttribute("class","n");b.setAttribute("style",`fill:var(--${n.k==="exc"?"t-exc":n.g?"t-"+n.g:n.k==="ret"?"t-ret":"fg"})`);b.textContent=n.v;t.appendChild(b);
+      if(n.s)el(gT,"text",{x:tx,y:cy+13,"text-anchor":anchor,class:"ns"},n.s);
+    });
+  })();
+
+  // ---------- 4,993 test cases by category (Table 9) ----------
+  (function(){
+    const C=[["gold",222,"#6FA680","Gold","Reference solution; tests acceptance of the designated example."],
+      ["cosmetic",840,"#93C1A0","Cosmetic","Changes formatting or irrelevant representation details."],
+      ["overstrict_trap",504,"#BCDCC4","Valid alternative","Another implementation or execution path that still satisfies the task."],
+      ["base",222,"#E2DDEE","Base","Initial, unrepaired, or unfinished outcome."],
+      ["partial",999,"#CBC2E0","Partial","Removes required arguments, actions, or changes."],
+      ["near_miss",907,"#B4A8D0","Near miss","Alters a consequential value or local behavior."],
+      ["regression",501,"#9D90BF","Regression","Introduces an additional failure or side effect."],
+      ["hack",796,"#E2A8A8","Hack (attack)","Exploits checking omissions, fakes success signals, or interferes with verification."],
+      ["process_violation",2,"#C98585","Process violation (attack)","Violates a safety constraint; both from AgentDojo injection tasks."]];
+    const tot=4993, bar=document.getElementById("cbar"), leg=document.getElementById("cleg"), grp=document.getElementById("cbar-groups");
+    grp.innerHTML=`<div style="width:${1566/tot*100}%">1,566 PASS · 31.4%</div><div class="neg" style="width:${3427/tot*100}%">3,427 FAIL · 68.6% (798 attacks)</div>`;
+    C.forEach(([id,n,col,name,desc])=>{
+      const s=document.createElement("span");s.style.flex=`${n} 1 0`;s.style.background=col;const rgb=[1,3,5].map(i=>parseInt(col.slice(i,i+2),16));s.title=`${name}: ${n.toLocaleString("en-US")} cases`;
+      if(n/tot>.06)s.textContent=n.toLocaleString("en-US");bar.appendChild(s);
+      const d=document.createElement("div");
+      d.innerHTML=`<i style="background:${col}"></i><b>${name}<em>${n.toLocaleString("en-US")}</em></b><span>${desc}</span>`;leg.appendChild(d);
+    });
+  })();
+
+  // ---------- Trajectory case gallery (Appendix H, Figures 6–10) ----------
+  (function(){
+    const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const code=(lines,hl=[])=>`<pre>${lines.map((l,i)=>`<span${hl.includes(i)?' class="hl"':""}>${esc(l)||" "}</span>`).join("")}</pre>`;
+    const vd=v=>v.replace(/\b(PASS|FAIL)\b/g,m=>`<span class="vd ${m.toLowerCase()}">${m}</span>`);
+    const tbl=(rows,head)=>`<table>${head?`<thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead>`:""}<tbody>${rows.map(r=>{
+      const hl=r[r.length-1]===true; const cells=hl?r.slice(0,-1):r;
+      return `<tr${hl?' class="hl"':""}>${cells.map(c=>`<td>${vd(String(c))}</td>`).join("")}</tr>`;}).join("")}</tbody></table>`;
+    const note=t=>`<p class="note">${t}</p>`;
+
+    const CASES=[
+     {tab:["Specified default","Qwen3.7 Plus · pi","Self-tests pass · 4/9 positives rejected"],
+      title:"A specified default is not implemented",meta:"Qwen3.7 Plus · pi harness · Tool-call verification",task:"vgb-t-d78e768308367722",
+      heads:["During generation","After generation"],
+      top:{id:"01",k:"agent",t:"Given task and tool definition",h:`<p>The task requests insertion, deletion, and substitution analyses for two DNA sequences. The tool definition makes <code>mutation_type</code> optional, with default <code>insertion</code>; only <code>sequence</code> and <code>reference_sequence</code> are required. Omitting this argument is therefore permitted for an insertion call.</p>`+note("Supplied tool definition: trace record 4. The candidate contains six calls; the panels below isolate the default-handling check.")},
+      L:[{id:"02",k:"agent",t:"Agent writes the comparison",h:`<p>The verifier reads an absent argument as an empty string and compares it with the expected value.</p>`+code(['for key, val in expected_args.items():','    actual_val = actual_args.get(','        key, "")'],[1,2])+`<p>For the optional insertion argument, the values become <code>""</code> and <code>"insertion"</code>; the comparison returns false.</p>`+note("Final-source excerpt, lines 140–144.")},
+         {id:"03",k:"agent",t:"Agent constructs self-tests",h:`<p>The intended positive explicitly supplies <code>mutation_type</code> in all six calls. A negative omits required calls. A further positive uses raw call text instead of the parsed representation, but still supplies the mutation types explicitly.</p>`+note("Complete-verifier invocations: records 15, 17, and 19.")},
+         {id:"04",k:"feedback",t:"Observed self-test results",h:tbl([["Fully specified calls","PASS"],["Missing required calls","FAIL"],["Fully specified raw calls","PASS"]])+`<p>The additional representation test succeeds without exercising omission of the optional argument.</p>`+note("Selected verdict fields from records 16, 18, and 20.")}],
+      R:[{id:"05",k:"hidden",t:"Hidden positive after generation",h:`<p>One call in the hidden candidate legally omits the optional argument:</p>`+code(['{','  "analyze_dna_sequence": {','    "reference_sequence": "AGCTTAGCTA",','    "sequence": "AGCTTAGCTA"','  }','}'])+`<p>The missing <code>mutation_type</code> means <code>insertion</code>, but the generated comparison does not apply that default.</p>`},
+         {id:"06",k:"hidden",t:"Recorded hidden judgments",h:tbl([["Accepted positive cases","5/9"],["Rejected positive cases","4/9",true]])+`<p>The four rejections correspond to two distinct payloads: omission in the first or second insertion call. They repeat the same default-handling error.</p>`}],
+      interp:"The agent tested both input representations and an incomplete solution, yet none of those tests checked that an omitted optional argument equals its explicit default. The error is established by the supplied tool definition and the generated comparison.",
+      foot:"Archived baseline. Source 8fbb3c3198da · trace 196fd8a8b340 · judgments ceddcbbca657. No repaired verifier was executed."},
+
+     {tab:["File restriction","GPT-6-astra · pi / LOW","Self-tests pass · 4/4 positives rejected"],
+      title:"Execution repairs leave a file restriction untested",meta:"GPT-6-astra · pi harness / LOW · Code-based verification",task:"vgb-t-d8bd9183d1119aa2",
+      heads:["During generation","After generation"],
+      top:{id:"01",k:"agent",t:"Given task: Django-11734",h:`<p>The reported issue is “OuterRef in exclude() or ~Q() uses wrong model.” The candidate is a source-code patch. The supplied requirements do not prohibit modifying the normal source module <code>django/db/models/fields/__init__.py</code>.</p>`+note("Issue title from trace record 4; the file restriction below is introduced by the generated verifier.")},
+      L:[{id:"02",k:"agent",t:"Agent adds a file restriction",h:code(["if path.endswith((","    'conftest.py','sitecustomize.py',","    '__init__.py'",")) or path=='tests/queries/models.py':","    return False,0.9"],[2])+`<p>This rejects every modified file named <code>__init__.py</code>, including ordinary Django source files.</p>`+note("Final source, line 64; display-only line wrapping.")},
+         {id:"03",k:"agent",t:"Agent tests and repairs execution",h:`<p>The positive self-test changes <code>django/db/models/sql/query.py</code>. The agent then resolves three observed problems:</p><ol><li>Replaces unsupported subprocess <code>text=True</code> handling.</li><li>Corrects the self-test patch's hunk counts after <code>PATCH_INVALID</code>.</li><li>Adds <code>vgb_env.reset()</code> before environment execution.</li></ol>`+note("Test construction: record 17. Errors and repairs: records 20–27. The test patch continues to modify query.py.")},
+         {id:"04",k:"feedback",t:"Actual CLI tests now succeed",h:tbl([["good.json","PASS"],["bad.json","FAIL"],["empty.json","FAIL"]])+note("Selected verdict fields from record 30, following the three complete-verifier invocations at record 29.")}],
+      R:[{id:"05",k:"hidden",t:"Hidden positive after generation",h:`<p>The hidden patch changes:</p>`+code(["django/db/models/fields/__init__.py"],[0])+`<p>This legal repair location triggers the retained suffix restriction before functional verification.</p>`+tbl([["Positive verdicts","4/4 FAIL",true],["Public environment executions","0"],["Evaluation budget blocks","0"]])+note("All four positive judgments have score 0 and confidence 0.9. They are a reference repair and surface variants, not four independent repair strategies.")},
+         {id:"06",k:"feedback",t:"Existing same-task contrast",h:`<p>Each of the other three Astra configurations accepts all four positives and rejects all ten negatives on this task. Accepting these source changes is compatible with rejecting the tested violations.</p>`+note("Separate generated verifiers from existing runs; not a rerun after removing the faulty condition.")}],
+      interp:"The execution repairs work for the tested patch, but that patch never challenges the restriction on other legal source files. A successful test of one repair location does not establish that excluding another location follows from the task requirements.",
+      foot:"Final Astra ablation. Source ee968cf6f4b1 · trace 9cfb5c80b509 · judgments bfff7dd14eec. The exact source hash at each historical self-test was not reconstructed."},
+
+     {tab:["Blocked self-test","GPT-6-astra · Claude Code / HIGH","Self-test blocked · 9/9 positives rejected"],
+      title:"Self-test blockage and a separate checking error",meta:"GPT-6-astra · Claude Code / HIGH · State-based verification",task:"vgb-t-be43c9631ca61343",
+      heads:["During generation","After generation"],
+      top:{id:"01",k:"agent",t:"Given task: retail/34",h:`<p>The user wants to remove three office items while retaining hiking items. The instruction provides a fallback: “If cancelling partial items is not possible, just change the address to your NYC place and you will return the items later.”</p>`+note("Public instruction: trace record 3. The generated verifier uses item categories to identify the relevant order.")},
+      L:[{id:"02",k:"agent",t:"Agent defines the category",h:`<p>The final <code>office_item</code> regular expression contains these alternatives:</p>`+code(["office|desk|monitor|keyboard|mouse|","printer|scanner|laptop|computer|","webcam|headset|ergonomic|chair|","shredder|docking|stationery|router|","tablet"])+`<p>It then requires exactly three office items and at least one hiking item.</p>`+note("Source lines 259–262, wrapped for display. Count check: lines 280–283.")},
+         {id:"03",k:"agent",t:"Agent chooses self-test items",h:code(['["Laptop", "Office Chair",',' "Computer Monitor", "Hiking Boots"]'])+`<p>These names satisfy the category check. The agent invokes the complete verifier using the real environment client.</p>`+note("Names from src/selftest.py, written at trace record 152.")},
+         {id:"04",k:"feedback",t:"Feedback does not confirm success",h:tbl([["Static channel","accepted"],["Complete-verifier verdict","FAIL"],["Score / confidence","null / 0.0"],["Environment request","BudgetExceeded"]])+`<p>After an ownership-check edit, the repeated self-test still cannot complete positive verification. The final response acknowledges this limitation.</p>`+note("Records 156 and 165. Edits: 158/161; final response: 167. The 20-call generation budget is exhausted.")}],
+      R:[{id:"05",k:"hidden",t:"Hidden cases expose another issue",h:`<p>The hidden order contains the three items below, plus Cycling Helmet and Hiking Boots.</p>`+tbl([["Mechanical Keyboard","yes"],["Headphones","no",true],["Office Chair","yes"]],["Order item","Category match"])+`<p>The vocabulary excludes Headphones, so this order cannot meet the generated requirement of three office items. This is a sufficient static rejection condition, independent of the self-test's execution obstacle.</p>`},
+         {id:"06",k:"hidden",t:"Recorded hidden judgments",h:tbl([["Positive verdicts","9/9 FAIL",true],["Public environment executions","0"],["Evaluation budget blocks","0"]])+`<p>The hidden evaluation has its own execution budget. These records do not establish an identical first failing branch for all nine.</p>`}],
+      interp:"The observed self-test failure and the category defect are different problems. Completing the same self-tests would still not exercise Headphones, because the agent's chosen examples omit that item.",
+      foot:"Final Astra ablation. Source bc44842dba72 · trace bcf7260cd9df · judgments 54015c0f763e. Generation-stage budget exhaustion is observed; no claim is made that it directly causes the hidden decisions."},
+
+     {tab:["Raw-call parsing","GPT-5.6-sol · Codex","Self-tests pass · gold rejected (0/7)"],
+      title:"Self-tests omit the field that triggers rejection",meta:"GPT-5.6-sol · Codex, with pi harness comparison · Tool-call verification",task:"vgb-t-0480046e6a2a021f",
+      heads:["During generation","After generation"],
+      top:{id:"01",k:"agent",t:"Given task and input fields",h:`<p>The task requests cancellation of five restaurant reservations with specified times and policies. The input description defines <code>parsed</code> as the calls in name/argument structures, and <code>raw</code> as the candidate's calls exactly as emitted. It does not specify a concrete grammar for <code>raw</code>.</p>`+note("Public instruction and field descriptions: Codex trace records 9–10.")},
+      L:[{id:"02",k:"agent",t:"Agent adds a raw-input check",h:`<p>After checking <code>parsed</code>, the verifier separately tries to decode <code>raw</code> as JSON:</p>`+code(['raw = payload.get("raw")','if raw is not None:','    ...','    try:','        raw_value = json.loads(raw)','    except Exception:','        raw_value = None'],[4])+`<p>It rejects if the resulting calls are invalid or differ from <code>parsed</code>.</p>`+note("Source lines 62–72; the ellipsis omits an empty-string/type check. Written at trace record 42.")},
+         {id:"03",k:"agent",t:"Agent prepares CLI self-tests",h:`<p>The first invocation fails because <code>python</code> is unavailable. The agent switches to <code>python3</code> and runs positive, negative, and malformed candidates. The positive reverses the booking order but supplies only <code>parsed</code>; it does not supply <code>raw</code>.</p>`+note("Invocation error: record 48. Interpreter discovery: 52/54. Self-test construction and execution: 56.")},
+         {id:"04",k:"feedback",t:"Actual CLI tests succeed",h:tbl([["correct","0","PASS"],["wrong","0","FAIL"],["malformed","0","FAIL"]],["Self-test","Exit","Verdict"])+note("Record 57. The source readback at 54 matches the final source; no later source edit appears in the trace.")}],
+      R:[{id:"05",k:"hidden",t:"Hidden positive includes both fields",h:`<p>The candidate provides the parsed calls and Python-style raw calls beginning with:</p>`+code(["[RestaurantReservation_cancelBooking(","    bookingId='R123', ...), ...]"],[0,1])+`<p>These calls are not JSON. The additional parse fails and the verifier returns <span class="vd fail">FAIL</span>.</p>`+note("Gold candidate vgb-c-6f17444e411e5d71. Recorded Codex score 0.0, confidence 1.0.")},
+         {id:"06",k:"feedback",t:"Same-task pi harness comparison",h:`<p>The pi verifier uses the supplied parsed calls, falling back to raw text only when needed. Both configurations evaluate the same 27 cases.</p>`+tbl([["Codex","0/7","20/20",true],["pi harness","7/7","20/20"]],["Harness","Positive PASS","Negative FAIL"])+note("Candidate identifiers and content hashes match between the two configurations.")}],
+      interp:"The successful self-tests omit the input field that triggers hidden rejection. This establishes a compatibility and coverage failure, not a violation of an explicitly specified raw-call grammar or an isolated causal effect of one harness component.",
+      foot:"Archived baseline. Codex: source 7c5c5da941cb · trace 765d2750b501 · judgments 3c25c46fd680. pi harness: source 59b73ccdba09 · trace 7184129b8c89 · judgments c2107476add5."},
+
+     {tab:["Expected state","Claude Opus 4.8 · pi vs Claude Code","pi 0/9 · Claude Code 9/9"],
+      title:"Establishing an expected state through execution",meta:"Claude Opus 4.8 · pi harness and Claude Code · State-based verification",task:"vgb-t-19a8dc037ab942c6",
+      heads:["pi harness","Claude Code"],
+      top:{id:"01",k:"agent",t:"Common task: retail/49",h:`<p>The user wants to exchange a mistakenly ordered IPX7 earbud for an earbud with the desired water resistance, choosing the cheapest other earbud in the same delivered order. The two generated verifiers judge exactly the same 17 action-replay test cases: nine positives and eight negatives.</p>`+note("Instruction: pi trace record 4 and Claude Code record 3. The columns show separate generation runs, not a repair of one verifier.")},
+      L:[{id:"02a",k:"agent",t:"Construct an expected replay",h:`<p>The generated verifier derives the exchange parameters from the candidate's read results, constructs an expected exchange transcript, and tries to replay it to obtain the target state. Its constructed transcript includes a tool response with content <code>{}</code>.</p>`+note("Source lines 238–253 and 387–418. The inner replay error is not retained; it is not established as the sole cause.")},
+         {id:"03a",k:"feedback",t:"Execution is blocked",h:`<p>Shell commands are blocked by an <code>unshare</code> availability error (exit 97). The final response describes its sanity cases as:</p><blockquote>“Reported sanity cases (reasoned, since local exec is blocked)”</blockquote>`+note("Blocked execution: records 36/60. Final-message excerpt: 67. These are not successful end-to-end self-tests.")},
+         {id:"04a",k:"hidden",t:"Hidden positive is rejected",h:`<p>The designated positive receives <span class="vd fail">FAIL</span>, score 0.0, confidence 0.45. In the final source, this confidence identifies the rejection branch without a usable expected-state comparison.</p>`+note("Inference from the recorded decision and source lines 420–426; not an internal replay log.")}],
+      R:[{id:"02b",k:"agent",t:"Execute the target exchange",h:`<p>The agent runs the correct exchange in the public environment and receives a final database-state hash.</p>`+code(["replay_mode: strict_mutating_tools","n_tool_calls: 1","final_db_hash: 57802d7b797e..."])+`<p>The final verifier includes the expected transcript and this observed state as a fallback, then compares the candidate replay with the target state and required exchange arguments.</p>`+note("Tool result: record 348, after the call at 347. Source lines 124–139 and 188–198.")},
+         {id:"03b",k:"feedback",t:"Test with a stub environment",h:`<p>The agent creates a local <code>vgb_env</code> stub using the observed state hash, then invokes the verifier's CLI.</p>`+tbl([["correct","PASS"],["wrong, noop, fab","FAIL"],["empty, malformed","FAIL"]])+note("Stub creation: 352; invocation: 360; verdicts: 361. These tests use the stub, not live environment executions.")},
+         {id:"04b",k:"feedback",t:"Recorded same-task judgments",h:tbl([["pi harness","0/9","8/8",true],["Claude Code","9/9","8/8"]],["Harness","Positive PASS","Negative FAIL"])+note("Identical candidate identifiers and content hashes. Gold candidate vgb-c-cf8287fc85af65b6.")}],
+      interp:"The successful verifier uses a target state obtained through live execution. Stub self-tests and hidden judgments provide distinct evidence; this comparison does not isolate a harness component.",
+      foot:"Archived baseline. pi harness: source 597597da29c1 · trace 17a5d5b16bdf · judgments 066a2ac9b054. Claude Code: source 10723c9b6d5b · trace 63248a7cb614 · judgments a4d76248f661."}
+    ];
+
+    const tabs=document.getElementById("gal-tabs"), box=document.getElementById("gal");
+    let cur=0, step=-1;
+    const panel=(p)=>`<div class="panel k-${p.k}" data-step="${p.id}"><h6><span class="sid">${p.id}</span>${p.t}</h6>${p.h}</div>`;
+    function order(c){return [c.top,...c.L,...c.R,{id:"✓"}];}
+    function render(){
+      const c=CASES[cur], seq=order(c);
+      box.setAttribute("aria-labelledby","gtab-"+cur);
+      box.innerHTML=`<div class="ink"><h3>Case ${cur+1}. ${c.title}</h3><div class="meta">${c.meta}</div><code>${c.task}</code></div>
+        <div class="stepper"><span class="lab">Step</span>
+          <button type="button" data-s="-1" aria-pressed="${step<0}">All</button>
+          ${seq.map((p,i)=>`<button type="button" data-s="${i}" aria-pressed="${step===i}" aria-label="${p.id==="✓"?"Interpretation":"Step "+p.id}">${p.id}</button>`).join("")}
+          <span class="sp"></span>
+          <button type="button" class="nav" data-nav="-1" aria-label="Previous step">← Prev</button>
+          <button type="button" class="nav" data-nav="1" aria-label="Next step">Next →</button>
+        </div>
+        <div class="cbody${step>=0?" stepping":""}">
+          ${panel(c.top)}
+          <div class="ccols">
+            <div class="ccol"><h5>${c.heads[0]}</h5>${c.L.map(panel).join("")}</div>
+            <div class="ccol"><h5>${c.heads[1]}</h5>${c.R.map(panel).join("")}</div>
+          </div>
+          <div class="panel k-interp" data-step="✓"><h6><span class="sid">✓</span>Interpretation</h6><p>${c.interp}</p></div>
+        </div>
+        <div class="cfoot">${c.foot}</div>`;
+      if(step>=0){const id=seq[step].id;box.querySelectorAll(".panel").forEach(p=>p.classList.toggle("cur",p.dataset.step===id));}
+      box.querySelectorAll("[data-s]").forEach(b=>b.addEventListener("click",()=>{step=+b.dataset.s;render();}));
+      box.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>{
+        const n=seq.length, d=+b.dataset.nav; step=step<0?(d>0?0:n-1):Math.min(n-1,Math.max(0,step+d)); render();
+        const p=box.querySelector(".panel.cur"); if(p&&p.getBoundingClientRect().top>innerHeight*0.8) p.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+      }));
+      tabs.querySelectorAll("button").forEach((b,i)=>{b.setAttribute("aria-selected",String(i===cur));b.tabIndex=i===cur?0:-1;});
+    }
+    CASES.forEach((c,i)=>{
+      const b=document.createElement("button");b.type="button";b.id="gtab-"+i;b.setAttribute("role","tab");b.setAttribute("aria-controls","gal");
+      b.innerHTML=`<span class="tn">Case ${i+1}</span><span class="tt">${c.tab[0]}</span><span class="ts">${c.tab[1]}</span><span class="to">${c.tab[2]}</span>`;
+      b.addEventListener("click",()=>{cur=i;step=-1;render();});
+      b.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key==="ArrowLeft"){cur=(cur+(e.key==="ArrowRight"?1:CASES.length-1))%CASES.length;step=-1;render();tabs.children[cur].focus();}});
+      tabs.appendChild(b);
+    });
+    render();
+  })();
+
+
+  // Native minus pi
+  (function(){
+    const D=[["Gemini 3.5 Flash","Gemini CLI",15.0],["Claude Opus 4.8","Claude Code",12.2],["GPT-6-astra","Codex",-4.1],
+             ["Gemini 2.5 Pro","Gemini CLI",-9.2],["GPT-5.5","Codex",-16.4],["GPT-5.6-terra","Codex",-21.8],["GPT-5.6-sol","Codex",-26.6]];
+    const svg=document.getElementById("delta"), W=720, L=250, Rr=40, T=26, rowH=30, H=T+D.length*rowH+8;
+    svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+    const x=v=>L+(v+30)/(20+30)*(W-L-Rr);
+    for(let v=-30;v<=20;v+=10){el(svg,"line",{x1:x(v),x2:x(v),y1:T-8,y2:H-4,class:v===0?"zero":"grid"});el(svg,"text",{x:x(v),y:T-12,"text-anchor":"middle"},(v>0?"+":"")+v);}
+    D.forEach((d,i)=>{const y=T+i*rowH+6, v=d[2];
+      el(svg,"text",{x:L-12,y:y+13,"text-anchor":"end",class:"lbl"},`${d[0]} → ${d[1]}`);
+      el(svg,"rect",{x:Math.min(x(0),x(v)),y:y,width:Math.abs(x(v)-x(0)),height:18,rx:2,class:v>=0?"pos":"neg"});
+      el(svg,"text",{x:v>=0?x(v)+6:x(v)-6,y:y+13,"text-anchor":v>=0?"start":"end",class:"lbl"},(v>0?"+":"")+v.toFixed(1));
+    });
+  })();
+
+  // Concentration
+  (function(){
+    const C=[["Claude Opus 4.8",64,96.0],["Kimi K3",47,95.5],["Qwen3.7 Plus",81,93.8],["GPT-5.1",124,93.5],["GPT-5.6-terra",88,92.9],
+             ["GPT-6-astra",65,92.7],["Gemini 2.5 Pro",109,92.5],["GPT-5.5",61,91.6],["GPT-5.6-sol",79,87.9]];
+    const svg=document.getElementById("conc"), W=720, L=150, Rr=110, T=26, rowH=28, H=T+C.length*rowH+6;
+    svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+    const x=v=>L+v/100*(W-L-Rr);
+    for(let v=0;v<=100;v+=25){el(svg,"line",{x1:x(v),x2:x(v),y1:T-8,y2:H-4,class:"grid"});el(svg,"text",{x:x(v),y:T-12,"text-anchor":"middle"},v+"%");}
+    el(svg,"text",{x:W-4,y:T-12,"text-anchor":"end"},"all-reject tasks");
+    C.forEach((c,i)=>{const y=T+i*rowH+5;
+      el(svg,"text",{x:L-10,y:y+13,"text-anchor":"end",class:"lbl"},c[0]);
+      el(svg,"rect",{x:x(0),y:y,width:x(100)-x(0),height:18,class:"rest"});
+      el(svg,"rect",{x:x(0),y:y,width:x(c[2])-x(0),height:18,class:"conc"});
+      el(svg,"text",{x:x(c[2])-6,y:y+13,"text-anchor":"end",style:"fill:var(--fg);font-weight:600"},c[2].toFixed(1)+"%");
+      el(svg,"text",{x:W-4,y:y+13,"text-anchor":"end",class:"lbl"},c[1]+" / 222");
+    });
+  })();
+
+
+  // Copy BibTeX
+  document.getElementById("copy-bib").addEventListener("click",function(){
+    const b=this, txt=document.getElementById("bib").textContent;
+    const done=()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy BibTeX",1600);};
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("bib"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selected — press Ctrl/Cmd+C";};
+    try{navigator.clipboard.writeText(txt).then(done,sel);}catch(e){sel();}
+  });
+
+  // Scrollspy for the contents rail
+  const links=[...document.querySelectorAll(".toc a")];
+  const ids=links.map(a=>a.getAttribute("href").slice(1));
+  function spy(){
+    let cur=ids[0];
+    for(const id of ids){const s=document.getElementById(id);if(s&&s.getBoundingClientRect().top<140)cur=id;}
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4)cur=ids[ids.length-1];
+    links.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+cur));
+  }
+  addEventListener("scroll",spy,{passive:true});spy();
+})();
+</script>
+</html>

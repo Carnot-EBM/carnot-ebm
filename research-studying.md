@@ -1,5 +1,16 @@
 # Research Studying — Ranked Ideas for Future Experiments
 
+## 2026-11-02 — Exp8726 V748 verification methods — INGESTED
+
+Ingested primary P(Yes)2610.25474 author methods and verifier code,
+VerifierBench2610.28679, sufficiency2608.00585 and KAN2602.02056v4.
+Sequential retrievals and failures are retained under Exp8726 raw literature.
+The [method-to-test table](docs/research-notes/v748-verification-methods.md)
+freezes two five-call schedules and48 source-bound Qwen support prompts.
+This is model-free protocol qualification; no new Qwen score, generalization,
+CUDA repair or hardware acceleration is established. VerifierBench code remains
+unavailable on its linked author project; no substitute was fabricated.
+
 <!-- EXP8346-V720-METHOD-INGESTION-START -->
 ## Exp8346 — V720 frozen input methods — INGESTED
 
