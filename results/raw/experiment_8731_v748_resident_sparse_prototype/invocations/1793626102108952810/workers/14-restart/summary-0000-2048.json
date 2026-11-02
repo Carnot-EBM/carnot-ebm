@@ -1,0 +1,319 @@
+{
+  "binding_call_rows": [
+    {
+      "calls": 1,
+      "coefficient_uploads": 109,
+      "extra_copy_bytes": 872,
+      "input_bytes": 1085,
+      "operation": "import_checkpoint",
+      "output_bytes": 0
+    },
+    {
+      "calls": 102400,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 0,
+      "input_bytes": 512000,
+      "operation": "quantized",
+      "output_bytes": 0
+    },
+    {
+      "calls": 4096,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3209216,
+      "input_bytes": 819200,
+      "operation": "prepare",
+      "output_bytes": 2455552
+    },
+    {
+      "calls": 4096,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 692224,
+      "input_bytes": 32768,
+      "operation": "telemetry",
+      "output_bytes": 692224
+    },
+    {
+      "calls": 2048,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 1785856,
+      "input_bytes": 49152,
+      "operation": "apply",
+      "output_bytes": 49152
+    },
+    {
+      "calls": 2048,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 1785856,
+      "input_bytes": 16384,
+      "operation": "qualification_audit",
+      "output_bytes": 2148352
+    },
+    {
+      "calls": 8,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3552,
+      "input_bytes": 64,
+      "operation": "serialize_checkpoint",
+      "output_bytes": 3552
+    }
+  ],
+  "byte_accounting": "logical typed field bytes; Python object allocator overhead unmeasured; audit copies are qualification-only",
+  "checkpoint": {
+    "ack": "sha256:b09eab6a1cb5c481c38386be05c07529e296b74909ef37beb68ebab756c4d299",
+    "counts": {
+      "decay_underflow": 0,
+      "overflow": 0,
+      "renormalization": 0,
+      "saturation": 0
+    },
+    "job_hash": "sha256:ad752dd1f1c5b3efff60433c613d7a4c11efbdb204d5765d75f7a45cc6a9a1fb",
+    "maximum": 966208849526588,
+    "next_index": 2048,
+    "operations": {
+      "accumulator_checks": 1650304,
+      "divide": 677824,
+      "multiply": 823104,
+      "saturation_checks": 828207
+    },
+    "state": {
+      "decay_scale": 16102983,
+      "parameters": [
+        -3430,
+        -191520,
+        -394369,
+        -321925,
+        -496728,
+        -2062043,
+        -2486305,
+        -1996839,
+        -5381912,
+        -6860246,
+        -2703476,
+        -1465695,
+        -241394,
+        -1671377,
+        -1561957,
+        -2338051,
+        -3213948,
+        -4103780,
+        -3897113,
+        -2118847,
+        -2080162,
+        -1612984,
+        -1008054,
+        -516806,
+        65558,
+        -1015918,
+        -1553760,
+        -2701790,
+        -3167507,
+        -3465282,
+        -3450424,
+        -2100253,
+        -2886157,
+        -2131563,
+        -1238556,
+        -718737,
+        -640160,
+        -1340042,
+        -2021108,
+        -2313849,
+        -2664898,
+        -3596873,
+        -3319551,
+        -2239783,
+        -2224202,
+        -1878352,
+        -1346081,
+        -779563,
+        -367979,
+        -865135,
+        -1275431,
+        -1720296,
+        -1850733,
+        -3860515,
+        -3854014,
+        -2707106,
+        -2927796,
+        -1772841,
+        -1574208,
+        -1588329,
+        -1926403,
+        -1612847,
+        -1455382,
+        -2027826,
+        -1498887,
+        -3570310,
+        -4149558,
+        -2400223,
+        -1872008,
+        -1792947,
+        -1178271,
+        -879790,
+        -1239310,
+        -1165285,
+        -1885217,
+        -2630488,
+        -2633533,
+        -4144482,
+        -3265282,
+        -2274656,
+        -2168829,
+        -1321423,
+        -884012,
+        -751878,
+        -527852,
+        -1047673,
+        -1643521,
+        -3244163,
+        -2486463,
+        -3119631,
+        -3714931,
+        -2820837,
+        -2524734,
+        -1660419,
+        -1417014,
+        -157229,
+        -365534,
+        -986156,
+        -2378715,
+        -2589901,
+        -2061021,
+        -3618932,
+        -3312311,
+        -2123799,
+        -2605619,
+        -2283429,
+        -1597388,
+        -441595,
+        -24364436
+      ],
+      "scaler": {
+        "maximum": [
+          0.95,
+          0.6983695652173914,
+          0.6983695652173914,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "minimum": [
+          0.010000000000000009,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.3016304347826087,
+          0.3016304347826087
+        ]
+      },
+      "temperature": 16777216
+    }
+  },
+  "failed_count": 0,
+  "host_calls": {
+    "durable_checkpoints": 8,
+    "label_admission": 2048,
+    "reference_snapshot_coefficient_copies": 223232,
+    "scaling": 4096,
+    "sigmoid": 4096
+  },
+  "native_calls": {
+    "basis": 4096,
+    "residual": 4096,
+    "serialize": 8,
+    "update": 2048
+  },
+  "observed_updates": 2048,
+  "operation_partition_rows": [
+    {
+      "calls": 4096,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "operation": "basis"
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 446464,
+      "operation": "residual"
+    },
+    {
+      "calls": 8,
+      "coefficient_downloads": 872,
+      "coefficient_uploads": 872,
+      "operation": "serialize"
+    },
+    {
+      "calls": 2048,
+      "coefficient_downloads": 223232,
+      "coefficient_uploads": 223232,
+      "operation": "update"
+    }
+  ],
+  "passed": true,
+  "rows_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8731_v748_resident_sparse_prototype/invocations/1793626102108952810/workers/14-restart/rows-0000-2048.jsonl",
+  "transferred_byte_rows": [
+    {
+      "calls": 1,
+      "coefficient_uploads": 109,
+      "extra_copy_bytes": 872,
+      "input_bytes": 1085,
+      "operation": "import_checkpoint",
+      "output_bytes": 0
+    },
+    {
+      "calls": 102400,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 0,
+      "input_bytes": 512000,
+      "operation": "quantized",
+      "output_bytes": 0
+    },
+    {
+      "calls": 4096,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3209216,
+      "input_bytes": 819200,
+      "operation": "prepare",
+      "output_bytes": 2455552
+    },
+    {
+      "calls": 4096,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 692224,
+      "input_bytes": 32768,
+      "operation": "telemetry",
+      "output_bytes": 692224
+    },
+    {
+      "calls": 2048,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 1785856,
+      "input_bytes": 49152,
+      "operation": "apply",
+      "output_bytes": 49152
+    },
+    {
+      "calls": 2048,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 1785856,
+      "input_bytes": 16384,
+      "operation": "qualification_audit",
+      "output_bytes": 2148352
+    },
+    {
+      "calls": 8,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3552,
+      "input_bytes": 64,
+      "operation": "serialize_checkpoint",
+      "output_bytes": 3552
+    }
+  ]
+}

@@ -1,0 +1,407 @@
+{
+  "binding_call_rows": [
+    {
+      "calls": 1,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 109,
+      "extra_copy_bytes": 872,
+      "input_bytes": 1085,
+      "operation": "import_checkpoint",
+      "output_bytes": 0
+    },
+    {
+      "calls": 204800,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 0,
+      "input_bytes": 1024000,
+      "operation": "quantized",
+      "output_bytes": 0
+    },
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 6418432,
+      "input_bytes": 1638400,
+      "operation": "prepare",
+      "output_bytes": 4911104
+    },
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 1384448,
+      "input_bytes": 65536,
+      "operation": "telemetry",
+      "output_bytes": 1384448
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3571712,
+      "input_bytes": 98304,
+      "operation": "apply",
+      "output_bytes": 98304
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 446464,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3571712,
+      "input_bytes": 32768,
+      "operation": "qualification_audit",
+      "output_bytes": 4296704
+    },
+    {
+      "calls": 16,
+      "coefficient_downloads": 1744,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 7104,
+      "input_bytes": 128,
+      "operation": "serialize_checkpoint",
+      "output_bytes": 7104
+    }
+  ],
+  "byte_accounting": "logical typed field bytes; Python object allocator overhead unmeasured; audit copies are qualification-only",
+  "checkpoint": {
+    "ack": "sha256:4a91ed8b324d407be3ed01d16da2501c274fbda77c86787d177089bafd1c993e",
+    "counts": {
+      "decay_underflow": 0,
+      "overflow": 0,
+      "renormalization": 0,
+      "saturation": 0
+    },
+    "job_hash": "sha256:fc52c40f9bfc3e0d22587ba2ae2ccf6c8927e61ecfe26944cc533297018e667d",
+    "maximum": 529155687381602,
+    "next_index": 4096,
+    "operations": {
+      "accumulator_checks": 3300608,
+      "divide": 1355648,
+      "multiply": 1646208,
+      "saturation_checks": 1656303
+    },
+    "state": {
+      "decay_scale": 15455867,
+      "parameters": [
+        832078,
+        1684293,
+        6350932,
+        12884028,
+        3810542,
+        -249311,
+        -2234710,
+        -2956682,
+        -5517992,
+        -6048588,
+        -2499582,
+        -839761,
+        -382558,
+        913164,
+        2955871,
+        4174255,
+        1336182,
+        -3469294,
+        -556024,
+        -755638,
+        1187331,
+        2045916,
+        -1179594,
+        -1054305,
+        1209628,
+        -161885,
+        670103,
+        3393196,
+        2541616,
+        -1840947,
+        -1404160,
+        3264216,
+        324400,
+        -2773581,
+        -333454,
+        326110,
+        -274649,
+        1686296,
+        2388066,
+        618486,
+        -286251,
+        -2265412,
+        892192,
+        3033794,
+        2642803,
+        -67336,
+        -904594,
+        -2248118,
+        -841021,
+        -433951,
+        -1371258,
+        -1196843,
+        2107517,
+        248359,
+        1182649,
+        2745099,
+        1178033,
+        1085505,
+        71233,
+        439983,
+        -1202696,
+        1213997,
+        2647577,
+        3741831,
+        5390780,
+        -1652298,
+        -4288130,
+        1510589,
+        1673611,
+        -1937110,
+        -2346608,
+        463745,
+        45497,
+        1066962,
+        1137546,
+        1422099,
+        1253585,
+        -1433421,
+        -258621,
+        352010,
+        -553106,
+        1065876,
+        1010193,
+        106764,
+        2322706,
+        1011504,
+        1338620,
+        -760578,
+        -674155,
+        -967613,
+        -1405162,
+        86652,
+        827566,
+        1303718,
+        960263,
+        1171867,
+        2585555,
+        902455,
+        -220604,
+        -366720,
+        4392861,
+        -480503,
+        -3851362,
+        1821073,
+        -1343772,
+        -1724663,
+        1295740,
+        2205191,
+        5215384
+      ],
+      "scaler": {
+        "maximum": [
+          0.95,
+          0.6983695652173914,
+          0.6983695652173914,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "minimum": [
+          0.010000000000000009,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.3016304347826087,
+          0.3016304347826087
+        ]
+      },
+      "temperature": 16777216
+    }
+  },
+  "failed_count": 0,
+  "host_calls": {
+    "durable_checkpoints": 16,
+    "label_admission": 4096,
+    "reference_snapshot_coefficient_copies": 446464,
+    "scaling": 8192,
+    "sigmoid": 8192
+  },
+  "legacy_host_operation_requests": {
+    "basis": 8192,
+    "residual": 8192,
+    "serialize": 16,
+    "update": 4096
+  },
+  "legacy_json_reference_partition_estimates": [
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "operation": "basis"
+    },
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 892928,
+      "operation": "residual"
+    },
+    {
+      "calls": 16,
+      "coefficient_downloads": 1744,
+      "coefficient_uploads": 1744,
+      "operation": "serialize"
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 446464,
+      "coefficient_uploads": 446464,
+      "operation": "update"
+    }
+  ],
+  "native_calls": {
+    "apply": 4096,
+    "import_checkpoint": 1,
+    "prepare": 8192,
+    "qualification_audit": 4096,
+    "quantized": 204800,
+    "serialize_checkpoint": 16,
+    "telemetry": 8192
+  },
+  "observed_updates": 4096,
+  "operation_partition_rows": [
+    {
+      "calls": 1,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 109,
+      "extra_copy_bytes": 872,
+      "input_bytes": 1085,
+      "operation": "import_checkpoint",
+      "output_bytes": 0
+    },
+    {
+      "calls": 204800,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 0,
+      "input_bytes": 1024000,
+      "operation": "quantized",
+      "output_bytes": 0
+    },
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 6418432,
+      "input_bytes": 1638400,
+      "operation": "prepare",
+      "output_bytes": 4911104
+    },
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 1384448,
+      "input_bytes": 65536,
+      "operation": "telemetry",
+      "output_bytes": 1384448
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3571712,
+      "input_bytes": 98304,
+      "operation": "apply",
+      "output_bytes": 98304
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 446464,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3571712,
+      "input_bytes": 32768,
+      "operation": "qualification_audit",
+      "output_bytes": 4296704
+    },
+    {
+      "calls": 16,
+      "coefficient_downloads": 1744,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 7104,
+      "input_bytes": 128,
+      "operation": "serialize_checkpoint",
+      "output_bytes": 7104
+    }
+  ],
+  "passed": true,
+  "rows_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8731_v748_resident_sparse_prototype/invocations/1793627091290781676/workers/19-full/rows-0000-4096.jsonl",
+  "transferred_byte_rows": [
+    {
+      "calls": 1,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 109,
+      "extra_copy_bytes": 872,
+      "input_bytes": 1085,
+      "operation": "import_checkpoint",
+      "output_bytes": 0
+    },
+    {
+      "calls": 204800,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 0,
+      "input_bytes": 1024000,
+      "operation": "quantized",
+      "output_bytes": 0
+    },
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 6418432,
+      "input_bytes": 1638400,
+      "operation": "prepare",
+      "output_bytes": 4911104
+    },
+    {
+      "calls": 8192,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 1384448,
+      "input_bytes": 65536,
+      "operation": "telemetry",
+      "output_bytes": 1384448
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3571712,
+      "input_bytes": 98304,
+      "operation": "apply",
+      "output_bytes": 98304
+    },
+    {
+      "calls": 4096,
+      "coefficient_downloads": 446464,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 3571712,
+      "input_bytes": 32768,
+      "operation": "qualification_audit",
+      "output_bytes": 4296704
+    },
+    {
+      "calls": 16,
+      "coefficient_downloads": 1744,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 7104,
+      "input_bytes": 128,
+      "operation": "serialize_checkpoint",
+      "output_bytes": 7104
+    }
+  ]
+}

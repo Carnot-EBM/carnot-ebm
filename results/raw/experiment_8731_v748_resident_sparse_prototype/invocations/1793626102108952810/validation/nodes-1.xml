@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="3" time="64.123" timestamp="2026-11-02T08:36:39.654196-05:00" hostname="icbfl1"><testcase classname="tests.python.test_resident_sparse_runner_8731" name="test_original_inputs_and_isolation" time="6.952" /><testcase classname="tests.python.test_resident_sparse_runner_8731" name="test_private_cli_and_replay" time="38.049"><failure message="AssertionError: [exp8719] error=changed_bytes:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_resident_sparse_8731.py&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...[exp8719] error=changed_bytes:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_resident_sparse_8731.py\n').returncode">private = PosixPath('/var/tmp/exp8666-validation-zfb9pz5g/suite-1/resident87310/experiment_8731_v748_resident_sparse_prototype.json')
+tmp_path = PosixPath('/var/tmp/exp8666-validation-zfb9pz5g/suite-1/test_private_cli_and_replay0')
+
+    def test_private_cli_and_replay(private, tmp_path):
+        """SCENARIO-VERIFY-8731-REPLAY: real processes retain exact restart state."""
+        value = json.loads(private.read_bytes())
+        assert value["completed_count"] == 2 and value["resident_update_ready_score"] == 0
+        assert value["restart_rows"][0]["real_exit"] == 73
+        assert value["binding_call_rows"] and value["transferred_byte_rows"]
+        api.runtime.replay(private)
+        command = [sys.executable, str(api.e.ROOT / api.e.CLI)]
+        for args, expected in [
+            (["--cold-replay", str(private)], 0),
+            (["--date", "bad"], 1),
+            (
+                ["--private-control", "--output", str(api.e.ROOT / "results" / (api.e.NAME + ".json"))],
+                1,
+            ),
+        ]:
+            result = subprocess.run(command + args, capture_output=True, timeout=120)
+&gt;           assert result.returncode == expected, result.stderr.decode()
+E           AssertionError: [exp8719] error=changed_bytes:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_resident_sparse_8731.py
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...[exp8719] error=changed_bytes:/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_resident_sparse_8731.py\n').returncode
+
+tests/python/test_resident_sparse_runner_8731.py:50: AssertionError</failure></testcase><testcase classname="tests.python.test_resident_sparse_runner_8731" name="test_build_rejects_failed_checks" time="0.004" /><testcase time="0.001" /></testsuite></testsuites>

@@ -298,8 +298,14 @@ fn fixed_sparse_8719(operation: &str, payload: &str) -> PyResult<String> {
 }
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(fixed_sparse_8719, m)?)?;
+    #[cfg(feature = "spline-resident-8731")]
+    resident::register(m)?;
     Ok(())
 }
+
+#[cfg(feature = "spline-resident-8731")]
+#[path = "spline_resident_8731.rs"]
+mod resident;
 
 #[cfg(test)]
 #[path = "spline_fixed_8719_tests.rs"]

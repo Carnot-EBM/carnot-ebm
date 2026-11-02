@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8731_v748_resident_sparse_prototype.py", line 15, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/compiled_sparse_runner_8719.py", line 501, in main
+    e.numerical.drive(
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/resident_sparse_8731.py", line 233, in drive
+    value: Json = engine.drive(job, folder, start, stop, extension, historical)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/compiled_sparse_8719.py", line 287, in drive
+    probability_py, _ = numeric.probability(python, raw, py)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/spline_precision_8692.py", line 172, in probability
+    ids, weights = local_basis(f, scaled)
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/spline_precision_8692.py", line 126, in local_basis
+    (x - knots[i], knots[i + degree] - knots[i], previous.get(i, 0)),
+                                                 ^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

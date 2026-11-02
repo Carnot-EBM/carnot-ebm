@@ -104225,3 +104225,20 @@ Exp8729 retains the exposed120-world scope and separate audit/gain scores in
 results/experiment_8729_v748_equal_budget_verifier.json. The matched-call gain
 is oracle-dependent constructed evidence; validation receipts and statement
 coverage remain bound to the actual invocation under results/raw/.
+## REQ-REPORT-8731: Opt-in resident signed32/24 update state
+
+Keep coefficients, decay and arithmetic counters in one typed PyO3 object over
+the unchanged checked integer kernel. Host scaling, nonlinear functions and
+label admission retain their original order. No stale-gradient batching or
+default learner change is permitted. Bind all fourteen V748 tasks separately
+from qualified Exp8719/8706 numerical methods and original input bytes.
+
+### SCENARIO-REPORT-8731-PARITY
+
+Compare every state, counter, error and acknowledgement on81920 original updates
+and320 boundary controls against Python and the original native witness. Retain
+signed floor division, ties to even, checked signed64, saturation, dense decay
+renormalization and serialization order. The supported accumulator bound is
+1333066761011986432;170632382681813352448 remains unsupported. Record crossings,
+typed payload bytes and diagnostic coefficient copies separately. Readiness
+proves numerical and lifecycle eligibility only; Exp8732 owns performance.

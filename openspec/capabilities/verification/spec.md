@@ -57476,3 +57476,18 @@ baseline120/150 versus targeted130/150; paired world-cluster bootstrap95 percent
 interval3.33–10.00 percentage points. Correct alternative rejection and unknown
 to false errors are zero. Targeted predicate input work is25 percent higher;
 no equal-wall-time benefit or independent generalization is claimed.
+## REQ-VERIFY-8731: Resident lifecycle custody and owned coverage
+
+Require actual extension load, checkpoint export/import and hard exit after
+committed update2048. Reject duplicate, late and invalid feedback without
+acknowledging unapplied work. Storage and fsync remain host-owned. Freeze source,
+input and test identities before execution. Require scoped Rust tests/fmt/clippy,
+Python checks,100 percent new statements and applicable E2E-003/004/018/021.
+
+### SCENARIO-VERIFY-8731-REPLAY
+
+Reuse the bounded current execution helper through an isolated version binding.
+Preserve raw child SQLite, JUnit, nodes, exits, clocks and source hashes. Cold
+replay must reject missing operands and consistently rehashed tampering before
+unchanged validators permit atomic publication. External absence is terminal
+blocked; failed owned checks disqualify. No model load or generation occurs.

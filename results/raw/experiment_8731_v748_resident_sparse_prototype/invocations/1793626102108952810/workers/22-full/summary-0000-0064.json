@@ -1,0 +1,319 @@
+{
+  "binding_call_rows": [
+    {
+      "calls": 1,
+      "coefficient_uploads": 109,
+      "extra_copy_bytes": 872,
+      "input_bytes": 1085,
+      "operation": "import_checkpoint",
+      "output_bytes": 0
+    },
+    {
+      "calls": 3200,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 0,
+      "input_bytes": 16000,
+      "operation": "quantized",
+      "output_bytes": 0
+    },
+    {
+      "calls": 128,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 101216,
+      "input_bytes": 25600,
+      "operation": "prepare",
+      "output_bytes": 77664
+    },
+    {
+      "calls": 128,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 21632,
+      "input_bytes": 1024,
+      "operation": "telemetry",
+      "output_bytes": 21632
+    },
+    {
+      "calls": 64,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 55808,
+      "input_bytes": 1536,
+      "operation": "apply",
+      "output_bytes": 1536
+    },
+    {
+      "calls": 64,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 55808,
+      "input_bytes": 512,
+      "operation": "qualification_audit",
+      "output_bytes": 67136
+    },
+    {
+      "calls": 1,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 444,
+      "input_bytes": 8,
+      "operation": "serialize_checkpoint",
+      "output_bytes": 444
+    }
+  ],
+  "byte_accounting": "logical typed field bytes; Python object allocator overhead unmeasured; audit copies are qualification-only",
+  "checkpoint": {
+    "ack": "sha256:17822a70654302a63759099b3ad9382ccee866ec01f999154b7c0bb0fc9a532c",
+    "counts": {
+      "decay_underflow": 0,
+      "overflow": 0,
+      "renormalization": 1,
+      "saturation": 0
+    },
+    "job_hash": "sha256:b1f041cec521c6defcda9d19c54bb00c1a7084dca048063800f25a2031d23b45",
+    "maximum": 476486105790752,
+    "next_index": 64,
+    "operations": {
+      "accumulator_checks": 52392,
+      "divide": 21534,
+      "multiply": 26132,
+      "saturation_checks": 26244
+    },
+    "state": {
+      "decay_scale": 16755712,
+      "parameters": [
+        23204,
+        48817,
+        95412,
+        127387,
+        113560,
+        101497,
+        -48619,
+        -122657,
+        -133681,
+        -151800,
+        -73096,
+        -9216,
+        -33099,
+        -41353,
+        -57380,
+        -10976,
+        -697,
+        46617,
+        -3091,
+        -12352,
+        -23106,
+        -31422,
+        52884,
+        84795,
+        16439,
+        56128,
+        34218,
+        -65079,
+        -90046,
+        -48355,
+        -43041,
+        108589,
+        52078,
+        -19354,
+        -2399,
+        -28367,
+        5410,
+        -53106,
+        -45245,
+        26745,
+        -55474,
+        -39134,
+        61065,
+        25258,
+        58899,
+        12943,
+        -16249,
+        -10287,
+        6927,
+        -3274,
+        14453,
+        23375,
+        -27874,
+        50787,
+        97572,
+        47875,
+        -16291,
+        16569,
+        -74869,
+        -164440,
+        -39744,
+        -28314,
+        -4726,
+        36762,
+        63818,
+        67625,
+        55301,
+        16179,
+        -80021,
+        -103004,
+        4327,
+        -17387,
+        29519,
+        30275,
+        10141,
+        -16450,
+        -54896,
+        4339,
+        6519,
+        16016,
+        -2861,
+        1883,
+        -3498,
+        -50166,
+        -10684,
+        -9332,
+        21077,
+        -21592,
+        -72650,
+        25172,
+        -4228,
+        470,
+        -4350,
+        27745,
+        52174,
+        -32997,
+        10648,
+        -4721,
+        -53017,
+        26063,
+        -2144,
+        16926,
+        14639,
+        76616,
+        -40268,
+        -24206,
+        -27950,
+        -21772,
+        -29189
+      ],
+      "scaler": {
+        "maximum": [
+          0.95,
+          0.6983695652173914,
+          0.6983695652173914,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "minimum": [
+          0.010000000000000009,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.3016304347826087,
+          0.3016304347826087
+        ]
+      },
+      "temperature": 16777216
+    }
+  },
+  "failed_count": 0,
+  "host_calls": {
+    "durable_checkpoints": 1,
+    "label_admission": 64,
+    "reference_snapshot_coefficient_copies": 6976,
+    "scaling": 128,
+    "sigmoid": 128
+  },
+  "native_calls": {
+    "basis": 128,
+    "residual": 128,
+    "serialize": 1,
+    "update": 64
+  },
+  "observed_updates": 64,
+  "operation_partition_rows": [
+    {
+      "calls": 128,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 0,
+      "operation": "basis"
+    },
+    {
+      "calls": 128,
+      "coefficient_downloads": 0,
+      "coefficient_uploads": 13952,
+      "operation": "residual"
+    },
+    {
+      "calls": 1,
+      "coefficient_downloads": 109,
+      "coefficient_uploads": 109,
+      "operation": "serialize"
+    },
+    {
+      "calls": 64,
+      "coefficient_downloads": 6976,
+      "coefficient_uploads": 6976,
+      "operation": "update"
+    }
+  ],
+  "passed": true,
+  "rows_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8731_v748_resident_sparse_prototype/invocations/1793626102108952810/workers/22-full/rows-0000-0064.jsonl",
+  "transferred_byte_rows": [
+    {
+      "calls": 1,
+      "coefficient_uploads": 109,
+      "extra_copy_bytes": 872,
+      "input_bytes": 1085,
+      "operation": "import_checkpoint",
+      "output_bytes": 0
+    },
+    {
+      "calls": 3200,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 0,
+      "input_bytes": 16000,
+      "operation": "quantized",
+      "output_bytes": 0
+    },
+    {
+      "calls": 128,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 101216,
+      "input_bytes": 25600,
+      "operation": "prepare",
+      "output_bytes": 77664
+    },
+    {
+      "calls": 128,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 21632,
+      "input_bytes": 1024,
+      "operation": "telemetry",
+      "output_bytes": 21632
+    },
+    {
+      "calls": 64,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 55808,
+      "input_bytes": 1536,
+      "operation": "apply",
+      "output_bytes": 1536
+    },
+    {
+      "calls": 64,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 55808,
+      "input_bytes": 512,
+      "operation": "qualification_audit",
+      "output_bytes": 67136
+    },
+    {
+      "calls": 1,
+      "coefficient_uploads": 0,
+      "extra_copy_bytes": 444,
+      "input_bytes": 8,
+      "operation": "serialize_checkpoint",
+      "output_bytes": 444
+    }
+  ]
+}
