@@ -1,0 +1,51 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_conductor_prompt_encoding[active] ____________________
+
+tmp_path = PosixPath('/tmp/exp8749-fixture-7bcbnlc6/failure_tmp/test_conductor_prompt_encoding0')
+source = 'active'
+
+    @pytest.mark.parametrize("source", ["active", "staged", "both"])
+    def test_conductor_prompt_encoding(tmp_path, source):
+        """SCENARIO-REPORT-8723-PROMPT-ENCODING: bind encoding without changing authority."""
+        m = api.m
+        text = (m.ROOT / m.DESIGN).read_text()
+>       tasks = m.parse_design(text, milestone=m.MILESTONE)[1]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v748_contract_8723.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = '# Carnot Research Roadmap V750: Qualified Learning, Verifier Representation, and Durable Costs\n\n**Created:** 2026-1...e}\\n\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n  ]\n}\n```\n<!-- V750_TASK_CONTRACT_END -->\n'
+
+    def parse_design(
+        text: str, *, milestone: str = MILESTONE
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+        """Read the visible table separately from the embedded machine contract."""
+        section = text.split("## Exact task contract", 1)[1]
+        table: list[dict[str, Any]] = []
+        for line in section.splitlines():
+            cells = [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+            if len(cells) == 5 and cells[0].isdigit():
+                table.append(
+                    dict(
+                        zip(
+                            ("order", *TABLE_FIELDS),
+                            (int(cells[0]), cells[1], cells[2], int(cells[3]), cells[4]),
+                        )
+                    )
+                )
+        version = milestone.rsplit(".", 1)[-1]
+        block = re.search(
+            rf"<!-- V{re.escape(version)}_TASK_CONTRACT_START -->\s*```json\s*(.*?)\s*```",
+            section,
+            re.S,
+        )
+        if block is None:
+>           raise ValueError(f"V{version} JSON contract missing")
+E           ValueError: V748 JSON contract missing
+
+python/carnot/reporting/roadmap_contract.py:55: ValueError
+=========================== short test summary info ============================
+FAILED tests/python/test_v748_contract_8723.py::test_conductor_prompt_encoding[active]
+1 failed in 1.33s

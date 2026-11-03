@@ -1,0 +1,100 @@
+.......F                                                                 [100%]
+=================================== FAILURES ===================================
+_______________ test_production_dispatch_preserves_owned_failure _______________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T012130-2276460-f94f9cf4/test_production_dispatch_prese0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f168c3211c0>
+
+    def test_production_dispatch_preserves_owned_failure(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8749-SCOPE: the production dispatcher cannot hide owned failures."""
+        from types import SimpleNamespace
+        from datetime import datetime, UTC
+        from carnot.reporting import v750_archive_runner as runner
+    
+        monkeypatch.setattr(runner, "Coverage", lambda **kwargs: SimpleNamespace(start=lambda: None))
+        monkeypatch.setattr(a, "mutations", lambda root: [dict(passed=True)])
+        monkeypatch.setattr(
+            runner,
+            "validate",
+            lambda *args: dict(
+                receipts=[dict(passed=False)] * 7,
+                union=dict(passed=False),
+                coverage=dict(complete=False),
+                raw_references=[],
+                ended_at_utc=datetime.now(UTC).isoformat(),
+            ),
+        )
+        out = tmp_path / (a.NAME + ".json")
+>       assert runner.main(["--output", str(out)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v750_archive_bound_8749.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v750_archive_runner.py:415: in main
+    atomic_json(
+                ^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T012130-2276460-f94f9cf4/test_production_dispatch_prese0/experiment_8749_v750_archive_bound_contract.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'archived_authority': False, 'contract': True, 'learning_inputs': True, 'muta...9/archived_design.md', 'sha256': 'sha256:4c9f681d4089475d5483510527a2c59ec22d48d68789387b7bd303caae95350d'}, ...}, ...}
+validator = <function main.<locals>.<lambda> at 0x7f1684216160>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8749] phase=start_no_model_load completed=0 pending=0
+[exp8749] phase=authenticate_and_freeze completed=0 pending=0
+[exp8749] phase=reproduce_original_child5_failure completed=0 pending=0
+[exp8205] phase=before_subprocess_moving_roadmap_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_moving_roadmap_failure completed=1 pending=0
+[exp8749] phase=full_task_mutation_controls completed=0 pending=0
+[exp8749] phase=scoped_validation completed=0 pending=0
+[exp8205] phase=before_subprocess_deliberate_owned_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_deliberate_owned_failure completed=1 pending=0
+[exp8749] phase=before_terminal_validation completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v750_archive_bound_8749.py::test_production_dispatch_preserves_owned_failure
+1 failed, 7 passed, 1 warning in 80.20s (0:01:20)

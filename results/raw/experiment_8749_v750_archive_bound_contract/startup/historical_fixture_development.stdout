@@ -1,0 +1,436 @@
+................F..F.........F.F                                         [100%]
+=================================== FAILURES ===================================
+______________________ test_private_cli_and_sealed_replay ______________________
+
+tmp_path = PosixPath('/tmp/exp8749-original-tests-tqvm24qp/tmp/test_private_cli_and_sealed_re0')
+
+    def test_private_cli_and_sealed_replay(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: real children keep private readiness at zero."""
+        m = api.m
+        output = tmp_path / "results" / (m.NAME + ".json")
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("cold", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+            ("date", ["--date", "20261101"], 2),
+            ("unsafe", ["--private-control"], 2),
+            ("error", ["--deliberate-error"], 7),
+        ]:
+            receipt = child(name, command + args, tmp_path / "logs", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: Traceback (most recent call last):
+E               File "/tmp/exp8749-original-tests-tqvm24qp/archive/scripts/experiments/experiment_8723_v748_collection_contract.py", line 5, in <module>
+E                 raise SystemExit(historical_main(Path('/tmp/exp8749-original-tests-tqvm24qp/archive')))
+E                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v750_archive_bound.py", line 125, in historical_main
+E                 return int(historical.main())
+E                            ^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v747_contract_runner.py", line 264, in main
+E                 old.publish(value, output, raw)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v746_contract_runner.py", line 312, in publish
+E                 publication = publish_primary(output, value, validate)
+E                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E                 raise ValueError("candidate_rejected")
+E             ValueError: candidate_rejected
+E             
+E           assert False
+
+/tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py:146: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+__________________ test_original_assertions_and_failed_child ___________________
+
+tmp_path = PosixPath('/tmp/exp8749-original-tests-tqvm24qp/tmp/test_original_assertions_and_f0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8338d62e70>
+
+    def test_original_assertions_and_failed_child(tmp_path, monkeypatch):
+        """REQ-VERIFY-8723: execute the original full-path assertions under current bindings."""
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original["test_collection_and_full_path"]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        with monkeypatch.context() as nested:
+>           check(tmp_path, nested)
+
+/tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/exp8749-original-tests-tqvm24qp/archive/tests/python/test_v747_contract_8709.py:165: in test_collection_and_full_path
+    assert runner.main(["--output", str(output)]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_runner.py:264: in main
+    old.publish(value, output, raw)
+python/carnot/reporting/v746_contract_runner.py:312: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/exp8749-original-tests-tqvm24qp/tmp/test_original_assertions_and_f0/full/experiment_8723_v748_collection_contract.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authority_mutations': True, 'complete_fourteen_objects': True, 'newly_owned_...erved': False, 'passed': True}, {'expected': False, 'mutation': 'title', 'observed': False, 'passed': True}, ...], ...}
+validator = <function publish.<locals>.validate at 0x7f8335975800>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_collect_once completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_once completed=1 pending=0
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8723] phase=preconditions_authenticated completed=0 pending=0
+[exp8723] phase=mutation_activated completed=1 pending=21
+[exp8723] phase=mutation_staged completed=2 pending=20
+[exp8723] phase=mutation_count completed=3 pending=19
+[exp8723] phase=mutation_order completed=4 pending=18
+[exp8723] phase=mutation_id completed=5 pending=17
+[exp8723] phase=mutation_title completed=6 pending=16
+[exp8723] phase=mutation_phase completed=7 pending=15
+[exp8723] phase=mutation_deliverable completed=8 pending=14
+[exp8723] phase=mutation_track completed=9 pending=13
+[exp8723] phase=mutation_priority completed=10 pending=12
+[exp8723] phase=mutation_model completed=11 pending=11
+[exp8723] phase=mutation_MODEL_SPECS completed=12 pending=10
+[exp8723] phase=mutation_inference_substrate_class completed=13 pending=9
+[exp8723] phase=mutation_prompt completed=14 pending=8
+[exp8723] phase=mutation_gated_on completed=15 pending=7
+[exp8723] phase=mutation_prior_failures completed=16 pending=6
+[exp8723] phase=mutation_start completed=17 pending=5
+[exp8723] phase=mutation_end completed=18 pending=4
+[exp8723] phase=mutation_table completed=19 pending=3
+[exp8723] phase=mutation_digest completed=20 pending=2
+[exp8723] phase=mutation_rehashed completed=21 pending=1
+[exp8723] phase=mutation_foreign_active completed=22 pending=0
+[exp8723] phase=source_sealed completed=10400 pending=0
+[exp8723] phase=child completed=0 pending=1
+[exp8205] phase=before_subprocess_tiny completed=0 pending=1
+[exp8205] phase=after_subprocess_tiny completed=1 pending=0
+[exp8723] phase=qualify_current_children completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_check completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_check completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff_format completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff_format completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_mypy completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_mypy completed=1 pending=0
+[exp8205] phase=before_subprocess_spec_coverage completed=0 pending=1
+[exp8205] phase=after_subprocess_spec_coverage completed=1 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+______ test_original_rejection_controls[test_direct_replay_controls-None] ______
+
+tmp_path = PosixPath('/tmp/exp8749-original-tests-tqvm24qp/tmp/test_original_rejection_contro9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f83372f3890>
+name = 'test_direct_replay_controls', mode = None
+
+    @pytest.mark.parametrize(
+        "name,mode",
+        [
+            ("test_retained_rejection", mode)
+            for mode in ["missing", "changed", "field", "zero", "flagged", "terminal"]
+        ]
+        + [("test_retained_deep_identity", mode) for mode in ["source", "qualification", "seal"]]
+        + [
+            (name, None)
+            for name in [
+                "test_direct_replay_controls",
+                "test_missing_original_methods",
+                "test_replay_rejects_historical_child_substitution",
+            ]
+        ],
+    )
+    def test_original_rejection_controls(tmp_path, monkeypatch, name, mode):
+        """REQ-VERIFY-8723: preserve unchanged historical rejection assertions under V748 bindings."""
+        import inspect
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original[name]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        arguments = dict(tmp_path=tmp_path, monkeypatch=monkeypatch, mode=mode)
+>       check(**{key: arguments[key] for key in inspect.signature(check).parameters})
+
+/tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/exp8749-original-tests-tqvm24qp/archive/tests/python/test_v747_contract_8709.py:178: in test_direct_replay_controls
+    assert runner.main(["--private-control", "--failed-child", "--output", str(output)]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_runner.py:264: in main
+    old.publish(value, output, raw)
+python/carnot/reporting/v746_contract_runner.py:312: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/exp8749-original-tests-tqvm24qp/tmp/test_original_rejection_contro9/results/experiment_8723_v748_collection_contract.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authority_mutations': True, 'complete_fourteen_objects': True, 'newly_owned_...erved': False, 'passed': True}, {'expected': False, 'mutation': 'title', 'observed': False, 'passed': True}, ...], ...}
+validator = <function publish.<locals>.validate at 0x7f833671bf60>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8723] phase=preconditions_authenticated completed=0 pending=0
+[exp8723] phase=mutation_activated completed=1 pending=21
+[exp8723] phase=mutation_staged completed=2 pending=20
+[exp8723] phase=mutation_count completed=3 pending=19
+[exp8723] phase=mutation_order completed=4 pending=18
+[exp8723] phase=mutation_id completed=5 pending=17
+[exp8723] phase=mutation_title completed=6 pending=16
+[exp8723] phase=mutation_phase completed=7 pending=15
+[exp8723] phase=mutation_deliverable completed=8 pending=14
+[exp8723] phase=mutation_track completed=9 pending=13
+[exp8723] phase=mutation_priority completed=10 pending=12
+[exp8723] phase=mutation_model completed=11 pending=11
+[exp8723] phase=mutation_MODEL_SPECS completed=12 pending=10
+[exp8723] phase=mutation_inference_substrate_class completed=13 pending=9
+[exp8723] phase=mutation_prompt completed=14 pending=8
+[exp8723] phase=mutation_gated_on completed=15 pending=7
+[exp8723] phase=mutation_prior_failures completed=16 pending=6
+[exp8723] phase=mutation_start completed=17 pending=5
+[exp8723] phase=mutation_end completed=18 pending=4
+[exp8723] phase=mutation_table completed=19 pending=3
+[exp8723] phase=mutation_digest completed=20 pending=2
+[exp8723] phase=mutation_rehashed completed=21 pending=1
+[exp8723] phase=mutation_foreign_active completed=22 pending=0
+[exp8723] phase=source_sealed completed=10399 pending=0
+[exp8205] phase=before_subprocess_private_child completed=0 pending=1
+[exp8205] phase=after_subprocess_private_child completed=1 pending=0
+[exp8723] phase=qualify_current_children completed=0 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] [--date {20261102}] [--root ROOT] [--output OUTPUT]
+                   [--private-control] [--failed-child]
+                   [--cold-replay COLD_REPLAY] [--deliberate-error]
+__main__.py: error: private outputs must remain outside the checkout
+_ test_original_rejection_controls[test_replay_rejects_historical_child_substitution-None] _
+
+tmp_path = PosixPath('/tmp/exp8749-original-tests-tqvm24qp/tmp/test_original_rejection_contro11')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8338c865d0>
+name = 'test_replay_rejects_historical_child_substitution', mode = None
+
+    @pytest.mark.parametrize(
+        "name,mode",
+        [
+            ("test_retained_rejection", mode)
+            for mode in ["missing", "changed", "field", "zero", "flagged", "terminal"]
+        ]
+        + [("test_retained_deep_identity", mode) for mode in ["source", "qualification", "seal"]]
+        + [
+            (name, None)
+            for name in [
+                "test_direct_replay_controls",
+                "test_missing_original_methods",
+                "test_replay_rejects_historical_child_substitution",
+            ]
+        ],
+    )
+    def test_original_rejection_controls(tmp_path, monkeypatch, name, mode):
+        """REQ-VERIFY-8723: preserve unchanged historical rejection assertions under V748 bindings."""
+        import inspect
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original[name]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        arguments = dict(tmp_path=tmp_path, monkeypatch=monkeypatch, mode=mode)
+>       check(**{key: arguments[key] for key in inspect.signature(check).parameters})
+
+/tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/exp8749-original-tests-tqvm24qp/archive/tests/python/test_v747_contract_8709.py:243: in test_replay_rejects_historical_child_substitution
+    assert runner.main(["--private-control", "--output", str(output)]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v747_contract_runner.py:264: in main
+    old.publish(value, output, raw)
+python/carnot/reporting/v746_contract_runner.py:312: in publish
+    publication = publish_primary(output, value, validate)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/exp8749-original-tests-tqvm24qp/tmp/test_original_rejection_contro11/results/experiment_8723_v748_collection_contract.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'authority_mutations': True, 'complete_fourteen_objects': True, 'newly_owned_...erved': False, 'passed': True}, {'expected': False, 'mutation': 'title', 'observed': False, 'passed': True}, ...], ...}
+validator = <function publish.<locals>.validate at 0x7f8337f5b420>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8723] phase=preconditions_authenticated completed=0 pending=0
+[exp8723] phase=mutation_activated completed=1 pending=21
+[exp8723] phase=mutation_staged completed=2 pending=20
+[exp8723] phase=mutation_count completed=3 pending=19
+[exp8723] phase=mutation_order completed=4 pending=18
+[exp8723] phase=mutation_id completed=5 pending=17
+[exp8723] phase=mutation_title completed=6 pending=16
+[exp8723] phase=mutation_phase completed=7 pending=15
+[exp8723] phase=mutation_deliverable completed=8 pending=14
+[exp8723] phase=mutation_track completed=9 pending=13
+[exp8723] phase=mutation_priority completed=10 pending=12
+[exp8723] phase=mutation_model completed=11 pending=11
+[exp8723] phase=mutation_MODEL_SPECS completed=12 pending=10
+[exp8723] phase=mutation_inference_substrate_class completed=13 pending=9
+[exp8723] phase=mutation_prompt completed=14 pending=8
+[exp8723] phase=mutation_gated_on completed=15 pending=7
+[exp8723] phase=mutation_prior_failures completed=16 pending=6
+[exp8723] phase=mutation_start completed=17 pending=5
+[exp8723] phase=mutation_end completed=18 pending=4
+[exp8723] phase=mutation_table completed=19 pending=3
+[exp8723] phase=mutation_digest completed=20 pending=2
+[exp8723] phase=mutation_rehashed completed=21 pending=1
+[exp8723] phase=mutation_foreign_active completed=22 pending=0
+[exp8723] phase=source_sealed completed=10399 pending=0
+[exp8205] phase=before_subprocess_private_child completed=0 pending=1
+[exp8205] phase=after_subprocess_private_child completed=1 pending=0
+[exp8723] phase=qualify_current_children completed=0 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+=========================== short test summary info ============================
+FAILED ../../../../../tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py::test_private_cli_and_sealed_replay
+FAILED ../../../../../tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py::test_original_assertions_and_failed_child
+FAILED ../../../../../tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py::test_original_rejection_controls[test_direct_replay_controls-None]
+FAILED ../../../../../tmp/exp8749-original-tests-tqvm24qp/tests/test_v748_contract_8723.py::test_original_rejection_controls[test_replay_rejects_historical_child_substitution-None]
+4 failed, 28 passed in 95.85s (0:01:35)

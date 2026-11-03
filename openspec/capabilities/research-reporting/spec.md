@@ -104601,3 +104601,29 @@ Run scoped lint/spec tracing and record global failures separately. Preserve
 continuous self-learning, calibrated decisions, ARC generalization sensitivity,
 and all three board operation boundaries. Planning performs no research run,
 model load, board operation, activation, external publication or push.
+
+## REQ-REPORT-8749: Bind V750 tasks to archived historical authority
+
+Exp8749 binds all fourteen visible V750 tasks, complete JSON objects, YAML and
+independent canonical digest. Each branch retains its own exact prompts, routes,
+prior failures and gates. Freeze unchanged V744 numerical methods, partitions,
+statistical criteria and source/test custody before validation. Readiness is
+administrative and never grants learning execution or scientific promotion.
+Preserve V748/V749 archives, producer bytes and quarantines without alteration.
+
+### SCENARIO-REPORT-8749-ARCHIVE
+
+Reproduce Exp8737 child5 with unchanged original V748 assertions in private
+fixtures. Supply archived DESIGN/ACTIVE/STAGED dependencies in an isolated root.
+The fixed V748 digest passes while the live vNEXT contains V750. Prompt, gate,
+route, deliverable path and digest mutations fail. No old production reader is
+redirected to V750. Freeze the reusable archived-root validation recipe.
+
+### SCENARIO-REPORT-8749-SCOPE
+
+Require every original scoped node, actual new-statement coverage, consumer
+checks and private E2E-018/021. A failed owned node suppresses readiness. Retain
+the exact unrelated full-suite failure under repository_health_reference; it
+neither qualifies nor vetoes scoped work. Return per-branch failures separately.
+Missing external custody is blocked; owned validation failures are disqualified.
+Ops/status/changelog and traceability reconciliation belong to the conductor.

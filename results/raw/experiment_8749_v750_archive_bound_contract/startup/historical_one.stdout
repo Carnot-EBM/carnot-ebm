@@ -1,0 +1,46 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_private_cli_and_sealed_replay ______________________
+
+tmp_path = PosixPath('/tmp/exp8749-debug-1nxn13t9/tmp/test_private_cli_and_sealed_re0')
+
+    def test_private_cli_and_sealed_replay(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: real children keep private readiness at zero."""
+        m = api.m
+        output = tmp_path / "results" / (m.NAME + ".json")
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("cold", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+            ("date", ["--date", "20261101"], 2),
+            ("unsafe", ["--private-control"], 2),
+            ("error", ["--deliberate-error"], 7),
+        ]:
+            receipt = child(name, command + args, tmp_path / "logs", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: Traceback (most recent call last):
+E               File "/tmp/exp8749-debug-1nxn13t9/archive/scripts/experiments/experiment_8723_v748_collection_contract.py", line 5, in <module>
+E                 raise SystemExit(historical_main(Path('/tmp/exp8749-debug-1nxn13t9/archive')))
+E                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v750_archive_bound.py", line 125, in historical_main
+E                 return int(historical.main())
+E                            ^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v747_contract_runner.py", line 264, in main
+E                 old.publish(value, output, raw)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v746_contract_runner.py", line 312, in publish
+E                 publication = publish_primary(output, value, validate)
+E                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E                 raise ValueError("candidate_rejected")
+E             ValueError: candidate_rejected
+E             
+E           assert False
+
+/tmp/exp8749-debug-1nxn13t9/tests/test_v748_contract_8723.py:146: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+=========================== short test summary info ============================
+FAILED ../../../../../tmp/exp8749-debug-1nxn13t9/tests/test_v748_contract_8723.py::test_private_cli_and_sealed_replay
+1 failed in 11.26s

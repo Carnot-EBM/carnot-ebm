@@ -57703,3 +57703,19 @@ Reject full-task prompt/routing/gate/reorder/omission changes, changed rows,
 receipts, rehashed primitives and missing source bytes. Valid terminal replay
 must preserve the exact producer and twelve-slot accounting. No private control
 can grant production readiness. Missing upstreams are terminal blocked.
+
+## REQ-VERIFY-8749: Seal archived authority and actual scoped execution
+
+Freeze inputs, methods, test nodes and source hashes before validation. Retain
+actual argv, exits, JUnit, full log hashes and SQLite coverage including real CLI
+children. Require 100 percent newly added executable statements, scoped Ruff,
+formatting, strict mypy, explicit spec tracing and private E2E-018/021. Preserve
+original assertions, shared publishers and validators. Publish terminal bytes
+only after unchanged adversarial and strict-row checks and fresh-process replay.
+
+### SCENARIO-VERIFY-8749-SEAL
+
+Reject full-object mutations, missing custody, changed raw/source bytes and
+consistently rehashed outer reports. Private controls cannot earn readiness.
+Use current invocation clocks, zero model calls and private test artifact roots.
+Archive isolation must preserve all original test assertions and V748 pins.
