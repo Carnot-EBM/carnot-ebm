@@ -21224,3 +21224,4 @@ code |
 | 2026-11-03 20:45 UTC | Milestone 2026.11.752 activated | OK | 13 tasks queued |
 | 2026-11-03 21:40 UTC | Bind thirteen tasks and admit independent branch i | OK | 95 passed, 1 warning in 100.52s (0:01:40) |
 | 2026-11-03 22:55 UTC | Qualify evidence-set failure publication with orig | OK | 88 passed, 1 warning in 197.20s (0:03:17) |
+| 2026-11-03 22:59 UTC | Prototype delayed constraint additions and a calib | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8776-branch-methods.memory_protocol_ready_score (actual=0 == expected=1) |
