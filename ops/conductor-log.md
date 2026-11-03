@@ -21212,3 +21212,4 @@ code |
 | 2026-11-03 13:33 UTC | Audit future Brier benefit and simultaneous retent | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8766-causal-brier-stream) |
 | 2026-11-03 14:18 UTC | Prototype evidence-set sufficiency with independen | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 96 passed, 1 warning in 149.38s (0:02:29) |
 | 2026-11-03 14:21 UTC | Measure evidence-set decisions against local and j | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8768-evidence-set-methods.evidence_set_methods_ready_score (actual=0 == expected=1) |
+| 2026-11-03 15:11 UTC | Attribute the installed costs that remain after qu | OK | 92 passed, 2 warnings in 171.83s (0:02:51) |
