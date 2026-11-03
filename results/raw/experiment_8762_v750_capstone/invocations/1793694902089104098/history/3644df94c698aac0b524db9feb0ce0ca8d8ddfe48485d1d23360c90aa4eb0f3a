@@ -1,0 +1,51 @@
+{
+  "experiment": 8725,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-02",
+  "started_at": "2026-11-02T11:57:03.789446+00:00",
+  "finished_at": "2026-11-02T11:57:03.789446+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Qualify original deadline controls and the complete causal execution union",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8724-invocation-clock-core",
+  "failed_field": "learning_core_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8724_v748_invocation_clock_core.json",
+  "failed_evidence_sha256": "sha256:53a6baafaa3e23f12758f9f58433c69c5df8dc14b73a525a1a620f29ecaddebb",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8724-invocation-clock-core",
+    "failed_field": "learning_core_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8724_v748_invocation_clock_core.json",
+    "failed_evidence_sha256": "sha256:53a6baafaa3e23f12758f9f58433c69c5df8dc14b73a525a1a620f29ecaddebb"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8724-invocation-clock-core.learning_core_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8724-invocation-clock-core",
+      "artifact_field": "learning_core_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8724_v748_invocation_clock_core.json",
+      "artifact_sha256": "sha256:53a6baafaa3e23f12758f9f58433c69c5df8dc14b73a525a1a620f29ecaddebb"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

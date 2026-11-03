@@ -793,3 +793,14 @@ supervisor evidence. It changes no live policy. Hardware readers keep causal
 learning, installed inference and ordinary-window cost boundaries separate.
 KV260, PolarFire and GateMate retain their actual operation limits. This is
 planned research, not a deployed change or scientific result.
+
+## V750 reconciliation implementation — 2026-11-03
+
+Exp8762 reuses the retained capstone driver and historical reducer. New pinned
+V750 primitives supply verifier transfer/surface and complete-process feature
+cost reductions. Methods custody and scheduling do not create scientific cases.
+Exact authenticated health diagnostics remain separate from scoped acceptance.
+Learning benefit, retention, ordinary durable costs and physical acceleration
+have no admitted V750 result. Old producer bytes and quarantine decisions remain
+unchanged. The V750 design is preserved in its dated archive; no next activation
+or deployment is part of this change. Conductor owns ops and traceability updates.

@@ -57933,3 +57933,26 @@ speedups, mixed clocks and consistently rehashed report changes. Publish only
 terminal bytes after unchanged adversarial and strict row scanners and fresh
 cold replay. Physical readiness and100x learning readiness remain zero without
 new compatible device evidence. The conductor owns ops and BMAD reconciliation.
+
+## REQ-VERIFY-8762: Seal current reconciliation and final-byte replay
+
+Freeze sources, methods, input and collected node hashes before measurement.
+Use retained runner, publication guards and private E2E-018/021. Require actual
+100 percent new executable statement coverage including standalone CLI children,
+Ruff check/format, strict mypy and explicit spec coverage. Preserve exact argv,
+exit codes, JUnit, SQLite coverage and full log hashes. Repository health is
+separate from scoped acceptance. No failed old producer is promoted.
+
+### SCENARIO-VERIFY-8762-REPLAY
+
+Full-object mutations, forged aggregate/row/receipt attacks, missing primitives
+and invalid dates fail. Fresh-process replay rebuilds final bytes from independent
+seals. Unchanged adversarial and strict row validators gate atomic publication.
+A completed scientific null closes its unchanged study. External absence is
+terminal blocked; owned validation failure disqualifies.
+
+Implementation20261103: requirement-linked unit and standalone CLI controls
+exercise current accounting, source pins, receipt/row/primitive mutations, invalid
+dates, failed children and no-science branches. The retained validation driver
+collects scoped nodes, child JUnit and SQLite coverage, runs explicit spec tracing
+and gates exact terminal bytes through unchanged scanners and cold replay.

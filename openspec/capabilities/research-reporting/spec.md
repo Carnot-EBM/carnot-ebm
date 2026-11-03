@@ -104802,3 +104802,31 @@ enter ideal Amdahl bounds. Require0.9/0.99 for ideal10x/100x before transfer.
 Host features, nonlinear operations, durability and unknown transfer stay outside
 claimed fabric speedups. Ordinary windows cannot estimate natural dense events.
 Papers and inventory supply interface hypotheses only; no current device probe.
+
+## REQ-REPORT-8762: Close fourteen V750 outcomes from authenticated evidence
+
+Bind all fourteen complete task objects, exact order and the independent V750
+canonical digest. Preserve primary bytes and conductor pre-gate receipts. Keep
+missing files, missing fields, observed zero, rejected producers and measured
+nulls distinct. Reuse the retained capstone reducer, independently binding V750
+verifier and complete-process cost primitives. Preserve historical quarantines,
+1.1382x batching and same-batch10x null. No model or physical operation occurs.
+Literal prior scope and authenticated verdict determine exact-repeat retirement;
+changed mechanisms are required for reopening. Archive V750 without activation.
+
+### SCENARIO-REPORT-8762-ACCOUNTING
+
+Fourteen outcome rows include the capstone. Scoped qualification remains separate
+from absent upstream science and bounded repository health. Recompute verifier
+transfer and paired surface sensitivity, and feature-reuse process intervals.
+Absent learning benefit/retention and ordinary durable costs remain terminal
+blocked. Constructed threshold controls supply no natural cost observation.
+Conductor owns status, changelog and BMAD traceability updates.
+
+Implementation20261103: `v750_capstone` configures the retained runner and
+`v750_capstone_reduce` independently binds current verifier/process primitives.
+The thin Exp8762 CLI, private requirement-linked tests, V750 archive and research
+note preserve complete accounting. Exact authenticated repository-health receipts
+remain separate from scoped qualification. Exp8754 methods custody is not a
+scientific measurement. Terminal validation evidence resides below the primary's
+raw invocation root; it does not certify repository-wide health.
