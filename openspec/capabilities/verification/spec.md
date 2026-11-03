@@ -58156,3 +58156,44 @@ only terminal bytes after unchanged adversarial and strict row checks and fresh
 cold replay against separate measurement/validation seals. Owned failure suppresses
 mapping readiness. No model loads or device commands. The conductor owns ops and
 BMAD reconciliation for this invocation.
+
+## REQ-VERIFY-V752-EVIDENCE: Evidence sufficiency and faithful extraction
+
+The V752 plan shall qualify the missing Exp8768 CLI failure path before new
+set-level measurements. Retain independent Boolean truth, local and joint
+symbolic controls, valid alternatives, conflicts and missing-premise unknowns.
+Expose V751 replication status. Freeze120 new six-edge worlds,120 disjoint
+seven-edge retention worlds and12 separate canary worlds before evaluation.
+Cluster representation variants by canonical world. Optional Qwen extraction
+shall use unsloth/Qwen3.8-27B-GGUF and model_bounded_generation, with48 calls
+and at most128 generated tokens per call. Separate source-record fidelity
+from symbolic correctness and end-to-end decisions.
+
+### SCENARIO-VERIFY-V752-EVIDENCE
+
+A valid semantic null releases complete rows after execution qualification.
+Missing CUDA authority skips only the canary. A parse failure is a failed
+extraction. Truth-bearing input fields and graph overlap reject qualification.
+No constructed comparison establishes independent natural hallucination benefit.
+
+## REQ-VERIFY-V752-LEARNING: Delayed information-adding constraint memory
+
+Exp8778 shall prototype an opt-in small Gibbs energy policy with six observed
+check features and three decision indicators. It shall use proper three-class
+Brier loss and output accept/reject/escalate with confidence. The new policy
+shall preserve the blocked historical nine-input spline-head qualification.
+Memory stays fixed within a query. Certified alpha-normalized templates and
+coefficient updates commit only after feedback releases. Limit templates to32
+and checks to5 per query. Each added check consumes the same call budget.
+
+### SCENARIO-VERIFY-V752-CAUSAL
+
+Initial40/20 development fit/tune graphs and evaluation rosters are disjoint.
+Predictions precede released labels. Restart matches uninterrupted state;
+duplicate acknowledgment and within-query writes reject. Compare frozen,
+read-only, additions-only, calibration-only, combined and shuffled-feedback
+arms. Record actual template use, future Brier and retention, not just updates.
+The four-check simultaneous acceptance procedure is frozen in the design.
+Pending-capacity tests retain every dropped label and admission probability.
+Oracle-dependent gains are circular_positive. This requirement is planned;
+no production learner or generator weights change during planning.

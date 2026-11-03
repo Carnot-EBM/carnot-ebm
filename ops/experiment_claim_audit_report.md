@@ -11,125 +11,15 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 5 |
-| NO_CLAIM | 2 |
+| CLAIM_SUPPORTED | 3 |
+| NO_CLAIM | 4 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8755_v750_verifier_family_surface.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-On these previously exposed worlds, targeted probing shows no detection gain over baseline, and the tested surface transformations preserve truth and correct-verifier decisions.
-
-## WHAT WOULD REFUTE IT
-Targeted probing meeting the declared transfer criterion—a new-family detection delta with lower95 above zero and no extra correct-verifier false rejections—would contradict the reported null. Any paired surface truth discrepancy or correct-verifier decision disagreement would refute the invariance result.
-
-## WAS THAT CHECKED
-Yes, within the reported scope.
-
-1. Probe outcomes are compared with expected truth; the displayed reject-all variant fails. Comparative success requires a separate detection advantage. Both old- and new-family paired intervals instead report zero estimates and zero endpoints.
-2. The verifier is the oracle, which prevents a positive added-value inference. The overall verdict is explicitly null.
-3. Exposure is acknowledged, model generation calls are zero, and independent generalization is explicitly unclaimed.
-4. The unchanged five-call baseline is the relevant inexpensive rival. It ties targeted probing; that supports the null.
-5. Excluded and censored counts are zero. The displayed failed reject-all row measures an intentional defect, rather than invalidating the observation. The cited interval and surface fields exist; surface summaries report zero discrepancies.
-
-This supports the observed null on this workload, without establishing equivalence on unseen worlds.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_null_v750_verifier_family_surface`
-- `criterion`: `new-family detection delta lower95 > 0 and no extra correct-verifier false rejection`
-- `paired_world_intervals`: `new`, `old`; both have `estimate`, `lower95`, and `upper95` equal to `0.0`
-- `correct_control_extra_false_rejections`: `0`
-- `surface_family_rows`: `truth_discrepancies` and `decision_disagreements` are `0`
-- `independent_generalization`: `false`; `independent_generalization_score`: `0`
-- `exposure_scope`: `Sixty constructed and previously exposed worlds; thirty original canonical evaluation clusters. Surface siblings, variants and ten timing repeats add no independent science units.`
-- `generation_calls_completed`: `0`
-- `excluded_count`: `0`; `censored_count`: `0`
-- `variant`: `reject_all`; `passed`: `false`; `raw_numerator`: `1`; `raw_denominator`: `5`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8756_v750_feature_reuse_qualification.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Feature reuse halves feature extractions while preserving baseline serialized decisions and digests on the original exposed 64-item panel.
-
-## WHAT WOULD REFUTE IT
-Reuse failing to reduce successful extractions from 128 to 64, producing a different decision or digest for the same input, or breaking required input and ownership contracts would refute qualification.
-
-## WAS THAT CHECKED
-Yes, within the stated engineering scope. Extraction counts distinguish expected from successful operations; parity rows check outputs; input and ownership checks report success. The failure control also produces a zero readiness score.
-
-The baseline’s output tie is the required preservation result. Oracle status supplies no independent correctness evidence, but this claim concerns extraction counts and execution parity. No speed or generalization benefit is claimed. The unsuccessful full-suite diagnostic is explicitly outside qualification dependencies.
-
-## EVIDENCE
-
-- `exposure_scope`: `original exposed64 panel; engineering parity only`
-- `feature_extraction_count_rows`: `baseline`, `successful_extractions`, `128`; `reuse`, `successful_extractions`, `64`; `intended_items`, `64`
-- `wire_parity_rows`: `passed`, `true`
-- `owned_failure_control`: `feature_reuse_ready_score`, `0`; `actual_exit`, `1`; `passed`, `true`
-- `verifier_is_oracle`: `true`
-- `throughput_benefit_score`: `0`; `independent_generalization_score`: `0`
-- `repository_health_is_dependency`: `false`; `full_suite_pass`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8757_v750_feature_reuse_cost.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Feature reuse improves complete-process throughput on the exposed workload while meeting the registered latency limits.
-
-## WHAT WOULD REFUTE IT
-Reuse matching or underperforming the same-provider baseline would refute the throughput benefit. A throughput-ratio lower confidence bound at or below 1.05 would fail the registered promotion criterion. Changed outputs, p95 above 50 ms, or p95 regression above 5% would defeat the qualified claim.
-
-## WAS THAT CHECKED
-Yes. Equal-work process rows measure elapsed time independently of the reuse setting; reuse could have incurred enough overhead to lose. Ten paired repeats yield a native throughput ratio of approximately 1.517, with a lower bound of 1.502. Native p95 decreases, and the shown native baseline/reuse output hashes match.
-
-The verifier is explicitly not the oracle. The workload is explicitly exposed, and the artifact assigns zero generalization credit.
-
-The cheapest serious baseline is the same implementation without reuse; both native and Python comparisons are present. Optimized Python approximately ties optimized native, and the separate 10× promotion gate fails. That tie does not undermine the within-provider reuse benefit.
-
-The shown measurement rows pass and contain the cited timing fields. The failed historical full-suite receipt concerns repository health, which is explicitly excluded as a dependency. Most individual process rows are elided, so their validity cannot be inspected individually here.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_positive_feature_reuse_cost`
-- `exposure_scope`: `original64 exposed requests; process timing only`
-- `native_reuse`: `estimate`: `1.5165077375588447`; `lower95`: `1.5016786270448874`
-- `native_reuse_throughput_lower95_min_exclusive`: `1.05`
-- `native_steady_p95_ms`: `baseline`: `18.80990305`; `reuse`: `9.945570149999998`
-- `python_reuse`: `lower95`: `1.5081887979010027`
-- `optimized_native_python`: `lower95`: `0.9935943114642525`; `upper95`: `1.010817068844449`
-- `same_batch_10x_score`: `0`
-- `verifier_is_oracle`: `false`
-- `independent_generalization_score`: `0`
-- `repository_health_is_dependency`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8758_v750_lifecycle_event_qualification.json
+## experiment_8768_v751_evidence_set_methods.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_8759_ordinary_durable_cost.json
+## experiment_8769_evidence_set_transfer.json
 
 **NO_CLAIM**
 
@@ -140,18 +30,24 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-run receipt with no comparative or performance conclusion.
+No comparative claim is made. This artifact records a blocked run, so there is no claimed method advantage to falsify.
 
 ## WAS THAT CHECKED
-No experiment result was tested. The prerequisite was checked in `gates_evaluated` and failed: observed 0 versus required 1.
+No—the intended comparison was blocked. Only the prerequisite gate was checked; it failed with observed 0 versus required 1.
 
 ## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `ordinary_window_ready_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`.
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `actual`: `0`
+- `expected`: `1`
+- `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8760_v750_arc_horizon_sensitivity.json
+## experiment_8770_v751_optimized_cost_attribution.json
 
 **CLAIM_SUPPORTED**
 
@@ -159,28 +55,32 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-This censored panel identifies no intervention benefit and supports no policy change.
+The diagnostic completed but failed low-overhead qualification, leaving no supported next optimization target.
 
 ## WHAT WOULD REFUTE IT
-An admissible comparison with completed outcomes and cross-game support identifying a positive benefit, or an independent reconstruction showing that usable outcomes were incorrectly classified as missing.
+Valid, reconciled attribution with observer overhead meeting the registered 5% limit on both backends would contradict the stated reason for withholding qualification.
 
 ## WAS THAT CHECKED
-Yes. The arm summaries check completion, overlap rows check comparison admissibility, and independent reductions reconstruct outcome counts and bounds. The reported outcomes remain unknown, comparisons fail admission, and shown reconstructions pass. This supports non-identification; it does not establish zero effect.
+Yes. Three instrumented/uninstrumented process pairs per backend provide a direct control on the same workload. Python’s overhead estimate is 5.84%; observed maxima reach 8.02% for Python and 5.29% for native. Qualification could have passed, but the measured overhead prevented it, and the artifact reports a null.
+
+This supports the scoped qualification failure, not a conclusion that optimization is impossible. No verifier-value, generalization, or new speed claim is promoted.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_null_arc_horizon_sensitivity`
-- `policy_decision`: `no_supported_policy_change`
-- `completed_count`: `0`; `censored_count`: `16`
-- `complete_case_mean`: `null`
-- `admission_passed`: `false`; `identifiable_benefit`: `false`; `generalization_claim`: `false`
-- `usable_cross_game_support`: `0`
-- `intervals_reconstructed_from_frozen_rows`: `true`; `unknown_count`: `16`; `passed`: `true`
+- `honest_verdict`: `complete_null_optimized_cost_attribution`
+- `overhead_limit`: `0.05`
+- `observer_overhead_rows`: `python`, `estimate`: `0.05836651124330672`, `maximum`: `0.08017429961098888`
+- `observer_overhead_rows`: `native`, `estimate`: `0.043936580067839515`, `maximum`: `0.05287655599140395`
+- `paired_repeats`: `3`
+- `name`: `low_observer_overhead`, `passed`: `false`
+- `reason`: `No supported target without complete low-overhead attribution.`
+- `selected_target`: `null`
+- `same_batch_10x_claim_this_invocation`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8761_v750_hardware_cost_boundaries.json
+## experiment_8771_v751_lifecycle_archive_qualification.json
 
 **NO_CLAIM**
 
@@ -191,23 +91,26 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-An authenticated, workload-compatible device execution with precision/quality parity and complete host, transfer, durability, and recovery costs would contradict the administrative conclusion that hardware qualification remains blocked.
+No comparative value claim is made. The execution qualification would fail on a state or acknowledgment mismatch, an incorrect dense-write count, a changed restart checkpoint, or replay of an acknowledged update.
 
 ## WAS THAT CHECKED
-Yes, as an evidence inventory: gate_check_summary records failed prerequisites, while board_status_rows and operation_support_rows document execution and compatibility status. No comparative hardware experiment was performed or claimed. Oracle-defined readiness is not presented as verifier value, and imported CPU timings are not promoted to hardware acceleration or generalization.
+Yes, for execution qualification: the displayed ordinary and threshold rows compare expected and observed results, and all three restart arms check checkpoint identity and acknowledged-update replay. These checks could fail; agreement with the oracle establishes conformance. The Python arm ties the other arms on the displayed checks, consistent with the stated parity scope. No verifier benefit or generalization claim follows.
+
+The historical failure remains explicitly disqualified, and the full-suite timeout is accompanied by an explicit denial of a full-suite pass.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_blocked_hardware_cost_boundaries`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `physical_hardware_ready_score`: `0`
-- `generalized_learning_benefit_score`: `0`
-- `interpretation`: `Conditional1/(1-f); neither observed speed nor a100x complete-learning result`
+- `scope`: `fixed-point replay of exposed historical labels; no learning benefit evaluated`
+- `complete_state_probability_touched_coefficients_ack_identical`: `true`
+- `dense_writes`: `109`; `expected_dense_writes`: `109`
+- `checkpoint_identical`: `true`; `acknowledged_update_replayed`: `false`
+- `old_primary_remains_disqualified`: `true`
+- `full_suite_pass_claimed`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8762_v750_capstone.json
+## experiment_8772_v751_ordinary_durable_cost.json
 
 **CLAIM_SUPPORTED**
 
@@ -215,25 +118,113 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-V750 remains blocked, with limited batching benefit insufficient to establish broader readiness.
+The bounded ordinary durable study did not establish a resident-native performance benefit over the original native implementation.
 
 ## WHAT WOULD REFUTE IT
-Qualified evidence satisfying all mandatory acceptance gates would contradict the blocked decision. The batching subclaim would fail if its paired lower confidence bound were ≤1.05 or native B16 p95 exceeded 50 ms.
+Valid paired measurements against json_native showing a complete-throughput ratio with a lower 95% bound above 1.05, together with no more than 5% p95 latency regression, would contradict the reported null.
 
 ## WAS THAT CHECKED
-Yes, at the aggregation level. Gate rows distinguish observed failures from missing evidence, and disqualified producers retain failed qualification status. The batching interval and latency satisfy their stated thresholds. The near-tie against Python at B16 is reported, while the stronger same-batch 10× claim receives zero. Independent generalization is explicitly unmeasured.
+Yes. The paired repeat comparison against json_native reports a lower bound of 0.9441418639991097 and a p95 latency ratio of 2.355170021011086, failing both conditions. Measured execution times could have satisfied those conditions; the null was not predetermined.
 
-These rows support an evidence-readiness decision; they do not establish that the blocked capabilities are impossible.
+The serious baseline is present. Oracle-defined correctness does not make the timing comparison circular, and no generalization benefit is claimed. The artifact reports 90 completed windows with zero failures, censoring, or exclusions. The separate repository-health timeout is explicitly accompanied by no full-suite pass claim.
 
 ## EVIDENCE
+- `honest_verdict`: `complete_null_ordinary_durable_cost`
+- `benefit_lower95_gt`: `1.05`; `maximum_p95_regression`: `0.05`
+- `paired_repeat_intervals` → `json_native`: `lower95`: `0.9441418639991097`; `p95_ratio`: `2.355170021011086`
+- `bounded_durable_benefit`: `false`
+- `completed_window_count`: `90`; `failed_count`: `0`; `censored_count`: `0`; `excluded_count`: `0`
+- `independent_generalization_score`: `0`; `full_suite_pass_claimed`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8773_arc_outcome_frontier.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this artifact records a blocked prerequisite, without claiming that supervisor refinement succeeds or adds value.
+
+## WAS THAT CHECKED
+No refinement comparison occurred. The sole prerequisite gate was checked and failed: its observed value was 0 against a required value of 1.
+
+## EVIDENCE
+- `schema`: `blocked_gate_check_v1`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `arc_new_outcomes_available_score`
+- `failed_expected`: `1`
+- `failed_observed`: `0`
+- `passed`: `false`
+- `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8774_v751_hardware_operation_decision.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative benefit claim is asserted. Authenticated compatible execution with complete service costs could challenge the blocked readiness decision; unknown performance does not establish a negative performance result.
+
+## WAS THAT CHECKED
+Prerequisite qualification was checked: the artifact records missing input, zero readiness, and rejected producer identity. It reports no new physical execution. This is an operational aggregation receipt, not a verifier-value or acceleration result.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_hardware_operation_decision`
+- `device_commands_executed`: `[]`
+- `physical_execution_this_invocation`: `false`
+- `achieved_speedup`: `null`
+- `measured_acceleration`: `false`
+- `operand_state`: `missing_file`, `observed_zero`, `rejected_producer`
+- `admitted`: `false`
+- `eligible_for_bound`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8775_v751_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The capstone remains disqualified, while reporting a modest batching benefit without establishing tenfold same-batch acceleration or independent generalization.
+
+## WHAT WOULD REFUTE IT
+A batching lower confidence bound at or below 1.05, or native B16 p95 above 50 ms, would defeat the positive batching conclusion. Fully qualified evidence satisfying the required gates would contradict disqualification.
+
+## WAS THAT CHECKED
+Yes, at the reported aggregation level. The batching lower bound is 1.12185 and p95 is 18.42 ms. Qualification checks record actual failures, including failed owned validation.
+
+The native/Python B16 comparison is effectively tied; the artifact assigns zero tenfold-speedup credit. It explicitly acknowledges exposure and assigns zero independent-generalization credit. Unqualified rows remain in the accounting with zero success numerators; their presence does not establish success. This supports disqualification, not a scientific conclusion that benefit is impossible.
+
+## EVIDENCE
+- `honest_verdict`: `complete_disqualified_v751_capstone`
+- `owned_validation_passed`: `false`
 - `activation_authorized`: `false`
-- `future_loss_and_retention`: `false`; `independent_semantics`: `false`
-- `operand_state`: `observed_zero`, `missing_file`; `producer_qualified`: `false`
-- `generalization_measured`: `false`
 - `batching_threshold`: `paired lower95 > 1.05 and native B16 p95 <= 50ms`
-- `lower95`: `1.1218473605571395`; `native_B16_steady_p95_ms`: `18.42018975`
+- `contrast`: `batching`; `lower95`: `1.1218473605571395`
+- `native_B16_steady_p95_ms`: `18.42018975`
 - `contrast`: `native_python_B16`; `estimate`: `1.0053949467902554`
 - `same_batch_10x_score`: `0`
+- `exposure_scope`: `Constructed and exposed upstream evidence; no natural independent generalization`
+- `producer_qualified`: `false`; `raw_numerator`: `0`
 
 ## RECOMMENDATION
 KEEP

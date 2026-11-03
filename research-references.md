@@ -54598,3 +54598,92 @@ roadmap. Exp8750's timer stacks locate waiting inside terminal publication
 and its late unprofiled output shows repeated cold replay; these observations
 do not yet establish the causal timeout mechanism. They justify a bounded
 publication-cost investigation, not another blind deadline rerun.
+
+## V752 planning scan — 2026-11-03
+
+Recorded before designing V752. These are external findings, not Carnot results.
+The scan revisits existing leads and records retrieval limits explicitly.
+
+### Selected methods and new citation leads
+
+- [SURE-RAG v2](https://arxiv.org/abs/2605.03534v2), revised July 24, motivates
+  evidence-set decisions: support, refute, or insufficient. Its natural-data
+  ranking differs from its controlled benchmark. Retain that boundary when
+  testing missing premises, shared bindings, and conflicting records. Carnot's
+  V751 implementation missed one owned executable statement; it has no admitted
+  transfer result. Qualify it before a fresh, independently scored comparison.
+- [Memoir](https://arxiv.org/abs/2607.20792), July 22, reports a fixed-budget
+  penalty from writing fast memory during the same recurrence that reads it.
+  Longer training removes that measured gap on its ceiling-limited task.
+  This supports a controlled write-timing question, not a universal prohibition.
+  For Carnot, freeze memory within a query. Admit certified constraint templates
+  only after delayed feedback. Compare read-only memory and shuffled feedback.
+- [Capacity-Constrained Delayed OCO](https://arxiv.org/abs/2606.11711), June 10,
+  studies limited pending-feedback capacity. The full text was checked. Compare
+  FIFO and randomized admission at equal capacity. Record admission probabilities,
+  dropped feedback, and release times. Its convex regret bounds do not transfer
+  to Carnot's learned nonlinear energy head.
+- [Certified Access](https://arxiv.org/abs/2610.39073), October 29, is a recent
+  EBT citation. It separates escape from reach failures in a physics-structured
+  memory and checks certificates on an analytic testbed. This is a deferred
+  architecture lead. It supplies no evidence for replacing Carnot's live agent.
+- [P(Yes)](https://arxiv.org/abs/2610.25474), October 18, includes Qwen3.8-27B
+  and searches using a frozen model's own decision probabilities. Keep it as
+  a comparator lead. A model's support score is not independent truth, and
+  it does not establish faithful extraction. Require real GGUF logits before
+  any such comparison; never reconstruct missing historical probabilities.
+- [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 19,
+  separates solver difficulty from model difficulty under matched density.
+  Use equivalent representations and independent case counts. Do not infer
+  transfer from renamed graphs or from an exact solver's own success.
+
+### Primary-topic coverage
+
+| Topic | Primary source checked | Planning use or deferral |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605v4), May 2026 | Learned compatibility is not proof of extracted premises. Keep energy calibration separate from exact truth. |
+| Neural constraints | [HardNet++ v2](https://arxiv.org/abs/2604.19669v2), May 2026; [CAffNet](https://arxiv.org/abs/2605.24437), May 2026 | Constraint enforcement assumes the encoded problem. No reopening of retired projection or solver stacks. |
+| Ising in ML | [Million-p-bit computer](https://arxiv.org/abs/2606.25313), June 24 | Distributed sampling depends on boundary exchange frequency. Preserve topology and communication costs. |
+| Hallucination mitigation | SURE-RAG and Solver-Hard above | Test evidence completeness and representation controls independently of extraction. |
+| KAN | [On-chip online KAN v4](https://arxiv.org/abs/2602.02056v4), June 19; ICML 2026 | Sparse arithmetic can be cheap. Complete durable feedback and useful future decisions remain separate measurements. |
+| Energy-guided decoding | [ETS v3](https://arxiv.org/abs/2601.21484v3), May 19; ICML 2026 | Monte Carlo guidance adds sampling cost. Defer a new decoder until faithful source extraction is measured. |
+| Accelerated sampling | Million-p-bit paper; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4 | Heterogeneous sparse hardware requires operation-specific mapping. Vendor efficiency is not a Carnot measurement. |
+| Continual constraint learning | Memoir and capacity-constrained OCO above | Freeze reads; release feedback causally; measure memory additions against static and no-write controls. |
+
+### Secondary sources and retrieval limits
+
+Semantic Scholar's EBT citation endpoint returned HTTP 200 with 43 records and
+no next page. The ARM–EBM endpoint returned HTTP 429. Both requests used
+`limit=100&fields=title,year,externalIds,url`. This describes returned-page
+coverage only. The new citation leads above were checked against arXiv.
+Endpoints: [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=100)
+and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=100).
+
+OpenReview searches covered NeurIPS 2025, ICLR 2026 and ICML 2026 EBM work.
+The [recurrent-EBM forum](https://openreview.net/forum?id=bYkfHTcR1v) and
+[energy-shaped projection forum](https://openreview.net/forum?noteId=saOUZ7cICb)
+returned browser challenges. No new acceptance inventory was verified.
+The ETS and KAN venue statements above come from their authors' arXiv pages.
+
+The [Hugging Face verification feed](https://huggingface.co/papers?q=verification)
+was readable but included old papers. Its P(Yes) page was unavailable through
+this browser. The [weekly GitHub Trending page](https://github.com/trending?since=weekly)
+returned a snapshot marked last month. Neither establishes a new current
+EBM/KAN repository ranking. No dependency was selected from those snapshots.
+
+Extropic's writing index timed out; its direct Z1T article was readable.
+[Logical Intelligence's Kona page](https://logicalintelligence.com/kona) describes
+Kona 1.0 as a constraint layer. It provides no reproducible new architecture
+or local integration result. Vendor claims remain vendor claims.
+
+### Local evidence before selecting work
+
+V751 left the original nine-input delayed learner blocked. Exp8764 measured
+publication stages but found no safe correction; its original timeout cause
+remains unresolved. Repeating that chain has no changed scientific operand.
+Exp8768 missed runner line345 in actual coverage. Exp8770 measured observer
+overhead up to 8.02 percent and declined to select an optimization target.
+Exp8772 produced ordinary-window costs but used a task identifier that its
+consumer rejected. Exp8771's lifecycle controls qualified. These findings favor
+one narrow validation repair, a distinct information-adding memory question,
+and explicit measurement boundaries. They do not authorize historical promotion.

@@ -105045,3 +105045,39 @@ physical transfer remain unknown. Do not promote ideal bounds to measured speed.
 Compare the Versal PUBO operations, precision, preprocessing and counted encoding
 auxiliaries against the installed pairwise interface before proposing a prototype.
 Mapping may qualify while physical execution and complete100x learning stay zero.
+
+## REQ-REPORT-V752-PLAN: Exact staged research contract
+
+Milestone2026.11.752 shall stage exactly13 tasks, Exp8776–Exp8788, in four
+phases. The visible ordered table, full embedded task objects and staged YAML
+shall agree on every field. A canonical SHA-256 shall bind those objects.
+Keep active V751 YAML, the conductor and preserved V751 design unchanged.
+Every prompt shall name its deliverable, source files, steps, artifact fields,
+run command and publication restrictions. Every step list shall require flushed
+phase/long-call messages, inner-loop progress, gaps below600 seconds and split
+large-file writes. Same-roadmap gates shall reference exact producer fields.
+
+### SCENARIO-REPORT-V752-CONTRACT
+
+The planning check accepts the matching13-task contract. It rejects changed
+order, title, prompt, routing, gate, prior-failure entry or deliverable. All
+matched prior entries include experiment_id, verdict, addressed_by and
+retire_if_same_verdict=true. Required verdict classes and blocked diagnostics
+remain explicit. Planning does not activate or execute the milestone.
+
+## REQ-REPORT-V752-BOUNDARIES: Independent admission and complete costs
+
+Exp8783 shall qualify exact producer identity without accepting Exp8772's
+historical alias. Exp8784 shall preserve ordinary-window durability, restart,
+prefix costs and paired observer controls. Component attribution requires
+worst paired overhead<=5 percent and parent-clock reconciliation error<=2
+percent. Repetition is not an independent scientific workload. Exp8787 and
+Exp8788 shall run despite absent scientific inputs. Preserve stable G1–G4.
+
+### SCENARIO-REPORT-V752-BOUNDARIES
+
+Readers distinguish absent files, absent fields, zero readiness, valid nulls
+and rejected producers. Old aliased bytes remain rejected after rehashing.
+Unknown host costs stay in acceleration denominators. No physical-device gain
+follows from simulation, CPU arithmetic or vendor claims. External blocks use
+blocked; owned validation failures use disqualified. Implementation is planned.
