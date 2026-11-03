@@ -1,0 +1,192 @@
+"""REQ-VERIFY-8754 / REQ-REPORT-8754: truth and custody precede scoring."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import sys
+
+import pytest
+
+from carnot.reporting import verifier_surface_methods_8754 as m
+from carnot.reporting import verifier_surface_runner_8754 as runner
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+from carnot.reporting.v709_execution import child
+
+
+def test_independent_truth(monkeypatch):
+    """SCENARIO-VERIFY-8754-TRUTH: a tested verifier cannot supply truth."""
+    from carnot.reporting import verifier_completeness_8715 as old
+
+    monkeypatch.setattr(old, "verifier", lambda *a: pytest.fail("tested verifier called"))
+    facts = [["a", "r", "b", True], ["b", "s", "c", True], ["a", "s", "c", False]]
+    assert m.truth(facts, [["a", "r", "?x"], ["?x", "s", "c"]]) == "true"
+    assert m.truth(facts, [["a", "s", "c"]]) == "false"
+    assert m.truth(facts, [["a", "r", "c"]]) == "unknown"
+    assert m.truth([], [["a", "r", "b"]]) == "unknown"
+    assert m.truth(facts, None) == "unknown"
+    assert m.truth([["a", "r", "b", False]], [["a", "r", "?x"]]) == "unknown"
+    assert (
+        m.truth(facts[:1] + [["c", "s", "d", True]], [["a", "r", "?x"], ["?x", "s", "d"]])
+        == "unknown"
+    )
+    with pytest.raises(ValueError, match="inconsistent"):
+        m.truth(facts + [["a", "r", "b", False]], [["a", "r", "b"]])
+
+
+def test_freeze_and_mutations():
+    """SCENARIO-VERIFY-8754-SURFACE: preserve every world and signed truth."""
+    canonical = m.retained()
+    transformed, controls, checks = m.surface(canonical)
+    assert canonical == m.retained()
+    assert (transformed, controls, checks) == m.surface(canonical)
+    assert len(canonical["rows"]) == len(transformed["rows"]) == 720
+    assert len(controls) == 60 and len(checks) == 480
+    assert all(r["passed"] for r in checks)
+    assert len({r["world_id"] for r in transformed["rows"] if r["partition"] == "evaluation"}) == 30
+    assert all(r["passed"] for r in m.mutations(canonical, transformed))
+    bad = deepcopy(transformed)
+    bad["worlds"][0]["probes"][0]["expected"] = "false"
+    assert not m.equivalence(canonical, bad)[0]["passed"]
+    bad = deepcopy(transformed)
+    for fact in bad["worlds"][0]["probes"][0]["facts"]:
+        fact[3] = not fact[3]
+    assert not all(r["passed"] for r in m.equivalence(canonical, bad))
+
+
+def test_missing_protocol(tmp_path):
+    """REQ-REPORT-8754: unavailable external evidence is blocked."""
+    with pytest.raises(FileNotFoundError):
+        m.retained(tmp_path / "absent.json")
+    path = tmp_path / "wrong.json"
+    atomic_json(path, {})
+    with pytest.raises(ValueError):
+        m.retained(path)
+
+
+def test_private_cli_replay(tmp_path):
+    """SCENARIO-REPORT-8754-CLI: real subprocesses cover success and rejection."""
+    output = tmp_path / (m.NAME + ".json")
+    argv = [sys.executable, str(m.ROOT / m.CLI)]
+    if os.environ.get("COVERAGE_RCFILE"):
+        argv = [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "--rcfile=" + os.environ["COVERAGE_RCFILE"],
+            str(m.ROOT / m.CLI),
+        ]
+    logs = tmp_path / "logs"
+    assert child(
+        "private", [*argv, "--private-control", "--output", str(output)], logs, deadline=120
+    )["passed"]
+    assert runner.replay(output)
+    assert child("replay", [*argv, "--cold-replay", str(output)], logs, deadline=60)["passed"]
+    original = output.read_bytes()
+    value = json.loads(original)
+    seal_path = Path(value["primitive_reference"]["path"]).parent / "independent_seal.json"
+    original_seal = seal_path.read_bytes()
+    atomic_json(seal_path, {})
+    assert not runner.replay(output)
+    seal_path.write_bytes(original_seal)
+    value["verifier_transfer_methods_ready_score"] = 1
+    value.pop("reproducibility_checksum")
+    value["reproducibility_checksum"] = canonical_hash(value)
+    atomic_json(output, value)
+    assert not runner.replay(output)
+    assert child("tampered", [*argv, "--cold-replay", str(output)], logs, expected=1, deadline=60)[
+        "passed"
+    ]
+    output.write_bytes(original)
+    work = Path(json.loads(original)["primitive_reference"]["path"])
+    saved = work.read_bytes()
+    work.write_text("{}")
+    assert not runner.replay(output)
+    work.write_bytes(saved)
+    assert not runner.replay(tmp_path / "missing.json")
+    assert child("unsafe", [*argv, "--private-control"], logs, expected=2, deadline=60)["passed"]
+    assert child("date", [*argv, "--date", "20260101"], logs, expected=2, deadline=60)["passed"]
+
+
+def test_build_and_production_dispatch(tmp_path, monkeypatch):
+    """REQ-REPORT-8754: failed scoped work disqualifies independently of health."""
+    from datetime import datetime, UTC
+    from types import SimpleNamespace
+    from carnot.reporting import verifier_surface_report_8754 as report
+
+    validation = dict(
+        receipts=[dict(passed=True)],
+        union=dict(passed=True),
+        coverage=dict(complete=True),
+        ended_at_utc=datetime.now(UTC).isoformat(),
+    )
+    raw, private = tmp_path / "raw", tmp_path / "private"
+    private.mkdir()
+    work = runner.prepare(raw, private, m.PROTOCOL, False)
+    validation["ended_at_utc"] = datetime.now(UTC).isoformat()
+    atomic_json(raw / "work.json", work)
+    atomic_json(raw / "validation.json", validation)
+    output = tmp_path / (m.NAME + ".json")
+    value = report.build(work, validation, output)
+    assert value["verifier_transfer_methods_ready_score"] == 1
+    assert value["repository_health_reference"]["full_suite_pass"] is False
+    validation["receipts"][0]["passed"] = False
+    assert report.build(work, validation, output)["verdict_class"] == "disqualified"
+    work["input_ready"] = False
+    assert report.build(work, validation, output)["verdict_class"] == "blocked"
+    monkeypatch.setattr(runner, "Coverage", lambda **kw: SimpleNamespace(start=lambda: None))
+
+    def completed_validation(*args):
+        return dict(validation, ended_at_utc=datetime.now(UTC).isoformat())
+
+    monkeypatch.setattr(runner, "validate", completed_validation)
+    assert runner.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_bytes())["verdict_class"] == "disqualified"
+    assert runner.replay(output)
+
+
+def test_blocked_cli_and_replay(tmp_path):
+    """SCENARIO-REPORT-8754-CLI: absence is blocked and remains replayable."""
+    output = tmp_path / (m.NAME + ".json")
+    assert (
+        runner.main(
+            ["--private-control", "--protocol", str(tmp_path / "missing"), "--output", str(output)]
+        )
+        == 0
+    )
+    assert json.loads(output.read_bytes())["verdict_class"] == "blocked"
+    assert runner.replay(output)
+
+
+def test_replay_source_and_surface_drift(tmp_path):
+    """SCENARIO-REPORT-8754-CLI: even coherently rehashed operands fail seals."""
+    output = tmp_path / (m.NAME + ".json")
+    assert runner.main(["--private-control", "--output", str(output)]) == 0
+    value = json.loads(output.read_bytes())
+    work_path = Path(value["primitive_reference"]["path"])
+    work = json.loads(work_path.read_bytes())
+    private_source = tmp_path / "source.txt"
+    private_source.write_text("original")
+    work["sources"].append(m.reference(private_source))
+    atomic_json(work_path, work)
+    value["primitive_reference"] = m.reference(work_path)
+    atomic_json(output, value)
+    seal_path = work_path.parent / "independent_seal.json"
+    atomic_json(seal_path, {k: value[k] for k in ["primitive_reference", "validation_reference"]})
+    private_source.write_text("forged")
+    assert not runner.replay(output)
+    private_source.write_text("original")
+    work["truth_equivalence_rows"][0]["passed"] = False
+    atomic_json(work_path, work)
+    value["primitive_reference"] = m.reference(work_path)
+    atomic_json(output, value)
+    atomic_json(seal_path, {k: value[k] for k in ["primitive_reference", "validation_reference"]})
+    assert not runner.replay(output)
+
+
+def test_retained_semantic_drift(monkeypatch):
+    """REQ-VERIFY-8754: a source pin alone cannot authorize changed methods."""
+    monkeypatch.setattr(m.historical, "freeze", lambda: {})
+    with pytest.raises(ValueError, match="protocol_drift"):
+        m.retained()

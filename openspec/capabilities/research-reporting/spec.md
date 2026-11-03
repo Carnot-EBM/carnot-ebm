@@ -104665,3 +104665,13 @@ the previously unrun timer arm was killed at 420.034458648 seconds with exit -9
 and successful descendant cleanup. No unprofiled rerun or numerical change was
 made. Failed supervision and incomplete unchanged controls disqualify execution;
 deadline readiness remains zero. Original timeout causation stays unresolved.
+
+## REQ-REPORT-8754: Independent verifier surface methods custody
+
+Exp8754 freezes paired canonical and transformed workloads without executing
+verifiers. REQ-VERIFY-8754 and SCENARIO-REPORT-8754-CLI in the verification
+capability define truth checks, private historical tests and terminal custody.
+Retain exposure and thirty evaluation clusters. A failed old producer is an
+input source only. Scoped validation and new statements require complete
+qualification; repository-wide diagnostics stay separate. The conductor owns
+ops/status, changelog and traceability reconciliation.

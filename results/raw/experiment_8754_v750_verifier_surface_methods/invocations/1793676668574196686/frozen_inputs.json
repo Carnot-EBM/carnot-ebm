@@ -1,0 +1,4647 @@
+{
+  "analysis_protocol": {
+    "cluster_reduction": {
+      "bootstrap_draws": 10000,
+      "cluster": "world_id",
+      "old_and_new_families_separate": true,
+      "paired": true,
+      "random_seed": 7508754
+    },
+    "correctness": "all three truth values and valid alternatives; reject_all must not qualify",
+    "invariance": "pair identical world/variant/arm; zero truth discrepancies and zero correct-verifier decision disagreements",
+    "probe_design": {
+      "excluded_defect_families": [
+        "omitted_shared_variable_join",
+        "missing_required_premise_as_false"
+      ],
+      "source": "unchanged Exp8726 schedules; no outcomes used"
+    },
+    "timing": {
+      "boundary": "all five calls including predicate work",
+      "early_exit": false,
+      "equal_calls_imply_equal_time": false,
+      "repeats_increase_sample_size": false,
+      "repetitions": 10
+    },
+    "transfer": {
+      "criterion": "new-family detection delta lower95 > 0 and no extra correct-verifier false rejection",
+      "defective_units_per_arm": 150,
+      "evaluation_worlds": 30,
+      "new_family_units_per_arm": 60,
+      "primary_surface": "canonical"
+    }
+  },
+  "canonical_workload": {
+    "evaluation_worlds": 30,
+    "independent_worlds": 60,
+    "intended_calls": 3600,
+    "intended_rows": 720,
+    "reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/canonical.json",
+      "sha256": "sha256:9517880b83a79f5e36ff72e69d3b222539e6b68e07ba7ba3b28bdb2e54280f8b"
+    },
+    "status": "frozen_unexecuted"
+  },
+  "frozen_at_utc": "2026-11-03T03:31:10.137256+00:00",
+  "gate_check_summary": [],
+  "input_ready": true,
+  "invocation_id": "1793676668574196686",
+  "method_mutation_rows": [
+    {
+      "mutation": "label",
+      "passed": true
+    },
+    {
+      "mutation": "truth",
+      "passed": true
+    },
+    {
+      "mutation": "identity",
+      "passed": true
+    },
+    {
+      "mutation": "calls",
+      "passed": true
+    },
+    {
+      "mutation": "schedule",
+      "passed": true
+    },
+    {
+      "mutation": "variant",
+      "passed": true
+    },
+    {
+      "mutation": "evaluation",
+      "passed": true
+    }
+  ],
+  "preconditions": {
+    "exclusion_check_passed": true,
+    "no_model_needed": true,
+    "private_scratch_writable": true,
+    "tools": {
+      "mypy": true,
+      "pytest": true,
+      "python": true,
+      "ruff": true
+    }
+  },
+  "private_control": false,
+  "raw": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686",
+  "references": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8737_v749_contract_methods/invocations/1793646952232607865/verifier_transfer_protocol.json",
+      "sha256": "sha256:9517880b83a79f5e36ff72e69d3b222539e6b68e07ba7ba3b28bdb2e54280f8b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/startup/full_python_suite.receipt.json",
+      "sha256": "sha256:802a682003c38de55c5d88f0bb9208123078bbe3b7f7128d6d428d44abae736f"
+    },
+    {
+      "path": "results/raw/experiment_8754_v750_verifier_surface_methods/startup/full_python_suite.stdout",
+      "sha256": "sha256:e3aacda51df003a85d2c543044d9c4f14628e4e8f751512fba8ef9ea76daf7f4"
+    },
+    {
+      "path": "results/raw/experiment_8754_v750_verifier_surface_methods/startup/full_python_suite.stderr",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8737_v749_contract_methods.json",
+      "sha256": "sha256:e02195338993c16ffba57e73c5d2c49c5e5952de15c19099b8563227890018c9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8737_v749_contract_methods/invocations/1793646952232607865/validation.json",
+      "sha256": "sha256:c791d9c60398cc83c6629f4e02be66865715ee9bd33957fe38b08afa5c85786a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8729_v748_equal_budget_verifier.json",
+      "sha256": "sha256:2ba30690e2ef226818658114ecf02d9cff002aa7a6ba6e9cdd242e868fd66a9e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-v748-preserved-20261102.md",
+      "sha256": "sha256:4c9f681d4089475d5483510527a2c59ec22d48d68789387b7bd303caae95350d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-v749-preserved-20261102.md",
+      "sha256": "sha256:07567bfc55f0d1cc462b6f286af1eb22d383c18109a7cf0e020658b294479b6b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:081d0cb3f30a97c2afae61715d9c84de5254acae75eef050e31a3a221bdfc8a0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/archive_748_research-roadmap-vNEXT.md",
+      "sha256": "sha256:4c9f681d4089475d5483510527a2c59ec22d48d68789387b7bd303caae95350d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/archive_748_research-roadmap.yaml",
+      "sha256": "sha256:6fa20e6322c026aee8fa675d100f8cda4f4ff73e279b8b169086fd1645b7b1b1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/archive_748_research-roadmap-next.yaml",
+      "sha256": "sha256:6fa20e6322c026aee8fa675d100f8cda4f4ff73e279b8b169086fd1645b7b1b1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/archive_749_research-roadmap-vNEXT.md",
+      "sha256": "sha256:07567bfc55f0d1cc462b6f286af1eb22d383c18109a7cf0e020658b294479b6b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/archive_749_research-roadmap.yaml",
+      "sha256": "sha256:cb29d232f685f8dfa5098395bbfd2d7096262930fe0adf71b570f9176472cde6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/archive_749_research-roadmap-next.yaml",
+      "sha256": "sha256:cb29d232f685f8dfa5098395bbfd2d7096262930fe0adf71b570f9176472cde6"
+    }
+  ],
+  "repository_health_reference": {
+    "current_invocation_diagnostic": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/startup/full_python_suite.receipt.json",
+      "sha256": "sha256:802a682003c38de55c5d88f0bb9208123078bbe3b7f7128d6d428d44abae736f"
+    },
+    "full_suite_pass": false,
+    "historical_producer_promoted": false,
+    "primary_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8737_v749_contract_methods.json",
+      "sha256": "sha256:e02195338993c16ffba57e73c5d2c49c5e5952de15c19099b8563227890018c9"
+    },
+    "receipt": {
+      "actual_exit": -9,
+      "argv": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "command": ".venv/bin/pytest tests/python -q",
+      "deadline_s": 300,
+      "duration_s": 300.026540658,
+      "ended_monotonic_ns": 326344244359192,
+      "exit_code": -9,
+      "expected_exit": 0,
+      "log_path": "results/raw/experiment_8737_v749_contract_methods/startup/full_python_suite.stdout",
+      "log_sha256": "sha256:e3aacda51df003a85d2c543044d9c4f14628e4e8f751512fba8ef9ea76daf7f4",
+      "name": "full_python_suite",
+      "normal_exit": false,
+      "passed": false,
+      "scope": "owned",
+      "started_monotonic_ns": 326044217818534,
+      "started_wall_ns": 1793645547005636632,
+      "stderr_path": "results/raw/experiment_8737_v749_contract_methods/startup/full_python_suite.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "results/raw/experiment_8737_v749_contract_methods/startup/full_python_suite.stdout",
+      "stdout_sha256": "sha256:e3aacda51df003a85d2c543044d9c4f14628e4e8f751512fba8ef9ea76daf7f4",
+      "timed_out": true
+    }
+  },
+  "sources": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/verifier_surface_methods_8754.py",
+      "sha256": "sha256:96288137230684009b6c558fed417563bdcf52b24fae2cc525841688814df8a2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/verifier_surface_runner_8754.py",
+      "sha256": "sha256:89962a7399bf3239fb14b32864f1a809f51849be0ab65d143166b7f9224603b8"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/verifier_surface_report_8754.py",
+      "sha256": "sha256:27ec3ec9ae0c4eacba05e75dcb26dd46e2c5b58c7c9853a02c53d7e382c6533f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8754_v750_verifier_surface_methods.py",
+      "sha256": "sha256:d4ec3b205ae22cb1269519740a30cd89d501dea794b413653f28e1e0dade5ece"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_verifier_surface_methods_8754.py",
+      "sha256": "sha256:7c05b5664def57b1a106963681c8a321af9d088fc00d07e17f9028fab04efdd3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v748_contract_8723.py",
+      "sha256": "sha256:2ca09352a5b948672defabd4f40b7b572f6fbfc3975339ff01c5ecb5a51eed9a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v749_contract_methods_8737.py",
+      "sha256": "sha256:20609f37b43ea1026916fecf28a2baf1ca20b339d14b6f4976b7e120be560c0c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+      "sha256": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_restricted_decision_audit_8210.py",
+      "sha256": "sha256:b390da1c764ab1c83b14d2343956fc35cc02c10ae164f0a10745661f5a38d908"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v749_verifier_protocol.py",
+      "sha256": "sha256:e39a49a8833ac0f95b247494c88dd85f0bba11c2b6343e5b28da5c194f68622b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/verification_methods_8726.py",
+      "sha256": "sha256:2cc5cd6ace3746730a82de5452095ec066283e5c9af26010feec4f0e5534330a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/equal_budget_verifier_8729.py",
+      "sha256": "sha256:d6cd4d75352db343546e8da4c0b25cbe8bb1c856d3350c47aea5f5deee4583b7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v750_archive_bound.py",
+      "sha256": "sha256:b1d3739fcdfef57000e6d3a2cb97a33bb21626a84ab83c26a2fb11ceb7e731b8"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v750_archive_runner.py",
+      "sha256": "sha256:219bba13096bdbf18983d3a29f0c486fd43fcaff07fa27dc001c7f1c65fc307c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/collection_contract.py",
+      "sha256": "sha256:39a045d963423c2daae50fcd7c5a9118753b3022c5d79f415d353f5723b6ee10"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:18dfabaaed325c91bd03cd584c8f7b945a068529f00cbd68e45c0e0c013d49d2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/original_tests_748/test_v748_contract_8723.py",
+      "sha256": "sha256:2ca09352a5b948672defabd4f40b7b572f6fbfc3975339ff01c5ecb5a51eed9a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/original_tests_748/conftest.py",
+      "sha256": "sha256:fcacb320d32c1f2dc51d11da9e74e3db4fb4aad1e505c2b73c3c49a5ff0a5f07"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/original_tests_749/test_v749_contract_methods_8737.py",
+      "sha256": "sha256:20609f37b43ea1026916fecf28a2baf1ca20b339d14b6f4976b7e120be560c0c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/original_tests_749/conftest.py",
+      "sha256": "sha256:1a7948da064ceb65f6cef09d6b5f4dd6379ed692b36e3d0c0440f0e438d41b2e"
+    }
+  ],
+  "started_at_utc": "2026-11-03T03:31:08.666396+00:00",
+  "surface_transform_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/surface_transform.json",
+    "sha256": "sha256:a11739eb445d50a817499b8677bb2fa585e8e372920c96bbe7c5d55de6ca7244"
+  },
+  "transformed_workload": {
+    "evaluation_worlds": 30,
+    "independent_worlds": 60,
+    "intended_calls": 3600,
+    "intended_rows": 720,
+    "reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/transformed.json",
+      "sha256": "sha256:dce49fcea85b40ef10e364b50d82050f32622a64f50c2dc33a999db9d3084da3"
+    },
+    "status": "frozen_unexecuted"
+  },
+  "truth_equivalence_rows": [
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "false",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "false",
+      "world_id": "v749/role_binding/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/temporal_order/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/00"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/01"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/02"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/03"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/04"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/05"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/06"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/07"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/08"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/09"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/10"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/11"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/12"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/13"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/14"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/15"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/16"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/17"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/18"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "truth",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "equivalent",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "invalid",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "unknown",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "deleted_records",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "true",
+      "passed": true,
+      "status": "completed",
+      "transform": "entity_bijection",
+      "transformed_truth": "true",
+      "world_id": "v749/two_premise_composition/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_premise",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/19"
+    },
+    {
+      "absolute_metric": 1,
+      "canonical_truth": "unknown",
+      "passed": true,
+      "status": "completed",
+      "transform": "required_role",
+      "transformed_truth": "unknown",
+      "world_id": "v749/two_premise_composition/19"
+    }
+  ],
+  "verifier_protocol_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8737_v749_contract_methods/invocations/1793646952232607865/verifier_transfer_protocol.json",
+    "sha256": "sha256:9517880b83a79f5e36ff72e69d3b222539e6b68e07ba7ba3b28bdb2e54280f8b"
+  },
+  "workload_references": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/canonical.json",
+      "sha256": "sha256:9517880b83a79f5e36ff72e69d3b222539e6b68e07ba7ba3b28bdb2e54280f8b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/transformed.json",
+      "sha256": "sha256:dce49fcea85b40ef10e364b50d82050f32622a64f50c2dc33a999db9d3084da3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8754_v750_verifier_surface_methods/invocations/1793676668574196686/surface_transform.json",
+      "sha256": "sha256:a11739eb445d50a817499b8677bb2fa585e8e372920c96bbe7c5d55de6ca7244"
+    }
+  ]
+}

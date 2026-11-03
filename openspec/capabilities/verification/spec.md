@@ -57753,3 +57753,43 @@ remain failed. No full-suite or complete scoped-validation pass is claimed.
 Conductor owns status, changelog and traceability reconciliation.
 
 Exp8750 terminal custody: retained actual SQLite covers 273/273 module and 6/6 direct CLI statements, with no exclusions. Terminal scanners and fresh replay pass after restoring the independently sealed receipt and canonical JSON gate order. The primitive discloses that the first failed terminal receipt was overwritten on retry. Required execution checks remain failed; no scientific readiness is granted.
+
+## REQ-VERIFY-8754: Qualify frozen verifier surface methods
+
+Authenticate the retained V749 protocol independently of its rejected producer.
+Freeze the original sixty worlds, six variants, two five-call schedules and
+thirty evaluation clusters. Keep join and missing-premise defects excluded from
+probe selection. A separately written truth enumerator must check all original
+labels, valid alternatives, contradictions and missing evidence without calling
+the tested verifier. No variant is executed during this methods task.
+
+### SCENARIO-VERIFY-8754-TRUTH
+
+A shared variable uses one binding throughout a query. Explicit negative facts
+make a predicate false; absent evidence remains unknown. Inconsistent signed
+facts are rejected. Independent truth checks catch altered labels and relations.
+
+### SCENARIO-VERIFY-8754-SURFACE
+
+Seed7508754 fixes one entity bijection and premise-order permutation per world
+before evaluation. Preserve truth, relations, sample identity and call budget.
+Freeze separate canonical and transformed720-row/3600-call workloads. Paired
+representations and ten timing repeats do not increase thirty evaluation units.
+Freeze correctness, transfer, invariance, timing and world-cluster reduction.
+
+## REQ-REPORT-8754: Publish qualified method custody with honest scope
+
+Require complete original archived V748/V749 tests, private E2E-018/021,
+consumer tests, method mutations, Ruff, strict types, explicit spec tracing and
+100 percent new executable statement coverage including real CLI children.
+Keep unrelated repository health separate. External absence blocks; owned
+validation failure disqualifies. Never rehabilitate a historical producer.
+
+### SCENARIO-REPORT-8754-CLI
+
+Private real CLI publication and fresh cold replay must reject missing inputs,
+changed hashes, changed labels and consistently rehashed report edits. Freeze
+source, input and test-node hashes before checks. Retain original JUnit, logs,
+argv, exit codes and coverage. Publish terminal bytes only after unchanged
+adversarial and strict-row validators. No model or scientific gain is claimed.
+Conductor owns ops/status, changelog and traceability reconciliation.
