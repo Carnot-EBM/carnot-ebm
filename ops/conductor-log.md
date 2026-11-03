@@ -21202,3 +21202,4 @@ code |
 | 2026-11-03 07:48 UTC | Map qualified learning and ordinary-window costs t | FAIL | Codex CLI error: validation_digest_wire', 'process_id': 'R5-python-reuse'}, { |
 | 2026-11-03 08:18 UTC | Map qualified learning and ordinary-window costs t | OK | 93 passed, 1 warning in 66.52s (0:01:06) |
 | 2026-11-03 08:52 UTC | Reconcile fourteen outcomes and close unchanged sc | OK | 92 passed, 1 warning in 197.08s (0:03:17) |
+| 2026-11-03 10:32 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

@@ -54507,3 +54507,94 @@ unknown. Exp8745's assumed dense-update event was absent. These facts justify
 isolating historical authority, using non-invasive deadline diagnostics, and
 qualifying lifecycle events before cost measurement. They do not justify
 promoting any disqualified V749 primary or weakening a scientific criterion.
+
+## V751 planning scan — 2026-11-03
+
+This primary-source scan was recorded before the V751 experiment design.
+External findings are leads, not Carnot measurements. Search covered all eight
+requested topics and the six secondary channels. Version dates below come
+from the primary pages; search crawl dates do not establish publication dates.
+
+### Findings to carry into experiment design
+
+- [SURE-RAG, 2605.03534v2](https://arxiv.org/abs/2605.03534v2), revised
+  July 24, treats evidence sufficiency as a property of a set. Missing hops
+  and conflicts require more than independent passage scores. Its natural
+  hallucination comparison reverses the controlled-task ranking. Adapt the
+  support/refute/insufficient distinction and counterfactual evidence swaps
+  to Carnot's relational records. Keep constructed-world results separate
+  from extraction and natural factuality. The full-text method was checked.
+- [Constrained Paraphrase Consistency, 2606.08158](https://arxiv.org/abs/2606.08158),
+  June 6, combines consistency across views with label preservation. Agreement
+  alone cannot certify truth. V750's zero surface disagreement therefore
+  does not repair its zero transfer gain. Use both truth-preserving changes
+  and truth-changing missing-hop/conflict controls. Defer backbone training;
+  the current small-head causal learning question remains open.
+- [Capacity-Constrained Delayed OCO, 2606.11711](https://arxiv.org/abs/2606.11711),
+  June 10, models finite pending capacity and lost feedback. Preserve actual
+  admission, label-release time and missing-feedback counts in continuous
+  learning. Do not import its convex regret guarantees into Carnot's head.
+- [On-chip KAN learning, 2602.02056v4](https://arxiv.org/abs/2602.02056v4),
+  revised June 19 and listed as ICML 2026, uses spline locality and fixed
+  precision. Continue separating sparse arithmetic, state transfer, restart
+  and durable acknowledgment. Kernel latency is not complete learning latency.
+- [Higher-order FPGA Ising powergrid optimization, 2610.40522](https://arxiv.org/abs/2610.40522),
+  October 29, uses PUBO interactions on a Versal Premium VP1802. File this
+  new hardware lead: higher-order operations and a large Versal are not the
+  existing KV260 pairwise evaluator. Require a capability and encoding-cost
+  comparison before any hardware proposal; no purchase or speed claim follows.
+
+### Primary-topic coverage and deferred alternatives
+
+| Topic | Sources checked | Planning boundary |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605v4), May 2026; [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 2026 | Compatibility, exact constraints and uncertainty remain distinct; no reopening of closed energy-as-generator work. |
+| Neural constraint satisfaction | [CAffNet v2](https://arxiv.org/abs/2605.24437v2), September 21 | Affine feasibility guarantees do not establish correct extraction or relational sufficiency. Defer a new neural architecture. |
+| Ising in ML | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), May 23 | Parameter learning and faithful sampling have different difficulty; keep evaluator and sampler claims separate. |
+| Hallucination detection | SURE-RAG and paraphrase consistency above; [VerifierBench](https://arxiv.org/abs/2610.28679), October 19 | Retain valid alternatives, missing evidence and independent truth; do not count representation variants as new cases. |
+| KAN | On-chip paper above | Complete durable costs and useful future loss must both be measured. |
+| Energy-guided/constrained generation | [Energy-guided decoding](https://arxiv.org/abs/2507.07731), July 2025; [Constrained Decoding: Harmful or Beneficial?](https://arxiv.org/abs/2610.35328), October 2026, previously verified in V750 | VLM layer selection is not text-GGUF support. Matched prompts and separate syntax/semantic metrics remain required for future Qwen work. |
+| Hardware sampling | Higher-order Ising above; [inertial parallel Ising](https://arxiv.org/abs/2604.17109), April 18; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4 | Match topology, operation and complete cost. Vendor estimates are not local device evidence. |
+| Continual learning | Capacity-constrained OCO above | Keep delayed feedback causal and retain fixed controls; a parameter change alone is not benefit. |
+
+### Secondary-channel retrieval record
+
+- **Semantic Scholar:** direct citation API requests used `limit=100` and
+  `fields=title,year,externalIds,url`. The EBT request returned HTTP 429.
+  The [ARM–EBM request](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=100)
+  returned HTTP 200, ten records and no next page. Its Distributional EBM
+  lead was checked at arXiv. This is returned-page coverage, not an exhaustive
+  literature claim; V750's successful EBT page remains historical evidence.
+- **OpenReview:** searched NeurIPS 2025, ICLR 2026 and ICML 2026 EBM work.
+  The [ICLR recurrent-EBM forum](https://openreview.net/forum?id=bYkfHTcR1v)
+  returned a browser challenge. The [NeurIPS energy-shaped projection page](https://openreview.net/forum?noteId=saOUZ7cICb)
+  reports weak unrelated-image OOD rejection despite attack detection. ICML
+  search results were insufficient for a verified submission inventory; the
+  primary KAN page independently identifies its ICML venue. No acceptance
+  status is inferred from search snippets or inaccessible forums.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and [SURE-RAG paper page](https://huggingface.co/papers/2605.03534), then
+  followed the latter to primary arXiv full text. Feed summaries are discovery
+  aids, not the evidence for adopted methods.
+- **GitHub:** [weekly Trending](https://github.com/trending?since=weekly)
+  again returned a snapshot marked last month. No current EBM/constraint/KAN
+  rank or new dependency is inferred. Repository discovery remains incomplete.
+- **Extropic:** the writing index timed out. The direct Z1T page was readable
+  and describes sparse probabilistic hardware with heterogeneous digital work.
+  It supplies no authenticated Carnot run or local TSU access.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  was reachable. Its constraint-layer description supplies no reproducible
+  new implementation or independently measured local architecture update.
+
+### Local evidence that constrains selection
+
+Exp8755 measured zero new-family detection gain, CI95 [0,0], and zero surface
+decision changes. Repeating the same probe schedule cannot test a new idea.
+Exp8757 measured native feature-reuse throughput 1.5165x, CI95
+[1.5017,1.5316], but optimized native/Python 1.0023x, CI95 [0.9936,1.0108].
+Exp8749 missed one executable statement in its owned coverage. Exp8758's
+original compiled-sparse authority test still expected V747 at the moving
+roadmap. Exp8750's timer stacks locate waiting inside terminal publication
+and its late unprofiled output shows repeated cold replay; these observations
+do not yet establish the causal timeout mechanism. They justify a bounded
+publication-cost investigation, not another blind deadline rerun.
