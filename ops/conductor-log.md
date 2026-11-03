@@ -21214,3 +21214,4 @@ code |
 | 2026-11-03 14:21 UTC | Measure evidence-set decisions against local and j | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8768-evidence-set-methods.evidence_set_methods_ready_score (actual=0 == expected=1) |
 | 2026-11-03 15:11 UTC | Attribute the installed costs that remain after qu | OK | 92 passed, 2 warnings in 171.83s (0:02:51) |
 | 2026-11-03 15:40 UTC | Activation REFUSED: milestone 2026.06.999 | BLOCK | ARC no-cov precondition lint failed while reading /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8771_v751_lifecycle_archive_qualification/invocations/1793720122586770042/repository_health/private_temp/popen-gw2/test_scenario_report_4482_acti1/research-roadmap-next.yaml: [Errno 2 |
+| 2026-11-03 16:05 UTC | Qualify sparse lifecycle windows with immutable V7 | OK | 91 passed, 1 warning in 224.77s (0:03:44) |
