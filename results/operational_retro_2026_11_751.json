@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.751",
+  "generated_at": "2026-11-03T18:32:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 75.4,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure matched ordinary durable windows after archived lifecycle qualification",
+      "duration_minutes": 34.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and close the measured archive-runner coverage gap",
+      "duration_minutes": 16.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Attribute the installed costs that remain after qualified feature reuse",
+      "duration_minutes": 9.06,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prototype evidence-set sufficiency with independent three-way truth controls",
+      "duration_minutes": 8.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Localize terminal publication cost before any original deadline rerun",
+      "duration_minutes": 4.38,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.751 completed 8 experiments (8 compute-bound, 0 synthesis-only) in 75.4 wall-time minutes (75 minutes / 1.3 hours, averaging 9 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). Wall time was led by 'Measure matched ordinary durable windows after archived lifecycle qualification' (34.58 minutes / 35min) and 'Bind thirteen tasks and close the measured archive-runner coverage gap' (16.03 minutes / 16min), followed by 'Attribute the installed costs that remain after qualified feature reuse' (9.06 minutes / 9min), 'Prototype evidence-set sufficiency with independent three-way truth controls' (8.42 minutes / 8min), and 'Localize terminal publication cost before any original deadline rerun' (4.38 minutes / 4min). Locked gpu_idle_on_compute_bound_tasks is false while GPU 0 (NVIDIA GeForce RTX 3090) held 2866/24576MB (12%) at 0% utilization and 48C with 1 Python process (PID 1913316, 2856MB, 1327.6s CPU / 86945s wall), and DualGPURunner was not applicable because only a single Python inference process was active.",
+  "bottlenecks_identified": [
+    "Wall-time concentration in 'Measure matched ordinary durable windows after archived lifecycle qualification' at 34.58 minutes (35min) and 'Bind thirteen tasks and close the measured archive-runner coverage gap' at 16.03 minutes (16min) out of 75.4 total milestone minutes (75 minutes / 1.3 hours).",
+    "Additional serial compute-bound runtime across 'Attribute the installed costs that remain after qualified feature reuse' (9.06 minutes / 9min), 'Prototype evidence-set sufficiency with independent three-way truth controls' (8.42 minutes / 8min), and 'Localize terminal publication cost before any original deadline rerun' (4.38 minutes / 4min).",
+    "Unbatched single-process Python inference on GPU 0 (PID 1913316 using 2856MB of 2866/24576MB / 12% at 48C across 1327.6s CPU / 86945s wall time), where batching 8-16 questions per forward pass is recommended for a 4-8x throughput improvement.",
+    "Fallback to disk-mtime timing reconstruction (retro_timing_fallback) because the live git-log path found 0 commits."
+  ],
+  "improvements_suggested": [
+    "Batch 8-16 questions per forward pass in the single Python inference process on GPU 0 (PID 1913316, 2856MB) to capture the 4-8x throughput improvement noted by the GPU monitor.",
+    "Partition durable-window evaluations and thirteen-task archive-runner coverage checks to reduce the 34.58-minute (35min) and 16.03-minute (16min) compute-bound tasks.",
+    "Reuse intermediate cost-attribution and truth-control fixtures across the 9.06-minute (9min), 8.42-minute (8min), and 4.38-minute (4min) tasks, and release the 2866MB (12%) GPU 0 allocation when PID 1913316 is between runs.",
+    "Record explicit start and finish timestamps in experiment artifacts so milestone timing does not depend on disk-mtime fallback when live git-log has 0 commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Enable 8-16 question forward-pass batching for the single Python inference process on GPU 0 (PID 1913316, 2856MB) to achieve the suggested 4-8x throughput speedup.",
+    "Parallelize durable-window checks in 'Measure matched ordinary durable windows after archived lifecycle qualification' (34.58 minutes / 35min) and coverage verification in 'Bind thirteen tasks and close the measured archive-runner coverage gap' (16.03 minutes / 16min).",
+    "Persist explicit per-experiment start/end timestamps in artifact JSON files to eliminate retro_timing_fallback when live git-log records 0 commits."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "Across the 8 compute-bound experiments (0 synthesis-only) totaling 75.4 wall-time minutes (75 minutes / 1.3 hours, 9 minutes average), execution was dominated by the 34.58-minute (35min) durable-window measurement and 16.03-minute (16min) archive-runner coverage tasks. With gpu_idle_on_compute_bound_tasks locked at false and only 1 Python process (PID 1913316, 2856MB on GPU 0 at 2866/24576MB / 12%, 48C) present, DualGPURunner did not apply and batching 8-16 questions per forward pass for 4-8x throughput is the primary tooling lever."
+}

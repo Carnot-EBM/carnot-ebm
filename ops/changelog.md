@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-03 UTC — Operational retrospective for milestone 2026.11.751
+
+- Updated `results/operational_retro_2026_11_751.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.751`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 8 completed experiments (8 compute-bound, 0 synthesis-only) across 75.4 wall-time minutes (75 minutes / 1.3 hours, averaging 9 minutes per experiment).
+- The five slowest experiments were all compute-bound: `Measure matched ordinary durable windows after archived lifecycle qualification` (34.58 minutes / 35min), `Bind thirteen tasks and close the measured archive-runner coverage gap` (16.03 minutes / 16min), `Attribute the installed costs that remain after qualified feature reuse` (9.06 minutes / 9min), `Prototype evidence-set sufficiency with independent three-way truth controls` (8.42 minutes / 8min), and `Localize terminal publication cost before any original deadline rerun` (4.38 minutes / 4min).
+- GPU monitor report (`2026-11-03T18:32:02.994515+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 2866/24576MB (12%), 0% utilization, and 48C with 1 python process (`PID 1913316`, 2856MB, 1327.6s CPU / 86945s wall); locked `gpu_idle_on_compute_bound_tasks` is `false`, and `DualGPURunner` did not apply to the single Python inference process.
+- Suggested improvements: batch 8-16 questions per forward pass in the single Python inference process (`PID 1913316`) for a 4-8x throughput improvement, parallelize durable-window and thirteen-task archive-runner coverage checks in the 34.58-minute and 16.03-minute experiments, release the 2866MB GPU 0 allocation when idle, and record explicit per-experiment timestamps to avoid `retro_timing_fallback` when live git-log has 0 commits.
+
 ## 2026-11-03 UTC — Fix Exp8763 private archive dependencies and guards
 
 Complete private historical result copies and replace the archive result
