@@ -54417,3 +54417,93 @@ about 46% of native child-service time to duplicate feature extraction;
 Exp8732's 122880 durable updates project at least 71507 seconds. Finish the
 unchanged scientific question, remove measured duplicate work, and bound new
 durable measurements before launch. Defer unchanged CUDA and physical probes.
+
+## V750 planning scan — 2026-11-02
+
+This scan precedes the V750 experiment design. Sources cover 2025–2026.
+Dates below use primary version records. External results remain external.
+
+### Findings selected for follow-up
+
+- [Verify to Amplify, 2603.03538v5](https://arxiv.org/abs/2603.03538v5),
+  revised September 9, replaces the earlier online-verifier title. It studies
+  the different costs of accepting wrong steps and rejecting correct steps.
+  Preserve both error types and abstention in Carnot's delayed-feedback study.
+  Its realizability and generator assumptions do not certify Carnot's learner.
+- [Solver-Hard Is Not Model-Hard, 2607.17047](https://arxiv.org/abs/2607.17047),
+  July 19, separates solver effort from model accuracy and finds sensitivity
+  to equivalent surface forms. Add a fixed, truth-preserving entity renaming
+  and premise-order control to the relational verifier study. Treat this as
+  a diagnostic inspired by the paper, not a reproduction or an LLM result.
+- [Constrained Decoding: Harmful or Beneficial?, 2610.35328](https://arxiv.org/abs/2610.35328),
+  October 26, separates format, validity and reasoning constraints. Its
+  comparison controls prompt and output format. File a future matched-prompt
+  Qwen grammar comparison. Current CUDA repair evidence is absent, so another
+  unchanged canary is not justified. Schema validity alone is not correctness.
+- [Distributional EBMs for Uncertainty-Aware Structured LLM Reasoning,
+  2605.18871](https://arxiv.org/abs/2605.18871), May 15, combines learned
+  quality with deterministic penalties and examines model-identity shortcuts.
+  Keep learned scores, exact constraint truth and uncertainty separate. Defer
+  its encoder/adapters: the local fixed small-head study is still unmeasured.
+- [KAN sample efficiency, 2610.10627](https://arxiv.org/abs/2610.10627),
+  October 7, compares sample use in physical regression and control. Its
+  [author repository](https://github.com/DerKevinRiehl/neurips26_kan_training)
+  is accessible. It motivates reporting loss against released-label count,
+  not only elapsed time. No control-task percentage transfers to Carnot.
+- [On-chip KAN learning, 2602.02056v4](https://arxiv.org/abs/2602.02056v4),
+  revised June 19, uses spline locality and fixed precision. Local lifecycle
+  measurements must identify actual dense renormalization events. Exp8745
+  found none in its assumed middle window. Separate ordinary sparse updates,
+  restart, and deliberately constructed threshold tests before timing them.
+
+### Requested primary-topic coverage
+
+| Topic | Primary work checked | Consequence |
+|---|---|---|
+| EBM reasoning/verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605) | Learned compatibility and function-space equivalence do not establish semantic truth. |
+| Neural constraints | [Certified Correctness position, 2608.14569](https://arxiv.org/abs/2608.14569); Solver-Hard above | Keep symbolic instance checks separate from translation and representation tests. |
+| Ising in ML | [Probabilistic Algorithms for Ising Machines, 2610.03972](https://arxiv.org/abs/2610.03972), October 2 | Match scoring, learning and sampling to distinct device operations. |
+| Hallucination detection | [VerifierBench, 2610.28679](https://arxiv.org/abs/2610.28679), October 19; Verify to Amplify | Include correct alternatives and asymmetric errors, not just planted invalid outputs. |
+| KAN | Sample-efficiency and on-chip papers above | Record released-label efficiency and complete lifecycle cost. |
+| Energy-guided/constrained generation | [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731); 2610.35328 | VLM layer selection is not a text-GGUF implementation. Defer new generation until runtime qualification. |
+| Accelerated sampling | Ising review; [Extropic Torx/Z1](https://extropic.ai/writing/from-one-to-one-billion); [Z1T](https://extropic.ai/writing/z1t) | Vendor architecture and efficiency estimates do not supply local device access or complete-service speed. |
+| Continual/online learning | [Capacity-constrained delayed OCO, 2606.11711](https://arxiv.org/abs/2606.11711); Verify to Amplify | Preserve causal label release, pending capacity and both error costs. Do not import convex regret bounds. |
+
+### Secondary sources and citation discovery
+
+- **Semantic Scholar:** direct unauthenticated API calls succeeded for both
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20).
+  EBT returned 20 records with next=20; ARM–EBM returned 10 without another page.
+  This is a partial EBT inventory and a returned ARM page, not proof of complete
+  citation coverage. Solver-Hard and Distributional EBMs were checked against
+  their primary arXiv pages. Earlier scans' HTTP429 limits remain historical.
+- **OpenReview:** searched NeurIPS2025, ICLR2026 and ICML2026 EBM submissions.
+  The ICLR recurrent-EBM PDF returned a browser challenge. Indexed NeurIPS
+  [Energy-Shaped Manifold Projections](https://openreview.net/forum?noteId=saOUZ7cICb)
+  reports weak rejection of unrelated OOD images despite attack separation.
+  This supports testing different error families; it supplies no text result.
+  ICML search did not yield a new verified submission inventory. The primary
+  on-chip KAN page identifies its ICML2026 venue.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification)
+  and test-based verification discovery results. VerifierBench's primary paper
+  governs the adopted valid-alternative checks. Feed dates are not paper dates.
+- **GitHub:** [weekly Trending](https://github.com/trending?since=weekly) returned
+  a snapshot marked last month. No current EBM/KAN rank is inferred. The KAN
+  author repository above is a verified lead, not a selected dependency.
+- **Extropic:** the writing index returned only its navigation shell. The
+  summer2026 Torx/Z1 announcement and September4 Z1T article were readable.
+  The former describes a planned2027 cluster; the latter concerns sparse
+  probabilistic hardware. Neither authorizes Carnot TSU timing claims.
+- **Logical Intelligence:** [Kona1.0](https://logicalintelligence.com/kona)
+  describes a constraint reasoning layer under other AI systems. No new
+  reproducible architecture or local integration was established by the page.
+
+Local selection evidence: Exp8737's child5 rejected a missing V748 contract
+because historical tests read mutable vNEXT. Several V749 producers also made
+short, incomplete full-suite runs prerequisites for scoped work. Exp8738's
+instrumented child died with signal11; the original timeout cause remains
+unknown. Exp8745's assumed dense-update event was absent. These facts justify
+isolating historical authority, using non-invasive deadline diagnostics, and
+qualifying lifecycle events before cost measurement. They do not justify
+promoting any disqualified V749 primary or weakening a scientific criterion.

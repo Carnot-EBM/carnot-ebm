@@ -773,3 +773,23 @@ and GateMate without inferring device execution. No generator weights, live ARC
 policy, shared validator or conductor change is part of this plan. This describes
 planned research, not a deployed capability. The twelve-task contract is in
 openspec/change-proposals/research-roadmap-vNEXT.md and research-roadmap-next.yaml.
+
+## Planned V750 execution and evidence boundaries — 2026-11-02
+
+V750 stages fourteen tasks, Exp8749–Exp8762. Historical test inputs move to
+private archived roots. New scoped qualification retains all original checks
+and records repository health separately. Old disqualified primaries and
+shared validators remain intact. An unprofiled control distinguishes original
+deadline work from observer failure before any new learning execution.
+
+The nine-input, 109-coefficient head and delayed-feedback protocol stay fixed.
+Verifier transfer adds paired equivalent representations with independent
+truth evaluation. Existing feature reuse gets new installed qualification
+before matched full-process timing. Ordinary durable windows include actual
+restart; constructed threshold states remain separate from natural events.
+
+ARC work tests censoring and arm overlap on private copies of reachable
+supervisor evidence. It changes no live policy. Hardware readers keep causal
+learning, installed inference and ordinary-window cost boundaries separate.
+KV260, PolarFire and GateMate retain their actual operation limits. This is
+planned research, not a deployed change or scientific result.

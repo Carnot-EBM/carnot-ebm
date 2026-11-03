@@ -4353,3 +4353,18 @@ Scoped Ruff, formatting, strict mypy and spec tracing pass. Global tracing retai
 1,142 existing missing references; the architecture date remains stale. No full
 repository suite rerun or deadline readiness is claimed. Validation receipts:
 `/var/tmp/carnot-8738-repair-znkkvfwh/`.
+
+## Planned V750 — 2026-11-02
+
+| PRD requirement | Tasks | OpenSpec requirement | State |
+|---|---|---|---|
+| FR-09/FR-10 | Exp8749–8751 | REQ-REPORT-V750-PLAN | Planned: archived test authority, observer controls and complete original union |
+| FR-11 | Exp8752/8753 | REQ-REPORT-V750-PLAN | Planned: causal typed decisions, released-label curves and joint retention |
+| FR-12 | Exp8754/8755 | REQ-REPORT-V750-PLAN | Planned: independently qualified transfer and equivalent-surface controls |
+| FR-05/FR-08/NFR-01 | Exp8756–8759 | REQ-REPORT-V750-PLAN | Planned: installed parity, complete inference costs and ordinary durable windows |
+| FR-11/FR-12 and hardware path | Exp8760–8762 | REQ-REPORT-V750-PLAN | Planned: ARC censoring sensitivity, three-board operation mapping and reconciliation |
+
+Design: openspec/change-proposals/research-roadmap-vNEXT.md.
+Queue: research-roadmap-next.yaml. Exactly fourteen tasks, Exp8749–Exp8762.
+The complete V749 design is preserved in research-roadmap-v749-preserved-20261102.md.
+No implementation or scientific result is changed by this plan.

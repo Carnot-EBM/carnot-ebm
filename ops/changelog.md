@@ -22886,3 +22886,22 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-02: Read only new live supervisor outcomes for cross-game refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_8746_v749_arc_outcome_frontier.json
 - 2026-11-02: Map new feature and durable-window costs to each board operation (⚠️ Research Finding) — honest_verdict=complete_disqualified_hardware_cost_or_physical_execution; results/experiment_8747_v749_hardware_cost_boundary.json
 - 2026-11-02: Reconcile twelve outcomes and close exact learning verification and cost scopes (⚠️ Research Finding) — honest_verdict=complete_disqualified_v749_capstone; results/experiment_8748_v749_capstone.json
+
+## 2026-11-02 — Stage research milestone 2026.11.750
+
+- Wrote matching fourteen-task design and staged YAML, Exp8749–Exp8762,
+  across four phases. Preserved the complete V749 design before replacement.
+- Filed the requested primary/secondary literature scan before experiment
+  design. Both Semantic Scholar citation requests succeeded; EBT coverage
+  remains partial. Added equivalent-surface verifier controls and filed new
+  constrained-decoding, distributional-energy and KAN sample-efficiency leads.
+- Planned immutable historical fixtures, non-invasive deadline diagnostics,
+  unchanged causal learning/retention, independent verifier methods, installed
+  feature qualification, ordinary durable windows and separate threshold tests.
+- Kept ARC work on generalization evidence sensitivity and mapped each of the
+  three FPGA boards to actual supported operations. Deferred unchanged CUDA.
+- Aligned planned OpenSpec, BMAD architecture/traceability and ops status.
+  Every task declares rows, verdict class, exact gates, failure lineage,
+  substrate, progress/heartbeat requirements and bounded file writes.
+- No research experiment, activation, conductor edit, active-roadmap edit,
+  manifest edit, deployment, external publication or push occurred.

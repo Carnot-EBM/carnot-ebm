@@ -18705,3 +18705,19 @@ ARC reads only new live supervisor outcomes. Hardware mapping includes all three
 boards. The unchanged CUDA canary is deferred until causal repair evidence exists.
 The literature scan precedes experiment design. Planning validation is recorded
 in the design and changelog; scientific results remain pending execution.
+
+## Staged V750 research milestone — 2026-11-02
+
+- Staged `2026.11.750`: fourteen tasks, Exp8749–Exp8762, in four phases.
+  The full design, task table, JSON contract and next-roadmap YAML agree.
+- V749 produced seven primaries and skipped five studies. Historical V748
+  tests read mutable vNEXT; short full-suite diagnostics also blocked scoped
+  work. Deadline cause remains unresolved. The proposed middle-window dense
+  update did not occur. No new learning, transfer or timing benefit qualified.
+- Next work isolates historical fixtures, diagnoses deadline observation,
+  preserves causal learning, tests equivalent verifier representations, and
+  measures installed feature reuse plus accurately named durable windows.
+- ARC censoring sensitivity and all three board operation boundaries remain
+  explicit. No unchanged CUDA canary, device probe or purchase is scheduled.
+- Planning only. Active roadmap, conductor and exclusion manifest stay unchanged.
+  Complete V749 design preserved in the change-proposals archive.

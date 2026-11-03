@@ -104563,3 +104563,41 @@ Twelve disposition rows include this capstone. Readiness is administrative;
 blocked science is not partial work. Stable G1–G4 and paper_ready retain their
 original publication definitions. Missing file, missing field, observed zero
 and failed authentication remain distinct. Ops/traceability are conductor-owned.
+
+## REQ-REPORT-V750-PLAN: Stage qualified learning and distinct cost estimands
+
+The V750 design and next-roadmap YAML shall contain exactly fourteen tasks,
+Exp8749 through Exp8762, in identical order across four phases. The visible
+contract, complete JSON task objects and canonical digest shall agree.
+Preserve the complete V749 design. Preserve the active roadmap, conductor
+source and exclusion manifest. Record current primary and secondary research
+before design. This requirement describes planned work, not completed science.
+
+V750 shall isolate historical test authority from mutable vNEXT. New wrappers
+shall require complete original scoped tests, coverage and applicable E2Es.
+Repository-wide health remains separate; failed original primaries remain
+failed. No shared validator or original assertion may be weakened. Diagnose
+original deadline work with an unprofiled control and non-invasive observation.
+Unknown cause cannot authorize another unchanged timeout or learning execution.
+
+Keep the original causal learner, delayed-label study, cluster units and joint
+retention gates. Qualify verifier methods independently. Add fixed paired
+truth-preserving surfaces without changing the original transfer estimand.
+Qualify existing installed feature reuse before timing. Separate ordinary
+sparse windows, actual restart and constructed threshold-state tests. An absent
+natural renormalization event cannot be reported as measured lifecycle cost.
+
+### SCENARIO-REPORT-V750-PLAN: Validate the staged executable contract
+
+Run schema, gate, exclusion and task-contract checks on the staged files.
+Check every earlier upstream and identical required field, all four failure
+lineage fields, per-unit rows, verdict classes, substrates, progress steps and
+chunked-write requirements. All fourteen tasks use no_model_load; any future
+LLM task must include unsloth/Qwen3.8-27B-GGUF with the actual duration class.
+
+Existing focused unit tests and private E2E-018/021 shall pass. In temporary
+copies, a changed task title or missing task shall fail contract comparison.
+Run scoped lint/spec tracing and record global failures separately. Preserve
+continuous self-learning, calibrated decisions, ARC generalization sensitivity,
+and all three board operation boundaries. Planning performs no research run,
+model load, board operation, activation, external publication or push.
