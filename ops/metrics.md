@@ -4428,3 +4428,11 @@ Turns 9 to 14 (2026-10-19 to 2026-10-20). Start times were not recorded. Token c
 | Turn | Start | End | Description | Tokens |
 |------|-------|-----|-------------|--------|
 | 1 | 2026-11-03T02:02:59Z | 2026-11-03T03:06:49Z | Published Exp8750 disqualified diagnostic; 16 new tests pass; 279/279 new statements covered; scoped execution failures retained; historical bytes preserved. | unavailable |
+
+
+## Session: 2026-11-03 Milestone 2026.11.750 Operational Retrospective
+
+| Turn | Start | End | Description | Tokens |
+|------|-------|-----|-------------|--------|
+| 1 | 2026-11-03T08:59:01Z | 2026-11-03T09:01:09Z | Operational retrospective for milestone 2026.11.750: preserved locked fields in `results/operational_retro_2026_11_750.json`, populated interpretive fields from authoritative timing/GPU data, appended `ops/changelog.md` and `docs/research-log.md`, and ran adversarial subagent review. | ~25k |
+

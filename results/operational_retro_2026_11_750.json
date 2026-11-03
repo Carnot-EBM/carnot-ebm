@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.750",
+  "generated_at": "2026-11-03T08:58:47Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 100.8,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify installed request-local feature reuse with complete scoped evidence",
+      "duration_minutes": 27.17,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Separate observer failure from original deadline work with bounded controls",
+      "duration_minutes": 25.19,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind fourteen tasks and isolate historical authority from the moving roadmap",
+      "duration_minutes": 16.61,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure composition-defect transfer and equivalent-surface robustness at equal p",
+      "duration_minutes": 11.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify frozen verifier transfer methods and truth-preserving surface controls",
+      "duration_minutes": 10.42,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.750 completed 10 synthesis-only experiments (0 compute-bound) in 100.8 wall-time minutes (101 minutes / 1.7 hours, averaging 10 minutes per experiment) via disk-mtime reconstruction (retro_timing_fallback, as live git-log found 0 commits). Wall time was led by 'Qualify installed request-local feature reuse with complete scoped evidence' (27.17 minutes / 27min), 'Separate observer failure from original deadline work with bounded controls' (25.19 minutes / 25min), and 'Bind fourteen tasks and isolate historical authority from the moving roadmap' (16.61 minutes / 17min), followed by 'Measure composition-defect transfer and equivalent-surface robustness at equal p' (11.34 minutes / 11min) and 'Qualify frozen verifier transfer methods and truth-preserving surface controls' (10.42 minutes / 10min). Because 0 compute-bound experiments executed, gpu_idle_on_compute_bound_tasks remains null, DualGPURunner was not applicable, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 49C, 1 python process PID 1913316 using 2856MB across 1096.8s CPU / 52549s wall) reflects expected non-GPU synthesis behavior.",
+  "bottlenecks_identified": [
+    "Synthesis execution time concentrated in the two longest tasks: 'Qualify installed request-local feature reuse with complete scoped evidence' (27.17 minutes / 27min) and 'Separate observer failure from original deadline work with bounded controls' (25.19 minutes / 25min) within the 100.8-minute (101 minutes / 1.7 hours) milestone window.",
+    "Additional synthesis-only latency in 'Bind fourteen tasks and isolate historical authority from the moving roadmap' (16.61 minutes / 17min), 'Measure composition-defect transfer and equivalent-surface robustness at equal p' (11.34 minutes / 11min), and 'Qualify frozen verifier transfer methods and truth-preserving surface controls' (10.42 minutes / 10min).",
+    "Milestone timing required disk-mtime reconstruction (retro_timing_fallback) because the live git-log path found 0 commits."
+  ],
+  "improvements_suggested": [
+    "Split and run scoped evidence verification checks concurrently inside 'Qualify installed request-local feature reuse with complete scoped evidence' (27.17 minutes / 27min) and 'Separate observer failure from original deadline work with bounded controls' (25.19 minutes / 25min).",
+    "Pre-validate historical archive fixtures and surface-control templates used by 'Bind fourteen tasks and isolate historical authority from the moving roadmap' (16.61 minutes / 17min), 'Measure composition-defect transfer and equivalent-surface robustness at equal p' (11.34 minutes / 11min), and 'Qualify frozen verifier transfer methods and truth-preserving surface controls' (10.42 minutes / 10min).",
+    "Record explicit task start and finish timestamps in experiment artifacts so milestone timing does not depend on disk-mtime fallback when live git-log reports 0 commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize scoped feature-reuse qualification and observer-control test suites in the 27.17-minute (27min) and 25.19-minute (25min) synthesis tasks.",
+    "Cache archive-bound contract checks and frozen verifier surface-control fixtures across the 16.61-minute (17min), 11.34-minute (11min), and 10.42-minute (10min) synthesis tasks.",
+    "Persist direct execution start/end timestamps in each experiment artifact to avoid retro_timing_fallback when live git-log finds 0 commits."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "All 10 completed experiments in milestone 2026.11.750 were synthesis-only (0 compute-bound) across 100.8 wall-time minutes (101 minutes / 1.7 hours, averaging 10 minutes per experiment), so no compute-bound experiment duration is available, gpu_idle_on_compute_bound_tasks is null, and DualGPURunner was not applicable. The 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 49C) is expected for synthesis-only tasks rather than a GPU bottleneck, making synthesis-task test and fixture optimization in the 27.17-minute and 25.19-minute tasks the primary lever for faster execution next milestone."
+}
