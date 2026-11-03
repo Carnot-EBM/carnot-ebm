@@ -104713,3 +104713,35 @@ defects, including50/60 new-family units. Both paired detection-gain intervals
 are[0,0]; all720 surface pairs have zero disagreements and truth discrepancies.
 The primary JSON retains scoped qualification and separately bounded repository
 health receipts. Tests reference REQ-VERIFY-8755 and REQ-REPORT-8755.
+
+## REQ-REPORT-8757: Measure matched qualified installed feature-reuse costs
+
+Admit only the exact Exp8756 producer with feature_reuse_ready_score=1 and its
+sealed wheel, extension, head and original64 request hashes. Freeze source,
+method, inputs and collected nodes before timing. Preserve batch16, Python/native
+by baseline/reuse by ten paired repeats:40 complete processes, each16 panels
+of64 items. Counterbalance process order. Run the installed protocol without
+profiling or extraction counters. Scientific request bytes must match; config
+hashes and live deadlines remain explicit envelope fields. Report parent launch
+through shutdown separately from steady request p95. Durability is excluded.
+
+### SCENARIO-REPORT-8757-COST
+
+One bounded four-arm probe projects all40 cells using the maximum complete
+process cost with25 percent reserve inside2700 seconds. Over-budget admission
+retains every intended cell as censored. Resample ten paired process blocks
+10000 times. Native reuse benefit requires throughput lower95>1.05, p95<=50ms
+and p95 regression<=5 percent. NFR-01 compares optimized native with optimized
+Python at the same boundary and requires lower95>=10. No historical child
+fraction can multiply parent cost. A valid scientific null is terminal.
+
+## Implementation status for REQ-REPORT-8757
+
+Planned: thin runner, retained process/request evidence and requirement-linked
+unit/CLI tests. Conductor owns ops and BMAD reconciliation.
+
+Implementation20261103 for REQ-REPORT-8757: `feature_reuse_cost_8757`, its
+measurement/runner modules and thin CLI retain the fixed40-cell design. The
+requirement-linked tests cover real installed children, process resampling,
+admission, failed cells and sealed replay. The terminal primary records actual
+scoped checks and scientific outcomes; repository health is a separate receipt.

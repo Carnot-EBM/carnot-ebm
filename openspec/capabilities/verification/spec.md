@@ -57856,3 +57856,25 @@ cold replay and coherently rehashed aggregate/row attacks. Freeze before scoring
 replay independently recomputes decisions and reductions from sealed inputs.
 Retain exact argv, exits, JUnit, coverage and full log hashes. No model loads or
 training occur. Conductor owns ops/status, changelog and traceability updates.
+
+## REQ-VERIFY-8757: Authenticate installed cost execution and row replay
+
+Require scoped units, unchanged consumers, Ruff lint/format, strict mypy,
+explicit spec coverage and100 percent new executable statements including real
+CLI children. Run actual installed E2E-003 and private E2E-021. Keep argv, exits,
+JUnit, coverage and full log hashes in private roots. Repository health remains
+separate. Missing or rejected external evidence blocks; failed owned checks
+disqualify and suppress all readiness and promotion scores.
+
+### SCENARIO-VERIFY-8757-CUSTODY
+
+Cold replay independently reduces every session's clocks, rows and numerical
+outputs, authenticates the sealed work and rejects aggregate/row mutations,
+missing files and mismatched authority. Publish only terminal bytes after the
+unchanged adversarial and strict row scanners and a fresh-process replay.
+No model loading, language generation or training occurs.
+
+Implementation20261103 for REQ-VERIFY-8757: retained owned coverage includes
+real CLI children. Existing custody and publication helpers preserve original
+consumer assertions. Independent replay checks raw process sessions before the
+unchanged terminal scanners authorize the exact candidate bytes.

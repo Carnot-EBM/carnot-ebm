@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="9" time="295.124" timestamp="2026-11-03T00:29:18.990331-05:00" hostname="icbfl1"><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_roster_intervals_and_gates" time="0.008" /><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_exact_inputs_and_external_states" time="0.063" /><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_real_private_cli_and_replay" time="43.561" /><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_admission_and_failed_cells" time="0.036"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/installed8702-tiynypyd/installed/environment/lib/python3.12/site-packages/carnot_native/libnine_input_8533.so'">tmp_path = PosixPath('/var/tmp/feature8757-development/test_admission_and_failed_cell0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f03f9fa3320&gt;
+
+    def test_admission_and_failed_cells(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8757-COST: a probe cannot replace the complete fixed panel."""
+        inputs = e.inputs(e.ROOT)
+        config = tmp_path / "head"
+        e.atomic_json(config, inputs["workload"]["configuration_template"])
+        monkeypatch.setattr(m.original, "prepare", lambda *a: (["python"], config, []))
+    
+        def probe(*a):
+            return dict(
+                process_row=dict(
+                    a[2], duration_s=100.0, passed=True, session_reference=e.reference(config)
+                ),
+                request_rows=[],
+                parity_rows=[],
+                complete_cost_rows=[],
+            )
+    
+        monkeypatch.setattr(m, "observe", probe)
+&gt;       result = m.measure(tmp_path / "raw", tmp_path, inputs, 2**63)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_feature_reuse_cost_8757.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/feature_reuse_cost_measure_8757.py:74: in measure
+    retained.write_bytes(Path(baseline_config["extension"]["path"]).read_bytes())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/var/tmp/installed8702-tiynypyd/installed/environment/lib/python3.12/site-packages/carnot_native/libnine_input_8533.so')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/installed8702-tiynypyd/installed/environment/lib/python3.12/site-packages/carnot_native/libnine_input_8533.so'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</failure></testcase><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_installed_e2e003_and_private_e2e021" time="137.931" /><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_observation_rejections" time="0.004"><failure message="KeyError: 'requests'">tmp_path = PosixPath('/var/tmp/feature8757-development/test_observation_rejections0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f03f9443d70&gt;
+
+    def test_observation_rejections(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8757-CUSTODY: scoring and optimization state are mandatory."""
+        config = tmp_path / "config.json"
+        e.atomic_json(config, dict(reuse_request_features=False))
+        primitive = dict(config_reference=e.reference(config))
+        monkeypatch.setattr(m.original, "session", lambda *a: primitive)
+        with pytest.raises(ValueError, match="optimization_state"):
+&gt;           m.observe([], config, dict(mode="reuse"), {}, tmp_path, tmp_path, 2**63)
+
+tests/python/test_feature_reuse_cost_8757.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+command = []
+config = PosixPath('/var/tmp/feature8757-development/test_observation_rejections0/config.json')
+slot = {'mode': 'reuse'}, inputs = {}
+scratch = PosixPath('/var/tmp/feature8757-development/test_observation_rejections0')
+raw = PosixPath('/var/tmp/feature8757-development/test_observation_rejections0')
+deadline_ns = 9223372036854775808
+
+    def observe(
+        command: list[str],
+        config: Path,
+        slot: Json,
+        inputs: Json,
+        scratch: Path,
+        raw: Path,
+        deadline_ns: int,
+    ) -&gt; Json:
+        """The original protocol retains validation and scoring; diagnostic wrappers stay off."""
+        primitive = original.session(
+&gt;           command, config, slot, inputs["requests"], scratch, raw, deadline_ns
+                                   ^^^^^^^^^^^^^^^^^^
+        )
+E       KeyError: 'requests'
+
+python/carnot/reporting/feature_reuse_cost_measure_8757.py:28: KeyError</failure></testcase><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_owned_measurement_failures" time="0.036"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/installed8702-tiynypyd/installed/environment/lib/python3.12/site-packages/carnot_native/libnine_input_8533.so'">tmp_path = PosixPath('/var/tmp/feature8757-development/test_owned_measurement_failure0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f03f94426f0&gt;
+
+    def test_owned_measurement_failures(tmp_path, monkeypatch):
+        """REQ-VERIFY-8757: failed cells stay in the full intended denominator."""
+        inputs = e.inputs(e.ROOT)
+        config = tmp_path / "config.json"
+        e.atomic_json(config, inputs["workload"]["configuration_template"])
+        monkeypatch.setattr(m.original, "prepare", lambda *a: ([], config, []))
+        count = 0
+    
+        def fail(*args):
+            nonlocal count
+            count += 1
+            if count &gt; 4:
+                args[-2].mkdir(parents=True)
+                e.atomic_json(args[-2] / "failed_child.json", dict(actual_exit=1))
+                raise ValueError("bad child")
+            return dict(
+                process_row=dict(args[2], duration_s=0.1, session_reference=e.reference(config))
+            )
+    
+        monkeypatch.setattr(m, "observe", fail)
+&gt;       measured = m.measure(tmp_path / "failure", tmp_path, inputs, 2**63)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_feature_reuse_cost_8757.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/feature_reuse_cost_measure_8757.py:74: in measure
+    retained.write_bytes(Path(baseline_config["extension"]["path"]).read_bytes())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/var/tmp/installed8702-tiynypyd/installed/environment/lib/python3.12/site-packages/carnot_native/libnine_input_8533.so')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/installed8702-tiynypyd/installed/environment/lib/python3.12/site-packages/carnot_native/libnine_input_8533.so'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError</failure></testcase><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_runner_rehashed_failures" time="45.545" /><testcase classname="tests.python.test_feature_reuse_cost_8757" name="test_scoped_validation_and_owned_errors" time="63.931" /></testsuite></testsuites>
