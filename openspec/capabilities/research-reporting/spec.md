@@ -104675,3 +104675,20 @@ Retain exposure and thirty evaluation clusters. A failed old producer is an
 input source only. Scoped validation and new statements require complete
 qualification; repository-wide diagnostics stay separate. The conductor owns
 ops/status, changelog and traceability reconciliation.
+
+## REQ-REPORT-8755: Fixed verifier family and surface evidence
+
+REQ-VERIFY-8755 and SCENARIO-REPORT-8755-CLI define Exp8755's sealed7200-call
+study. Preserve old/new defect results, paired surfaces, valid alternatives,
+independent truth checks and separate ten-repeat cost observations. Execution
+readiness is independent of scientific transfer and representation invariance.
+Any oracle-dependent benefit remains circular_positive. Conductor owns ops docs.
+
+Exp8755 implementation: the thin runner and family/surface measurement,
+analysis and report modules retain the full fixed roster, independent truth
+checks, timing observations and sealed row replay. The2026-11-03 numerical run
+completed1440 rows/7200 primary calls. Both arms detected140/150 evaluation
+defects, including50/60 new-family units. Both paired detection-gain intervals
+are[0,0]; all720 surface pairs have zero disagreements and truth discrepancies.
+The primary JSON retains scoped qualification and separately bounded repository
+health receipts. Tests reference REQ-VERIFY-8755 and REQ-REPORT-8755.

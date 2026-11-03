@@ -57793,3 +57793,44 @@ source, input and test-node hashes before checks. Retain original JUnit, logs,
 argv, exit codes and coverage. Publish terminal bytes only after unchanged
 adversarial and strict-row validators. No model or scientific gain is claimed.
 Conductor owns ops/status, changelog and traceability reconciliation.
+
+## REQ-VERIFY-8755: Measure frozen family transfer and surface robustness
+
+Admit only Exp8754 readiness one with authenticated canonical and transformed
+workloads. Freeze input, source, method and exact test-node hashes before
+measurement. Execute all1440 world/variant/arm/surface rows and7200 distinct
+scheduled probe calls without early exit. Record inputs, queries, signed
+results, predicate input counts and actual spans. Ten extra timing repetitions
+are cost observations only. Preserve30 exposed evaluation worlds,150 defective
+units per arm and60 new-family units. Use10000 paired world-cluster draws.
+
+### SCENARIO-VERIFY-8755-TRANSFER
+
+Separate old and new defect families on the original canonical surface. Require
+new-family detection-gain lower95 above zero and no extra correct-verifier false
+rejections. Oracle-dependent gains remain circular_positive. A completed null
+closes this fixed study and establishes no natural extraction quality.
+
+### SCENARIO-VERIFY-8755-SURFACE
+
+Pair each fixed world, variant and arm across surfaces. Report disagreements,
+detection and error deltas by defect family. Invariance requires zero independent
+truth discrepancies and zero correct-control decision changes. Keep any transfer
+gain beside surface failures. Reject-all must fail valid-alternative controls;
+missing premises remain distinct from explicit falsehood.
+
+## REQ-REPORT-8755: Publish replayable fixed-study evidence
+
+External missing, changed or rejected inputs block; failed owned checks
+disqualify. Preserve every intended row and denominator. Require scoped units,
+unchanged consumers, private E2E-018/021, Ruff, strict mypy, explicit spec coverage
+and100 percent new statements including real CLI children. Keep repository
+health separate. Use unchanged terminal scanners and fresh-process cold replay.
+
+### SCENARIO-REPORT-8755-CLI
+
+Real private CLI children exercise publication, missing inputs, invalid dates,
+cold replay and coherently rehashed aggregate/row attacks. Freeze before scoring;
+replay independently recomputes decisions and reductions from sealed inputs.
+Retain exact argv, exits, JUnit, coverage and full log hashes. No model loads or
+training occur. Conductor owns ops/status, changelog and traceability updates.

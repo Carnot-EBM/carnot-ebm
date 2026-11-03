@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="69.290" timestamp="2026-11-02T23:07:00.380881-05:00" hostname="icbfl1"><testcase classname="tests.python.test_verifier_family_surface_8755" name="test_signed_variants" time="0.000" /><testcase classname="tests.python.test_verifier_family_surface_8755" name="test_full_measurement_and_reduction" time="3.130" /><testcase classname="tests.python.test_verifier_family_surface_8755" name="test_upstream_gates" time="0.017" /><testcase classname="tests.python.test_verifier_family_surface_8755" name="test_private_cli_replay_and_attacks" time="40.184"><failure message="assert False">tmp_path = PosixPath('/tmp/exp8755-initial/test_private_cli_replay_and_at0')
+
+            ("verifier_transfer_methods_ready_score", 0),
+            ("verdict_class", "disqualified"),
+        ]:
+            changed = dict(upstream, **{field: value})
+            atomic_json(path, changed)
+            assert not m.inputs(path, m.reference(path)["sha256"])["passed"]
+        upstream.pop("verifier_transfer_methods_ready_score")
+        atomic_json(path, upstream)
+        assert not m.inputs(path, m.reference(path)["sha256"])["passed"]
+        assert not m.inputs(path)["passed"]
+    
+    
+    def test_private_cli_replay_and_attacks(tmp_path):
+        """SCENARIO-REPORT-8755-CLI: real children reject rehashed rows and aggregates."""
+&gt;       output = tmp_path / (m.NAME + ".json")
+E       assert False
+
+tests/python/test_verifier_family_surface_8755.py:90: AssertionError</failure></testcase><testcase classname="tests.python.test_verifier_family_surface_8755" name="test_blocked_cli" time="23.832" /></testsuite></testsuites>
