@@ -22949,3 +22949,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-03: Measure matched ordinary durable windows after archived lifecycle qualification (⚠️ Research Finding) — honest_verdict=complete_null_ordinary_durable_cost; results/experiment_8772_v751_ordinary_durable_cost.json
 - 2026-11-03: Map residual host and durable costs to actual FPGA operation limits (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_decision; results/experiment_8774_v751_hardware_operation_decision.json
 - 2026-11-03: Reconcile thirteen outcomes and retire unchanged scientific scopes (⚠️ Research Finding) — honest_verdict=complete_disqualified_v751_capstone; results/experiment_8775_v751_capstone.json
+- 2026-11-03: Bind thirteen tasks and admit independent branch inputs (⚠️ Research Finding) — honest_verdict=complete_disqualified_v752_branch_methods; results/experiment_8776_v752_branch_methods.json
