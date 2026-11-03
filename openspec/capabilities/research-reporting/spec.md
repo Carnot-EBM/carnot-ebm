@@ -104745,3 +104745,22 @@ measurement/runner modules and thin CLI retain the fixed40-cell design. The
 requirement-linked tests cover real installed children, process resampling,
 admission, failed cells and sealed replay. The terminal primary records actual
 scoped checks and scientific outcomes; repository health is a separate receipt.
+## REQ-REPORT-8758: Qualify lifecycle events before ordinary durable costs
+
+Authenticate the original4096-update trajectory and independently recompute
+fixed-point scalar decay and the strict threshold predicate. Report measured
+dense writes, decay scales and the actual restart after2048. Qualify32-update
+windows at offsets0/2032/4064 for Python, stateless native and resident native.
+Compare complete states, probabilities, touched coefficients, counters,
+serialized bytes and acknowledgment chains at every boundary. A zero-dense
+middle window is restart-only. An ordinal is never a dense-write event.
+
+### SCENARIO-REPORT-8758-EVENTS
+
+Natural zero dense writes is a completed observation and cannot veto honest
+ordinary-window qualification. Exercise the retained below/at/above threshold
+controls separately with synthetic_boundary=true. Require actual dense writes
+exactly when the rounded scalar predicate demands them. Synthetic fixtures
+cannot enter natural costs or supply natural event frequency. Freeze a cost
+protocol with explicit no-renormalization scope and separate ordinary and
+threshold readiness scores. No timing benefit or model inference is claimed.

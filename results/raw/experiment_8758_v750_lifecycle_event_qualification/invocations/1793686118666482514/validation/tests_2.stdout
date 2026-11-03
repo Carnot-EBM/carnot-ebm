@@ -1,0 +1,20 @@
+....F...                                                                 [100%]
+=================================== FAILURES ===================================
+________________________________ test_authority ________________________________
+
+    def test_authority():
+        """REQ-REPORT-8719: this independent branch authenticates its own authority."""
+        value = e.inputs()
+>       assert not value["failures"]
+E       AssertionError: assert not [{'artifact_field': 'v747_authority', 'check': 'v747_authority', 'expected': '2026.11.747', 'field': 'v747_authority', ...}]
+
+tests/python/test_compiled_sparse_8719.py:80: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_compiled_sparse_8719.py::test_authority - AssertionE...
+1 failed, 7 passed, 1 warning in 28.84s

@@ -21195,3 +21195,4 @@ code |
 | 2026-11-03 04:36 UTC | Measure composition-defect transfer and equivalent | OK | 88 passed, 1 warning in 179.30s (0:02:59) |
 | 2026-11-03 05:22 UTC | Qualify installed request-local feature reuse with | OK | 87 passed, 1 warning in 18.46s |
 | 2026-11-03 05:51 UTC | Measure matched complete installed costs after fea | OK | 92 passed, 1 warning in 159.79s (0:02:39) |
+| 2026-11-03 06:13 UTC | Activation REFUSED: milestone 2026.06.999 | BLOCK | ARC no-cov precondition lint failed while reading /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8758_v750_lifecycle_event_qualification/invocations/1793686118666482514/repository_health/private_temp/popen-gw2/test_scenario_report_4482_acti1/research-roadmap-next.yaml: [Errno 2]  |

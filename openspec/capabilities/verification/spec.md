@@ -57878,3 +57878,28 @@ Implementation20261103 for REQ-VERIFY-8757: retained owned coverage includes
 real CLI children. Existing custody and publication helpers preserve original
 consumer assertions. Independent replay checks raw process sessions before the
 unchanged terminal scanners authorize the exact candidate bytes.
+## REQ-VERIFY-8758: Preserve lifecycle custody and exact native import
+
+Freeze source, inputs, method and collected test nodes before measurement.
+Use retained qualified numerical drivers and the exact loaded binary. Import
+original state and counters without replaying or rounding them. Exact import
+mismatches block the affected timing branch with the expected and observed
+state fields. Failed owned checks disqualify and zero readiness. Repository
+health stays separate and a bounded diagnostic is never a full-suite pass.
+
+### SCENARIO-VERIFY-8758-RESTART
+
+Run actual loaded E2E-003/004 and hard-exit73/resume controls at2048 for each
+arm. Serialized state, counters and acknowledgments must match uninterrupted
+execution. Duplicate, late and invalid feedback cannot advance acknowledged
+state. Run original consumers and private E2E-021 with unchanged assertions.
+
+### SCENARIO-VERIFY-8758-CUSTODY
+
+Require scoped tests, Ruff lint/format, strict mypy, explicit spec tracing and
+100 percent new executable statements including real CLI children. Retain
+argv, exits, JUnit, coverage SQLite and complete log hashes in private roots.
+Cold replay authenticates independent measurement and validation seals and
+recomputes evidence. Publish terminal bytes only after unchanged adversarial
+and strict-row validators. Missing external inputs block; owned failures
+disqualify. Conductor owns ops/status/changelog and BMAD reconciliation.
