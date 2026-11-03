@@ -21207,3 +21207,6 @@ code |
 | 2026-11-03 11:18 UTC | Milestone 2026.11.751 activated | OK | 13 tasks queued |
 | 2026-11-03 12:39 UTC | Bind thirteen tasks and close the measured archive | OK | 105 passed, 1 warning in 87.07s (0:01:27) |
 | 2026-11-03 13:28 UTC | Localize terminal publication cost before any orig | OK | 102 passed, 1 warning in 23.55s |
+| 2026-11-03 13:31 UTC | Qualify the original learning union after measured | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8763-branch-contract.learning_protocol_ready_score (actual=0 == expected=1) |
+| 2026-11-03 13:33 UTC | Measure continuous typed-decision learning with se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8765-learning-union) |
+| 2026-11-03 13:33 UTC | Audit future Brier benefit and simultaneous retent | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8766-causal-brier-stream) |
