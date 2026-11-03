@@ -22906,3 +22906,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - No research experiment, activation, conductor edit, active-roadmap edit,
   manifest edit, deployment, external publication or push occurred.
 - 2026-11-03: Bind fourteen tasks and isolate historical authority from the moving roadmap (⚠️ Research Finding) — honest_verdict=complete_disqualified_v750_archive_bound_contract; results/experiment_8749_v750_archive_bound_contract.json
+- 2026-11-03: Separate observer failure from original deadline work with bounded controls (⚠️ Research Finding) — honest_verdict=complete_disqualified_v750_deadline_observer_control; results/experiment_8750_v750_deadline_observer_control.json
