@@ -21199,3 +21199,4 @@ code |
 | 2026-11-03 06:30 UTC | Qualify actual sparse lifecycle events before dura | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 92 passed, 1 warning in 170.38s (0:02:50) |
 | 2026-11-03 06:33 UTC | Measure ordinary durable windows and restart at ma | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8758-lifecycle-event-qualification.ordinary_window_ready_score (actual=0 == expected=1) |
 | 2026-11-03 07:44 UTC | Test cross-game supervisor conclusions against cen | OK | 93 passed, 1 warning in 160.22s (0:02:40) |
+| 2026-11-03 07:48 UTC | Map qualified learning and ordinary-window costs t | FAIL | Codex CLI error: validation_digest_wire', 'process_id': 'R5-python-reuse'}, { |
