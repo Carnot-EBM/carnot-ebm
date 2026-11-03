@@ -105081,3 +105081,48 @@ and rejected producers. Old aliased bytes remain rejected after rehashing.
 Unknown host costs stay in acceleration denominators. No physical-device gain
 follows from simulation, CPU arithmetic or vendor claims. External blocks use
 blocked; owned validation failures use disqualified. Implementation is planned.
+
+## REQ-REPORT-8776: Bind independent V752 branch protocols
+
+Bind the ordered thirteen-task table and every complete JSON/YAML task object to
+canonical digest96a277806aa53175f8661b2e09da69a3c62ddab8f88d0eaaf21e6f25aadc945d.
+Only the established literal-brace activation encoding may change a prompt.
+Freeze separate evidence, delayed-template-memory, capacity and durable-cost
+protocols before evaluating readiness. Memory protocol custody requires explicit
+partial-observation inputs, canonical-graph split isolation and causal gates;
+it does not qualify an implementation or reopen the historical learning union.
+Read current runtime authority through the shipped V744 reader once and the ARC
+frontier beyond Exp8760 once. Their absence cannot disable independent CPU gates.
+Preserve Exp8763's disqualification and Exp8764's null without rewriting primaries.
+
+### SCENARIO-REPORT-8776-BRANCHES
+
+Every changed prompt, gate, routing, prior or deliverable rejects, including
+coordinated rehashing. Missing runtime evidence and empty real ARC outcomes leave
+their scores zero while qualified administrative and memory protocols remain
+ready. No model loads, generation, training, CUDA rebuilds or live games occur.
+
+## REQ-VERIFY-8776: Private archive and terminal custody
+
+Reuse the shipped V751 repair with real private result directories. Retain the
+original archive and output-guard assertions, bounded serial child inventories,
+JUnit, normal exits, SQLite coverage and log hashes. Require100 percent of newly
+owned statements, scoped consumers, Ruff, strict mypy, explicit spec tracing and
+private E2E-018/021. Global health is separate from scoped acceptance. Validate
+terminal bytes with unchanged adversarial and strict row validators, then cold
+replay sealed primitives. Owned failure disqualifies and zeros readiness;
+external absence is terminal blocked. The conductor owns ops/BMAD reconciliation.
+
+### SCENARIO-VERIFY-8776-REPLAY
+
+Private CLI publication and fresh replay pass. Unsafe private output rejects.
+Changed primitives, seals, references, tasks and rehashed aggregates reject.
+A real failed private validation publishes disqualified with every readiness zero.
+
+Implementation for REQ-REPORT-8776 and REQ-VERIFY-8776: the three
+`python/carnot/reporting/v752_branch_*.py` modules and thin Exp8776 CLI implement
+this administrative scope. `test_v752_branch_methods_8776.py` covers branch
+predicates, full-object mutations and private replay; `test_v752_archive_8776.py`
+retains the original archive assertions. Exact execution and coverage outcomes
+are authoritative only through the Exp8776 primary's sealed validation receipt.
+Memory implementation and scientific execution remain separately gated.

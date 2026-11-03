@@ -58197,3 +58197,18 @@ The four-check simultaneous acceptance procedure is frozen in the design.
 Pending-capacity tests retain every dropped label and admission probability.
 Oracle-dependent gains are circular_positive. This requirement is planned;
 no production learner or generator weights change during planning.
+
+## REQ-VERIFY-8776: Independent branch custody and sealed replay
+
+The V752 administrative producer shall preserve original private archive and
+output-guard assertions using the shipped repair and real private result
+directories. Require exact scoped node outcomes, retained JUnit/SQLite/logs,
+100 percent newly owned statements, private E2E-018/021, Ruff, strict mypy and
+explicit spec tracing. Do not schedule the old learning execution union.
+
+### SCENARIO-VERIFY-8776-REPLAY
+
+A real private failed check publishes disqualified and zero readiness. Cold
+replay accepts sealed primitives and rejects missing or changed references,
+independent seals, protocols, full task objects and rehashed aggregates. Runtime
+or ARC absence affects only its own branch. No model or live game is executed.
