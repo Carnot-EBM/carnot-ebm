@@ -58054,3 +58054,22 @@ Implementation20261103 for Exp8768: requirement-linked private controls exercise
 strict JSON, missing joins, explicit negatives, contradictory sets, oracle-access
 traps, real CLI children and consistently rehashed label/row/source mutations.
 Retained validation authenticates exact nodes, JUnit and new-statement SQLite.
+## REQ-VERIFY-8770: Replay optimized attribution from sealed primitives
+
+Freeze methods, source/configuration identities and exact test nodes before
+measurement. Cover every new executable statement, including real CLI children.
+Retain argv, exits, JUnit, node outcomes, coverage and log hashes. Run installed
+E2E-003/004 and private E2E-018/021. Keep bounded repository health separate.
+Publish terminal bytes only after unchanged adversarial/strict-row validators
+and fresh-process cold replay against an independently supplied primitive hash.
+
+### SCENARIO-VERIFY-8770-CUSTODY
+
+Private fixtures never write production evidence. Valid private CLI evidence
+replays; missing authority, aggregate tampering, rehashed primitive tampering,
+changed source seals, invalid clocks and owned failures cannot gain readiness.
+
+Implementation20261103: Exp8770 reuses frozen node collection, retained child
+SQLite/JUnit custody, strict scoped checks and atomic terminal publication.
+New statement coverage includes real CLI and diagnostic entrypoints. Installed
+wire parity and separate child scoring clocks retain their original boundaries.

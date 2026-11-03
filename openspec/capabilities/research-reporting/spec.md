@@ -104933,3 +104933,28 @@ completion enumerator, canonical graph roster, paired-world reducer and thin CLI
 retain separate input/oracle/decision seals. The research note records constructed
 scope and implementation exposure. Measured acceptance belongs to the terminal
 artifact and its invocation-bound validation receipts, not this plan text.
+## REQ-REPORT-8770: Attribute the qualified optimized installed path
+
+Under REQ-REPORT-V751-PLAN, authenticate Exp8756/8757 primary bytes and their
+sealed wheel, extension, B16 configuration and original 64 requests. Run three
+counterbalanced process repeats for each Python/native and profiler on/off
+condition: twelve processes, each with sixteen panels. Preserve the workload.
+Use exclusive diagnostic leaves for extraction, digesting, JSON, native crossing
+and numerical scoring. Keep child and complete-process clocks separate and
+retain unknown residuals. Reconcile each clock within max(1ms,1 percent).
+Report observer overhead and optimistic Amdahl bounds. Material overhead limits
+precision and suppresses selection. Select at most one supported future target.
+No new speed headline, model inference, generalization or hardware claim follows.
+
+### SCENARIO-REPORT-8770-COST
+
+All twelve cells retain denominators, numerical parity and installed identities.
+Absent or rejected upstream evidence blocks with an exact gate. Failed owned
+checks disqualify. Missing costs stay unknown. Nested spans never count twice;
+overlapping spans, changed configurations and changed outputs reject.
+
+Implementation20261103: `optimized_cost_attribution_8770` and its thin runner
+reuse installed workload and publication helpers. `optimized_profile_8770`
+adds opt-in exclusive leaves. Requirement-linked private tests retain original
+parity and rejection controls. The terminal primary binds actual qualification,
+overhead limits, reconciliations and a future target or an explicit absence.

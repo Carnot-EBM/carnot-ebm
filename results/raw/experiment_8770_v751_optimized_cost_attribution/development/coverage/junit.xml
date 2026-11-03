@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="7" time="132.793" timestamp="2026-11-03T09:37:51.619656-05:00" hostname="icbfl1"><testcase classname="tests.python.test_optimized_cost_attribution_8770" name="test_roster_bounds_and_overhead" time="0.003" /><testcase classname="tests.python.test_optimized_cost_attribution_8770" name="test_inputs" time="0.438" /><testcase classname="tests.python.test_optimized_cost_attribution_8770" name="test_cli_blocked_and_replay" time="62.023"><failure message="AssertionError: Traceback (most recent call last):&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8770_v751_optimized_cost_attribution.py&quot;, line 10, in &lt;module&gt;&#10;      raise SystemExit(main())&#10;                       ^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/feature_reuse_cost_runner_8757.py&quot;, line 279, in main&#10;      return run(&#10;             ^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/feature_reuse_cost_runner_8757.py&quot;, line 248, in run&#10;      published = publish_primary(output, value, lambda path: publication.terminal(path, raw))&#10;                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py&quot;, line 73, in publish_primary&#10;      raise ValueError(&quot;candidate_rejected&quot;)&#10;  ValueError: candidate_rejected&#10;  &#10;assert False">tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T143708-2845883-6968cf83/test_cli_blocked_and_replay0')
+
+    def test_cli_blocked_and_replay(tmp_path):
+        """SCENARIO-VERIFY-8770-CUSTODY: actual CLI children publish private blocked rows."""
+        output = tmp_path / (e.NAME + ".json")
+        receipt = child(
+            "blocked",
+            [sys.executable, "-u", e.CLI, "--root", str(tmp_path), "--private-output", str(output)],
+            tmp_path / "logs",
+            deadline=120,
+        )
+&gt;       assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8770_v751_optimized_cost_attribution.py", line 10, in &lt;module&gt;
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/feature_reuse_cost_runner_8757.py", line 279, in main
+E             return run(
+E                    ^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/feature_reuse_cost_runner_8757.py", line 248, in run
+E             published = publish_primary(output, value, lambda path: publication.terminal(path, raw))
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert False
+
+tests/python/test_optimized_cost_attribution_8770.py:75: AssertionError</failure></testcase><testcase classname="tests.python.test_optimized_cost_attribution_8770" name="test_installed_e2e003_e2e004" time="43.924" /><testcase classname="tests.python.test_optimized_cost_attribution_8770" name="test_profile_leaves_and_actual_entrypoint" time="0.173" /><testcase classname="tests.python.test_optimized_cost_attribution_8770" name="test_rejected_pairs_reconciliation_and_missingness" time="0.002" /><testcase classname="tests.python.test_optimized_cost_attribution_8770" name="test_input_terminal_rejection_and_owned_failure" time="17.397" /></testsuite></testsuites>
