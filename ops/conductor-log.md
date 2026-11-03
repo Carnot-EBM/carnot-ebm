@@ -21187,3 +21187,4 @@ code |
 | 2026-11-03 00:52 UTC | Plan milestone 2026.11.750 | OK | 14 tasks proposed |
 | 2026-11-03 01:07 UTC | Milestone 2026.11.750 activated | OK | 14 tasks queued |
 | 2026-11-03 01:59 UTC | Bind fourteen tasks and isolate historical authori | OK | 89 passed, 1 warning in 130.30s (0:02:10) |
+| 2026-11-03 03:14 UTC | Separate observer failure from original deadline w | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 97 passed, 1 warning in 88.98s (0:01:28) |
