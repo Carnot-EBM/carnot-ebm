@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_948_symbolic_kan_real_fover.py

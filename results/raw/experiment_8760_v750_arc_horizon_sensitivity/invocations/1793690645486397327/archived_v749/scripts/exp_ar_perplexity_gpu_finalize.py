@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/exp_ar_perplexity_gpu_finalize.py

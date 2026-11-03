@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3006_eqr_fixed_point_energy_diagnostic_v1.py

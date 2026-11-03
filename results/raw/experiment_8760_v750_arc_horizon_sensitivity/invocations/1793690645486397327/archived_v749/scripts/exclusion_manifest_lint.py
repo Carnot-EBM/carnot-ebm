@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py

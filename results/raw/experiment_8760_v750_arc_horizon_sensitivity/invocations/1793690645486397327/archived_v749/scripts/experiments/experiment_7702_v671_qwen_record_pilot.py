@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7702_v671_qwen_record_pilot.py

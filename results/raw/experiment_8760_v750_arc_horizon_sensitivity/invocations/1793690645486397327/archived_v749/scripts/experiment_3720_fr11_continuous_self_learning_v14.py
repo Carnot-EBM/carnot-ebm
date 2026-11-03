@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3720_fr11_continuous_self_learning_v14.py

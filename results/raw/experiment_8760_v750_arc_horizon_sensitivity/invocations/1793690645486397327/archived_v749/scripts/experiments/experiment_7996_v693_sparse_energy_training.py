@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7996_v693_sparse_energy_training.py

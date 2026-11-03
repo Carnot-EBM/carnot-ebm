@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_1172_nrgpt_per_token_energy_inference.py

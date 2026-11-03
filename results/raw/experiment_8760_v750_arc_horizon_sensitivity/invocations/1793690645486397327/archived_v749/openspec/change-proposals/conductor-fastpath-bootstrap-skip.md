@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/conductor-fastpath-bootstrap-skip.md

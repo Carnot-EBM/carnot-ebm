@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_3821_latent_symbol_bridge_unblocked.py

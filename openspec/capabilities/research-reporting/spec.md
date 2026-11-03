@@ -104764,3 +104764,23 @@ exactly when the rounded scalar predicate demands them. Synthetic fixtures
 cannot enter natural costs or supply natural event frequency. Freeze a cost
 protocol with explicit no-renormalization scope and separate ordinary and
 threshold readiness scores. No timing benefit or model inference is claimed.
+## REQ-REPORT-8760: Full-roster ARC horizon sensitivity
+
+Exp8760 SHALL authenticate the qualified Exp8746 frontier and registry before
+reading genuinely new reachable receipts. An empty delta runs no live game and
+earns no solve credit. Preserve the closed four-game, sixteen-episode roster
+and 120-action binary progress estimand. On private copies, preregister the
+Cartesian grid of no/per-game removal, 30/60/90/120-action follow-up and
+no/per-arm outcome masking. Preserve selection, application and reset cause.
+Each missing arm outcome has interval [0,1] with the full intended episode
+denominator. Report every game/arm cell and pairwise effect bound. Removing
+support SHALL only widen bounds. Complete-case means are diagnostics.
+
+### SCENARIO-REPORT-8760: Independent reconstruction
+
+Compare the unchanged frozen action/observer reducer with a direct independent
+status/count reconstruction for every grid cell. Unknown differs from observed
+zero. Fewer than three shared games or five observed firings per shared arm
+cell suppresses admission; meeting these floors never certifies broad transfer.
+The result is an exposed-development diagnostic, with no causal benefit claim,
+no live policy change and new_level_credit=0.

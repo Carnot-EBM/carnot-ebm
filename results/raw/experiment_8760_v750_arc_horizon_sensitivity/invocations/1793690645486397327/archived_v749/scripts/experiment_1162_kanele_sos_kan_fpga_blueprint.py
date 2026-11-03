@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_1162_kanele_sos_kan_fpga_blueprint.py

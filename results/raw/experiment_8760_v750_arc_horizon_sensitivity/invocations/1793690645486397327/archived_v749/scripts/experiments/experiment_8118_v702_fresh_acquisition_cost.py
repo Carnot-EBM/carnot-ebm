@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py

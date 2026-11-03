@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/emotion-vectors-for-steering.md

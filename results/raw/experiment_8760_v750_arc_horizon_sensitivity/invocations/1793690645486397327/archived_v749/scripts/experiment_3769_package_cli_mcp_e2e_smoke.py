@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3769_package_cli_mcp_e2e_smoke.py

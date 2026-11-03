@@ -57903,3 +57903,17 @@ Cold replay authenticates independent measurement and validation seals and
 recomputes evidence. Publish terminal bytes only after unchanged adversarial
 and strict-row validators. Missing external inputs block; owned failures
 disqualify. Conductor owns ops/status/changelog and BMAD reconciliation.
+## REQ-VERIFY-8760: Invocation-bound sensitivity evidence
+
+Before measurement freeze input, method, source and exact test-node hashes.
+Use private scratch for controls. Require complete scoped tests, consumers,
+E2E-017/023 and private E2E-021, Ruff, strict mypy, explicit spec tracing and
+100 percent newly owned executable statements including actual CLI children.
+Keep repository-wide health separate. Preserve historical bytes and validators.
+
+### SCENARIO-VERIFY-8760: Terminal replay and rejection
+
+Cold replay SHALL reconstruct the private grid from sealed primitive inputs
+and reject consistently rehashed aggregate changes. External absence is blocked;
+owned check failures are disqualified. Publish terminal bytes only after the
+unchanged adversarial and strict row-consistency validators and cold replay.

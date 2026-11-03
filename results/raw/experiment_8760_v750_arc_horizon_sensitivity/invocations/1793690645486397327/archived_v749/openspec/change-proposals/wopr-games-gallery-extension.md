@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/wopr-games-gallery-extension.md

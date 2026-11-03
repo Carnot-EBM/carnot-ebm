@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6869_calibration_only_paired_semantic_rule.py

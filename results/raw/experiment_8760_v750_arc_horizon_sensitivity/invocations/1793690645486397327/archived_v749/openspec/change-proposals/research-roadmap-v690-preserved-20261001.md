@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-v690-preserved-20261001.md

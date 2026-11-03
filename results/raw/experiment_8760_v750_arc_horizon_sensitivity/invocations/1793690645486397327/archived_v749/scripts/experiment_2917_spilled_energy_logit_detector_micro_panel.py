@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_2917_spilled_energy_logit_detector_micro_panel.py

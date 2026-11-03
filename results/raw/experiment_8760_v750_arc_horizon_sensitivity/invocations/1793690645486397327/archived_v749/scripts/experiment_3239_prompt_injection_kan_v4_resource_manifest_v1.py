@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3239_prompt_injection_kan_v4_resource_manifest_v1.py

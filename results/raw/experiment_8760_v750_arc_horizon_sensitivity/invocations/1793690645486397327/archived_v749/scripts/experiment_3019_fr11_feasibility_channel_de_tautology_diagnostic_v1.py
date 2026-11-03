@@ -1,0 +1,1 @@
+/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic_v1.py

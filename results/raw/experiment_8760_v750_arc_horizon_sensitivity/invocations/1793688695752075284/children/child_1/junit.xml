@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="9" time="55.420" timestamp="2026-11-03T01:57:45.910965-05:00" hostname="icbfl1"><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_empty" time="11.700"><failure message="AssertionError: assert 'complete_blo...ger_authority' == 'complete_nul...isor_outcomes'&#10;  &#10;  - complete_null_no_new_supervisor_outcomes&#10;  + complete_blocked_ledger_authority">private = (PosixPath('/var/tmp/arc8760-tests-hrlpsfr9/collection-080495de581344108502f955ddd35b97/1/tmp/arc87460/experiment_8746...validation': True, 'production_receipts': False, ...}, 'adversarial_findings': [], 'arc_frontier_ready_score': 0, ...})
+
+    def test_empty(private):
+        """SCENARIO-REPORT-8746-FRONTIER: no new evidence supports no policy change."""
+        path, value = private
+        assert value["experiment_id"] == 8746 and value["milestone"] == "2026.11.749"
+&gt;       assert value["honest_verdict"] == "complete_null_no_new_supervisor_outcomes"
+E       AssertionError: assert 'complete_blo...ger_authority' == 'complete_nul...isor_outcomes'
+E         
+E         - complete_null_no_new_supervisor_outcomes
+E         + complete_blocked_ledger_authority
+
+tests/python/test_arc_outcome_frontier_8746.py:44: AssertionError</failure></testcase><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_retained_identity[source]" time="0.017" /><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_retained_identity[frontier]" time="0.015" /><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_retained_identity[ready]" time="0.015" /><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_retained_identity[registry]" time="0.015" /><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_rejection_paths" time="37.892" /><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_authority_missing" time="0.001" /><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_duplicate_retained_identity" time="0.002" /><testcase classname="tests.python.test_arc_outcome_frontier_8746" name="test_upstream_operand_states" time="0.133" /></testsuite></testsuites>
