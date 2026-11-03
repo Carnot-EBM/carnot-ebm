@@ -105126,3 +105126,27 @@ predicates, full-object mutations and private replay; `test_v752_archive_8776.py
 retains the original archive assertions. Exact execution and coverage outcomes
 are authoritative only through the Exp8776 primary's sealed validation receipt.
 Memory implementation and scientific execution remain separately gated.
+## REQ-REPORT-8777: Qualify evidence methods with original truth controls
+
+Freeze the unchanged V751 method, original test bytes and private V751 authority.
+Retain 60 development and 120 exposed evaluation graph classes, six conditions
+and two surfaces. Freeze 120 additional canonical six-edge worlds, 12 separate
+six-edge canaries and 120 seven-edge retention worlds. Reject isomorphism
+overlap across rosters. Independent Boolean completions supply sealed labels;
+only facts/query enter arms. Each arm has the same five-call ceiling, with
+actual calls and wall costs. For longer queries the unchanged local-record
+arm is censored at five premise checks and escalates to insufficient.
+
+### SCENARIO-REPORT-8777-TRUTH
+
+Execute all-accept/all-reject, conflicts, missing hops, valid alternatives and
+bijective renamings. Cluster surfaces by canonical world. New evaluation N=120;
+retention, canaries and exposed replication are separate. Qualification permits
+a complete semantic null; constructed oracle comparisons imply no natural
+factuality or hidden-game transfer. No models or numerical training execute.
+
+Implementation20261103: `evidence_qualification_8777` freezes the disjoint
+rosters and input-only five-call protocol. Its report and thin runner bind
+canonical original node identities, current invocation clocks and private V751
+authority. The terminal Exp8777 artifact owns measured acceptance and comparisons;
+the historical Exp8768 primary remains unchanged and disqualified.

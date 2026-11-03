@@ -58212,3 +58212,27 @@ A real private failed check publishes disqualified and zero readiness. Cold
 replay accepts sealed primitives and rejects missing or changed references,
 independent seals, protocols, full task objects and rehashed aggregates. Runtime
 or ARC absence affects only its own branch. No model or live game is executed.
+## REQ-VERIFY-8777: Cover real original failure publication
+
+Write requirement-linked tests first. Execute original runner line345 through
+the real CLI under coverage with a genuinely failed private pytest check.
+Require disqualified publication and zero original readiness. Preserve the
+original test assertions and historical primary. Private authority copies
+replace moving roadmap paths without changing historical tests.
+
+### SCENARIO-VERIFY-8777-CUSTODY
+
+Retain exact original and scoped nodes, JUnit outcomes, normal exits, log hashes
+and coverage SQLite. Require every owned executable statement, including CLI
+children, Ruff, strict mypy, explicit spec tracing and private E2E-018/021.
+One bounded full-suite health command is separate from scoped acceptance.
+Cold replay reconstructs labels, decisions and rows from separately sealed
+primitives and rejects changed sources or rehashed summaries. Use unchanged
+terminal validators. Failed owned validation disqualifies; absent external
+authority blocks. The conductor owns ops and traceability reconciliation.
+
+Implementation20261103: `evidence_archive_8777` preserves source and assertion
+bytes, uses private archived authority and observes the real original CLI with
+an outer system-monitoring coverage collector. The qualification tests retain
+real failed validation, sealed replay attacks and unit/CLI SQLite. Acceptance
+belongs to the invocation-bound terminal artifact, separate from repository health.

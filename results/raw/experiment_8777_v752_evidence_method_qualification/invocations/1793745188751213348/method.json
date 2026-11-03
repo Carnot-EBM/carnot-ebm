@@ -1,0 +1,43 @@
+{
+  "MODEL_SPECS": [],
+  "local_over_budget": "first five premise checks; any refutation refutes; otherwise insufficient",
+  "maximum_evaluator_invocations": 5,
+  "original_method": {
+    "arms": [
+      "local_record",
+      "joint_symbolic",
+      "evidence_set"
+    ],
+    "early_exit_between_units": false,
+    "feature_allowlist": [
+      "facts",
+      "query"
+    ],
+    "maximum_evaluator_invocations": 5,
+    "opt_in": true,
+    "schema": "carnot.v751.evidence-set.v1",
+    "seed": 7518768,
+    "semantics": "Open world; absence unknown; explicit opposite can refute; any conflict insufficient.",
+    "split_design": "60 distinct four-edge development graphs; 120 distinct five-edge evaluation graphs; disjoint entities, templates and graph isomorphism classes",
+    "statistical_protocol": {
+      "cluster": "world_id",
+      "comparators": 2,
+      "draws": 10000,
+      "familywise_confidence": 0.975,
+      "individual_two_sided_confidence": 0.9875,
+      "multiplicity": "Bonferroni two comparisons",
+      "paired": true,
+      "percentile_indices": [
+        62,
+        9937
+      ],
+      "primary": "macro three-class error averaged per evaluation world",
+      "promotion": "both lower improvements > 0; no added false acceptance or valid rejection; exact correct invariance",
+      "seed": 7518768
+    }
+  },
+  "original_method_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8768_v751_evidence_set_methods/invocations/1793714517651596571/method.json",
+    "sha256": "sha256:235fca0df7cccc61623c5df4576256f2bad0110f85fb83c8169462a7a6b36158"
+  }
+}

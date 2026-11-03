@@ -1,0 +1,232 @@
+"""REQ-REPORT-8777: retain original semantics while adding disjoint constructed worlds."""
+
+from __future__ import annotations
+
+from copy import deepcopy
+from pathlib import Path
+import time
+from typing import Any
+
+from carnot.reporting import evidence_set_methods_8768 as original
+from carnot.reporting import evidence_set_corpus_8768 as corpus
+from carnot.reporting import evidence_set_analysis_8768 as analysis
+from carnot.reporting.current_work_receipt import canonical_hash
+
+Json = dict[str, Any]
+ROOT = Path(__file__).resolve().parents[3]
+NAME, TASK = (
+    "experiment_8777_v752_evidence_method_qualification",
+    "exp8777-evidence-method-qualification",
+)
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [
+    f"python/carnot/reporting/evidence_{s}_8777.py"
+    for s in ["qualification", "archive", "qualification_report", "qualification_runner"]
+] + [CLI]
+TESTS = ["tests/python/test_evidence_qualification_8777.py"]
+SEED = 7528777
+MODEL_SPECS: list[Json] = []
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush real phase boundaries so a quiet child remains distinguishable from a stall."""
+    print(f"[exp8777] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def disjoint(worlds: list[Json]) -> bool:
+    """A surface or entity renaming cannot create an additional canonical world."""
+    return len({r["structure"] for r in worlds}) == len(worlds)
+
+
+def projection(payload: Json) -> Json:
+    """Opaque bijections remove split and graph identifiers from every transported literal."""
+    return {
+        kind: [
+            [
+                ("opaque/" + canonical_hash(term).split(":")[-1])
+                if isinstance(term, str) and not term.startswith("?")
+                else term
+                for term in row
+            ]
+            for row in payload[kind]
+        ]
+        for kind in ["facts", "query"]
+    }
+
+
+def new_units(split: str, roster: tuple[Any, ...]) -> list[Json]:
+    """Apply the original six truth interventions and two surfaces to new graph classes."""
+    units = []
+    for index, edges in enumerate(roster):
+        world = f"v752/{split}/{index:03d}"
+        nodes = ["?join"] + [f"{world}/constant/{i}" for i in range(1, 5)]
+        witness, distractor = world + "/witness", world + "/distractor"
+        query = [[nodes[a], f"{world}/rule/{k}", nodes[b]] for k, (a, b) in enumerate(edges)]
+        facts = [
+            [witness if x == "?join" else x, r, witness if y == "?join" else y, True]
+            for x, r, y in query
+        ]
+        ground = next(k for k, (a, b) in enumerate(edges) if a and b)
+        hop = next(k for k, edge in enumerate(edges) if 0 in edge)
+        position = 0 if edges[hop][0] == 0 else 2
+        for condition in corpus.CONDITIONS:
+            records = deepcopy(facts)
+            if condition == "explicit_refutation":
+                records[ground][3] = False
+            elif condition == "missing_required_hop":
+                records.pop(hop)
+            elif condition == "disconnected_join":
+                records[hop][position] = distractor
+            elif condition == "irrelevant_distractor":
+                records.append([distractor, world + "/irrelevant", nodes[1], True])
+            elif condition == "explicit_conflict":
+                records.append([*facts[ground][:3], False])
+            rename = {
+                x: f"{world}/renamed/{i}"
+                for i, x in enumerate([distractor, witness, *reversed(nodes[1:])])
+            }
+            for view in ["original", "renamed_ordered"]:
+                viewed, predicates = deepcopy(records), deepcopy(query)
+                if view == "renamed_ordered":
+                    viewed = [
+                        [rename[x], r, rename[y], sign] for x, r, y, sign in reversed(records)
+                    ]
+                    predicates = [
+                        [rename.get(x, x), r, rename.get(y, y)] for x, r, y in reversed(query)
+                    ]
+                units.append(
+                    dict(
+                        unit_id=f"{world}/{condition}/{view}",
+                        world_id=world,
+                        split=split,
+                        condition=condition,
+                        view=view,
+                        structure=canonical_hash(edges),
+                        input=dict(facts=viewed, query=predicates),
+                    )
+                )
+    return units
+
+
+def freeze() -> tuple[list[Json], list[Json], Json]:
+    """Seal labels separately; exposed replication never enlarges the new evaluation N."""
+    progress("before_graph_freeze")
+    inputs, _ = corpus.construct()
+    for unit in inputs:
+        if unit["split"] == "evaluation":
+            unit["split"] = "replication"
+    roster = corpus.graph_roster(6, 132)
+    inputs += new_units("evaluation", roster[:120])
+    inputs += new_units("canary", roster[120:])
+    inputs += new_units("retention", corpus.graph_roster(7, 120))
+    worlds = [
+        dict(
+            world_id=p["world_id"],
+            split=p["split"],
+            structure=p["structure"],
+            edge_count=len(p["input"]["query"]),
+        )
+        for p in inputs
+        if p["condition"] == "complete_support" and p["view"] == "original"
+    ]
+    manifest = dict(
+        world_counts={
+            s: sum(p["split"] == s for p in worlds)
+            for s in ["development", "replication", "evaluation", "canary", "retention"]
+        },
+        canonical_worlds=worlds,
+        disjoint=disjoint(worlds),
+        canonicalization="directed graphs; shared-variable vertex distinguished; constants permuted",
+        maximum_evaluator_invocations=5,
+    )
+    labels = []
+    for index, unit in enumerate(inputs):
+        unit["input"] = projection(unit["input"])
+        oracle = corpus.enumerate_truth(unit["input"])
+        labels.append(dict(unit_id=unit["unit_id"], decision=oracle["decision"], oracle=oracle))
+        if (index + 1) % 120 == 0:
+            progress("boolean_oracle_seal", index + 1, len(inputs) - index - 1)
+    return inputs, labels, manifest
+
+
+def bounded(arm: str, payload: Json) -> tuple[str, int]:
+    """Escalate an unfinished local proof instead of exceeding its equal five-call ceiling."""
+    original.parse(payload)
+    if arm == "local_record" and len(payload["query"]) > 5:
+        decisions = [
+            original.compare(arm, dict(facts=payload["facts"], query=[q]))[0]
+            for q in payload["query"][:5]
+        ]
+        return ("refute" if "refute" in decisions else "insufficient"), 5
+    return original.compare(arm, payload)
+
+
+def measure(payloads: list[Json]) -> list[Json]:
+    """Only the strict facts/query projection crosses the evaluator process boundary."""
+    rows = []
+    for index, payload in enumerate(payloads):
+        original.parse(payload)
+        for arm in original.ARMS:
+            start = time.monotonic_ns()
+            decision, calls = bounded(arm, payload)
+            end = time.monotonic_ns()
+            rows.append(
+                dict(
+                    input_index=index,
+                    arm=arm,
+                    decision=decision,
+                    evaluator_invocations=calls,
+                    started_monotonic_ns=start,
+                    ended_monotonic_ns=end,
+                    wall_time_s=(end - start) / 1e9,
+                )
+            )
+        if (index + 1) % 120 == 0:
+            progress("decisions", (index + 1) * 3, (len(payloads) - index - 1) * 3)
+    return rows
+
+
+def audit(inputs: list[Json], decisions: list[Json]) -> bool:
+    """Recompute each arm independently of stored labels and measured summary fields."""
+    if len(decisions) != len(inputs) * 3:
+        return False
+    return all(
+        r["input_index"] == i // 3
+        and r["arm"] == original.ARMS[i % 3]
+        and (r["decision"], r["evaluator_invocations"])
+        == bounded(r["arm"], inputs[i // 3]["input"])
+        and 1 <= r["evaluator_invocations"] <= 5
+        and r["wall_time_s"] == (r["ended_monotonic_ns"] - r["started_monotonic_ns"]) / 1e9
+        and r["wall_time_s"] >= 0
+        for i, r in enumerate(decisions)
+    )
+
+
+def score(inputs: list[Json], labels: list[Json], decisions: list[Json]) -> list[Json]:
+    """Incorrect decisions remain completed observations with their original denominators."""
+    return [
+        dict(
+            r,
+            **{
+                k: inputs[r["input_index"]][k]
+                for k in ["unit_id", "world_id", "split", "condition", "view"]
+            },
+            expected=labels[r["input_index"]]["decision"],
+            raw_numerator=int(r["decision"] != labels[r["input_index"]]["decision"]),
+            raw_denominator=1,
+            absolute_metric=int(r["decision"] == labels[r["input_index"]]["decision"]),
+            status="completed",
+            failed=False,
+            censored=False,
+            excluded=False,
+            missingness=None,
+            budget_exhausted=r["arm"] == "local_record"
+            and len(inputs[r["input_index"]]["input"]["query"]) > 5,
+        )
+        for r in decisions
+    ]
+
+
+def summarize(rows: list[Json]) -> Json:
+    """Reuse the frozen paired-world analysis, with only new evaluation worlds in its N."""
+    return analysis.summarize(rows)

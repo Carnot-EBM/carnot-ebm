@@ -1,0 +1,48 @@
+[exp8768] phase=start_no_model_load completed=0 pending=0
+[exp8768] phase=freeze_methods_and_nodes completed=0 pending=0
+[exp8205] phase=before_subprocess_collect_once completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_once completed=1 pending=0
+[exp8768] phase=oracle_seal completed=120 pending=2040
+[exp8768] phase=oracle_seal completed=240 pending=1920
+[exp8768] phase=oracle_seal completed=360 pending=1800
+[exp8768] phase=oracle_seal completed=480 pending=1680
+[exp8768] phase=oracle_seal completed=600 pending=1560
+[exp8768] phase=oracle_seal completed=720 pending=1440
+[exp8768] phase=oracle_seal completed=840 pending=1320
+[exp8768] phase=oracle_seal completed=960 pending=1200
+[exp8768] phase=oracle_seal completed=1080 pending=1080
+[exp8768] phase=oracle_seal completed=1200 pending=960
+[exp8768] phase=oracle_seal completed=1320 pending=840
+[exp8768] phase=oracle_seal completed=1440 pending=720
+[exp8768] phase=oracle_seal completed=1560 pending=600
+[exp8768] phase=oracle_seal completed=1680 pending=480
+[exp8768] phase=oracle_seal completed=1800 pending=360
+[exp8768] phase=oracle_seal completed=1920 pending=240
+[exp8768] phase=oracle_seal completed=2040 pending=120
+[exp8768] phase=oracle_seal completed=2160 pending=0
+[exp8205] phase=before_subprocess_development_input_only completed=0 pending=1
+[exp8205] phase=after_subprocess_development_input_only completed=1 pending=0
+[exp8205] phase=before_subprocess_evaluation_input_only completed=0 pending=1
+[exp8205] phase=after_subprocess_evaluation_input_only completed=1 pending=0
+[exp8768] phase=before_scoped_validation completed=0 pending=0
+[exp8768] phase=before_bootstrap_local_record completed=0 pending=10000
+[exp8768] phase=after_bootstrap_local_record completed=10000 pending=0
+[exp8768] phase=before_bootstrap_joint_symbolic completed=0 pending=10000
+[exp8768] phase=after_bootstrap_joint_symbolic completed=10000 pending=0
+[exp8768] phase=before_terminal_publication completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8768_v751_evidence_set_methods.py", line 14, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/evidence_set_runner_8768.py", line 356, in main
+    published = publish_primary(output, value, lambda p: terminal(p, raw))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+    raise ValueError("candidate_rejected")
+ValueError: candidate_rejected
