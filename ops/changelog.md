@@ -22913,3 +22913,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-03: Measure matched complete installed costs after feature reuse qualification (✅ Complete) — honest_verdict=complete_positive_feature_reuse_cost; results/experiment_8757_v750_feature_reuse_cost.json
 - 2026-11-03: Qualify actual sparse lifecycle events before durable timing (⚠️ Research Finding) — honest_verdict=complete_disqualified_lifecycle_event_qualification; results/experiment_8758_v750_lifecycle_event_qualification.json
 - 2026-11-03: Test cross-game supervisor conclusions against censoring and incomplete overlap (⚠️ Research Finding) — honest_verdict=complete_null_arc_horizon_sensitivity; results/experiment_8760_v750_arc_horizon_sensitivity.json
+- 2026-11-03: Map qualified learning and ordinary-window costs to each FPGA operation (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_cost_boundaries; results/experiment_8761_v750_hardware_cost_boundaries.json
