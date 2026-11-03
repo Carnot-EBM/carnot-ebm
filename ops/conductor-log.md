@@ -21216,3 +21216,4 @@ code |
 | 2026-11-03 15:40 UTC | Activation REFUSED: milestone 2026.06.999 | BLOCK | ARC no-cov precondition lint failed while reading /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8771_v751_lifecycle_archive_qualification/invocations/1793720122586770042/repository_health/private_temp/popen-gw2/test_scenario_report_4482_acti1/research-roadmap-next.yaml: [Errno 2 |
 | 2026-11-03 16:05 UTC | Qualify sparse lifecycle windows with immutable V7 | OK | 91 passed, 1 warning in 224.77s (0:03:44) |
 | 2026-11-03 17:20 UTC | Measure matched ordinary durable windows after arc | OK | 107 passed, 1 warning in 162.17s (0:02:42) |
+| 2026-11-03 17:24 UTC | Assess cross-game supervisor refinement only from  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8763-branch-contract.arc_new_outcomes_available_score (actual=0 == expected=1) |
