@@ -105150,3 +105150,23 @@ rosters and input-only five-call protocol. Its report and thin runner bind
 canonical original node identities, current invocation clocks and private V751
 authority. The terminal Exp8777 artifact owns measured acceptance and comparisons;
 the historical Exp8768 primary remains unchanged and disqualified.
+
+## REQ-REPORT-8779: Evaluate frozen evidence sufficiency in separate strata
+
+Authenticate Exp8777 and reuse its frozen method and operands. Evaluate120
+exposed V751 replication worlds and120 constructed six-edge worlds separately,
+with six conditions, two paired surfaces and all three frozen arms. Preserve
+the five-call ceiling, actual calls, CPU and wall time, input bytes, independent
+Boolean truth, confusion, valid-alternative, false-acceptance, missing-hop and
+conflict outcomes. Renamings do not increase independent N. Reuse the frozen
+10000 world-cluster bootstrap and Bonferroni two-contrast simultaneous intervals.
+Promote only if both lower improvements exceed zero and safety never worsens.
+Exact symbolic ceilings remain present. Oracle-dependent gains are circular_positive;
+constructed correctness establishes no natural hallucination detection.
+
+### SCENARIO-REPORT-8779-ROWS
+
+All8640 arm observations are retained; exposed and new metrics remain separate.
+A perfect comparator yields no benefit. Complete authenticated execution can
+release evidence_rows_ready_score=1 even for a scientific null. MODEL_SPECS=[];
+model loads, generation and numerical training calls are zero.

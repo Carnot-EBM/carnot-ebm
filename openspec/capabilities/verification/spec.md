@@ -58236,3 +58236,22 @@ bytes, uses private archived authority and observes the real original CLI with
 an outer system-monitoring coverage collector. The qualification tests retain
 real failed validation, sealed replay attacks and unit/CLI SQLite. Acceptance
 belongs to the invocation-bound terminal artifact, separate from repository health.
+
+## REQ-VERIFY-8779: Seal evaluation and qualify every owned statement
+
+Write requirement-linked tests first. Use private input-only CLI measurement,
+separate oracle labels and independently sealed primitives. Replay recomputes
+truth, arm decisions and all reductions and rejects rehashed tampering. Retain
+exact serial node inventories, normal exits, JUnit, SQLite, argv and log hashes.
+Require100 percent new unit/CLI statement coverage, scoped consumers, private
+E2E-018/021, Ruff check/format, strict mypy and explicit spec coverage. Keep the
+single bounded full Python health receipt separate. Unchanged adversarial and
+strict row validators plus cold replay precede atomic publication. External
+absence blocks; owned failure disqualifies. The conductor owns ops and BMAD updates.
+
+### SCENARIO-VERIFY-8779-CUSTODY
+
+Private CLI controls publish disqualified with zero readiness on real failed
+validation. Missing file, missing readiness field, zero readiness and rejected
+producer retain exact upstream/path/hash/check/field/operator/expected/observed
+diagnostics. Changed primitives, source bytes, decisions and summaries reject.
