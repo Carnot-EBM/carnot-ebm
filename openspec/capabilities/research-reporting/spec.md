@@ -104830,3 +104830,36 @@ note preserve complete accounting. Exact authenticated repository-health receipt
 remain separate from scoped qualification. Exp8754 methods custody is not a
 scientific measurement. Terminal validation evidence resides below the primary's
 raw invocation root; it does not certify repository-wide health.
+
+## REQ-REPORT-V751-PLAN: Bind thirteen complete V751 tasks
+
+Bind the visible table, complete JSON objects and activated YAML to one independently
+pinned canonical SHA-256. Require exactly Exp8763 through Exp8775. Accept only the
+established literal-brace activation encoding. Preserve V750 archive bytes.
+
+## REQ-REPORT-8763: Separate branch custody from scientific evidence
+
+Authenticate unchanged V744 numerical methods, learner source identities, splits,
+thresholds and original 64 learning nodes, 27 runner nodes and83 statement anchors.
+Contract readiness and learning custody require owned qualification. Neither grants
+learning benefit. Read the qualified Exp8760 frontier and authoritative locator once.
+Only new authenticated selected/applied outcomes beyond that frontier admit Exp8773.
+An empty delta blocks only ARC with an exact missing-input gate. Load no model.
+
+### SCENARIO-REPORT-8763-BRANCHES
+
+Every field mutation fails against the independent pin. Missing files, missing fields,
+zero and rejected producers remain distinct. Failed owned validation zeros all branch
+readiness. An empty ARC delta does not zero otherwise qualified learning custody.
+
+Implementation20261103: `v751_branch_contract` reuses the archive runner with
+thirteen complete pinned tasks and unchanged historical assertion bytes.
+`v751_branch_evidence` separates qualified method custody from new ARC outcome
+admission. The Exp8763 thin CLI and research note bind private fixtures and
+terminal publication. The primary records measured scoped validation; bounded
+repository health remains a separate receipt. No learning benefit is claimed.
+
+Repair20261103: private archive roots own their result directories and include
+all historical diagnostic/upstream primaries, V749 retrievals, health receipt
+and relative logs. Facades expose required dependencies only; the original
+private-output safety check binds to the archived checkout root.

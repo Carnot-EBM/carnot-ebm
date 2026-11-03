@@ -57956,3 +57956,42 @@ exercise current accounting, source pins, receipt/row/primitive mutations, inval
 dates, failed children and no-science branches. The retained validation driver
 collects scoped nodes, child JUnit and SQLite coverage, runs explicit spec tracing
 and gates exact terminal bytes through unchanged scanners and cold replay.
+
+## REQ-VERIFY-8763: Measure real archive failure publication
+
+Run the actual Exp8749 private_control CLI, including line354, failure publication
+and exit, under real child coverage. Preserve all original V748/V749/V750 assertions,
+historical readers and owned-failure controls through private archived roots. Report
+the complete original node union and every new executable statement with zero exclusions.
+Freeze methods, input/source hashes, exact test nodes and configuration before checks.
+
+Private V748/V749 roots SHALL own a real `results/` directory containing byte-identical
+copies of all historical diagnostic and upstream primaries, V749 literature retrievals,
+the full-suite health receipt and its relative logs. Fixture facades SHALL expose only
+required dependencies so cleanup cannot resolve operator-curated document symlinks.
+Historical private-output checks SHALL use the archived checkout root and reject
+implicit output paths within it before writing any evidence.
+Bind that root only during the output check; historical method-source references
+and parent/child cold replay SHALL retain identical provenance paths.
+Apply the same scoped output-check binding to both archived pytest parents
+and historical CLI children; direct dispatcher rejection controls remain intact.
+
+### SCENARIO-VERIFY-8763-TERMINAL
+
+Require scoped unit/consumer tests, private E2E-018/021, full-object mutations, Ruff
+check/format, strict mypy and explicit spec tracing. Retain argv, exits, node outcomes,
+JUnit, coverage SQLite and log hashes. Keep bounded repository health separate.
+Publish only terminal bytes after unchanged adversarial and strict row validators
+and fresh-process cold replay. The conductor owns ops and BMAD reconciliation.
+
+Implementation20261103: requirement-linked tests invoke the unchanged Exp8749
+production CLI with private archived authority. They retain failure publication,
+zero readiness and fresh replay assertions. The current runner adds the entire
+original V750 test suite to V748/V749 and consumer checks. Actual child SQLite,
+JUnit and node receipts determine coverage and acceptance before publication.
+
+Repair20261103 validation: 204 scoped tests pass, including every unchanged
+V748/V749/V750 assertion. Fresh unit/subprocess SQLite measures all 276 V751
+module/CLI statements with zero exclusions and original V750 line354 execution.
+Scoped lint, formatting, strict types and spec tracing pass. Existing global
+documentation/traceability debt remains separate from this repair.

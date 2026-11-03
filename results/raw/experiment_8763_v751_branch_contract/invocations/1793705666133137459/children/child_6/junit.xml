@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="12" time="14.217" timestamp="2026-11-03T06:46:59.785325-05:00" hostname="icbfl1"><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_contract_mutations" time="6.569" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_truth_and_roster" time="0.027" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_learning_and_upstream" time="0.178"><failure message="StopIteration">def test_learning_and_upstream():
+        """REQ-REPORT-8737: execution failures cannot erase complete method custody."""
+        learning = m.learning()
+        assert learning["ready"]
+        assert learning["original_node_count"] == 64
+        assert len(learning["original_runner_node_ids"]) == 27
+        assert learning["statement_anchor_count"] == 83
+&gt;       prior = m.upstreams()
+                ^^^^^^^^^^^^^
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_749/test_v749_contract_methods_8737.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def upstreams() -&gt; Json:
+        """Authenticate raw successful children separately from a failed parent disposition."""
+        from carnot.reporting import invocation_clock_core_8724 as clock
+        from carnot.reporting.v748_capstone import PINS
+    
+        values, refs = {}, []
+        for number in [8723, 8724, 8729, 8731, 8732, 8733, 8736]:
+&gt;           path = next((ROOT / "results").glob(f"experiment_{number}_*.json"))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           StopIteration
+
+python/carnot/reporting/v749_contract_methods.py:258: StopIteration</failure></testcase><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_gate_distinguishes_absence" time="0.001" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_private_cli_and_replay" time="3.874"><failure message="assert False">tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/6/tmp/test_private_cli_and_replay0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f931ee7c410&gt;
+
+    def test_private_cli_and_replay(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8737-CONTRACT: fresh private CLI rejects altered bytes."""
+        from carnot.reporting.v709_execution import child
+        from carnot.reporting import v749_contract_runner as runner
+        from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+        import sys
+    
+        out = tmp_path / (m.NAME + ".json")
+        argv = [sys.executable, "-u", str(m.ROOT / runner.CLI)]
+        if os.environ.get("COVERAGE_RCFILE"):
+            argv = [
+                sys.executable,
+                "-m",
+                "coverage",
+                "run",
+                "--rcfile=" + os.environ["COVERAGE_RCFILE"],
+                str(m.ROOT / runner.CLI),
+            ]
+        good = child(
+            "private",
+            [*argv, "--private-control", "--output", str(out)],
+            tmp_path / "logs",
+            deadline=120,
+        )
+&gt;       assert good["passed"]
+E       assert False
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_749/test_v749_contract_methods_8737.py:147: AssertionError</failure></testcase><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_report_branches" time="0.660"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/literature/retrievals.json'">tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/6/tmp/test_report_branches0')
+
+    def test_report_branches(tmp_path):
+        """REQ-REPORT-8737: each branch is independent and gates cannot imply benefit."""
+        from carnot.reporting import v749_contract_runner as runner
+        from carnot.reporting import v749_contract_report as report
+        from carnot.reporting.current_work_receipt import atomic_json
+    
+&gt;       work = runner.prepare(m.ROOT, tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_749/test_v749_contract_methods_8737.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v749_contract_runner.py:86: in prepare
+    retrievals = json.loads(retrieval_path.read_bytes())
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/literature/retrievals.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/literature/retrievals.json'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_disconnected_composition_is_unknown" time="0.145" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_coverage_reader_uses_real_sqlite" time="0.056" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_external_absence_stays_blocked" time="0.001" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_staged_contract_keeps_historical_binding" time="1.074" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_empty_child_union_never_qualifies" time="0.001"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/startup/full_python_suite.receipt.json'">tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/6/tmp/test_empty_child_union_never_q0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f931ee7f470&gt;
+
+    def test_empty_child_union_never_qualifies(tmp_path, monkeypatch):
+        """REQ-REPORT-8737: failed original union cannot be replaced by consumer passes."""
+        from types import SimpleNamespace
+        from carnot.reporting import v749_contract_runner as runner
+    
+        monkeypatch.setattr(runner, "collect", lambda *a: ([], dict(passed=False)))
+        monkeypatch.setattr(runner, "coverage_summary", lambda *a: dict(complete=False))
+&gt;       result = runner.validate(tmp_path, SimpleNamespace(stop=lambda: None, save=lambda: None))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_749/test_v749_contract_methods_8737.py:289: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v749_contract_runner.py:195: in validate
+    full_receipt = m.load(m.reference(full_path))
+                          ^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v746_retained_evidence.py:34: in reference
+    return dict(path=str(path.absolute()), sha256=sha256_file(path))
+                                                  ^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:52: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/startup/full_python_suite.receipt.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/startup/full_python_suite.receipt.json'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_749.test_v749_contract_methods_8737" name="test_owned_validation_failure_dispatch" time="0.658"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/literature/retrievals.json'">tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/6/tmp/test_owned_validation_failure_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f931ee7c830&gt;
+
+    def test_owned_validation_failure_dispatch(tmp_path, monkeypatch):
+        """REQ-REPORT-8737: production dispatch preserves a failed owned check."""
+        from types import SimpleNamespace
+        from carnot.reporting import v749_contract_runner as runner
+    
+        monkeypatch.setattr(runner, "Coverage", lambda **k: SimpleNamespace(start=lambda: None))
+        monkeypatch.setattr(
+            runner,
+            "validate",
+            lambda *a: dict(receipts=[], coverage=dict(complete=False), passed=False),
+        )
+        out = tmp_path / (m.NAME + ".json")
+&gt;       assert runner.main(["--output", str(out)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_749/test_v749_contract_methods_8737.py:305: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v749_contract_runner.py:321: in main
+    work = prepare(args.root, raw)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v749_contract_runner.py:86: in prepare
+    retrievals = json.loads(retrieval_path.read_bytes())
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/literature/retrievals.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8749-fixture-dp9wqqrh/archive_749/results/raw/experiment_8737_v749_contract_methods/literature/retrievals.json'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: FileNotFoundError</failure></testcase></testsuite></testsuites>

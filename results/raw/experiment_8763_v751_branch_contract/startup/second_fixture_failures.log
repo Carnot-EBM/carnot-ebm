@@ -1,0 +1,190 @@
+..FF.......F......                                                       [100%]
+=================================== FAILURES ===================================
+___________________ test_actual_original_private_control_gap ___________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T112928-2646034-eec8d36c/test_actual_original_private_c0')
+
+    def test_actual_original_private_control_gap(tmp_path):
+        """REQ-VERIFY-8763: original CLI executes line354, publishes failure and exits zero."""
+        output = tmp_path / (api.prior.NAME + ".json")
+        root = api.archive750(tmp_path / "archive")
+        cli = root / api.prior.CLI
+        receipt = child(
+            "original_private",
+            [sys.executable, str(cli), "--private-control", "--output", str(output)],
+            tmp_path / "logs",
+            deadline=120,
+        )
+>       assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E       AssertionError: Traceback (most recent call last):
+E           File "/var/tmp/pytest-carnot-ianblenke/20261103T112928-2646034-eec8d36c/test_actual_original_private_c0/archive/scripts/experiments/experiment_8749_v750_archive_bound_contract.py", line 5, in <module>
+E             raise SystemExit(historical750_main(Path('/var/tmp/pytest-carnot-ianblenke/20261103T112928-2646034-eec8d36c/test_actual_original_private_c0/archive')))
+E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v751_branch_contract.py", line 208, in historical750_main
+E             return int(runner.main())
+E                        ^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v750_archive_runner.py", line 449, in main
+E             published = publish_primary(output, value, lambda candidate: terminal(candidate, raw))
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert False
+
+tests/python/test_v751_branch_contract_8763.py:106: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_original_private completed=0 pending=1
+[exp8205] phase=after_subprocess_original_private completed=1 pending=0
+___________________ test_production_dispatch_retains_failure ___________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T112928-2646034-eec8d36c/test_production_dispatch_retai0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f644053fa10>
+
+    def test_production_dispatch_retains_failure(tmp_path, monkeypatch):
+        """REQ-VERIFY-8763: failed owned checks cannot be relabeled as qualified work."""
+        monkeypatch.setattr(api.runtime, "Coverage", lambda **kw: SimpleNamespace(start=lambda: None))
+        monkeypatch.setattr(api.scope, "mutations", lambda root: [dict(passed=True)])
+        monkeypatch.setattr(
+            api.runtime,
+            "validate",
+            lambda *args: dict(
+                receipts=[dict(passed=False)] * 8,
+                union=dict(passed=False),
+                coverage=dict(complete=False),
+                raw_references=[],
+                ended_at_utc=datetime.now(UTC).isoformat(),
+            ),
+        )
+        output = tmp_path / (api.NAME + ".json")
+>       assert api.main(["--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_branch_contract_8763.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v751_branch_contract.py:348: in main
+    return int(runtime.main(argv))
+               ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v750_archive_runner.py:297: in main
+    with TemporaryDirectory(prefix="exp8749-fixture-") as directory:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:950: in __exit__
+    self.cleanup()
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:954: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:934: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:759: in rmtree
+    _rmtree_safe_fd(stack, onexc)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:698: in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+python/carnot/testing/tracked_results_guard.py:249: in _audit_hook
+    _record_and_raise(hit, event.rpartition(".")[2])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resolved = '/home/ianblenke/github.com/ianblenke/carnot/results'
+event = 'remove'
+
+    def _record_and_raise(resolved: str, event: str) -> None:
+        relative = os.path.relpath(resolved, str(_REPO_ROOT))
+        _violations.append(
+            {
+                "path": relative,
+                "event": event,
+                "stack": "".join(traceback.format_stack(limit=12)),
+            }
+        )
+>       raise TrackedResultWriteError(
+            f"Test attempted to {event} tracked result evidence {relative!r}. "
+            "Experiment tests must redirect artifact output to a temporary root."
+        )
+E       carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence 'results'. Experiment tests must redirect artifact output to a temporary root.
+
+python/carnot/testing/tracked_results_guard.py:221: TrackedResultWriteError
+----------------------------- Captured stdout call -----------------------------
+[exp8763] phase=start_no_model_load completed=0 pending=0
+[exp8763] phase=authenticate_and_freeze completed=0 pending=0
+[exp8763] phase=arc_frontier_and_locator_once completed=0 pending=0
+[exp8763] phase=freeze_archived_fixture_748 completed=0 pending=0
+[exp8763] phase=freeze_archived_fixture_749 completed=0 pending=0
+[exp8763] phase=reproduce_original_child5_failure completed=0 pending=0
+[exp8205] phase=before_subprocess_moving_roadmap_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_moving_roadmap_failure completed=1 pending=0
+[exp8763] phase=full_task_mutation_controls completed=0 pending=0
+[exp8763] phase=scoped_validation completed=0 pending=0
+[exp8205] phase=before_subprocess_deliberate_owned_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_deliberate_owned_failure completed=1 pending=0
+[exp8763] phase=before_terminal_validation completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8763] phase=published_disqualified completed=14 pending=0
+_______________ test_validation_adapter_preserves_original_bytes _______________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T112928-2646034-eec8d36c/test_validation_adapter_preser0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f641358b2c0>
+
+    def test_validation_adapter_preserves_original_bytes(tmp_path, monkeypatch):
+        """REQ-VERIFY-8763: private bindings leave all original V750 assertions unchanged."""
+    
+        def checked(raw, tracer, suites):
+            assert len(suites) == 3
+            assert Path(suites[-1]).read_bytes() == (api.ROOT / api.prior.TESTS[0]).read_bytes()
+            return dict(passed=True)
+    
+        monkeypatch.setattr(api, "base_validate", checked)
+>       assert api.validate(tmp_path, None, ["original748", "original749"]) == dict(passed=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_branch_contract_8763.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v751_branch_contract.py:325: in validate
+    with TemporaryDirectory(prefix="v751-original750-") as directory:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:950: in __exit__
+    self.cleanup()
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:954: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:934: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:759: in rmtree
+    _rmtree_safe_fd(stack, onexc)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:698: in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+python/carnot/testing/tracked_results_guard.py:249: in _audit_hook
+    _record_and_raise(hit, event.rpartition(".")[2])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resolved = '/home/ianblenke/github.com/ianblenke/carnot/results'
+event = 'remove'
+
+    def _record_and_raise(resolved: str, event: str) -> None:
+        relative = os.path.relpath(resolved, str(_REPO_ROOT))
+        _violations.append(
+            {
+                "path": relative,
+                "event": event,
+                "stack": "".join(traceback.format_stack(limit=12)),
+            }
+        )
+>       raise TrackedResultWriteError(
+            f"Test attempted to {event} tracked result evidence {relative!r}. "
+            "Experiment tests must redirect artifact output to a temporary root."
+        )
+E       carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence 'results'. Experiment tests must redirect artifact output to a temporary root.
+
+python/carnot/testing/tracked_results_guard.py:221: TrackedResultWriteError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v751_branch_contract_8763.py::test_actual_original_private_control_gap
+FAILED tests/python/test_v751_branch_contract_8763.py::test_production_dispatch_retains_failure
+FAILED tests/python/test_v751_branch_contract_8763.py::test_validation_adapter_preserves_original_bytes
+3 failed, 15 passed, 1 warning in 69.89s (0:01:09)

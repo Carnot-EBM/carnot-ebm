@@ -1,0 +1,46 @@
+...F....                                                                 [100%]
+=================================== FAILURES ===================================
+______________________ test_private_cli_and_sealed_replay ______________________
+
+tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/7/tmp/test_private_cli_and_sealed_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4e6bf1e4e0>
+
+    def test_private_cli_and_sealed_replay(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8749-SEAL: actual CLI children reject tampered terminal bytes."""
+        from carnot.reporting import v750_archive_runner as runner
+    
+        out = tmp_path / (a.NAME + ".json")
+        argv = [sys.executable, str(a.ROOT / a.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(out)], 0),
+            ("replay", ["--cold-replay", str(out)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "missing")], 1),
+            ("bad_date", ["--date", "20260101"], 2),
+            ("unsafe", ["--private-control"], 2),
+        ]:
+            receipt = child(name, argv + args, tmp_path / "logs", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: 
+E           assert False
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_750/test_v750_archive_bound_8749.py:84: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+[exp8205] phase=before_subprocess_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_bad_date completed=0 pending=1
+[exp8205] phase=after_subprocess_bad_date completed=1 pending=0
+[exp8205] phase=before_subprocess_unsafe completed=0 pending=1
+[exp8205] phase=after_subprocess_unsafe completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_750/test_v750_archive_bound_8749.py::test_private_cli_and_sealed_replay
+1 failed, 7 passed, 1 warning in 186.32s (0:03:06)

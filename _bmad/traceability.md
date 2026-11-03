@@ -1,6 +1,23 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-11-02
+**Last Updated:** 2026-11-03
+
+## Exp8763 private archive repair — 2026-11-03 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8763 / REQ-VERIFY-8763 | `v751_branch_contract.archived_root` copies complete private historical inputs into a real result directory and exposes required facade dependencies only | Both original dependency-closure tests pass; copied primary and receipt bytes match their sources |
+| SCENARIO-VERIFY-8763-TERMINAL | `output_binding`, `historical_main` and `historical_suite` share a scoped output guard without rebinding method provenance | All 52 unchanged V748/V749/V750 tests pass, including direct unsafe dispatch, parent replay and cold CLI controls |
+| REQ-CONDUCTOR-FIXGATE-1 | Original assertions, historical modules and conductor preserved; no skips or reversions | All ten fix-gate tests pass; conductor SHA-256 remains `8af429226e559cce237973c151529b28ebc719ecc8d6ca1bbd33d37cca954ef3` |
+
+All 204 scoped tests pass: 24 V751, 128 core/private E2E-018/021/publication/
+fix-gate, and 52 historical tests. Fresh SQLite measures 276/276 statements
+with zero exclusions in the V751 modules and CLI; actual original V750
+private-control line354 execution remains asserted. Scoped Ruff, formatting,
+strict mypy and spec tracing pass. Global reconciliation retains 1,142 missing
+references and the stale architecture date; no full repository pass or new
+scientific readiness is claimed. Receipts:
+`/var/tmp/carnot-v751-repair-tclh0_l2/`.
 
 ## Exp8723 activated prompt encoding repair — 2026-11-02 UTC
 

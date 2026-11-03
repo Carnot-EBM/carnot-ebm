@@ -1,0 +1,195 @@
+.F..............F............F..                                         [100%]
+=================================== FAILURES ===================================
+__________________ test_branch_authority_and_original_methods __________________
+
+tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_branch_authority_and_orig0')
+
+    def test_branch_authority_and_original_methods(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: every branch binds its own unchanged operands."""
+        m = api.m
+        authority = m.authority(m.ROOT)
+        assert authority["ready"] and len(authority["rows"]) == 14
+        assert [r["task_object"]["id"] for r in authority["rows"]][0] == m.TASK
+        assert not m.authority(tmp_path)["ready"]
+        rows = m.mutations()
+        assert len(rows) >= 20 and all(r["passed"] for r in rows)
+        retained, methods = m.retained(), m.methods()
+        assert retained["passed"] and retained["qualification"]["original_node_count"] == 77
+>       assert methods["learning_authority_inputs_ready_score"] == 1
+E       assert 0 == 1
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py:44: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8723] phase=mutation_activated completed=1 pending=21
+[exp8723] phase=mutation_staged completed=2 pending=20
+[exp8723] phase=mutation_count completed=3 pending=19
+[exp8723] phase=mutation_order completed=4 pending=18
+[exp8723] phase=mutation_id completed=5 pending=17
+[exp8723] phase=mutation_title completed=6 pending=16
+[exp8723] phase=mutation_phase completed=7 pending=15
+[exp8723] phase=mutation_deliverable completed=8 pending=14
+[exp8723] phase=mutation_track completed=9 pending=13
+[exp8723] phase=mutation_priority completed=10 pending=12
+[exp8723] phase=mutation_model completed=11 pending=11
+[exp8723] phase=mutation_MODEL_SPECS completed=12 pending=10
+[exp8723] phase=mutation_inference_substrate_class completed=13 pending=9
+[exp8723] phase=mutation_prompt completed=14 pending=8
+[exp8723] phase=mutation_gated_on completed=15 pending=7
+[exp8723] phase=mutation_prior_failures completed=16 pending=6
+[exp8723] phase=mutation_start completed=17 pending=5
+[exp8723] phase=mutation_end completed=18 pending=4
+[exp8723] phase=mutation_table completed=19 pending=3
+[exp8723] phase=mutation_digest completed=20 pending=2
+[exp8723] phase=mutation_rehashed completed=21 pending=1
+[exp8723] phase=mutation_foreign_active completed=22 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+______________________ test_private_cli_and_sealed_replay ______________________
+
+tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_private_cli_and_sealed_re0')
+
+    def test_private_cli_and_sealed_replay(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: real children keep private readiness at zero."""
+        m = api.m
+        output = tmp_path / "results" / (m.NAME + ".json")
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("cold", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+            ("date", ["--date", "20261101"], 2),
+            ("unsafe", ["--private-control"], 2),
+            ("error", ["--deliberate-error"], 7),
+        ]:
+            receipt = child(name, command + args, tmp_path / "logs", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: 
+E           assert False
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py:146: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+[exp8205] phase=before_subprocess_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_date completed=0 pending=1
+[exp8205] phase=after_subprocess_date completed=1 pending=0
+[exp8205] phase=before_subprocess_unsafe completed=0 pending=1
+[exp8205] phase=after_subprocess_unsafe completed=1 pending=0
+______ test_original_rejection_controls[test_direct_replay_controls-None] ______
+
+tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_original_rejection_contro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6e8c1929c0>
+name = 'test_direct_replay_controls', mode = None
+
+    @pytest.mark.parametrize(
+        "name,mode",
+        [
+            ("test_retained_rejection", mode)
+            for mode in ["missing", "changed", "field", "zero", "flagged", "terminal"]
+        ]
+        + [("test_retained_deep_identity", mode) for mode in ["source", "qualification", "seal"]]
+        + [
+            (name, None)
+            for name in [
+                "test_direct_replay_controls",
+                "test_missing_original_methods",
+                "test_replay_rejects_historical_child_substitution",
+            ]
+        ],
+    )
+    def test_original_rejection_controls(tmp_path, monkeypatch, name, mode):
+        """REQ-VERIFY-8723: preserve unchanged historical rejection assertions under V748 bindings."""
+        import inspect
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original[name]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        arguments = dict(tmp_path=tmp_path, monkeypatch=monkeypatch, mode=mode)
+>       check(**{key: arguments[key] for key in inspect.signature(check).parameters})
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_original_rejection_contro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6e8c1929c0>
+
+    def test_direct_replay_controls(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8709-REPLAY: missing and rehashed primitives reject independently."""
+        assert runner.main(["--deliberate-error"]) == 7
+>       with pytest.raises(SystemExit):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'SystemExit'>
+
+/tmp/exp8749-fixture-dp9wqqrh/archive_748/tests/python/test_v747_contract_8709.py:175: Failed
+----------------------------- Captured stdout call -----------------------------
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=start_no_model_load_calls_0 completed=0 pending=0
+[exp8723] phase=preconditions completed=0 pending=0
+[exp8627] phase=branch_learning completed=1 pending=4
+[exp8627] phase=branch_extraction completed=2 pending=3
+[exp8627] phase=branch_deployment completed=3 pending=2
+[exp8627] phase=branch_arc completed=4 pending=1
+[exp8627] phase=branch_canary completed=5 pending=0
+[exp8640] phase=research_operands_arc completed=1 pending=4
+[exp8640] phase=research_operands_canary completed=2 pending=3
+[exp8640] phase=research_operands_deployment completed=3 pending=2
+[exp8640] phase=research_operands_extraction completed=4 pending=1
+[exp8640] phase=research_operands_learning completed=5 pending=0
+[exp8723] phase=preconditions_authenticated completed=0 pending=0
+[exp8723] phase=mutation_activated completed=1 pending=21
+[exp8723] phase=mutation_staged completed=2 pending=20
+[exp8723] phase=mutation_count completed=3 pending=19
+[exp8723] phase=mutation_order completed=4 pending=18
+[exp8723] phase=mutation_id completed=5 pending=17
+[exp8723] phase=mutation_title completed=6 pending=16
+[exp8723] phase=mutation_phase completed=7 pending=15
+[exp8723] phase=mutation_deliverable completed=8 pending=14
+[exp8723] phase=mutation_track completed=9 pending=13
+[exp8723] phase=mutation_priority completed=10 pending=12
+[exp8723] phase=mutation_model completed=11 pending=11
+[exp8723] phase=mutation_MODEL_SPECS completed=12 pending=10
+[exp8723] phase=mutation_inference_substrate_class completed=13 pending=9
+[exp8723] phase=mutation_prompt completed=14 pending=8
+[exp8723] phase=mutation_gated_on completed=15 pending=7
+[exp8723] phase=mutation_prior_failures completed=16 pending=6
+[exp8723] phase=mutation_start completed=17 pending=5
+[exp8723] phase=mutation_end completed=18 pending=4
+[exp8723] phase=mutation_table completed=19 pending=3
+[exp8723] phase=mutation_digest completed=20 pending=2
+[exp8723] phase=mutation_rehashed completed=21 pending=1
+[exp8723] phase=mutation_foreign_active completed=22 pending=0
+[exp8723] phase=source_sealed completed=10432 pending=0
+[exp8205] phase=before_subprocess_private_child completed=0 pending=1
+[exp8205] phase=after_subprocess_private_child completed=1 pending=0
+[exp8723] phase=qualify_current_children completed=0 pending=0
+[exp8205] phase=before_subprocess_terminal_cold completed=0 pending=1
+[exp8205] phase=after_subprocess_terminal_cold completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_strict_rows completed=0 pending=1
+[exp8205] phase=after_subprocess_strict_rows completed=1 pending=0
+[exp8723] phase=published completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py::test_branch_authority_and_original_methods
+FAILED results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py::test_private_cli_and_sealed_replay
+FAILED results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py::test_original_rejection_controls[test_direct_replay_controls-None]
+3 failed, 29 passed, 1 warning in 253.11s (0:04:13)

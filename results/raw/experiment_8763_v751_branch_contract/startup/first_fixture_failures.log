@@ -1,0 +1,445 @@
+F..EF.......                                                             [100%]
+==================================== ERRORS ====================================
+________ ERROR at teardown of test_actual_original_private_control_gap _________
+
+path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T112654-2644635-22a20ce5/test_actual_original_private_c0')
+ignore_errors = True, onerror = None
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, onexc=None, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onexc or
+        onerror is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        the value of exc_info describes the exception. For onexc it is the
+        exception instance, and for onerror it is a tuple as returned by
+        sys.exc_info().  If ignore_errors is false and both onexc and
+        onerror are None, the exception is reraised.
+    
+        onerror is deprecated and only remains for backwards compatibility.
+        If both onerror and onexc are set, onerror is ignored and onexc is used.
+        """
+    
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onexc(*args):
+                pass
+        elif onerror is None and onexc is None:
+            def onexc(*args):
+                raise
+        elif onexc is None:
+            if onerror is None:
+                def onexc(*args):
+                    raise
+            else:
+                # delegate to onerror
+                def onexc(*args):
+                    func, path, exc = args
+                    if exc is None:
+                        exc_info = None, None, None
+                    else:
+                        exc_info = type(exc), exc, exc.__traceback__
+                    return onerror(func, path, exc_info)
+    
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            stack = [(os.lstat, dir_fd, path, None)]
+            try:
+                while stack:
+>                   _rmtree_safe_fd(stack, onexc)
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:759: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:698: in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+python/carnot/testing/tracked_results_guard.py:249: in _audit_hook
+    _record_and_raise(hit, event.rpartition(".")[2])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resolved = '/home/ianblenke/github.com/ianblenke/carnot/results'
+event = 'remove'
+
+    def _record_and_raise(resolved: str, event: str) -> None:
+        relative = os.path.relpath(resolved, str(_REPO_ROOT))
+        _violations.append(
+            {
+                "path": relative,
+                "event": event,
+                "stack": "".join(traceback.format_stack(limit=12)),
+            }
+        )
+>       raise TrackedResultWriteError(
+            f"Test attempted to {event} tracked result evidence {relative!r}. "
+            "Experiment tests must redirect artifact output to a temporary root."
+        )
+E       carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence 'results'. Experiment tests must redirect artifact output to a temporary root.
+
+python/carnot/testing/tracked_results_guard.py:221: TrackedResultWriteError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_original_private completed=0 pending=1
+[exp8205] phase=after_subprocess_original_private completed=1 pending=0
+[exp8205] phase=before_subprocess_original_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_original_replay completed=1 pending=0
+=================================== FAILURES ===================================
+_____________________ test_complete_contract_and_mutations _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T112654-2644635-22a20ce5/test_complete_contract_and_mut0')
+
+    def test_complete_contract_and_mutations(tmp_path):
+        """SCENARIO-REPORT-8763-BRANCHES: every complete object has independent custody."""
+        before = (api.ROOT / api.ARCHIVE).read_bytes()
+        value = api.authority(api.ROOT)
+        assert value["ready"] and len(value["rows"]) == 13
+        assert api.prior.tasks_digest([r["task_object"] for r in value["rows"]]) == api.PIN
+        assert all(r["raw_denominator"] > 0 for r in value["rows"])
+>       controls = api.mutations(tmp_path / "mutations")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_branch_contract_8763.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v751_branch_contract.py:118: in mutations
+    rows.append(dict(task_id=task["id"], field=field, passed=not authority(root)["ready"]))
+                                                                 ^^^^^^^^^^^^^^^
+python/carnot/reporting/v751_branch_contract.py:62: in authority
+    result = compare_contract(
+python/carnot/reporting/roadmap_contract.py:110: in compare_contract
+    checks["gate_order"] = all(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <str_ascii_iterator object at 0x7fcb3a2f7dc0>
+
+    checks["gate_order"] = all(
+>       gate.get("upstream") in {task.get("id") for task in staged_tasks[:index]}
+        ^^^^^^^^
+        for gate in planned.get("gated_on", [])
+    )
+E   AttributeError: 'str' object has no attribute 'get'
+
+python/carnot/reporting/roadmap_contract.py:111: AttributeError
+___________________ test_production_dispatch_retains_failure ___________________
+
+argv = ['--output', '/var/tmp/pytest-carnot-ianblenke/20261103T112654-2644635-22a20ce5/test_production_dispatch_retai0/experiment_8763_v751_branch_contract.json']
+
+    def main(argv: list[str] | None = None) -> int:
+        """Publish only terminal checked bytes; private controls cannot grant readiness."""
+        a.progress("start_no_model_load")
+        parser = argparse.ArgumentParser(description=__doc__)
+        parser.add_argument("--date", choices=["20261103"], default="20261103")
+        parser.add_argument("--output", type=Path, default=a.ROOT / "results" / (a.NAME + ".json"))
+        parser.add_argument("--root", type=Path, default=a.ROOT)
+        parser.add_argument("--private-control", action="store_true")
+        parser.add_argument("--cold-replay", type=Path)
+        args = parser.parse_args(argv)
+        if args.cold_replay:
+            passed = replay(args.cold_replay)
+            a.progress("replay_passed" if passed else "replay_rejected")
+            return int(not passed)
+        output = args.output.absolute()
+        if args.private_control and output.resolve().is_relative_to(a.ROOT.resolve()):
+            parser.error("private outputs must remain outside the checkout")
+        raw = output.parent / "raw" / a.NAME / "invocations" / str(time.time_ns())
+        raw.mkdir(parents=True)
+        started = datetime.now(UTC).isoformat()
+        tracer = Coverage(data_file=str(raw / "producer.sqlite"), config_file=False)
+        if not args.private_control:
+            tracer.start()
+        with TemporaryDirectory(prefix="exp8749-fixture-") as directory:
+            private = Path(directory)
+            probe = private / "writable"
+            probe.write_text("private scratch")
+            a.progress("authenticate_and_freeze")
+            work = a.freeze(raw, args.root)
+            work.update(
+                root=str(args.root.absolute()),
+                invocation_id=raw.name,
+                started_at_utc=started,
+                private_control=args.private_control,
+                preconditions=dict(
+                    private_scratch_writable=probe.read_text() == "private scratch",
+                    tools={
+                        name: (a.ROOT / ".venv/bin" / name).is_file()
+                        for name in ["python", "pytest", "ruff", "mypy"]
+                    },
+                    no_model_needed=True,
+                ),
+                mutation_rows=[],
+                historical_fixture_rows=[],
+                owned_failure_controls=[],
+                visible_table=parse_design((args.root / a.DESIGN).read_text(), milestone=a.MILESTONE)[
+                    0
+                ],
+            )
+            # Keep actual fixture bytes after private scratch is removed.
+            dependencies = []
+            archived_suites = []
+            for version in [748, 749]:
+                a.progress("freeze_archived_fixture_" + str(version))
+                fixture = a.archived_root(private / f"archive_{version}", version)
+                suite = a.historical_suite(fixture, raw / f"original_tests_{version}", version)
+                archived_suites.append(suite)
+                cli = (
+                    a.HISTORICAL_CLI
+                    if version == 748
+                    else "scripts/experiments/experiment_8737_v749_contract_methods.py"
+                )
+                for index, path in enumerate(
+                    [
+                        fixture / a.DESIGN,
+                        fixture / a.ACTIVE,
+                        fixture / a.STAGED,
+                        fixture / cli,
+                        Path(suite),
+                        Path(suite).parent / "conftest.py",
+                    ]
+                ):
+                    target = raw / f"archived_dependency_{version}_{index}"
+                    shutil.copyfile(path, target)
+                    dependencies.append(a.reference(target))
+            work["references"] += dependencies
+            work["archived_validation_recipe"]["dependencies"] = dependencies
+            atomic_json(raw / "frozen_inputs.json", work)
+            work["frozen_input_reference"] = a.reference(raw / "frozen_inputs.json")
+            if args.private_control:
+                validation = dict(
+                    receipts=[dict(name="private_control", passed=False)],
+                    union=dict(passed=False),
+                    coverage=dict(complete=False),
+                    ended_at_utc=datetime.now(UTC).isoformat(),
+                )
+            else:
+                a.progress("reproduce_original_child5_failure")
+                receipt = child(
+                    "moving_roadmap_failure",
+                    [
+                        sys.executable,
+                        "-m",
+                        "pytest",
+                        "-n",
+                        "0",
+                        "-o",
+                        "addopts=",
+                        "--no-cov",
+                        "-q",
+                        "tests/python/test_v748_contract_8723.py::test_conductor_prompt_encoding[active]",
+                        "--basetemp=" + str(private / "failure_tmp"),
+                        "--junitxml=" + str(raw / "moving_failure.xml"),
+                    ],
+                    raw / "checks",
+                    expected=1,
+                    deadline=120,
+                )
+                work["historical_fixture_rows"].append(
+                    dict(
+                        check="original_mutable_vnext_failure",
+                        passed=receipt["passed"]
+                        and "V748 JSON contract missing" in Path(receipt["stdout_path"]).read_text(),
+                        receipt=receipt,
+                    )
+                )
+                a.progress("full_task_mutation_controls")
+                work["mutation_rows"] = a.mutations(private / "mutations")
+                a.progress("scoped_validation")
+                validation = validate(raw, tracer, archived_suites)
+                for index, version in enumerate([748, 749]):
+                    historical = validation["receipts"][len(a.TESTS + a.CONSUMERS) + 1 + index]
+                    work["historical_fixture_rows"].append(
+                        dict(
+                            check=f"unchanged_archived_v{version}_tests",
+                            passed=historical["passed"],
+                            receipt=historical,
+                        )
+                    )
+                failure_node = private / "test_owned_failure.py"
+                failure_node.write_text("def test_owned_failure():\n    assert False\n")
+                failed_receipt = child(
+                    "deliberate_owned_failure",
+                    [
+                        sys.executable,
+                        "-m",
+                        "pytest",
+                        "-c",
+                        "/dev/null",
+                        "-o",
+                        "addopts=",
+                        "--no-cov",
+                        "-q",
+                        str(failure_node),
+                        "--basetemp=" + str(private / "owned_failure_tmp"),
+                        "--junitxml=" + str(raw / "owned_failure.xml"),
+                    ],
+                    raw / "checks",
+                    deadline=60,
+                )
+                failed = dict(validation, receipts=[failed_receipt])
+                work["owned_failure_controls"] = [
+                    dict(
+                        check="owned_failure_zeros_readiness",
+                        passed=failed_receipt["exit_code"] == 1 and not a.scoped_ready(failed),
+                        receipt=failed_receipt,
+                    ),
+                    dict(
+                        check="unrelated_global_health_stays_red",
+                        passed=work["repository_health_reference"]["full_suite_pass"] is False,
+                    ),
+                ]
+                validation["ended_at_utc"] = datetime.now(UTC).isoformat()
+            atomic_json(raw / "work.json", work)
+            atomic_json(raw / "validation.json", validation)
+            atomic_json(
+                raw / "independent_seal.json",
+                dict(
+                    primitive_reference=a.reference(raw / "work.json"),
+                    validation_reference=a.reference(raw / "validation.json"),
+                    frozen_input_reference=work["frozen_input_reference"],
+                ),
+            )
+            value = build(work, validation, output)
+            a.progress("before_terminal_validation")
+>           published = publish_primary(output, value, lambda candidate: terminal(candidate, raw))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/carnot/reporting/v750_archive_runner.py:449: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T112654-2644635-22a20ce5/test_production_dispatch_retai0/experiment_8763_v751_branch_contract.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'archived_authority': False, 'contract': True, 'exclusion': True, 'learning_i... {'check': 'new_evidence_pre_gate', 'expected': 0, 'field': 'new_selected_applied_outcomes', 'observed': 0, ...}], ...}
+validator = <function main.<locals>.<lambda> at 0x7fcb27e43100>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261103T112654-2644635-22a20ce5/test_production_dispatch_retai0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fcb3965a000>
+
+    def test_production_dispatch_retains_failure(tmp_path, monkeypatch):
+        """REQ-VERIFY-8763: failed owned checks cannot be relabeled as qualified work."""
+        monkeypatch.setattr(api.runtime, "Coverage", lambda **kw: SimpleNamespace(start=lambda: None))
+        monkeypatch.setattr(api.scope, "mutations", lambda root: [dict(passed=True)])
+        monkeypatch.setattr(
+            api.runtime,
+            "validate",
+            lambda *args: dict(
+                receipts=[dict(passed=False)] * 8,
+                union=dict(passed=False),
+                coverage=dict(complete=False),
+                raw_references=[],
+                ended_at_utc=datetime.now(UTC).isoformat(),
+            ),
+        )
+        output = tmp_path / (api.NAME + ".json")
+>       assert api.main(["--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_branch_contract_8763.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v751_branch_contract.py:330: in main
+    return int(runtime.main(argv))
+               ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v750_archive_runner.py:297: in main
+    with TemporaryDirectory(prefix="exp8749-fixture-") as directory:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:950: in __exit__
+    self.cleanup()
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:954: in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/tempfile.py:934: in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:759: in rmtree
+    _rmtree_safe_fd(stack, onexc)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:698: in _rmtree_safe_fd
+    os.unlink(entry.name, dir_fd=topfd)
+python/carnot/testing/tracked_results_guard.py:249: in _audit_hook
+    _record_and_raise(hit, event.rpartition(".")[2])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resolved = '/home/ianblenke/github.com/ianblenke/carnot/results'
+event = 'remove'
+
+    def _record_and_raise(resolved: str, event: str) -> None:
+        relative = os.path.relpath(resolved, str(_REPO_ROOT))
+        _violations.append(
+            {
+                "path": relative,
+                "event": event,
+                "stack": "".join(traceback.format_stack(limit=12)),
+            }
+        )
+>       raise TrackedResultWriteError(
+            f"Test attempted to {event} tracked result evidence {relative!r}. "
+            "Experiment tests must redirect artifact output to a temporary root."
+        )
+E       carnot.testing.tracked_results_guard.TrackedResultWriteError: Test attempted to remove tracked result evidence 'results'. Experiment tests must redirect artifact output to a temporary root.
+
+python/carnot/testing/tracked_results_guard.py:221: TrackedResultWriteError
+----------------------------- Captured stdout call -----------------------------
+[exp8763] phase=start_no_model_load completed=0 pending=0
+[exp8763] phase=authenticate_and_freeze completed=0 pending=0
+[exp8763] phase=arc_frontier_and_locator_once completed=0 pending=0
+[exp8763] phase=freeze_archived_fixture_748 completed=0 pending=0
+[exp8763] phase=freeze_archived_fixture_749 completed=0 pending=0
+[exp8763] phase=reproduce_original_child5_failure completed=0 pending=0
+[exp8205] phase=before_subprocess_moving_roadmap_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_moving_roadmap_failure completed=1 pending=0
+[exp8763] phase=full_task_mutation_controls completed=0 pending=0
+[exp8763] phase=scoped_validation completed=0 pending=0
+[exp8205] phase=before_subprocess_deliberate_owned_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_deliberate_owned_failure completed=1 pending=0
+[exp8763] phase=before_terminal_validation completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v751_branch_contract_8763.py::test_complete_contract_and_mutations
+FAILED tests/python/test_v751_branch_contract_8763.py::test_production_dispatch_retains_failure
+ERROR tests/python/test_v751_branch_contract_8763.py::test_actual_original_private_control_gap
+2 failed, 9 passed, 1 warning, 1 error in 44.71s

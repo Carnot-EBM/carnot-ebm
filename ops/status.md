@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-11-02
+**Last Updated:** 2026-11-03
+
+## 2026-11-03 UTC — Exp8763 private archive repair
+
+V751 archives own real result directories containing unchanged historical
+diagnostic/upstream primaries, V749 retrievals, health receipts and relative
+logs. Facades expose required dependencies only. Parent pytest fixtures and
+CLI children bind the original output guard only during its path check,
+preserving method provenance and cold replay. Existing assertions, historical
+sources, experiment verdicts and `scripts/research_conductor.py` are preserved.
+
+All 204 scoped tests pass: 24 V751 tests, 128 core/private E2E-018/021,
+publication and fix-gate tests, and 52 unchanged V748/V749/V750 tests. Fresh
+unit/subprocess SQLite covers 276/276 reporting-module/CLI statements with no
+exclusions, including measured execution of the original V750 line354 path.
+Scoped Ruff, formatting, strict mypy and spec tracing pass. Global reconciliation
+retains 1,142 missing spec references and the architecture date of 2026-10-11;
+the full repository suite was not rerun. No scientific readiness is promoted.
+Receipts: `/var/tmp/carnot-v751-repair-tclh0_l2/`.
 
 ## 2026-11-02 UTC — Exp8738 coverage-child import repair
 

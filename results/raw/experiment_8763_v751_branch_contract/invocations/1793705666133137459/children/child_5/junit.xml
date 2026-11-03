@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="32" time="253.014" timestamp="2026-11-03T06:42:42.276742-05:00" hostname="icbfl1"><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_historical_bindings_remain_isolated" time="0.003" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_branch_authority_and_original_methods" time="13.907"><failure message="assert 0 == 1">tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_branch_authority_and_orig0')
+
+    def test_branch_authority_and_original_methods(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: every branch binds its own unchanged operands."""
+        m = api.m
+        authority = m.authority(m.ROOT)
+        assert authority["ready"] and len(authority["rows"]) == 14
+        assert [r["task_object"]["id"] for r in authority["rows"]][0] == m.TASK
+        assert not m.authority(tmp_path)["ready"]
+        rows = m.mutations()
+        assert len(rows) &gt;= 20 and all(r["passed"] for r in rows)
+        retained, methods = m.retained(), m.methods()
+        assert retained["passed"] and retained["qualification"]["original_node_count"] == 77
+&gt;       assert methods["learning_authority_inputs_ready_score"] == 1
+E       assert 0 == 1
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py:44: AssertionError</failure></testcase><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_full_contract_dimensions[agent_type]" time="0.482" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_full_contract_dimensions[routing]" time="0.483" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_full_contract_dimensions[prompt]" time="0.463" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_full_contract_dimensions[gated_on]" time="0.482" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_full_contract_dimensions[deliverable]" time="0.483" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_full_contract_dimensions[MODEL_SPECS]" time="0.483" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_conductor_prompt_encoding[active]" time="0.801" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_conductor_prompt_encoding[staged]" time="0.981" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_conductor_prompt_encoding[both]" time="0.987" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_prompt_encoding_rejects_changes[date]" time="0.493" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_prompt_encoding_rejects_changes[project_root]" time="0.492" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_prompt_encoding_rejects_changes[extra_braces]" time="0.495" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_prompt_encoding_rejects_changes[content]" time="0.493" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_prompt_encoding_rejects_changes[field]" time="0.490" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_private_cli_and_sealed_replay" time="69.078"><failure message="AssertionError: &#10;assert False">tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_private_cli_and_sealed_re0')
+
+    def test_private_cli_and_sealed_replay(tmp_path):
+        """SCENARIO-REPORT-8723-AUTHORITY: real children keep private readiness at zero."""
+        m = api.m
+        output = tmp_path / "results" / (m.NAME + ".json")
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("cold", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+            ("date", ["--date", "20261101"], 2),
+            ("unsafe", ["--private-control"], 2),
+            ("error", ["--deliberate-error"], 7),
+        ]:
+            receipt = child(name, command + args, tmp_path / "logs", expected=expected, deadline=120)
+&gt;           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: 
+E           assert False
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py:146: AssertionError</failure></testcase><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_missing_preserved_operand" time="3.211" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_absent_priors_are_bound_not_invented" time="0.948" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_assertions_and_failed_child" time="96.885" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_rejection-missing]" time="0.204" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_rejection-changed]" time="0.210" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_rejection-field]" time="0.242" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_rejection-zero]" time="0.246" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_rejection-flagged]" time="0.243" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_rejection-terminal]" time="0.246" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_deep_identity-source]" time="0.039" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_deep_identity-qualification]" time="0.042" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_retained_deep_identity-seal]" time="0.043" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_direct_replay_controls-None]" time="24.551"><failure message="Failed: DID NOT RAISE &lt;class 'SystemExit'&gt;">tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_original_rejection_contro0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f6e8c1929c0&gt;
+name = 'test_direct_replay_controls', mode = None
+
+    @pytest.mark.parametrize(
+        "name,mode",
+        [
+            ("test_retained_rejection", mode)
+            for mode in ["missing", "changed", "field", "zero", "flagged", "terminal"]
+        ]
+        + [("test_retained_deep_identity", mode) for mode in ["source", "qualification", "seal"]]
+        + [
+            (name, None)
+            for name in [
+                "test_direct_replay_controls",
+                "test_missing_original_methods",
+                "test_replay_rejects_historical_child_substitution",
+            ]
+        ],
+    )
+    def test_original_rejection_controls(tmp_path, monkeypatch, name, mode):
+        """REQ-VERIFY-8723: preserve unchanged historical rejection assertions under V748 bindings."""
+        import inspect
+        import runpy
+    
+        original = runpy.run_path(str(api.m.ROOT / "tests/python/test_v747_contract_8709.py"))
+        check = original[name]
+        monkeypatch.setitem(check.__globals__, "m", api.m)
+        monkeypatch.setitem(check.__globals__, "runner", api.runtime)
+        arguments = dict(tmp_path=tmp_path, monkeypatch=monkeypatch, mode=mode)
+&gt;       check(**{key: arguments[key] for key in inspect.signature(check).parameters})
+
+results/raw/experiment_8763_v751_branch_contract/invocations/1793705666133137459/original_tests_748/test_v748_contract_8723.py:240: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/tmp/exp8749-checks-_q6gw7ii/collection-d443958e891043eea1ad51be62496806/5/tmp/test_original_rejection_contro0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f6e8c1929c0&gt;
+
+    def test_direct_replay_controls(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8709-REPLAY: missing and rehashed primitives reject independently."""
+        assert runner.main(["--deliberate-error"]) == 7
+&gt;       with pytest.raises(SystemExit):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'SystemExit'&gt;
+
+/tmp/exp8749-fixture-dp9wqqrh/archive_748/tests/python/test_v747_contract_8709.py:175: Failed</failure></testcase><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_missing_original_methods-None]" time="0.322" /><testcase classname="results.raw.experiment_8763_v751_branch_contract.invocations.1793705666133137459.original_tests_748.test_v748_contract_8723" name="test_original_rejection_controls[test_replay_rejects_historical_child_substitution-None]" time="33.575" /></testsuite></testsuites>

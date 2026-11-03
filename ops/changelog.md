@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-11-03 UTC — Fix Exp8763 private archive dependencies and guards
+
+Complete private historical result copies and replace the archive result
+symlink with a real directory. Limit facades to required dependencies so
+cleanup avoids protected documents. Bind the original private-output guard
+for both pytest parents and CLI children only while checking the path;
+historical method provenance and replay stay identical. Strengthen copy and
+dispatch regressions without changing original assertions or the conductor.
+
+Validation: 204 scoped tests pass, including all 52 unchanged historical tests,
+private E2E-018/021, publication and fix-gate controls. Fresh coverage is
+276/276 statements across the V751 modules and CLI with zero exclusions;
+the original V750 private-control line354 executes. Scoped Ruff, formatting,
+strict mypy and spec tracing pass. Global reconciliation still reports the
+existing 1,142 missing spec references and stale architecture date. No full
+repository pass or scientific promotion is claimed. Evidence:
+`/var/tmp/carnot-v751-repair-tclh0_l2/`.
+
 ## 2026-11-02 UTC — Operational retrospective for milestone 2026.11.749
 
 - Updated `results/operational_retro_2026_11_749.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.749`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 7 completed experiments (0 compute-bound, 7 synthesis-only) across 35.5 wall-time minutes (36 minutes / 0.6 hours, averaging 5 minutes per experiment).
