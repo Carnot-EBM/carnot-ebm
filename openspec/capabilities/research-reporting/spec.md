@@ -104784,3 +104784,21 @@ zero. Fewer than three shared games or five observed firings per shared arm
 cell suppresses admission; meeting these floors never certifies broad transfer.
 The result is an exposed-development diagnostic, with no causal benefit claim,
 no live policy change and new_level_credit=0.
+## REQ-REPORT-8761: Independently map qualified V750 cost boundaries
+
+Read Exp8752 learning, Exp8757 installed inference and Exp8759 ordinary durable
+costs independently. Preserve each absent, missing-field, zero or rejected gate.
+Mapping may qualify without physical execution. Retain Exp8747 disqualification.
+Map every admitted operation to KV260, PolarFire and GateMate as supported,
+unsupported or unknown. KV260 supports only authenticated quadratic Ising
+k_max<=5 via SSH/scp/xmutil; PolarFire CPU dispatch supplies no fabric support.
+GateMate requires dated physical change and IDCODE0x20000001 after0xffffffff.
+
+### SCENARIO-REPORT-8761-CLOCKS
+
+Keep causal_learning, installed_inference_only and ordinary_durable_window
+separate. Only disjoint compatible fractions inside one named measured parent
+enter ideal Amdahl bounds. Require0.9/0.99 for ideal10x/100x before transfer.
+Host features, nonlinear operations, durability and unknown transfer stay outside
+claimed fabric speedups. Ordinary windows cannot estimate natural dense events.
+Papers and inventory supply interface hypotheses only; no current device probe.

@@ -57917,3 +57917,19 @@ Cold replay SHALL reconstruct the private grid from sealed primitive inputs
 and reject consistently rehashed aggregate changes. External absence is blocked;
 owned check failures are disqualified. Publish terminal bytes only after the
 unchanged adversarial and strict row-consistency validators and cold replay.
+## REQ-VERIFY-8761: Seal independently qualified operation mapping
+
+Freeze source, method, input and collected test-node hashes before reduction.
+Authenticate exact producer bytes, terminal acceptance and registered cold replay.
+Require complete scoped tests and consumers, private E2E-018/021, Ruff lint and
+format, strict mypy, explicit spec tracing and100 percent newly executable
+statements including actual CLI children. Keep repository health separate.
+External absence blocks its branch; owned validation failure disqualifies.
+
+### SCENARIO-VERIFY-8761-REPLAY
+
+Private real CLI and cold replay reject missing fields, unsupported-operation
+speedups, mixed clocks and consistently rehashed report changes. Publish only
+terminal bytes after unchanged adversarial and strict row scanners and fresh
+cold replay. Physical readiness and100x learning readiness remain zero without
+new compatible device evidence. The conductor owns ops and BMAD reconciliation.
