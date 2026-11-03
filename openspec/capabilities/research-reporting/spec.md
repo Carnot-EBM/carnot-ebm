@@ -104837,6 +104837,25 @@ Bind the visible table, complete JSON objects and activated YAML to one independ
 pinned canonical SHA-256. Require exactly Exp8763 through Exp8775. Accept only the
 established literal-brace activation encoding. Preserve V750 archive bytes.
 
+## REQ-REPORT-8772: Measure qualified ordinary durable windows
+
+Under REQ-REPORT-V751-PLAN, require authenticated Exp8771 ordinary_window_ready_score=1
+independently of its threshold score. Freeze the exact cost protocol, source and
+installed binary, 90 counterbalanced cells (offsets0/2032/4064,32 updates, three
+arms, ten paired repeats), 10000 repeat-block bootstrap draws and test nodes.
+Keep the full122880-update study closed. Admit measurement only when projected
+fixed work with25 percent reserve fits3000 seconds on persistent writable disk.
+Include setup/import, two durable Store commits per update, restart after2048,
+acknowledgment and shutdown. Report prefix preparation and arithmetic separately.
+
+### SCENARIO-REPORT-8772-ORDINARY
+
+Retain90 window and2880 update rows including failures/censoring. Zero natural
+dense events remain zero; constructed threshold timings never enter these costs.
+Bounded benefit requires resident/stateless complete throughput lower95>1.05 and
+p95 regression<=5 percent. Report Python separately; no long-run or learning claim.
+
+
 ## REQ-REPORT-8771: Qualify lifecycle windows under immutable historical authority
 
 Reproduce the retained Exp8758 tests_2 V747 authority failure. Bind the unchanged

@@ -1,0 +1,112 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8772_v751_ordinary_durable_cost.json",
+  "primary_sha256": "sha256:b8087c8d53324d46d419147bd31ac8797e05437123e6cf8ef6a9e85bf4911ccd",
+  "report": {
+    "actual_findings": {
+      "flagged_count": 0,
+      "reports": [
+        {
+          "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/terminal_candidate.json",
+          "exp_id": 8772,
+          "flag_count": 0,
+          "flags": [],
+          "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+          "honest_verdict": "complete_null_ordinary_durable_cost",
+          "loaded": true,
+          "max_severity": -1,
+          "title": ""
+        }
+      ]
+    },
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8772_v751_ordinary_durable_cost.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8772_v751_ordinary_durable_cost.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/terminal_candidate.json",
+        "deadline_s": 300,
+        "duration_s": 4.877088131,
+        "ended_monotonic_ns": 406514605074786,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/cold_replay.stdout",
+        "log_sha256": "sha256:947b0abe95c787d02cd6b080fc0a9b07715789c593ac03f15168eb1178913ee8",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 406509727986655,
+        "started_wall_ns": 1793726012515805144,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/cold_replay.stdout",
+        "stdout_sha256": "sha256:947b0abe95c787d02cd6b080fc0a9b07715789c593ac03f15168eb1178913ee8",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/terminal_candidate.json",
+        "deadline_s": 300,
+        "duration_s": 6.474701297,
+        "ended_monotonic_ns": 406521080846338,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/adversarial.stdout",
+        "log_sha256": "sha256:b1b3cd86d339d1b747ffe215cc4f649a61bbe57cd4d6667fb6a837efc084d16c",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 406514606145041,
+        "started_wall_ns": 1793726017393963470,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/adversarial.stdout",
+        "stdout_sha256": "sha256:b1b3cd86d339d1b747ffe215cc4f649a61bbe57cd4d6667fb6a837efc084d16c",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/terminal_candidate.json",
+        "deadline_s": 300,
+        "duration_s": 0.114773831,
+        "ended_monotonic_ns": 406521197053114,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 406521082279283,
+        "started_wall_ns": 1793726023870097491,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8772_v751_ordinary_durable_cost/invocations/1793723299871513279/terminal/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ]
+  }
+}

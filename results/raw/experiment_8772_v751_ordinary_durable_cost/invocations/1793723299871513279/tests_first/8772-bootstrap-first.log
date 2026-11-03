@@ -1,0 +1,46 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_paired_repeat_bootstrap _________________________
+
+    def test_paired_repeat_bootstrap():
+        """REQ-REPORT-8772: sample the same repeat blocks for both comparisons."""
+        assert e.intervals([], [[0] * 10]) == {}
+        rows = [dict(r, status="completed", complete_ns=100 if r["arm"] == "resident_native" else 120, p95_ns=100) for r in e.roster()]
+>       value = e.intervals(rows, [[i] * 10 for i in range(10)])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_ordinary_durable_cost_8772.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rows = [{'arm': 'python', 'complete_ns': 120, 'offset': 0, 'order': 0, ...}, {'arm': 'json_native', 'complete_ns': 120, 'offs...s': 100, 'offset': 2032, 'order': 1, ...}, {'arm': 'python', 'complete_ns': 120, 'offset': 2032, 'order': 2, ...}, ...]
+draws = [[0, 0, 0, 0, 0, 0, ...], [1, 1, 1, 1, 1, 1, ...], [2, 2, 2, 2, 2, 2, ...], [3, 3, 3, 3, 3, 3, ...], [4, 4, 4, 4, 4, 4, ...], [5, 5, 5, 5, 5, 5, ...], ...]
+
+    def intervals(rows: list[Json], draws: list[list[int]]) -> Json:
+        """Resample paired repeats together across all windows and arms."""
+        if len(rows) != 90 or any(r["status"] != "completed" for r in rows):
+            return {}
+        lookup = {(r["repeat"], r["offset"], r["arm"]): r for r in rows}
+        result = {}
+        for comparator in ["json_native", "python"]:
+            ratios, tails = [], []
+            for repeat in range(10):
+                ratios.append(
+                    [
+                        lookup[repeat, offset, comparator]["complete_ns"]
+>                       / lookup[repeat, offset, "resident"]["complete_ns"]
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        for offset in METHOD["offsets"]
+                    ]
+                )
+E               KeyError: (0, 0, 'resident')
+
+python/carnot/reporting/ordinary_durable_cost_8772.py:201: KeyError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_ordinary_durable_cost_8772.py::test_paired_repeat_bootstrap
+1 failed, 1 warning in 4.43s

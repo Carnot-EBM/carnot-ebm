@@ -58098,3 +58098,22 @@ avoid production-result symlinks during test cleanup. The retained disjoint
 collector supplies original node outcomes, JUnit and SQLite; the final artifact
 retains scoped checks separately from bounded repository health. Ops and BMAD
 reconciliation are conductor-owned for this task.
+
+## REQ-VERIFY-8772: Seal ordinary cost execution and terminal publication
+
+Write failing requirement-linked tests first. Freeze nodes, methods, inputs and
+source/configuration identities before measurement. Require100 percent newly
+owned executable statements including real CLI children, scoped unit/consumer
+checks, Ruff check/format, strict mypy, explicit spec coverage, real E2E-003/004
+and private E2E-018/021. Reject skipped fsync and incomplete windows. Retain argv,
+exits, nodes, JUnit, SQLite and log hashes. One bounded full-suite diagnostic is
+separate repository health and never a full-suite pass claim.
+
+### SCENARIO-VERIFY-8772-CUSTODY
+
+Private controls cannot write production artifacts. Distinguish absent files,
+absent fields, zero and rejected producers. Fresh-process replay authenticates
+independent measurement/validation seals, raw updates and derived summaries.
+Owned failure suppresses readiness. Publish only terminal bytes accepted by
+unchanged adversarial and strict row scanners and cold replay. No model is used.
+Ops/status/changelog/BMAD reconciliation is conductor-owned for this invocation.
