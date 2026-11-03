@@ -104831,6 +104831,32 @@ remain separate from scoped qualification. Exp8754 methods custody is not a
 scientific measurement. Terminal validation evidence resides below the primary's
 raw invocation root; it does not certify repository-wide health.
 
+## REQ-REPORT-8775: Reconcile thirteen outcomes without promoting scheduling
+
+Bind every V751 task and visible order to the independently pinned contract.
+Archive the full design before measurement. Replay uses immutable authority
+copies; later active roadmap changes do not invalidate this closed milestone.
+Authenticate producer identities, conductor skips and prior failure scopes.
+Reconstruct V750 verifier/cost rows and present V751 evidence-set, residual
+cost and ordinary durability rows independently, retaining producer eligibility.
+Missing external science is terminal blocked. Preserve valid nulls and require
+a concrete changed mechanism before reopening an unchanged closed comparison.
+Only exact authenticated scope/verdict repeats are retirement candidates.
+No model loads, training, manifest edits or external publication are authorized.
+
+Implementation20261103: `v751_capstone` reuses the V750 driver with thirteen
+current bindings. `v751_capstone_reduce` rebuilds historical and current rows.
+Conductor records are compared with authenticated operands. Exp8772 retains
+its published null and raw windows, but its different task ID rejects current
+eligibility. Saved authorities support replay after a roadmap rollover.
+
+### SCENARIO-REPORT-8775-ACCOUNTING
+
+Thirteen complete task objects and thirteen outcome rows include skipped studies.
+Keep rejected inputs, absent fields, zero scores and valid nulls separate.
+Preserve V750 zero verifier gain, feature reuse scope and same-batch 10x null.
+Report stable G1/G2/G3/G4 from the unchanged publication command.
+
 ## REQ-REPORT-V751-PLAN: Bind thirteen complete V751 tasks
 
 Bind the visible table, complete JSON objects and activated YAML to one independently

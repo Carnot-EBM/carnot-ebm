@@ -57996,6 +57996,26 @@ module/CLI statements with zero exclusions and original V750 line354 execution.
 Scoped lint, formatting, strict types and spec tracing pass. Existing global
 documentation/traceability debt remains separate from this repair.
 
+## REQ-VERIFY-8775: Seal current reconciliation and terminal validation
+
+Freeze source/configuration hashes, exact test nodes and private resources
+before reduction. Require actual 100 percent new-statement coverage, real CLI
+children, private E2E-018/021, consumer checks, Ruff, strict mypy and spec tracing.
+Keep bounded repository health separate from owned acceptance. The conductor
+owns ops and BMAD updates. Preserve unchanged terminal validators and assertions.
+
+Supervise this capstone's owned validation shard for at most1200 seconds and
+its private CLI controls for at most600 seconds. These are administrative
+validation limits. Scientific deadlines and unchanged validator limits retain
+their original values. Preserve the first disqualified timeout artifact.
+
+### SCENARIO-VERIFY-8775-REPLAY
+
+Fresh-process cold replay rejects changed rows, receipts and rehashed primitive
+substitution. Full-task mutations reject every field and coordinated rehashing.
+Private tests never write production results. Replay authenticates saved V751
+authority rather than requiring the active queue to remain at V751 forever.
+
 ## REQ-VERIFY-8764: Authenticate bounded publication evidence
 
 Freeze sources and full transitive input bytes before measurement. Real children

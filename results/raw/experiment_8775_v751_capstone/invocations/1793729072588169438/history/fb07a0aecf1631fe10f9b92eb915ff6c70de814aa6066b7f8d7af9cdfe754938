@@ -1,0 +1,51 @@
+{
+  "experiment": 8759,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-03",
+  "started_at": "2026-11-03T06:32:25.895623+00:00",
+  "finished_at": "2026-11-03T06:32:25.895623+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure ordinary durable windows and restart at matched complete costs",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8758-lifecycle-event-qualification",
+  "failed_field": "ordinary_window_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8758_v750_lifecycle_event_qualification.json",
+  "failed_evidence_sha256": "sha256:8e0c904ab7ff9859d002293e05fc2aa3957ca0c0b8379019afe125d448431ac3",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8758-lifecycle-event-qualification",
+    "failed_field": "ordinary_window_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8758_v750_lifecycle_event_qualification.json",
+    "failed_evidence_sha256": "sha256:8e0c904ab7ff9859d002293e05fc2aa3957ca0c0b8379019afe125d448431ac3"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8758-lifecycle-event-qualification.ordinary_window_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8758-lifecycle-event-qualification",
+      "artifact_field": "ordinary_window_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8758_v750_lifecycle_event_qualification.json",
+      "artifact_sha256": "sha256:8e0c904ab7ff9859d002293e05fc2aa3957ca0c0b8379019afe125d448431ac3"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

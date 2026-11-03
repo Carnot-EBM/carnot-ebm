@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="10" failures="0" skipped="0" tests="11" time="246.766" timestamp="2026-11-03T13:06:10.844430-05:00" hostname="icbfl1"><testcase classname="tests.python.test_v751_capstone_8775" name="test_accounting" time="240.061"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_reconstruction" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_rehashed_rejection[rows]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_rehashed_rejection[receipts]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_rehashed_rejection[primitive]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_rehashed_rejection[missing]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_rehashed_rejection[authority]" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_failure_and_readiness" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_controls_and_saved_authority" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_pin_rejection" time="0.000"><error message="failed on setup with &quot;subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _trace=&lt;pluggy._tracing.Ta..., _basetemp=PosixPath('/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """SCENARIO-REPORT-8775-ACCOUNTING: no fixture publishes production evidence."""
+        path = tmp_path_factory.mktemp("v751-capstone") / (c.e.NAME + ".json")
+&gt;       result = cli("--output", path, "--private-control", "--date", "20261103")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v751_capstone_8775.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_v751_capstone_8775.py:19: in cli
+    return subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 409913.542134788, orig_timeout = 240
+stdout_seq = [b'[exp8775] phase=start_no_model_load_MODEL_SPECS_empty_current_LLM_calls_zero completed=0 pending=14\n', b'[exp8763]...se=full_object_controls completed=4 pending=9\n', b'[exp8763] phase=full_object_controls completed=5 pending=8\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8775_v751_capstone.py', '--output', '/var/tmp/capstone8708-coverage-zmio8vf6/0/tmp/v751-capstone0/experiment_8775_v751_capstone.json', '--private-control', '--date', '20261103']' timed out after 240 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</error></testcase><testcase classname="tests.python.test_v751_capstone_8775" name="test_conductor_and_identity_checks" time="0.618" /></testsuite></testsuites>

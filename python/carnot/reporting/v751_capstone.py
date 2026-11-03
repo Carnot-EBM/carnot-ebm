@@ -1,0 +1,237 @@
+"""REQ-REPORT-8775: bind V751 to the qualified V750 reconciliation driver."""
+
+from __future__ import annotations
+
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from typing import Any
+
+from carnot.reporting import v750_capstone as previous
+from carnot.reporting import v751_branch_contract as binding
+from carnot.reporting.v748_collection_contract import namespace
+from carnot.reporting.v751_capstone_reduce import reduce, HISTORY
+
+Json = dict[str, Any]
+retained = namespace(previous, "8775_retained")
+e, runtime = retained.e, retained.runtime
+base_child = runtime.child
+e.NAME, e.TASK, e.MILESTONE = "experiment_8775_v751_capstone", "exp8775-capstone", binding.MILESTONE
+e.CLI = f"scripts/experiments/{e.NAME}.py"
+e.TESTS = ["tests/python/test_v751_capstone_8775.py"]
+e.OWNED = [
+    "python/carnot/reporting/v751_capstone.py",
+    "python/carnot/reporting/v751_capstone_reduce.py",
+    e.CLI,
+]
+retained.binding, e.contract_source = binding, binding
+retained.ARCHIVE = "openspec/change-proposals/research-roadmap-v751-preserved-20261103.md"
+retained.PINS = {
+    8763: "8d3018a69d01e05a8162f85d4c23a0b2b891aa89e586a40fac2d3f8a71fa5c19",
+    8764: "bfe690e41a7f14940741fa8863956834aecfa494a14b08e8093e96fb46206662",
+    8768: "18c0f307c4cca4def9f2f1cf0ecf788b7a5764b59e81b54ef670a84ac54df2a3",
+    8770: "71421b897fa5e59004d55ac5ec692fd69a5d3c3854aeb5dcf329bc39e6a79556",
+    8771: "b53d1d20698ca082eb2dcc439d4b3e718e22203d63710f2f3f7c074357890401",
+    8772: "b8087c8d53324d46d419147bd31ac8797e05437123e6cf8ef6a9e85bf4911ccd",
+    8774: "14ae7cb2ea53d96866dc4c4c9cc0bf2ef965684879756d57cc8249200a32b68e",
+}
+authority = retained.authority
+base_slot, base_measure, base_methods = retained.slot, retained.measure, retained.methods
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush real boundaries so a supervisor sees activity during bounded work."""
+    completed = min(completed, 13)
+    pending = min(pending, 13 - completed)
+    print(f"[exp8775] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def controls() -> list[Json]:
+    """Use the current full-object controls without modifying active authority."""
+    with TemporaryDirectory(prefix="capstone8775-controls-", dir="/var/tmp") as directory:
+        return list(binding.mutations(Path(directory) / "controls"))
+
+
+def methods() -> Json:
+    """Preserve registered methods and the complete archived design as immutable operands."""
+    value: Json = base_methods()
+    check = value["gate_check_summary"][-1]
+    check.update(
+        expected=8775, passed="8775" not in check["observed"] and e.TASK not in check["observed"]
+    )
+    value["references"].append(HISTORY)
+    value["references"].append(e.reference(e.ROOT / "docs/research-notes/v751-capstone.md"))
+    value["references"].append(
+        e.reference(e.ROOT / "results/raw" / e.NAME / "first_attempt_disqualified.json")
+    )
+    return value
+
+
+def slot(task: Json, raw: Path, lines: list[str], root: Path = e.ROOT) -> Json:
+    """Scheduling records explain absence; qualified methods still establish no new science."""
+    row: Json = base_slot(task, raw, lines, root)
+    value = e.load(row["primary_reference"]) if row["primary_reference"]["sha256"] else {}
+    row["producer_terminal_authenticated"] = False
+    if row["producer_executed"]:
+        original = retained.previous.authenticate(
+            Path(row["primary_reference"]["path"]), dict(id=value["task_id"])
+        )
+        row["producer_terminal_authenticated"] = original["authenticated"]
+        row["evidence_references"] += original["references"]
+    row["source_identity_failures"] = [
+        dict(
+            upstream=task["id"],
+            **row["primary_reference"],
+            check=error,
+            field="task_id" if error == "producer_task_identity" else "producer_authentication",
+            operator="==",
+            expected=task["id"] if error == "producer_task_identity" else [],
+            observed=value.get("task_id")
+            if error == "producer_task_identity"
+            else row["authentication_errors"],
+            passed=False,
+        )
+        for error in row["authentication_errors"]
+    ]
+    row["conductor_pre_gate_checks"] = []
+    for recorded in value.get("gates_evaluated", []):
+        ref = dict(path=recorded["artifact_path"], sha256=recorded["artifact_sha256"])
+        actual = e.observe(
+            ref, recorded["upstream"], recorded["artifact_field"], recorded["expected"]
+        )
+        matched = (
+            actual["observed"] == recorded["actual"] and actual["passed"] == recorded["passed"]
+        )
+        row["conductor_pre_gate_checks"].append(
+            dict(
+                actual,
+                check="conductor_record_matches_frozen_operand",
+                operator="==",
+                field=recorded["artifact_field"] + ":observed_and_passed",
+                expected=[recorded["actual"], recorded["passed"]],
+                observed=[actual["observed"], actual["passed"]],
+                passed=matched,
+            )
+        )
+    if row["experiment_id"] in {8763, 8764, 8768, 8771, 8774}:
+        row["scientific_result_measured"] = False
+    if row["disposition"] == "conductor_cascade_skip":
+        row["missing_reason"] = "registered_upstream_retired_or_rejected"
+    row["raw_numerator"], row["raw_denominator"] = int(row["producer_qualified"]), 1
+    return row
+
+
+def measure(raw: Path, date: str, private: bool) -> Json:
+    """Snapshot live authorities once; closed-milestone replay uses their saved bytes."""
+    work: Json = base_measure(raw, date, private)
+    moving = {str(e.ROOT / p) for p in [e.DESIGN, binding.ACTIVE, binding.STAGED]}
+    for ref in work["source_refs"]:
+        if ref["path"] in moving:
+            snapshot = ref.pop("snapshot_reference")
+            ref.update(source_path=ref["path"], path=snapshot["path"], sha256=snapshot["sha256"])
+    work["repository_health_reference"] = dict(
+        reference=e.reference(
+            e.ROOT / "results/raw" / e.NAME / "startup/full_python_suite.receipt.json"
+        ),
+        full_suite_pass=False,
+        acceptance_dependency=False,
+    )
+    work["owned_validation_limit_s"] = 1200
+    e.atomic_json(raw / "measurement.json", work)
+    e.atomic_json(
+        raw.parents[1] / "seals" / (raw.name + ".json"),
+        dict(measurement=e.reference(raw / "measurement.json"), code_refs=work["code_refs"]),
+    )
+    return work
+
+
+def build(work: Json, receipts: list[Json], output: Path) -> Json:
+    """A complete reconciliation may remain blocked by absent external scientific comparisons."""
+    value: Json = retained.BASE_BUILD(work, receipts, output)
+    value.update(
+        experiment_id=8775,
+        honest_verdict=f"complete_{value['verdict_class']}_v751_capstone",
+        random_seed=7518775,
+        intended_count=13,
+        completed_count=13,
+        repository_health_reference=work["repository_health_reference"],
+        scoped_validation_scope=dict(
+            test_files=e.TESTS,
+            consumers=runtime.E2E,
+            e2e=["E2E-018", "E2E-021"],
+            repository_health_is_dependency=False,
+        ),
+        full_task_mutation_rows=work["contract_mutation_rows"],
+        methodology_note="Reconcile thirteen complete V751 tasks using immutable authority, actual producer bytes and conductor skips. Independently reconstruct V750 and present V751 rows; rejected producers remain ineligible. Missing causal learning and transfer remain terminal blocked. Valid nulls close unchanged comparisons. No model, training, natural extraction, broad ARC transfer or physical acceleration claim.",
+    )
+    value["rows"][-1].update(experiment_id=8775, honest_verdict=value["honest_verdict"])
+    value["sample_size_budget"]["intended_scheduling_slots"] = 13
+    value["gate_check_summary"] += value["scientific_reconstruction"]["blocked_comparison_gates"]
+    value["gate_check_summary"] += [
+        g
+        for r in work["slots"]
+        for g in r["source_identity_failures"] + r["conductor_pre_gate_checks"]
+    ]
+    value["registered_prior_failure_count"] = len(work["prior_rows"])
+    for row in value["retirement_candidate_rows"]:
+        row.update(
+            retire_if_same_verdict=row["registration"]["retire_if_same_verdict"],
+            changed_method_reopen_conditions=[
+                row["registration"]["addressed_by"],
+                "Require changed authenticated operands and complete owned validation before reopening this exact comparison.",
+            ],
+        )
+    for task, row in zip(work["contract"]["tasks"], value["next_decision_rows"], strict=True):
+        row["changed_mechanism_conditions"] = [p["addressed_by"] for p in task["prior_failures"]]
+        row["closed_comparison_scope"] = task["title"]
+    value["next_decision_rows"][7]["changed_mechanism_conditions"] = [
+        "Change observer instrumentation and demonstrate maximum paired overhead <=5 percent on the identical installed B16 job; preserve parity and exclusive complete-cost reconciliation before selecting a target."
+    ]
+    value["next_decision_rows"][9]["changed_mechanism_conditions"] = [
+        "Publish a new producer bound to the scheduled task identity, then require a changed resident Store commit/import mechanism before reopening the same ninety-window benefit comparison; preserve two durable commits per update and restart boundaries."
+    ]
+    value["valid_null_closure_rows"] = [
+        dict(
+            task_id=r["task_id"],
+            primary_reference=r["primary_reference"],
+            terminal_verdict=r["scientific_verdict"],
+            scope=d["closed_comparison_scope"],
+            comparison_closed=True,
+            scientific_hypothesis_retired=False,
+            automatic_rerun_authorized=False,
+            changed_mechanism_reopening_conditions=d["changed_mechanism_conditions"],
+        )
+        for r, d in zip(value["rows"], value["next_decision_rows"], strict=True)
+        if r["producer_qualified"] and r["verdict_class"] == "null"
+    ]
+    value["next_measurement_priorities"] = [
+        dict(
+            task_id=r["task_id"],
+            decision=r["decision"],
+            reopening_conditions=r["changed_mechanism_conditions"],
+            automatic_rerun_authorized=False,
+        )
+        for r in value["next_decision_rows"]
+    ]
+    value["field_principles"] = dict.fromkeys(
+        [*value, "reproducibility_checksum"],
+        "Authenticate original bytes and eligibility; scheduling closure differs from science; missing, rejected and zero operands differ.",
+    )
+    value["reproducibility_checksum"] = e.digest(value)
+    return value
+
+
+retained.controls, retained.e.progress = controls, progress
+e.slot, e.previous.original_inputs = slot, methods
+retained.report.reduce = reduce
+
+
+def supervised_child(name: str, argv: list[str], logs: Path, **limits: Any) -> Json:
+    """Coverage adds supervision cost without changing a scientific or validator deadline."""
+    if name == "tests_0":
+        limits["deadline"] = 1200
+    return dict(base_child(name, argv, logs, **limits))
+
+
+runtime.measure, runtime.report.build, runtime.child = measure, build, supervised_child
+runtime.E2E = [*runtime.E2E, "tests/python/test_primary_publication_7928.py"]
+main = runtime.main

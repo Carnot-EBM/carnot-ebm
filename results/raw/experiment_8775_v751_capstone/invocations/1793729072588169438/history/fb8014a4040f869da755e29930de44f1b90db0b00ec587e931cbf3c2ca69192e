@@ -1,0 +1,51 @@
+{
+  "experiment": 8699,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-01",
+  "started_at": "2026-11-01T18:14:08.643314+00:00",
+  "finished_at": "2026-11-01T18:14:08.643314+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure continuous Brier learning after prediction sealing and delayed feedback",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8697-learning-union-qualification",
+  "failed_field": "learning_execution_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8697_v746_learning_union_qualification.json",
+  "failed_evidence_sha256": "sha256:1e9e81e361ffdbe70fae3c8e61460776abb74834b313fe575dd1ae20e6f39525",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8697-learning-union-qualification",
+    "failed_field": "learning_execution_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8697_v746_learning_union_qualification.json",
+    "failed_evidence_sha256": "sha256:1e9e81e361ffdbe70fae3c8e61460776abb74834b313fe575dd1ae20e6f39525"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8697-learning-union-qualification.learning_execution_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8697-learning-union-qualification",
+      "artifact_field": "learning_execution_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8697_v746_learning_union_qualification.json",
+      "artifact_sha256": "sha256:1e9e81e361ffdbe70fae3c8e61460776abb74834b313fe575dd1ae20e6f39525"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
