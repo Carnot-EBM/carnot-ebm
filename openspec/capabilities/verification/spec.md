@@ -57610,6 +57610,28 @@ formatting, strict mypy and spec tracing pass. Global spec tracing retains
 the full repository suite was not rerun. Validation receipts are retained at
 `/var/tmp/carnot-8738-repair-znkkvfwh/`.
 
+## REQ-VERIFY-8756: Keep complete scoped parity independent of global health
+
+Freeze and execute all original122 nodes, unchanged Exp8743 assertions and new
+tests. Require genuine100 percent new executable statements, including actual
+CLI children, with no coverage exclusions. Retain JUnit, SQLite, actual argv,
+exits and full log hashes in private artifact roots. Require scoped Ruff,
+format, strict mypy, explicit spec coverage, installed E2E-003/004 and private
+E2E-018/021. Preserve archived fixture bindings and shared validators.
+
+### SCENARIO-VERIFY-8756-FAILURE
+
+An actual deliberately failing owned pytest node SHALL keep
+feature_reuse_ready_score=0, even when installed parity succeeds. A failing
+unrelated full-suite diagnostic SHALL remain visible separately. Mutation,
+cross-request reuse, stale output, malformed frames and source drift still fail.
+
+### SCENARIO-VERIFY-8756-CUSTODY
+
+The real private CLI covers date/path rejection, absent inputs, sealed replay
+and tampering. Publish only terminal bytes after unchanged adversarial and
+strict row validators plus independently bound fresh-process cold replay.
+
 ## REQ-VERIFY-8743: Preserve owned features and rejection boundaries
 
 Prepare an immutable per-request feature vector. Use that vector for scoring

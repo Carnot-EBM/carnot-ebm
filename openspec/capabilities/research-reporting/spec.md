@@ -104441,6 +104441,27 @@ missing statements still deny coverage qualification. This repair changes no
 historical deadline receipt or scientific readiness claim. See
 SCENARIO-VERIFY-8738-CHILD-IMPORTS for regression and custody validation.
 
+## REQ-REPORT-8756: Requalify installed request-local feature reuse
+
+Exp8756 SHALL reuse Exp8743's implementation and measurement without changing
+its disqualified primary. Freeze the exact original122 node IDs, source/test
+hashes, original64 inputs and original Exp8744 cost workload before measurement.
+Build a fresh private wheel and load its authenticated native extension. Require
+Python/native baseline/reuse at B1/4/16, identical score/digest bytes,128 baseline
+and64 reuse extractions per cell, and every original import/rejection/ownership
+check. No model, training, speed or independent-generalization claim is allowed.
+All scoped checks are required; a bounded full-suite diagnostic is retained as
+separate repository health and cannot grant or erase scoped qualification.
+Missing external inputs block; failed owned validation disqualifies. Conductor
+reconciliation owns ops/status, ops/changelog and BMAD traceability.
+
+### SCENARIO-REPORT-8756-QUALIFICATION
+
+Retain all12 cells,384 parity rows and every rejection. Freeze the original
+B16,16 panels of64 requests, two providers by original/reuse by ten paired
+repeats cost design for Exp8757 without measuring it. The new primary binds
+one invocation's exact inputs, installed origins, clocks, logs and raw hashes.
+
 ## REQ-REPORT-8743: Qualify one extraction per installed request
 
 Exp8743 SHALL authenticate Exp8733 and Exp8716 by exact producer bytes and bound
