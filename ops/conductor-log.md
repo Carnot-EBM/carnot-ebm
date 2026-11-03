@@ -21191,3 +21191,4 @@ code |
 | 2026-11-03 03:19 UTC | Qualify the complete original learning union under | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8749-archive-bound-contract.learning_protocol_ready_score (actual=0 == expected=1) |
 | 2026-11-03 03:21 UTC | Measure continuous typed-decision learning with se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8751-learning-union) |
 | 2026-11-03 03:21 UTC | Audit future proper loss asymmetric errors and sim | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8752-causal-brier-stream) |
+| 2026-11-03 03:53 UTC | Qualify frozen verifier transfer methods and truth | OK | 89 passed, 1 warning in 31.67s |
