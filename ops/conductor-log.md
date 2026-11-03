@@ -21184,3 +21184,5 @@ code |
 | 2026-11-03 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 5: OPEN 35 days: S |
 | 2026-11-03 00:01 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8715_v747_verifier_completeness.json age-week 0: OPEN 1 days: CLAIM_O |
 | 2026-11-03 00:18 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-03 00:52 UTC | Plan milestone 2026.11.750 | OK | 14 tasks proposed |
+| 2026-11-03 01:07 UTC | Milestone 2026.11.750 activated | OK | 14 tasks queued |
