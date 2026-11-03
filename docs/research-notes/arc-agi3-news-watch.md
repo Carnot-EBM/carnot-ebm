@@ -802,3 +802,13 @@ Gemini 4 Argon’s Standard evaluation suffered API failures: its best-scoring c
 
 - **October 1 — Milestone #2 winners announced:** **Daniel Franzen:** 27.9%, $25,000; **Lord Han Solo:** 23.8%, $7,500; **Lohit Siriki:** 22.5%, $5,000. All three open-sourced their agents. [Results report](https://competopia.ai/news/arc-prize-announces-milestone-2-winners-for-arc-agi-3-kaggle-competition/)
 
+## 2026-11-03 14:11 UTC -- NEW
+
+- **November 3 — NVARC3 reaches third:** Improved **56.15% → 60.95%**, overtaking **xz (58.59%)**. The public leaderboard now has **Yi-Chia Chen @ Fields Model first (75.56%)** and **Tufa Labs second (70.24%)**. Standings remain provisional. [Leaderboard snapshot](https://arc.markbarney.net/arc-leaderboards)
+
+- **October 24–26 — Kaggle acknowledges evaluation failures:** Staff confirmed dataset/model cache instability and broader platform problems affecting runs; some rescores had started. [Report with links to staff discussions](https://arc.markbarney.net/news/2026-10-27-morning-arc-3)
+
+- **October 13 — Gemini 4 Argon verified results:** ARC Prize reports **97.5% with the Provider Adapter harness** and **49.8% with the Standard harness** on ARC-AGI-3 Semi-Private. API failures left the Standard evaluation incomplete. [Official results](https://arcprize.org/results/google-gemini-4-argon)
+
+- **September 3 — Official harness distinction and Astra results:** ARC Prize announced **62.7% using its Standard harness** and **99.9% using a Provider Adapter harness** on Semi-Private. The adapter preserves reasoning state between requests and supports context compaction; the two evaluation conditions are reported separately. [Official announcement](https://arcprize.org/blog/astra)
+

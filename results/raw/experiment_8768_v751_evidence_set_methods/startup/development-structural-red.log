@@ -1,0 +1,48 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_corpus_and_independent_labels ______________________
+
+frozen = ([{'condition': 'complete_support', 'input': {'facts': [['v751/development/000/a', 'development/rule/0/r', 'v751/devel...], [85, 170, 'v751/development/000/renamed/4\tdevelopment/rule/0/r\tv751/development/000/renamed/3\t1\n']], ...}, ...])
+
+    def test_corpus_and_independent_labels(frozen):
+        """SCENARIO-REPORT-8768-CORPUS: all 2160 units have independent three-way labels."""
+        inputs, labels, sources = frozen
+        assert len(inputs) == len(labels) == len(sources) == 2160
+        assert sum(p["split"] == "evaluation" for p in inputs) == 1440
+        assert len({p["world_id"] for p in inputs if p["split"] == "development"}) == 60
+        assert len({p["world_id"] for p in inputs if p["split"] == "evaluation"}) == 120
+        assert corpus.disjoint(inputs)
+        originals = [p for p in inputs if p["condition"] == "complete_support" and p["view"] == "original"]
+>       assert len({p["structure"] for p in originals}) == 180
+E       AssertionError: assert 2 == 180
+E        +  where 2 = len({'directed_path_three_edges', 'directed_triangle'})
+
+tests/python/test_evidence_set_methods_8768.py:88: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8768] phase=oracle_seal completed=120 pending=2040
+[exp8768] phase=oracle_seal completed=240 pending=1920
+[exp8768] phase=oracle_seal completed=360 pending=1800
+[exp8768] phase=oracle_seal completed=480 pending=1680
+[exp8768] phase=oracle_seal completed=600 pending=1560
+[exp8768] phase=oracle_seal completed=720 pending=1440
+[exp8768] phase=oracle_seal completed=840 pending=1320
+[exp8768] phase=oracle_seal completed=960 pending=1200
+[exp8768] phase=oracle_seal completed=1080 pending=1080
+[exp8768] phase=oracle_seal completed=1200 pending=960
+[exp8768] phase=oracle_seal completed=1320 pending=840
+[exp8768] phase=oracle_seal completed=1440 pending=720
+[exp8768] phase=oracle_seal completed=1560 pending=600
+[exp8768] phase=oracle_seal completed=1680 pending=480
+[exp8768] phase=oracle_seal completed=1800 pending=360
+[exp8768] phase=oracle_seal completed=1920 pending=240
+[exp8768] phase=oracle_seal completed=2040 pending=120
+[exp8768] phase=oracle_seal completed=2160 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_evidence_set_methods_8768.py::test_corpus_and_independent_labels
+1 failed, 10 deselected, 1 warning in 3.89s

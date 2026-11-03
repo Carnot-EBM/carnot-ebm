@@ -104897,3 +104897,39 @@ Final-source measurement20261103, invocation1793711938729949984: all six origina
 stages finish normally; scan49.763s, strict rows0.477s, fresh cold replay14.103s.
 Earlier stage timings belong to preserved implementation attempts. No numerical
 correction, paired corrected rows or original-union projection is claimed.
+## REQ-REPORT-8768: Freeze constructed evidence-set methods
+
+Under REQ-REPORT-V751-PLAN, freeze 60 development and 120 evaluation worlds
+with disjoint entity rosters, relation templates and query graph structures.
+Each world has a distinct canonical graph, six conditions and two renaming/order views: 2160 units,
+6480 three-arm decisions, 4320 evaluation decisions and 120 evaluation clusters.
+Keep the historical local-record and joint symbolic evaluators unchanged.
+No label, oracle output, condition ID or split enters scorer features.
+Evaluation inputs and independently enumerated labels have separate seals;
+decision rules and exact test nodes freeze before measurement. Generator
+inspection is exposure, not blindness. V750 is history outside this N.
+
+### SCENARIO-REPORT-8768-CORPUS
+
+Complete support and irrelevant distractors support; an explicit negative
+ground premise refutes; a missing hop and disconnected join remain unknown;
+contradictory records are insufficient. A bijective renaming and order change
+must preserve independent labels and correct decisions. Truth-changing controls
+must change labels. Report all-accept/all-reject failures separately from arms.
+
+### SCENARIO-REPORT-8768-STATISTICS
+
+Predeclare per-world macro three-class error, paired bootstrap with 10000 world
+draws, and familywise simultaneous 97.5 percent confidence across both
+comparators (Bonferroni, individual two-sided 98.75 percent intervals).
+Promotion requires both lower improvement bounds above zero, no added false
+acceptance, no extra valid-alternative rejection and exact correct invariance.
+Qualification may release a valid null. No independent generalization follows.
+Record actual invocation counts (at most five per arm/unit) and wall costs.
+Conductor owns ops/status/changelog and BMAD traceability reconciliation.
+
+Implementation20261103 for Exp8768: the opt-in signed-record scorer, independent
+completion enumerator, canonical graph roster, paired-world reducer and thin CLI
+retain separate input/oracle/decision seals. The research note records constructed
+scope and implementation exposure. Measured acceptance belongs to the terminal
+artifact and its invocation-bound validation receipts, not this plan text.

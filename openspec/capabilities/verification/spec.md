@@ -58028,3 +58028,29 @@ the mismatched output/shard basename. Explicit input shard paths repair collecti
 without excluding statements or altering validators. Earlier failed parents and
 source snapshots remain bound history. Final invocation1793711938729949984 has21
 passing owned tests; its retained coverage and terminal receipts govern acceptance.
+## REQ-VERIFY-8768: Independent open-world sufficiency controls
+
+Use typed support/refute/insufficient decisions over signed relational records.
+Absence is unknown. Explicit opposite literals can refute; contradictory sets
+are insufficient. Required joins share bindings. Independently enumerate finite
+Boolean worlds to label conjunctions with existential joins; neither the scorer
+nor historical evaluators supply labels. Keep truth-bearing records separate
+from strictly parsed verifier input. Preserve satisfiable alternatives.
+
+### SCENARIO-VERIFY-8768-TERMINAL
+
+Freeze source/configuration/input hashes and test nodes before measurement.
+Require scoped tests/consumers, private E2E-018/021, parser/serialization rejection,
+Ruff check/format, strict mypy, explicit spec coverage and 100 percent new
+executable statements including actual CLI children. Preserve argv, exits,
+node outcomes, JUnit, coverage and log hashes. A bounded full Python suite
+diagnostic remains separate. Owned validation failures suppress readiness.
+Fresh cold replay authenticates seals and independently rebuilds rows and
+summaries, rejecting missing primitives and consistently rehashed mutations.
+Publish terminal bytes only after unchanged adversarial and strict-row scanners.
+No model loads, generation, training or shared policy changes are permitted.
+
+Implementation20261103 for Exp8768: requirement-linked private controls exercise
+strict JSON, missing joins, explicit negatives, contradictory sets, oracle-access
+traps, real CLI children and consistently rehashed label/row/source mutations.
+Retained validation authenticates exact nodes, JUnit and new-statement SQLite.
