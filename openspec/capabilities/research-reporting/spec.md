@@ -104837,6 +104837,28 @@ Bind the visible table, complete JSON objects and activated YAML to one independ
 pinned canonical SHA-256. Require exactly Exp8763 through Exp8775. Accept only the
 established literal-brace activation encoding. Preserve V750 archive bytes.
 
+## REQ-REPORT-8771: Qualify lifecycle windows under immutable historical authority
+
+Reproduce the retained Exp8758 tests_2 V747 authority failure. Bind the unchanged
+compiled-sparse assertions and historical CLI to a private DESIGN/ACTIVE/STAGED
+fixture from the preserved full V747 design and its original fixed digest.
+The live V751 roadmap, old disqualified primary, validators and numerical paths
+remain unchanged. Authenticate current source and actual native binary identities.
+
+### SCENARIO-REPORT-8771-EVENTS
+
+Recompute all4096 original updates, ordinary32-update windows at0/2032/4064 and
+restart after2048 across Python, stateless native and resident native arms.
+Zero natural dense events remain zero. Keep below/at/above-threshold constructed
+fixtures separate. Release ordinary and threshold readiness independently, only
+after the complete original node union and current owned qualification pass.
+
+Implementation20261103: lifecycle_archive_8771 reuses the existing lifecycle
+numerical paths and thin CLI. Private V747 authority files and copied source
+closure retain the original fixed digests. The actual opt-in native binary must
+match its retained numerical witness. Original assertions stay unchanged;
+the terminal artifact records complete current scoped qualification.
+
 ## REQ-REPORT-8763: Separate branch custody from scientific evidence
 
 Authenticate unchanged V744 numerical methods, learner source identities, splits,

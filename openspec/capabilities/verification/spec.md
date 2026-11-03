@@ -58073,3 +58073,28 @@ Implementation20261103: Exp8770 reuses frozen node collection, retained child
 SQLite/JUnit custody, strict scoped checks and atomic terminal publication.
 New statement coverage includes real CLI and diagnostic entrypoints. Installed
 wire parity and separate child scoring clocks retain their original boundaries.
+
+## REQ-VERIFY-8771: Preserve original historical assertions and new statement coverage
+
+Freeze methods, original node IDs, source/configuration and input hashes before
+measurement. Reject changed V747 prompts, task fields, gates, source or artifact
+bytes. Execute every original Exp8758 scoped node including compiled-sparse
+test_authority; retain argv, exits, JUnit, SQLite and log hashes. Require100 percent
+new executable statements including real CLI children, Ruff check/format, strict
+mypy, explicit spec coverage and E2E-003/004 plus private E2E-018/021.
+One bounded full Python suite diagnostic is separate from scoped acceptance.
+
+### SCENARIO-VERIFY-8771-CUSTODY
+
+Private fixtures cannot write production evidence. Fresh-process replay verifies
+independent measurement/validation seals and reconstructs exact events and report
+fields. Changed authority or rehashed aggregates reject. Owned failures suppress
+both readiness scores. Publish terminal bytes only after unchanged adversarial
+and strict-row scanners and cold replay. No LLM is loaded or called.
+
+Implementation20261103: ten new requirement-linked tests pass. Real unit and CLI
+child coverage measures185/185 new executable statements. Private source copies
+avoid production-result symlinks during test cleanup. The retained disjoint
+collector supplies original node outcomes, JUnit and SQLite; the final artifact
+retains scoped checks separately from bounded repository health. Ops and BMAD
+reconciliation are conductor-owned for this task.
