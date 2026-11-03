@@ -104863,3 +104863,37 @@ Repair20261103: private archive roots own their result directories and include
 all historical diagnostic/upstream primaries, V749 retrievals, health receipt
 and relative logs. Facades expose required dependencies only; the original
 private-output safety check binds to the archived checkout root.
+
+## REQ-REPORT-8764: Bound terminal publication diagnosis before deadline execution
+
+Under REQ-REPORT-V751-PLAN, Exp8764 SHALL freeze one original private measurement,
+transitive input/source hashes, configuration and exact test nodes before measurement.
+Inspect retained Exp8750 parent, stage, stdout and stack evidence as ineligible history.
+Run original precondition, copy, materialization, scan, strict row and fresh cold-replay
+stages separately under real supervision, at most1800 seconds total. Do not execute
+the original three-case deadline benchmark. Keep phase spans disjoint and clocks real.
+Only measured duplicate immutable work permits one invocation-local correction;
+otherwise publish complete_null and publication_path_ready_score=0. A null releases
+no deadline semantics or scientific claim; Exp8765 owns the original union.
+
+### SCENARIO-REPORT-8764-NULL
+
+Retain exact call-boundary counts, raw timing, missingness and denominators, including
+censored stages after the first unexplained overrun. Preserve old disqualifications.
+No model loads, generation, altered shared validators or process-wide clocks occur.
+Without a qualified correction, paired rows and union projection are explicitly absent.
+
+Implementation20261103: Exp8764 uses a branch-owned boundary observer and thin CLI.
+All six original terminal stages finish normally on one frozen numerical fixture;
+scan50.865s and fresh cold replay14.059s dominate this diagnostic. Materialization
+performs two row reductions; cold replay reconstructs100 steps and20 retention
+calls. No safe computation-reuse correction or complete original-union projection
+is qualified. The terminal diagnostic null keeps publication readiness zero.
+An initial expected-warning exit interpretation error is retained as unqualified
+owned history with source snapshots; the corrected observer preserves exact
+original findings and actual exits. Exp8750 remains disqualified.
+
+Final-source measurement20261103, invocation1793711938729949984: all six original
+stages finish normally; scan49.763s, strict rows0.477s, fresh cold replay14.103s.
+Earlier stage timings belong to preserved implementation attempts. No numerical
+correction, paired corrected rows or original-union projection is claimed.

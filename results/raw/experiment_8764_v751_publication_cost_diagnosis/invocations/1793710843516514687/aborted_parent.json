@@ -1,0 +1,80 @@
+{
+  "ended_at_utc": "2026-11-03T13:05:20.549398+00:00",
+  "full_suite_was_started": true,
+  "original_stages_reused": false,
+  "process_tree": [
+    {
+      "command": ".venv/bin/python -u scripts/experiments/experiment_8764_v751_publication_cost_diagnosis.py --date 20261103",
+      "pid": 2806808,
+      "ppid": 2806758,
+      "state": "Sl"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "pid": 2809844,
+      "ppid": 2806808,
+      "state": "Ssl"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))",
+      "pid": 2809994,
+      "ppid": 2809844,
+      "state": "Rl"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))",
+      "pid": 2809997,
+      "ppid": 2809844,
+      "state": "Rl"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))",
+      "pid": 2810000,
+      "ppid": 2809844,
+      "state": "Rl"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c import sys;exec(eval(sys.stdin.readline()))",
+      "pid": 2810003,
+      "ppid": 2809844,
+      "state": "Rl"
+    }
+  ],
+  "publication_path_ready_score": 0,
+  "reason": "original scanner warnings exit1 was incorrectly treated as failure; no timeout occurred",
+  "repository_health_receipt": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "duration_s": null,
+    "exit_code": null,
+    "exit_observation": "outer parent and owned descendants killed before supervisor receipt; unknown wait status",
+    "interrupted_by_owned_observer_fix": true,
+    "name": "repository_health",
+    "normal_exit": false,
+    "passed": false,
+    "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8764_v751_publication_cost_diagnosis/invocations/1793710843516514687/repository_health/repository_health.stderr",
+    "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8764_v751_publication_cost_diagnosis/invocations/1793710843516514687/repository_health/repository_health.stdout",
+    "stdout_sha256": "sha256:e3aacda51df003a85d2c543044d9c4f14628e4e8f751512fba8ef9ea76daf7f4",
+    "timed_out": false
+  },
+  "signal_sent": 9,
+  "source_snapshots": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8764_v751_publication_cost_diagnosis/invocations/1793710843516514687/observer_before_expected_exit_fix/publication_cost_8764.py",
+      "sha256": "sha256:dfbceccc089a1f8bb633a887c9f0fa99a4b35680400d069d9860d14e1a162d19"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8764_v751_publication_cost_diagnosis/invocations/1793710843516514687/observer_before_expected_exit_fix/publication_probe_8764.py",
+      "sha256": "sha256:5b31ddb579423453b4be1b1e7b395d94c58f7aad8fe51d9563592bf588fbfdf6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8764_v751_publication_cost_diagnosis/invocations/1793710843516514687/observer_before_expected_exit_fix/test_publication_cost_8764.py",
+      "sha256": "sha256:f21555560d60589786ed8b2ff1ded7b5657f959b8e8412c0f50ce39f30f841ec"
+    }
+  ],
+  "status": "owned_observer_error_not_scientific_evidence"
+}

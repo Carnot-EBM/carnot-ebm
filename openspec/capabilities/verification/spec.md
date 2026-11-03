@@ -57995,3 +57995,36 @@ V748/V749/V750 assertion. Fresh unit/subprocess SQLite measures all 276 V751
 module/CLI statements with zero exclusions and original V750 line354 execution.
 Scoped lint, formatting, strict types and spec tracing pass. Existing global
 documentation/traceability debt remains separate from this repair.
+
+## REQ-VERIFY-8764: Authenticate bounded publication evidence
+
+Freeze sources and full transitive input bytes before measurement. Real children
+use owned process groups, heartbeat within60 seconds, kill and reap on timeout.
+Missing event keys cannot prevent cleanup. Failed children, hash/source mutation,
+stale or false cached success, mismatched clocks and incomplete validation reject
+readiness. No verdict cache is authorized. Cover every newly owned statement with
+real unit and CLI coverage and run private E2E-018/021, scoped consumers, Ruff,
+strict mypy and explicit spec coverage. Retain argv, exits, JUnit and log hashes.
+Record one bounded full Python suite diagnostic separately from scoped acceptance.
+
+### SCENARIO-VERIFY-8764-REPLAY
+
+Fresh-process reconstruction authenticates frozen inputs, stage receipts, source
+closure and invocation seal and rebuilds exact final fields. Changed summaries,
+repaired envelope hashes and missing primitives fail. Unchanged adversarial scanner,
+strict row lint and fresh cold replay gate atomic publication. The conductor owns
+ops/status, changelog and BMAD reconciliation.
+
+Implementation20261103: real negative controls cover missing event keys, hash and
+clock drift, stale/false success, conflicting identity, kill/wait and detached
+process cleanup. Exact expected scanner warnings may finish normally; changed
+findings still reject. Private publication crosses unchanged scanners and genuine
+CLI cold replay. Each diagnostic stage retains process-group cleanup and exact
+argv/exit evidence. One interrupted global-health command is retained separately
+and is not repeated. The primary records actual scoped validation and coverage.
+
+The owned combiner regression executes genuine Coverage.py SQLite and reproduces
+the mismatched output/shard basename. Explicit input shard paths repair collection
+without excluding statements or altering validators. Earlier failed parents and
+source snapshots remain bound history. Final invocation1793711938729949984 has21
+passing owned tests; its retained coverage and terminal receipts govern acceptance.
