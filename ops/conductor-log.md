@@ -21228,3 +21228,4 @@ code |
 | 2026-11-03 23:29 UTC | Measure evidence sufficiency on exposed and unseen | OK | 92 passed, 1 warning in 159.80s (0:02:39) |
 | 2026-11-03 23:31 UTC | Measure later decisions after delayed verified tem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8778-delayed-memory-prototype) |
 | 2026-11-03 23:31 UTC | Compare pending-feedback admission under equal mem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8778-delayed-memory-prototype) |
+| 2026-11-03 23:32 UTC | Measure bounded Qwen extraction fidelity before sy | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8776-branch-methods.runtime_repair_ready_score (actual=0 == expected=1) |
