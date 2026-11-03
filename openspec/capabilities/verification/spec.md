@@ -57719,3 +57719,37 @@ Reject full-object mutations, missing custody, changed raw/source bytes and
 consistently rehashed outer reports. Private controls cannot earn readiness.
 Use current invocation clocks, zero model calls and private test artifact roots.
 Archive isolation must preserve all original test assertions and V748 pins.
+
+## REQ-VERIFY-8750: Authenticate bounded observer controls
+
+New executable statements, including the real CLI, SHALL have actual 100 percent
+coverage without exclusions. Preserve tamper, missing SQLite and killed-child
+rejection controls. Require scoped tests, Ruff, strict mypy, explicit spec tracing,
+private E2E-018/021, E2E-020 and current clock tests. Preserve full logs and JUnit.
+
+### SCENARIO-VERIFY-8750-CUSTODY
+
+Replay authenticates a separately sealed primitive, source/configuration and raw
+operands, all child stream hashes and the unchanged historical observations.
+Consistently rehashed claim changes, input drift and killed children cannot grant
+readiness. Parent resource sampling and cleanup remain bounded. Source and method
+identity freeze precedes measurement; unknown substage timings remain unknown.
+
+### SCENARIO-VERIFY-8750-SUPERVISION
+
+A boundary-event log SHALL NOT be passed to the historical profile-event parser.
+Retain an actual supervisor exception, cleanup and any over-budget output; such
+output cannot qualify numerical controls. One parent-only namespace correction
+may isolate the legacy supervisor logs. Never rerun the unprofiled timeout to
+replace the failed observation. Retained failed supervision disqualifies the
+current execution even when all new owned tests and coverage pass.
+
+Measured Exp8750 validation (2026-11-03): all sixteen new owned tests pass,
+including supervisor-log isolation, retained-arm no-retry and exact method/source
+rejection. Ruff, formatting, strict mypy and scoped spec tracing pass. Private
+E2E-018/021 pass. E2E-020 times out at its 300-second bound; unchanged clock
+consumers display failures and also reach their 300-second bound. These receipts
+remain failed. No full-suite or complete scoped-validation pass is claimed.
+Conductor owns status, changelog and traceability reconciliation.
+
+Exp8750 terminal custody: retained actual SQLite covers 273/273 module and 6/6 direct CLI statements, with no exclusions. Terminal scanners and fresh replay pass after restoring the independently sealed receipt and canonical JSON gate order. The primitive discloses that the first failed terminal receipt was overwritten on retry. Required execution checks remain failed; no scientific readiness is granted.

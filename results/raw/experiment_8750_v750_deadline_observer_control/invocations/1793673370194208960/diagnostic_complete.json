@@ -1,0 +1,224 @@
+[
+  {
+    "arm": "unprofiled",
+    "receipt": {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/diagnostic_coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "-p",
+        "carnot.reporting.deadline_observer_8750",
+        "--junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/nodes.xml",
+        "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3599.0-2-None]",
+        "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3600.0-3-3600.25]",
+        "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3601.0-3-3601.25]"
+      ],
+      "budget_s": 420,
+      "cleanup_passed": true,
+      "cleanup_started_monotonic_ns": 353691112928931,
+      "duration_s": 748.50329205,
+      "ended_monotonic_ns": 353691153292050,
+      "exit_code": null,
+      "exit_observation": "not_waitable_after_parent_supervision_exception",
+      "frozen_method": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/frozen_method.json",
+        "sha256": "sha256:9eefb24ce506759d7e902820e1d71a6cfc5a57dc1898b076b794206d721d2a5d"
+      },
+      "name": "unprofiled",
+      "normal_exit": false,
+      "parent_samples": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/parent_samples.jsonl",
+        "sha256": "sha256:b463c60546db2dc2c6adfca6298a0839a8bd45ea07f46b9a6ed0d3723b4d84ff"
+      },
+      "passed": false,
+      "pid": 2346263,
+      "process_start_clock_resolution_s": 0.01,
+      "retained_observer_source": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/observer_source_before_correction.py",
+        "sha256": "sha256:ba5f940c5c5a956e11a3bd8baf27c30da91180267dd5fc9a99879114a2794e85"
+      },
+      "signal_sent": 9,
+      "started_monotonic_ns": 352942650000000,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/unprofiled.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/unprofiled.stdout",
+      "stdout_sha256": "sha256:5c7d1018490160163535ec1feb9064db26b142b0c7ac4da816cb666da3c805bf",
+      "supervision_failed": true,
+      "supervisor_failure": "KeyError:event in legacy stage_rows before kill; late child output is ineligible",
+      "timed_out": true
+    },
+    "rows": [
+      {
+        "arm": "unprofiled",
+        "cost_s": null,
+        "denominator": 1,
+        "excluded_post_budget_row": {
+          "clock_reads": 2,
+          "deadline_failed": false,
+          "exit_code": 0,
+          "kernel_clock_unchanged": true,
+          "missing_reason": null,
+          "normal_cleanup": true,
+          "observed_elapsed_s": null,
+          "output_reference": {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/deadline_cases/case-3599/experiment_8582_v737_causal_brier_stream.json",
+            "sha256": "sha256:1cb13b684e2b6c427034b1eca9409c0028cb7ff684c0b09a019ec0750b296f1a"
+          },
+          "passed": true,
+          "positive_class_absent": true,
+          "predicate_elapsed_s": 3599.0,
+          "unit": "deadline_3599",
+          "verdict_class": "disqualified"
+        },
+        "missing_reason": "supervision_failed; post-budget output ineligible",
+        "node_id": "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3599.0-2-None]",
+        "passed": false,
+        "predicate_elapsed_s": 3599,
+        "status": "censored"
+      },
+      {
+        "arm": "unprofiled",
+        "cost_s": null,
+        "denominator": 1,
+        "excluded_post_budget_row": null,
+        "missing_reason": "supervision_failed; post-budget output ineligible",
+        "node_id": "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3600.0-3-3600.25]",
+        "passed": false,
+        "predicate_elapsed_s": 3600,
+        "status": "censored"
+      },
+      {
+        "arm": "unprofiled",
+        "cost_s": null,
+        "denominator": 1,
+        "excluded_post_budget_row": null,
+        "missing_reason": "supervision_failed; post-budget output ineligible",
+        "node_id": "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3601.0-3-3601.25]",
+        "passed": false,
+        "predicate_elapsed_s": 3601,
+        "status": "censored"
+      }
+    ],
+    "stage_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/stages.jsonl",
+      "sha256": "sha256:87703101e581417a2620a17e830c4c2282e730bf7035e43031e1bc04d4cef5fb"
+    },
+    "unobserved_spans": [
+      "source_authentication",
+      "copy",
+      "publication",
+      "replay"
+    ]
+  },
+  {
+    "arm": "timer_observed",
+    "receipt": {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/diagnostic_coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "-p",
+        "carnot.reporting.deadline_observer_8750",
+        "--junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/timer_observed/nodes.xml",
+        "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3599.0-2-None]",
+        "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3600.0-3-3600.25]",
+        "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3601.0-3-3601.25]"
+      ],
+      "cleanup_passed": true,
+      "duration_s": 420.034458648,
+      "ended_monotonic_ns": 354304489784013,
+      "exit_code": -9,
+      "name": "timer_observed",
+      "normal_exit": false,
+      "parent_samples": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/timer_observed/parent_samples.jsonl",
+        "sha256": "sha256:3da4281ce9735c50b2a6eb3c14b29bc29a0ed6a9bbf5c988d0d6e7c49f3cce4d"
+      },
+      "passed": false,
+      "pid": 2353381,
+      "process_tree": [
+        {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m coverage run --rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/diagnostic_coverage.ini -m pytest -n 0 -o addopts= --no-cov -q -s -p carnot.reporting.deadline_observer_8750 --junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/timer_observed/nodes.xml tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3599.0-2-None] tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3600.0-3-3600.25] tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3601.0-3-3601.25]",
+          "pid": 2353381,
+          "ppid": 2352917,
+          "state": "Ssl"
+        },
+        {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/timer_observed/deadline_cases/case-3599/raw/experiment_8582_v737_causal_brier_stream/terminal_candidate.json",
+          "pid": 2361353,
+          "ppid": 2353381,
+          "state": "Rs"
+        }
+      ],
+      "started_monotonic_ns": 353884455321167,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/timer_observed/process/timer_observed.stderr",
+      "stderr_sha256": "sha256:df0d6ea6b21f7251a1126b280a81c35d9421fa3eeb8539256b46492aac0edb43",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/timer_observed/process/timer_observed.stdout",
+      "stdout_sha256": "sha256:ac5c8154b48fb7009b347318662d078593b8be2610088da59b718d05b5654707",
+      "timed_out": true
+    },
+    "rows": [
+      {
+        "arm": "timer_observed",
+        "cost_s": null,
+        "denominator": 1,
+        "node_id": "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3599.0-2-None]",
+        "passed": false,
+        "predicate_elapsed_s": 3599,
+        "status": "censored"
+      },
+      {
+        "arm": "timer_observed",
+        "cost_s": null,
+        "denominator": 1,
+        "node_id": "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3600.0-3-3600.25]",
+        "passed": false,
+        "predicate_elapsed_s": 3600,
+        "status": "censored"
+      },
+      {
+        "arm": "timer_observed",
+        "cost_s": null,
+        "denominator": 1,
+        "node_id": "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3601.0-3-3601.25]",
+        "passed": false,
+        "predicate_elapsed_s": 3601,
+        "status": "censored"
+      }
+    ],
+    "stage_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793673370194208960/timer_observed/stages.jsonl",
+      "sha256": "sha256:0dad814d0a6194306b3d2a3d6d9a72d811008224a8a3beaa2955da251f5c19cc"
+    },
+    "unobserved_spans": [
+      "source_authentication",
+      "copy",
+      "publication",
+      "replay"
+    ]
+  }
+]

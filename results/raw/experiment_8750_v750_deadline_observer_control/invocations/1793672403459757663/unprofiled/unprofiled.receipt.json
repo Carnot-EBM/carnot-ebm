@@ -1,0 +1,58 @@
+{
+  "name": "unprofiled",
+  "argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "-m",
+    "coverage",
+    "run",
+    "--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/diagnostic_coverage.ini",
+    "-m",
+    "pytest",
+    "-n",
+    "0",
+    "-o",
+    "addopts=",
+    "--no-cov",
+    "-q",
+    "-s",
+    "-p",
+    "carnot.reporting.deadline_observer_8750",
+    "--junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/nodes.xml",
+    "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3599.0-2-None]",
+    "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3600.0-3-3600.25]",
+    "tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3601.0-3-3601.25]"
+  ],
+  "pid": 2346263,
+  "exit_code": null,
+  "exit_observation": "not_waitable_after_parent_supervision_exception",
+  "signal_sent": 9,
+  "normal_exit": false,
+  "passed": false,
+  "timed_out": true,
+  "budget_s": 420,
+  "started_monotonic_ns": 352942650000000,
+  "ended_monotonic_ns": 353691153292050,
+  "duration_s": 748.50329205,
+  "process_start_clock_resolution_s": 0.01,
+  "cleanup_started_monotonic_ns": 353691112928931,
+  "cleanup_passed": true,
+  "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/unprofiled.stdout",
+  "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/unprofiled.stderr",
+  "stdout_sha256": "sha256:5c7d1018490160163535ec1feb9064db26b142b0c7ac4da816cb666da3c805bf",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "parent_samples": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/parent_samples.jsonl",
+    "sha256": "sha256:b463c60546db2dc2c6adfca6298a0839a8bd45ea07f46b9a6ed0d3723b4d84ff"
+  },
+  "supervision_failed": true,
+  "supervisor_failure": "KeyError:event in legacy stage_rows before kill; late child output is ineligible",
+  "retained_observer_source": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/observer_source_before_correction.py",
+    "sha256": "sha256:ba5f940c5c5a956e11a3bd8baf27c30da91180267dd5fc9a99879114a2794e85"
+  },
+  "frozen_method": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/frozen_method.json",
+    "sha256": "sha256:9eefb24ce506759d7e902820e1d71a6cfc5a57dc1898b076b794206d721d2a5d"
+  }
+}

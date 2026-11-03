@@ -4422,3 +4422,9 @@ Turns 9 to 14 (2026-10-19 to 2026-10-20). Start times were not recorded. Token c
 | 13 | 2026-10-19T23:58:57Z | not recorded | "scope, note": stopped variant 4 by PID, appended NCM addendum, commit `c1880a17e4` | not measured |
 | 14 | 2026-10-20T00:12:11Z | 2026-10-20T00:12:54Z | "pair, ops": partial pairing (21 pairs), wrote this entry | not measured |
 
+
+## Session: 2026-11-03 Exp8750 observer control
+
+| Turn | Start | End | Description | Tokens |
+|------|-------|-----|-------------|--------|
+| 1 | 2026-11-03T02:02:59Z | 2026-11-03T03:06:49Z | Published Exp8750 disqualified diagnostic; 16 new tests pass; 279/279 new statements covered; scoped execution failures retained; historical bytes preserved. | unavailable |

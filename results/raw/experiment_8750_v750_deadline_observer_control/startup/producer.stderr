@@ -1,0 +1,34 @@
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/deadline_cost_8738.py", line 204, in supervise
+    process.wait(
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 2045, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '-m', 'coverage', 'run', '--rcfile=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/diagnostic_coverage.ini', '-m', 'pytest', '-n', '0', '-o', 'addopts=', '--no-cov', '-q', '-s', '-p', 'carnot.reporting.deadline_observer_8750', '--junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8750_v750_deadline_observer_control/invocations/1793672403459757663/unprofiled/nodes.xml', 'tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3599.0-2-None]', 'tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3600.0-3-3600.25]', 'tests/python/test_deadline_edge_8603.py::test_real_deadline_edges[3601.0-3-3601.25]']' timed out after 29.993778253000016 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8750_v750_deadline_observer_control.py", line 14, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/deadline_observer_8750.py", line 568, in main
+    return run(
+           ^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/deadline_observer_8750.py", line 512, in run
+    compare(work)
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/deadline_observer_8750.py", line 222, in compare
+    receipt = supervise(arm, plan["argv"], namespace, 420)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/deadline_observer_8750.py", line 85, in supervise
+    receipt = old.supervise(name, argv, raw, budget)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/deadline_cost_8738.py", line 214, in supervise
+    dict(process_tree=tree, stages=stage_rows(raw / "stages.jsonl")),
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/deadline_cost_8738.py", line 149, in stage_rows
+    if event["event"] == "call":
+       ~~~~~^^^^^^^^^
+KeyError: 'event'

@@ -104627,3 +104627,41 @@ the exact unrelated full-suite failure under repository_health_reference; it
 neither qualifies nor vetoes scoped work. Return per-branch failures separately.
 Missing external custody is blocked; owned validation failures are disqualified.
 Ops/status/changelog and traceability reconciliation belong to the conductor.
+
+## REQ-REPORT-8750: Separate deadline work from observer failure
+
+Exp8750 SHALL preserve the original 300-second timeout and later signal 11 as
+separate observations. Freeze original fixture inputs, source closure, test nodes
+and configuration before a matched unprofiled and timer-observed comparison.
+Each arm has a 420-second cap; diagnostics and one justified correction have an
+1800-second cap. Use no model and no profiling callbacks inside authentication.
+Unknown original causes yield complete_null with deadline readiness zero and no
+further timeout retry. Historical primary bytes and quarantines remain unchanged.
+
+### SCENARIO-REPORT-8750-OBSERVER
+
+Both arms execute unchanged 3599/3600/3601 tests with the shipped external
+PYTHONPATH repair. Timer dumps and parent process/resource snapshots occur at
+most 60 seconds apart. Report observable setup and case boundaries; authentication,
+copy, publication and replay spans without boundary evidence remain unknown.
+Every intended case remains present, including censored cases. Repeats establish
+no independent scientific cases. Immutable caching needs measured repeated waste
+and exact source/configuration identity; otherwise no correction is authorized.
+
+## REQ-REPORT-8750-PUBLICATION: Publish only scoped terminal evidence
+
+Retain real argv, exits, JUnit, logs, current clocks and file hashes. Scoped owned
+validation failures disqualify; a separately bounded repository health diagnostic
+is neither a scoped prerequisite nor a full-suite pass. Use unchanged publication,
+adversarial scanning, strict row lint and fresh-process replay. No old producer is
+rehabilitated. Conductor owns ops/status, changelog and traceability reconciliation.
+
+Measured Exp8750 execution (2026-11-03): the unprofiled arm's supervisor raised
+`KeyError: event` before enforcing its 420-second cleanup. The owned child was
+subsequently killed; its retained receipt records 748.50329205 seconds, unknown
+wait status and successful cleanup. Late numerical output is retained but cannot
+qualify. A single parent-only log-namespace correction passed regressions, and
+the previously unrun timer arm was killed at 420.034458648 seconds with exit -9
+and successful descendant cleanup. No unprofiled rerun or numerical change was
+made. Failed supervision and incomplete unchanged controls disqualify execution;
+deadline readiness remains zero. Original timeout causation stays unresolved.
