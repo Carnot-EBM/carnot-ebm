@@ -1,0 +1,23 @@
+...........E.....                                                        [100%]
+==================================== ERRORS ====================================
+_______________ ERROR at teardown of test_producer_replay_paths ________________
+Memory leak: +701MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +701MB
+----------------------------- Captured stdout call -----------------------------
+[exp8774] phase=producer_replay_before completed=0 pending=1
+[exp8774] phase=producer_replay_after completed=1 pending=0
+[exp8774] phase=producer_replay_before completed=0 pending=1
+[exp8774] phase=producer_replay_after completed=1 pending=0
+[exp8774] phase=producer_replay_before completed=0 pending=1
+[exp8774] phase=producer_replay_before completed=0 pending=1
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/python/test_hardware_operation_decision_8774.py::test_producer_replay_paths
+16 passed, 1 warning, 1 error in 150.73s (0:02:30)

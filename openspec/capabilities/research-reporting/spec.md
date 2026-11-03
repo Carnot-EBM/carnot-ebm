@@ -104999,3 +104999,23 @@ reuse installed workload and publication helpers. `optimized_profile_8770`
 adds opt-in exclusive leaves. Requirement-linked private tests retain original
 parity and rejection controls. The terminal primary binds actual qualification,
 overhead limits, reconciliations and a future target or an explicit absence.
+
+## REQ-REPORT-8774: Map authenticated costs to installed FPGA operations
+
+Under REQ-REPORT-V751-PLAN, read Exp8770 residual, Exp8772 ordinary durable and
+Exp8766 causal learning readiness independently. Retain absent files, absent
+fields, zero and rejected producers as distinct gates. A valid ordinary-cost
+null need not pass its benefit gate. Use qualified Exp8757 only within its
+installed inference boundary. Never fill absent durable or causal costs with it.
+Preserve KV260 quadratic Ising k_max<=5, PolarFire Linux CPU evidence and
+GateMate JTAG0xffffffff without new device commands. Inventory is not reachability.
+
+### SCENARIO-REPORT-8774-OPERATIONS
+
+Map features, digests/JSON, exact energy, sparse updates, nonlinear host work,
+setup/transfer and storage to actual interfaces. Unsupported work stays on host.
+Use disjoint same-clock parents for ideal Amdahl fractions; unknown costs and
+physical transfer remain unknown. Do not promote ideal bounds to measured speed.
+Compare the Versal PUBO operations, precision, preprocessing and counted encoding
+auxiliaries against the installed pairwise interface before proposing a prototype.
+Mapping may qualify while physical execution and complete100x learning stay zero.

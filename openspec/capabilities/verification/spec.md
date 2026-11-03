@@ -58117,3 +58117,22 @@ independent measurement/validation seals, raw updates and derived summaries.
 Owned failure suppresses readiness. Publish only terminal bytes accepted by
 unchanged adversarial and strict row scanners and cold replay. No model is used.
 Ops/status/changelog/BMAD reconciliation is conductor-owned for this invocation.
+
+## REQ-VERIFY-8774: Seal bounded operation decisions and private validation
+
+Freeze methods, input/configuration/source hashes and exact test nodes before
+reduction. Write failing requirement-linked tests first. Require scoped unit and
+consumer checks, private E2E-018/021, actual100 percent newly owned executable
+statements including real CLI children, Ruff check/format, strict mypy and explicit
+spec coverage. Run one bounded full Python suite diagnostic and retain its actual
+outcome separately; it does not replace owned acceptance or prove a suite pass.
+
+### SCENARIO-VERIFY-8774-CUSTODY
+
+Private roots never write production evidence. Cover missing fields, zero,
+rejected producer, unsupported operations, mixed clocks and rehashed primitive
+mutations. Retain argv, exits, exact nodes, JUnit, coverage and log hashes. Publish
+only terminal bytes after unchanged adversarial and strict row checks and fresh
+cold replay against separate measurement/validation seals. Owned failure suppresses
+mapping readiness. No model loads or device commands. The conductor owns ops and
+BMAD reconciliation for this invocation.
