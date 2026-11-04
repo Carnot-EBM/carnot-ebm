@@ -58654,3 +58654,31 @@ boundaries, exact model/substrate declarations and every scheduled denominator.
 The positive, negative and leakage controls in the V754 prompt must run before
 a benefit claim. New owned code needs actual unit/child statement coverage;
 constructed exact-oracle success cannot become an oracle-distinct headline.
+
+#### SCENARIO-VERIFY-8802-TRANSACTION
+
+Five primitive serving checks SHALL use frozen query state. Prediction and
+state hash SHALL be durable before feedback release eight queries later.
+Independently verified feedback alone SHALL admit role-normalized constraints.
+Template, coefficients, pending events and acknowledgements SHALL commit in one
+atomic state write. Restart SHALL equal uninterrupted complete pending state;
+duplicate acknowledgement and mutation during an active query SHALL fail.
+
+#### SCENARIO-VERIFY-8802-ENERGY-CONTROLS
+
+A Gibbs energy head SHALL consume exactly six observed counts and three decision
+bits. NCE and proper three-class Brier gradients SHALL be measured with finite
+nonzero gradients. Thresholds SHALL freeze on tune data. Equal update budgets
+SHALL apply to all arms, with discarded updates reported separately. Added
+constraints SHALL change later checked bindings; useless constraints SHALL not.
+Shuffled labels SHALL come only from the released prefix. Label/world/solver
+fields SHALL be rejected. Unit and real child SQLite coverage SHALL combine to
+100 percent owned statements without exclusions before readiness can equal one.
+
+Exp8802 measured controls, 2026-11-04: all eleven prototype control rows pass,
+including role transfer, useless templates, released-prefix shuffle, duplicate
+feedback, forbidden label fields and active-query write rejection. All 180
+restart rows preserve the complete pending state; 60 also compare the next
+released-feedback transaction with uninterrupted execution. Private E2E-018/021
+and primary publication consumers pass 37 tests. The single bounded global
+Python run records failures and a 300-second timeout as separate health debt.

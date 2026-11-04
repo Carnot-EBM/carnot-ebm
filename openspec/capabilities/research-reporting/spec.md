@@ -105657,3 +105657,28 @@ blocked-gate operands, following the frozen V754 task contract.
 A private cold replay reconstructs aggregates and rejects changed authority,
 missing producer fields and rehashed aggregate tampering. External absence is
 terminal blocked; failed owned validation is disqualified with readiness zero.
+
+#### SCENARIO-REPORT-8802-CAUSAL-PROTOTYPE
+
+The prototype SHALL freeze the qualified V754 protocol, 40 fit/20 tune worlds,
+30 reset streams, 12 retention worlds per stream, seeds 11/23/37 and learning
+rate before execution. Its constructed rows SHALL retain all five arms, five
+serving checks per query, actual computed/committed updates, complete checkpoint
+hashes and no downstream benefit claim. Missing prerequisite operands SHALL
+block before measurement; owned validation failure SHALL disqualify.
+
+#### SCENARIO-REPORT-8802-COLD-CUSTODY
+
+Outside-checkout replay without PYTHONPATH SHALL authenticate exact historical
+qualification and current authority independently, source and raw receipts,
+reconstruct row counts and reject rehashed summary or checkpoint tampering.
+No historical authority SHALL be resolved through mutable vNEXT.
+
+Exp8802 prototype measurement, 2026-11-04: 180 constructed query rows cover five
+arms and three nested seeds, with 900 serving primitive checks. The run records
+18 verified template admissions, 60 released-feedback optimizer steps and 60
+restart-branch optimizer steps, plus 120 development steps and one precondition
+probe. Thirty downstream reset streams and their retention recipes remain
+frozen and unexecuted. Added constraints change later bindings and symbolic
+decisions; typed actions remain escalate in these controls. These observations
+establish mechanism evidence only and carry no independent benefit claim.
