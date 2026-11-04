@@ -21268,3 +21268,4 @@ code |
 | 2026-11-04 05:28 UTC | Milestone 2026.11.753 activated | OK | 12 tasks queued |
 | 2026-11-04 07:02 UTC | Qualify original failure publication and bind twel | FAIL | Post-tests failed: > assert good["projection_fits"] and good["dependency_imports_passed"] |
 | 2026-11-04 07:04 UTC | Qualify original failure publication and bind twel | OK | Deliverable already exists in repo |
+| 2026-11-04 07:06 UTC | Build a causal template store and small calibrated | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8789-branch-qualification.memory_protocol_ready_score (actual=0 == expected=1) |
