@@ -105934,3 +105934,177 @@ Exact operands are retained in
 `results/raw/experiment_8808_v754_archived_observer_costs/invocations/1793812686308800940/measurement.json`.
 Scoped validation and terminal publication follow measurement; operational and
 traceability reconciliation is delegated to the conductor as requested.
+
+## Planned V755 research contracts — 2026-11-04
+
+Status: planned only. Exact methods and task objects are frozen in the V755 roadmap;
+no new implementation or empirical success is asserted by these requirements.
+
+### REQ-REPORT-8814: Bind thirteen tasks and ingest selective-decision methods without a global science gate
+
+The experiment SHALL publish `results/experiment_8814_v755_branch_contract.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: contract_ready_score, runtime_repair_ready_score, arc_new_outcomes_available_score: integer 0/1; full_task_objects, canonical_tasks_sha256, gate_edge_rows, source_method_rows, branch_admission_rows, preserved_v754_reference. Principle: administrative custody is separate from scientific evidence.
+
+#### SCENARIO-REPORT-8814-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8815: Separate feature ambiguity from optimization failure in the causal energy head
+
+The experiment SHALL publish `results/experiment_8815_v755_learning_signal_diagnosis.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: diagnosis_rows_ready_score, objective_candidate_ready_score: integer 0/1; collision_rows, empirical_feature_floor, per_seed_fit_rows, gradient_control_rows, objective_selection, selected_configuration_hash, mechanism_supported. Principle: development fit qualifies a changed mechanism, not future generalization.
+
+#### SCENARIO-REPORT-8815-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8816: Seal fresh evidence worlds and a fixed risk-coverage decision protocol
+
+The experiment SHALL publish `results/experiment_8816_v755_selective_evidence_methods.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: evidence_protocol_ready_score, consensus_protocol_ready_score, canary_protocol_ready_score: integer 0/1; split_manifest_hash, structure_disjointness_rows, protocol_hashes, threshold_menu, estimands, multiplicity_families, label_custody, calibration_selection_rule. Principle: selection happens before untouched evaluation.
+
+#### SCENARIO-REPORT-8816-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8817: Qualify a normalized categorical energy objective in the causal template store
+
+The experiment SHALL publish `results/experiment_8817_v755_categorical_memory_prototype.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: memory_execution_ready_score: integer 0/1; objective_config, initial_weights_hash, frozen_stream_manifest_hash, template_policy, causal_release_rows, restart_rows, parity_rows, per_update_operation_counts. Principle: prototype controls qualify execution, not beneficial learning.
+
+#### SCENARIO-REPORT-8817-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8818: Measure useful evidence decisions under equal computational budgets
+
+The experiment SHALL publish `results/experiment_8818_v755_evidence_decisive_coverage.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: evidence_rows_ready_score, evidence_utility_score: integer 0/1; per_world_results, per_defect_rows, operation_budget_rows, whole_world_intervals, exact_reference_rows, exhausted_count. Principle: useful decisions and errors share an explicit denominator; exact semantics remain circular.
+
+#### SCENARIO-REPORT-8818-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8819: Test calibrated consensus energy at frozen risk and coverage targets
+
+The experiment SHALL publish `results/experiment_8819_v755_consensus_selective_energy.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: consensus_rows_ready_score, selective_benefit_score: integer 0/1; selected_threshold_rows, calibration_eligibility_rows, per_candidate_rows, risk_numerators_denominators, coverage_rows, brier_rows, simultaneous_intervals, matched_random_rows, shortcut_controls. Principle: freeze the selector before evaluation; no claims from seed pseudoreplication.
+
+#### SCENARIO-REPORT-8819-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8820: Measure future decisions after normalized energy updates and delayed template additions
+
+The experiment SHALL publish `results/experiment_8820_v755_causal_objective_streams.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: memory_rows_ready_score, learning_cost_ready_score: integer 0/1; frozen_manifest_hash, per_query_rows, retention_rows, complete_stream_cost_rows, release_rows, template_addition_rows, state_hashes, numerical_training_calls, inference_operation_counts. Principle: one stream is one independent unit; all nested work and durable costs remain visible.
+
+#### SCENARIO-REPORT-8820-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8821: Audit causal future benefit and retention without mixing training and evaluation rows
+
+The experiment SHALL publish `results/experiment_8821_v755_future_benefit_audit.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: learning_audit_ready_score, future_benefit_score: integer 0/1; independent_stream_rows, familywise_intervals, causality_checks, retention_checks, coverage_checks, exact_denominator_rows, retirement_recommendations. Principle: benefit claims require future loss, retention and useful decisions together.
+
+#### SCENARIO-REPORT-8821-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8822: Measure complete adaptation cost with parent clocks and unchanged durability
+
+The experiment SHALL publish `results/experiment_8822_v755_parent_window_cost.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: whole_cost_ready_score: integer 0/1; per_window_rows, parent_clock_rows, per_block_ratios, workload_hashes, cold_costs, warm_interval_definition, restart_rows, durable_ack_rows, overhead_policy, operation_counts. Principle: whole-operation timing needs no rejected internal cost attribution.
+
+#### SCENARIO-REPORT-8822-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8823: Probe source-anchored extraction with mandated Qwen after authenticated runtime repair
+
+The experiment SHALL publish `results/experiment_8823_v755_qwen_witness_canary.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: canary_rows_ready_score: integer 0/1; MODEL_SPECS must include unsloth/Qwen3.8-27B-GGUF; per_call_rows, per_world_extraction_rows, complete_source_hashes, span_binding_rows, runtime_build_hash, model_hash, gpu_offload_evidence, token_counts. Principle: generation provenance and semantic fidelity are separate checks.
+
+#### SCENARIO-REPORT-8823-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8824: Assess live supervisor generalization only from newly admitted outcomes
+
+The experiment SHALL publish `results/experiment_8824_v755_arc_outcome_transfer.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: arc_rows_ready_score: integer 0/1; per_game_results, per_arm_rows, new_event_frontier, censoring_rows, overlap_counts, registry_precheck, solve_provenance, recommendation_only. Principle: only live reachable evidence can support a credited level outcome.
+
+#### SCENARIO-REPORT-8824-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8825: Map the new learner operations to KV260 PolarFire and GateMate boundaries
+
+The experiment SHALL publish `results/experiment_8825_v755_hardware_operation_map.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: hardware_map_ready_score: integer 0/1; board_operation_rows, supported_operation_counts, measured_complete_cost_refs, target_latency_requirements, unknown_costs, physical_evidence_state, sampling_call_count. Principle: all three boards retain separate boundaries; unknown is not zero.
+
+#### SCENARIO-REPORT-8825-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8826: Reconcile thirteen outcomes and distinguish constructed measurements from generalization
+
+The experiment SHALL publish `results/experiment_8826_v755_capstone.json` under the exact V755 protocol.
+It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
+source and configuration hashes, owned validation and exact blocked-gate operands.
+Task-specific output contract: reconciliation_ready_score: integer 0/1; rows for all13 tasks, task_outcome_rows, gate_edge_rows, constructed_measurement_count, independent_constructed_unit_count, natural_generalization_count, branch_conclusions, rejected_evidence, retirement_recommendations, publication_authorized=false, activation_authorized=false. Principle: reconcile all work without promoting administrative or circular evidence.
+
+#### SCENARIO-REPORT-8826-REPLAY
+
+Given admitted immutable inputs, private execution and cold replay reproduce the
+registered row reductions; missing inputs block, and rehashed semantic tampering
+is rejected. Readiness never substitutes for the task's independent benefit gate.

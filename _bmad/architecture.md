@@ -818,3 +818,24 @@ queries. A separate consensus challenge tests shared wrong answers using new
 constructed worlds. The optional Qwen3.8-27B canary is bounded generation.
 Observer-qualified complete costs feed compatible-operation acceleration bounds.
 This is proposed work, not an implementation change or scientific promotion.
+
+## Planned V755 decision and adaptation boundaries — 2026-11-04
+
+V755 stages thirteen tasks, Exp8814–Exp8826, after the qualified V754 causal
+store showed no future benefit. A bounded feature/optimization diagnostic must
+show a matched-budget improvement before an opt-in exactly normalized
+categorical-energy objective enters the same transactional store. Within-query
+state stays frozen; delayed verified labels permit between-query template and
+weight commits. Generator weights and the default old objective remain intact.
+
+A separate evidence branch seals graph-structure splits and calibration-only
+threshold selection. It measures useful decisive coverage at fixed risk, with
+whole-world uncertainty and explicit constructed/exact-oracle claim boundaries.
+The Qwen3.8 source-span canary requires authenticated runtime changes. ARC reads
+only newly admitted live supervisor outcomes and performs no hidden-game solve.
+
+Complete adaptation cost uses parent clocks around durable work, with restart
+and tail drain. Rejected component clocks cannot feed hardware fractions.
+KV260, PolarFire and GateMate retain operation-specific limits; the map runs
+even when another branch is blocked. Independent CPU methods have no global
+CUDA or contract-producer gate. These are planned studies, not deployed changes.

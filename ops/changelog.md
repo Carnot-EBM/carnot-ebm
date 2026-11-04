@@ -23043,3 +23043,28 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-04: Audit future learning benefit and retention from sealed stream rows (⚠️ Research Finding) — honest_verdict=complete_null_causal_learning_audit; results/experiment_8810_v754_causal_learning_audit.json
 - 2026-11-04: Reconcile thirteen outcomes and retire unchanged failed continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v754_capstone; results/experiment_8813_v754_capstone.json
 - 2026-11-04: Operational retrospective for milestone 2026.11.754 (`results/operational_retro_2026_11_754.json`, schema `carnot.operational_retro.v64`): analyzed 10 completed synthesis-only experiments (0 compute-bound) across 112.5 wall-time minutes (112 minutes / 1.9 hours, averaging 11 minutes per experiment) reconstructed via `retro_timing_fallback` (live git-log found 0 commits). Slowest synthesis-only experiments were `Measure future Brier loss after delayed constraint additions` (30.51 min / 31min), `Qualify repaired original memory controls under preserved authorities` (13.3 min / 13min), `Audit future learning benefit and retention from sealed stream rows` (13.1 min / 13min), `Measure semantic sensitivity and harmless-evidence invariance` (12.31 min / 12min), and `Measure observer disturbance using immutable durable-work authorities` (11.07 min / 11min). With 0 compute-bound experiments, `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` was not applicable, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) is expected synthesis-only behavior.
+
+## 2026-11-04 — Stage research milestone 2026.11.755
+
+- Created the matching thirteen-task design and staged YAML, Exp8814–Exp8826,
+  across four phases. Preserved complete V754 design bytes before replacing vNEXT.
+- Recorded the requested primary and secondary literature scan before design,
+  including selective-risk audit work and policy-dependent online feedback.
+  EBT citations returned429; ARM–EBM returned ten entries. Access limits remain
+  explicit; papers and vendor estimates are not local measurements.
+- Planned a bounded diagnosis of feature ambiguity and objective optimization,
+  conditional normalized-energy adaptation, prospective risk/coverage studies,
+  future-loss/retention audit and parent-clock complete-operation costs.
+- Preserved V754 nulls, source/label separation, the mandated Qwen3.8 bounded
+  canary, the live ARC frontier and all three board operation boundaries.
+  CUDA/ARC absence does not gate independent CPU science. Hardware and capstone
+  account for available evidence unconditionally.
+- Aligned planned reporting requirements, architecture, traceability and status.
+  Every prompt includes numbered progress/heartbeat and bounded-write steps,
+  exact artifact fields, per-unit evidence, terminal verdict classes and rerun lineage.
+- Validation:120 selected unit/private E2E-018/021 checks passed; scoped Ruff and
+  spec tracing passed. Full spec tracing reports1,142 existing missing references.
+  Contract/schema, gate field/order, model/substrate, ARC-floor and protected-file
+  checks passed. Final exclusion/gate rechecks are recorded in the design footer.
+- Planning only: no experiment, activation, conductor/active-roadmap/manifest edit,
+  deployment, external publication, commit or push was performed.

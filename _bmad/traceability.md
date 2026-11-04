@@ -4482,3 +4482,25 @@ contain exactly 13 tasks, Exp8801–Exp8813. Evidence history remains unchanged.
 FR-06/FR-11 map to 8802/8804/8806/8809/8810; FR-12 to 8803/8805/8806/8807;
 FR-05/FR-08/NFR-01 to 8808/8812. ARC generalization is reserved in 8811.
 Original repair qualification is 8801; unconditional reconciliation is 8813.
+
+## Planned V755 research milestone — 2026-11-04
+
+All entries below are planned; implementation, tests and results are pending.
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`; execution queue:
+`research-roadmap-next.yaml`; exactly13 tasks, Exp8814–Exp8826.
+
+| Requirement | Planned task | Deliverable | State |
+|---|---|---|---|
+| REQ-REPORT-8814 | exp8814-branch-contract | `results/experiment_8814_v755_branch_contract.json` | Planned |
+| REQ-REPORT-8815 | exp8815-learning-signal-diagnosis | `results/experiment_8815_v755_learning_signal_diagnosis.json` | Planned |
+| REQ-REPORT-8816 | exp8816-selective-evidence-methods | `results/experiment_8816_v755_selective_evidence_methods.json` | Planned |
+| REQ-REPORT-8817 | exp8817-categorical-memory-prototype | `results/experiment_8817_v755_categorical_memory_prototype.json` | Planned |
+| REQ-REPORT-8818 | exp8818-evidence-decisive-coverage | `results/experiment_8818_v755_evidence_decisive_coverage.json` | Planned |
+| REQ-REPORT-8819 | exp8819-consensus-selective-energy | `results/experiment_8819_v755_consensus_selective_energy.json` | Planned |
+| REQ-REPORT-8820 | exp8820-causal-objective-streams | `results/experiment_8820_v755_causal_objective_streams.json` | Planned |
+| REQ-REPORT-8821 | exp8821-future-benefit-audit | `results/experiment_8821_v755_future_benefit_audit.json` | Planned |
+| REQ-REPORT-8822 | exp8822-parent-window-cost | `results/experiment_8822_v755_parent_window_cost.json` | Planned |
+| REQ-REPORT-8823 | exp8823-qwen-witness-canary | `results/experiment_8823_v755_qwen_witness_canary.json` | Planned |
+| REQ-REPORT-8824 | exp8824-arc-outcome-transfer | `results/experiment_8824_v755_arc_outcome_transfer.json` | Planned |
+| REQ-REPORT-8825 | exp8825-hardware-operation-map | `results/experiment_8825_v755_hardware_operation_map.json` | Planned |
+| REQ-REPORT-8826 | exp8826-capstone | `results/experiment_8826_v755_capstone.json` | Planned |

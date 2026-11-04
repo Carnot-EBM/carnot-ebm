@@ -54873,3 +54873,98 @@ checks and standalone capstone imports. A future experiment must authenticate
 and rerun those checks under immutable historical authorities. They justify a
 changed qualification attempt, not a rewrite of V753 results. CUDA repair and
 new ARC supervisor outcomes remain separate, currently absent prerequisites.
+
+## V755 planning scan — 2026-11-04
+
+Recorded before drafting the V755 experiments. Sources below were retrieved in
+this planning session; papers and vendor reports do not establish Carnot results.
+The V754 nulls remain unchanged. In particular, Exp8806 reduced Brier loss but
+lost coverage, Exp8810 found slightly worse future loss, and Exp8808 failed its
+absolute observer-disturbance criterion.
+
+### Findings to ingest
+
+- [The Price of Choice in Selective Prediction](https://arxiv.org/abs/2610.29067),
+  October 21, 2026; abstract and full HTML retrieved. It distinguishes auditing
+  one frozen rule from searching a menu of selective rules. Adapt the split
+  discipline: choose a small, explicit threshold menu on development data,
+  freeze it, and evaluate risk and useful coverage together on fresh worlds.
+  A post-hoc threshold that rescues V754 is not a new result. No distribution-free
+  coverage guarantee transfers to correlated graph variants or online drift.
+- [Audit-First VAPO](https://arxiv.org/abs/2609.33662), September 27, revised
+  October 16, 2026. The abstract separates update admission from update magnitude
+  and compares policies at matched coverage and verification cost. Adapt those
+  controls to a small Carnot selector, not to generator fine-tuning. The v1 HTML
+  request returned 404; algorithm-level reproduction needs the current full text.
+- [Online Learning for Multi-Layer Hierarchical Inference under Partial and
+  Policy-Dependent Feedback](https://arxiv.org/abs/2603.04247), March 4, 2026;
+  abstract and full HTML retrieved. Feedback available only after escalation is
+  a selection mechanism. Preserve label-release and observation probabilities
+  in any future routing experiment. The proposed milestone first tests whether
+  the existing fully observed learner can learn; partial-feedback bandit work
+  remains deferred. Its regret theorem does not apply to Carnot's neural head.
+- [Constrained Online Learning with Noisy Constraint Values](https://arxiv.org/abs/2609.06921),
+  September 7, revised September 13, 2026. This distinguishes hard violation from
+  cumulative budget violation under noisy observations. Keep exact constructed
+  labels, uncertain extraction and resource budgets as different quantities;
+  do not claim a noiseless constraint guarantee for a learned decision score.
+- [VeriHarness](https://arxiv.org/abs/2610.00972), October 1, 2026, rechecked:
+  shared answers still need evidence. Preserve unanimous-wrong cases and test
+  useful decisions at a controlled risk, rather than treating agreement as truth.
+- [Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning](https://arxiv.org/abs/2605.18871), May 2026, rechecked from the
+  ARM–EBM citation feed. Separate the energy readout, exact constraint evidence,
+  normalization and shortcut controls. The next learning diagnostic compares
+  the existing mixed Brier/NCE objective with an exactly normalized categorical
+  energy objective on the same serving-visible features before a new stream.
+
+### Requested primary-topic coverage
+
+| Topic | Checked primary source | Consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), May 2026 | Compatibility and functional equivalence are not proofs of extracted premises. |
+| Neural constraint satisfaction | [PAL](https://arxiv.org/abs/2503.19466), March/June 2025; [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025 | Guarantees rely on encoded algebraic constraints. Do not reopen the retired projection-repair stack. |
+| Ising applications in ML | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), May 2026 | Parameter learning and efficient sampling are distinct; no general sampler speed claim from a fit. |
+| Hallucination mitigation | VeriHarness; [HalluScoring](https://arxiv.org/abs/2609.38355), September 2026 | Keep question/model shift and constructed-domain limits explicit. |
+| KAN | [On-chip online spline learning](https://arxiv.org/abs/2602.02056), February/June 2026 | Local updates motivate an operation map; host durability and dense Gibbs heads are separate costs. |
+| Energy-guided decoding | [ETS v3](https://arxiv.org/abs/2601.21484), May 2026 | Runtime and trustworthy extraction precede decoder integration. |
+| Hardware sampling | [Million-p-bit computer](https://arxiv.org/abs/2606.25313), June 2026 | Sampling topology and boundary exchange matter; count actual sampler calls before mapping workloads. |
+| Continual constraint learning | Hierarchical inference and noisy-constraint papers above | Establish useful fully observed online learning before adding feedback-selection complexity. |
+
+### Secondary checks and retrieval limits
+
+- OpenReview searches covered NeurIPS 2025, ICLR 2026 and ICML 2026 EBM work.
+  The indexed [EBT ICLR PDF](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  supplied a conference-version lead. The [energy-shaped detection forum](https://openreview.net/forum?noteId=saOUZ7cICb)
+  returned a browser challenge and the [cross-regression workshop PDF](https://openreview.net/pdf?id=re2e15nmzt)
+  returned 429. No acceptance or implementation claim is based on unavailable text.
+- Semantic Scholar: the direct [EBT citations request](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,externalIds,url)
+  returned HTTP429. The [ARM–EBM citations request](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,externalIds,url)
+  returned HTTP200 with ten entries and no next page. This is API coverage, not
+  an exhaustive citation census. Primary pages were checked for distributional
+  EBM, [false first steps](https://arxiv.org/abs/2602.02991) and
+  [causal-invariant masking](https://arxiv.org/abs/2610.02887). The latter two
+  are future leads; neither authorizes a new generator or multimodal branch.
+- [Hugging Face's verification feed](https://huggingface.co/papers?q=verification)
+  was readable but its snapshot included old work. Source papers determine dates.
+- [GitHub Trending](https://github.com/trending) returned navigation without a
+  usable ranking. Targeted search found the author [KAN Graph Metanetwork
+  repository](https://github.com/BarSGuy/KAN-Graph-Metanetwork); it is a lead,
+  not a verified trending entry or a new dependency. No new repository was
+  promoted without reading its implementation and license.
+- [Extropic writing](https://extropic.ai/writing) exposed navigation only;
+  [Z1T](https://extropic.ai/writing/z1t), September 4, was readable. Its preliminary
+  sparse hardware/software efficiency estimates are vendor estimates. They do
+  not supply local TSU access, dense-head support or end-to-end durable timings.
+- [Kona 1.0](https://logicalintelligence.com/kona) remained a vendor description
+  of an energy-based constraint layer. No reproducible new architecture or
+  benchmark protocol was established from that page.
+
+### Planning implications
+
+Preserve V754 as exposed development evidence. Diagnose near-uniform causal
+predictions before changing training, and test evidence coverage at a fixed
+risk on genuinely fresh graph structures. Whole-operation parent timing can
+measure the new learner without borrowing rejected component attribution.
+CUDA and new live ARC outcomes remain separate conditional branches. Every
+hardware comparison must state which operations a board actually supports.

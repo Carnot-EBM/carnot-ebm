@@ -21295,3 +21295,5 @@ code |
 | 2026-11-04 19:17 UTC | Assess cross-game supervisor generalization from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8801-repaired-memory-qualification.arc_new_outcomes_available_score (actual=0 == expected=1) |
 | 2026-11-04 19:20 UTC | Bound acceleration from complete measured learning | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8808-archived-observer-costs.component_cost_ready_score (actual=0 == expected=1) |
 | 2026-11-04 20:05 UTC | Reconcile thirteen outcomes and retire unchanged f | OK | 88 passed, 1 warning in 35.24s |
+| 2026-11-04 21:27 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-04 21:32 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

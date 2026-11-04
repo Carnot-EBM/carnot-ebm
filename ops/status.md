@@ -18826,3 +18826,31 @@ in the design and changelog; scientific results remain pending execution.
   explicit. No unchanged CUDA canary, device probe or purchase is scheduled.
 - Planning only. Active roadmap, conductor and exclusion manifest stay unchanged.
   Complete V749 design preserved in the change-proposals archive.
+
+## 2026-11-04 — V755 research milestone staged
+
+The next plan is2026.11.755: exactly thirteen tasks, Exp8814–Exp8826, across
+four phases. The design and staged YAML contain identical complete task
+objects. V754 design bytes are preserved in the dated change-proposals archive.
+The active roadmap and conductor remain unchanged; activation has not occurred.
+
+V754 qualified causal template execution but its future Brier loss worsened
+slightly. Consensus energy improved Brier but lost coverage; evidence methods
+had no false-accept headroom; component profiling failed observer stability.
+V755 diagnoses feature/optimization limits before another learning stream,
+freezes prospective selective-risk contracts, tests useful evidence decisions,
+and measures complete adaptation with parent clocks. All prior nulls remain.
+
+The literature scan preceded design and includes selective prediction and
+policy-dependent-feedback leads. EBT citation retrieval returned429; ARM–EBM
+returned ten entries. Optional Qwen3.8 bounded generation needs changed runtime
+evidence. ARC analysis needs new live outcomes. An unconditional operation map
+keeps all three boards visible without unsupported speed claims. Planned
+OpenSpec, architecture and traceability entries are aligned. Validation results
+are recorded in the design and changelog when the checks finish.
+
+V755 planning validation: complete contract equality and all nine structured
+gate edges passed; exclusion and prior-failure lint were clean. The 120 selected
+unit/private E2E checks, scoped lint and scoped spec tracing passed. Global spec
+tracing retains 1,142 existing missing references. Active-roadmap, conductor,
+manifest and archived-design hashes were verified. No research producer ran.
