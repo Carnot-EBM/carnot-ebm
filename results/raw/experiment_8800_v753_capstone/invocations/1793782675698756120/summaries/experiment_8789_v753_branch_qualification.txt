@@ -1,0 +1,20 @@
+==============================================================================
+ARTIFACT  experiment_8789_v753_branch_qualification.json
+------------------------------------------------------------------------------
+  verdict          : complete_disqualified_v753_branch_qualification
+  flagged_adversarial (stamped): False   |   LIVE re-check: clean
+  acceptance gates :
+      [?   ] acceptance_gates = {'contract': True, 'exclusion': True, 'memory_protocol': True, 'mutation_controls': True, 'original_failure_publication_and_coverage': False, 'owned_validation': False, 'preconditions': True}
+      [?   ] gate_check_summary = [{'check': 'owned_validation', 'expected': True, 'field': 'owned_validation', 'observed': False, 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8789_v753_branch_qualification/invocations/1793770868848971611/work.json', 'sha256': 'sha256:33415f9e8c1fe5d788246629e97fdc9efa5c67a4b56959ba8f966c6fde3440ba', 'upstream': 'exp8789-branch-qualification'}, {'check': 'authenticated_changed_runtime_and_mandated_model', 'expected': True, 'field': 'authenticated_changed_runtime_and_mandated_model', 'observed': 'missing_file', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/ops/cuda-runtime-repair-receipt.json', 'sha256': None, 'upstream': 'exp8410'}, {'artifact_field': 'supplied_causal_repair_and_current_validator_custody', 'check': 'supplied_causal_repair_and_current_validator_custody', 'expected': True, 'field': 'supplied_causal_repair_and_current_validator_custody', 'observed': None, 'op': '==', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/ops/cuda-runtime-repair-receipt.json', 'sha256': None, 'upstream': 'exp8410', 'upstream_id': 'exp8410'}, {'check': 'new_evidence_pre_gate', 'expected': 0, 'field': 'new_selected_applied_outcomes', 'observed': 0, 'operator': '>', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/ops/arc_supervisor_refinement_ledger.json', 'reason': 'No authenticated selected/applied arm outcomes beyond Exp8760 frozen frontier.', 'sha256': 'sha256:e83fb0720502e8351792640bf012ded1e96180a04fd05e4d500ae8830609fe34', 'upstream': 'exp8773-arc-outcome-frontier'}]
+  duration_s       : 615.410345   substrate: aggregation_from_upstream_artifacts
+  duration floor   : no_model_load >=0.0001s (substrate_class)
+  headline metrics :
+      arc_new_outcomes_available_score = 0
+      contract_ready_score = 0
+      independent_generalization_score = 0
+      learning_execution_ready_score = 0
+      memory_execution_ready_score = 0
+      memory_protocol_ready_score = 0
+      n_samples = 0
+      runtime_repair_ready_score = 0
+  adversarial flags: none

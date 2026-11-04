@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-11-04 UTC — Fix Exp8800 standalone reporting imports
+
+- Resolve V753's own checkout before importing retained reporting dependencies,
+  allowing private resource checks to run in fresh standalone interpreters.
+- Add an outside-checkout import regression with PYTHONPATH absent; preserve all
+  existing tests, previous implementation changes and the conductor.
+- Pass 100 affected/repair-gate tests and 46 private qualification tests. Fresh
+  unit/child coverage is 249/249 statements with no exclusions; scoped Ruff,
+  formatting, strict mypy and spec tracing pass.
+- Pass the full private E2E-018 CLI: 91 affected tests, 106 consumer tests, twelve
+  mutations, terminal validators and cold replay. E2E-021 passes in qualification.
+- Retain the existing global reconciliation debt: stale architecture date and
+  1,142 missing spec references. The whole repository suite was not rerun.
+  Receipts: `/var/tmp/carnot-8800-repair-ekoq850e/`.
+
 ## 2026-11-04 UTC — Fix Exp8791 producer type diagnostics
 
 - Reject non-object producer JSON before dictionary coercion while retaining

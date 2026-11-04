@@ -58447,3 +58447,32 @@ inspect final bytes before atomic publication. Owned validation failure
 disqualifies; unchanged external contract absence blocks with no measurement.
 Preserve historical artifacts, shared validators, conductor, roadmap, exclusion
 manifest, weights and ARC defaults. The conductor owns ops and BMAD updates.
+
+# REQ-VERIFY-8800: Retain V753 reconciliation validation independently
+
+Before aggregation measure parsing time, peak RSS and available resources, check
+imports and private scratch, and bind complete authority bytes. Required resource
+failure produces complete_blocked_resource with no scientific measurement.
+Retain actual scoped child exits, exact node inventories, JUnit and coverage
+SQLite. Require 100 percent new statements and unchanged private E2E-018/021.
+A separate single whole-suite health run cannot substitute for owned validation.
+
+### SCENARIO-VERIFY-8800-RESOURCE
+
+A missing dependency blocks with its observed gate value. A failed owned child
+disqualifies. Cold replay rejects changed primitives even when the candidate
+checksum is recomputed. Stable publication gates grant no external authorization.
+
+### SCENARIO-VERIFY-8800-CHECKOUT-IMPORT
+
+A fresh interpreter outside the checkout, with PYTHONPATH absent, SHALL import
+the V753 reconciliation and runner through the installed Carnot package. Resolve
+repository script dependencies from that package's own checkout before loading
+retained reporting modules, so resource checks and sealed publication can run.
+Missing dependencies must reach the observed resource gate instead of failing
+early because repository helpers are absent from the interpreter search path.
+
+Implementation 20261104: V753 adds its own checkout root before importing retained
+reporting modules. The unchanged private resource CLI and an additional clean
+interpreter regression pass. Fresh unit/child SQLite covers 249/249 owned module
+and CLI statements without exclusions; all 46 private qualification tests pass.

@@ -105432,6 +105432,10 @@ close this invocation at preflight; an admitted workload requires separately
 qualified observer execution and must never fall through to the old observer.
 # REQ-REPORT-8800: Reconcile all twelve V753 outcomes without promotion
 
+The invocation SHALL retain the exact conductor receipt separately from the
+expected producer path. A missing scientific artifact never becomes a zero
+measurement, and a terminal scheduling receipt never authenticates a producer.
+
 Bind Exp8789–Exp8800 to the complete pinned task objects, visible ordered
 table and activated YAML, preserving literal-brace activation encoding.
 Read source artifacts through summarize_artifact before importing fields.
@@ -105469,3 +105473,9 @@ Retain exact collected nodes, JUnit, normal exits and coverage SQLite; require
 E2E-018/021. No native round trip is owned. Record one whole Python suite health
 run separately from scoped validation. External absence yields blocked; failed
 owned validation yields disqualified. The conductor owns ops and BMAD updates.
+
+Implementation 20261104 repair: standalone V753 imports resolve repository helpers
+from the installed Carnot package's own checkout, including when PYTHONPATH is
+absent. SCENARIO-VERIFY-8800-CHECKOUT-IMPORT and the original missing-resource CLI
+verify this path. Scoped qualification covers 249/249 statements without exclusions
+and preserves blocked resources, failed owned work and sealed replay behavior.

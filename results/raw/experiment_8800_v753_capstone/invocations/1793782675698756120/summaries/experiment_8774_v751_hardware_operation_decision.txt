@@ -1,0 +1,17 @@
+==============================================================================
+ARTIFACT  experiment_8774_v751_hardware_operation_decision.json
+------------------------------------------------------------------------------
+  verdict          : complete_blocked_hardware_operation_decision
+  flagged_adversarial (stamped): False   |   LIVE re-check: clean
+  acceptance gates :
+      [?   ] acceptance_gates = {'board_authority': True, 'owned_validation': True}
+      [?   ] gate_check_summary = [{'check': 'authenticated_field', 'expected': 1, 'field': 'learning_cost_ready_score', 'observed': None, 'operand_state': 'missing_file', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8766_v751_causal_brier_stream.json', 'sha256': None, 'upstream': 'exp8766-causal-brier-stream'}, {'check': 'authenticated_field', 'expected': 1, 'field': 'residual_cost_ready_score', 'observed': 0, 'operand_state': 'observed_zero', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8770_v751_optimized_cost_attribution.json', 'sha256': 'sha256:71421b897fa5e59004d55ac5ec692fd69a5d3c3854aeb5dcf329bc39e6a79556', 'upstream': 'exp8770-optimized-cost-attribution'}, {'check': 'authenticated_field', 'expected': 'exp8772-ordinary-durable-cost', 'field': 'task_id', 'observed': 'exp8772-ordinary-update-cost', 'operand_state': 'observed', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8772_v751_ordinary_durable_cost.json', 'sha256': 'sha256:b8087c8d53324d46d419147bd31ac8797e05437123e6cf8ef6a9e85bf4911ccd', 'upstream': 'exp8772-ordinary-durable-cost'}, {'check': 'original_producer_authentication', 'expected': 'exp8772-ordinary-durable-cost', 'field': 'task_id', 'observed': 'exp8772-ordinary-update-cost', 'operand_state': 'rejected_producer', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8772_v751_ordinary_durable_cost.json', 'reason': 'producer_execution_qualification', 'sha256': 'sha256:b8087c8d53324d46d419147bd31ac8797e05437123e6cf8ef6a9e85bf4911ccd', 'upstream': 'exp8772-ordinary-durable-cost'}, {'check': 'compatible_physical_execution', 'expected': 1, 'field': 'physical_hardware_ready_score', 'observed': 0, 'operand_state': 'observed_zero', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8707_v746_hardware_operation_boundary.json', 'sha256': 'sha256:21802928248cb86fe4dcc2cdb4ea6ad8bf403d0884d3c4e049f13e8906f53cb6', 'upstream': 'target_boards'}]
+  duration_s       : 3.330298204   substrate: aggregation_from_upstream_artifacts
+  duration floor   : none
+  headline metrics :
+      complete_100x_learning_ready_score = 0
+      generalized_learning_benefit_score = 0
+      hardware_mapping_ready_score = 1
+      independent_generalization_score = 0
+      physical_hardware_ready_score = 0
+  adversarial flags: none

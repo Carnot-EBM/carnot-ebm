@@ -1,5 +1,21 @@
 # Carnot — Traceability Matrix
 
+## Exp8800 standalone import repair — 2026-11-04 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-8800 / SCENARIO-VERIFY-8800-CHECKOUT-IMPORT | `v753_capstone` resolves its own checkout before loading retained reporting dependencies | Fresh interpreter outside the checkout imports the capstone, runner and matching script helpers with PYTHONPATH absent |
+| SCENARIO-VERIFY-8800-RESOURCE / SCENARIO-VERIFY-8800-REPLAY | Existing resource gates, terminal publication and sealed replay remain intact | Original resource CLI, private success/failure children and replay attacks pass; 249/249 owned statements covered without exclusions |
+| REQ-CONDUCTOR-FIXGATE-1 | Existing assertions, previous changes and conductor preserved | All ten repair-gate tests pass; no skips or reversions |
+
+All 100 affected/repair-gate tests and 46 private qualification tests pass.
+E2E-018 additionally passes 91 affected tests, 106 consumer tests, twelve mutations,
+terminal validators and cold replay; E2E-021 passes in qualification. Scoped
+Ruff, formatting, strict mypy and spec tracing pass. Global reconciliation retains
+the existing 2026-10-11 architecture date and 1,142 missing spec references; the
+whole repository suite was not rerun. Receipts:
+`/var/tmp/carnot-8800-repair-ekoq850e/`.
+
 ## Exp8791 producer JSON repair — 2026-11-04 UTC
 
 | Requirement / scenario | Implementation | Verification |

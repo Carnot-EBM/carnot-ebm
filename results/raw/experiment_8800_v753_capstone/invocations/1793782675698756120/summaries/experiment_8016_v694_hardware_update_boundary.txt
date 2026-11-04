@@ -1,0 +1,17 @@
+==============================================================================
+ARTIFACT  experiment_8016_v694_hardware_update_boundary.json
+------------------------------------------------------------------------------
+  verdict          : complete_blocked_no_qualified_update_trajectory_or_board_custody
+  flagged_adversarial (stamped): False   |   LIVE re-check: clean
+  acceptance gates :
+      [?   ] acceptance_gate_results = {'custody': True, 'device_benefit': False, 'numeric': {'action_disagreements': 0, 'max_probability_drift': None, 'overflow': 0, 'restart_agrees': None}, 'numeric_pass': False, 'qualified_trajectory': False}
+      [?   ] gate_check_summary = [{'artifact_field': 'artifact.exists', 'artifact_hash': None, 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json', 'expected': True, 'observed': False, 'op': '==', 'passed': False, 'upstream_id': 'exp8012'}, {'artifact_field': 'conditioned_fit_ready_score', 'artifact_hash': 'sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json', 'expected': 1, 'observed': 0, 'op': '==', 'passed': False, 'scope': 'historical_conductor_block_diagnostic_not_trajectory', 'upstream_id': 'exp8008-conditioned-energy-fit'}, {'artifact_field': 'verdict_class', 'artifact_hash': 'sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186', 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json', 'expected': ['positive', 'null', 'circular_positive'], 'observed': 'blocked', 'op': 'in', 'passed': False, 'scope': 'historical_conductor_block_diagnostic_not_trajectory', 'upstream_id': 'exp8008-conditioned-energy-fit'}, {'artifact_field': 'artifact.exists', 'artifact_hash': None, 'artifact_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8015_v694_native_update_parity.json', 'expected': True, 'observed': False, 'op': '==', 'passed': False, 'upstream_id': 'exp8015'}]
+  duration_s       : 69.21154052589554   substrate: aggregation_from_upstream_artifacts
+  duration floor   : none
+  headline metrics :
+      board_custody_ready_score = 1
+      hardware_evidence_ready_score = 0
+      quantized_update_ready_score = 0
+  !! every headline metric is a COMPLETION FLAG, not a measurement.
+     The result is in these rows, unread by this summary: historical_failed_operands, phase_spans, validation_receipts
+  adversarial flags: none

@@ -1,5 +1,23 @@
 # Carnot — Operational Status
 
+## 2026-11-04 UTC — Exp8800 standalone import repair
+
+V753 capstone imports add their own checkout root before loading retained
+reporting modules. Fresh standalone interpreters can therefore resolve
+`scripts.conductor_gates` without PYTHONPATH or a checkout working directory.
+The original private missing-dependency CLI reaches its blocked-resource verdict,
+and an additional regression verifies the capstone, runner and helper identity.
+
+All 100 affected/repair-gate tests and 46 private qualification tests pass.
+Fresh unit/subprocess SQLite covers all 249 owned module/CLI statements with
+zero exclusions. Scoped Ruff, formatting, strict mypy and spec tracing pass.
+E2E-018's full private CLI passes 91 affected and 106 consumer tests, twelve
+mutations, terminal validators and cold replay; E2E-021 passes in qualification.
+Existing assertions, historical modules, primary research artifacts and the
+conductor remain intact. Global reconciliation retains the existing architecture
+date of 2026-10-11 and 1,142 missing spec references. The whole repository suite
+was not rerun. Receipts: `/var/tmp/carnot-8800-repair-ekoq850e/`.
+
 ## 2026-11-04 UTC — Exp8791 producer JSON repair
 
 Producer authentication checks the original JSON type before the retained
