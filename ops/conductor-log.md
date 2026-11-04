@@ -21293,3 +21293,4 @@ code |
 | 2026-11-04 18:22 UTC | Measure finite feedback capacity under real queue  | OK | 87 passed, 1 warning in 25.78s |
 | 2026-11-04 19:13 UTC | Audit future learning benefit and retention from s | OK | 100 passed, 1 warning in 49.39s |
 | 2026-11-04 19:17 UTC | Assess cross-game supervisor generalization from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8801-repaired-memory-qualification.arc_new_outcomes_available_score (actual=0 == expected=1) |
+| 2026-11-04 19:20 UTC | Bound acceleration from complete measured learning | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8808-archived-observer-costs.component_cost_ready_score (actual=0 == expected=1) |
