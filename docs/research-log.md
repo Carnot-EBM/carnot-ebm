@@ -7616,6 +7616,12 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 4 synthesis-only experiments (0 compute-bound) completed in 35.4 wall-time minutes (35 minutes / 0.6 hours, averaging 9 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by reconciling twelve outcomes and closing unchanged research continuations (18.18 min / 18min), qualifying original failure publication and binding twelve independent task slots (10.26 min / 10min), sealing length-balanced evidence interventions and strong solver controls (6.93 min / 7min), and separating timer overhead from process variation on durable update windows (0.03 min / 0min); because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 49C, 1 Python process PID 1913316 at 2856MB over 2282.7s CPU / 141491s wall) reflects expected behavior for synthesis-only tasks.
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.754
+- exp_range: no data available this milestone
+- theme: Operational review of 10 completed synthesis-only experiments (0 compute-bound) across 112.5 wall-time minutes (112 minutes / 1.9 hours, averaging 11 minutes per experiment).
+- key result: honest operational negative — 10 synthesis-only experiments (0 compute-bound) completed in 112.5 wall-time minutes (112 minutes / 1.9 hours, averaging 11 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by measuring future Brier loss after delayed constraint additions (30.51 min / 31min), qualifying repaired original memory controls under preserved authorities (13.3 min / 13min), auditing future learning benefit and retention from sealed stream rows (13.1 min / 13min), measuring semantic sensitivity and harmless-evidence invariance (12.31 min / 12min), and measuring observer disturbance using immutable durable-work authorities (11.07 min / 11min); because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) reflects expected behavior for synthesis-only tasks.
+- acceptance: no data available this milestone
+
 
 
 

@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.754",
+  "generated_at": "2026-11-04T20:10:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 112.5,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure future Brier loss after delayed constraint additions",
+      "duration_minutes": 30.51,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify repaired original memory controls under preserved authorities",
+      "duration_minutes": 13.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit future learning benefit and retention from sealed stream rows",
+      "duration_minutes": 13.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure semantic sensitivity and harmless-evidence invariance",
+      "duration_minutes": 12.31,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure observer disturbance using immutable durable-work authorities",
+      "duration_minutes": 11.07,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.754 completed 10 synthesis-only experiments (0 compute-bound) in 112.5 wall-time minutes (112 minutes / 1.9 hours, averaging 11 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback — live git-log path found 0 commits). Wall time was led by 'Measure future Brier loss after delayed constraint additions' (30.51 minutes / 31min), 'Qualify repaired original memory controls under preserved authorities' (13.3 minutes / 13min), 'Audit future learning benefit and retention from sealed stream rows' (13.1 minutes / 13min), 'Measure semantic sensitivity and harmless-evidence invariance' (12.31 minutes / 12min), and 'Measure observer disturbance using immutable durable-work authorities' (11.07 minutes / 11min). Because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null, DualGPURunner was not applicable, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) reflects expected synthesis-only behavior.",
+  "bottlenecks_identified": [
+    "Live git-log timing collection found 0 commits, requiring fallback to disk-mtime reconstruction (retro_timing_fallback) across all 10 completed experiments and 112.5 minutes (112 minutes / 1.9 hours) of milestone wall time.",
+    "Across the 10 synthesis-only experiments (averaging 11 minutes per experiment, with 0 compute-bound experiments), wall time was concentrated in 'Measure future Brier loss after delayed constraint additions' (30.51 minutes / 31min), followed by 'Qualify repaired original memory controls under preserved authorities' (13.3 minutes / 13min), 'Audit future learning benefit and retention from sealed stream rows' (13.1 minutes / 13min), 'Measure semantic sensitivity and harmless-evidence invariance' (12.31 minutes / 12min), and 'Measure observer disturbance using immutable durable-work authorities' (11.07 minutes / 11min)."
+  ],
+  "improvements_suggested": [
+    "Persist explicit experiment start and completion timestamps or restore commit-anchored git-log visibility so milestone retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback when live git-log finds 0 commits).",
+    "Parallelize delayed-constraint Brier-loss evaluation and pre-validate authority and stream-row fixtures to reduce synthesis wall time in 'Measure future Brier loss after delayed constraint additions' (30.51 minutes / 31min), 'Qualify repaired original memory controls under preserved authorities' (13.3 minutes / 13min), 'Audit future learning benefit and retention from sealed stream rows' (13.1 minutes / 13min), 'Measure semantic sensitivity and harmless-evidence invariance' (12.31 minutes / 12min), and 'Measure observer disturbance using immutable durable-work authorities' (11.07 minutes / 11min).",
+    "Release the 4MB allocated on GPU 0 (NVIDIA GeForce RTX 3090 — 4/24576MB / 0%, Util: 0%, Temp: 49C) when idle per the GPU Monitor Report suggestion, and keep DualGPURunner disabled unless 2+ models are loaded in parallel on compute-bound work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Parallelize delayed-constraint Brier-loss evaluation and verification checks in 'Measure future Brier loss after delayed constraint additions' (30.51 minutes / 31min) toward the 11-minute per-experiment average.",
+    "Reuse pre-validated authority and stream-row fixtures across 'Qualify repaired original memory controls under preserved authorities' (13.3 minutes / 13min), 'Audit future learning benefit and retention from sealed stream rows' (13.1 minutes / 13min), 'Measure semantic sensitivity and harmless-evidence invariance' (12.31 minutes / 12min), and 'Measure observer disturbance using immutable durable-work authorities' (11.07 minutes / 11min).",
+    "Record direct per-experiment timing metadata so milestone retrospectives avoid retro_timing_fallback when the live git-log path finds 0 commits."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "All 10 completed experiments in milestone 2026.11.754 were synthesis-only (0 compute-bound) across 112.5 wall-time minutes (112 minutes / 1.9 hours, averaging 11 minutes per experiment), so no compute-bound experiment ran, gpu_idle_on_compute_bound_tasks is null, and DualGPURunner was not applicable. The 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) is expected for synthesis-only work rather than a GPU bottleneck, making synthesis runtime in 'Measure future Brier loss after delayed constraint additions' (30.51 minutes / 31min) the primary operational target for the next milestone."
+}
