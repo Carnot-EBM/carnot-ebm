@@ -23040,3 +23040,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-04: Test whether a small energy policy detects shared wrong answers (⚠️ Research Finding) — honest_verdict=complete_null_constructed_consensus_energy; results/experiment_8806_v754_consensus_challenge_energy.json
 - 2026-11-04: Measure observer disturbance using immutable durable-work authorities (⚠️ Research Finding) — honest_verdict=complete_null_archived_observer_costs; results/experiment_8808_v754_archived_observer_costs.json
 - 2026-11-04: Measure finite feedback capacity under real queue overflow (⚠️ Research Finding) — honest_verdict=complete_null_no_corrected_useful_policy_effect; results/experiment_8809_v754_delayed_feedback_capacity.json
+- 2026-11-04: Audit future learning benefit and retention from sealed stream rows (⚠️ Research Finding) — honest_verdict=complete_null_causal_learning_audit; results/experiment_8810_v754_causal_learning_audit.json
