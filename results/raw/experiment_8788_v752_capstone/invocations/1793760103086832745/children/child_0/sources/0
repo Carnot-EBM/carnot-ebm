@@ -1,0 +1,348 @@
+"""REQ-REPORT-8788: reconcile sealed operands without running historical controllers."""
+
+from __future__ import annotations
+
+from datetime import datetime, UTC
+import json
+from pathlib import Path
+import shutil
+from typing import Any
+
+import yaml
+
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash, sha256_file
+from carnot.reporting.primary_publication import read_bound_sidecar, validate_primary
+from carnot.reporting.roadmap_contract import compare_contract, parse_design
+
+Json = dict[str, Any]
+ROOT = Path(__file__).resolve().parents[3]
+NAME, TASK, MILESTONE = "experiment_8788_v752_capstone", "exp8788-capstone", "2026.11.752"
+PIN = "96a277806aa53175f8661b2e09da69a3c62ddab8f88d0eaaf21e6f25aadc945d"
+DESIGN = "openspec/change-proposals/research-roadmap-vNEXT.md"
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [f"python/carnot/reporting/v752_capstone{s}.py" for s in ["", "_report", "_runner"]] + [CLI]
+TESTS = [
+    "tests/python/test_v752_capstone_8788.py",
+    "tests/python/test_v752_capstone_archive_8788.py",
+]
+CONSUMERS = [
+    "tests/python/test_primary_publication_7928.py",
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+    "tests/python/test_restricted_decision_audit_8210.py",
+]
+MODEL_SPECS: list[Json] = []
+
+
+def now() -> str:
+    """Keep fresh invocation clocks separate from historical measurement clocks."""
+    return datetime.now(UTC).isoformat()
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush real boundaries so bounded child work remains visible."""
+    print(f"[exp8788] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def reference(path: Path) -> Json:
+    """Absent bytes have no digest and cannot impersonate a measured zero."""
+    return dict(path=str(path.absolute()), sha256=sha256_file(path) if path.is_file() else None)
+
+
+def load(ref: Json) -> Json:
+    """Reject substitutions before interpreting their fields."""
+    if ref["sha256"] is None or reference(Path(ref["path"])) != {
+        k: ref[k] for k in ["path", "sha256"]
+    }:
+        raise ValueError("changed_or_missing_bytes:" + ref["path"])
+    return dict(json.loads(Path(ref["path"]).read_bytes()))
+
+
+def digest(value: Json) -> str:
+    """Leave the checksum outside its own input to permit deterministic replay."""
+    return canonical_hash({k: v for k, v in value.items() if k != "reproducibility_checksum"})
+
+
+def observe(ref: Json, upstream: str, field: str, expected: Any = 1) -> Json:
+    """Distinguish absent fields, absent files and observed values in gate receipts."""
+    value = load(ref) if ref["sha256"] else {}
+    state = (
+        "missing_file"
+        if not ref["sha256"]
+        else "missing_field"
+        if field not in value
+        else "observed"
+    )
+    observed = value.get(field) if state == "observed" else state
+    return dict(
+        ref,
+        upstream=upstream,
+        check="authenticated_operand",
+        field=field,
+        operator="==",
+        expected=expected,
+        observed=observed,
+        operand_state=state,
+        passed=state == "observed" and type(observed) is type(expected) and observed == expected,
+    )
+
+
+def contract(root: Path) -> Json:
+    """An independent full-object pin rejects jointly edited table and queue bytes."""
+    text = (root / DESIGN).read_text()
+    table, tasks = parse_design(text, milestone=MILESTONE)
+    active = yaml.safe_load((root / "research-roadmap.yaml").read_bytes())
+    staged_path = root / "research-roadmap-next.yaml"
+    staged = yaml.safe_load(staged_path.read_bytes()) if staged_path.is_file() else active
+    comparison = compare_contract(
+        text, staged, active, milestone=MILESTONE, first_id=8776, count=13
+    )
+    if not (
+        comparison["passed"]
+        and tasks == active["tasks"] == staged["tasks"]
+        and canonical_hash(tasks) == "sha256:" + PIN
+        and f"Canonical tasks SHA-256: `{PIN}`" in text
+        and "<!-- V752_TASK_CONTRACT_END -->" in text
+    ):
+        raise ValueError("v752_full_object_authority")
+    return dict(tasks=tasks, visible_table=table, comparison=comparison)
+
+
+def authenticate(path: Path, task_id: str) -> Json:
+    """Checked terminal bytes and primitive hashes grant admission, never aliases."""
+    ref = reference(path)
+    value = load(ref)
+    validate_primary(value, path)
+    if value.get("task_id") != task_id:
+        raise ValueError("producer_task_identity")
+    side = path.parent / "raw" / path.stem / "validators" / (ref["sha256"][7:] + ".json")
+    report = read_bound_sidecar(path, side)
+    if report["primary_path"] != str(path.absolute()) or report["report"]["passed"] is not True:
+        raise ValueError("producer_terminal_acceptance")
+    refs = [reference(side)]
+    for key in ["primitive_reference", "validation_reference"]:
+        load(value[key])
+        refs.append(value[key])
+    validation = load(value["validation_reference"])
+    if validation.get("receipts") != value["validation_receipts"]:
+        raise ValueError("producer_validation_drift")
+    for ref in value.get("raw_shard_hashes", []):
+        if ref.get("sha256") and reference(Path(ref["path"]))["sha256"] != ref["sha256"]:
+            raise ValueError("producer_raw_shard_drift")
+        if ref.get("sha256"):
+            refs.append(ref)
+    if any(
+        not r["passed"]
+        for r in value["validation_receipts"]
+        if r.get("scope") != "repository_health"
+    ) and value.get("required_checks_passed"):
+        raise ValueError("producer_owned_validation_failure")
+    return dict(value=value, references=refs)
+
+
+def slot(task: Json, root: Path) -> Json:
+    """A scheduler receipt explains nonexecution without inventing a producer verdict."""
+    number = int(task["id"].split("-")[0][3:])
+    path = root / task["deliverable"]
+    found = sorted((root / "results").glob(f"experiment_{number}_*.json"))
+    ref = reference(path)
+    value = load(ref) if ref["sha256"] else {}
+    receipt = next(
+        (p for p in found if load(reference(p)).get("blocked_at_layer") == "conductor_pre_gate"),
+        None,
+    )
+    scheduler = load(reference(receipt)) if receipt else {}
+    log_path = root / "ops/conductor-log.md"
+    log_lines = log_path.read_text().splitlines() if log_path.is_file() else []
+    dispositions = [
+        line
+        for line in log_lines
+        if "| GATE_BLOCK |" in line and task["title"][:48].strip() in line
+    ]
+
+    errors: list[str] = ["ambiguous_primary"] if len(found) > 1 else []
+    refs: list[Json] = []
+    executed = bool(value) and value.get("blocked_at_layer") != "conductor_pre_gate"
+    if executed:
+        try:
+            admitted = authenticate(path, task["id"])
+            refs += admitted["references"]
+        except (ValueError, OSError, KeyError, TypeError) as error:
+            errors.append(str(error))
+    qualified = (
+        executed
+        and not errors
+        and value.get("required_checks_passed") is True
+        and value.get("flagged_adversarial") is False
+        and value.get("verdict_class") != "disqualified"
+    )
+    verdict = value.get("verdict_class") if qualified else "disqualified" if executed else "blocked"
+    return dict(
+        task_id=task["id"],
+        experiment_id=number,
+        unit_id=task["id"],
+        arm="scheduled_task",
+        status="completed",
+        absolute_metric=int(qualified),
+        raw_numerator=int(qualified),
+        raw_denominator=1,
+        censored=False,
+        excluded=False,
+        effective_independent_groups=0,
+        producer_executed=executed,
+        producer_qualified=qualified,
+        honest_verdict=value.get("honest_verdict") if executed else None,
+        verdict_class=verdict,
+        scheduler_outcome="producer"
+        if executed
+        else "conductor_pre_gate"
+        if scheduler
+        else "conductor_cascade_skip"
+        if dispositions
+        else "absent_primary",
+        primary_reference=ref,
+        conductor_reference=reference(receipt) if receipt else None,
+        conductor_gate_receipts=scheduler.get("gates_evaluated", []),
+        conductor_disposition_lines=dispositions,
+        conductor_log_reference=reference(log_path) if dispositions else None,
+        authentication_errors=errors,
+        evidence_references=refs,
+        cost_s=value.get("duration_s"),
+        independent_count=value.get("independent_count", 0) if qualified else 0,
+    )
+
+
+def freeze(root: Path, raw: Path, run_date: str) -> Json:
+    """Snapshot authorities before collecting outcomes; later replay uses saved bytes."""
+    start = now()
+    raw.mkdir(parents=True, exist_ok=True)
+    snapshot = raw / "authority"
+    refs = []
+    for name in [DESIGN, "research-roadmap.yaml", "research-roadmap-next.yaml"]:
+        source = root / name
+        if source.is_file():
+            target = snapshot / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(source.read_bytes())
+            refs.append(reference(target))
+    authority = contract(snapshot)
+    probe = raw / "scratch_probe"
+    probe.write_text("private writable scratch")
+    preconditions = dict(
+        private_scratch_writable=probe.read_text() == "private writable scratch",
+        tools={
+            name: (ROOT / ".venv/bin" / name).is_file()
+            for name in ["python", "pytest", "ruff", "mypy"]
+        },
+        free_bytes=shutil.disk_usage(raw).free,
+        projected_validation_s=1200,
+        validation_reserve_s=900,
+        task_cap_s=4800,
+        required_free_bytes=128 * 1024 * 1024,
+        model_required=False,
+        no_model_load=True,
+    )
+    preconditions["projection_fits"] = (
+        preconditions["free_bytes"] >= preconditions["required_free_bytes"]
+        and preconditions["projected_validation_s"] + preconditions["validation_reserve_s"]
+        <= preconditions["task_cap_s"]
+        and all(preconditions["tools"].values())
+        and preconditions["private_scratch_writable"]
+    )
+    rows = []
+    for i, task in enumerate(authority["tasks"][:-1]):
+        rows.append(slot(task, root))
+        progress("slot_frozen", i + 1, 12 - i)
+    work = dict(
+        authority,
+        slots=rows,
+        root=str(root),
+        raw=str(raw.absolute()),
+        invocation_id=raw.name,
+        run_date=run_date,
+        started_at_utc=start,
+        preconditions=preconditions,
+        references=refs,
+        sources=[
+            reference(ROOT / p)
+            for p in OWNED
+            + TESTS
+            + CONSUMERS
+            + [
+                "scripts/experiment_template.py",
+                "scripts/adversarial_verify.py",
+                "scripts/verdict_row_consistency_lint.py",
+                "scripts/publication_gate.py",
+                "ops/exclusion_manifest.yaml",
+                "python/carnot/reporting/evidence_set_evaluation_8779.py",
+                "python/carnot/reporting/durable_cost_components_8784.py",
+            ]
+        ],
+        historical={},
+        prior_outcomes=[],
+    )
+    for row in rows:
+        if row["conductor_log_reference"]:
+            source = Path(row["conductor_log_reference"]["path"])
+            target = raw / "conductor-log.md"
+            if not target.is_file():
+                shutil.copyfile(source, target)
+            row["conductor_log_reference"] = dict(reference(target), source_path=str(source))
+        refs += [
+            r
+            for r in [
+                row["primary_reference"],
+                row["conductor_reference"],
+                row["conductor_log_reference"],
+                *row["evidence_references"],
+            ]
+            if r and r["sha256"]
+        ]
+    for n, fields in [
+        (
+            8775,
+            [
+                "historical_quarantines",
+                "current_quarantines",
+                "preserved_nulls",
+                "preserved_v737_supervisor_null",
+                "preserved_v743_batch_one_null",
+                "historical_stamped_outcomes",
+                "historical_outcome_archive",
+            ],
+        )
+    ]:
+        paths = list((root / "results").glob(f"experiment_{n}_*.json"))
+        if paths:
+            ref = reference(paths[0])
+            value = load(ref)
+            work["historical"] = dict(reference=ref, **{k: value.get(k) for k in fields})
+            refs.append(ref)
+    for task in work["tasks"]:
+        for prior in task["prior_failures"]:
+            number = prior["experiment_id"].split("-")[0][3:]
+            paths = sorted((root / "results").glob(f"experiment_{number}_*.json"))
+            ref = (
+                reference(paths[0])
+                if len(paths) == 1
+                else reference(root / "results" / f"experiment_{number}.json")
+            )
+            value = load(ref) if ref["sha256"] else {}
+            work["prior_outcomes"].append(
+                dict(
+                    task_id=task["id"],
+                    prior_task_id=prior["experiment_id"],
+                    primary_reference=ref,
+                    actual_task_id=value.get("task_id"),
+                    actual_honest_verdict=value.get("honest_verdict"),
+                    actual_verdict_class=value.get("verdict_class"),
+                    registered_verdict_matches=value.get("honest_verdict") == prior["verdict"],
+                    exact_identity_matches=value.get("task_id") == prior["experiment_id"],
+                )
+            )
+            if ref["sha256"]:
+                refs.append(ref)
+    atomic_json(raw / "work.json", work)
+    return work
+
+
+from carnot.reporting.v752_capstone_report import build, replay

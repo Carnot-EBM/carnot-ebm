@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="183.173" timestamp="2026-11-03T21:29:39.669803-05:00" hostname="icbfl1"><testcase classname="tests.python.test_v752_capstone_archive_8788" name="test_original_capstone_family" time="181.288"><failure message="subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'pytest', '-n0', '-o', 'addopts=', '--no-cov', '-q', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/1/tmp/test_original_capstone_family0/test_v751_capstone_8775.py', '--junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/1/tmp/test_original_capstone_family0/original-family-junit.xml']' timed out after 180 seconds">tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/1/tmp/test_original_capstone_family0')
+
+    def test_original_capstone_family(tmp_path):
+        """SCENARIO-VERIFY-8788-REPLAY: execute the original failing nodes and retain their outcomes."""
+        root = tmp_path / "v751"
+        root.mkdir()
+        primary = json.loads((ROOT / "results/experiment_8775_v751_capstone.json").read_bytes())
+        primitive = Path(primary["primitive_reference"]["path"])
+        assert sha256_file(primitive) == primary["primitive_reference"]["sha256"]
+        work = json.loads(primitive.read_bytes())
+        atomic_json(root / "sealed_work.json", work)
+        design = root / "openspec/change-proposals/research-roadmap-vNEXT.md"
+        design.parent.mkdir(parents=True)
+        text = (
+            ROOT / "openspec/change-proposals/research-roadmap-v751-preserved-20261103.md"
+        ).read_text()
+        design.write_text(text)
+        tasks = parse_design(text, milestone="2026.11.751")[1]
+        for name in ["research-roadmap.yaml", "research-roadmap-next.yaml"]:
+            (root / name).write_text(yaml.safe_dump(dict(milestone="2026.11.751", tasks=tasks)))
+        (root / "results").mkdir()
+        for task in tasks[:-1]:
+            for source in (ROOT / "results").glob(
+                "experiment_" + task["id"].split("-")[0][3:] + "_*.json"
+            ):
+                shutil.copyfile(source, root / "results" / source.name)
+        source_test = ROOT / "tests/python/test_v751_capstone_8775.py"
+        suite = tmp_path / source_test.name
+        shutil.copyfile(source_test, suite)
+        assert sha256_file(suite) == sha256_file(source_test)
+        helper = Path(__file__).resolve()
+        prelude = f"import sys\nsys.path[:0] = {[str(ROOT / 'python'), str(ROOT), str(helper.parent)]!r}\nfrom pathlib import Path\n"
+        (root / "archive_cli.py").write_text(
+            prelude
+            + "from test_v752_capstone_archive_8788 import archive_main\n"
+            + f"raise SystemExit(archive_main(Path({str(root)!r})))\n"
+        )
+        (tmp_path / "conftest.py").write_text(
+            prelude
+            + "from test_v752_capstone_archive_8788 import configure\n"
+            + f"configure(Path({str(root)!r}))\n"
+        )
+        command = [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-n0",
+            "-o",
+            "addopts=",
+            "--no-cov",
+            "-q",
+            str(suite),
+            "--junitxml=" + str(tmp_path / "original-family-junit.xml"),
+        ]
+&gt;       result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            timeout=300,
+            env=dict(os.environ, PYTHONPATH=f"{ROOT / 'python'}:{ROOT}"),
+        )
+
+tests/python/test_v752_capstone_archive_8788.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....&gt;
+endtime = 440059.82956261, orig_timeout = 180
+stdout_seq = [b'.', b'.', b'.', b'.', b'.', b'.', ...], stderr_seq = []
+skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'pytest', '-n0', '-o', 'addopts=', '--no-cov', '-q', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/1/tmp/test_original_capstone_family0/test_v751_capstone_8775.py', '--junitxml=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/1/tmp/test_original_capstone_family0/original-family-junit.xml']' timed out after 180 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired</failure></testcase></testsuite></testsuites>

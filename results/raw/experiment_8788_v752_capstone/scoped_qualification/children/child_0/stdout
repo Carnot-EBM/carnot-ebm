@@ -1,0 +1,158 @@
+..E.F..EE                                                                [100%]
+==================================== ERRORS ====================================
+________________ ERROR at setup of test_cli_replay_and_attacks _________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v75...ion/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8788: an actual private CLI child publishes a disqualified control."""
+        parent = tmp_path_factory.mktemp("capstone8788")
+        root = fixture_root(parent / "fixture")
+        output = parent / (c.NAME + ".json")
+        result = cli("--root", root, "--output", output, "--private-control")
+>       assert result.returncode == 1, result.stdout + result.stderr
+E       AssertionError: [exp8788] phase=start_no_model_load completed=0 pending=0
+E         usage: experiment_8788_v752_capstone.py [-h] [--date {20261104}] [--root ROOT]
+E                                                 [--output OUTPUT] [--private-control]
+E                                                 [--failed-child]
+E                                                 [--cold-replay COLD_REPLAY]
+E         experiment_8788_v752_capstone.py: error: private output must be outside the checkout
+E         
+E       assert 2 == 1
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...  [--cold-replay COLD_REPLAY]\nexperiment_8788_v752_capstone.py: error: private output must be outside the checkout\n').returncode
+
+tests/python/test_v752_capstone_8788.py:161: AssertionError
+________________ ERROR at teardown of test_primitive_reductions ________________
+Memory leak: +762MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +762MB
+_________ ERROR at setup of test_replay_source_and_authority_mutations _________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v75...ion/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/0/tmp'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def private(tmp_path_factory):
+        """REQ-VERIFY-8788: an actual private CLI child publishes a disqualified control."""
+        parent = tmp_path_factory.mktemp("capstone8788")
+        root = fixture_root(parent / "fixture")
+        output = parent / (c.NAME + ".json")
+        result = cli("--root", root, "--output", output, "--private-control")
+>       assert result.returncode == 1, result.stdout + result.stderr
+E       AssertionError: [exp8788] phase=start_no_model_load completed=0 pending=0
+E         usage: experiment_8788_v752_capstone.py [-h] [--date {20261104}] [--root ROOT]
+E                                                 [--output OUTPUT] [--private-control]
+E                                                 [--failed-child]
+E                                                 [--cold-replay COLD_REPLAY]
+E         experiment_8788_v752_capstone.py: error: private output must be outside the checkout
+E         
+E       assert 2 == 1
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...  [--cold-replay COLD_REPLAY]\nexperiment_8788_v752_capstone.py: error: private output must be outside the checkout\n').returncode
+
+tests/python/test_v752_capstone_8788.py:161: AssertionError
+=================================== FAILURES ===================================
+_____________________ test_validation_and_production_path ______________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/0/tmp/test_validation_and_production0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f97546012b0>
+
+    def test_validation_and_production_path(tmp_path, monkeypatch):
+        """REQ-VERIFY-8788: real bounded validation plumbing and production orchestration execute."""
+        from carnot.reporting import v752_capstone_runner as runner
+    
+        suite = tmp_path / "test_small.py"
+        suite.write_text(
+            '"""REQ-VERIFY-8788: private validation plumbing."""\n\n\ndef test_ok() -> None:\n    assert True\n'
+        )
+        raw = tmp_path / "validation"
+        raw.mkdir()
+        with monkeypatch.context() as patch:
+            patch.setattr(c, "TESTS", [suite.name])
+            patch.setattr(c, "ROOT", tmp_path)
+            patch.setattr(c, "CONSUMERS", [])
+            patch.setattr(c, "OWNED", [str(suite)])
+            real_validation_child = runner.child
+    
+            def fixture_child(name, argv, logs, **limits):
+                argv = [
+                    str(suite) + arg[len(suite.name) :] if arg.startswith(suite.name) else arg
+                    for arg in argv
+                ]
+                return real_validation_child(name, argv, logs, **limits)
+    
+            patch.setattr(runner, "child", fixture_child)
+>           validation = runner.validate(raw)
+                         ^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v752_capstone_8788.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v752_capstone_runner.py:25: in validate
+    plan, collection = collect(scratch, raw, c.TESTS + c.CONSUMERS, c.TESTS, child)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+private = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/...te_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/0/tmp/test_validation_and_production0/validation/private_checks')
+raw = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/0/tmp/test_validation_and_production0/validation')
+suites = ['test_small.py'], owned = ['test_small.py']
+child = <function test_validation_and_production_path.<locals>.fixture_child at 0x7f9747893240>
+
+    def collect(
+        private: Path,
+        raw: Path,
+        suites: list[str],
+        owned: list[str],
+        child: Callable[..., Json],
+    ) -> tuple[list[Json], Json]:
+        """A rejected inventory cannot leave child state or inherit old coverage files."""
+        token = uuid4().hex
+        receipt = child(
+            "collect_once",
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                "-n",
+                "0",
+                "-o",
+                "addopts=",
+                "--no-cov",
+                "--collect-only",
+                "-q",
+                *suites,
+            ],
+            raw / ("collection-" + token),
+            deadline=60,
+        )
+        nodes = [line for line in Path(receipt["stdout_path"]).read_text().splitlines() if "::" in line]
+        if not receipt["passed"] or not nodes or len(nodes) != len(set(nodes)):
+            raise ValueError("single_exact_collection_failed")
+        if (
+            not suites
+            or len(suites) != len(set(suites))
+            or any(
+                n.split("::", 1)[0] not in suites
+                or any(not part.strip() for part in n.split("::"))
+                or n != n.strip()
+                for n in nodes
+            )
+        ):
+>           raise ValueError("malformed_collection_inventory")
+E           ValueError: malformed_collection_inventory
+
+python/carnot/reporting/collection_contract.py:54: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_collect_once completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_once completed=1 pending=0
+=============================== warnings summary ===============================
+tests/python/test_v752_capstone_8788.py::test_primitive_reductions
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v752_capstone_8788.py::test_validation_and_production_path
+ERROR tests/python/test_v752_capstone_8788.py::test_cli_replay_and_attacks - ...
+ERROR tests/python/test_v752_capstone_8788.py::test_primitive_reductions - Fa...
+ERROR tests/python/test_v752_capstone_8788.py::test_replay_source_and_authority_mutations
+1 failed, 5 passed, 1 warning, 3 errors in 10.96s

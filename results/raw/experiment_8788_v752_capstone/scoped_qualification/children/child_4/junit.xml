@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="7" time="61.421" timestamp="2026-11-03T21:34:25.624361-05:00" hostname="icbfl1"><testcase classname="tests.python.test_restricted_decision_audit_8210" name="test_original_costs_missing_and_identity" time="1.575" /><testcase classname="tests.python.test_restricted_decision_audit_8210" name="test_registered_gates_and_distinct_risk_denominators" time="0.345" /><testcase classname="tests.python.test_restricted_decision_audit_8210" name="test_private_cli_and_rehashed_mutations" time="3.547"><failure message="AssertionError: [exp8210] phase=start completed=0 pending=0&#10;  usage: experiment_8210_v709_restricted_decision_audit.py [-h]&#10;                                                           [--date {20261006}]&#10;                                                           [--root ROOT]&#10;                                                           [--output OUTPUT]&#10;                                                           [--fixture-output FIXTURE_OUTPUT]&#10;                                                           [--worker-output WORKER_OUTPUT]&#10;                                                           [--stream-path STREAM_PATH]&#10;                                                           [--mutation {,labels,roles,slots,source}]&#10;                                                           [--cold-replay COLD_REPLAY]&#10;  experiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private&#10;  &#10;assert 2 == 0&#10; +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cold-replay COLD_REPLAY]\nexperiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private\n').returncode">tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_private_cli_and_rehashed_0')
+
+    def test_private_cli_and_rehashed_mutations(tmp_path: Path) -&gt; None:
+        """SCENARIO-REPORT-8210-CLI: real success, block and four cold mutation failures."""
+        output = tmp_path / (e.NAME + ".json")
+        result = cli(tmp_path, "--date", "20261006", "--fixture-output", output)
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8210] phase=start completed=0 pending=0
+E         usage: experiment_8210_v709_restricted_decision_audit.py [-h]
+E                                                                  [--date {20261006}]
+E                                                                  [--root ROOT]
+E                                                                  [--output OUTPUT]
+E                                                                  [--fixture-output FIXTURE_OUTPUT]
+E                                                                  [--worker-output WORKER_OUTPUT]
+E                                                                  [--stream-path STREAM_PATH]
+E                                                                  [--mutation {,labels,roles,slots,source}]
+E                                                                  [--cold-replay COLD_REPLAY]
+E         experiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cold-replay COLD_REPLAY]\nexperiment_8210_v709_restricted_decision_audit.py: error: fixture outputs must be private\n').returncode
+
+tests/python/test_restricted_decision_audit_8210.py:110: AssertionError</failure></testcase><testcase classname="tests.python.test_restricted_decision_audit_8210" name="test_natural_custody_and_owned_failure" time="39.108"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c..._checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0/worker/measurement.json\'\n').returncode&#10; +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c..._checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0/worker/measurement.json\'\n') = cli(PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0'), '--root', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0') / 'absent'), '--worker-output', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0') / 'worker/measurement.json'))">tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7fe25835cc80&gt;
+
+    def test_natural_custody_and_owned_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -&gt; None:
+        """REQ-REPORT-8210: natural cached audit is ready; failed owned checks disqualify."""
+        private = tmp_path / "validation"
+        private.mkdir()
+        plan = e.manifest(private, tmp_path / "candidate.json")
+        cold = next(c for c in plan["terminal_commands"] if c["name"] == "cold_replay")
+        assert str(e.ROOT / e.CLI) in cold["argv"]
+        work = e.measure(e.ROOT, tmp_path / "natural")
+        assert work["evidence"] and not work["owned_failure"]
+        value = e.build(work, tmp_path / "natural", [dict(passed=True)])
+        assert value["action_audit_ready_score"] == 1
+        assert (value["completed_count"], value["failed_count"], value["excluded_count"]) == (97, 30, 1)
+        output = tmp_path / "natural.json"
+        atomic_json(output, value)
+        assert e.replay(output)
+        measurement = Path(value["measurement_reference"]["path"])
+        for mutation in ("row", "original_label", "permission_mask", "denominator", "pin"):
+            changed_work = deepcopy(work)
+            data = changed_work["evidence"]
+            if mutation == "original_label":
+                data["original_response_records"][0]["labels"] = []
+                data["original_response_records"][0]["quality"] = "changed"
+            elif mutation == "permission_mask":
+                data["predictions"][0]["allowed_actions"] = ["accept"]
+            elif mutation == "denominator":
+                data["predictions"][0]["denominator"] = 128
+            elif mutation == "pin":
+                changed_work["refs"][0]["sha256"] = "sha256:" + "0" * 64
+            else:
+                row = data["predictions"][0]
+                row["action"] = "reject" if row["action"] == "accept" else "accept"
+            atomic_json(measurement, changed_work)
+            changed = deepcopy(value)
+            changed["measurement_reference"] = e.reference(measurement)
+            changed.pop("reproducibility_checksum")
+            changed["reproducibility_checksum"] = canonical_hash(changed)
+            atomic_json(output, changed)
+            rejected = cli(tmp_path, "--cold-replay", output)
+            assert rejected.returncode == 1, mutation + rejected.stdout + rejected.stderr
+        atomic_json(measurement, work)
+        atomic_json(output, value)
+        assert e.replay(output)
+        monkeypatch.setattr(e, "OPTIONAL", "results/optional_missing_8210.json")
+        optional = e.measure(e.ROOT, tmp_path / "optional")
+        assert optional["evidence"] and "absent" in optional["optional_sibling_disposition"]
+        monkeypatch.undo()
+        assert (
+            e.build(work, tmp_path / "natural", [dict(passed=False)])["verdict_class"] == "disqualified"
+        )
+&gt;       assert (
+            cli(
+                tmp_path,
+                "--root",
+                tmp_path / "absent",
+                "--worker-output",
+                tmp_path / "worker/measurement.json",
+            ).returncode
+            == 0
+        )
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c..._checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0/worker/measurement.json\'\n').returncode
+E        +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c..._checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0/worker/measurement.json\'\n') = cli(PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0'), '--root', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0') / 'absent'), '--worker-output', (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/4/tmp/test_natural_custody_and_owned0') / 'worker/measurement.json'))
+
+tests/python/test_restricted_decision_audit_8210.py:184: AssertionError</failure></testcase><testcase classname="tests.python.test_restricted_decision_audit_8210" name="test_failure_receipts_and_primitive_hashes" time="2.686" /><testcase classname="tests.python.test_restricted_decision_audit_8210" name="test_unpaired_and_duplicate_source_failures" time="0.296" /><testcase classname="tests.python.test_restricted_decision_audit_8210" name="test_standalone_manifest_frozen_replay_and_scope" time="9.454" /></testsuite></testsuites>

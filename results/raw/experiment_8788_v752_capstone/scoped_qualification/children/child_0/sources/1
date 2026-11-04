@@ -1,0 +1,414 @@
+"""REQ-REPORT-8788: preserve missing science separately from administrative readiness."""
+
+from copy import deepcopy
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+from carnot.reporting.current_work_receipt import ZERO_INVOCATION_COUNTS
+from carnot.reporting import v752_capstone as c
+
+Json = dict[str, Any]
+BRANCHES = {
+    "evidence_transfer": (
+        8779,
+        [
+            "exposed_replication_metrics",
+            "new_family_metrics",
+            "paired_intervals",
+            "confusion_rows",
+            "cost_rows",
+            "valid_alternative_rows",
+        ],
+    ),
+    "faithful_extraction": (
+        8782,
+        ["rows", "extraction_fidelity", "independent_generalization_score"],
+    ),
+    "later_memory_benefit": (8785, ["rows", "future_brier", "joint_retention"]),
+    "finite_capacity_sensitivity": (8781, ["rows", "paired_intervals"]),
+    "durable_cost": (
+        8784,
+        [
+            "process_pair_rows",
+            "descriptive_ratio_ranges",
+            "per_process_rows",
+            "prefix_preparation_cost_rows",
+            "unassigned_cost_rows",
+            "restart_rows",
+            "component_cost_rows",
+            "observer_overhead_rows",
+            "reconciliation_rows",
+            "ideal_speed_bounds",
+            "per_window_rows",
+            "per_update_rows",
+        ],
+    ),
+    "arc_deltas": (8786, ["rows", "new_outcome_count"]),
+}
+REOPEN = {
+    8776: "Correct failed owned archive validation with unchanged assertions and exact successful node receipts.",
+    8778: "Publish exp8776 memory_protocol_ready_score=1 with successful owned validation, then execute the delayed-memory prototype.",
+    8780: "Publish authenticated exp8778 memory_execution_ready_score=1 before measuring causal learning.",
+    8781: "Publish authenticated exp8778 memory_execution_ready_score=1 before pairing capacities 8 and 32.",
+    8782: "Supply changed authenticated CUDA runtime and unsloth/Qwen3.8-27B-GGUF custody; require exp8776 runtime_repair_ready_score=1 and a revised model contract.",
+    8784: "Change observer instrumentation; demonstrate worst paired overhead <=0.05 and parent-clock reconciliation error <=0.02 on the identical durable workload.",
+    8785: "Publish authenticated exp8780 memory_rows_ready_score=1 with sealed prediction-before-release receipts.",
+    8786: "Provide new authenticated live hidden-game outcomes beyond the frozen frontier and exp8776 arc_new_outcomes_available_score=1.",
+    8787: "Provide complete admitted host costs and authenticated physical-operation custody for the same workload.",
+    8788: "Change the missing authenticated branch operands; unchanged absence authorizes no repeat.",
+}
+
+
+def reconstruct(value: Json) -> Json:
+    """Recompute admitted science from its primitive rows without invoking a producer CLI."""
+    if not value:
+        return {}
+    work = c.load(value["primitive_reference"])
+    rebuilt: Json = {}
+    if "frozen_reference" in work and "decisions_reference" in work:
+        from carnot.reporting import evidence_set_evaluation_8779 as evidence
+
+        frozen = c.load(work["frozen_reference"])
+        decisions = c.load(work["decisions_reference"])["rows"]
+        rows = evidence.score(frozen["inputs"], frozen["labels"], decisions)
+        rebuilt = dict(evidence.summarize(rows), rows=rows)
+    elif "window_rows" in work:
+        from carnot.reporting import durable_cost_components_8784 as durable
+
+        rebuilt = durable.reduce(work["window_rows"])
+        for row in rebuilt["component_cost_rows"]:
+            row["admitted"] = bool(value["component_cost_ready_score"])
+    for key, actual in rebuilt.items():
+        if key in value and actual != value[key]:
+            raise ValueError("primitive_reduction_drift:" + key)
+    return rebuilt
+
+
+def build(work: Json, validation: Json, output: Path) -> Json:
+    """Completed accounting can stay blocked; owned validation failure always disqualifies."""
+    checked = (
+        bool(validation["receipts"])
+        and all(r["passed"] for r in validation["receipts"])
+        and validation["coverage"]["complete"]
+        and validation["union"]["passed"]
+    )
+    rows = deepcopy(work["slots"])
+    by_id = {t["id"]: t for t in work["tasks"]}
+    gates, admissions = [], []
+    values = {}
+    for row in rows:
+        ref = row["primary_reference"]
+        value = c.load(ref) if ref["sha256"] and row["producer_executed"] else {}
+        values[row["experiment_id"]] = value
+        admissions.append(
+            dict(
+                task_id=row["task_id"],
+                reference=ref,
+                admitted=row["producer_qualified"],
+                reasons=row["authentication_errors"],
+            )
+        )
+        for gate in by_id[row["task_id"]]["gated_on"]:
+            upstream = next(r for r in rows if r["task_id"] == gate["upstream"])
+            observed = c.observe(
+                upstream["primary_reference"],
+                gate["upstream"],
+                gate["artifact_field"],
+                gate["value"],
+            )
+            gates.append(
+                dict(
+                    observed,
+                    consumer_task_id=row["task_id"],
+                    producer_qualified=upstream["producer_qualified"],
+                    passed=observed["passed"] and upstream["producer_qualified"],
+                )
+            )
+        for recorded in row["conductor_gate_receipts"]:
+            ref = dict(path=recorded["artifact_path"], sha256=recorded["artifact_sha256"])
+            actual = c.observe(
+                ref, recorded["upstream"], recorded["artifact_field"], recorded["expected"]
+            )
+            gates.append(
+                dict(
+                    actual,
+                    consumer_task_id=row["task_id"],
+                    check="conductor_receipt_matches_operand",
+                    expected=[recorded["actual"], recorded["passed"]],
+                    observed=[actual["observed"], actual["passed"]],
+                    passed=[actual["observed"], actual["passed"]]
+                    == [recorded["actual"], recorded["passed"]],
+                )
+            )
+    for row in rows:
+        if row["authentication_errors"]:
+            gates.append(
+                dict(
+                    row["primary_reference"],
+                    upstream=row["task_id"],
+                    check="producer_admission",
+                    field="exact_task_identity_and_terminal_validation",
+                    operator="==",
+                    expected=True,
+                    observed="rejected_producer",
+                    operand_state="rejected_producer",
+                    passed=False,
+                )
+            )
+    branches = {}
+    for name, (number, fields) in BRANCHES.items():
+        row = next(r for r in rows if r["experiment_id"] == number)
+        value = values[number]
+        rebuilt = reconstruct(value) if row["producer_qualified"] else {}
+        branches[name] = dict(
+            primitive_reconstruction=rebuilt,
+            measured=row["producer_qualified"],
+            verdict_class=row["verdict_class"],
+            primary_reference=row["primary_reference"],
+            independent_count=row["independent_count"],
+            verifier_is_oracle=bool(
+                value.get("verifier_is_oracle") or value.get("oracle_dependent_benchmark")
+            ),
+            exposure_scope=value.get("exposure_scope", "no admitted measurement"),
+            independent_generalization_score=0,
+            accounting={
+                k: value.get(k) if row["producer_qualified"] else None
+                for k in [
+                    "intended_count",
+                    "completed_count",
+                    "failed_count",
+                    "censored_count",
+                    "excluded_count",
+                    "independent_count",
+                ]
+            },
+            raw_rows=value.get("rows", []) if row["producer_qualified"] else [],
+            natural_model_headline_admitted=False,
+            metrics={k: value.get(k) if row["producer_qualified"] else None for k in fields},
+            field_provenance={k: dict(row["primary_reference"], field=k) for k in fields},
+        )
+    # Missing comparisons stay missing even when all scheduling slots are accounted for.
+    verdict = (
+        "disqualified"
+        if not checked
+        else "blocked"
+        if any(not b["measured"] for b in branches.values())
+        else "null"
+    )
+    self_row = dict(
+        task_id=c.TASK,
+        experiment_id=8788,
+        unit_id=c.TASK,
+        arm="scheduled_task",
+        status="completed",
+        absolute_metric=int(checked),
+        raw_numerator=int(checked),
+        raw_denominator=1,
+        censored=False,
+        excluded=False,
+        effective_independent_groups=0,
+        producer_executed=True,
+        producer_qualified=checked,
+        honest_verdict="complete_" + verdict + "_v752_capstone",
+        verdict_class=verdict,
+        scheduler_outcome="self_reconciliation",
+        primary_reference=dict(path=str(output.absolute()), sha256=None),
+        conductor_reference=None,
+        conductor_gate_receipts=[],
+        authentication_errors=[],
+        evidence_references=[],
+        cost_s=None,
+        independent_count=0,
+    )
+    rows.append(self_row)
+    decisions, retirements = [], []
+    for task, row in zip(work["tasks"], rows, strict=True):
+        condition = REOPEN.get(
+            row["experiment_id"],
+            "This constructed fixture comparison is closed; require new disjoint worlds and an explicitly changed registered estimand.",
+        )
+        decisions.append(
+            dict(
+                task_id=task["id"],
+                verdict_class=row["verdict_class"],
+                comparison_closed=True,
+                automatic_rerun_authorized=False,
+                reopening_conditions=[condition],
+            )
+        )
+        for prior in task["prior_failures"]:
+            actual_prior = next(
+                p
+                for p in work["prior_outcomes"]
+                if p["task_id"] == task["id"] and p["prior_task_id"] == prior["experiment_id"]
+            )
+            current = row["honest_verdict"]
+            prior_class = next(
+                (
+                    v
+                    for v in ["disqualified", "blocked", "null", "circular_positive", "positive"]
+                    if prior["verdict"].startswith("complete_" + v)
+                ),
+                None,
+            )
+            same = (
+                current is not None
+                and current == actual_prior["actual_honest_verdict"]
+                and actual_prior["registered_verdict_matches"]
+                and actual_prior["exact_identity_matches"]
+            )
+            repeated = row["verdict_class"] == prior_class
+            retirements.append(
+                dict(
+                    task_id=task["id"],
+                    registration=prior,
+                    prior_evidence=actual_prior,
+                    observed_producer_verdict=current,
+                    scheduler_outcome=row["scheduler_outcome"],
+                    exact_repeat=same,
+                    same_terminal_class=repeated,
+                    recommendation="retire_unchanged_scope"
+                    if same or repeated or not row["producer_executed"]
+                    else "close_prior_comparison",
+                    retire_if_same_verdict=prior["retire_if_same_verdict"],
+                    reopening_conditions=[condition],
+                    manifest_edited=False,
+                )
+            )
+    end = validation["ended_at_utc"]
+    duration = (
+        datetime.fromisoformat(end) - datetime.fromisoformat(work["started_at_utc"])
+    ).total_seconds()
+    publication = work["publication_gates"]
+    primitive = c.reference(Path(work["raw"]) / "work.json")
+    validation_ref = c.reference(Path(work["raw"]) / "validation.json")
+    value = dict(
+        experiment_id=8788,
+        task_id=c.TASK,
+        milestone=c.MILESTONE,
+        run_date=work["run_date"],
+        invocation_id=work["invocation_id"],
+        honest_verdict=self_row["honest_verdict"],
+        verdict_class=verdict,
+        gate_check_summary=[g for g in gates if not g["passed"]],
+        inference_substrate="aggregation_from_upstream_artifacts",
+        inference_substrate_class="no_model_load",
+        MODEL_SPECS=[],
+        model_invocation_counts=dict(ZERO_INVOCATION_COUNTS),
+        current_language_model_calls=0,
+        numerical_training_calls=0,
+        rows=rows,
+        intended_count=13,
+        completed_count=13,
+        failed_count=sum(r["verdict_class"] == "disqualified" for r in rows),
+        censored_count=0,
+        excluded_count=0,
+        independent_count=0,
+        verifier_is_oracle=False,
+        exposure_scope="administrative reconciliation; constructed oracle worlds remain separate from natural extraction and hidden games",
+        independent_generalization_score=0,
+        acceptance_gates=dict(
+            scoped_validation=checked,
+            exact_task_custody=len(rows) == 13,
+            resource_projection=work["preconditions"]["projection_fits"],
+        ),
+        required_checks_passed=checked,
+        flagged_adversarial=False,
+        validation_receipts=validation["receipts"],
+        owned_statement_coverage=validation["coverage"],
+        terminal_validation_sidecar_path=str(Path(work["raw"]) / "terminal_validation.json"),
+        preconditions_checked=work["preconditions"],
+        duration_s=duration,
+        started_at_utc=work["started_at_utc"],
+        ended_at_utc=end,
+        phase_spans=[
+            dict(
+                phase="freeze_and_validation",
+                start_utc=work["started_at_utc"],
+                end_utc=end,
+                duration_s=duration,
+            )
+        ],
+        random_seed=7528788,
+        source_artifact_hashes=work["references"],
+        code_config_hashes=work["sources"],
+        raw_shard_hashes=[primitive, validation_ref],
+        cited_upstream_artifacts=work["references"],
+        repository_health_reference=work.get("repository_health_reference", {}),
+        scoped_validation_scope=dict(
+            test_files=c.TESTS,
+            consumers=c.CONSUMERS,
+            e2e=["E2E-018", "E2E-021"],
+            repository_health_is_dependency=False,
+        ),
+        reconciliation_ready_score=int(checked),
+        task_outcome_rows=rows,
+        gate_edge_rows=gates,
+        full_task_objects=work["tasks"],
+        canonical_tasks_sha256=c.PIN,
+        visible_task_table=work["visible_table"],
+        source_admission_rows=admissions,
+        retirement_recommendations=retirements,
+        next_measurement_priorities=decisions,
+        scientific_reconstruction=branches,
+        historical_quarantines=work["historical"],
+        unresolved_original_deadline_learning_chain=True,
+        publication_gates=publication,
+        paper_ready=publication["paper_ready"],
+        unmet_gates=publication["unmet_gates"],
+        activation_authorized=False,
+        publication_authorized=False,
+        primitive_reference=primitive,
+        validation_reference=validation_ref,
+        publication_output=str(output.absolute()),
+        original_node_union=validation["union"],
+        methodology_note="Account for thirteen exact tasks without executing historical controllers. Preserve qualified constructed evidence and durable nulls. Missing learning, natural extraction, capacity and ARC outcomes remain blocked. No model, training, physical-device or independent generalization claim.",
+        **publication["gates"],
+    )
+    if not checked:
+        value["gate_check_summary"].append(
+            dict(
+                primitive,
+                upstream=c.TASK,
+                check="owned_validation",
+                field="required_checks_passed",
+                operator="==",
+                expected=True,
+                observed=False,
+                passed=False,
+            )
+        )
+    value["field_principles"] = dict.fromkeys(
+        [*value, "field_principles", "reproducibility_checksum"],
+        "Bind exact identity and immutable bytes; preserve measured zero, absence, rejection and circularity separately.",
+    )
+    value["reproducibility_checksum"] = c.digest(value)
+    return value
+
+
+def replay(path: Path) -> bool:
+    """Independent seals reject repaired envelopes and recomputation rejects invented totals."""
+    try:
+        value = c.load(c.reference(path))
+        work = c.load(value["primitive_reference"])
+        raw = Path(work["raw"])
+        if (raw / "work.json").read_bytes() != (raw / "frozen_inputs.json").read_bytes():
+            return False
+        seal = c.load(c.reference(raw / "independent_seal.json"))
+        if seal != dict(
+            primitive_reference=value["primitive_reference"],
+            validation_reference=value["validation_reference"],
+        ):
+            return False
+        validation = c.load(value["validation_reference"])
+        if any(
+            c.reference(Path(r["path"]))["sha256"] != r["sha256"]
+            for r in work["references"] + work["sources"]
+        ):
+            return False
+        if c.contract(raw / "authority")["tasks"] != work["tasks"]:
+            return False
+        return build(work, validation, Path(value["publication_output"])) == value
+    except (OSError, ValueError, KeyError, TypeError, IndexError):
+        return False

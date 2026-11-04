@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="18" time="19.604" timestamp="2026-11-03T21:33:39.167408-05:00" hostname="icbfl1"><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_matching_activation_and_consumed_stage" time="1.001" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_old_active_and_changed_full_task_fail" time="2.994" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_core_mutations_fail[id]" time="1.012" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_core_mutations_fail[title]" time="1.005" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_core_mutations_fail[phase]" time="1.087" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_core_mutations_fail[deliverable]" time="1.012" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_core_mutations_fail[MODEL_SPECS]" time="1.006" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_core_mutations_fail[inference_substrate_class]" time="1.091" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_core_mutations_fail[gated_on]" time="1.009" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_missing_digest_and_inconsistent_design_count_fail" time="0.469" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_wrong_staged_digest_and_active_count_fail" time="2.070" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_immutable_snapshot_refuses_corruption" time="0.912" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_cli_private_success_failure_and_replay" time="0.596"><failure message="AssertionError: [exp7891] phase=startup event=start elapsed_s=0.002 completed_units=0&#10;  [exp7891] phase=preconditions event=start elapsed_s=0.002 completed_units=0&#10;  Traceback (most recent call last):&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py&quot;, line 513, in &lt;module&gt;&#10;      raise SystemExit(main())&#10;                       ^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py&quot;, line 481, in main&#10;      candidate = build_candidate(args, raw_root)&#10;                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py&quot;, line 233, in build_candidate&#10;      assessed = assess_authorities(&#10;                 ^^^^^^^^^^^^^^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py&quot;, line 98, in assess_authorities&#10;      &quot;design&quot;: _snapshot(design, design_raw, snapshot_dir, &quot;design&quot;),&#10;                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py&quot;, line 56, in _snapshot&#10;      &quot;snapshot_sha256&quot;: sha256_file(target),&#10;                         ^^^^^^^^^^^^^^^^^^^&#10;    File &quot;/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py&quot;, line 52, in sha256_file&#10;      with path.open(&quot;rb&quot;) as stream:&#10;           ^^^^^^^^^^^^^^^&#10;    File &quot;/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py&quot;, line 1013, in open&#10;      return io.open(self, mode, buffering, encoding, errors, newline)&#10;             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&#10;    File &quot;/tmp/carnot-child-results-guard-c85jije1/sitecustomize.py&quot;, line 62, in opened&#10;      return real(file, mode, *args, **kwargs)&#10;             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^&#10;  FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/3/tmp/test_cli_private_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin'&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...te_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin\'\n').returncode">authority_paths = (PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification...ification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/3/tmp/test_cli_private_success_failu0/snapshots'))
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/3/tmp/test_cli_private_success_failu0')
+
+    def test_cli_private_success_failure_and_replay(authority_paths, tmp_path):
+        """SCENARIO-REPORT-7891-VALIDATION: real CLI rejects a changed candidate."""
+        design, staged, active, _ = authority_paths
+        output, raw = tmp_path / "candidate.json", tmp_path / "rows.json"
+        base = [
+            sys.executable,
+            str(CLI),
+            "--date",
+            "20260929",
+            "--design",
+            str(design),
+            "--staged",
+            str(staged),
+            "--active",
+            str(active),
+            "--output",
+            str(output),
+            "--raw",
+            str(raw),
+            "--no-validation",
+        ]
+        done = subprocess.run(base, cwd=ROOT, capture_output=True, text=True, timeout=60)
+&gt;       assert done.returncode == 0, done.stdout + done.stderr
+E       AssertionError: [exp7891] phase=startup event=start elapsed_s=0.002 completed_units=0
+E         [exp7891] phase=preconditions event=start elapsed_s=0.002 completed_units=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 513, in &lt;module&gt;
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 481, in main
+E             candidate = build_candidate(args, raw_root)
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7891_v685_authority_lifecycle.py", line 233, in build_candidate
+E             assessed = assess_authorities(
+E                        ^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 98, in assess_authorities
+E             "design": _snapshot(design, design_raw, snapshot_dir, "design"),
+E                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v685_authority_lifecycle.py", line 56, in _snapshot
+E             "snapshot_sha256": sha256_file(target),
+E                                ^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 52, in sha256_file
+E             with path.open("rb") as stream:
+E                  ^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+E             return io.open(self, mode, buffering, encoding, errors, newline)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/tmp/carnot-child-results-guard-c85jije1/sitecustomize.py", line 62, in opened
+E             return real(file, mode, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8788_v752_capstone/scoped_qualification/private_checks/collection-5694a86a8b29457a8c42ada7ca570f3c/3/tmp/test_cli_private_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...te_success_failu0/authority_snapshots/design-f0b76c84de9a2682059cadda845b7f4c018f5bdf65681ff7016630488f5b0c9e.bin\'\n').returncode
+
+tests/python/test_experiment_7891_v685_authority_lifecycle.py:165: AssertionError</failure></testcase><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_terminal_recheck_failure_refuses_publication" time="0.005" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_child_deadline_seals_failed_receipt" time="0.105" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_authority_and_required_check_verdicts" time="2.039" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_terminal_recovery_rechecks_disqualified_bytes" time="0.005" /><testcase classname="tests.python.test_experiment_7891_v685_authority_lifecycle" name="test_direct_replay_date_and_publication_hash_exits" time="0.181" /></testsuite></testsuites>

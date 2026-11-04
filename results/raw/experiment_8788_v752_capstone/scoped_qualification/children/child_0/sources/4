@@ -1,0 +1,411 @@
+"""REQ-REPORT-8788 / REQ-VERIFY-8788: exact custody and sealed private replay."""
+
+from copy import deepcopy
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from carnot.reporting import v752_capstone as c
+
+
+def fixture_root(root):
+    """REQ-REPORT-8788: build synthetic operands wholly in private scratch."""
+    for name in [c.DESIGN, "research-roadmap.yaml"]:
+        target = root / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(c.ROOT / name, target)
+    tasks = c.contract(root)["tasks"]
+    for i in [0, 1, 3, 7, 8, 11]:
+        task = tasks[i]
+        path = root / task["deliverable"]
+        raw = path.parent / "raw" / path.stem
+        c.atomic_json(raw / "primitive.json", dict(fixture=True))
+        receipts = [dict(passed=i != 0)]
+        c.atomic_json(raw / "validation.json", dict(receipts=receipts))
+        verdict = (
+            "disqualified"
+            if i == 0
+            else "null"
+            if i == 8
+            else "blocked"
+            if i == 11
+            else "circular_positive"
+        )
+        value = dict(
+            task_id=task["id"],
+            experiment_id=8776 + i,
+            honest_verdict="complete_" + verdict + "_fixture",
+            verdict_class=verdict,
+            required_checks_passed=i != 0,
+            flagged_adversarial=False,
+            primitive_reference=c.reference(raw / "primitive.json"),
+            validation_reference=c.reference(raw / "validation.json"),
+            validation_receipts=receipts,
+            independent_count=120 if i == 3 else 0,
+            verifier_is_oracle=True,
+            exposure_scope="constructed private fixture",
+            memory_protocol_ready_score=0,
+            runtime_repair_ready_score=0,
+            arc_new_outcomes_available_score=0,
+            evidence_methods_ready_score=1,
+            durable_producer_ready_score=1,
+        )
+        c.atomic_json(path, value)
+        ref = c.reference(path)
+        c.atomic_json(
+            raw / "validators" / (ref["sha256"][7:] + ".json"),
+            dict(
+                primary_path=str(path.absolute()),
+                primary_sha256=ref["sha256"],
+                report=dict(passed=True),
+            ),
+        )
+    receipt_path = root / "results/experiment_8778_delayed_memory_prototype.json"
+    upstream = root / tasks[0]["deliverable"]
+    c.atomic_json(
+        receipt_path,
+        dict(
+            blocked_at_layer="conductor_pre_gate",
+            gates_evaluated=[
+                dict(
+                    upstream=tasks[0]["id"],
+                    artifact_path=str(upstream),
+                    artifact_sha256=c.reference(upstream)["sha256"],
+                    artifact_field="memory_protocol_ready_score",
+                    expected=1,
+                    actual=0,
+                    passed=False,
+                )
+            ],
+        ),
+    )
+    return root
+
+
+def cli(*args):
+    """SCENARIO-VERIFY-8788-REPLAY: exercise the actual script from outside the checkout."""
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    return subprocess.run(
+        [sys.executable, "-u", str(c.ROOT / c.CLI), *map(str, args)],
+        cwd="/var/tmp",
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+
+
+def test_operand_states(tmp_path):
+    """SCENARIO-REPORT-8788-ACCOUNTING: absence, zero and identity differ."""
+    path = tmp_path / "source.json"
+    assert c.observe(c.reference(path), "exp1-x", "ready", 1)["operand_state"] == "missing_file"
+    c.atomic_json(path, {"ready": 0})
+    ref = c.reference(path)
+    assert c.observe(ref, "exp1-x", "ready", 1)["observed"] == 0
+    assert c.observe(ref, "exp1-x", "absent", 1)["operand_state"] == "missing_field"
+    path.write_text("{}")
+    with pytest.raises(ValueError):
+        c.load(ref)
+
+
+def test_rows_and_replay(tmp_path):
+    """SCENARIO-VERIFY-8788-REPLAY: private evidence cannot fabricate producer verdicts."""
+    root = fixture_root(tmp_path / "fixture")
+    raw = tmp_path / "raw"
+    work = c.freeze(root, raw, "20261104")
+    work["publication_gates"] = dict(
+        gates={g: dict(pass_=True) for g in []},
+        paper_ready=False,
+        unmet_gates=["G1", "G2", "G3", "G4"],
+    )
+    validation = dict(
+        receipts=[dict(passed=True)],
+        coverage=dict(complete=True),
+        union=dict(passed=True),
+        ended_at_utc=c.now(),
+    )
+    c.atomic_json(raw / "validation.json", validation)
+    value = c.build(work, validation, tmp_path / (c.NAME + ".json"))
+    assert value["intended_count"] == len(value["rows"]) == 13
+    assert value["rows"][2]["honest_verdict"] is None
+    assert value["rows"][2]["scheduler_outcome"] == "conductor_pre_gate"
+    assert value["verdict_class"] == "blocked"
+    assert value["MODEL_SPECS"] == []
+    assert value["independent_generalization_score"] == 0
+    assert len(value["retirement_recommendations"]) == sum(
+        len(t["prior_failures"]) for t in work["tasks"]
+    )
+    failed = c.build(
+        work, dict(validation, receipts=[dict(passed=False)]), tmp_path / (c.NAME + ".json")
+    )
+    assert failed["verdict_class"] == "disqualified"
+    assert failed["reconciliation_ready_score"] == 0
+    changed = deepcopy(value)
+    changed["full_task_objects"][0]["title"] = "forged"
+    assert changed["full_task_objects"] != work["tasks"]
+
+
+@pytest.fixture(scope="module")
+def private(tmp_path_factory):
+    """REQ-VERIFY-8788: an actual private CLI child publishes a disqualified control."""
+    parent = tmp_path_factory.mktemp("capstone8788")
+    root = fixture_root(parent / "fixture")
+    output = parent / (c.NAME + ".json")
+    result = cli("--root", root, "--output", output, "--private-control")
+    assert result.returncode == 1, result.stdout + result.stderr
+    value = json.loads(output.read_bytes())
+    assert value["verdict_class"] == "disqualified"
+    return root, output, value
+
+
+def test_cli_replay_and_attacks(private, tmp_path):
+    """SCENARIO-VERIFY-8788-REPLAY: hashes alone cannot repair invented aggregates."""
+    root, output, value = private
+    assert cli("--cold-replay", output).returncode == 0
+    for field in ["rows", "receipts", "authority", "primitive", "missing", "source", "contract"]:
+        changed = deepcopy(value)
+        if field == "rows":
+            changed["rows"][0]["producer_qualified"] = True
+        elif field == "receipts":
+            changed["validation_receipts"][0]["passed"] = False
+        elif field == "authority":
+            changed["full_task_objects"][0]["prompt"] += "forged"
+        elif field in ["primitive", "missing"]:
+            target = tmp_path / "forged_work.json"
+            if field == "primitive":
+                c.atomic_json(target, dict(c.load(value["primitive_reference"]), run_date="forged"))
+            changed["primitive_reference"] = c.reference(target)
+        else:
+            work = c.load(value["primitive_reference"])
+            if field == "source":
+                work["references"].append(
+                    dict(path=str(tmp_path / "absent"), sha256="sha256:forged")
+                )
+            else:
+                work["tasks"] = []
+            target = tmp_path / ("work_" + field + ".json")
+            c.atomic_json(target, work)
+            changed["primitive_reference"] = c.reference(target)
+            raw = Path(work["raw"])
+            original = (raw / "independent_seal.json").read_bytes()
+            c.atomic_json(
+                raw / "independent_seal.json",
+                dict(
+                    primitive_reference=changed["primitive_reference"],
+                    validation_reference=changed["validation_reference"],
+                ),
+            )
+        changed["reproducibility_checksum"] = c.digest(changed)
+        candidate = tmp_path / "candidate.json"
+        c.atomic_json(candidate, changed)
+        assert not c.replay(candidate), field
+        if field in ["source", "contract"]:
+            (raw / "independent_seal.json").write_bytes(original)
+    failed = tmp_path / "failed" / (c.NAME + ".json")
+    result = cli("--root", root, "--output", failed, "--private-control", "--failed-child")
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert json.loads(failed.read_bytes())["validation_receipts"][0]["actual_exit"] == 1
+    assert cli("--private-control").returncode == 2
+    assert cli("--date", "123").returncode == 2
+    assert cli("--cold-replay", tmp_path / "missing.json").returncode == 1
+
+
+def test_authentication_and_contract(tmp_path):
+    """REQ-REPORT-8788: substituted producer identities and invalid authority are rejected."""
+    root = fixture_root(tmp_path / "fixture")
+    tasks = c.contract(root)["tasks"]
+    row = c.slot(tasks[1], root)
+    assert row["producer_qualified"]
+    path = root / tasks[1]["deliverable"]
+    v = c.load(c.reference(path))
+    c.atomic_json(path, dict(v, task_id="exp8777-alias"))
+    assert c.slot(tasks[1], root)["authentication_errors"] == ["producer_task_identity"]
+    c.atomic_json(path, v)
+    side = (
+        path.parent / "raw" / path.stem / "validators" / (c.reference(path)["sha256"][7:] + ".json")
+    )
+    report = c.load(c.reference(side))
+    c.atomic_json(side, dict(report, report=dict(passed=False)))
+    with pytest.raises(ValueError, match="producer_terminal_acceptance"):
+        c.authenticate(path, tasks[1]["id"])
+    c.atomic_json(side, report)
+    c.atomic_json(Path(v["validation_reference"]["path"]), dict(receipts=[]))
+    with pytest.raises(ValueError):
+        c.authenticate(path, tasks[1]["id"])
+    staged = root / "research-roadmap-next.yaml"
+    shutil.copyfile(root / "research-roadmap.yaml", staged)
+    assert c.contract(root)
+    text = (root / c.DESIGN).read_text()
+    (root / c.DESIGN).write_text(text.replace(c.PIN, "0" * 64))
+    with pytest.raises(ValueError, match="v752_full_object_authority"):
+        c.contract(root)
+
+
+def test_validation_and_production_path(tmp_path, monkeypatch):
+    """REQ-VERIFY-8788: real bounded validation plumbing and production orchestration execute."""
+    from carnot.reporting import v752_capstone_runner as runner
+
+    suite = tmp_path / "test_small.py"
+    suite.write_text(
+        '"""REQ-VERIFY-8788: private validation plumbing."""\n\n\ndef test_ok() -> None:\n    assert True\n'
+    )
+    raw = tmp_path / "validation"
+    raw.mkdir()
+    with monkeypatch.context() as patch:
+        patch.setattr(c, "TESTS", [suite.name])
+        patch.setattr(c, "ROOT", tmp_path)
+        patch.setattr(c, "CONSUMERS", [])
+        patch.setattr(c, "OWNED", [str(suite)])
+        real_validation_child = runner.child
+
+        def fixture_child(name, argv, logs, **limits):
+            argv = [
+                str(suite) + arg[len(suite.name) :] if arg.startswith(suite.name) else arg
+                for arg in argv
+            ]
+            return real_validation_child(name, argv, logs, **limits)
+
+        patch.setattr(runner, "child", fixture_child)
+        validation = runner.validate(raw)
+    assert validation["union"]["passed"]
+    assert validation["coverage"]["complete"]
+    assert all(r["passed"] for r in validation["receipts"])
+    root = fixture_root(tmp_path / "fixture")
+    output = tmp_path / "production_path" / (c.NAME + ".json")
+    real_child = runner.child
+
+    def bounded_health(name, argv, logs, **limits):
+        if name == "full_python_suite":
+            return real_child(
+                name,
+                [sys.executable, "-c", 'print("private repository health fixture")'],
+                logs,
+                **limits,
+            )
+        return real_child(name, argv, logs, **limits)
+
+    monkeypatch.setattr(runner, "child", bounded_health)
+    monkeypatch.setattr(runner, "validate", lambda raw: validation)
+    assert runner.main(["--root", str(root), "--output", str(output)]) == 0
+    assert c.replay(output)
+    value = json.loads(output.read_bytes())
+    assert value["verdict_class"] == "blocked"
+    assert value["reconciliation_ready_score"] == 1
+
+
+def test_raw_receipt_and_history_branches(tmp_path):
+    """REQ-REPORT-8788: raw substitutions, owned receipt drift and prior identities stay explicit."""
+    root = fixture_root(tmp_path / "fixture")
+    tasks = c.contract(root)["tasks"]
+    path = root / tasks[1]["deliverable"]
+    value = c.load(c.reference(path))
+
+    def replace_primary(updated):
+        c.atomic_json(path, updated)
+        side = (
+            path.parent
+            / "raw"
+            / path.stem
+            / "validators"
+            / (c.reference(path)["sha256"][7:] + ".json")
+        )
+        c.atomic_json(
+            side,
+            dict(
+                primary_path=str(path.absolute()),
+                primary_sha256=c.reference(path)["sha256"],
+                report=dict(passed=True),
+            ),
+        )
+
+    operand = tmp_path / "operand.json"
+    c.atomic_json(operand, dict(fixture=True))
+    replace_primary(dict(value, raw_shard_hashes=[c.reference(operand)]))
+    assert c.authenticate(path, tasks[1]["id"])
+    replace_primary(dict(value, raw_shard_hashes=[dict(path=str(operand), sha256="sha256:forged")]))
+    with pytest.raises(ValueError, match="producer_raw_shard_drift"):
+        c.authenticate(path, tasks[1]["id"])
+    validation_path = Path(value["validation_reference"]["path"])
+    c.atomic_json(validation_path, dict(receipts=[]))
+    replace_primary(dict(value, validation_reference=c.reference(validation_path)))
+    with pytest.raises(ValueError, match="producer_validation_drift"):
+        c.authenticate(path, tasks[1]["id"])
+    receipts = [dict(passed=False)]
+    c.atomic_json(validation_path, dict(receipts=receipts))
+    replace_primary(
+        dict(value, validation_reference=c.reference(validation_path), validation_receipts=receipts)
+    )
+    with pytest.raises(ValueError, match="producer_owned_validation_failure"):
+        c.authenticate(path, tasks[1]["id"])
+    historical = root / "results/experiment_8775_historical.json"
+    c.atomic_json(
+        historical,
+        dict(
+            task_id="exp8775-capstone",
+            honest_verdict="complete_disqualified_v751_capstone",
+            verdict_class="disqualified",
+            historical_quarantines=["private quarantine"],
+        ),
+    )
+    log = root / "ops/conductor-log.md"
+    log.parent.mkdir(parents=True)
+    log.write_text("| date | " + tasks[4]["title"][:48] + " | GATE_BLOCK | upstream retired |\n")
+    work = c.freeze(root, tmp_path / "raw", "20261104")
+    assert work["historical"]["historical_quarantines"] == ["private quarantine"]
+    assert work["slots"][4]["scheduler_outcome"] == "conductor_cascade_skip"
+    assert any(p["exact_identity_matches"] for p in work["prior_outcomes"])
+
+
+def test_primitive_reductions(tmp_path, monkeypatch):
+    """REQ-VERIFY-8788: replay recomputes primitive science and rejects changed summaries."""
+    from carnot.reporting import v752_capstone_report as report
+    from carnot.reporting import evidence_set_evaluation_8779 as evidence
+    from carnot.reporting import durable_cost_components_8784 as durable
+
+    assert report.reconstruct({}) == {}
+    frozen, decisions, primitive = [
+        tmp_path / (name + ".json") for name in ["frozen", "decisions", "primitive"]
+    ]
+    c.atomic_json(frozen, dict(inputs=["input"], labels=["label"]))
+    c.atomic_json(decisions, dict(rows=["decision"]))
+    c.atomic_json(
+        primitive,
+        dict(frozen_reference=c.reference(frozen), decisions_reference=c.reference(decisions)),
+    )
+    monkeypatch.setattr(
+        evidence,
+        "score",
+        lambda inputs, labels, decisions: [dict(raw_numerator=1, raw_denominator=1)],
+    )
+    monkeypatch.setattr(evidence, "summarize", lambda rows: dict(private_summary=2))
+    value = dict(primitive_reference=c.reference(primitive), private_summary=2)
+    assert report.reconstruct(value)["private_summary"] == 2
+    with pytest.raises(ValueError, match="primitive_reduction_drift"):
+        report.reconstruct(dict(value, private_summary=3))
+    c.atomic_json(primitive, dict(window_rows=[]))
+    monkeypatch.setattr(durable, "reduce", lambda rows: dict(component_cost_rows=[dict(cost_ns=5)]))
+    value = dict(primitive_reference=c.reference(primitive), component_cost_ready_score=0)
+    assert report.reconstruct(value)["component_cost_rows"][0]["admitted"] is False
+
+
+def test_replay_source_and_authority_mutations(private):
+    """SCENARIO-VERIFY-8788-REPLAY: unchanged envelopes still reject changed operand bytes."""
+    _, output, value = private
+    work = c.load(value["primitive_reference"])
+    path = Path(work["references"][0]["path"])
+    saved = path.read_bytes()
+    path.write_bytes(saved + b"changed")
+    assert not c.replay(output)
+    path.write_bytes(saved)
+    raw = Path(work["raw"])
+    source = raw / "frozen_inputs.json"
+    saved = source.read_bytes()
+    source.write_bytes(saved + b" ")
+    assert not c.replay(output)
+    source.write_bytes(saved)

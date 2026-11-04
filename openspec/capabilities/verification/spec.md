@@ -58323,3 +58323,28 @@ Private CLI success, unsafe output, missing and rejected inputs, failed owned
 validation and consistently rehashed primitive mutations are exercised outside
 production results. Owned failure disqualifies and zeros readiness. External
 absence is terminal blocked with exact upstream/path/hash/field diagnostics.
+
+## REQ-VERIFY-8788: Qualify scoped reconciliation and replay sealed primitives
+
+Write private requirement-linked tests before implementation. Run the original
+V751 capstone assertion family with immutable authority and a bounded fixture CLI;
+do not invoke historical validation controllers. Retain exact collected nodes,
+JUnit outcomes, normal exits, argv, logs and real unit/CLI coverage SQLite. Require
+100 percent newly owned executable statements, Ruff, strict mypy, explicit spec
+coverage and private E2E-018/021. A bounded full-suite health receipt remains
+separate from scoped acceptance. Failed owned checks disqualify. Unchanged
+external absence is terminal blocked. Run unchanged terminal validators and cold
+replay; reject changed references, task objects, receipts and rehashed summaries.
+
+### SCENARIO-VERIFY-8788-REPLAY
+
+A real failed pytest child produces a disqualified private artifact with zero
+readiness. Cold replay reconstructs from independently sealed primitives and
+rejects coordinated envelope edits. All tests write only private results. The
+conductor owns ops/status, changelog and traceability reconciliation.
+
+Implementation20261104: `v752_capstone_runner` uses serial bounded children and
+private disk scratch. Requirement-linked unit/CLI and copied original V751
+assertion tests preserve normal exits, exact JUnit nodes and coverage SQLite.
+The unchanged validators and independent sealed replay control publication.
+Repository-health evidence remains separate from scoped acceptance.

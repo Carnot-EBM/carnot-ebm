@@ -105271,3 +105271,28 @@ Complete mapping can score1 while physical and complete100x learning score0.
 Architectural changes compare sparse KAN locality, distributed Ising communication
 and Z1T topology conditionally, without importing vendor speed or energy numbers.
 Device access, SDK and exact operation support precede acquisition decisions.
+
+## REQ-REPORT-8788: Reconcile exact V752 outcomes without recursive controllers
+
+Bind the thirteen full task objects, visible table and YAML to the V752 canonical
+hash. Emit one terminal row per exact identifier, including self and conductor
+skips. A scheduler receipt cannot supply a producer honest_verdict. Authenticate
+imported paths, hashes, fields and terminal sidecars. Keep evidence transfer,
+faithful extraction, delayed memory, finite capacity, durable cost and ARC deltas
+separate. Preserve V751 quarantines and the unresolved deadline-learning chain.
+Compare every registered prior failure and close unchanged null or blocked scopes
+with concrete changed-operand reopening conditions. Emit stable publication gates
+from the unchanged CLI. Publication and activation remain unauthorized.
+
+### SCENARIO-REPORT-8788-ACCOUNTING
+
+Private fixtures distinguish absent files, absent fields, measured zero, rejected
+identities and conductor skips. Oracle-dependent results remain circular and cannot
+enter independent natural-model headlines. Every prior registration receives a
+comparison and retirement recommendation without changing the exclusion manifest.
+
+Implementation20261104: `v752_capstone`, `v752_capstone_report` and the thin
+Exp8788 CLI bind the complete V752 contract. The report keeps producer custody,
+conductor receipts, primitive science reductions, all prior registrations and
+changed-operand reopening conditions separate. Terminal readiness belongs only
+to the invocation-bound deliverable and its retained evidence.
