@@ -23041,3 +23041,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-04: Measure observer disturbance using immutable durable-work authorities (⚠️ Research Finding) — honest_verdict=complete_null_archived_observer_costs; results/experiment_8808_v754_archived_observer_costs.json
 - 2026-11-04: Measure finite feedback capacity under real queue overflow (⚠️ Research Finding) — honest_verdict=complete_null_no_corrected_useful_policy_effect; results/experiment_8809_v754_delayed_feedback_capacity.json
 - 2026-11-04: Audit future learning benefit and retention from sealed stream rows (⚠️ Research Finding) — honest_verdict=complete_null_causal_learning_audit; results/experiment_8810_v754_causal_learning_audit.json
+- 2026-11-04: Reconcile thirteen outcomes and retire unchanged failed continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v754_capstone; results/experiment_8813_v754_capstone.json
