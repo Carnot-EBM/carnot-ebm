@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="10" time="238.561" timestamp="2026-11-04T12:10:06.510027-05:00" hostname="icbfl1"><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_orders_and_absolute_gate" time="0.001" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_immutable_resolution" time="0.002" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_private_replay_and_tampering" time="55.088" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_build_failure_and_cli_guards" time="0.006" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_real_workers_states_and_components" time="139.850"><failure message="assert False&#10; +  where False = all(&lt;generator object test_real_workers_states_and_components.&lt;locals&gt;.&lt;genexpr&gt; at 0x7fbf0fdc1630&gt;)">successful = PosixPath('/var/tmp/exp8666-validation-uvwtvkbm/suite-0/observer-success0/experiment_8808_v754_archived_observer_costs.json')
+
+    def test_real_workers_states_and_components(successful):
+        """SCENARIO-REPORT-8808-WINDOWS: observer arms retain every state and output."""
+        value = json.loads(successful.read_bytes())
+        assert value["completed_count"] == 6
+        assert all(r["passed"] for r in value["state_parity_rows"])
+&gt;       assert all(r["passed"] for r in value["parent_clock_reconciliation_rows"])
+E       assert False
+E        +  where False = all(&lt;generator object test_real_workers_states_and_components.&lt;locals&gt;.&lt;genexpr&gt; at 0x7fbf0fdc1630&gt;)
+
+tests/python/test_archived_observer_costs_8808.py:188: AssertionError</failure></testcase><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_measure_resource_failure" time="33.646" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_public_health_is_separate" time="0.790" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_fork_failure_timeout_and_direct_worker" time="2.072" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_admission_uses_no_mutable_alias" time="1.361" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_public_measurement_cites_exact_operands" time="0.267" /></testsuite></testsuites>

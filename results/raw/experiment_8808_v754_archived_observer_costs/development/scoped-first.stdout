@@ -1,0 +1,168 @@
+....EF                                                                   [100%]
+==================================== ERRORS ====================================
+__________ ERROR at setup of test_real_workers_states_and_components ___________
+
+durable_packet = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T165205-3946400-a847c378/components-operands0/packet.json')
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T165205-3946400-a847c378'), _trace...h('/var/tmp/pytest-carnot-ianblenke/20261104T165205-3946400-a847c378'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def successful(durable_packet, tmp_path_factory):
+        """SCENARIO-VERIFY-8808-SEALED: real children cover all observer conditions."""
+        root = tmp_path_factory.mktemp("observer-success")
+        output = root / (e.NAME + ".json")
+        receipt = runner.child(
+            "success",
+            [
+                sys.executable,
+                "-u",
+                e.CLI,
+                "--private-input",
+                str(durable_packet),
+                "--output",
+                str(output),
+            ],
+            root / "logs",
+            deadline=150,
+        )
+>       assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E       AssertionError: [exp8808] error=candidate_rejected
+E         
+E       assert False
+
+tests/python/test_archived_observer_costs_8808.py:176: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8205] phase=before_subprocess_success completed=0 pending=1
+[exp8205] phase=waiting_success completed=0 pending=1
+[exp8205] phase=waiting_success completed=0 pending=1
+[exp8205] phase=waiting_success completed=0 pending=1
+[exp8205] phase=waiting_success completed=0 pending=1
+[exp8205] phase=after_subprocess_success completed=1 pending=0
+=================================== FAILURES ===================================
+________________________ test_measure_resource_failure _________________________
+
+packet = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T165205-3946400-a847c378/test_measure_resource_failure0/packet.json')
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T165205-3946400-a847c378/test_measure_resource_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fab380830e0>
+
+    def test_measure_resource_failure(packet, tmp_path, monkeypatch):
+        """REQ-VERIFY-8808: an unchanged unavailable resource blocks before probing."""
+        monkeypatch.setattr(
+            runner.runtime, "resources", lambda path: dict(disk_backed=False, tools_available=False)
+        )
+>       work = runner.measure(tmp_path / "blocked", "20261104", packet)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_archived_observer_costs_8808.py:215: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/archived_observer_runner_8808.py:164: in measure
+    work: Json = runtime.measure(raw, date)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T165205-3946400-a847c378/test_measure_resource_failure0/blocked')
+date = '20261104'
+
+    def measure(raw: Path, date: str) -> Json:
+        """Freeze all cells and exact test nodes before the real durable admission probe."""
+        begin, wall = time.monotonic_ns(), datetime.now(UTC).isoformat()
+        raw.mkdir(parents=True)
+        pre = resources(raw)
+        e.progress("authenticate_before")
+        admitted = e.inputs()
+        failures = list(admitted["failures"])
+        bootstrap = dict(draws=np.random.default_rng(e.SEED).integers(0, 10, size=(10000, 10)).tolist())
+        atomic_json(raw / "bootstrap.json", bootstrap)
+        collection = child(
+            "frozen_nodes",
+            [sys.executable, "-m", "pytest", *COMMON, "--collect-only", "-q", *e.TESTS, *E2E],
+            raw / "plan",
+            deadline=90,
+        )
+        nodes = [
+            s.strip()
+            for s in Path(collection["stdout_path"]).read_text().splitlines()
+            if s.startswith("tests/") and "::" in s
+        ]
+        if not collection["passed"] or not nodes:
+            raise ValueError("premeasurement_node_collection")
+        code = [
+            e.reference(e.ROOT / p)
+            for p in [
+                *e.OWNED,
+                *e.TESTS,
+                *(suite.split("::")[0] for suite in E2E),
+                "python/carnot/reporting/bounded_durable_cost_8745.py",
+                "python/carnot/reporting/v743_capstone.py",
+                "python/carnot/reporting/v709_execution.py",
+                "python/carnot/reporting/primary_publication.py",
+                "python/carnot/verify/resident_update_cost_8732.py",
+                "python/carnot/verify/block_feedback_state_8433.py",
+                "scripts/experiment_template.py",
+                "ops/exclusion_manifest.yaml",
+                "ops/e2e-test-plan.md",
+                str(Path(sys.executable).resolve()),
+            ]
+        ]
+        atomic_json(
+            raw / "premeasurement_seal.json",
+            dict(
+                method=e.METHOD,
+                roster=e.roster(),
+                inputs=admitted["refs"],
+                code=code,
+                nodes=nodes,
+                validation_suites=e.TESTS + E2E,
+                bootstrap=e.reference(raw / "bootstrap.json"),
+            ),
+        )
+        pre.update(
+            file_fsync=False,
+            atomic_replace=False,
+            directory_fsync=False,
+            no_model_load=True,
+            MODEL_SPECS=[],
+            python_version=sys.version,
+            numpy_version=np.__version__,
+        )
+        temporary = raw / "storage.tmp"
+        with temporary.open("wb") as stream:
+            stream.write(b"ordinary durable storage probe")
+            stream.flush()
+            os.fsync(stream.fileno())
+        pre["file_fsync"] = True
+        temporary.replace(raw / "storage_probe")
+        pre["atomic_replace"] = True
+        fd = os.open(raw, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        pre["directory_fsync"] = True
+        if not pre["disk_backed"] or not pre["tools_available"]:
+            failures.append(
+>               e.failure(
+                    e.reference(raw / "storage_probe"),
+                    "persistent_storage_and_dependencies",
+                    True,
+                    False,
+                )
+            )
+E           TypeError: failure() missing 1 required positional argument: 'state'
+
+python/carnot/reporting/ordinary_durable_runner_8772.py:262: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8808] phase=authority_before completed=0 pending=1
+[exp8808] phase=authority_after completed=1 pending=0
+[exp8808] phase=authenticate_before completed=0 pending=0
+[exp8205] phase=before_subprocess_frozen_nodes completed=0 pending=1
+[exp8205] phase=after_subprocess_frozen_nodes completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_archived_observer_costs_8808.py::test_measure_resource_failure
+ERROR tests/python/test_archived_observer_costs_8808.py::test_real_workers_states_and_components
+1 failed, 4 passed, 1 warning, 1 error in 220.75s (0:03:40)

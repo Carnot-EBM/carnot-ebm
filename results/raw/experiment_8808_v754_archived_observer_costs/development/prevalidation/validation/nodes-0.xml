@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="9" time="342.193" timestamp="2026-11-04T11:58:16.983397-05:00" hostname="icbfl1"><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_orders_and_absolute_gate" time="0.001" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_immutable_resolution" time="0.002" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_private_replay_and_tampering" time="53.988" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_build_failure_and_cli_guards" time="45.511" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_real_workers_states_and_components" time="153.893"><error message="failed on setup with &quot;AssertionError: &#10;assert False&quot;">durable_packet = PosixPath('/var/tmp/exp8666-validation-aw41dke9/suite-0/components-operands0/packet.json')
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/exp8666-validation-aw41dke9/suite-0'), _trace=&lt;pluggy._tracing.Tag...&gt;, _basetemp=PosixPath('/var/tmp/exp8666-validation-aw41dke9/suite-0'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def successful(durable_packet, tmp_path_factory):
+        """SCENARIO-VERIFY-8808-SEALED: real children cover all observer conditions."""
+        root = tmp_path_factory.mktemp("observer-success")
+        output = root / (e.NAME + ".json")
+        receipt = runner.child(
+            "success",
+            [
+                sys.executable,
+                "-u",
+                e.CLI,
+                "--private-input",
+                str(durable_packet),
+                "--output",
+                str(output),
+            ],
+            root / "logs",
+            deadline=150,
+        )
+&gt;       assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E       AssertionError: 
+E       assert False
+
+tests/python/test_archived_observer_costs_8808.py:176: AssertionError</error></testcase><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_measure_resource_failure" time="33.455" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_public_health_is_separate" time="46.194" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_fork_failure_timeout_and_direct_worker" time="2.234" /><testcase classname="tests.python.test_archived_observer_costs_8808" name="test_admission_uses_no_mutable_alias" time="1.443" /></testsuite></testsuites>

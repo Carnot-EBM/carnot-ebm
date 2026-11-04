@@ -105802,3 +105802,36 @@ probe. Thirty downstream reset streams and their retention recipes remain
 frozen and unexecuted. Added constraints change later bindings and symbolic
 decisions; typed actions remain escalate in these controls. These observations
 establish mechanism evidence only and carry no independent benefit claim.
+
+#### SCENARIO-REPORT-8808-IMMUTABLE
+
+Resolve the producer-recorded V751 and V752 design hashes to preserved bytes.
+The task-local adapter SHALL retain original producer, lifecycle and ordinary
+window assertions. Reading the checkout's mutable vNEXT path is a regression.
+Missing or changed required bytes yield terminal blocked with exact operands;
+no timing probe runs until admission succeeds.
+
+#### SCENARIO-REPORT-8808-WINDOWS
+
+Freeze seed7548808, two implementations, offsets0/2032/4064, two repeats and
+all six plain/sham/clock orders per implementation:36 windows,32 updates each,
+restart after16. Preserve full checkpoints, outputs and every scheduled unit.
+Report startup and custody separately from full durable operation timing.
+An injected delay outside score logic must be resolved by the same parent clock.
+Every registered absolute observer disturbance must be <=0.05 and independently
+accounted parent discrepancy <=0.02 before component readiness can equal1.
+Large negative disturbance fails. At most six process/state groups describe
+one constructed workload; no population speedup or physical-device claim.
+
+Implementation measurement20261104 for REQ-REPORT-8808: invocation
+`1793812686308800940` completed36/36 windows and1152 durable updates in
+664.169517065 measured seconds. All36 complete state/output parity controls and
+all108 child/full-window parent accounting rows passed. The100ms positive
+control resolved100.136040ms of added parent time. Only5/12 matched observer
+triples satisfied every5percent disturbance bound; signed disturbance ranged
+from-9.78364553percent to+15.61627389percent. Component attribution is therefore
+inadmissible. Negative disturbance is instability, with no speedup claim.
+Exact operands are retained in
+`results/raw/experiment_8808_v754_archived_observer_costs/invocations/1793812686308800940/measurement.json`.
+Scoped validation and terminal publication follow measurement; operational and
+traceability reconciliation is delegated to the conductor as requested.

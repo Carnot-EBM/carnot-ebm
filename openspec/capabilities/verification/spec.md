@@ -58786,3 +58786,37 @@ restart rows preserve the complete pending state; 60 also compare the next
 released-feedback transaction with uninterrupted execution. Private E2E-018/021
 and primary publication consumers pass 37 tests. The single bounded global
 Python run records failures and a 300-second timeout as separate health debt.
+
+#### SCENARIO-VERIFY-8808-AUTHORITY
+
+A private fixture with identical archived design bytes passes the original
+admission functions. Missing design bytes, changed hashes, aliased producer
+identity and missing producer fields remain distinct rejected operands. A trap
+on mutable vNEXT reads must never fire. Historical primary bytes stay unchanged.
+
+#### SCENARIO-VERIFY-8808-SEALED
+
+Execute private CLI workers and outside-checkout replay without PYTHONPATH.
+Reject changed summary, source and independently sealed primitive bytes even
+when their summary hashes are refreshed. Require real unit plus child SQLite
+coverage of100 percent newly owned statements with zero exclusions, original
+E2E-018/021, Ruff check/format, strict mypy and explicit owned spec coverage.
+Failed owned checks disqualify with zero readiness; unchanged external absence
+is terminal blocked. Retain a single full Python suite health receipt separately.
+
+Measurement20261104 for REQ-VERIFY-8808: original preserved V751/V752 byte
+hashes qualified through the unchanged producer admission checks. Mutable
+checkout vNEXT reads remain trapped by the regression. Invocation
+`1793812686308800940` retained36 exact state/output controls,108 independently
+bounded parent accounting rows, complete raw windows and a measured positive
+delay. Maximum parent/accounted discrepancy was0. All36 scheduled windows
+completed; none were excluded. Owned test/child SQLite coverage and terminal
+scanner receipts are retained beside the sealed measurement. Shared validators,
+old producer source files and historical primary bytes remain unchanged.
+
+Owned validation20261104 for REQ-VERIFY-8808 passed10/10 tests and the original
+private E2E-018/021 cases. Combined actual unit/child SQLite coverage reached
+324/324 owned executable statements with zero exclusions. Scoped Ruff check,
+Ruff format, strict mypy and explicit spec coverage passed. The one full Python
+suite receipt is recorded separately as repository health; it does not replace
+owned acceptance or promote the failed observer disturbance gate.
