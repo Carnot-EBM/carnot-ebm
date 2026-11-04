@@ -23013,3 +23013,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-04: Measure complete ordinary update costs with low-overhead component clocks (⚠️ Research Finding) — honest_verdict=complete_null_durable_cost_components; results/experiment_8784_v752_durable_cost_components.json
 - 2026-11-04: Map new learning and durable costs to supported hardware operations (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_boundary; results/experiment_8787_v752_hardware_operation_boundary.json
 - 2026-11-04: Reconcile thirteen outcomes and close unsupported continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v752_capstone; results/experiment_8788_v752_capstone.json
+- 2026-11-04: Seal length-balanced evidence interventions and strong solver controls (⚠️ Research Finding) — honest_verdict=complete_disqualified_v753_evidence_intervention_methods; results/experiment_8791_v753_evidence_intervention_methods.json
