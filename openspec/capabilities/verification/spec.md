@@ -58916,3 +58916,14 @@ private E2E-018/021 cases. Combined actual unit/child SQLite coverage reached
 Ruff format, strict mypy and explicit spec coverage passed. The one full Python
 suite receipt is recorded separately as repository health; it does not replace
 owned acceptance or promote the failed observer disturbance gate.
+
+## REQ-VERIFY-8814: Isolate administrative custody and optional admission
+
+SCENARIO-VERIFY-8814-BRANCHES: A missing optional runtime receipt or unchanged ARC
+frontier yields a zero branch score with exact missing-file, missing-field,
+rejected-producer or observed-zero evidence, while valid CPU contracts remain
+ready. Admission uses the qualified artifact readers, with no device/game probe.
+SCENARIO-VERIFY-8814-TAMPER: Changed task fields, edge order, arbitrary brace
+normalization, rehashed raw reductions, source drift and failed owned validation
+must reject readiness. CLI and unit execution cover all new statements without
+exclusions, and cold replay works outside the checkout without PYTHONPATH.

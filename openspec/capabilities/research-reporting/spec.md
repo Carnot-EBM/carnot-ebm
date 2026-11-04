@@ -106108,3 +106108,23 @@ Task-specific output contract: reconciliation_ready_score: integer 0/1; rows for
 Given admitted immutable inputs, private execution and cold replay reproduce the
 registered row reductions; missing inputs block, and rehashed semantic tampering
 is rejected. Readiness never substitutes for the task's independent benefit gate.
+
+### REQ-REPORT-8814 implementation contract — 2026-11-04
+
+SCENARIO-REPORT-8814-REPLAY additionally requires all thirteen visible and complete
+objects to match the independently pinned V755 digest, accepting only exact
+conductor brace encoding. Retain V754 design, ten actual primaries and three
+scheduler skips. Freeze branch-local inputs and ordered structured edges.
+Missing runtime or ARC evidence records its operand and affects only that branch.
+Ingest versioned primary methods with retrieval failures and untested assumptions.
+Owned checks and unit/CLI coverage must pass before administrative readiness.
+Replay checks immutable raw bytes, semantics and reductions outside the checkout;
+repository-wide test debt is recorded separately. No historical rerun or activation.
+
+REQ-REPORT-8814 implementation: `python/carnot/reporting/v755_branch_contract.py`,
+`python/carnot/reporting/v755_branch_runner.py` and the Exp8814 CLI implement the
+contract. `tests/python/test_v755_branch_contract_8814.py` covers custody,
+branch isolation, real private publication, scanner checks and rehashed tamper
+rejection. Exact validation receipts and statement coverage are published with
+the artifact. Operational reconciliation is delegated to the conductor's next
+step under the task instruction; no ops/status, changelog or BMAD edit is made.

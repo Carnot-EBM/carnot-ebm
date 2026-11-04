@@ -6743,3 +6743,12 @@ speedup deferred. Operation-specific Ising support remains quadratic with
 k_max<=5 on qualified KV260 work; general spline hardware mapping is deferred.
 The protocol freezes120 constructed worlds and60 batch cells before outputs.
 These controls establish no natural entailment or independent generalization.
+
+## 2026-11-04 — Exp8814 V755 selective methods — INGESTED
+
+Read versioned primary methods: Price of Choice2610.29067v1, Audit-First
+VAPO2609.33662v2 and distributional energy2605.18871v1. Adopt frozen-rule audits,
+matched coverage/cost controls and matched-feature objective diagnostics.
+[Method map](docs/research-notes/v755-methods.md) records source dates, failed
+sweep requests and untested transfer assumptions. This is administrative method
+ingestion; no new scientific benefit or natural/hidden-game generalization.

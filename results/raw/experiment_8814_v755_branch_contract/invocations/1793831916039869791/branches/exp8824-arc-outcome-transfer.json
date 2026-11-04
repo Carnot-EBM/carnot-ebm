@@ -1,0 +1,48 @@
+{
+  "administrative_root_required": false,
+  "canonical_tasks_sha256": "12f51392c099f3ae4f18a879428d7512b6ac0e5fa231cea0321033859d9463f7",
+  "gates": [
+    {
+      "artifact_field": "arc_new_outcomes_available_score",
+      "op": "==",
+      "upstream": "exp8814-branch-contract",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8824_v755_arc_outcome_transfer.json",
+    "estimated_wall_time_min": 25,
+    "gated_on": [
+      {
+        "artifact_field": "arc_new_outcomes_available_score",
+        "op": "==",
+        "upstream": "exp8814-branch-contract",
+        "value": 1
+      }
+    ],
+    "id": "exp8824-arc-outcome-transfer",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 20,
+    "milestone": "2026.11.755",
+    "operator_override": "2026-05-29 operator directive (standing): versioned lineage continuation; scope matches historical exp8811-new-arc-outcome-analysis; Only authenticated new selected/applied outcomes reopen analysis; Exp8814 provides a cheap structured pre-gate and the unchanged empty frontier never launches this task.",
+    "per_unit_rows": true,
+    "phase": 4,
+    "prior_failures": [
+      {
+        "addressed_by": "Only authenticated new selected/applied outcomes reopen analysis; Exp8814 provides a cheap structured pre-gate and the unchanged empty frontier never launches this task.",
+        "experiment_id": "exp8811-new-arc-outcome-analysis",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.755, exp8824-arc-outcome-transfer. The standing ARC slot is cross-game generalization. V754 had no new selected/applied outcomes beyond Exp8760 and skipped analysis. This task is pre-gated so unchanged inventory costs no agent call.\nChanged scope: Only authenticated new selected/applied outcomes reopen analysis; Exp8814 provides a cheap structured pre-gate and the unchanged empty frontier never launches this task.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/agentic/arc_competition_agent.py\n- python/carnot/agentic/arc_solver_kit.py\n- ops/arc_solve_registry.yaml\n- ops/arc_supervisor_refinement_ledger.json\n- results/experiment_8760_v750_arc_horizon_sensitivity.json\n- results/experiment_8814_v755_branch_contract.json\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8824)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nAssess live supervisor generalization only from newly admitted outcomes. Deliver results/experiment_8824_v755_arc_outcome_transfer.json and private hash-bound raw evidence under results/raw/experiment_8824_v755_arc_outcome_transfer/. Implement scripts/experiments/experiment_8824_v755_arc_outcome_transfer.py with --date and private-output/replay options; keep science independent of optional branches.\n\nCONCRETE STEPS:\n1. Emit a flushed progress line at every phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. During long loops emit completed/pending counts at least every 60 seconds; while a child runs, forward its output and emit elapsed/phase heartbeats every 60 seconds. Keep every output gap below 600 seconds, including tool-free reasoning. Use python -u and print(..., flush=True); heartbeat does not extend a measured deadline.\n2. Keep tool calls bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Use scripts/experiments/ for experiment entrypoints, tests/python/ for tests and /tmp for throwaway probes. Never write scratch scripts at the repository root.\n3. Authenticate arc_new_outcomes_available_score and source hashes. Read only newly selected-and-applied trajectory_supervisor events beyond the frozen frontier; proposals and duplicate episode IDs are excluded with reasons. Missing authority blocks once. No new outcomes means no recommendation; do not rerun a public-game solve to manufacture data.\n4. Precheck arc_solve_registry before attributing any level. Every credited outcome requires solve_provenance=live_agent_self_discovery, source episode and runtime attempt evidence. Exclude development_proxy and outer_loop_re from credited results. This reader runs no game, per-game adapter, offline BFS, model or live-policy modification.\n5. Tabulate per-game/per-arm outcomes, resolved_by_levelup, actions_to_levelup, competing events and right censoring at32/64/128-action horizons. Comparative leave-one-game-out recommendations require at least30 independent episodes, three overlapping games and five firings per shared arm cell. Bootstrap whole episodes within games and state small-game uncertainty; observational association is not causal supervisor benefit.\n6. Keep arm changes as reviewable recommendations, with exact event IDs and support. Preserve AVO curated-arm selection rather than model-generated new arms. Do not change submitted generator configuration, deploy or publish.\n7. Before implementation, read CODEX.md and CLAUDE.md and extend the named REQ/SCENARIO in openspec/capabilities/research-reporting/spec.md (plus the relevant learning/verification capability); write failing tests first. Reuse current_work_receipt, primary_publication and existing scoped validation rather than copying an old milestone runner. Bind immutable historical authorities, never mutable vNEXT as an old fixture. Validate owned code with scoped pytest and actual unit/child coverage at 100 percent with zero exclusions, Ruff check/format, strict mypy, and scripts/check_spec_coverage.py with owned test paths as positional arguments. Run applicable private E2E-018/021, and E2E-003/004 plus cargo test/fmt/clippy only for native changes. Cold-replay the terminal artifact outside the checkout without PYTHONPATH. Run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the candidate before publishing. Retain rejected evidence; a failed owned check means disqualified and readiness zero. Record global test/spec debt separately, never silently waive an owned failure. Reconcile specs, _bmad/traceability.md, ops/status.md and ops/changelog.md.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, honest_verdict (terminal complete_ prefix); verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Partial is only unfinished own work that another attempt can complete; unchanged external absence is blocked. inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls, verifier_is_oracle, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes, phase_spans, preconditions_checked. rows: per-unit records with unit_id, cluster_id, arm, seed, metric, denominator, status, missing_reason; intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count. gate_check_summary: check, upstream, artifact_field, expected, observed, path and hash for every blocked result, distinguishing missing_file, missing_field, rejected_producer and observed zero. acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage, exposure_scope, independent_generalization_score, cited_upstream_artifacts, field_principles. Annotate all extra fields with their evidence principle. Exact-oracle success is circular_positive, never positive; constructed evidence never establishes natural-text or hidden-game generalization. Readiness means valid evidence, not benefit. Do not pad elapsed time to meet substrate floors.\narc_rows_ready_score: integer 0/1; per_game_results, per_arm_rows, new_event_frontier, censoring_rows, overlap_counts, registry_precheck, solve_provenance, recommendation_only. Principle: only live reachable evidence can support a credited level outcome.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8824_v755_arc_outcome_transfer.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Assess live supervisor generalization only from newly admitted outcomes",
+    "track": "research"
+  },
+  "upstream_task_ids": [
+    "exp8814-branch-contract"
+  ]
+}

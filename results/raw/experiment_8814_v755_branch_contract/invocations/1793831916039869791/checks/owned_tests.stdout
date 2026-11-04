@@ -1,0 +1,86 @@
+.........F....                                                           [100%]
+=================================== FAILURES ===================================
+________________ test_owned_validation_refuses_unmeasured_code _________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T223845-4141333-faec6596/test_owned_validation_refuses_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa7bfebfe60>
+
+    def test_owned_validation_refuses_unmeasured_code(tmp_path, monkeypatch):
+        """REQ-VERIFY-8814: even passing commands cannot replace complete statement evidence."""
+        from coverage import Coverage
+        from carnot.reporting import v755_branch_runner as runner
+    
+        tracer = Coverage(data_file=str(tmp_path / ".coverage.parent"), config_file=False)
+        tracer.start()
+        c.progress("coverage_failure_control")
+        monkeypatch.setattr(runner, "run_check", lambda *args, **kwargs: dict(passed=True))
+>       result = runner.validate(tmp_path, tracer)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v755_branch_contract_8814.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v755_branch_runner.py:138: in validate
+    combined.combine(data_paths=[str(raw)], strict=True, keep=True)
+.venv/lib/python3.12/site-packages/coverage/control.py:907: in combine
+    combine_parallel_data(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = <CoverageData @0x7fa7c28e9460 _no_disk=False _basename='/var/tmp/pytest-carnot-ianblenke/20261104T223845-4141333-faec6...ave_used=False _has_lines=False _has_arcs=False _current_context=None _current_context_id=None _query_context_ids=None>
+aliases = <coverage.files.PathAliases object at 0x7fa7bfc1a300>
+data_paths = ['/var/tmp/pytest-carnot-ianblenke/20261104T223845-4141333-faec6596/test_owned_validation_refuses_0']
+strict = True, keep = True
+message = <bound method Coverage._message of <Coverage @0x7fa7bfc1b6e0 core=-none- data_file='/var/tmp/pytest-carnot-ianblenke/20261104T223845-4141333-faec6596/test_owned_validation_refuses_0/combined.coverage'>>
+
+    def combine_parallel_data(
+        data: CoverageData,
+        aliases: PathAliases | None = None,
+        data_paths: Iterable[str] | None = None,
+        strict: bool = False,
+        keep: bool = False,
+        message: Callable[[str], None] | None = None,
+    ) -> None:
+        """Combine a number of data files together.
+    
+        `data` is a CoverageData.
+    
+        Treat `data.filename` as a file prefix, and combine the data from all
+        of the data files starting with that prefix plus a dot.
+    
+        If `aliases` is provided, it's a `PathAliases` object that is used to
+        re-map paths to match the local machine's.
+    
+        If `data_paths` is provided, it is a list of directories or files to
+        combine.  Directories are searched for files that start with
+        `data.filename` plus dot as a prefix, and those files are combined.
+    
+        If `data_paths` is not provided, then the directory portion of
+        `data.filename` is used as the directory to search for data files.
+    
+        Unless `keep` is True every data file found and combined is then deleted
+        from disk. If a file cannot be read, a warning will be issued, and the
+        file will not be deleted.
+    
+        If `strict` is true, and no files are found to combine, an error is
+        raised.
+    
+        `message` is a function to use for printing messages to the user.
+    
+        """
+        files_to_combine = combinable_files(data.base_filename(), data_paths)
+    
+        if strict and not files_to_combine:
+>           raise NoDataError("No data to combine")
+E           coverage.exceptions.NoDataError: No data to combine
+
+.venv/lib/python3.12/site-packages/coverage/data.py:170: NoDataError
+----------------------------- Captured stdout call -----------------------------
+[exp8814] phase=coverage_failure_control completed=0 pending=0
+=============================== warnings summary ===============================
+tests/python/test_v755_branch_contract_8814.py::test_optional_and_methods
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v755_branch_contract_8814.py::test_owned_validation_refuses_unmeasured_code
+1 failed, 13 passed, 1 warning in 49.20s

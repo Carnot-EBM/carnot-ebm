@@ -1,0 +1,61 @@
+{
+  "administrative_root_required": false,
+  "canonical_tasks_sha256": "12f51392c099f3ae4f18a879428d7512b6ac0e5fa231cea0321033859d9463f7",
+  "gates": [
+    {
+      "artifact_field": "objective_candidate_ready_score",
+      "op": "==",
+      "upstream": "exp8815-learning-signal-diagnosis",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [],
+    "agent_type": "codex",
+    "deliverable": "results/experiment_8817_v755_categorical_memory_prototype.json",
+    "estimated_wall_time_min": 45,
+    "gated_on": [
+      {
+        "artifact_field": "objective_candidate_ready_score",
+        "op": "==",
+        "upstream": "exp8815-learning-signal-diagnosis",
+        "value": 1
+      }
+    ],
+    "id": "exp8817-categorical-memory-prototype",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 50,
+    "milestone": "2026.11.755",
+    "model": "gpt-6.1-sol",
+    "per_unit_rows": true,
+    "phase": 2,
+    "prior_failures": [
+      {
+        "addressed_by": "Exp8815 must first demonstrate matched-budget development benefit of exact categorical normalization; only then introduce that objective and frozen development initialization while preserving V754 transaction semantics.",
+        "experiment_id": "exp8802-causal-memory-prototype",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_causal_execution_qualified_no_benefit_claim"
+      },
+      {
+        "addressed_by": "Exp8815 must first demonstrate matched-budget development benefit of exact categorical normalization; only then introduce that objective and frozen development initialization while preserving V754 transaction semantics.",
+        "experiment_id": "exp8804-causal-template-streams",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_measurements_ready_benefit_reserved_for_exp8810"
+      },
+      {
+        "addressed_by": "Exp8815 must first demonstrate matched-budget development benefit of exact categorical normalization; only then introduce that objective and frozen development initialization while preserving V754 transaction semantics.",
+        "experiment_id": "exp8810-causal-learning-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_causal_learning_audit"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.755, exp8817-categorical-memory-prototype. The learning continuation is authorized only by Exp8815 showing a specific same-budget objective improvement. Reuse the V754 transactional template store and exactly the same serving features; a loss change must not hide more checks, labels or capacity.\nChanged scope: Exp8815 must first demonstrate matched-budget development benefit of exact categorical normalization; only then introduce that objective and frozen development initialization while preserving V754 transaction semantics.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/memory/causal_memory_8802.py\n- tests/python/test_causal_memory_8802.py\n- python/carnot/reporting/causal_memory_runner_8802.py\n- results/experiment_8815_v755_learning_signal_diagnosis.json\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8817)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nQualify a normalized categorical energy objective in the causal template store. Deliver results/experiment_8817_v755_categorical_memory_prototype.json and private hash-bound raw evidence under results/raw/experiment_8817_v755_categorical_memory_prototype/. Implement scripts/experiments/experiment_8817_v755_categorical_memory_prototype.py with --date and private-output/replay options; keep science independent of optional branches.\n\nCONCRETE STEPS:\n1. Emit a flushed progress line at every phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. During long loops emit completed/pending counts at least every 60 seconds; while a child runs, forward its output and emit elapsed/phase heartbeats every 60 seconds. Keep every output gap below 600 seconds, including tool-free reasoning. Use python -u and print(..., flush=True); heartbeat does not extend a measured deadline.\n2. Keep tool calls bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Use scripts/experiments/ for experiment entrypoints, tests/python/ for tests and /tmp for throwaway probes. Never write scratch scripts at the repository root.\n3. Authenticate objective_candidate_ready_score=1 and its frozen configuration before changing behavior. Add an opt-in objective choice using loss E(x,y)+logsumexp(-E(x,c)) over c in support/refute/insufficient, preserving the original objective and all existing callers. Use the selected LR, hidden width and one update per released label; no extra training passes in the online arms.\n4. Fit the initialization on only the 40 development fit worlds from Exp8815; use the held-out development worlds for its predeclared selection and freeze weights, template-empty initial state and cutoff. Never initialize from V754 evaluation labels. Declare numerical_training_calls; this is small CPU energy training, no GGUF load.\n5. Qualify five-check accounting, frozen within-query state, prediction-before-label, delay-eight release, templates added only on released verifier feedback, normalized reusable identity, at most32 templates, deterministic resume, idempotent acknowledgements, atomic weights/templates/pending commit and hard-exit recovery. Original default outputs must remain unchanged. Include shuffled feedback drawn only from already released labels and an offline hindsight control excluded from science.\n6. Freeze 30 fresh 64-query reset streams with varied relation/query structures and three nested seeds [11,23,47]; reserve 12 structurally disjoint retention worlds per stream. Define five arms: original cold combined, pretrained frozen, pretrained calibration-only, pretrained combined, pretrained shuffled-feedback combined. Hold paid checks, labels, initial weights of the four pretrained arms, durability and seed schedules equal. Publish execution readiness only after private CLI replay and original regression controls pass.\n7. Before implementation, read CODEX.md and CLAUDE.md and extend the named REQ/SCENARIO in openspec/capabilities/research-reporting/spec.md (plus the relevant learning/verification capability); write failing tests first. Reuse current_work_receipt, primary_publication and existing scoped validation rather than copying an old milestone runner. Bind immutable historical authorities, never mutable vNEXT as an old fixture. Validate owned code with scoped pytest and actual unit/child coverage at 100 percent with zero exclusions, Ruff check/format, strict mypy, and scripts/check_spec_coverage.py with owned test paths as positional arguments. Run applicable private E2E-018/021, and E2E-003/004 plus cargo test/fmt/clippy only for native changes. Cold-replay the terminal artifact outside the checkout without PYTHONPATH. Run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the candidate before publishing. Retain rejected evidence; a failed owned check means disqualified and readiness zero. Record global test/spec debt separately, never silently waive an owned failure. Reconcile specs, _bmad/traceability.md, ops/status.md and ops/changelog.md.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, honest_verdict (terminal complete_ prefix); verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Partial is only unfinished own work that another attempt can complete; unchanged external absence is blocked. inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls, verifier_is_oracle, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes, phase_spans, preconditions_checked. rows: per-unit records with unit_id, cluster_id, arm, seed, metric, denominator, status, missing_reason; intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count. gate_check_summary: check, upstream, artifact_field, expected, observed, path and hash for every blocked result, distinguishing missing_file, missing_field, rejected_producer and observed zero. acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage, exposure_scope, independent_generalization_score, cited_upstream_artifacts, field_principles. Annotate all extra fields with their evidence principle. Exact-oracle success is circular_positive, never positive; constructed evidence never establishes natural-text or hidden-game generalization. Readiness means valid evidence, not benefit. Do not pad elapsed time to meet substrate floors.\nmemory_execution_ready_score: integer 0/1; objective_config, initial_weights_hash, frozen_stream_manifest_hash, template_policy, causal_release_rows, restart_rows, parity_rows, per_update_operation_counts. Principle: prototype controls qualify execution, not beneficial learning.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8817_v755_categorical_memory_prototype.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Qualify a normalized categorical energy objective in the causal template store",
+    "track": "research"
+  },
+  "upstream_task_ids": [
+    "exp8815-learning-signal-diagnosis"
+  ]
+}
