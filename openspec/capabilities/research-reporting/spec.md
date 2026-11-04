@@ -105430,3 +105430,42 @@ preflight latency. Freeze the2400-second execution cap and900-second validation
 reserve separately from scientific acceptance. The current implementation may
 close this invocation at preflight; an admitted workload requires separately
 qualified observer execution and must never fall through to the old observer.
+# REQ-REPORT-8800: Reconcile all twelve V753 outcomes without promotion
+
+Bind Exp8789–Exp8800 to the complete pinned task objects, visible ordered
+table and activated YAML, preserving literal-brace activation encoding.
+Read source artifacts through summarize_artifact before importing fields.
+Authenticate exact task identity, terminal receipts and raw hashes. Preserve
+missing primaries, conductor pre-gate and retired-upstream receipts, rejected
+owned work and quarantined evidence as separate dispositions. Include this
+capstone's validated outcome. Administrative readiness cannot admit science.
+
+### SCENARIO-REPORT-8800-ACCOUNTING
+
+Recompute every gate against its exact producer field and record absent files,
+absent fields, zeros and rejected producers. Keep component and learning benefit
+readiness zero without qualified measurements. Constructed positives remain
+circular; failed overflow controls admit no admission-policy comparison.
+Evaluate retirement using exact primary verdicts or explicit conductor skips,
+never class aliases. Close unchanged scopes and name a changed operand plus a
+falsifiable reopening gate. Preserve prior evidence and the exclusion manifest.
+Retain stable G1/G2/G3/G4 source hashes and keep both authorizations false.
+
+# REQ-VERIFY-8800: Seal and replay the unconditional V753 reconciliation
+
+Write tests before implementation. Check private scratch, dependency imports,
+exact authority and source hashes with measured time/memory projections before
+aggregation. Missing resources block without scientific measurement. Keep
+MODEL_SPECS empty and all model/training calls zero. Freeze primitives and
+validation separately, validate candidate bytes with unchanged terminal scanners,
+cold-replay and atomically publish once using primary_publication.
+
+### SCENARIO-VERIFY-8800-REPLAY
+
+Real private CLI children exercise success, blocked resources and failed owned
+validation. Reject rehashed aggregate, primitive, receipt and authority changes.
+Retain exact collected nodes, JUnit, normal exits and coverage SQLite; require
+100 percent new statements, Ruff, strict types, spec tracing and private
+E2E-018/021. No native round trip is owned. Record one whole Python suite health
+run separately from scoped validation. External absence yields blocked; failed
+owned validation yields disqualified. The conductor owns ops and BMAD updates.
