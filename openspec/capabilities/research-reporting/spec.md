@@ -105248,3 +105248,26 @@ private requirement-linked tests cover arm/restart parity, missing inputs,
 overhead admission, failure rows, identity, rehashed replay and repository-health
 separation. The terminal artifact and its sealed receipts determine actual
 readiness; the implementation does not require a speed advantage.
+## REQ-REPORT-8787: Map exact new learning and durable operations
+
+Bind exp8787-hardware-operation-boundary, milestone2026.11.752 and date20261104.
+Run independently of absent Exp8780/8785. Authenticate each declared producer
+separately. Preserve absent primary, missing field, zero readiness, valid null
+and rejected producer states. Exp8784 complete windows remain admissible when
+component attribution fails. Rejected components never supply accelerator costs.
+Map constraint lookup, relational checks, feature construction, calibration,
+sparse arithmetic, persistence, restart and transfer to CPU, CUDA, KV260,
+PolarFire and GateMate. KV260 qualification covers quadratic pairwise k_max<=5
+only. PolarFire qualification is Linux CPU dispatch. GateMate remains physically
+blocked. Inference, template learning, historical sparse arithmetic and durable
+windows have separate denominators. Unknown costs remain in each denominator.
+
+### SCENARIO-REPORT-8787-OPERATIONS
+
+Only admitted non-overlapping leaves in one complete parent clock supply ideal
+Amdahl bounds. A finite100x target requires compatible fraction strictly>0.99.
+Otherwise feasibility fails. Physical setup and transfer remain unknown.
+Complete mapping can score1 while physical and complete100x learning score0.
+Architectural changes compare sparse KAN locality, distributed Ising communication
+and Z1T topology conditionally, without importing vendor speed or energy numbers.
+Device access, SDK and exact operation support precede acquisition decisions.

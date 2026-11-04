@@ -58305,3 +58305,21 @@ exclusions. Ruff check/format, strict mypy and explicit spec tracing pass. All36
 measured windows and1,152 updates complete without failure/censoring; worst
 paired observer overhead18.6708706221 percent rejects component attribution.
 Repository health and terminal publication remain separately receipted.
+## REQ-VERIFY-8787: Seal independent operation evidence and private validation
+
+Write requirement-linked failing tests first. Preserve original consumer and
+private E2E-018/021 assertions. Freeze nodes, methods, resource projection and
+input hashes. Retain bounded serial child argv, normal exits, JUnit, SQLite and
+log hashes. Require100 percent newly owned executable statements, Ruff check
+and format, strict mypy and explicit spec coverage. Repository health is separate.
+Use unchanged adversarial and strict row validators before atomic publication.
+Cold replay checks sealed primitives, source bytes and validation receipts.
+MODEL_SPECS=[]; no_model_load; zero LLM and numerical training calls.
+Conductor owns ops/BMAD reconciliation for this invocation.
+
+### SCENARIO-VERIFY-8787-REPLAY
+
+Private CLI success, unsafe output, missing and rejected inputs, failed owned
+validation and consistently rehashed primitive mutations are exercised outside
+production results. Owned failure disqualifies and zeros readiness. External
+absence is terminal blocked with exact upstream/path/hash/field diagnostics.
