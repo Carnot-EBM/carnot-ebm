@@ -7604,6 +7604,13 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 8 compute-bound experiments (0 synthesis-only) finished in 75.4 wall-time minutes (75 minutes / 1.3 hours, averaging 9 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by measuring matched ordinary durable windows after archived lifecycle qualification (34.58 min / 35min), binding thirteen tasks and closing the measured archive-runner coverage gap (16.03 min / 16min), attributing the installed costs that remain after qualified feature reuse (9.06 min / 9min), prototyping evidence-set sufficiency with independent three-way truth controls (8.42 min / 8min), and localizing terminal publication cost before any original deadline rerun (4.38 min / 4min); locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner did not apply to the single Python inference process on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 0% utilization, 48C, PID 1913316 at 2856MB over 1327.6s CPU / 86945s wall), and batching 8-16 questions per forward pass is recommended for a 4-8x throughput gain.
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.752
+- exp_range: no data available this milestone
+- theme: Operational review of 7 completed compute-bound experiments (0 synthesis-only) across 69.1 wall-time minutes (69 minutes / 1.2 hours, averaging 10 minutes per experiment).
+- key result: honest operational negative — 7 compute-bound experiments (0 synthesis-only) finished in 69.1 wall-time minutes (69 minutes / 1.2 hours, averaging 10 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by measuring complete ordinary update costs with low-overhead component clocks (17.78 min / 18min), binding thirteen tasks and admitting independent branch inputs (17.53 min / 18min), qualifying evidence-set failure publication with original truth controls (14.83 min / 15min), reconciling thirteen outcomes and closing unsupported continuations (9.25 min / 9min), and measuring evidence sufficiency on exposed and unseen graph families (7.68 min / 8min); locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner did not apply to the single Python inference process on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 0% utilization, 46C, PID 1913316 at 2856MB over 2135.4s CPU / 117578s wall), and batching 8-16 questions per forward pass is recommended for a 4-8x throughput improvement.
+- acceptance: no data available this milestone
+
+
 
 
 

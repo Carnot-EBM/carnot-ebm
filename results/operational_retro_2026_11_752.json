@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.752",
+  "generated_at": "2026-11-04T03:02:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 69.1,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete ordinary update costs with low-overhead component clocks",
+      "duration_minutes": 17.78,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and admit independent branch inputs",
+      "duration_minutes": 17.53,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify evidence-set failure publication with original truth controls",
+      "duration_minutes": 14.83,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes and close unsupported continuations",
+      "duration_minutes": 9.25,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure evidence sufficiency on exposed and unseen graph families",
+      "duration_minutes": 7.68,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.752 completed 7 experiments (7 compute-bound, 0 synthesis-only) in 69.1 wall-time minutes (69 minutes / 1.2 hours, averaging 10 minutes per experiment) via disk-mtime reconstruction (retro_timing_fallback with 0 commits in live git-log). Runtime was concentrated in 'Measure complete ordinary update costs with low-overhead component clocks' (17.78 minutes / 18min), 'Bind thirteen tasks and admit independent branch inputs' (17.53 minutes / 18min), and 'Qualify evidence-set failure publication with original truth controls' (14.83 minutes / 15min), followed by 'Reconcile thirteen outcomes and close unsupported continuations' (9.25 minutes / 9min) and 'Measure evidence sufficiency on exposed and unseen graph families' (7.68 minutes / 8min). Locked gpu_idle_on_compute_bound_tasks is false, with GPU 0 (NVIDIA GeForce RTX 3090) holding 2866/24576MB (12%) at 0% utilization and 46C under 1 Python process (PID 1913316, 2856MB, CPU 2135.4s / Wall 117578s) where DualGPURunner does not apply.",
+  "bottlenecks_identified": [
+    "Longest compute-bound execution time was concentrated in 'Measure complete ordinary update costs with low-overhead component clocks' (17.78 minutes / 18min), 'Bind thirteen tasks and admit independent branch inputs' (17.53 minutes / 18min), and 'Qualify evidence-set failure publication with original truth controls' (14.83 minutes / 15min).",
+    "Additional compute-bound runtime was spent in 'Reconcile thirteen outcomes and close unsupported continuations' (9.25 minutes / 9min) and 'Measure evidence sufficiency on exposed and unseen graph families' (7.68 minutes / 8min).",
+    "Single Python inference process (PID 1913316 on GPU 0 using 2856MB across 2135.4s CPU / 117578s wall time) ran without multi-question forward-pass batching (8-16 questions per pass).",
+    "Milestone timing required disk-mtime reconstruction (retro_timing_fallback) because the live git-log path found 0 commits."
+  ],
+  "improvements_suggested": [
+    "Batch 8-16 questions per forward pass in the single Python inference process (PID 1913316 on GPU 0) for a 4-8x throughput improvement.",
+    "Parallelize independent branch-input checks, component-clock update cost measurements, and original truth-control qualifications across the 17.78-minute, 17.53-minute, and 14.83-minute compute-bound tasks.",
+    "Cache validated thirteen-task binding and evidence-sufficiency outputs to reduce execution time in the 9.25-minute outcome reconciliation and 7.68-minute graph-family sufficiency tasks.",
+    "Release the 2866MB allocation on GPU 0 (2856MB held by PID 1913316) when the inference process is idle, and record explicit per-experiment start/end timestamps to avoid retro_timing_fallback when live git-log has 0 commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Batch 8-16 questions per forward pass in the single Python inference process (PID 1913316 on GPU 0) to achieve a 4-8x throughput improvement.",
+    "Parallelize component-clock cost measurements, thirteen-task branch-input admissions, and original truth-control qualifications in the 17.78-minute, 17.53-minute, and 14.83-minute tasks.",
+    "Free the 2866MB GPU 0 memory allocation (2856MB on PID 1913316) when idle and persist direct per-experiment timing metadata to eliminate disk-mtime fallback (retro_timing_fallback)."
+  ],
+  "estimated_time_savings_pct": 16,
+  "meta_reflection": "All 7 completed experiments in milestone 2026.11.752 were compute-bound (0 synthesis-only) across 69.1 wall-time minutes (averaging 10 minutes per experiment), with locked gpu_idle_on_compute_bound_tasks set to false and a single Python process (PID 1913316, 2856MB) on GPU 0 where DualGPURunner is not applicable. Because live git-log found 0 commits and triggered retro_timing_fallback, combining 8-16 question forward-pass batching with explicit artifact timing records provides the clearest operational leverage for the next milestone."
+}

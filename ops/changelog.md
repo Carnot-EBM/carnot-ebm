@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-04 UTC — Operational retrospective for milestone 2026.11.752
+
+- Updated `results/operational_retro_2026_11_752.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.752`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 7 completed experiments (7 compute-bound, 0 synthesis-only) across 69.1 wall-time minutes (69 minutes / 1.2 hours, averaging 10 minutes per experiment).
+- The five slowest experiments were all compute-bound: `Measure complete ordinary update costs with low-overhead component clocks` (17.78 minutes / 18min), `Bind thirteen tasks and admit independent branch inputs` (17.53 minutes / 18min), `Qualify evidence-set failure publication with original truth controls` (14.83 minutes / 15min), `Reconcile thirteen outcomes and close unsupported continuations` (9.25 minutes / 9min), and `Measure evidence sufficiency on exposed and unseen graph families` (7.68 minutes / 8min).
+- GPU monitor report (`2026-11-04T03:02:36.901637+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 2866/24576MB (12%), 0% utilization, and 46C with 1 python process (`PID 1913316`, 2856MB, 2135.4s CPU / 117578s wall); locked `gpu_idle_on_compute_bound_tasks` is `false`, and `DualGPURunner` did not apply to the single Python inference process.
+- Suggested improvements: batch 8-16 questions per forward pass in the single Python inference process (`PID 1913316`) for a 4-8x throughput improvement, parallelize component-clock measurements, thirteen-task branch-input checks, and truth-control qualifications across the 17.78-minute, 17.53-minute, and 14.83-minute experiments, release the 2866MB GPU 0 allocation when idle, and record explicit per-experiment timestamps to avoid `retro_timing_fallback` when live git-log has 0 commits.
+
 ## 2026-11-03 UTC — Operational retrospective for milestone 2026.11.751
 
 - Updated `results/operational_retro_2026_11_751.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.751`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 8 completed experiments (8 compute-bound, 0 synthesis-only) across 75.4 wall-time minutes (75 minutes / 1.3 hours, averaging 9 minutes per experiment).
