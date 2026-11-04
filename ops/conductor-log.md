@@ -21260,3 +21260,4 @@ code |
 | 2026-11-04 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8492_v730_publication_cost_model.json age-week 3: OPEN 21 days: CLAIM |
 | 2026-11-04 01:26 UTC | Measure complete ordinary update costs with low-ov | OK | 99 passed, 1 warning in 261.39s (0:04:21) |
 | 2026-11-04 01:28 UTC | Audit future calibration constraint additions and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8780-causal-template-learning) |
+| 2026-11-04 01:30 UTC | Assess cross-game supervisor choices only from new | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8776-branch-methods.arc_new_outcomes_available_score (actual=0 == expected=1) |
