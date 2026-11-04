@@ -23069,3 +23069,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - Planning only: no experiment, activation, conductor/active-roadmap/manifest edit,
   deployment, external publication, commit or push was performed.
 - 2026-11-04: Bind thirteen tasks and ingest selective-decision methods without a global science gate (⚠️ Research Finding) — honest_verdict=complete_disqualified_v755_branch_contract; results/experiment_8814_v755_branch_contract.json
+- 2026-11-04: Separate feature ambiguity from optimization failure in the causal energy head (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_check; results/experiment_8815_v755_learning_signal_diagnosis.json
