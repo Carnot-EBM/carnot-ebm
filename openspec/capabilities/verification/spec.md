@@ -58927,3 +58927,27 @@ SCENARIO-VERIFY-8814-TAMPER: Changed task fields, edge order, arbitrary brace
 normalization, rehashed raw reductions, source drift and failed owned validation
 must reject readiness. CLI and unit execution cover all new statements without
 exclusions, and cold replay works outside the checkout without PYTHONPATH.
+
+### REQ-VERIFY-8815: Diagnose finite feature identifiability before further streams
+
+Keep six visible counts,candidate bits,five primitive checks and Gibbs hidden
+width four fixed. Exposed development labels train only the40 fit structures;
+20 validation structures choose one learning rate per objective. Historical
+labels serve retrospective diagnosis only. Compare all objectives at400 updates
+for seeds11/23/37/47/59. Verify separable controls,feature-identical conflicts,
+shuffled labels,finite differences and serving/training parity. Readiness means
+valid evidence; development fit qualifies a mechanism,not future generalization.
+
+#### SCENARIO-VERIFY-8815-CONTROLS
+
+Collision floors retain conflicting labels. Identical features cannot produce
+different predictions. Analytic gradients agree with finite differences; the
+original mixed update and serving probabilities match shared implementations.
+Missing historical operands block,owned failures disqualify,and rehashed
+aggregate tampering fails outside-checkout replay.
+
+Implementation for REQ-VERIFY-8815 uses the shared Gibbs forward path and checks
+mixed-loss update parity against the existing trainer. The owned tests cover
+finite feature floors,canonical structure splits,numeric controls,private CLI
+execution,replay tampering and failure dispositions. The terminal artifact and
+its private validation receipts determine readiness; no future stream is run.

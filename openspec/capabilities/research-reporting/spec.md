@@ -106128,3 +106128,30 @@ branch isolation, real private publication, scanner checks and rehashed tamper
 rejection. Exact validation receipts and statement coverage are published with
 the artifact. Operational reconciliation is delegated to the conductor's next
 step under the task instruction; no ops/status, changelog or BMAD edit is made.
+
+#### SCENARIO-REPORT-8815-FINITE
+
+Authenticate immutable V754 seals before reporting template-on/off feature
+collisions, conditional labels and the empirical finite-corpus Brier floor.
+Do not interpret that floor as a population Bayes bound. Generate sixty new
+five-query development graph structures with the existing constructor; split
+40/20 and exclude historical evaluation and reserved stream/retention structures.
+Compare mixed Brier/NCE, exact categorical NLL on the same width-four head and
+multinomial linear energy with five nested seeds,400 SGD updates and learning
+rates0.01/0.03/0.1. Save matched-update loss,gradient and probability curves.
+Candidate readiness requires validation Brier improvement>=0.01 for four seeds,
+disjoint identities and passing separable/conflicting/shuffled/finite-difference/
+serving controls. Otherwise close this objective continuation. No new stream,
+architecture expansion,FR-11 benefit or independent generalization is claimed.
+Private hash-bound evidence,100 percent owned statement coverage without
+exclusions,scoped checks and cold replay qualify evidence readiness only.
+
+Implementation for SCENARIO-REPORT-8815-FINITE:
+`python/carnot/reporting/learning_signal_diagnosis_8815.py` owns finite features,
+objectives and controls; `learning_signal_runner_8815.py` owns authentication,
+private validation and publication. The direct experiment CLI accepts dated
+execution,private output/raw locations and cold replay. Traced checks live in
+`tests/python/test_learning_signal_diagnosis_8815.py`. The hash-bound terminal
+artifact records measured outcomes and qualification; these implementation
+paths alone assert no readiness or scientific benefit. Ops and traceability
+reconciliation remain conductor-owned for this task.

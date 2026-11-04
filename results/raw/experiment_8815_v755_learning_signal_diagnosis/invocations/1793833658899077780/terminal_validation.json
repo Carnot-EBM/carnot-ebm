@@ -1,0 +1,65 @@
+{
+  "passed": false,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/candidate.json --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/candidate.json",
+        "--json"
+      ],
+      "duration_s": 4.022254722949583,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/terminal/00_adversarial.log",
+      "log_sha256": "sha256:03e417e5e57d8d4e32b16eab4955fa9ecaa8aa9c48e527345d5133a197024e18",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8815,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_finite_learning_signal_diagnosis\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/candidate.json"
+      ],
+      "duration_s": 0.2654117080383003,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/terminal/01_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "env -u PYTHONPATH -C /tmp /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8815_v755_learning_signal_diagnosis.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/candidate.json",
+      "command_argv": [
+        "env",
+        "-u",
+        "PYTHONPATH",
+        "-C",
+        "/tmp",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8815_v755_learning_signal_diagnosis.py",
+        "--replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/candidate.json"
+      ],
+      "duration_s": 600.4879995940137,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_8815_v755_learning_signal_diagnosis/invocations/1793833658899077780/terminal/02_cold_replay.log",
+      "log_sha256": "sha256:465bae67f1cd1ee87e7f0db5f76f506cf3560afc643421b7320cd455f57c0b34",
+      "name": "cold_replay",
+      "output_tail": "[exp8815] phase=imports_before completed=0 pending=1\n[exp8815] phase=imports_after completed=1 pending=0\n[exp8815] phase=authenticate_before completed=0 pending=1\n[exp8810] phase=authenticate_slots completed=1000 pending=29600\n[exp8810] phase=authenticate_slots completed=2000 pending=28600\n[exp8810] phase=authenticate_slots completed=3000 pending=27600\n[exp8810] phase=authenticate_slots completed=4000 pending=26600\n[exp8810] phase=authenticate_slots completed=5000 pending=25600\n[exp8810] phase=authenticate_slots completed=6000 pending=24600\n[exp8810] phase=authenticate_slots completed=7000 pending=23600\n[exp8810] phase=authenticate_slots completed=8000 pending=22600\n[exp8810] phase=authenticate_slots completed=9000 pending=21600\n[exp8810] phase=authenticate_slots completed=10000 pending=20600\n[exp8810] phase=authenticate_slots completed=11000 pending=19600\n[exp8810] phase=authenticate_slots completed=12000 pending=18600\n[exp8810] phase=authenticate_slots completed=13000 pending=17600\n[exp8810] phase=authenticate_slots completed=14000 pending=16600\n[exp8810] phase=authenticate_slots completed=15000 pending=15600\n[exp8810] phase=authenticate_slots completed=16000 pending=14600\n[exp8810] phase=authenticate_slots completed=17000 pending=13600\n[exp8810] phase=authenticate_slots completed=18000 pending=12600\n[exp8810] phase=authenticate_slots completed=19000 pending=11600\n[exp8810] phase=authenticate_slots completed=20000 pending=10600\n[exp8810] phase=authenticate_slots completed=21000 pending=9600\n[exp8810] phase=authenticate_slots completed=22000 pending=8600\n[exp8810] phase=authenticate_slots completed=23000 pending=7600\n[exp8810] phase=authenticate_slots completed=24000 pending=6600\n[exp8810] phase=authenticate_slots completed=24876 pending=5724\n[exp8810] phase=authenticate_slots completed=25000 pending=5600\n[exp8810] phase=authenticate_slots completed=26000 pending=4600\n[exp8810] phase=authenticate_slots completed=27000 pending=3600\n[exp8810] phase=authenticate_slots completed=27710 pending=2890\n[exp8810] phase=authenticate_slots completed=28000 pending=2600\n[exp8810] phase=authenticate_slots completed=28702 pending=1898\n[exp8810] phase=authenticate_slots completed=29000 pending=1600\n[exp8810] phase=authenticate_slots completed=29392 pending=1208\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": true
+    }
+  ]
+}
