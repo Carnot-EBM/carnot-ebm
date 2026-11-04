@@ -21288,3 +21288,4 @@ code |
 | 2026-11-04 15:22 UTC | Measure future Brier loss after delayed constraint | OK | 92 passed, 1 warning in 221.00s (0:03:41) |
 | 2026-11-04 16:09 UTC | Measure semantic sensitivity and harmless-evidence | OK | 94 passed, 1 warning in 95.28s (0:01:35) |
 | 2026-11-04 16:36 UTC | Test whether a small energy policy detects shared  | OK | 96 passed, 1 warning in 18.48s |
+| 2026-11-04 16:40 UTC | Run a bounded mandated-Qwen evidence extraction ca | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8801-repaired-memory-qualification.runtime_repair_ready_score (actual=0 == expected=1) |
