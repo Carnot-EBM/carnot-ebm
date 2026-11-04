@@ -21287,3 +21287,4 @@ code |
 | 2026-11-04 13:51 UTC | Qualify repaired evidence controls and seal new in | OK | 89 passed, 1 warning in 93.84s (0:01:33) |
 | 2026-11-04 15:22 UTC | Measure future Brier loss after delayed constraint | OK | 92 passed, 1 warning in 221.00s (0:03:41) |
 | 2026-11-04 16:09 UTC | Measure semantic sensitivity and harmless-evidence | OK | 94 passed, 1 warning in 95.28s (0:01:35) |
+| 2026-11-04 16:36 UTC | Test whether a small energy policy detects shared  | OK | 96 passed, 1 warning in 18.48s |
