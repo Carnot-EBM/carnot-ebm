@@ -21299,3 +21299,4 @@ code |
 | 2026-11-04 21:32 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |
 | 2026-11-04 22:12 UTC | Plan milestone 2026.11.755 | OK | 13 tasks proposed |
 | 2026-11-04 22:25 UTC | Milestone 2026.11.755 activated | OK | 13 tasks queued |
+| 2026-11-04 22:54 UTC | Bind thirteen tasks and ingest selective-decision  | OK | 96 passed, 1 warning in 111.25s (0:01:51) |
