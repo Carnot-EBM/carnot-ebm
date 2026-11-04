@@ -105296,3 +105296,45 @@ Exp8788 CLI bind the complete V752 contract. The report keeps producer custody,
 conductor receipts, primitive science reductions, all prior registrations and
 changed-operand reopening conditions separate. Terminal readiness belongs only
 to the invocation-bound deliverable and its retained evidence.
+
+## REQ-REPORT-V753-PLAN: Exact staged twelve-task contract
+
+Milestone 2026.11.753 shall contain exactly 12 ordered tasks, Exp8789 through
+Exp8800, across four phases. The visible task table, complete embedded JSON
+objects and research-roadmap-next.yaml shall agree on every task field and
+canonical tasks SHA-256. Preserve the active V752 YAML and conductor bytes.
+Keep the previous design in research-roadmap-v752-preserved-20261103.md.
+Planning shall not activate experiments, publish results or change old primaries.
+
+### SCENARIO-REPORT-V753-CONTRACT
+
+Accept the matching task list; reject changed count, order, identity, prompt,
+gate, prior-failure entry, routing or deliverable. Each prerequisite belongs
+to an earlier task in this queue and its field occurs in that producer's
+REQUIRED ARTIFACT FIELDS. Prior-failure entries retain all four required keys.
+Every prompt requires flushed phase and long-call progress, inner-loop counts,
+heartbeats, gaps below 600 seconds, and split writes for large files.
+
+## REQ-REPORT-V753-BOUNDARIES: Independent evidence and causal comparisons
+
+Exp8789 shall exercise the original missing failure-publication statements
+with actual child coverage and unchanged assertions. The delayed memory
+prototype shall require this new qualification. Optional runtime and ARC
+absence shall not invalidate a qualified CPU protocol. Learning evaluates
+30 reset streams with nested seeds; variants and linked queries shall not
+inflate independence. Evidence interventions use a disjoint graph-size family.
+Feedback-policy comparison shall first demonstrate real capacity overflow.
+Timing attribution shall reject large positive and negative observer effects.
+Every task shall distinguish execution readiness, benefit and external absence.
+
+### SCENARIO-REPORT-V753-BOUNDARIES
+
+A zero runtime gate skips the bounded Qwen canary while a qualified memory
+gate remains usable. A non-overflowing queue cannot support an admission-policy
+null. A large negative timing difference fails the observer gate. A solver's
+constructed positive remains circular_positive. New live ARC outcomes retain
+solve provenance. External missing inputs produce blocked, not partial.
+
+Implementation status — 2026-11-04: planning only. The two design authorities
+and reference scan are written. Experiment implementations and their scientific
+outcomes remain pending; planning checks do not grant those outcomes.

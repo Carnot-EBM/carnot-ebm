@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-11-03
 
-Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 4 of 20 unit(s); rotation advances by 4 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -14,31 +14,29 @@ Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21)
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 4 |
+| `SILENT_NON_FIRING` | 3 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 1 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `operator_curated_docs_lint.py` — docs/blog/café.html
-- `operator_curated_doc_guard.py` — model_card.md` — a symlink resolving to `<repo>/README.md`, opened for writing.
-- `child_results_guard.py` — experiment_3361_archive_v309_activate_v310.json` opened for writing with the child’s working directory set to `<repo>/results/`.
-- `artifact_freshness_lint.py` — A commit changing only any of these actual registered row sources: - `results/inducer_h2h_6021/h2h_shard_gemma31b.jsonl` - `results/inducer_h2h_6021/h2h_shard_qwen27b.jsonl` - `results/inducer_h2h_6021/h2h_vram.jsonl` All three fail the shipped hook regex while the guard’s coverage check returns true.
+- `arc_count_integrity_lint.py` — - `ops/arc_solve_registry.yaml` containing `[]`, or missing entirely. - `package_manifest[0].levels = 999` with `package_manifest[0].action_sequence = []`, alongside unchanged successful validation evidence. - Two identical successful r11l validation rows counted as two reproduced levels.
+- `arc_llm_on_liveness_lint.py` — json { "game": "dc22", "actions": 400, "llm_tier_operational": true, "llm": {"calls": 20, "responses": 0, "errors": 20}, "generator_healthy_after": false, "llm_on_row_valid": false } ``` This plausible per-game summary yields **zero rows seen, zero findings, exit 0**.
+- `verifier_authenticity_lint.py` — features = np.random.randn(1000, 64)` and `labels = np.random.randint(0, 2, 1000)`, evaluated as research data in the counterexample.
 
 ### FLAGGED — operator action recommended
-- `operator_curated_docs_lint.py` — **SILENT_NON_FIRING**
-- `operator_curated_doc_guard.py` — **SILENT_NON_FIRING**
-- `child_results_guard.py` — **SILENT_NON_FIRING**
-- `artifact_freshness_lint.py` — **SILENT_NON_FIRING**
+- `arc_count_integrity_lint.py` — **SILENT_NON_FIRING**
+- `arc_llm_on_liveness_lint.py` — **SILENT_NON_FIRING**
+- `verifier_authenticity_lint.py` — **SILENT_NON_FIRING**
 
 ---
 
-## test_suite_mutation_check.py
+## arc_artifact_lint.py
 
 (audit call failed: Command '['/home/ianblenke/.local/bin/codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-6.1-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed out after 600 seconds)
 
-## operator_curated_docs_lint.py
+## arc_count_integrity_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -46,52 +44,70 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CONCEPT
-Prevent autonomous conductor commits from changing operator-curated documentation without operator authorization.
+Prevent inflated ARC reproduced-level totals and submission-package claims unsupported by successful replay evidence.
 
 ## FINDINGS
-1. **Protected Unicode blog paths pass silently.** L120 requests human-readable Git output, which quotes non-ASCII filenames by default. L113 retains those quotes and escapes; L131 then compares that encoded representation against the path patterns. Neither blog pattern matches, so L160–161 returns success. Reproduced through an installed commit-msg hook: the protected blog addition committed successfully with no warning.
+1. **Unreadable or structurally invalid registries pass.** Lines 375–377 use `except (OSError, yaml.YAMLError):` followed by `return {}`, and also replace non-mapping YAML with an empty mapping. `_reproduced_entries` returns no entries; `_as_int` converts the missing total to zero; lines 83–86 compare zero with zero. No replay runs, and the CLI exits successfully. Missing, malformed, and list-valued registries all reproduced this failure. JSON package read failures instead produce submission-field errors and fail closed; replay exceptions also fail closed.
 
-2. **Missing invocation data explicitly fails open.** Missing arguments reach `return 0` at L144; a nonexistent message file reaches `return 0` at L149. Both print warnings but approve without checking staged paths. Conversely, subprocess failures fail closed through `check=True`; message read and decoding errors propagate and produce nonzero execution.
+2. **Unperformed replays are accepted as verified.** Registry lines 120–121 silently continue when a callback returns no result. Submission line 208 initializes `replay_ok = metadata_ok`; line 224 only changes it when a replay result exists. Consequently, a missing result or exhausted replay budget leaves the row countable at lines 261–262. Zero or negative replay limits and `--skip-replay` produce the same successful report without distinguishing unverified claims. A broken sequence passed with zero budget and failed under the default budget.
 
-3. **Unrecognized subjects mean permission to skip.** L94 recognizes only a leading `[conductor]`; L152–153 returns success for everything else. Ordinary Git autosquash subjects can therefore hide conductor provenance without anyone deliberately removing its marker. The prefix tuple defines the documented classification contract, but cannot establish actual operator authorization. Allowing outer-loop and operator subjects is explicitly intentional.
+3. **The actual operator manifest is never checked.** Lines 177–262 inspect validation rows exclusively. The package’s separate operator manifest can declare different levels and different executable sequences without affecting any check. Using an existing successful row, I changed the manifest to claim 999 levels with an empty sequence: the default, real offline replay ran, and the lint returned no issues.
 
-4. **The real conductor routinely bypasses this hook.** scripts/research_conductor.py:2647 commits with `--no-verify`, following staging. This is established automation, not a hypothetical attacker. The guard’s docstring describes that flag as an explicitly authorized override, but its target automation already uses it normally; the guard performs no independent enforcement.
+4. **Repeated evidence inflates counts.** There is no uniqueness check on game identity. Registry line 84 sums every retained entry; submission line 262 adds every passing row. Duplicating the same successful game row therefore counts the same completed levels twice. Two copies of an actual one-level row, with package total two, passed real offline replay.
 
-5. **Git configuration and working directory can turn a real change into an empty result.** L119–124 neither anchors the subprocess to the repository root nor forces repository-relative output. The subdirectory invocation in the counterexample produced no paths; L156–157 accepted that as an empty commit despite a staged protected change. Normal Git hook execution starts at the root, so this concerns direct, test, or CI invocation.
+5. **The banked-sequence comparison cannot fire through the default implementation.** Line 516 obtains the submitted sequence; line 530 assigns `result["expected_action_sequence"] = list(sequence)`. Lines 239–242 then compare the submitted sequence with that copy. Appending an extra action to an existing successful sequence produced a successful replay whose expected sequence differed from the banked plan but matched the submitted input. Replay failure remains independently detectable; the advertised banked-plan comparison is inert.
 
-6. **The path inventory is a policy definition, with bounded coverage.** No missing literal member of the cited policy table was established. Paths outside the tuple, unstaged writes, changes restored before staging, and previously committed changes are unchecked; no alternate enforcement is called here. Added, modified, deleted, and rename/copy paths emitted by Git are parsed without a status filter. However, `docs/blog/**/*.html` is behaviorally redundant: Python fnmatch lets the star in `docs/blog/*.html` cross directory separators.
+6. **Recognition and scope are closed over two filenames.** Lines 293–309 recognize exactly two basenames and silently return no issues for everything else. A renamed or versioned package therefore receives a successful report without inspection. These names define supported inputs, not the full concept of ARC claims. The metadata keys are schema definitions; there is no reason to inspect all arbitrary artifact keys, but omission of the separate manifest is substantive. The `sc25` marker is a special-case diagnostic: other games still receive the general total-mismatch check. The directory-name set in `_infer_repo_root` defines root discovery, not violation recognition.
 
-7. **The focused tests can stay green with the entire Git inspection disabled.** All 46 unchanged tests passed in an isolated temporary tree. Eight of 26 mutations survived: replacing `_staged_files` with an empty result, removing subprocess error checking, changing `--name-status` to `--name-only`, removing the recursive blog glob, removing subject stripping, removing path stripping, removing blank-diff-line handling, and removing the empty-staged shortcut. The latter shortcut and recursive glob duplicate neighboring behavior. A companion runtime-guard test detects tuple inequality if only this file’s glob is removed; that does not prove distinct matching coverage. Removing any other path entry, case normalization, comment recognition, or rename-source handling failed focused tests.
+7. **Sampling and execution leave additional scope holes.** The default checks three deterministically selected registry games; unsampled rows can overclaim while the arithmetic remains consistent. This is explicitly documented sampling, not exhaustive verification. The file reads current filesystem contents, never staged blobs or deletion/rename history, and checks only supplied paths when arguments exist. Replay-source changes alone do not trigger the inspected hook configuration. No sibling coverage is established by this file, and bypassing hooks leaves it unexecuted.
 
-8. **No absolute write target, premature metric, or destructive fixture was found.** This guard reads the message and Git output and writes diagnostics. It computes no duration/count/size measurement. Its focused tests write message fixtures under temporary paths, without overwriting tracked research artifacts. Focused lint and spec-reference checks passed; the full repository suite was not run.
+8. **Green tests permit deletion of important checks.** The focused suite passed all 16 tests. Nine independent in-memory mutations each also passed all 16:
+   - Removing either the success flag or reached-level threshold from registry replay validation.
+   - Removing either predicate from package replay validation.
+   - Removing either predicate from embedded-result validation.
+   - Disabling the live-augmented provisional-inflation recognizer.
+   - Replacing either real default replay implementation with an empty result.
+
+   Existing fixtures pair unsuccessful flags with insufficient levels, so either neighbouring predicate masks deletion of the other. Tests assert the named total, structural, metadata, and injected sequence-mismatch failures, including `SC25_PROVISIONAL_COUNTED_AS_REPRODUCED`; deleting that diagnostic would fail tests despite its rejection being redundant. Replay-exception handlers have no focused exception tests. Tests explicitly accept missing replay results and zero replay budgets.
+
+9. **Absolute paths, timing, and state writes.** Line 20 correctly derives `REPO_ROOT` from the file location. The supplied lint contains no absolute operator write target, premature duration measurement, or direct protected-artifact write; its focused fixtures isolate writes. The separate experiment driver does write results/experiment_4462_provisional_reproduced_count_integrity_lint.json at a fixed default location when run, so using that driver as an unmocked smoke test risks overwriting its historical artifact. The existing orchestration test mocks that writer.
 
 ## COUNTEREXAMPLE
-Reproduced in a temporary Git repository with this script installed as commit-msg:
+Set ops/arc_solve_registry.yaml to valid YAML containing only:
 
-- Subject: `[conductor] update documentation`
-- Staged path: `docs/blog/café.html`
-- Actual Git name-status output, with `\t` representing a tab: `A\t"docs/blog/caf\303\251.html"`
-- Parser result: the quoted, escaped filename remains unchanged.
-- Both blog patterns return false.
-- Hook exits **0**, emits nothing, and the commit succeeds.
+```yaml
+[]
+```
 
-Additional reproduced bypasses:
+Calling the CLI with that explicit registry path and `--json` exits **0** and reports:
 
-- Staged `README.md` rewrite with subject `fixup! [conductor] update documentation`: exits **0**.
-- Staged `README.md` rewrite, valid conductor message, invocation from `scripts/` with `diff.relative=true`: Git output is empty; exits **0**.
-- Staged `README.md` rewrite committed using `--no-verify`: commit succeeds despite an installed hook.
+```json
+{"issue_count": 0, "issues": [], "ok": true}
+```
+
+Separately, retain the committed package’s existing r11l validation row, set the package total to 1, and set its manifest to:
+
+```json
+"package_manifest": [
+  {"game": "r11l", "levels": 999, "action_sequence": []}
+]
+```
+
+The default real offline replay succeeds and the lint returns no issues.
 
 ## MISSED INPUT
-`docs/blog/café.html`
+- `ops/arc_solve_registry.yaml` containing `[]`, or missing entirely.
+- `package_manifest[0].levels = 999` with `package_manifest[0].action_sequence = []`, alongside unchanged successful validation evidence.
+- Two identical successful r11l validation rows counted as two reproduced levels.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-A path explicitly covered by the blog policy commits successfully through the installed hook because the guard matches Git’s display encoding instead of the filename. Use NUL-delimited path output, anchor inspection to the repository root, and refuse malformed invocations. Enforcement must also reach conductor commits that routinely skip hooks; mocked path lists currently let the entire Git inspection disappear while tests remain green.
+Successful reports currently conflate verified claims, skipped verification, unreadable evidence, and unchecked package contents. Require valid input structure, explicit verification outcomes, agreement with the operator manifest, and unique game counts before reporting success; the existing tests demonstrably allow essential checks to disappear.
 
 
-## operator_curated_doc_guard.py
+## arc_llm_on_liveness_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -99,111 +115,70 @@ A path explicitly covered by the blog policy commits successfully through the in
 SILENT_NON_FIRING
 
 ## CONCEPT
-Prevent tests from altering or destroying operator-curated repository documents, refusing the mutation before it happens and identifying its origin.
+Prevent ARC measurements from passing as valid LLM-on evidence when their own instrumentation records a dead, ineffective, or invalid generator.
 
 ## FINDINGS
-1. **Aliases bypass protection before resolution.** L288–290 checks the supplied basename before L297 resolves symlinks. A differently named symlink to `README.md` therefore returns `None` without examining its target. Reproduced: the protected document changed and the ledger remained empty. Hard links also bypass protection; resolving their paths never identifies the shared file.
+1. **A witness error suppresses independent proof of failure.** Lines 234–246 return only `WITNESS_UNAVAILABLE` when any counter is negative or `liveness_witness_error` is truthy. This happens before checking `generator_healthy_after`, completions, or storms. Adding an error diagnostic to an otherwise rejected dead-generator row changes the exit status from one to zero.
 
-2. **Moving protected documents away is allowed.** L379 checks only `args[1]`, the destination. Renaming `README.md` to an unprotected backup succeeds without a violation. Renaming the containing documentation directory also succeeds: neither source paths nor ancestors of protected documents are checked.
+2. **Missing fields suppress surviving counters.** Lines 249–257 return `WITNESS_MISSING` before checking completions. An LLM-on row recording nine calls, nine errors, and zero responses passes when its health and validity fields are absent. Those missing fields do not erase the available evidence that every call failed.
 
-3. **Real directory descriptors disable mutation checks.** L378 and L393 set relative resolution false for actual descriptors; L292–293 then exempts relative names outright. Descriptor-relative replacement and deletion of `README.md` both succeeded. Ordinary recursive cleanup also deleted the protected documentation directory without a recorded violation. For write-intent opens, L354 instead resolves against CWD regardless of the actual directory descriptor, allowing a descriptor-relative write from another working directory.
+3. **The row recognizer is a sample of representations, not the concept.** Lines 149–155 recognize three field shapes, then end with `return False`. A per-game summary retaining `llm_tier_operational` as true, a dead-generator reading, and failed-call counters is completely invisible if it omits the three recognized shapes. This omission is especially concrete because `_claims_llm_on` already recognizes that operational field as authoritative—but the walker never delivers the row to it.
 
-4. **Existing file descriptors remain writable.** L284–285 rejects integer paths, expressly including descriptor-based truncation at L388–389. Truncating an already-open protected document succeeded with an empty ledger. Writes and writable memory mappings through existing descriptors also escape the event dispatch. These are additional in-process gaps beyond the documented subprocess limitation.
+4. **A warning disables the invalid-stamp check.** Line 381 uses `if stamp is False and not findings:`. Ten calls, eight responses, two errors, healthy teardown, and a false stamp produce only `GENERATOR_PARTIAL_FAILURES`; that warning prevents `STAMP_FALSE_UNEXPLAINED`. The documented rule says disagreement should refuse when no FAIL was recomputed, whereas the implementation requires no finding whatsoever.
 
-5. **Resolution errors fail open.** L298–299 explicitly uses `except (OSError, ValueError, RuntimeError):` followed by `return None`. Forcing a resolution error allowed an otherwise protected direct write to succeed without recording anything. The unknown write-intent fallback correctly fails closed at L237; path-check failures do the opposite.
+5. **Input failures fail open.** Lines 459–461 use `except Exception:`, append the filename to `unreadable`, and `continue`. Missing files and malformed JSON both produce zero failures and exit zero through line 947, despite the documented IO-error exit status. An empty directory also passes without checking anything. Baseline parsing is safer: its exception fallback, `known = set()`, leaves detected failures blocking.
 
-6. **Installation can claim success without installing protection.** L409–411 assumes `sys.addaudithook(_audit_hook)` registered the hook before setting `_installed = True`. Reproduced on this interpreter: an existing audit hook refused further registration, yet installation reported success and a protected write succeeded. The repository’s pytest installation wrapper additionally suppresses import and installation exceptions.
+6. **Historical exemptions attach to locations, not historical measurements.** Lines 512–513 key exemptions using only filename, JSON location, and code; line 535 accepts a matching key. Replacing an exempt cell with a new game and seed carrying the same failure codes still exits zero. A routine rerun overwriting a fixed output path can therefore inherit the historical exemption without changing the baseline.
 
-7. **The filename definition is legitimate; its recognizers are incomplete.** Repository policy explicitly makes `OPERATOR_CURATED_PATHS` authoritative, so no omitted curated filename is established. The derived absolute/glob sets inherit that definition; `__all__` defines exports, and `wxa+` identifies standard writable modes. However, `_WATCHED_BASENAMES` and the `blog` substring recognize only selected spellings, while the event tuples recognize only selected mutation mechanisms. Their defaults silently exempt aliases, descriptors and ancestor operations described above.
+7. **Coverage stops at the selected working files.** Default scanning recursively reads JSON under `results`; other directories and JSONL artifacts require separate invocation. It reads filesystem contents, not staged blobs or historical diffs: a bad staged version concealed by a clean working copy is outside its view, as are deleted artifacts and files renamed outside the scanned scope. `--warn-only` deliberately disables refusal, and `--self-test` skips artifact scanning entirely. The conductor integration is explicitly advisory; no blocking fallback for these holes is established here.
 
-8. **Substantial rules can disappear with tests green.** The 25 existing focused tests passed unchanged in a disposable replica. Individual removals still left all 25 passing for:
-   - CWD-relative open support at L354—the original incident mechanism.
-   - Recognition of `shutil.move`, `shutil.copyfile`, `shutil.copy2`, `os.remove`, or `os.truncate`.
-   - Individual `os.O_WRONLY`, `os.O_APPEND`, `os.O_CREAT`, or `os.O_TRUNC` bits. The tested combined flags conceal removal of either writable/create bit.
-   - Matching any of the 13 non-README literal entries, while retaining the declared tuple.
-   - Bytes handling, root canonicalization, installation idempotence, stack capture, defensive descriptor handling, and error/short-event branches.
+8. **Several branches survive deletion with the focused tests green.** All 13 guard tests, including the self-test, still pass when individually disabling the aggregate row recognizer at line 151, the witness-unavailable shortcut at line 236, the calls-denominator override at line 334, or the unauditable-stamp branch at line 415. The denominator override is unproved because tested examples use matching totals. The operational override also survives this focused suite, although sibling witness tests exercise it. Removing `FAIL_CODES` or `WARN_CODES` changes nothing: these unused tuples define diagnostic labels rather than detection patterns, and `WARN_CODES` omits `STAMP_FALSE_UNAUDITABLE`. The origin-cell arrays are incident samples, not exhaustive coverage of the concept.
 
-   Removing candidate symlink resolution, individual mode markers, `os.O_RDWR`, the unknown-intent fallback, relative-path exclusion, outside-repository allowance, or ledger append/clear did fail tests. The nested blog pattern is decorative: `fnmatch` already lets `docs/blog/*.html` match nested paths. Synthetic tests distinguish `os.replace` and `os.unlink`, but actual calls emitted `os.rename` and `os.remove`; notably, removing the latter still passed.
-
-9. **Scope and remaining checks.** Protection applies only after installation, in that interpreter, against the checkout derived from the module location. Subprocesses, uninstalled execution paths and non-curated evidence/output directories remain outside it. The source names commit-time and after-run backstops; those cannot prevent a transient mutation restored before inspection. No executable absolute write target, premature runtime metric, or fixed tracked-state write by the guard/current focused fixtures was found.
+9. **Explicit baseline writing can destroy a scanned artifact.** `--write-baseline` uses `nargs="?"`; an artifact path immediately following it becomes the output destination. Lines 909–912 then open that path with `"w"` without rejecting overlap with scanned inputs. A temporary reproduction replaced the original measurement with an exemption manifest and exited zero. Ordinary scanning, self-testing, and the inspected tests do not write protected records. There is no hardcoded absolute filesystem target and no premature duration measurement in this guard.
 
 ## COUNTEREXAMPLE
-Reproduced in a disposable checkout, with its root as CWD:
+```json
+{
+  "llm_enabled": true,
+  "game": "dc22",
+  "actions": 400,
+  "llm": {"calls": 20, "responses": 0, "errors": 20},
+  "generator_healthy_after": false,
+  "llm_on_row_valid": false,
+  "liveness_witness_error": "AttributeError: optional telemetry unavailable"
+}
+```
 
-```python
-from pathlib import Path
-from carnot.testing import operator_curated_doc_guard as guard
+Scanning this produces only `WITNESS_UNAVAILABLE` and exits **0**. Removing the error field produces `DEAD_GENERATOR` and `NO_COMPLETIONS`, exiting **1**.
 
-guard.install()
-Path("model_card.md").symlink_to(Path("README.md").resolve())
-Path("model_card.md").write_text("# generated model card\n")
+The destructive argument shape, reproduced entirely in a temporary directory, is:
 
-assert Path("README.md").read_text() == "# generated model card\n"
-assert guard.recorded_violations() == []
+```bash
+arc_llm_on_liveness_lint.py --write-baseline results/cell.json
 ```
 
 ## MISSED INPUT
-`model_card.md` — a symlink resolving to `<repo>/README.md`, opened for writing.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Multiple ordinary in-process operations changed or removed protected documents while recording zero violations; the documented subprocess exclusion does not explain these failures. Protection needs to account for resolved targets, rename sources, protected descendants and descriptor-relative operations, and report unverifiable checks loudly. Focused lint and spec checks passed; verification used disposable trees, and full-suite integration was not run.
-
-
-## child_results_guard.py
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CONCEPT
-Prevent Python subprocesses launched by tests from modifying or destroying the repository’s historical results artifacts.
-
-## FINDINGS
-
-1. **Path spelling silently disables protection.** Lines 144–145 return `None` whenever the supplied path lacks the literal substring `"results"`, before resolving its actual location. A basename opened while the child’s working directory is results, or a path through a differently named symlink, overwrites protected evidence. Both reproduced with exit status 0 and no diagnostic.
-
-2. **Directory-relative operations use the wrong resolution context.** `_os_open` passes only the path to `_target`, which resolves against the working directory. It forwards directory-descriptor arguments through `**kwargs` without accounting for them. A write resolved by the kernel relative to a results directory descriptor can therefore overwrite protected evidence; reproduced successfully.
-
-3. **The intercepted APIs are a sample of mutations, not their definition.** The five assignments at lines 194–198 omit deletion and truncation operations, including os.unlink, os.remove and os.truncate. Moreover, `_wrap_move` checks only `_target(dst)` and passes `src` unchanged: moving an existing protected artifact removes it from the record, even when the destination is redirected. Deletion, truncation, moving out and moving within results all reproduced with exit status 0.
-
-4. **Failures explicitly permit the original write.** Lines 155–157 catch `OSError` from creating the redirect directory and return `None`; lines 174–176 then open the original target. Making the redirect root a regular file reproduced silent destruction. The installation-level `except Exception:` followed by `pass` at lines 203–206 and the spawn-wrapper equivalent at lines 305–307 also suppress guard failures. Injecting a shim-creation error with an explicit child environment produced an unprotected, successful write while `is_installed()` remained true. The signature fallback, `return 10`, also substitutes an unchecked assumption rather than reporting inability to inspect the signature.
-
-5. **Configuration defaults can disable an apparently installed guard.** `base.setdefault(CHILD_REPO_ROOT_ENV, str(_REPO_ROOT))` preserves an explicitly supplied empty or stale repository root. The shim then takes `if not _REPO or not _ROOT:` and returns without installing protection, or protects the wrong tree. An empty repository-root value reproduced an overwrite under an installed parent wrapper. Separately, `child_env` and `install` deliberately return without arming when no redirect root exists; neither establishes child protection.
-
-6. **Read-after-write behavior contradicts the docstring.** Only writing modes are redirected. After a successful redirected write, reading the same original pathname returns the historical bytes, not the replacement. This reproduced directly. A test can therefore validate old evidence while believing it checked its newly generated artifact.
-
-7. **Pattern inventory and execution scope are incomplete.** The results directory name defines the intended scope; its occurrence in the caller’s path is merely a spelling heuristic. `"wxa+"` and the listed open flags describe standard writable open modes; the missing coverage is other mutation APIs. `__all__`, environment-variable names and temporary-directory prefixes are interface definitions or labels, not artifact classifiers. The documented exclusions include non-Python writers, alternate spawning APIs, startup flags and writes outside results; isolated Python startup is another way to ignore the injected path. This file does not inspect Git changes or invoke a backstop. It names `scripts/test_suite_mutation_check.py` and `git status`, without enforcing their execution.
-
-8. **The focused tests permit substantial protection to disappear.** In isolated copies, all six tests passed after each independent mutation: removing the `io.open` patch; removing the `os.open` patch; removing both move patches; recognizing only write mode; removing bytes handling; removing the containment check; or disabling `install` entirely. The containment check is masked because the outside-tree fixture exits through the earlier substring filter. The normal signature calculation is tested, but error fallbacks, positional environment rewriting, destructive operations, readback and startup chaining lack corresponding focused assertions. These results concern the six dedicated tests; the full repository suite was not run.
-
-9. **No baked operator path, but unsafe redirect targets are accepted.** `_REPO_ROOT = Path(__file__).resolve().parents[3]` derives the repository location correctly. Shim creation normally writes to a temporary directory, and the dedicated tests use temporary fixtures. However, neither `install` nor `child_env` validates that the redirect root is outside the protected tree. Pointing it at results redirected the write onto the original artifact and destroyed the fixture record successfully. No tracked project artifacts were modified during this audit.
-
-10. **No premature measurement found.** This guard neither computes nor consumes duration, count or size measurements; the call-argument timing failure does not apply.
-
-## COUNTEREXAMPLE
-With the generated shim active, both guard variables correctly populated, and the child working directory set to a temporary fixture’s results directory:
-
-```python
-open("experiment_3361_archive_v309_activate_v310.json", "w").write("{}")
+```json
+{
+  "game": "dc22",
+  "actions": 400,
+  "llm_tier_operational": true,
+  "llm": {"calls": 20, "responses": 0, "errors": 20},
+  "generator_healthy_after": false,
+  "llm_on_row_valid": false
+}
 ```
 
-The existing artifact contained `flagged_adversarial` and `corrigendum_note`. The child exited 0, replaced it with `{}`, created no redirected artifact and emitted no diagnostic. Lines 144–145 bypassed protection because the supplied basename lacked `"results"`.
-
-## MISSED INPUT
-`experiment_3361_archive_v309_activate_v310.json` opened for writing with the child’s working directory set to `<repo>/results/`.
+This plausible per-game summary yields **zero rows seen, zero findings, exit 0**.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Ordinary path spelling and cleanup operations can silently destroy evidence despite a correctly armed shim. Protection needs to follow actual filesystem targets and mutation operations, distinguish guard failure from an unprotected target, and validate redirect destinations; the focused suite currently permits major protections to vanish unnoticed.
+Independent failure evidence must survive broken telemetry, and supported LLM-on claims must reach validation. All 13 focused tests and the self-test pass despite these reproduced bypasses; mutation testing was limited to that focused suite. Reproductions used temporary data, and no tracked files were changed.
 
 
-## artifact_freshness_lint.py
+## verifier_authenticity_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -211,53 +186,85 @@ Ordinary path spelling and cleanup operations can silently destroy evidence desp
 SILENT_NON_FIRING
 
 ## CONCEPT
-Prevent commits from leaving analyser-produced research artifacts inconsistent with the code and inputs that produced them.
+Prevent verifier implementations from presenting fabricated evaluation data, manipulated scores, or invented runtime as authentic research computation.
 
 ## FINDINGS
+1. **Sleep-padding detection contradicts its documented range.** L28 promises detection within five lines; L91 requires the duration assignment on the immediately following line. One intervening blank line or comment makes the padding invisible. The counterexample below was reported clean.
 
-1. **Wrong checkout verified — L183–184, L308–309.** Dependency hashing reads the recorded path directly. For absolute provenance paths pointing into the operator’s checkout, a clone or worktree checks that checkout’s files instead of its own changed dependencies. `_repo_relative` only normalizes names afterward. Reproduced: a staged analyser change in a clone received a fresh status and exit 0.
+2. **Random-data detection recognizes naming conventions, not fabricated evaluation.** L112 requires one of four prefixes, one of four variable-name endings, an unannotated assignment, and the literal spelling `np.random`. Those are samples of the concept. Ordinary feature/label names, train/test suffixes, type annotations, and generator-based random calls escape. No evaluation-data provenance is checked.
 
-2. **Expired acknowledgements become permanent backlog exemptions — L310–325, L571–589.** `if head == rec:` compares HEAD against the original fingerprint, ignoring the acknowledgement that made HEAD fresh. After an acknowledged dependency changes again, its acknowledgement correctly stops matching, but HEAD still differs from the original fingerprint; the new violation is consequently classified as inherited backlog. Reproduced: the baseline was fresh through acknowledgement, the next substantive edit was stale, and the default invocation nevertheless returned 0. The function never reads the artifact’s HEAD version to establish whether it actually was stale then.
+3. **Constant-duration detection excludes ordinary constants and field representations.** L118 accepts only two-to-four-digit decimal literals after `duration_s` and an equals sign. Single-digit values, five-digit values, scientific notation, annotated assignments, and dictionary fields escape. The digit range and assignment syntax are samples, not definitions of invented duration.
 
-3. **Actual registered inputs fall outside the trigger — L80–84, L428–445, L479–490.** The index filename is a definition; the analyser naming pattern and JSON artifact pattern are samples. The registered corpus includes three JSONL row sources that match neither those patterns nor an enumerated code dependency. Changing only one does not invoke this hook, while its coverage check reports success because it checks only code dependencies. Row sources outside the results directory are likewise absent unless independently matched. No compensating check is visible in this file.
+4. **Other patterns have equivalent spelling holes.**
+   - L96/L101 miss nested function calls before the cap/floor argument, reversed arguments, and alternative thresholds. These regexes sample score manipulation.
+   - L123 stops at the first closing parenthesis, so a default-value function call before `mock_sleep` hides even the explicitly forbidden parameter. That exact name defines the documented narrow rule; it only samples sleep-control parameters generally.
+   - L106’s two token names define the expressly named-token rule. They do not establish detection of gaming that omits those names.
+   - Rule labels and diagnostic strings classify findings; they do not broaden recognition.
 
-4. **Unrecognized dependency shapes silently disappear — L104–115.** `_rows_source_entries` accepts two container shapes and silently skips other shapes. A named row group containing one fingerprint dictionary instead of a list contributes no dependencies. With an unchanged code fingerprint, changing that explicitly declared row input produces a fresh status. These recognizers are samples of dependency representations, yet their default means permission to omit the check.
+5. **The allowlist disables every protection.** L71 describes permission to mention adversarial-check tokens, but L132–133 returns before applying any pattern. Consequently, the gradient-clamp exception for `python/carnot/verify/local_qualification_8333.py` also permits random-data fabrication, sleep padding, and hardcoded durations. Confirmed by placing all seven positive controls at that temporary relative path. The allowlist defines exceptions, not authentic behavior.
 
-5. **Incomplete acknowledgements are accepted — L150–158.** The documented contract requires `sha256_was`, but the implementation never validates or even reads it. Furthermore, converting `reason` and `evidence` with `str` turns JSON null into nonempty text. Reproduced: an acknowledgement missing the old hash and containing null reason and evidence cleared real drift.
+6. **Discovery leaves entire execution paths uncovered.** L153 uses nonrecursive `glob("*.py")` in two directories. Nested verifier packages, helpers elsewhere, notebooks, artifacts, and documentation are outside inspection. It reads current filesystem contents, without staged-content inspection or deletion/rename history. Moving implementation into a subpackage unintentionally bypasses it; calling it after a run provides no protection against artifact overwrites. This file invokes no sibling protection, and skipping the hook bypasses execution entirely.
 
-6. **Read and parse failures fail open — L87–91, L167–177, L198–199, L402–415, L541–567.** Missing or unreadable dependencies become unverifiable, including deleted code dependencies—not merely cleaned-up scratch rows. Artifact JSON parse failures become unreadable. Neither status enters the blocking list because collection requires `if status == "stale":`. Missing, malformed, empty, or incorrectly typed indexes also return 0; the unreadable-index branch explicitly says “passing rather than blocking.” Reproduced both deleted code and malformed index cases. HEAD lookup failures do fail closed when classifying detected drift; that protection does not cover these earlier exits.
+7. **Read and discovery failures fail open.** L135–137 explicitly uses `except Exception:` followed by `return []`. A syntactically valid Python file declaring Latin-1 encoding, containing a non-UTF-8 comment and a prohibited duration assignment, was reported clean because decoding failed. L149–151 returns success when the verifier directory is missing, even when the pipeline directory contains violations. Missing pipeline directories and empty discovery also produce no alarm.
 
-7. **Default branch disables trigger verification — L463–470, L482–485.** Hook identification recognizes one textual YAML spelling. Quoting the hook ID is valid YAML but prevents identification; the terminal `return None` then reaches `return (True, [], generated)`. Reproduced with a quoted ID and an insufficient trigger: coverage reported success. The hook ID itself defines identity; the line markers and quoting assumptions only sample YAML syntax. The four Git discovery variable names and status-display labels are bounded implementation definitions; no additional omission was demonstrated there.
+8. **Unrecognized forms become approval; measurement order is unchecked.** There is no substrate-threshold dispatcher or terminal `return None` here. The analogous path is empty `hits` at L139–145 followed by `if not flagged:` and success at L160–162. L118 examines numeric spelling only: elapsed time computed as an argument before a builder performs its work passes unchecked. The guard itself computes no runtime metric.
 
-8. **Scope and ordinary bypasses.** Only currently indexed artifacts and their declared dependencies are checked. Unregistered artifacts, undeclared imports/configuration, and entries removed from the index are invisible; registration is an explicitly documented limitation. Missing registered artifacts are skipped at L556–558. The guard reads filesystem state rather than staged blobs and has no independent rename/deletion analysis. A normal worktree edit, dependency deletion, malformed index write, or second edit after an acknowledgement can defeat it without malicious intent. A run that never invokes the guard receives no protection; the docstring also explicitly acknowledges automation committing with `--no-verify`.
+9. **No direct behavioral regression tests were found.** Repository searches found no tests exercising any of the seven patterns, allowlist behavior, read failures, discovery holes, or exit-status branches. All seven rules appear removable without a direct regression failure; whole-suite mutation testing was not performed. Each rule fired independently in isolated positive controls, so none is inherently redundant, although comment-bearing score examples are additionally rejected by `DODGE_TOKEN_REFERENCE`.
 
-9. **Tests leave important rules removable.** In an isolated selection of 18 existing tests, each of these deletions independently remained green: each of the three static trigger patterns; the index analyser fallback at L434–436; the row-source dependency union at L428–431; and the default invocation’s coverage check at L518–522. Existing analyser fixtures already fingerprint their analysers, masking removal of the fallback; generated-pattern assertions focus on code, leaving static and row coverage unpinned. Disabling hash-drift detection failed four tests. The original safe test selection separately produced 16 passes and two existing corpus failures, so the complete suite cannot honestly be described as green. The test that temporarily edits a live dependency was excluded from execution.
-
-10. **Writes and measurement timing.** No hardcoded absolute filesystem target or artifact-writing operation exists in this guard; `REPO` derives from its source location. No duration or similar measurement-before-work defect was found. The existing backlog regression test temporarily rewrites a real tracked dependency and restores it in a finally block; its selection can include Python builders beneath the results directory. That test is not fully isolated, although no fixed historical JSON overwrite was found.
+10. **No absolute-write or tracked-state mutation defect found.** L67 derives the root through `Path(__file__).resolve().parent.parent`. This source reads files and prints diagnostics; it writes no research artifacts or curated documents. All counterexample fixtures used automatically removed temporary directories.
 
 ## COUNTEREXAMPLE
+Place this at `python/carnot/verify/random_feature_evaluator.py`:
 
-Reproduced in temporary repositories using the unchanged guard:
+```python
+import time
+import numpy as np
 
-1. Build `results/outer_loop_scored_path_lever_ab_llm_on_20260726.json` with an absolute fingerprint for the original checkout’s `scripts/analyze_scored_path_lever_ab.py`. Clone the repository, change and stage that analyser only in the clone. The guard hashes the unchanged original checkout and prints “fresh” and “OK”, exiting 0.
+def evaluate():
+    features = np.random.randn(1000, 64)
+    labels = np.random.randint(0, 2, 1000)
+    score = min(float(np.mean(labels == (features[:, 0] > 0))), 0.99)
+    padding_s = 65.0
+    time.sleep(padding_s)
 
-2. Record original hash A, then commit dependency version B with a verified-inert acknowledgement pinned to B. Confirm the guard passes. Change and stage version C without rebuilding or acknowledging C. The guard detects drift but calls it “ALREADY stale at HEAD” and exits 0.
+    duration_s = padding_s
+    return {"score": score, "duration_s": duration_s}
+```
 
-3. Declare `rows_sources: {"rows": {"path": "/tmp/rows.jsonl", "sha256": "<original hash>"}}`, alongside a valid code fingerprint. Change the row file. The guard reports only the code dependency verified and returns fresh.
+Confirmed against the supplied implementation: `scan_file()` returned `[]`; isolated `main()` printed `verifier_authenticity_lint: clean (1 files scanned)` and returned zero. The evaluator was linted, not executed.
+
+Additional independently confirmed misses include:
+
+```python
+duration_s = 0.0001
+duration_s = 10000
+duration_s: float = 120.0
+artifact = {"duration_s": 120.0}
+
+mock_features_train = np.random.randn(1000, 64)
+mock_features: np.ndarray = np.random.randn(1000, 64)
+
+rng = np.random.default_rng(42)
+mock_features = rng.standard_normal((1000, 64))
+
+score = min(0.99, score)
+score = min(score, 0.999)
+score = max(float(score), 0.01)
+
+def evaluate(config=dict(), mock_sleep=65):
+    return mock_sleep
+
+artifact = build_artifact(
+    duration_s=max(time.monotonic() - start, 0.0001)
+)
+```
 
 ## MISSED INPUT
-
-A commit changing only any of these actual registered row sources:
-
-- `results/inducer_h2h_6021/h2h_shard_gemma31b.jsonl`
-- `results/inducer_h2h_6021/h2h_shard_qwen27b.jsonl`
-- `results/inducer_h2h_6021/h2h_vram.jsonl`
-
-All three fail the shipped hook regex while the guard’s coverage check returns true.
+`features = np.random.randn(1000, 64)` and `labels = np.random.randint(0, 2, 1000)`, evaluated as research data in the counterexample.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The guard can certify a different checkout, waive newly introduced drift after an acknowledgement expires, and omit registered input changes from its trigger. Resolve dependencies into the checkout being checked, establish baseline freshness from HEAD’s artifact and acknowledgements, cover tracked row inputs, and make unverifiable checks explicit failures rather than successful exits.
+The guard recognizes a small collection of textual spellings while claiming protection against broader fabrication practices. Replace syntax-sensitive matching with parsed checks, narrow exceptions to individual rules, and refuse incomplete scans. Verified silent passes demonstrate that a clean result currently provides substantially less assurance than the documented discipline promises.
 

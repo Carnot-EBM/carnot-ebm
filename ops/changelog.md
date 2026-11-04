@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-11-04 — V753 research plan staged
+
+- Added the V753 reference scan, including November type-aware verification,
+  delayed memory and capacity controls, with primary links and retrieval limits.
+- Preserved the complete V752 design and wrote matching V753 design/YAML
+  authorities: 12 tasks, Exp8789–Exp8800, across four phases.
+- Planned original failure-path qualification, causal template additions,
+  actual queue overflow, balanced evidence interventions, bounded mandated
+  Qwen generation, observer controls, new ARC outcomes and operation costs.
+- Declared exact producer gate fields, complete prior-failure metadata,
+  per-unit rows, verdict classes, progress/heartbeat rules and bounded writes.
+- Added planned OpenSpec requirements and BMAD traceability. The active
+  roadmap, conductor and historical primary artifacts are outside this change.
+
 ## 2026-11-04 UTC — Operational retrospective for milestone 2026.11.752
 
 - Updated `results/operational_retro_2026_11_752.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.752`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 7 completed experiments (7 compute-bound, 0 synthesis-only) across 69.1 wall-time minutes (69 minutes / 1.2 hours, averaging 10 minutes per experiment).

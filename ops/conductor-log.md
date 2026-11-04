@@ -21263,3 +21263,4 @@ code |
 | 2026-11-04 01:30 UTC | Assess cross-game supervisor choices only from new | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8776-branch-methods.arc_new_outcomes_available_score (actual=0 == expected=1) |
 | 2026-11-04 02:06 UTC | Map new learning and durable costs to supported ha | OK | 96 passed, 1 warning in 92.24s (0:01:32) |
 | 2026-11-04 02:57 UTC | Reconcile thirteen outcomes and close unsupported  | OK | 92 passed, 1 warning in 101.05s (0:01:41) |
+| 2026-11-04 04:26 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

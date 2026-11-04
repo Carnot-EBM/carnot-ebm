@@ -1,5 +1,23 @@
 # Carnot — Operational Status
 
+## 2026-11-04 — V753 staged research plan
+
+The next plan contains exactly 12 tasks, Exp8789–Exp8800, in four phases.
+The design and staged YAML bind full task objects. V752's design is preserved
+as `openspec/change-proposals/research-roadmap-v752-preserved-20261103.md`.
+
+The main prerequisite is measured execution of the four missing original
+Exp8776 failure-publication statements. Continuous learning then tests actual
+constraint additions and a small calibrated energy policy on reset streams.
+Independent evidence work tests semantic defects under balanced length/order
+changes. A sham-clock intervention checks complete durable cost attribution.
+The Qwen canary and ARC outcome analysis remain gated on new authenticated
+inputs. The capstone always accounts for all twelve slots.
+
+Research findings and source-access limits were appended before task design.
+This plan is not activated. Experiment results, runtime repair, physical
+hardware benefit and publication authorization remain unclaimed.
+
 **Last Updated:** 2026-11-03
 
 ## 2026-11-03 UTC — Exp8763 private archive repair

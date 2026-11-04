@@ -54687,3 +54687,98 @@ Exp8772 produced ordinary-window costs but used a task identifier that its
 consumer rejected. Exp8771's lifecycle controls qualified. These findings favor
 one narrow validation repair, a distinct information-adding memory question,
 and explicit measurement boundaries. They do not authorize historical promotion.
+
+## V753 planning scan — 2026-11-03
+
+Recorded before V753 task design. External results below are research leads,
+not Carnot measurements. This scan covers 2025–2026 primary sources and all
+requested secondary channels. Prior entries remain historical records.
+
+### Findings selected for experimental controls
+
+- [Beyond Binary Detection: Type-Aware Hallucination Analysis](https://arxiv.org/abs/2611.02258),
+  submitted November 1, 2026. The abstract and HTML describe length and lexical
+  confounds, and error types hidden by aggregate accuracy. Adapt the diagnostic
+  principle: balance label and length, report each semantic defect separately,
+  and distinguish harmless padding from changed evidence. A constructed graph
+  study cannot inherit the paper's financial QA results or natural labels.
+- [Memoir](https://arxiv.org/abs/2607.20792), July 22, 2026. The abstract and HTML
+  describe a fixed-budget learning penalty from updating memory during the
+  recurrence that reads it. Later training reaches a ceiling in both arms.
+  Keep reads fixed within a Carnot query; test additions after delayed feedback
+  against read-only, calibration-only, and shuffled-feedback controls. This is
+  an adaptation of the timing question, not a replication of its architecture.
+- [Capacity-Constrained Online Convex Optimization with Delayed Feedback](https://arxiv.org/abs/2606.11711),
+  June 10, 2026. The abstract and HTML distinguish bounded tracking from delayed
+  labels alone. The previous proposed fixed delay of eight with capacity eight
+  or 32 need not cause a capacity conflict. A new test must demonstrate an
+  overflow event before comparing admission policies. Record dropped feedback
+  and admission probabilities. Uniform replacement with unweighted updates is
+  a heuristic comparator; the paper's convex regret bounds do not apply.
+- [Distributional Energy-Based Models for Structured LLM Reasoning](https://arxiv.org/abs/2605.18871),
+  May 15, 2026. The authors combine a learned quality signal with explicit
+  constraints and audit model-identity shortcuts. For Carnot, keep the exact
+  solver as a strong, separately costed reference. Remove world identity,
+  condition labels, and final truth from the small policy's inputs. Do not
+  infer learned verification value from exact-oracle success.
+
+### Coverage of primary research topics
+
+| Topic | Primary source checked | Decision |
+|---|---|---|
+| EBM verification and reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605v4), May 2026; distributional EBM above | Compatibility and calibration are distinct from proof of premises. Train only a small typed-decision policy. |
+| Neural constraint satisfaction | [CAffNet](https://arxiv.org/abs/2605.24437), May 2026; [HardNet++](https://arxiv.org/abs/2604.19669), April 2026 | Encoding assumptions remain central. Projection-stack work stays deferred under the exclusion manifest. |
+| Ising applications in ML | [Programmable million-p-bit computer](https://arxiv.org/abs/2606.25313), June 2026 | Sampling quality depends on boundary exchange and topology. No local speed claim follows from flips per second. |
+| Hallucination detection and mitigation | Type-aware analysis above; [HalluScoring](https://arxiv.org/abs/2609.38355), September 2026 | Separate error classes, question shift, and model shift. No new natural-data benchmark without label custody. |
+| Kolmogorov–Arnold Networks | [On-chip online KAN v4](https://arxiv.org/abs/2602.02056v4), June 2026; [ICML proceedings](https://proceedings.mlr.press/v306/hoang26a.html) | Sparse update arithmetic motivates an operation budget; it does not accelerate durable host work by itself. |
+| Energy-guided decoding | [ETS v3](https://arxiv.org/abs/2601.21484v3), May 2026; [object-hallucination decoding](https://arxiv.org/abs/2507.07731), July 2025 | Defer decoder changes until the mandated runtime and extraction qualify. The second paper is multimodal and does not establish text transfer. |
+| Hardware sampling | Million-p-bit paper; [Extropic Z1T](https://extropic.ai/writing/z1t), September 4, 2026 | Include communication, topology, fixed precision, host costs, and compatible operations. Vendor energy estimates are not local latency. |
+| Continual constraint systems | Memoir and capacity-constrained OCO above | Test causal template additions, future proper loss, retention, and actual overflow under equal budgets. |
+
+[Temporal Verification for Generative Robot Policies](https://arxiv.org/abs/2609.39038),
+September 30, 2026, is a further EBM lead: it conditions action scoring on recent
+history. Keep it as a future ARC hypothesis. Robotics results do not reopen the
+retired cross-game learned-value mechanism or authorize changes to the live policy.
+
+### Secondary sources and access limits
+
+- OpenReview: searched NeurIPS 2025, ICLR 2026, and ICML 2026 EBM work. The
+  [latent-informed EBM submission PDF](https://openreview.net/pdf?id=c6iHKR4zTX)
+  and [NeurIPS workshop metacognition PDF](https://openreview.net/pdf?id=FrY7CU3U3p)
+  appeared in search. The corresponding ICLR forum and the
+  [compositional planning forum](https://openreview.net/forum?id=r2sJKlXY3M)
+  returned browser challenges. No new acceptance claim is inferred from a
+  search snippet. KAN's venue is independently stated by its proceedings page.
+- Semantic Scholar: direct citation requests for both
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,externalIds,url)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,externalIds,url)
+  returned HTTP 429 in this scan. Browser retrieval also failed. Citation
+  coverage is incomplete; the prior scan's successful EBT request is not a
+  successful current request. No new citation count is claimed.
+- Hugging Face: the [verification feed](https://huggingface.co/papers?q=verification)
+  and [HalluScoring page](https://huggingface.co/papers/2609.38355) were readable.
+  The feed contains older work. The new type-aware paper's HF page could not
+  be retrieved; its primary arXiv abstract and HTML were checked instead.
+- GitHub: the [monthly trending snapshot](https://github.com/trending?since=monthly)
+  had no energy/Kolmogorov text match and was marked crawled last month.
+  [EBT's author repository](https://github.com/alexiglad/EBT) was readable.
+  Targeted KAN repository search supplied no verified new dependency. This is
+  discovery coverage, not evidence of a current ranking or a comprehensive census.
+- Extropic: the [writing index](https://extropic.ai/writing) exposed navigation
+  only; the direct Z1T article was readable. Its sparse heterogeneous hardware
+  design remains relevant, but no local TSU access was established.
+- Logical Intelligence: the [Kona 1.0 page](https://logicalintelligence.com/kona)
+  describes an energy-based constraint layer. The page supplies no reproducible
+  new implementation, benchmark protocol, or local integration result.
+
+### Local findings that constrain the design
+
+The live artifact summary found no critical flags in the seven V752 primaries.
+Exp8776 nevertheless failed its own coverage gate: four executable runner
+statements, lines 88–90 and 107, were unmeasured. Its memory protocol was
+present, but that qualification failure blocked implementation and learning.
+Exp8777 and Exp8779 qualified constructed evidence-set checks; these are
+execution-grounded results. Exp8783 qualified producer identity and ordinary
+durable windows. Exp8784 retained complete costs but failed observer acceptance.
+The next cost question is a randomized observer intervention with sham clocks,
+not another claim that native arithmetic already speeds up the complete service.

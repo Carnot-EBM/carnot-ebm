@@ -9,26 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| CANNOT_DETERMINE | 5 |
+| CHECKABLE | 4 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_8768_v751_evidence_set_methods.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The evidence_set arm has lower macro error than both comparators across the recorded evaluation worlds, but readiness is disqualified because scoped_validation is false.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8769_evidence_set_transfer.json
+## experiment_8778_delayed_memory_prototype.json
 
 **CHECKABLE**
 
@@ -36,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `evidence_set_methods_ready_score` was 0, failing the requirement that it equal 1.
+The experiment was blocked because upstream `memory_protocol_ready_score` was 0, failing the required value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -44,7 +28,39 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8770_v751_optimized_cost_attribution.json
+## experiment_8779_v752_evidence_set_evaluation.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+On the exposed replication set, evidence_set achieved lower macro error than both comparators, with "paired_world_rows" recording all three arms’ metrics for each of 120 worlds.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8782_qwen_evidence_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because upstream `runtime_repair_ready_score` was 0, while the gate required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8783_v752_durable_producer_identity.json
 
 **CANNOT_DETERMINE**
 
@@ -52,15 +68,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible gates report complete optimized diagnostic execution but failure of the low-observer-overhead gate.
+The visible fragment marks all eight "acceptance_gates" true, but does not reveal the headline verdict.
 
 ## WHAT IS MISSING
-The artifact cuts off inside "component_cost_rows"; the final conclusion and observer-overhead measurements are unavailable. "acceptance_gates" identifies the failed check, and per-process rows are present.
+The remainder of the artifact: the JSON ends mid-entry in "cited_upstream_artifacts", leaving any results, per-unit rows, or blocker diagnostics unseen.
 
 ## THE CHECK A READER CANNOT DO
-What observed observer overhead supports the failed "low_observer_overhead" gate?
+Does the artifact’s headline verdict have supporting measurements or a recorded blocker reason?
 
-## experiment_8771_v751_lifecycle_archive_qualification.json
+## experiment_8784_v752_durable_cost_components.json
 
 **CANNOT_DETERMINE**
 
@@ -68,31 +84,15 @@ What observed observer overhead supports the failed "low_observer_overhead" gate
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible "acceptance_gates" reports all five gates as passed.
+no claim
 
 ## WHAT IS MISSING
-The artifact cuts off inside "cited_upstream_artifacts"; gate criteria, observed check values, per-unit measurements, and the final verdict are not visible.
+The artifact’s remainder: it cuts off mid-"path" inside "cited_upstream_artifacts". No headline verdict, per-unit metrics, or blocker diagnostic is visible. "acceptance_gates" includes "component_attribution": false, but does not establish a blocked outcome.
 
 ## THE CHECK A READER CANNOT DO
-Do the underlying measurements justify all five passed gates in "acceptance_gates"?
+Does the complete artifact claim a comparative result, report a blocked outcome, or merely record a receipt?
 
-## experiment_8772_v751_ordinary_durable_cost.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The “bounded_durable_benefit” acceptance gate was not met, with “bounded_durable_benefit_score” equal to 0.
-
-## WHAT IS MISSING
-The artifact ends mid-“sha256” inside “cited_upstream_artifacts”; the remaining JSON is missing, so any verdict, blocker diagnostic, or per-unit measurements cannot be assessed.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact record measurements explaining why “bounded_durable_benefit” is false?
-
-## experiment_8773_arc_outcome_frontier.json
+## experiment_8786_arc_new_outcome_decision.json
 
 **CHECKABLE**
 
@@ -108,7 +108,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8774_v751_hardware_operation_decision.json
+## experiment_8787_v752_hardware_operation_boundary.json
 
 **CANNOT_DETERMINE**
 
@@ -116,15 +116,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion claims board authority and owned validation passed, but the terminal verdict is not visible.
+The visible fragment asserts administrative contract readiness through `"authority.ready": true`.
 
 ## WHAT IS MISSING
-The artifact cuts off inside `"authority.rows[3].task_object.prompt"`. Actual result fields `"honest_verdict"` and `"verdict_class"` and any subsequent evidence are unavailable; `"acceptance_gates"` and partial `"authority.rows"` are present.
+The artifact ends mid-string inside `"authority.rows"`; its remaining results and current `"honest_verdict"` / `"verdict_class"` are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Does the terminal result claim success or blockage, and does its supporting evidence justify that verdict?
+Does the completed artifact report only administrative readiness, a comparative outcome, or a blocked verdict with a diagnostic?
 
-## experiment_8775_v751_capstone.json
+## experiment_8788_v752_capstone.json
 
 **CANNOT_DETERMINE**
 
@@ -132,10 +132,10 @@ Does the terminal result claim success or blockage, and does its supporting evid
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible summary withholds activation and reports no supported policy change, but the capstone’s final headline is unavailable.
+"G2.detail" claims independent reproduction of FoVer’s AUROC and learning contribution within published confidence intervals.
 
 ## WHAT IS MISSING
-The remainder of the artifact: it cuts off inside "code_config_hashes", before any final verdict or later per-unit results. "acceptance_gates" and "branch_gate_values" already identify failed checks and their values, so BLOCKED_WITHOUT_DIAGNOSTIC is not established.
+The artifact is truncated inside "cited_upstream_artifacts"; any subsequent per-unit results, overall verdict, or blocker diagnostics are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Does the capstone’s final verdict assert a comparative improvement supported by per-unit measurements?
+Does the reported learning contribution reflect improvement across units or an effect concentrated in a few units?

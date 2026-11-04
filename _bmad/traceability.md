@@ -1,5 +1,19 @@
 # Carnot — Traceability Matrix
 
+## V753 staged research plan — 2026-11-04
+
+| Requirement / scenario | Planned artifact | Verification scope |
+|---|---|---|
+| REQ-REPORT-V753-PLAN / SCENARIO-REPORT-V753-CONTRACT | V753 design and staged YAML: exactly 12 tasks, Exp8789–Exp8800 | Full-object/table/hash equality, mutation rejection, gate/schema and exclusion checks |
+| REQ-REPORT-V753-BOUNDARIES / SCENARIO-REPORT-V753-BOUNDARIES | Independent learning, evidence, observer, model and ARC branches | Scoped planning checks and private E2E-018/021; experiment results remain pending |
+| FR-06 / FR-11 | Exp8790/8792/8793/8797 causal additions and calibrated decisions | Planned reset-stream benefit, overflow and retention controls |
+| FR-12 | Exp8791/8794/8795 evidence interventions and optional Qwen extraction | Planned semantic controls; constructed results cannot certify natural factuality |
+| FR-05 / FR-08 / NFR-01 | Exp8796/8799 complete costs and compatible operations | Planned observer controls and operation bounds; no hardware gain claimed |
+
+The reference scan precedes experiment design. The previous V752 design is
+preserved. This entry stages research; it changes no runtime behavior or
+scientific readiness. See the V753 operational entry for validation results.
+
 **Last Updated:** 2026-11-03
 
 ## Exp8763 private archive repair — 2026-11-03 UTC
