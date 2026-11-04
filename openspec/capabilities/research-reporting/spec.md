@@ -105579,6 +105579,44 @@ A private cold replay reconstructs aggregates and rejects changed authority,
 missing producer fields and rehashed aggregate tampering. External absence is
 terminal blocked; failed owned validation is disqualified with readiness zero.
 
+#### SCENARIO-REPORT-8804-STREAMS
+
+Freeze thirty reset streams, thirty-two online queries and twelve disjoint
+retention worlds per stream. Execute seeds 11/23/47 and five paired arms, with
+retention checkpoints 0/16/32: retain 14400 online and 16200 retention slots.
+The explicit V754 task seed 47 supersedes the prototype protocol's seed 37 for
+this invocation only; retain both operands and historical bytes. Independent
+count is thirty reset streams, never seeds or sibling arms. Readiness reports
+complete measurements, while Exp8810 decides benefit.
+
+#### SCENARIO-REPORT-8804-COST
+
+Seal probabilities, typed action, template IDs, paid checks and complete prior
+state durably before independently verifying truth. Release each label only
+after eight later predictions. Measure prediction through durable acknowledgement
+with parent clocks, and separately retain service components and the entire
+eight-event tail drain. Include feature extraction, verification, numerical
+updates (also discarded control updates), commit, fsync and restart. Retention
+reads cannot alter learned state. Censored slots have null metrics, never zero.
+
+#### SCENARIO-REPORT-8804-PARALLEL-RESOURCES
+
+A measured thirty-unit durable-I/O wave may qualify execution across thirty
+independent reset streams. Each stream keeps its own sequential query/release
+order, state and paths. Merge receipts in frozen roster order. Project wall time
+from the measured wave and actual worker count, with custody charged once and
+900 seconds reserved for validation. No serialized latency is divided by an
+unmeasured speedup. Retain the rejected serial projection and all probe calls.
+
+Implementation measurement 20261104: the owned invocation emitted all 14400
+online and 16200 retention rows, with zero failed or censored slots, 14400
+released updates and 450 complete eight-event tail drains. State remains reset
+between thirty independent streams; nested seeds and paired arms add no
+independent units. Terminal readiness remains subject to the retained unit/CLI
+coverage and validation receipts. Benefit inference belongs to Exp8810; this
+constructed exact-oracle study makes no independent generalization claim.
+The conductor owns subsequent ops and BMAD reconciliation.
+
 ### REQ-REPORT-8805: Measure semantic sensitivity and harmless-evidence invariance
 
 Exp8805 SHALL publish `results/experiment_8805_v754_evidence_intervention_study.json` with exact source hashes,

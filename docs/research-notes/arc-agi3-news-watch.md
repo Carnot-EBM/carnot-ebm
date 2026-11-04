@@ -812,3 +812,7 @@ Gemini 4 Argon’s Standard evaluation suffered API failures: its best-scoring c
 
 - **September 3 — Official harness distinction and Astra results:** ARC Prize announced **62.7% using its Standard harness** and **99.9% using a Provider Adapter harness** on Semi-Private. The adapter preserves reasoning state between requests and supports context compaction; the two evaluation conditions are reported separately. [Official announcement](https://arcprize.org/blog/astra)
 
+## 2026-11-04 14:12 UTC -- NEW
+
+**October 1 — Milestone #2 results:** Daniel Franzen won **$25,000 (27.9%)**, Lord Han Solo **$7,500 (23.8%)**, and Lohit Siriki **$5,000 (22.5%)**. All three winning solutions were open-sourced. [Official announcement](https://x.com/arcprize/status/2105737436450201734) · [Readable mirror](https://site.twstalker.com/arcprize/status/2105737436450201734)
+

@@ -601,3 +601,17 @@ No submission-linked public code or technique writeup was found. **Classificatio
 
 ## 2026-11-03 14:30 UTC -- checked, nothing new
 
+## 2026-11-04 14:38 UTC -- NEW
+
+- **Grigoriy Zatravkin & co — (b), general-purpose:** Runs **400 experts for six hours, then restores 512** as fewer games remain active. The author reports **50→54** from this change. Restoration hot-swaps weights while shrinking the KV pool. INT4 K/V supports 110 concurrent games. [Disclosure](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755202#3548986), [hot-swap detail](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755202#3549315).  
+  **POSSIBLE CARNOT LEVER:** Restore full generator capacity as concurrency falls, allocating higher-quality inference to remaining difficult games without RL.
+
+- **xz — (b), general-purpose:** Reports **80K context** as optimal. FP8 input projections degraded performance less than FP8 output projections; expert pruning lost roughly as much token efficiency as it gained throughput. [Context finding](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755202#3548993), [precision findings](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755202#3549336).  
+  **POSSIBLE CARNOT LEVER:** Test selective FP8 conversion while preserving output-projection precision.
+
+- **Team Turducken — (b), general-purpose:** Son Pham discloses **32 parallel streams and 2,350 tokens/second, including prefill and decode**. Its harness remained close to Duck, principally adding agent-written notes. He reports that some speed improvements reduced token quality on later levels. [Disclosure](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755202#3549070), [throughput clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755202#3549413).
+
+- **Tufa Labs and NVARC3 — (b), general-purpose model use:** Both confirm their selected ARC-AGI-3 submissions use pretrained models **without additional training**. Tufa reports limited post-training success with 27B models and none with Flash. [Tufa disclosure](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-2/discussion/755217#3549446), [ARC-AGI-3 confirmations](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-2/discussion/755217#3549455).
+
+These classifications cover the disclosed mechanisms, which require neither game-source access nor per-game hardcoding. Complete-submission exploit status remains unverified.
+

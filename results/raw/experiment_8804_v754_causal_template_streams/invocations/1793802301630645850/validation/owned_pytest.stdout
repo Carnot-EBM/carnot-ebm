@@ -1,0 +1,131 @@
+.F...F.F...                                                              [100%]
+=================================== FAILURES ===================================
+____________________ test_real_stream_causal_rows_and_tail _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T142504-3884540-ea9e321b/test_real_stream_causal_rows_a0')
+
+    def test_real_stream_causal_rows_and_tail(tmp_path: Path):
+        """SCENARIO-VERIFY-8804-CAUSAL / SCENARIO-REPORT-8804-COST: real durable work."""
+        frozen = small_manifest()
+        head = dict(seed=11, parameters=m.initial_parameters(11), threshold=0.5)
+        work = s.execute(frozen, [head], tmp_path)
+        rows, retained = work["per_query_rows"], work["retention_rows"]
+        assert len(rows) == 160 and len(retained) == 180
+        assert work["numerical_training_calls"] == 160
+        assert len(work["release_order_rows"]) == 160
+        assert len(work["complete_learning_cost_rows"]) == 160
+        assert len(work["tail_drain_rows"]) == 5
+        assert work["tail_drain_cost_s"] > 0
+        assert all(r["initial_state_equal"] for r in work["reset_rows"])
+        assert all(r["paid_checks"] == 5 for r in rows + retained)
+        assert all(r["learning_state_unchanged"] for r in retained)
+        assert work["template_addition_rows"]
+        assert any(r["changed_later_predicates"] for r in rows)
+        for row in rows:
+            assert sum(row["prediction"]) == pytest.approx(1, abs=1e-6)
+            assert row["sealed_ns"] <= row["truth_recorded_ns"]
+            assert row["metric"] == s.brier(row["prediction"], row["truth"])
+        for row in work["release_order_rows"]:
+            assert row["feedback_ordinal"] >= row["prediction_ordinal"] + 8
+            assert row["feedback_label"] in row["released_prefix"]
+        for row in work["complete_learning_cost_rows"]:
+            assert row["ack_ns"] >= row["predict_started_ns"]
+            assert row["duration_s"] == (row["ack_ns"] - row["predict_started_ns"]) / 1e9
+            assert row["restart_equal"]
+>       assert s.check_work(work, frozen)["passed"], s.check_work(work, frozen)
+E       AssertionError: {'checks': {'census': True, 'completed': True, 'cost': True, 'inputs': True, ...}, 'numerical_training_calls': 160, 'passed': False}
+E       assert False
+
+tests/python/test_causal_template_streams_8804.py:68: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8804] phase=stream_arm_complete completed=1 pending=4
+[exp8804] phase=stream_arm_complete completed=2 pending=3
+[exp8804] phase=stream_arm_complete completed=3 pending=2
+[exp8804] phase=stream_arm_complete completed=4 pending=1
+[exp8804] phase=stream_arm_complete completed=5 pending=0
+_______________ test_resets_across_three_streams_and_tail_replay _______________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T142504-3884540-ea9e321b/test_resets_across_three_strea0')
+
+    def test_resets_across_three_streams_and_tail_replay(tmp_path: Path):
+        """REQ-VERIFY-8804: replay more than a thousand genuine rows and all tail states."""
+        frozen = s.manifest()
+        frozen["streams"] = frozen["streams"][:3]
+        frozen["seeds"] = [11]
+        head = dict(seed=11, parameters=m.initial_parameters(11), threshold=0.5)
+        work = s.execute(frozen, [head], tmp_path)
+        assert len(work["per_query_rows"]) + len(work["retention_rows"]) == 1020
+>       assert s.check_work(work, frozen)["passed"], s.check_work(work, frozen)
+E       AssertionError: {'checks': {'census': True, 'completed': True, 'cost': True, 'inputs': True, ...}, 'numerical_training_calls': 480, 'passed': False}
+E       assert False
+
+tests/python/test_causal_template_streams_8804.py:163: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8804] phase=stream_arm_complete completed=1 pending=14
+[exp8804] phase=stream_arm_complete completed=2 pending=13
+[exp8804] phase=stream_arm_complete completed=3 pending=12
+[exp8804] phase=stream_arm_complete completed=4 pending=11
+[exp8804] phase=stream_arm_complete completed=5 pending=10
+[exp8804] phase=stream_arm_complete completed=6 pending=9
+[exp8804] phase=stream_arm_complete completed=7 pending=8
+[exp8804] phase=stream_arm_complete completed=8 pending=7
+[exp8804] phase=stream_arm_complete completed=9 pending=6
+[exp8804] phase=stream_arm_complete completed=10 pending=5
+[exp8804] phase=stream_arm_complete completed=11 pending=4
+[exp8804] phase=stream_arm_complete completed=12 pending=3
+[exp8804] phase=stream_arm_complete completed=13 pending=2
+[exp8804] phase=stream_arm_complete completed=14 pending=1
+[exp8804] phase=stream_arm_complete completed=15 pending=0
+[exp8804] phase=replay_rows completed=1000 pending=20
+[exp8804] phase=replay_rows completed=1000 pending=20
+_______________________ test_blocked_census_and_cold_cli _______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T142504-3884540-ea9e321b/test_blocked_census_and_cold_c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f952a254830>
+
+    def test_blocked_census_and_cold_cli(tmp_path: Path, monkeypatch):
+        """SCENARIO-REPORT-8804-REPLAY: terminal blocks retain all slots and replay cold."""
+        monkeypatch.setattr(r, "UPSTREAM", str(tmp_path / "missing.json"))
+        value = r.run(tmp_path / "raw", "20261104")
+        assert value["verdict_class"] == "blocked"
+        assert value["completed_count"] == 0 and value["censored_count"] == 30600
+        assert len(value["per_query_rows"]) == 14400 and len(value["retention_rows"]) == 16200
+        assert not value["numerical_training_calls"]
+        candidate = tmp_path / "candidate.json"
+        atomic_json(candidate, value)
+        assert r.replay(candidate)["passed"]
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        coverage_dir = Path(env.get("CARNOT_8804_COVERAGE_DIRECTORY", str(tmp_path)))
+        argv = [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "--rcfile=/dev/null",
+            "--parallel-mode",
+            "--data-file=" + str(coverage_dir / ".coverage.child"),
+            str(r.ROOT / r.CLI),
+            "--replay",
+            str(candidate),
+        ]
+        child = subprocess.run(argv, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=60)
+>       assert child.returncode == 0 and '"passed": true' in child.stdout
+E       AssertionError: assert (1 == 0)
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcf...template_streams/invocations/1793802301630645850/coverage/.coverage.child.icbfl1.pid3885424.XU2tXc5x.HsF1Cke1XU4h\'\n').returncode
+
+tests/python/test_causal_template_runner_8804.py:67: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8804] phase=preconditions_before completed=0 pending=0
+[exp8804] phase=preconditions_after completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_causal_template_streams_8804.py::test_real_stream_causal_rows_and_tail
+FAILED tests/python/test_causal_template_streams_8804.py::test_resets_across_three_streams_and_tail_replay
+FAILED tests/python/test_causal_template_runner_8804.py::test_blocked_census_and_cold_cli
+3 failed, 8 passed, 1 warning in 265.95s (0:04:25)

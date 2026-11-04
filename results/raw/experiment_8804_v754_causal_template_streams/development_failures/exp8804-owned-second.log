@@ -1,0 +1,122 @@
+.F....F.F..                                                              [100%]
+=================================== FAILURES ===================================
+____________________ test_real_stream_causal_rows_and_tail _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T141016-3879000-a372e898/test_real_stream_causal_rows_a0')
+
+    def test_real_stream_causal_rows_and_tail(tmp_path: Path):
+        """SCENARIO-VERIFY-8804-CAUSAL / SCENARIO-REPORT-8804-COST: real durable work."""
+        frozen = small_manifest()
+        head = dict(seed=11, parameters=m.initial_parameters(11), threshold=0.5)
+        work = s.execute(frozen, [head], tmp_path)
+        rows, retained = work["per_query_rows"], work["retention_rows"]
+        assert len(rows) == 160 and len(retained) == 180
+        assert work["numerical_training_calls"] == 160
+        assert len(work["release_order_rows"]) == 160
+        assert len(work["complete_learning_cost_rows"]) == 160
+        assert len(work["tail_drain_rows"]) == 5
+        assert work["tail_drain_cost_s"] > 0
+        assert all(r["initial_state_equal"] for r in work["reset_rows"])
+        assert all(r["paid_checks"] == 5 for r in rows + retained)
+        assert all(r["learning_state_unchanged"] for r in retained)
+        assert work["template_addition_rows"]
+        assert any(r["changed_later_predicates"] for r in rows)
+        for row in rows:
+            assert sum(row["prediction"]) == pytest.approx(1, abs=1e-6)
+            assert row["sealed_ns"] <= row["truth_recorded_ns"]
+            assert row["metric"] == s.brier(row["prediction"], row["truth"])
+        for row in work["release_order_rows"]:
+            assert row["feedback_ordinal"] >= row["prediction_ordinal"] + 8
+            assert row["feedback_label"] in row["released_prefix"]
+        for row in work["complete_learning_cost_rows"]:
+            assert row["ack_ns"] >= row["predict_started_ns"]
+            assert row["duration_s"] == (row["ack_ns"] - row["predict_started_ns"]) / 1e9
+            assert row["restart_equal"]
+>       assert s.check_work(work, frozen)["passed"]
+E       assert False
+
+tests/python/test_causal_template_streams_8804.py:68: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8804] phase=stream_arm_complete completed=1 pending=4
+[exp8804] phase=stream_arm_complete completed=2 pending=3
+[exp8804] phase=stream_arm_complete completed=3 pending=2
+[exp8804] phase=stream_arm_complete completed=4 pending=1
+[exp8804] phase=stream_arm_complete completed=5 pending=0
+________________ test_gate_absence_zero_rejection_and_preflight ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T141016-3879000-a372e898/test_gate_absence_zero_rejecti0')
+
+    def test_gate_absence_zero_rejection_and_preflight(tmp_path: Path):
+        """SCENARIO-VERIFY-8804-QUALIFICATION: absence cannot become a measured zero."""
+        path = tmp_path / "upstream.json"
+        assert r.upstream_gate(path)["observed"] == "missing_file"
+        atomic_json(path, {"experiment_id": 8802})
+        assert r.upstream_gate(path)["observed"] == "missing_field"
+        atomic_json(path, {"experiment_id": 8802, "memory_execution_ready_score": 0})
+        assert r.upstream_gate(path)["observed"] == 0
+        atomic_json(
+            path,
+            {"experiment_id": 8802, "memory_execution_ready_score": 1, "verdict_class": "disqualified"},
+        )
+        assert r.upstream_gate(path)["observed"] == "rejected_producer"
+        path.write_text("invalid")
+        assert r.upstream_gate(path)["observed"] == "rejected_producer"
+        pre = r.preflight(tmp_path / "pre")
+>       assert pre["passed"], {
+            k: pre[k] for k in ["checked", "measured_cheap_unit_s", "projected_work_s"]
+        }
+E       AssertionError: {'checked': {'available_memory': True, 'current_authority': True, 'dependency_imports': True, 'disk': True, ...}, 'measured_cheap_unit_s': 1.1612841350142844, 'projected_work_s': 35535.2945314371}
+E       assert False
+
+tests/python/test_causal_template_runner_8804.py:33: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8804] phase=cheap_unit_before completed=0 pending=0
+[exp8804] phase=cheap_unit_after completed=1 pending=0
+_________________ test_measured_replay_and_rehashed_tampering __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T141016-3879000-a372e898/test_measured_replay_and_rehas0')
+
+    def test_measured_replay_and_rehashed_tampering(tmp_path: Path):
+        """REQ-REPORT-8804: independent seal operands reject changed loss and source claims."""
+        frozen = r.s.manifest()
+        frozen["streams"] = frozen["streams"][:1]
+        frozen["seeds"] = [11]
+        value = r.run(tmp_path / "raw", "20261104", frozen=frozen)
+        candidate = tmp_path / "candidate.json"
+        atomic_json(candidate, value)
+        assert r.replay(candidate)["passed"]
+        for field, supplied in [
+            ("completed_count", -1),
+            ("numerical_training_calls", -1),
+            ("learning_cost_ready_score", 1),
+        ]:
+            changed = deepcopy(value)
+            changed[field] = supplied
+            atomic_json(candidate, changed)
+            assert not r.replay(candidate)["passed"]
+        work_path = Path(value["raw_shard_hashes"][0]["path"])
+        work = json.loads(work_path.read_bytes())
+>       work["per_query_rows"][0]["metric"] += 0.1
+E       TypeError: unsupported operand type(s) for +=: 'NoneType' and 'float'
+
+tests/python/test_causal_template_runner_8804.py:98: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8804] phase=preconditions_before completed=0 pending=0
+[exp8804] phase=cheap_unit_before completed=0 pending=0
+[exp8804] phase=cheap_unit_after completed=1 pending=0
+[exp8804] phase=preconditions_after completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['docs/research-notes/arc-agi3-news-watch.md']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_causal_template_streams_8804.py::test_real_stream_causal_rows_and_tail
+FAILED tests/python/test_causal_template_runner_8804.py::test_gate_absence_zero_rejection_and_preflight
+FAILED tests/python/test_causal_template_runner_8804.py::test_measured_replay_and_rehashed_tampering
+3 failed, 8 passed, 2 warnings in 200.14s (0:03:20)

@@ -58576,6 +58576,44 @@ The positive, negative and leakage controls in the V754 prompt must run before
 a benefit claim. New owned code needs actual unit/child statement coverage;
 constructed exact-oracle success cannot become an oracle-distinct headline.
 
+#### SCENARIO-VERIFY-8804-CAUSAL
+
+Tests must reject early feedback, label-bearing public input, changed frozen
+state and duplicate acknowledgement. Cloned arms start with equal complete
+state, reset between streams and preserve five primitive checks per prediction.
+Actual additions must reuse alpha-normalized predicates on different evidence;
+record subsequent changed bindings separately from Brier loss. Shuffle only
+already released labels. No retention label can enter learning state.
+
+#### SCENARIO-VERIFY-8804-QUALIFICATION
+
+Check exact upstream hashes, historical snapshots, current full task authority,
+imports, private scratch, available resources and a measured unit projection
+with a 900-second validation reserve. Missing external operands block before
+measurement; failed owned checks disqualify and set both readiness scores zero.
+Combine unit and actual CLI SQLite statement coverage with no exclusions.
+Cold replay outside the checkout without PYTHONPATH must reject rehashed raw
+metrics, changed aggregates, state, schedule, source and readiness. Use the
+unchanged adversarial and strict row validators; keep rejected candidates.
+
+#### SCENARIO-VERIFY-8804-PARALLEL-RESOURCES
+
+A measured thirty-unit durable-I/O wave may qualify execution across thirty
+independent reset streams. Each stream keeps its own sequential query/release
+order, state and paths. Merge receipts in frozen roster order. Project wall time
+from the measured wave and actual worker count, with custody charged once and
+900 seconds reserved for validation. No serialized latency is divided by an
+unmeasured speedup. Retain the rejected serial projection and all probe calls.
+
+Implementation measurement 20261104: the owned invocation emitted all 14400
+online and 16200 retention rows, with zero failed or censored slots, 14400
+released updates and 450 complete eight-event tail drains. State remains reset
+between thirty independent streams; nested seeds and paired arms add no
+independent units. Terminal readiness remains subject to the retained unit/CLI
+coverage and validation receipts. Benefit inference belongs to Exp8810; this
+constructed exact-oracle study makes no independent generalization claim.
+The conductor owns subsequent ops and BMAD reconciliation.
+
 ### REQ-VERIFY-8805: Measure semantic sensitivity and harmless-evidence invariance
 
 Exp8805 SHALL execute its V754 protocol only after its own preconditions and
