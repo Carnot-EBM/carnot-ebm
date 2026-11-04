@@ -1,0 +1,4783 @@
+{
+  "rows": [
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "support",
+      "unit_id": "private/0/intact/unanimous_correct",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "support",
+      "unit_id": "private/0/intact/unanimous_wrong",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "support",
+      "unit_id": "private/0/intact/disagreement",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/0/missing_hop/unanimous_correct",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/0/missing_hop/unanimous_wrong",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/0/missing_hop/disagreement",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/0/binding_swap/unanimous_correct",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/0/binding_swap/unanimous_wrong",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/0/binding_swap/disagreement",
+      "world_id": "private/0"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/intact/unanimous_correct",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/intact/unanimous_wrong",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/intact/disagreement",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/missing_hop/unanimous_correct",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/missing_hop/unanimous_wrong",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/missing_hop/disagreement",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/binding_swap/unanimous_correct",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/binding_swap/unanimous_wrong",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/1/binding_swap/disagreement",
+      "world_id": "private/1"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/intact/unanimous_correct",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/intact/unanimous_wrong",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/intact/disagreement",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/missing_hop/unanimous_correct",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/missing_hop/unanimous_wrong",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/missing_hop/disagreement",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/binding_swap/unanimous_correct",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/binding_swap/unanimous_wrong",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/2/binding_swap/disagreement",
+      "world_id": "private/2"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "support",
+      "unit_id": "private/3/intact/unanimous_correct",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "support",
+      "unit_id": "private/3/intact/unanimous_wrong",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "support",
+      "unit_id": "private/3/intact/disagreement",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/3/missing_hop/unanimous_correct",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/3/missing_hop/unanimous_wrong",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/3/missing_hop/disagreement",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/3/binding_swap/unanimous_correct",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/3/binding_swap/unanimous_wrong",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/3/binding_swap/disagreement",
+      "world_id": "private/3"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/intact/unanimous_correct",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/intact/unanimous_wrong",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/intact/disagreement",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/missing_hop/unanimous_correct",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/missing_hop/unanimous_wrong",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/missing_hop/disagreement",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/binding_swap/unanimous_correct",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/binding_swap/unanimous_wrong",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "refute",
+      "unit_id": "private/4/binding_swap/disagreement",
+      "world_id": "private/4"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/intact/unanimous_correct",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/intact/unanimous_wrong",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/intact/disagreement",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/missing_hop/unanimous_correct",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/missing_hop/unanimous_wrong",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/missing_hop/disagreement",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/binding_swap/unanimous_correct",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/binding_swap/unanimous_wrong",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_dev",
+      "truth": "insufficient",
+      "unit_id": "private/5/binding_swap/disagreement",
+      "world_id": "private/5"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "support",
+      "unit_id": "private/6/intact/unanimous_correct",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "support",
+      "unit_id": "private/6/intact/unanimous_wrong",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "support",
+      "unit_id": "private/6/intact/disagreement",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/6/missing_hop/unanimous_correct",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/6/missing_hop/unanimous_wrong",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/6/missing_hop/disagreement",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/6/binding_swap/unanimous_correct",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/6/binding_swap/unanimous_wrong",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/6/binding_swap/disagreement",
+      "world_id": "private/6"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/intact/unanimous_correct",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/intact/unanimous_wrong",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/intact/disagreement",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/missing_hop/unanimous_correct",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/missing_hop/unanimous_wrong",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/missing_hop/disagreement",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "refute",
+        "refute",
+        "refute"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/binding_swap/unanimous_correct",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/binding_swap/unanimous_wrong",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "a",
+            "r2",
+            "b",
+            false
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "refute",
+      "unit_id": "private/7/binding_swap/disagreement",
+      "world_id": "private/7"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/intact/unanimous_correct",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/intact/unanimous_wrong",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "intact",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/intact/disagreement",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/missing_hop/unanimous_correct",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/missing_hop/unanimous_wrong",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "missing_hop",
+      "input": {
+        "facts": [
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/missing_hop/disagreement",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "unanimous_correct",
+      "candidates": [
+        "insufficient",
+        "insufficient",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/binding_swap/unanimous_correct",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "unanimous_wrong",
+      "candidates": [
+        "support",
+        "support",
+        "support"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/binding_swap/unanimous_wrong",
+      "world_id": "private/8"
+    },
+    {
+      "agreement": "disagreement",
+      "candidates": [
+        "support",
+        "refute",
+        "insufficient"
+      ],
+      "condition": "binding_swap",
+      "input": {
+        "facts": [
+          [
+            "swapped_binding",
+            "r0",
+            "a",
+            true
+          ],
+          [
+            "w",
+            "r1",
+            "b",
+            true
+          ],
+          [
+            "b",
+            "r3",
+            "c",
+            true
+          ]
+        ],
+        "query": [
+          [
+            "?x",
+            "r0",
+            "a"
+          ],
+          [
+            "?x",
+            "r1",
+            "b"
+          ],
+          [
+            "a",
+            "r2",
+            "b"
+          ],
+          [
+            "b",
+            "r3",
+            "c"
+          ]
+        ]
+      },
+      "split": "consensus_test",
+      "truth": "insufficient",
+      "unit_id": "private/8/binding_swap/disagreement",
+      "world_id": "private/8"
+    }
+  ]
+}

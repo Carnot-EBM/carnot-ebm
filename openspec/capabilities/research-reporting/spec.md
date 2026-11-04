@@ -105665,6 +105665,35 @@ A private cold replay reconstructs aggregates and rejects changed authority,
 missing producer fields and rehashed aggregate tampering. External absence is
 terminal blocked; failed owned validation is disqualified with readiness zero.
 
+#### SCENARIO-REPORT-8806-COHORT
+
+Authenticate the exact Exp8803 producer and sealed consensus worlds. Sort the
+60 development worlds by a salted hash into 40 training and 20 calibration
+worlds before opening released labels. Cross three agreement configurations
+with intact, missing-hop and binding-swap evidence, retaining three candidates
+in each of 1080 held-out groups. Publish answer/label/agreement contingencies.
+
+#### SCENARIO-REPORT-8806-ENERGY
+
+Train five nested Gibbs seeds through the existing NCE gradient pipeline using
+only supported, conflicted, missing, unchecked constraint counts and paid-check
+coverage. Fit thresholds on calibration worlds only. Retain agreement, fixed
+evidence, learned and exact-oracle rows, costs and all parameters. Paired world
+bootstrap intervals at 97.5 percent must show at least 0.05 fewer unanimous-wrong
+false accepts, 0.01 lower three-way Brier than fixed evidence, and at most 0.02
+coverage loss. Failed gates yield null; failed development label-permutation
+or all-feature-ablation controls disqualify a benefit. All claims remain
+constructed-domain with independent_generalization_score=0.
+
+Measured Exp8806, 20261104: 1080 held-out groups,
+25920 candidate/arm/seed rows, 120 independent worlds. Learned mean
+unanimous-wrong false accepts 0.073333 versus agreement 1.0; paired reduction
+97.5% interval [0.901111, 0.951111]. Brier improvement over fixed evidence
+0.106125, interval [0.061271, 0.150665]. Coverage falls 0.113580 versus both
+non-oracle baselines, failing the 0.02 allowance. Both development controls
+pass. Scientific outcome is null; exact-oracle Brier zero is circular_positive.
+Terminal validation/readiness is determined by the hash-bound artifact.
+
 ### REQ-REPORT-8807: Run a bounded mandated-Qwen evidence extraction canary
 
 Exp8807 SHALL publish `results/experiment_8807_v754_qwen_evidence_canary.json` with exact source hashes,

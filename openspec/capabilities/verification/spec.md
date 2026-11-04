@@ -58658,6 +58658,23 @@ The positive, negative and leakage controls in the V754 prompt must run before
 a benefit claim. New owned code needs actual unit/child statement coverage;
 constructed exact-oracle success cannot become an oracle-distinct headline.
 
+#### SCENARIO-VERIFY-8806-CUSTODY
+
+Reject missing files, missing readiness, observed zero, changed producer bytes,
+changed cohort bytes and unqualified authority with distinct gate operands.
+External rejection writes a terminal blocked artifact with 1080 censored units
+and no measurement or training. Owned validation failure is disqualified with
+readiness zero. Cold replay outside the checkout must reject changed summaries,
+parameters, raw rows and source hashes, including locally repaired hashes.
+
+#### SCENARIO-VERIFY-8806-VALIDATION
+
+Combine actual unit and CLI SQLite coverage with no exclusions and require
+100 percent of newly owned executable statements. Record scoped pytest, Ruff,
+strict mypy, spec coverage and private E2E-018/021 receipts. Run the whole Python
+suite once and record unrelated reconciliation debt separately. Validate exact
+terminal bytes with adversarial and strict row scanners before publication.
+
 ### REQ-VERIFY-8807: Run a bounded mandated-Qwen evidence extraction canary
 
 Exp8807 SHALL execute its V754 protocol only after its own preconditions and

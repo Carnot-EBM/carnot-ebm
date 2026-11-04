@@ -1,0 +1,104 @@
+[exp8806] phase=start_no_llm_load_or_generation completed=0 pending=0
+[exp8806] phase=preconditions_before completed=0 pending=0
+[exp8806] phase=preconditions_after completed=0 pending=0
+[exp8806] phase=split_sealed_before_labels completed=60 pending=120
+[exp8806] phase=construct_worlds completed=20 pending=160
+[exp8806] phase=construct_worlds completed=40 pending=140
+[exp8806] phase=construct_worlds completed=60 pending=120
+[exp8806] phase=construct_worlds completed=80 pending=100
+[exp8806] phase=construct_worlds completed=100 pending=80
+[exp8806] phase=construct_worlds completed=120 pending=60
+[exp8806] phase=construct_worlds completed=140 pending=40
+[exp8806] phase=construct_worlds completed=160 pending=20
+[exp8806] phase=construct_worlds completed=180 pending=0
+[exp8806] phase=construction_after completed=0 pending=0
+[exp8806] phase=before_numerical_training completed=0 pending=5
+[exp8806] phase=trained_seed_7548806 completed=1 pending=2
+[exp8806] phase=trained_seed_7548806 completed=2 pending=1
+[exp8806] phase=trained_seed_7548806 completed=3 pending=0
+[exp8806] phase=trained_seed_7548806 completed=1 pending=2
+[exp8806] phase=trained_seed_7548806 completed=2 pending=1
+[exp8806] phase=trained_seed_7548806 completed=3 pending=0
+[exp8806] phase=trained_seed_7548806 completed=1 pending=2
+[exp8806] phase=trained_seed_7548806 completed=2 pending=1
+[exp8806] phase=trained_seed_7548806 completed=3 pending=0
+[exp8806] phase=after_numerical_training completed=1 pending=4
+[exp8806] phase=before_numerical_training completed=1 pending=4
+[exp8806] phase=trained_seed_7548807 completed=1 pending=2
+[exp8806] phase=trained_seed_7548807 completed=2 pending=1
+[exp8806] phase=trained_seed_7548807 completed=3 pending=0
+[exp8806] phase=after_numerical_training completed=2 pending=3
+[exp8806] phase=before_numerical_training completed=2 pending=3
+[exp8806] phase=trained_seed_7548808 completed=1 pending=2
+[exp8806] phase=trained_seed_7548808 completed=2 pending=1
+[exp8806] phase=trained_seed_7548808 completed=3 pending=0
+[exp8806] phase=after_numerical_training completed=3 pending=2
+[exp8806] phase=before_numerical_training completed=3 pending=2
+[exp8806] phase=trained_seed_7548809 completed=1 pending=2
+[exp8806] phase=trained_seed_7548809 completed=2 pending=1
+[exp8806] phase=trained_seed_7548809 completed=3 pending=0
+[exp8806] phase=after_numerical_training completed=4 pending=1
+[exp8806] phase=before_numerical_training completed=4 pending=1
+[exp8806] phase=trained_seed_7548810 completed=1 pending=2
+[exp8806] phase=trained_seed_7548810 completed=2 pending=1
+[exp8806] phase=trained_seed_7548810 completed=3 pending=0
+[exp8806] phase=after_numerical_training completed=5 pending=0
+[exp8806] phase=training_and_calibration_after completed=0 pending=0
+[exp8806] phase=heldout_before completed=0 pending=1080
+[exp8806] phase=evaluate_groups completed=180 pending=900
+[exp8806] phase=evaluate_groups completed=360 pending=720
+[exp8806] phase=evaluate_groups completed=540 pending=540
+[exp8806] phase=evaluate_groups completed=720 pending=360
+[exp8806] phase=evaluate_groups completed=900 pending=180
+[exp8806] phase=evaluate_groups completed=1080 pending=0
+[exp8806] phase=heldout_after completed=0 pending=0
+[exp8806] phase=validation_before completed=0 pending=0
+[exp8205] phase=before_subprocess_unit completed=0 pending=1
+[exp8205] phase=waiting_unit completed=0 pending=1
+[exp8205] phase=after_subprocess_unit completed=1 pending=0
+[exp8205] phase=before_subprocess_e2e018 completed=0 pending=1
+[exp8205] phase=after_subprocess_e2e018 completed=1 pending=0
+[exp8205] phase=before_subprocess_e2e021 completed=0 pending=1
+[exp8205] phase=after_subprocess_e2e021 completed=1 pending=0
+[exp8205] phase=before_subprocess_ruff completed=0 pending=1
+[exp8205] phase=after_subprocess_ruff completed=1 pending=0
+[exp8205] phase=before_subprocess_format completed=0 pending=1
+[exp8205] phase=after_subprocess_format completed=1 pending=0
+[exp8205] phase=before_subprocess_mypy completed=0 pending=1
+[exp8205] phase=after_subprocess_mypy completed=1 pending=0
+[exp8205] phase=before_subprocess_spec completed=0 pending=1
+[exp8205] phase=after_subprocess_spec completed=1 pending=0
+[exp8806] phase=validation_after completed=0 pending=0
+[exp8806] phase=terminal_validation_before completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_energy_runner_8806.py", line 587, in main
+    atomic_json(raw / "work.json", work)
+                    ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+    raise ValueError("candidate_rejected")
+ValueError: candidate_rejected
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8806_v754_consensus_challenge_energy.py", line 14, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_energy_runner_8806.py", line 614, in main
+    atomic_json(raw / "work.json", work)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+    raise ValueError("candidate_rejected")
+ValueError: candidate_rejected
