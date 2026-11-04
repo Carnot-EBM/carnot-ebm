@@ -58620,6 +58620,26 @@ Exp8805 SHALL execute its V754 protocol only after its own preconditions and
 structured gates qualify. Preserve historical assertions, causal information
 boundaries, exact model/substrate declarations and every scheduled denominator.
 
+#### SCENARIO-VERIFY-8805-BOUNDARIES
+
+Solvers receive only facts and query, with opaque transport identifiers.
+Reject leaked fields, changed source bytes and missing readiness fields.
+Charge the same frozen Python LINE primitive allowance to all three methods.
+Meter unlimited exact execution separately. Record actual unit and child
+SQLite coverage with no exclusions. Failed owned checks disqualify readiness.
+
+#### SCENARIO-VERIFY-8805-TERMINAL
+
+Cold replay from outside the checkout must reconstruct decisions and all
+aggregates. It must reject rehashed summary tampering and missing raw operands.
+Private E2E-018/021 readers, unchanged adversarial verification and strict row
+consistency must accept the terminal candidate. Preserve historical primaries.
+Missing external resources produce terminal blocked with explicit gate operands.
+
+Measured on 20261104: all 13 owned tests pass. Actual unit and child SQLite
+cover all 325 owned executable statements, with zero exclusions. The terminal
+artifact binds the remaining shared checks, private E2Es and cold replay.
+
 #### SCENARIO-VERIFY-8805-CONTROLS
 
 The positive, negative and leakage controls in the V754 prompt must run before

@@ -1,0 +1,276 @@
+"""REQ-REPORT-8805 / REQ-VERIFY-8805: sealed interventions and honest nulls."""
+
+from copy import deepcopy
+import json
+from pathlib import Path
+import sys
+
+import pytest
+
+from carnot.reporting import evidence_intervention_study_8805 as m
+from carnot.reporting import evidence_intervention_runner_8805 as runner
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+from carnot.reporting.v709_execution import child
+
+
+@pytest.fixture
+def cohort():
+    """REQ-REPORT-8805: use one sealed world without changing its original assertions."""
+    producer = json.loads(m.UPSTREAM.read_bytes())
+    data = m.cohort(producer)
+    world = data["labels"][0]["world_id"]
+    chosen = [i for i, r in enumerate(data["labels"]) if r["world_id"] == world]
+    return {k: [v[i] for i in chosen] for k, v in data.items()}
+
+
+def test_sealed_schedule_and_protocol():
+    """SCENARIO-REPORT-8805-SEALED-ROWS: preserve the full crossed schedule."""
+    admitted = m.authenticate(m.UPSTREAM)
+    assert admitted["passed"], admitted
+    data = m.cohort(admitted["producer"])
+    labels = data["labels"]
+    assert len(labels) == 3360
+    scheduled = [r for r in labels if r["scope"] == "scheduled"]
+    assert len(scheduled) * 3 == 8640
+    assert len({r["world_id"] for r in scheduled}) == 120
+    assert {r["condition"] for r in scheduled} == set(m.up.CONDITIONS)
+    assert {r["token_bin"] for r in scheduled} == {1024, 1536}
+    assert all(set(r) == {"unit_id", "input"} for r in data["inputs"])
+    assert all(r["unit_id"].startswith("sha256:") for r in data["inputs"])
+    p = m.protocol()
+    assert p["draws"] == 10000 and p["confidence"] == 0.9875
+    assert len(p["families"]) == 4 and p["primitive_limit"] == 200000
+
+
+def test_measure_score_and_null(cohort):
+    """SCENARIO-REPORT-8805-SIMULTANEOUS: low false-accept headroom cannot win."""
+    decisions = m.measure(cohort["inputs"])
+    assert len(decisions) == len(cohort["inputs"]) * 4
+    assert all(0 < r["primitive_operations"] for r in decisions)
+    rows = m.score(cohort["labels"], decisions)
+    scheduled = [r for r in rows if r["scope"] == "scheduled" and r["arm"] in m.ARMS]
+    controls = [r for r in rows if r["scope"] == "valid_alternative" and r["arm"] in m.ARMS]
+    summary = m.summarize(scheduled, controls)
+    assert not summary["method_benefit"]
+    assert len(summary["simultaneous_intervals"]) == 8
+    assert all(r["draws"] == 10000 for r in summary["simultaneous_intervals"])
+    assert len(summary["per_defect_rows"]) == 21
+    assert all(r["denominator"] == 4 for r in summary["per_defect_rows"])
+    local = [r for r in scheduled if r["arm"] == "local_record"]
+    assert all(r["decision"] == "insufficient" for r in local)
+    exact = [r for r in rows if r["arm"] == "unlimited_exact_reference"]
+    assert all(r["metric"] == 1 for r in exact)
+    assert all(r["primitive_limit"] is None for r in exact)
+    assert m.audit(cohort["inputs"], decisions)
+    altered = deepcopy(decisions)
+    altered[0]["decision"] = "refute"
+    assert not m.audit(cohort["inputs"], altered)
+    assert not m.audit(cohort["inputs"], decisions[:-1])
+    with pytest.raises(ValueError, match="input_fields"):
+        m.measure([dict(cohort["inputs"][0], expected="support")])
+    with pytest.raises(ValueError, match="input_fields"):
+        m.measure([dict(cohort["inputs"][0], input=dict(cohort["inputs"][0]["input"], label=1))])
+    assert m.summarize([], [])["paired_deltas"] == []
+
+
+@pytest.mark.parametrize(
+    "value,check",
+    [
+        (None, "rejected_producer"),
+        ({}, "missing_field"),
+        ({"evidence_interventions_ready_score": 0}, "observed_zero"),
+        ({"evidence_interventions_ready_score": 1}, "rejected_producer"),
+    ],
+)
+def test_authentication_rejections(tmp_path, value, check):
+    """SCENARIO-VERIFY-8805-BOUNDARIES: absence and observed zero differ."""
+    path = tmp_path / "producer.json"
+    atomic_json(path, value)
+    result = m.authenticate(path)
+    assert not result["passed"]
+    assert result["diagnostics"][0]["check"] == check
+    assert result["diagnostics"][0]["artifact_field"]
+
+
+def test_missing_source_and_cohort_drift(tmp_path, monkeypatch):
+    """REQ-VERIFY-8805: exact hashes bind raw sources, not just readiness scalars."""
+    assert m.authenticate(tmp_path / "absent")["diagnostics"][0]["check"] == "missing_file"
+    with monkeypatch.context() as patch:
+        patch.setattr(m, "reference", lambda p: dict(path=str(p), sha256="drift"))
+        assert not m.authenticate(m.UPSTREAM)["passed"]
+    producer = json.loads(m.UPSTREAM.read_bytes())
+    producer["cohort_references"]["intervention_inputs"]["sha256"] = "drift"
+    with pytest.raises(ValueError):
+        m.cohort(producer)
+    original_reference = m.reference
+    with monkeypatch.context() as patch:
+        patch.setattr(
+            m,
+            "reference",
+            lambda p: (
+                original_reference(p) if p == m.UPSTREAM else dict(path=str(p), sha256="drift")
+            ),
+        )
+        assert not m.authenticate(m.UPSTREAM)["passed"]
+    producer = json.loads(m.UPSTREAM.read_bytes())
+    inputs = m.load(producer["cohort_references"]["intervention_inputs"])
+    inputs["rows"][0]["unit_id"] = "changed"
+    atomic_json(tmp_path / "drift.json", inputs)
+    producer["cohort_references"]["intervention_inputs"] = original_reference(
+        tmp_path / "drift.json"
+    )
+    with pytest.raises(ValueError, match="cohort_join"):
+        m.cohort(producer)
+
+
+def test_missing_decisions_preserve_denominators(cohort):
+    """REQ-VERIFY-8805: failed scheduled work stays visible instead of disappearing."""
+    rows = m.score(cohort["labels"], [])
+    assert len(rows) == len(cohort["labels"]) * 4
+    assert all(r["status"] == "failed" and r["missing_reason"] == "decision_missing" for r in rows)
+    assert all(r["decision"] is None for r in rows)
+
+
+def test_preflight(tmp_path, monkeypatch):
+    """REQ-VERIFY-8805: projection charges custody once and keeps 900 seconds."""
+    pre = runner.preflight(tmp_path)
+    assert pre["passed"], pre
+    assert pre["resource_projection"]["reserved_validation_seconds"] == 900
+    assert pre["resource_projection"]["probe_units"] == 1
+    monkeypatch.setattr(m, "UPSTREAM", tmp_path / "missing")
+    assert not runner.preflight(tmp_path)["passed"]
+
+
+def test_private_cli_blocked_and_replay(tmp_path):
+    """SCENARIO-VERIFY-8805-TERMINAL: real CLI preserves blocked operands and replay."""
+    output = tmp_path / (m.NAME + ".json")
+    cli = [sys.executable, str(m.ROOT / m.CLI)]
+    for name, args, expected in [
+        ("blocked", ["--upstream", str(tmp_path / "absent"), "--output", str(output)], 0),
+        ("cold", ["--cold-replay", str(output)], 0),
+        ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+        ("date", ["--date", "20260101"], 2),
+        ("input_missing_output", ["--decide-input", str(tmp_path / "none")], 2),
+    ]:
+        receipt = child(name, cli + args, tmp_path / "logs", expected=expected, deadline=120)
+        assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+    value = json.loads(output.read_bytes())
+    assert value["verdict_class"] == "blocked" and value["evidence_rows_ready_score"] == 0
+    assert value["completed_count"] == 0 and value["intended_count"] == 8640
+    assert value["gate_check_summary"] and runner.replay(output)
+    value["completed_count"] = 1
+    value.pop("reproducibility_checksum")
+    value["reproducibility_checksum"] = canonical_hash(value)
+    atomic_json(output, value)
+    assert not runner.replay(output)
+
+
+def test_real_input_child_and_build(tmp_path, cohort, monkeypatch):
+    """REQ-REPORT-8805: label-free child and owned-failure suppression are executable."""
+    inputs, output = tmp_path / "inputs.json", tmp_path / "decisions.json"
+    atomic_json(inputs, dict(rows=cohort["inputs"]))
+    assert runner.main(["--decide-input", str(inputs), "--decisions", str(output)]) == 0
+    decisions = json.loads(output.read_bytes())["rows"]
+    for name, value in [
+        ("inputs", cohort["inputs"]),
+        ("labels", cohort["labels"]),
+        ("decisions", decisions),
+    ]:
+        atomic_json(tmp_path / (name + ".json"), dict(rows=value))
+    work = dict(
+        raw=str(tmp_path),
+        run_date="20261104",
+        preconditions_checked=dict(passed=True, diagnostics=[]),
+        duration_s=1.0,
+        phase_spans=[],
+        source_artifact_hashes=[],
+        code_config_hashes=[],
+        measurement_receipts=[dict(passed=True)],
+        raw_shard_hashes=[
+            m.reference(tmp_path / (n + ".json")) for n in ["inputs", "labels", "decisions"]
+        ],
+    )
+    invalid = runner.unqualified()
+    atomic_json(tmp_path / "work.json", work)
+    atomic_json(tmp_path / "validation.json", invalid)
+    assert runner.build(work, invalid)["verdict_class"] == "disqualified"
+    qualified = dict(
+        receipts=[dict(passed=True)],
+        union=dict(passed=True),
+        coverage=dict(complete=True),
+        raw_references=[],
+    )
+    atomic_json(tmp_path / "validation.json", qualified)
+    value = runner.build(work, qualified)
+    assert value["verdict_class"] == "disqualified" and value["evidence_rows_ready_score"] == 0
+    assert value["completed_count"] == 72 and value["independent_count"] == 1
+    atomic_json(tmp_path / "work.json", work)
+    atomic_json(tmp_path / "validation.json", qualified)
+    runner.seal(tmp_path, value)
+    candidate = tmp_path / (m.NAME + ".json")
+    atomic_json(candidate, value)
+    assert runner.replay(candidate)
+    assert runner.terminal(candidate, tmp_path)["passed"]
+    changed_seal = deepcopy(value)
+    changed_seal["primitive_reference"]["sha256"] = "changed"
+    atomic_json(tmp_path / "changed_seal.json", changed_seal)
+    assert not runner.replay(tmp_path / "changed_seal.json")
+    changed = deepcopy(value)
+    changed["paired_deltas"][0]["values"]["semantic_false_accept_difference"] += 1
+    changed.pop("reproducibility_checksum")
+    changed["reproducibility_checksum"] = canonical_hash(changed)
+    atomic_json(candidate, changed)
+    assert not runner.replay(candidate)
+    atomic_json(candidate, value)
+    with monkeypatch.context() as patch:
+        patch.setattr(m, "audit", lambda *_: False)
+        assert not runner.replay(candidate)
+    Path(value["raw_shard_hashes"][0]["path"]).unlink()
+    assert not runner.replay(candidate)
+
+
+def test_private_full_cli_and_failures(tmp_path, monkeypatch):
+    """REQ-VERIFY-8805: private full work stays disqualified without actual validation."""
+    output = tmp_path / (m.NAME + ".json")
+    assert runner.main(["--private-control", "--output", str(output)]) == 0
+    value = json.loads(output.read_bytes())
+    assert value["completed_count"] == 8640 and value["verdict_class"] == "disqualified"
+    assert value["acceptance_gates"]["complete_schedule"]
+    assert runner.replay(output)
+    with monkeypatch.context() as patch:
+        patch.setattr(m, "authenticate", lambda _: dict(passed=False))
+        assert not runner.replay(output)
+    raw = Path(value["primitive_reference"]["path"]).parent
+    work = m.load(value["primitive_reference"])
+    copied = m.load(m.reference(raw / "inputs.json"))
+    copied["rows"][0]["input"]["facts"][0][3] = False
+    atomic_json(raw / "inputs.json", copied)
+    work["raw_shard_hashes"] = [m.reference(Path(r["path"])) for r in work["raw_shard_hashes"]]
+    atomic_json(raw / "work.json", work)
+    value["primitive_reference"] = m.reference(raw / "work.json")
+    runner.seal(raw, value)
+    atomic_json(output, value)
+    with monkeypatch.context() as patch:
+        patch.setattr(
+            m, "audit", lambda *_: (_ for _ in ()).throw(AssertionError("drift reached solvers"))
+        )
+        assert not runner.replay(output)
+    with pytest.raises(SystemExit):
+        runner.main(["--private-control"])
+    with monkeypatch.context() as patch:
+        patch.setattr(
+            runner, "preflight", lambda *_: (_ for _ in ()).throw(OSError("missing scratch"))
+        )
+        assert runner.main(["--output", str(output)]) == 0
+        assert json.loads(output.read_bytes())["verdict_class"] == "blocked"
+
+
+def test_shared_validation_delegation(tmp_path, monkeypatch):
+    """REQ-VERIFY-8805: owned files and unchanged historical tests reach the shared collector."""
+    from types import SimpleNamespace
+
+    target = SimpleNamespace(validate=lambda raw, private: dict(raw=str(raw), private=str(private)))
+    monkeypatch.setattr(runner, "namespace", lambda module, name: target)
+    assert runner.validate(tmp_path, tmp_path) == dict(raw=str(tmp_path), private=str(tmp_path))
+    assert target.e.OWNED == m.OWNED
+    assert target.e.TESTS == m.TESTS + m.up.TESTS + m.up.old.TESTS

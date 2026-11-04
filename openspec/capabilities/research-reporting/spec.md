@@ -105623,6 +105623,30 @@ Exp8805 SHALL publish `results/experiment_8805_v754_evidence_intervention_study.
 per-unit rows, measured durations, verdict_class, field principles and explicit
 blocked-gate operands, following the frozen V754 task contract.
 
+#### SCENARIO-REPORT-8805-SEALED-ROWS
+
+Admit only the exact qualified Exp8803 primary and its hash-bound cohorts.
+Measure 120 worlds across six conditions, two orderings, two length bins and
+three unchanged budgeted methods: 8640 rows and 120 independent clusters.
+Keep 480 valid-alternative control inputs and unlimited reference rows separate.
+Every error remains in its scheduled denominator. Missing facts remain unknown.
+
+#### SCENARIO-REPORT-8805-SIMULTANEOUS
+
+Recompute defect counts, paired deltas and costs from sealed decision rows.
+Use 10000 whole-world bootstrap draws with 98.75-percent intervals for four
+families: false acceptance, valid-alternative rejection, nuisance invariance,
+and insufficient recall. Benefit requires false-accept difference upper bound
+at most -0.05, alternative-rejection upper bound at most 0.02, invariance at
+least 0.95 and no higher paid-check allowance than the per-chunk comparator.
+Publish a measured null when any condition fails. Exact wins are circular.
+
+Measured on 20261104: all 8640 scheduled rows cover 120 worlds. All three
+methods have zero false accepts. The separate 480 alternative inputs per
+method produce 480 local, 154 evidence-set and zero joint-verifier rejects.
+The false-accept improvement gate therefore has no headroom. Qualification,
+costs and complete defect counts belong to the hash-bound terminal artifact.
+
 #### SCENARIO-REPORT-8805-REPLAY
 
 A private cold replay reconstructs aggregates and rejects changed authority,

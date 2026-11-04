@@ -1,0 +1,227 @@
+"""REQ-REPORT-8805: measure sealed graph interventions without loading a model."""
+
+from collections import defaultdict
+import json
+from pathlib import Path
+import random
+import sys
+import time
+from typing import Any
+
+from carnot.reporting import repaired_evidence_8803 as up
+from carnot.reporting.current_work_receipt import canonical_hash
+from carnot.reporting.v746_retained_evidence import load, reference
+
+Json = dict[str, Any]
+__all__ = ["up"]
+ROOT = up.ROOT
+NAME, TASK = (
+    "experiment_8805_v754_evidence_intervention_study",
+    "exp8805-evidence-intervention-study",
+)
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [
+    f"python/carnot/reporting/evidence_intervention_{s}_8805.py"
+    for s in ["study", "analysis", "runner"]
+] + [CLI]
+TESTS = ["tests/python/test_evidence_intervention_study_8805.py"]
+UPSTREAM = ROOT / "results/experiment_8803_v754_repaired_evidence_methods.json"
+PIN = "sha256:65708e874ea1095258c9a4fd63844a37b85b25626d7c1b0c5748ede1f5f5b5cf"
+ARMS, SEED = up.old.ARMS, 7548805
+MODEL_SPECS: list[Json] = []
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush real work counts so the parent can distinguish work from a stalled child."""
+    print(f"[exp8805] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def protocol() -> Json:
+    """Freeze the analysis before opening test labels; no thresholds are fitted."""
+    return dict(
+        draws=10000,
+        confidence=0.9875,
+        random_seed=SEED,
+        families=[
+            "semantic_false_accept_difference",
+            "valid_alternative_false_reject_difference",
+            "nuisance_invariance",
+            "insufficient_recall",
+        ],
+        resampling="whole world with all conditions, lengths, orderings and methods retained",
+        primitive_limit=up.BUDGET,
+        false_accept_upper=-0.05,
+        false_reject_upper=0.02,
+        minimum_invariance=0.95,
+        multiplicity="Bonferroni: four predeclared families, alpha 0.05/4",
+        interval_quantiles=[0.00625, 0.99375],
+        per_chunk_comparator="local_record",
+    )
+
+
+def authenticate(path: Path) -> Json:
+    """Pinned producer and source bytes prevent a scalar readiness flag from granting admission."""
+    diagnostic: Json = dict(
+        check="missing_file",
+        upstream=up.TASK,
+        artifact_field="producer",
+        expected=PIN,
+        observed=None,
+        path=str(path),
+        sha256=None,
+    )
+    try:
+        ref = reference(path)
+        diagnostic.update(check="rejected_producer", sha256=ref["sha256"])
+        value = json.loads(path.read_bytes())
+        if not isinstance(value, dict):
+            raise ValueError("producer_object")
+        field = "evidence_interventions_ready_score"
+        diagnostic.update(
+            check="missing_field", artifact_field=field, expected=1, observed=value.get(field)
+        )
+        if field not in value:
+            raise ValueError("missing_field")
+        diagnostic["check"] = "observed_zero"
+        if value[field] != 1:
+            raise ValueError("readiness_zero")
+        diagnostic.update(
+            check="rejected_producer", artifact_field="sha256", expected=PIN, observed=ref["sha256"]
+        )
+        if ref["sha256"] != PIN or value["verdict_class"] != "circular_positive":
+            raise ValueError("producer_identity")
+        refs = (
+            [ref]
+            + value["source_artifact_hashes"]
+            + value["code_config_hashes"]
+            + value["raw_shard_hashes"]
+        )
+        for source in refs:
+            diagnostic.update(path=source["path"], expected=source["sha256"], observed=None)
+            observed = reference(Path(source["path"]))
+            diagnostic.update(observed=observed["sha256"], sha256=observed["sha256"])
+            if observed != source:
+                raise ValueError("source_drift")
+        return dict(passed=True, producer=value, references=refs, diagnostics=[])
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        if isinstance(error, OSError):
+            diagnostic["check"] = "missing_file"
+        diagnostic["error"] = str(error)
+        return dict(passed=False, references=[], diagnostics=[diagnostic])
+
+
+def cohort(producer: Json) -> Json:
+    """Select sealed conditions by evaluator metadata, then strip that metadata before execution."""
+    inputs = load(producer["cohort_references"]["intervention_inputs"])["rows"]
+    labels = load(producer["cohort_references"]["intervention_labels"])["rows"]
+    selected_inputs, selected_labels = [], []
+    for unit, label in zip(inputs, labels, strict=True):
+        if unit["unit_id"] != canonical_hash(label["unit_id"]):
+            raise ValueError("cohort_join")
+        if label["condition"] in (*up.CONDITIONS, "alternative_proof"):
+            selected_inputs.append(unit)
+            selected_labels.append(
+                dict(
+                    label,
+                    unit_id=unit["unit_id"],
+                    scope="valid_alternative"
+                    if label["condition"] == "alternative_proof"
+                    else "scheduled",
+                )
+            )
+    return dict(inputs=selected_inputs, labels=selected_labels)
+
+
+def measure(inputs: list[Json]) -> list[Json]:
+    """Only opaque identifiers and facts/query enter solvers; exact cost is measured separately."""
+    rows = []
+    progress("before_measurement", 0, len(inputs) * 4)
+    for i, unit in enumerate(inputs):
+        if set(unit) != {"unit_id", "input"}:
+            raise ValueError("input_fields")
+        up.original.parse(unit["input"])
+        for arm in (*ARMS, "unlimited_exact_reference"):
+            start, cpu = time.monotonic_ns(), time.process_time_ns()
+            exact = arm == "unlimited_exact_reference"
+            result = up.bounded(
+                "joint_symbolic" if exact else arm,
+                unit["input"],
+                sys.maxsize if exact else up.BUDGET,
+            )
+            end, cpu_end = time.monotonic_ns(), time.process_time_ns()
+            rows.append(
+                dict(
+                    result,
+                    arm=arm,
+                    unit_id=unit["unit_id"],
+                    primitive_limit=None if exact else up.BUDGET,
+                    input_sha256=canonical_hash(unit["input"]),
+                    wall_time_s=(end - start) / 1e9,
+                    cpu_time_s=(cpu_end - cpu) / 1e9,
+                    started_monotonic_ns=start,
+                    ended_monotonic_ns=end,
+                )
+            )
+        if (i + 1) % 120 == 0:
+            progress("measurement", (i + 1) * 4, (len(inputs) - i - 1) * 4)
+    progress("after_measurement", len(rows), 0)
+    return rows
+
+
+def audit(inputs: list[Json], decisions: list[Json]) -> bool:
+    """Re-execute decisions and paid primitives; transport hashes cannot repair false decisions."""
+    replayed = measure(inputs)
+    ignored = {"wall_time_s", "cpu_time_s", "started_monotonic_ns", "ended_monotonic_ns"}
+    return len(replayed) == len(decisions) and all(
+        {k: v for k, v in a.items() if k not in ignored}
+        == {k: v for k, v in b.items() if k not in ignored}
+        and b["wall_time_s"] == (b["ended_monotonic_ns"] - b["started_monotonic_ns"]) / 1e9
+        and b["wall_time_s"] >= 0
+        and b["cpu_time_s"] >= 0
+        for a, b in zip(replayed, decisions, strict=True)
+    )
+
+
+def score(labels: list[Json], decisions: list[Json]) -> list[Json]:
+    """Open labels after sealing decisions; incorrect answers remain completed measurements."""
+    by_id = {r["unit_id"]: r for r in labels}
+    present = {(r["unit_id"], r["arm"]) for r in decisions}
+    missing = [
+        dict(
+            unit_id=label["unit_id"],
+            arm=arm,
+            decision=None,
+            primitive_operations=0,
+            primitive_limit=None if arm == "unlimited_exact_reference" else up.BUDGET,
+            wall_time_s=0.0,
+            cpu_time_s=0.0,
+            budget_exhausted=False,
+            status="failed",
+            missing_reason="decision_missing",
+        )
+        for label in labels
+        for arm in (*ARMS, "unlimited_exact_reference")
+        if (label["unit_id"], arm) not in present
+    ]
+    return [
+        dict(
+            r,
+            **{k: v for k, v in by_id[r["unit_id"]].items() if k != "unit_id"},
+            cluster_id=by_id[r["unit_id"]]["world_id"],
+            seed=SEED,
+            metric=int(r["decision"] == by_id[r["unit_id"]]["expected"]),
+            denominator=1,
+            raw_numerator=int(r["decision"] == by_id[r["unit_id"]]["expected"]),
+            raw_denominator=1,
+            status=r.get("status", "completed"),
+            missing_reason=r.get("missing_reason"),
+        )
+        for r in decisions + missing
+    ]
+
+
+def summarize(rows: list[Json], controls: list[Json]) -> Json:
+    """Keep the numerical reducer separate so raw decisions remain reusable and auditable."""
+    from carnot.reporting.evidence_intervention_analysis_8805 import summarize as reduce
+
+    return reduce(rows, controls)

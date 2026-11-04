@@ -1,0 +1,140 @@
+.........FF                                                              [100%]
+=================================== FAILURES ===================================
+_______________________ test_real_input_child_and_build ________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T153300-3908165-2b457311/test_real_input_child_and_buil0')
+cohort = {'inputs': [{'input': {'facts': [['w', 'r0', 'a', True], ['w', 'r1', 'b', True], ['w', 'r2', 'c', True], ['w', 'r3', '....}, {'condition': 'irrelevant_padding', 'expected': 'support', 'ordering': 'forward', 'scope': 'scheduled', ...}, ...]}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff8b880a420>
+
+    def test_real_input_child_and_build(tmp_path, cohort, monkeypatch):
+        """REQ-REPORT-8805: label-free child and owned-failure suppression are executable."""
+        inputs, output = tmp_path / "inputs.json", tmp_path / "decisions.json"
+        atomic_json(inputs, dict(rows=cohort["inputs"]))
+        assert runner.main(["--decide-input", str(inputs), "--decisions", str(output)]) == 0
+        decisions = json.loads(output.read_bytes())["rows"]
+        for name, value in [
+            ("inputs", cohort["inputs"]),
+            ("labels", cohort["labels"]),
+            ("decisions", decisions),
+        ]:
+            atomic_json(tmp_path / (name + ".json"), dict(rows=value))
+        work = dict(
+            raw=str(tmp_path),
+            run_date="20261104",
+            preconditions_checked=dict(passed=True, diagnostics=[]),
+            duration_s=1.0,
+            phase_spans=[],
+            source_artifact_hashes=[],
+            code_config_hashes=[],
+            measurement_receipts=[dict(passed=True)],
+            raw_shard_hashes=[
+                m.reference(tmp_path / (n + ".json")) for n in ["inputs", "labels", "decisions"]
+            ],
+        )
+        invalid = runner.unqualified()
+        atomic_json(tmp_path / "work.json", work)
+        atomic_json(tmp_path / "validation.json", invalid)
+        assert runner.build(work, invalid)["verdict_class"] == "disqualified"
+        qualified = dict(
+            receipts=[dict(passed=True)],
+            union=dict(passed=True),
+            coverage=dict(complete=True),
+            raw_references=[],
+        )
+        value = runner.build(work, qualified)
+        assert value["verdict_class"] == "disqualified" and value["evidence_rows_ready_score"] == 0
+        assert value["completed_count"] == 72 and value["independent_count"] == 1
+        atomic_json(tmp_path / "work.json", work)
+        atomic_json(tmp_path / "validation.json", qualified)
+        runner.seal(tmp_path, value)
+        candidate = tmp_path / (m.NAME + ".json")
+        atomic_json(candidate, value)
+>       assert runner.replay(candidate)
+E       AssertionError: assert False
+E        +  where False = <function replay at 0x7ff8b8b071a0>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T153300-3908165-2b457311/test_real_input_child_and_buil0/experiment_8805_v754_evidence_intervention_study.json'))
+E        +    where <function replay at 0x7ff8b8b071a0> = runner.replay
+
+tests/python/test_evidence_intervention_study_8805.py:184: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8805] phase=start_no_model_load completed=0 pending=0
+[exp8805] phase=before_measurement completed=0 pending=112
+[exp8805] phase=after_measurement completed=112 pending=0
+[exp8805] phase=before_bootstrap_evidence_set completed=0 pending=10000
+[exp8805] phase=bootstrap_evidence_set completed=2500 pending=7500
+[exp8805] phase=bootstrap_evidence_set completed=5000 pending=5000
+[exp8805] phase=bootstrap_evidence_set completed=7500 pending=2500
+[exp8805] phase=bootstrap_evidence_set completed=10000 pending=0
+[exp8805] phase=before_bootstrap_joint_symbolic completed=0 pending=10000
+[exp8805] phase=bootstrap_joint_symbolic completed=2500 pending=7500
+[exp8805] phase=bootstrap_joint_symbolic completed=5000 pending=5000
+[exp8805] phase=bootstrap_joint_symbolic completed=7500 pending=2500
+[exp8805] phase=bootstrap_joint_symbolic completed=10000 pending=0
+[exp8805] phase=before_bootstrap_evidence_set completed=0 pending=10000
+[exp8805] phase=bootstrap_evidence_set completed=2500 pending=7500
+[exp8805] phase=bootstrap_evidence_set completed=5000 pending=5000
+[exp8805] phase=bootstrap_evidence_set completed=7500 pending=2500
+[exp8805] phase=bootstrap_evidence_set completed=10000 pending=0
+[exp8805] phase=before_bootstrap_joint_symbolic completed=0 pending=10000
+[exp8805] phase=bootstrap_joint_symbolic completed=2500 pending=7500
+[exp8805] phase=bootstrap_joint_symbolic completed=5000 pending=5000
+[exp8805] phase=bootstrap_joint_symbolic completed=7500 pending=2500
+[exp8805] phase=bootstrap_joint_symbolic completed=10000 pending=0
+______________________ test_private_full_cli_and_failures ______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T153300-3908165-2b457311/test_private_full_cli_and_fail0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff90f6615b0>
+
+        coverage=dict(complete=True),
+        raw_references=[],
+    )
+    atomic_json(tmp_path / "validation.json", qualified)
+    value = runner.build(work, qualified)
+    assert value["verdict_class"] == "disqualified" and value["evidence_rows_ready_score"] == 0
+    assert value["completed_count"] == 72 and value["independent_count"] == 1
+>   atomic_json(tmp_path / "work.json", work)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: assert False
+E    +  where False = <function replay at 0x7ff8b8b071a0>(PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T153300-3908165-2b457311/test_private_full_cli_and_fail0/experiment_8805_v754_evidence_intervention_study.json'))
+E    +    where <function replay at 0x7ff8b8b071a0> = runner.replay
+
+tests/python/test_evidence_intervention_study_8805.py:207: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8805] phase=start_no_model_load completed=0 pending=0
+[exp8805] phase=preconditions_before completed=0 pending=0
+[exp8805] phase=before_measurement completed=0 pending=4
+[exp8805] phase=after_measurement completed=4 pending=0
+[exp8805] phase=preconditions_after completed=0 pending=0
+[exp8205] phase=before_subprocess_input_only_study completed=0 pending=1
+[exp8205] phase=waiting_input_only_study completed=0 pending=1
+[exp8205] phase=after_subprocess_input_only_study completed=1 pending=0
+[exp8805] phase=validation_before completed=0 pending=0
+[exp8805] phase=validation_after completed=0 pending=0
+[exp8805] phase=before_bootstrap_evidence_set completed=0 pending=10000
+[exp8805] phase=bootstrap_evidence_set completed=2500 pending=7500
+[exp8805] phase=bootstrap_evidence_set completed=5000 pending=5000
+[exp8805] phase=bootstrap_evidence_set completed=7500 pending=2500
+[exp8805] phase=bootstrap_evidence_set completed=10000 pending=0
+[exp8805] phase=before_bootstrap_joint_symbolic completed=0 pending=10000
+[exp8805] phase=bootstrap_joint_symbolic completed=2500 pending=7500
+[exp8805] phase=bootstrap_joint_symbolic completed=5000 pending=5000
+[exp8805] phase=bootstrap_joint_symbolic completed=7500 pending=2500
+[exp8805] phase=bootstrap_joint_symbolic completed=10000 pending=0
+[exp8805] phase=terminal_publication_before completed=8640 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=waiting_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8805] phase=published_disqualified completed=8640 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_evidence_intervention_study_8805.py::test_real_input_child_and_build
+FAILED tests/python/test_evidence_intervention_study_8805.py::test_private_full_cli_and_failures
+2 failed, 9 passed, 1 warning in 143.38s (0:02:23)
