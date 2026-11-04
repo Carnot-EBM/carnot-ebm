@@ -1,0 +1,20 @@
+.F...                                                                    [100%]
+=================================== FAILURES ===================================
+_______________ test_stream_cluster_intervals_and_empty_overflow _______________
+
+    def test_stream_cluster_intervals_and_empty_overflow():
+        """SCENARIO-REPORT-8809-INFERENCE: seeds add no independent observations."""
+        interval = r.interval([-.1] * 30, .05 / 6)
+>       assert interval['lower'] == interval['upper'] == pytest.approx(-.1)
+E       assert -0.10000000000000005 == -0.10000000000000002
+
+tests/python/test_delayed_feedback_capacity_8809.py:43: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_delayed_feedback_capacity_8809.py::test_stream_cluster_intervals_and_empty_overflow
+1 failed, 4 passed, 1 warning in 14.88s

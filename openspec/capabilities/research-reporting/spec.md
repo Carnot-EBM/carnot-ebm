@@ -105724,6 +105724,37 @@ Exp8809 SHALL publish `results/experiment_8809_v754_delayed_feedback_capacity.js
 per-unit rows, measured durations, verdict_class, field principles and explicit
 blocked-gate operands, following the frozen V754 task contract.
 
+#### SCENARIO-REPORT-8809-OVERFLOW
+
+Thirty reset streams contain 64 queries and three nested seeds. Delays 4/16/32
+cross capacities 4/8 and FIFO/uniform eviction. Unlimited references are shared
+across capacities: 69120 bounded and 17280 unlimited predictions. Release precedes
+arrival in every arm. Record attempted pre-eviction pending peaks separately
+from retained occupancy. Delay 4/capacity 8 must match unlimited predictions and
+updates exactly. Every admission, eviction, release and applied update has a
+causal query time. Dropped labels never train; tail releases are measured.
+
+#### SCENARIO-REPORT-8809-INFERENCE
+
+Average nested seeds within each stream before paired stream-cluster intervals.
+The six FIFO-minus-uniform Brier contrasts form one Bonferroni family with
+99.1667 percent intervals. Useful policy evidence requires an upper bound below
+-0.01, retention degradation no greater than 0.02, differing admissions and a
+positive overflow control. Empty overflow yields null_uninformative_capacity.
+Both unweighted policies are heuristic comparators without OCO regret claims.
+
+Exp8809 measurement, 2026-11-04: all 86400 scheduled predictions completed in
+1350 stream/seed/condition cells. Bounded arms issued 69120 predictions;
+unlimited references issued 17280. There were 40533 evictions and 45867 applied
+feedback updates. All overloaded cells exceeded capacity before eviction.
+FIFO and uniform retained different events. Delay 4/capacity 8 reproduced
+unlimited predictions and update hashes exactly. Six corrected intervals use
+30 stream clusters. None has an upper bound below -0.01. The largest favorable
+mean contrast is FIFO minus uniform at delay 16/capacity 8: -0.000217703,
+99.1667 percent interval [-0.000385947, -0.0000494583]. Its improvement does not
+meet the prespecified 0.01 threshold. Total measured tail service was 3.699 s.
+These constructed exact-label measurements support no independent skill claim.
+
 #### SCENARIO-REPORT-8809-REPLAY
 
 A private cold replay reconstructs aggregates and rejects changed authority,

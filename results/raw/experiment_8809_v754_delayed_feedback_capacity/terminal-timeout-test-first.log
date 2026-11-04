@@ -1,0 +1,30 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_large_terminal_candidate_keeps_real_parent_heartbeats __________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T180735-3974922-92acac85/test_large_terminal_candidate_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8f44d52510>
+
+    def test_large_terminal_candidate_keeps_real_parent_heartbeats(tmp_path, monkeypatch):
+        """REQ-VERIFY-8809: a large complete census needs a bounded adequate validator window."""
+        calls = []
+    
+        def child(name, argv, logs, **kwargs):
+            calls.append((name, kwargs))
+            return {'passed': True}
+    
+        monkeypatch.setattr(r.base, 'child', child)
+>       assert r.terminal_child('adversarial', [], tmp_path, deadline=60, heartbeat=60)['passed']
+               ^^^^^^^^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.delayed_feedback_capacity_8809' has no attribute 'terminal_child'. Did you mean: 'terminal_checks'?
+
+tests/python/test_delayed_feedback_capacity_8809.py:212: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_delayed_feedback_capacity_8809.py::test_large_terminal_candidate_keeps_real_parent_heartbeats
+1 failed, 5 deselected, 1 warning in 2.56s

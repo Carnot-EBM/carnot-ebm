@@ -58705,6 +58705,37 @@ Exp8809 SHALL execute its V754 protocol only after its own preconditions and
 structured gates qualify. Preserve historical assertions, causal information
 boundaries, exact model/substrate declarations and every scheduled denominator.
 
+#### SCENARIO-VERIFY-8809-CAUSAL-QUEUE
+
+Private tests force overflow, differing FIFO/uniform admissions and the
+delay 4/capacity 8 negative control. Predictions use five paid checks, template
+bound 32 and the unchanged prototype numerical update. No release reads labels
+or expiry schedules ahead of availability. Reconstruct raw events, predictions,
+loss and intervals during cold replay; reject rehashed aggregate tampering.
+
+#### SCENARIO-VERIFY-8809-CUSTODY
+
+Pin qualified Exp8802 bytes and all imported sources. Authenticate current V754
+authority separately from preserved V752/V753 contracts. Check imports, private
+scratch, disk and memory; measure a cheap unit and reserve 900 validation seconds.
+Missing external operands produce blocked with no measurement. Failed owned
+validation produces disqualified and readiness 0. Combine genuine unit and CLI
+SQLite coverage with zero exclusions; require 100 percent new statements.
+
+Exp8809 control result, 2026-11-04: owned tests exercise real overflow, loss of
+labels, release timing, unlimited parity, rehashed reduction tampering and
+rejection of fabricated coverage readiness. Five scoped tests pass. Original
+private E2E-018/021 and publication controls pass all 37 tests. The one bounded
+whole Python suite command timed out after 120 seconds during collection;
+retain this global debt separately and do not report a whole-suite pass.
+
+The terminal-budget regression adds a sixth passing owned test. Combined real
+unit and CLI SQLite data cover all 307 newly owned statements, with zero
+exclusions. The initial 60-second adversarial timeout remains a rejected
+publication attempt with readiness 0. Its cold replay reconstructed all 86400
+predictions. The unchanged validator receives a bounded 300-second window;
+the parent retains 60-second heartbeats. Scientific measurements are reused.
+
 #### SCENARIO-VERIFY-8809-CONTROLS
 
 The positive, negative and leakage controls in the V754 prompt must run before
