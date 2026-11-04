@@ -21291,3 +21291,4 @@ code |
 | 2026-11-04 16:40 UTC | Run a bounded mandated-Qwen evidence extraction ca | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8801-repaired-memory-qualification.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-04 17:46 UTC | Measure observer disturbance using immutable durab | OK | 91 passed, 4 warnings in 209.66s (0:03:29) |
 | 2026-11-04 18:22 UTC | Measure finite feedback capacity under real queue  | OK | 87 passed, 1 warning in 25.78s |
+| 2026-11-04 19:13 UTC | Audit future learning benefit and retention from s | OK | 100 passed, 1 warning in 49.39s |
