@@ -804,3 +804,17 @@ Learning benefit, retention, ordinary durable costs and physical acceleration
 have no admitted V750 result. Old producer bytes and quarantine decisions remain
 unchanged. The V750 design is preserved in its dated archive; no next activation
 or deployment is part of this change. Conductor owns ops and traceability updates.
+
+## Planned V754 research boundaries — 2026-11-04
+
+The thirteen-task staged plan qualifies the concrete November 4 original-child
+and JSON-admission repairs under immutable V752/V753 authorities. Evidence
+methods and durable-cost studies remain independent roots; GPU and ARC absence
+do not block CPU learning. The original primary verdicts remain unchanged.
+
+The new causal template store and small Gibbs energy policy freeze within-query
+reads, seal predictions before delayed feedback, and commit additions between
+queries. A separate consensus challenge tests shared wrong answers using new
+constructed worlds. The optional Qwen3.8-27B canary is bounded generation.
+Observer-qualified complete costs feed compatible-operation acceleration bounds.
+This is proposed work, not an implementation change or scientific promotion.

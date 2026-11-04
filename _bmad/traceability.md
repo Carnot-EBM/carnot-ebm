@@ -4457,3 +4457,28 @@ Design: openspec/change-proposals/research-roadmap-vNEXT.md.
 Queue: research-roadmap-next.yaml. Exactly fourteen tasks, Exp8749–Exp8762.
 The complete V749 design is preserved in research-roadmap-v749-preserved-20261102.md.
 No implementation or scientific result is changed by this plan.
+
+## Planned V754 research milestone — 2026-11-04
+
+Status: proposed, not activated or implemented. The staged YAML and V754 design
+contain exactly 13 tasks, Exp8801–Exp8813. Evidence history remains unchanged.
+
+| Requirements | Planned experiment | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-8801; REQ-VERIFY-8801 | Qualify repaired original memory controls under preserved authorities | `results/experiment_8801_v754_repaired_memory_qualification.json` | Planned |
+| REQ-REPORT-8802; REQ-VERIFY-8802 | Build and validate causal template additions with a calibrated energy head | `results/experiment_8802_v754_causal_memory_prototype.json` | Planned |
+| REQ-REPORT-8803; REQ-VERIFY-8803 | Qualify repaired evidence controls and seal new intervention and consensus cohorts | `results/experiment_8803_v754_repaired_evidence_methods.json` | Planned |
+| REQ-REPORT-8804; REQ-VERIFY-8804 | Measure future Brier loss after delayed constraint additions | `results/experiment_8804_v754_causal_template_streams.json` | Planned |
+| REQ-REPORT-8805; REQ-VERIFY-8805 | Measure semantic sensitivity and harmless-evidence invariance | `results/experiment_8805_v754_evidence_intervention_study.json` | Planned |
+| REQ-REPORT-8806; REQ-VERIFY-8806 | Test whether a small energy policy detects shared wrong answers | `results/experiment_8806_v754_consensus_challenge_energy.json` | Planned |
+| REQ-REPORT-8807; REQ-VERIFY-8807 | Run a bounded mandated-Qwen evidence extraction canary | `results/experiment_8807_v754_qwen_evidence_canary.json` | Planned |
+| REQ-REPORT-8808; REQ-VERIFY-8808 | Measure observer disturbance using immutable durable-work authorities | `results/experiment_8808_v754_archived_observer_costs.json` | Planned |
+| REQ-REPORT-8809; REQ-VERIFY-8809 | Measure finite feedback capacity under real queue overflow | `results/experiment_8809_v754_delayed_feedback_capacity.json` | Planned |
+| REQ-REPORT-8810; REQ-VERIFY-8810 | Audit future learning benefit and retention from sealed stream rows | `results/experiment_8810_v754_causal_learning_audit.json` | Planned |
+| REQ-REPORT-8811; REQ-VERIFY-8811 | Assess cross-game supervisor generalization from new live outcomes | `results/experiment_8811_v754_new_arc_outcome_analysis.json` | Planned |
+| REQ-REPORT-8812; REQ-VERIFY-8812 | Bound acceleration from complete measured learning operations | `results/experiment_8812_v754_learning_operation_budget.json` | Planned |
+| REQ-REPORT-8813; REQ-VERIFY-8813 | Reconcile thirteen outcomes and retire unchanged failed continuations | `results/experiment_8813_v754_capstone.json` | Planned |
+
+FR-06/FR-11 map to 8802/8804/8806/8809/8810; FR-12 to 8803/8805/8806/8807;
+FR-05/FR-08/NFR-01 to 8808/8812. ARC generalization is reserved in 8811.
+Original repair qualification is 8801; unconditional reconciliation is 8813.

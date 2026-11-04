@@ -54782,3 +54782,94 @@ execution-grounded results. Exp8783 qualified producer identity and ordinary
 durable windows. Exp8784 retained complete costs but failed observer acceptance.
 The next cost question is a randomized observer intervention with sham clocks,
 not another claim that native arithmetic already speeds up the complete service.
+## V754 planning scan — 2026-11-04
+
+Recorded before experiment design. This is a fresh search of 2025–2026 work,
+with earlier references rechecked where useful. External results are research
+leads, not Carnot measurements. The V753 primary capstone admits zero scientific
+measurements. Later private repair receipts do not promote those primaries.
+
+### Selected research directions
+
+- [VeriHarness](https://arxiv.org/abs/2610.00972), October 1, 2026,
+  discovered again through [Hugging Face Papers](https://huggingface.co/papers/2610.00972).
+  The authors distinguish disagreement resolution from challenging shared
+  errors. Adapt this into a bounded consensus-challenge control: hold candidate
+  agreement fixed while removing a necessary premise or changing a binding.
+  Use source evidence to test the answer. Agreement alone is not a truth label.
+  Its reported frontier-model gains do not establish a Carnot or ARC gain.
+- [Distributional EBM verification](https://arxiv.org/abs/2605.18871), May 15,
+  2026, combines learned quality scores and explicit constraints and reports
+  shortcut audits. Keep separate measures for learned energy, exact symbolic
+  checks and acceptance calibration. Train only a small policy on observations
+  available before the answer label; keep identity, condition and solver truth
+  out of its features.
+- [Type-aware hallucination analysis](https://arxiv.org/abs/2611.02258),
+  November 1, 2026, shows why pooled detection can hide error-type weaknesses
+  and dataset shortcuts. Retain length-balanced and order-balanced conditions
+  and report binding, missing-evidence and conflicting-evidence errors separately.
+  Constructed relational labels are not independently labeled natural text.
+- [Memoir](https://arxiv.org/abs/2607.20792), July 22, 2026, reports a fixed-budget
+  learning penalty for memory writes inside the recurrence that reads them;
+  longer training saturates both arms. Test between-query additions, frozen
+  within-query state, proper future loss and disjoint retention. This is a
+  timing hypothesis, not a claim to reproduce that architecture.
+- [Capacity-constrained delayed OCO](https://arxiv.org/abs/2606.11711),
+  June 10, 2026, distinguishes delay from the loss of feedback under finite
+  tracking capacity. Require measured overflow, dropped events and different
+  admission decisions before interpreting a queue-policy comparison. A neural
+  learner with heuristic eviction inherits none of the paper's regret bounds.
+
+### Coverage of the requested primary topics
+
+| Topic | Primary sources checked | Planning consequence |
+|---|---|---|
+| EBM reasoning and verification | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, May 2026](https://arxiv.org/abs/2512.15605v4); distributional EBM above | Compatibility scores and an ARM–EBM equivalence do not certify extracted premises. No revival of energy-descent generation. |
+| Neural constraint satisfaction | [CAffNet, May 2026](https://arxiv.org/abs/2605.24437); [closed-loop text control, September 2026](https://arxiv.org/abs/2609.19710) | Hard guarantees concern encoded constraints. Separate extraction fidelity and exact metric control from semantic correctness; no retired projection stack is reopened. |
+| Ising applications and accelerated sampling | [Million-p-bit computer, June 2026](https://arxiv.org/abs/2606.25313) | Boundary exchange and topology determine sampling quality. Count complete compatible operations before estimating any benefit. |
+| Hallucination mitigation | Type-aware analysis and VeriHarness above | Add a shared-wrong-answer control alongside ordinary disagreement. |
+| KAN and continual learning | [Spline-local online KAN, February 2026](https://arxiv.org/abs/2602.02056); [KAC, March 2025](https://arxiv.org/abs/2503.21076) | Sparse arithmetic offers a hardware path; neither locality nor a classifier result proves retention or durable-service speed. |
+| Energy-guided decoding | [ETS v3, May 2026](https://arxiv.org/abs/2601.21484v3); [object-hallucination decoding, July 2025](https://arxiv.org/abs/2507.07731) | Keep decoder integration deferred until the mandated CUDA runtime and extraction qualify. The latter is a vision-language result. |
+| Continual constraint systems | Memoir and delayed OCO above | Causal label release, actual template additions, future Brier score and capacity controls remain the next unmeasured questions. |
+
+### Secondary source checks and retrieval limits
+
+- OpenReview searches covered NeurIPS, ICML and ICLR EBM work. An indexed
+  [energy-based conformal-score PDF](https://openreview.net/pdf?id=zCwTMRtASZ)
+  describes energy-adjusted nonconformity. Direct PDF and forum requests returned
+  a browser challenge. Treat it as a lead only; do not assert venue acceptance,
+  implement its formula from snippets, or claim coverage under concept drift.
+- Semantic Scholar citation requests for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,externalIds,url)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,externalIds,url)
+  failed in the browser and returned HTTP 429 through direct requests. Citing-paper
+  coverage is incomplete; no new citation count or citation relationship is claimed.
+- The [Hugging Face verification feed](https://huggingface.co/papers?q=verification)
+  was readable. Primary arXiv pages were checked for selected papers; generated
+  feed summaries and user comments are not experimental evidence.
+- [GitHub Trending](https://github.com/trending) exposed navigation without a
+  usable repository ranking in this retrieval. Targeted author repositories
+  [EBT](https://github.com/alexiglad/EBT),
+  [THRML](https://github.com/extropic-ai/thrml), and
+  [KAC](https://github.com/Ethanhuhuhu/KAC) were accessible. No repository is
+  claimed to be newly trending and no dependency is added by this scan.
+- [Extropic's writing index](https://extropic.ai/writing) exposed navigation;
+  the [September 4 Z1T article](https://extropic.ai/writing/z1t) was readable.
+  It describes sparse probabilistic operations split with FPGA work and labels
+  its estimates as a preliminary codesign study. Those estimates are not local
+  measurements, hardware access, or a complete Carnot learning speedup.
+- [Kona 1.0](https://logicalintelligence.com/kona) describes an energy-based
+  constraint layer. No reproducible new architecture or benchmark protocol was
+  established from that page. Vendor assertions remain vendor assertions.
+
+### Local evidence changes admitted for planning
+
+The V753 record has four producers and eight skipped slots. Exp8789 failed
+original private validation; Exp8791 failed owned validation and was quarantined;
+Exp8796 rejected a mutable historical-contract lookup; Exp8800 recorded the
+missing science with a terminal blocked class. The November 4 repair entries
+in ops/status.md report actual original-child coverage, producer JSON-type
+checks and standalone capstone imports. A future experiment must authenticate
+and rerun those checks under immutable historical authorities. They justify a
+changed qualification attempt, not a rewrite of V753 results. CUDA repair and
+new ARC supervisor outcomes remain separate, currently absent prerequisites.

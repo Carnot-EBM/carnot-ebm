@@ -1,29 +1,34 @@
 # Autoresearch conductor round
 
-- started: 2026-11-04T05:12:32.297355+00:00
+- started: 2026-11-04T11:13:00.961917+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
-- iterations: 4
+- iterations: 5
 - accepted: 0
-- rejected: 4
+- rejected: 5
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 8008
-- breaker_historical_tail_at_start: 25
+- breaker_invocation_start_position: 8012
+- breaker_historical_tail_at_start: 29
 - breaker_invocation_local_tail_at_start: 0
-- breaker_invocation_local_tail_at_end: 4
+- breaker_invocation_local_tail_at_end: 5
 - generator_exhausted: False
 - fallback_iterations: [1]
 
 
 ## Generator failure reasons
-- Optimization Procedure: Energy regression on: verifier_auroc
+- 1. **Exact AUROC Computation**: We implement an exact $O(N \log N)$ Wilcoxon-Mann-Whitney rank-sum AUROC metric with average-rank tie resolution in pure Python (no external dependencies).
+2. **Direction Alignment**: We evaluate the baseline `Probe(entity_weight=0.5, falsifiability_weight=0.5)` on `verifier_auroc_train_rows` to calibrate the positive-class label orientation against the evaluator's metric.
+3. **Signal Decomposition & Linearity Check**: We probe the basis vectors $(1.0, 0.0)$ and $(0.0, 1.0)$ to extract individual signal projections ($s_{\text{entity}}$ and $s_{\text{falsifiability}}$). We test linearity against the baseline to enable rapid vectorized evaluation across candidate weights.
+4. **Comprehensive Weight Search**:
+   - **Simplex sweep**: Dense sweep of convex combinations $w_e \in [0.0, 1.0]$ in fine increments ($w_f = 1.0 - w_e$).
+   - **Angular unit-circle sweep**: Full $360^\circ$ sweep $(\cos\theta, \sin\theta)$ to explore potential negative correlations between the two signals.
+   - **Local refinement**: Fine-grained exploration around the top candidate.
+5. **Real Probe Verification & Degeneracy Guard**: We instantiate the true `PCIBProbe` with the candidate weights, verify that outputs are strictly non-degenerate (`max(scores) > min(scores)`), and confirm that training AUROC meets or exceeds baseline performance.: Energy regression on: verifier_auroc
 - agy_call_failed: agy exit 0: jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied. Add an allow-rule under permissions.allow in settings.json (e.g. command(<target>)). Alternatively, re-run with --dangerously-skip-permissions to auto-approve all tools.
-- codex_call_failed: Command '['/home/ianblenke/.local/bin/codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-6-astra', '--cd', '/tmp/autoresearch-codex-uw2mn9xt', '--ephemeral', '-']' timed out after 300 seconds
-- generator_empty: Generator returned no hypotheses on iteration 1.
-- Both procedures dynamically detect the present benchmark data keys, execute safely within wall-clock limits, and output the exact required state specifications without `carnot` imports.: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f8b93665b80>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
-- ---: Energy regression on: verifier_auroc, calibrated_decision
-- 1. **`verifier_auroc`**: We empirically identify the evaluator's positive label convention by scoring with the documented default weights `(0.5, 0.5)` and determining whether `"incorrect"` or `"correct"` yields AUROC > 0.5. We then precompute basis scores for entity uptake and falsifiability and perform a 5-fold cross-validated grid search over the weight simplex. Choosing the weights that maximize out-of-fold validation AUROC (with fallback to default weights `[0.5, 0.5]` if no candidate improves validation performance) ensures we optimize discrimination without overfitting the training corpus.
-2. **`calibrated_decision`**: The previous sandbox failure (`GibbsModel is not a valid JAX type`) occurred because `GibbsModel` is an un-registered Python model object rather than a JAX PyTree. Because the architecture `(input_dim=2, hidden_dims=[4])` contains only 17 scalar parameters ($8 + 4 + 4 + 1$), we optimize directly using numerical finite-difference gradients evaluated through `benchmark_data["nce_loss"]`. We train using Adam with weight decay ($L_2$ regularization) and early stopping on a held-out validation split. This avoids logit explosion, preserves probability calibration, and guarantees that trained weights never regress past initialization.: Energy regression on: verifier_auroc, calibrated_decision
+- Hypothesis: For `calibrated_decision`, validation-selected L2 regularization and early stopping can improve generalization and reduce overconfident predictions. Search three penalties and two initializations, then retrain the selected configuration on all supplied training rows.: Energy regression on: calibrated_decision
+- Implementation: Energy regression on: verifier_auroc
+- ---: Energy regression on: verifier_auroc
+- Implementation: Energy regression on: verifier_auroc
 No hypothesis both won this round and committed cleanly.

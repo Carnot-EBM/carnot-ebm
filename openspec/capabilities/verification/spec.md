@@ -58476,3 +58476,165 @@ Implementation 20261104: V753 adds its own checkout root before importing retain
 reporting modules. The unchanged private resource CLI and an additional clean
 interpreter regression pass. Fresh unit/child SQLite covers 249/249 owned module
 and CLI statements without exclusions; all 46 private qualification tests pass.
+
+## Planned V754 research requirements — 2026-11-04
+
+These requirements are planned, not implementation or result claims. The exact
+protocols and acceptance gates are in the V754 design and staged task prompts.
+Historical requirements and primary verdicts remain unchanged.
+
+### REQ-VERIFY-8801: Qualify repaired original memory controls under preserved authorities
+
+Exp8801 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8801-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8802: Build and validate causal template additions with a calibrated energy head
+
+Exp8802 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8802-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8803: Qualify repaired evidence controls and seal new intervention and consensus cohorts
+
+Exp8803 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8803-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8804: Measure future Brier loss after delayed constraint additions
+
+Exp8804 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8804-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8805: Measure semantic sensitivity and harmless-evidence invariance
+
+Exp8805 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8805-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8806: Test whether a small energy policy detects shared wrong answers
+
+Exp8806 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8806-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8807: Run a bounded mandated-Qwen evidence extraction canary
+
+Exp8807 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8807-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8808: Measure observer disturbance using immutable durable-work authorities
+
+Exp8808 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8808-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8809: Measure finite feedback capacity under real queue overflow
+
+Exp8809 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8809-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8810: Audit future learning benefit and retention from sealed stream rows
+
+Exp8810 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8810-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8811: Assess cross-game supervisor generalization from new live outcomes
+
+Exp8811 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8811-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8812: Bound acceleration from complete measured learning operations
+
+Exp8812 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8812-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.
+
+### REQ-VERIFY-8813: Reconcile thirteen outcomes and retire unchanged failed continuations
+
+Exp8813 SHALL execute its V754 protocol only after its own preconditions and
+structured gates qualify. Preserve historical assertions, causal information
+boundaries, exact model/substrate declarations and every scheduled denominator.
+
+#### SCENARIO-VERIFY-8813-CONTROLS
+
+The positive, negative and leakage controls in the V754 prompt must run before
+a benefit claim. New owned code needs actual unit/child statement coverage;
+constructed exact-oracle success cannot become an oracle-distinct headline.

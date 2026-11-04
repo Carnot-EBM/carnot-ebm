@@ -105479,3 +105479,165 @@ from the installed Carnot package's own checkout, including when PYTHONPATH is
 absent. SCENARIO-VERIFY-8800-CHECKOUT-IMPORT and the original missing-resource CLI
 verify this path. Scoped qualification covers 249/249 statements without exclusions
 and preserves blocked resources, failed owned work and sealed replay behavior.
+
+## Planned V754 research requirements — 2026-11-04
+
+These requirements are planned, not implementation or result claims. The exact
+protocols and acceptance gates are in the V754 design and staged task prompts.
+Historical requirements and primary verdicts remain unchanged.
+
+### REQ-REPORT-8801: Qualify repaired original memory controls under preserved authorities
+
+Exp8801 SHALL publish `results/experiment_8801_v754_repaired_memory_qualification.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8801-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8802: Build and validate causal template additions with a calibrated energy head
+
+Exp8802 SHALL publish `results/experiment_8802_v754_causal_memory_prototype.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8802-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8803: Qualify repaired evidence controls and seal new intervention and consensus cohorts
+
+Exp8803 SHALL publish `results/experiment_8803_v754_repaired_evidence_methods.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8803-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8804: Measure future Brier loss after delayed constraint additions
+
+Exp8804 SHALL publish `results/experiment_8804_v754_causal_template_streams.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8804-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8805: Measure semantic sensitivity and harmless-evidence invariance
+
+Exp8805 SHALL publish `results/experiment_8805_v754_evidence_intervention_study.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8805-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8806: Test whether a small energy policy detects shared wrong answers
+
+Exp8806 SHALL publish `results/experiment_8806_v754_consensus_challenge_energy.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8806-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8807: Run a bounded mandated-Qwen evidence extraction canary
+
+Exp8807 SHALL publish `results/experiment_8807_v754_qwen_evidence_canary.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8807-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8808: Measure observer disturbance using immutable durable-work authorities
+
+Exp8808 SHALL publish `results/experiment_8808_v754_archived_observer_costs.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8808-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8809: Measure finite feedback capacity under real queue overflow
+
+Exp8809 SHALL publish `results/experiment_8809_v754_delayed_feedback_capacity.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8809-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8810: Audit future learning benefit and retention from sealed stream rows
+
+Exp8810 SHALL publish `results/experiment_8810_v754_causal_learning_audit.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8810-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8811: Assess cross-game supervisor generalization from new live outcomes
+
+Exp8811 SHALL publish `results/experiment_8811_v754_new_arc_outcome_analysis.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8811-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8812: Bound acceleration from complete measured learning operations
+
+Exp8812 SHALL publish `results/experiment_8812_v754_learning_operation_budget.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8812-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
+
+### REQ-REPORT-8813: Reconcile thirteen outcomes and retire unchanged failed continuations
+
+Exp8813 SHALL publish `results/experiment_8813_v754_capstone.json` with exact source hashes,
+per-unit rows, measured durations, verdict_class, field principles and explicit
+blocked-gate operands, following the frozen V754 task contract.
+
+#### SCENARIO-REPORT-8813-REPLAY
+
+A private cold replay reconstructs aggregates and rejects changed authority,
+missing producer fields and rehashed aggregate tampering. External absence is
+terminal blocked; failed owned validation is disqualified with readiness zero.
