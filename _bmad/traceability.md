@@ -1,5 +1,21 @@
 # Carnot — Traceability Matrix
 
+## Exp8791 producer JSON repair — 2026-11-04 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-8791 / SCENARIO-VERIFY-8791-REPLAY | `evidence_intervention_methods_8791.authenticate` checks the original JSON type before retained dictionary conversion, then verifies exact bytes | Existing diagnostic and historical-source drift assertions plus additional non-object JSON cases |
+| REQ-REPORT-8791 / SCENARIO-REPORT-8791-INTERVENTIONS | Preserve the sealed corpus, original arm and independent strong reference | Existing truth, length-balance, cost and private CLI tests remain unchanged |
+| REQ-CONDUCTOR-FIXGATE-1 | Preserve every existing assertion, historical implementation and conductor | No test skips, weakened assertions or source reversions |
+
+Validation passes all 94 conductor-subset tests, 50 private qualification tests
+(including E2E-018/021), and ten repair-gate tests: 141 distinct tests. Combined
+unit/child SQLite covers 377/377 owned module/CLI statements without exclusions.
+Scoped Ruff, formatting, strict mypy, spec tracing, terminal validators and
+outside-checkout cold replay pass. Global reconciliation retains the existing
+architecture-date and 1,142-reference debt; no full-suite rerun is claimed.
+Evidence: `/var/tmp/carnot-8791-repair-njbh608h/repair-summary.json`.
+
 ## V753 preflight cost repair — 2026-11-04 UTC
 
 | Requirement / scenario | Implementation | Verification |

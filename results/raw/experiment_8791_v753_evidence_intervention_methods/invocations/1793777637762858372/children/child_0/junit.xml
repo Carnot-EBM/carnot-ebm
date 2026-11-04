@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="13" time="162.937" timestamp="2026-11-04T02:34:48.868750-05:00" hostname="icbfl1"><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_authentication_and_diagnostics" time="2.257" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_roster_and_balanced_projection" time="0.114" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_semantics_metamorphisms_and_real_costs" time="0.254" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_freeze_before_results_and_preconditions" time="0.130" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_cli_terminal_and_rehashed_attacks" time="48.836" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_future_interventions_are_sealed_without_arm_execution" time="3.667" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_normal_entry_and_blocked_entry" time="31.540" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_cli_arguments_and_input_only_boundary" time="0.015" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_cost_instrumentation_and_historical_negative_controls" time="1.136" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_missing_dependency_blocks_and_failed_child_disqualifies" time="31.555" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_serialized_hidden_fields_are_rejected" time="3.783" /><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_readiness_diagnostics_and_source_drift" time="0.002"><failure message="AssertionError: assert 'missing_field' == 'rejected_producer'&#10;  &#10;  - rejected_producer&#10;  + missing_field">tmp_path = PosixPath('/tmp/exp8791-private-63itzet1/collection-5c5e11fc4f1947c88b59408f7d528c52/0/tmp/test_readiness_diagnostics_and0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f4e44d4dd90&gt;
+
+    def test_readiness_diagnostics_and_source_drift(tmp_path, monkeypatch):
+        """REQ-VERIFY-8791: missing fields, zero, foreign identity and changed source remain distinct."""
+        for producer, check in [
+            ([], "rejected_producer"),
+            ({}, "missing_field"),
+            ({"evidence_methods_ready_score": 0}, "observed_zero"),
+            ({"evidence_methods_ready_score": 1, "task_id": "alias"}, "rejected_producer"),
+        ]:
+            path = tmp_path / "producer.json"
+            atomic_json(path, producer)
+            result = m.authenticate(path, m.UPSTREAM_ROWS)
+&gt;           assert result["diagnostics"][0]["check"] == check
+E           AssertionError: assert 'missing_field' == 'rejected_producer'
+E             
+E             - rejected_producer
+E             + missing_field
+
+tests/python/test_evidence_intervention_methods_8791.py:280: AssertionError</failure></testcase><testcase classname="tests.python.test_evidence_intervention_methods_8791" name="test_replay_reconstructs_despite_repaired_seals" time="34.868" /></testsuite></testsuites>

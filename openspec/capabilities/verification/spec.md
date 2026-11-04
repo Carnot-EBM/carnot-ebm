@@ -58396,3 +58396,35 @@ conductor subset, 35 fix-gate/private E2E tests and all 64 qualification nodes
 zero exclusions. Terminal validation and outside-checkout cold replay pass;
 no further implementation changes were needed. Receipts are retained under
 `results/raw/carnot-v753-recheck-qs7qlka3/`.
+
+## REQ-VERIFY-8791: Qualify sealed controls with real child coverage
+
+Write requirement-linked tests before implementation. Check private scratch,
+imports, source identity and measured resource projection before controls.
+External absence blocks without measurement; owned validation failure disqualifies.
+Reject corrupt labels and hidden condition fields. Retain exact collected nodes,
+normal exits, JUnit and coverage SQLite with100 percent owned statements, Ruff,
+strict mypy and explicit spec tracing. Run private E2E-018/021 for publication;
+E2E-003/004 apply only if a native path is used. Keep one full-suite health run
+separate. Validate bytes with unchanged adversarial and strict verdict validators.
+Cold replay reconstructs primitives and rejects rehashed tampering. The conductor
+owns ops/status/changelog and BMAD reconciliation for this task.
+
+Producer authentication SHALL reject non-object JSON as `rejected_producer`
+before any dictionary coercion. Empty objects remain `missing_field`; arrays,
+including arrays of key/value pairs, SHALL NOT become producer objects. Valid
+objects remain subject to the unchanged exact-byte and historical-source checks.
+
+### SCENARIO-VERIFY-8791-REPLAY
+
+Private real CLI children cover successful qualification, missing-resource
+blocking, failed validation, exact identity rejection and sealed replay attacks.
+No model loads, generation or numerical training execute. Freeze120 worlds but
+measure only tiny fixtures; surfaces and timings never increase independent N.
+
+Implementation20261104: private CLI controls retain exact child inventories,
+JUnit and SQLite. Interpreter monitoring uses a separate slot so cost metering
+does not replace coverage tracing. Rehashed oracle-label corruption is rejected
+by semantic reconstruction. Terminal validation owns the final scoped verdict;
+whole-repository failures remain separately recorded. Ops/BMAD updates are
+reserved for the conductor's reconciliation step.

@@ -1,5 +1,23 @@
 # Carnot — Operational Status
 
+## 2026-11-04 UTC — Exp8791 producer JSON repair
+
+Producer authentication checks the original JSON type before the retained
+loader converts values to dictionaries. Arrays, including key/value pair
+arrays, and scalar values report `rejected_producer`; empty objects still
+report `missing_field`. Exact upstream byte pins and historical source
+authentication remain enforced. Existing assertions are preserved and the
+diagnostic regression also exercises null, boolean, numeric and string inputs.
+
+The reported conductor subset passes 94/94 tests. Private qualification passes
+50/50 tests, including E2E-018/021, and all ten repair-gate tests pass (141
+distinct tests overall). Fresh unit/subprocess SQLite covers 377/377 statements
+across the four modules and CLI with zero exclusions. Scoped Ruff, formatting,
+strict mypy, spec tracing, terminal validators and outside-checkout cold replay
+pass. The full repository suite was not rerun; global reconciliation retains
+the existing architecture date of 2026-10-11 and 1,142 missing spec references.
+Evidence: `/var/tmp/carnot-8791-repair-njbh608h/repair-summary.json`.
+
 ## 2026-11-04 UTC — V753 preflight cost repair
 
 V753 preflight now charges imports and custody checks once instead of scaling

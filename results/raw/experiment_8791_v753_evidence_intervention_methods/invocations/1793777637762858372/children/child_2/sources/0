@@ -1,0 +1,279 @@
+"""REQ-REPORT-8791: freeze the original arm beside a complete symbolic reference."""
+
+from itertools import product
+from pathlib import Path
+import sys
+import time
+from types import CodeType
+from typing import Any
+
+from carnot.reporting import evidence_set_methods_8768 as original
+from carnot.reporting import evidence_qualification_8777 as qualification
+from carnot.reporting import evidence_set_evaluation_8779 as history
+from carnot.reporting.current_work_receipt import canonical_hash
+from carnot.reporting.v746_retained_evidence import reference, load
+
+Json = dict[str, Any]
+ROOT = original.ROOT
+NAME, TASK = (
+    "experiment_8791_v753_evidence_intervention_methods",
+    "exp8791-evidence-intervention-methods",
+)
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [
+    f"python/carnot/reporting/evidence_intervention_{part}_8791.py"
+    for part in ["methods", "corpus", "report", "runner"]
+] + [CLI]
+TESTS = ["tests/python/test_evidence_intervention_methods_8791.py"]
+ARMS = ("local_record", "evidence_set", "joint_symbolic")
+SEED = 7538791
+MODEL_SPECS: list[Json] = []
+UPSTREAM_METHOD = ROOT / "results/experiment_8777_v752_evidence_method_qualification.json"
+UPSTREAM_ROWS = ROOT / "results/experiment_8779_v752_evidence_set_evaluation.json"
+PINS = [
+    "sha256:399f9403b438d55956396ceb59a9305e4e048e0c3cd6a31cafd0b4bc83d05178",
+    "sha256:22ac64106e80050c21eb35a95f8482f1573e1305bf65238f3dec14a51436c608",
+]
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush boundaries so a waiting parent can distinguish progress from a stalled child."""
+    print(f"[exp8791] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def authenticate(method_path: Path, rows_path: Path) -> Json:
+    """Pinned producer bytes and recomputed raw rows preserve the exposed comparison as history."""
+    result: Json = dict(passed=False, references=[], diagnostics=[])
+    diagnostic: Json = {}
+    try:
+        for path, pin, task in zip(
+            [method_path, rows_path], PINS, [qualification.TASK, history.TASK], strict=True
+        ):
+            diagnostic = dict(
+                upstream=task,
+                path=str(path.absolute()),
+                sha256=None,
+                check="missing_file",
+                field="exact_upstream_sha256",
+                operator="==",
+                expected=pin,
+                observed=None,
+            )
+            ref = reference(path)
+            diagnostic.update(sha256=ref["sha256"], check="rejected_producer")
+            producer = load(ref)
+            if not isinstance(producer, dict):
+                diagnostic.update(
+                    field="producer_object", expected="object", observed=type(producer).__name__
+                )
+                raise ValueError("producer_object")
+            field = (
+                "evidence_methods_ready_score"
+                if task == qualification.TASK
+                else "evidence_rows_ready_score"
+            )
+            diagnostic.update(
+                sha256=ref["sha256"],
+                check="missing_field",
+                field=field,
+                expected=1,
+                observed=producer.get(field),
+            )
+            if field not in producer:
+                raise ValueError("missing_field")
+            diagnostic["check"] = "observed_zero"
+            if producer[field] != 1:
+                raise ValueError("readiness")
+            diagnostic.update(
+                sha256=ref["sha256"],
+                check="rejected_producer",
+                field="exact_upstream_sha256",
+                expected=pin,
+                observed=ref["sha256"],
+            )
+            if ref["sha256"] != pin:
+                raise ValueError("producer_identity")
+            result["references"].append(ref)
+        admitted = history.freeze(method_path)
+        diagnostic.update(
+            check="method_authentication",
+            field="authenticated_method",
+            expected=True,
+            observed=admitted["passed"],
+        )
+        if not admitted["passed"]:
+            raise ValueError("method_authentication")
+        value = load(reference(rows_path))
+        work = load(value["primitive_reference"])
+        decisions = load(work["decisions_reference"])["rows"]
+        diagnostic.update(
+            check="raw_row_audit", field="raw_rows_match", expected=True, observed=False
+        )
+        if not history.audit(admitted["inputs"], decisions) or value["rows"] != history.score(
+            admitted["inputs"], admitted["labels"], decisions
+        ):
+            raise ValueError("raw_row_drift")
+        executable_refs = [r for r in value["code_config_hashes"] if r["path"].endswith(".py")]
+        refs = admitted["references"] + executable_refs + value["raw_shard_hashes"]
+        for ref in refs:
+            observed = reference(Path(ref["path"]))
+            if observed != ref:
+                diagnostic.update(
+                    path=ref["path"],
+                    sha256=observed["sha256"],
+                    check="historical_source_drift",
+                    field="sha256",
+                    expected=ref["sha256"],
+                    observed=observed["sha256"],
+                )
+                raise ValueError("historical_source_drift")
+        result.update(passed=True, references=result["references"] + refs, exposed_history=True)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        diagnostic["diagnostic"] = str(error)
+        result["diagnostics"].append(diagnostic)
+    return result
+
+
+def strong(payload: Json) -> str:
+    """Enumerate shared assignments over signed records; no absent atom becomes a false fact."""
+    original.parse(payload)
+    signs: dict[tuple[str, ...], set[bool]] = {}
+    for s, r, o, sign in payload["facts"]:
+        signs.setdefault((s, r, o), set()).add(sign)
+    if any(len(v) > 1 for v in signs.values()):
+        return "insufficient"
+    variables = sorted({t for q in payload["query"] for t in q if t.startswith("?")})
+    domain = sorted(
+        {
+            row[i]
+            for kind in ("facts", "query")
+            for row in payload[kind]
+            for i in (0, 2)
+            if not row[i].startswith("?")
+        }
+    )
+    possible = False
+    for assignment in product(domain, repeat=len(variables)):
+        binding = dict(zip(variables, assignment, strict=True))
+        states = [signs.get(tuple(binding.get(t, t) for t in q), set()) for q in payload["query"]]
+        if all(v == {True} for v in states):
+            return "support"
+        possible |= not any(v == {False} for v in states)
+    return "insufficient" if possible else "refute"
+
+
+def evaluate(arm: str, payload: Json) -> tuple[str, int]:
+    """One batched interface call may inspect many predicates; local retains its historical ceiling."""
+    if arm == "joint_symbolic":
+        return strong(payload), 1
+    if arm in {"local_record", "evidence_set"}:
+        return qualification.bounded(arm, payload)
+    raise ValueError("arm")
+
+
+class Meter(list[Any]):
+    """Count every input-record inspection, including repeated scans inside historical solvers."""
+
+    inspections = 0
+    instructions = 0
+
+    def __iter__(self) -> Any:
+        for value in super().__iter__():
+            Meter.inspections += 1
+            yield value
+
+
+def instruction_counter(code: CodeType, offset: int) -> None:
+    """A separate interpreter monitoring slot counts instructions without replacing coverage."""
+    Meter.instructions += 1
+
+
+def measure(payloads: list[Json]) -> list[Json]:
+    """Only parsed facts/query reach an arm; counters include validation and all solver scans."""
+    rows = []
+    for index, payload in enumerate(payloads):
+        original.parse(payload)
+        for arm in ARMS:
+            Meter.inspections = 0
+            Meter.instructions = 0
+            metered = {k: Meter(v) for k, v in payload.items()}
+            start, cpu = time.monotonic_ns(), time.process_time_ns()
+            sys.monitoring.use_tool_id(3, "exp8791")
+            sys.monitoring.register_callback(
+                3, sys.monitoring.events.INSTRUCTION, instruction_counter
+            )
+            sys.monitoring.set_events(3, sys.monitoring.events.INSTRUCTION)
+            try:
+                decision, calls = evaluate(arm, metered)
+            finally:
+                sys.monitoring.set_events(3, 0)
+                sys.monitoring.free_tool_id(3)
+            end, cpu_end = time.monotonic_ns(), time.process_time_ns()
+            rows.append(
+                dict(
+                    input_index=index,
+                    arm=arm,
+                    decision=decision,
+                    evaluator_invocations=calls,
+                    predicate_inspections=Meter.inspections,
+                    primitive_operations=Meter.inspections + calls,
+                    python_instruction_count=Meter.instructions,
+                    input_sha256=canonical_hash(payload),
+                    wall_time_s=(end - start) / 1e9,
+                    cpu_time_s=(cpu_end - cpu) / 1e9,
+                    status="completed",
+                    raw_numerator=0,
+                    raw_denominator=1,
+                    missingness=None,
+                )
+            )
+        if (index + 1) % 6 == 0:
+            progress("tiny_controls", (index + 1) * 3, (len(payloads) - index - 1) * 3)
+    return rows
+
+
+def audit(fixtures: list[Json], rows: list[Json]) -> bool:
+    """Replay decisions and costs without trusting labels, elapsed time or stored summaries."""
+    replayed = measure([f["input"] for f in fixtures])
+    keys = [
+        "input_index",
+        "arm",
+        "decision",
+        "evaluator_invocations",
+        "predicate_inspections",
+        "primitive_operations",
+        "input_sha256",
+    ]
+    return len(rows) == len(replayed) and all(
+        all(row[k] == check[k] for k in keys)
+        and row["wall_time_s"] >= 0
+        and row["cpu_time_s"] >= 0
+        and row["python_instruction_count"] > 0
+        for row, check in zip(rows, replayed, strict=True)
+    )
+
+
+def method() -> Json:
+    """Semantics and costs are sealed before tiny labels or future comparison results are opened."""
+    return dict(
+        arms=list(ARMS),
+        original_method=original.method(),
+        evidence_set="unchanged V751 decide; all global conflicts insufficient",
+        joint_symbolic="complete shared assignment sufficiency; explicit signed falsity only; any global conflict insufficient; alternative witnesses accepted",
+        local_record="original five-premise interface ceiling, no shared joins",
+        MODEL_SPECS=[],
+        maximum_evaluator_invocations=5,
+        primitive_budget_definition=dict(
+            interface="at most five evaluator calls; joint and evidence_set each use one batched call",
+            predicate_inspections="all input facts/query visits including parse and repeated scans",
+            primitive_operations="input-record inspections plus evaluator invocations; not an equal computation budget",
+            python_instruction_count="measured Python VM operations, runtime cache dependent; C builtin internals excluded",
+            primitive_limit=None,
+            fairness="interface ceiling is not an equal primitive-work budget",
+        ),
+        token_definition="Unicode words or single non-whitespace punctuation in canonical JSON; protocol tokens, not LLM tokens",
+        bins=[1024, 1536],
+        implementation_references=[reference(ROOT / p) for p in OWNED],
+        frozen_before_evaluation=True,
+        future_primary="world-cluster paired robustness to order/length versus sensitivity to independently changed truth; no population comparison in this qualification",
+    )

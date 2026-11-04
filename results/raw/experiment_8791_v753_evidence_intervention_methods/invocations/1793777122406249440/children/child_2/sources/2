@@ -1,0 +1,216 @@
+"""REQ-VERIFY-8791: derive readiness only from authenticated sealed qualification primitives."""
+
+import json
+from pathlib import Path
+from typing import Any
+
+from carnot.reporting import evidence_intervention_methods_8791 as m
+from carnot.reporting import evidence_set_methods_8768 as original
+from carnot.reporting import evidence_intervention_corpus_8791 as c
+from carnot.reporting.current_work_receipt import canonical_hash, ZERO_INVOCATION_COUNTS
+from carnot.reporting.v746_retained_evidence import load, reference
+from carnot.reporting.evidence_qualification_report_8777 import audit_validation
+
+Json = dict[str, Any]
+
+
+def build(work: Json, validation: Json, output: Path) -> Json:
+    """Qualification readiness measures controlled semantics, never natural extraction or benefit."""
+    frozen = load(work["frozen_reference"])
+    fixtures, decisions = frozen["fixtures"], load(work["decisions_reference"])["rows"]
+    rows = [
+        dict(
+            row,
+            unit_id=fixtures[row["input_index"]]["unit_id"],
+            world_id="tiny/shared-binding",
+            expected=fixtures[row["input_index"]]["expected"],
+            raw_numerator=int(row["decision"] == fixtures[row["input_index"]]["expected"]),
+            raw_denominator=1,
+        )
+        for row in decisions
+    ]
+    checks = (
+        bool(validation["receipts"])
+        and all(r["passed"] for r in validation["receipts"])
+        and validation["union"]["passed"]
+        and validation["coverage"]["complete"]
+    )
+    truth = [
+        dict(
+            unit_id=r["unit_id"],
+            condition=r["condition"],
+            ordering=r["ordering"],
+            token_bin=r["token_bin"],
+            expected=r["expected"],
+            independent_oracle=r["oracle"],
+            strong_decision=m.strong(r["input"]),
+            renamed_decision=m.strong(c.rename(r["input"])),
+        )
+        for r in fixtures
+    ]
+    if fixtures:
+        truth += [
+            dict(
+                unit_id=f"tiny/truth-table/{i}",
+                condition="hand_inspected_counterexample",
+                ordering="fixed",
+                token_bin=None,
+                expected=expected,
+                independent_oracle=c.oracle.enumerate_truth(payload),
+                strong_decision=m.strong(payload),
+                renamed_decision=m.strong(c.rename(payload)),
+            )
+            for i, (payload, expected) in enumerate(c.counterexamples())
+        ]
+    gates = dict(
+        upstream_authenticated=frozen["authentication"]["passed"],
+        preconditions=work["preconditions_checked"]["passed"],
+        independent_truth=c.audit(fixtures) if fixtures else False,
+        length_balance=bool(frozen["plan"]["length_balance_rows"])
+        and frozen["plan"]["split_manifest"]["disjoint"]
+        and all(r["passed"] for r in frozen["plan"]["length_balance_rows"]),
+        strong_reference_agreement=bool(truth)
+        and all(r["expected"] == r["strong_decision"] == r["renamed_decision"] for r in truth),
+        decision_audit=m.audit(fixtures, decisions),
+        input_only_child=bool(work["measurement_receipts"])
+        and all(r["passed"] for r in work["measurement_receipts"]),
+        scoped_validation=bool(checks),
+    )
+    ready = all(gates.values())
+    verdict = (
+        "blocked"
+        if not gates["upstream_authenticated"] or not gates["preconditions"]
+        else "null"
+        if ready
+        else "disqualified"
+    )
+    diagnostics = list(frozen["authentication"]["diagnostics"])
+    diagnostics += [
+        dict(
+            upstream=m.TASK,
+            **work["frozen_reference"],
+            check=k,
+            field=k,
+            operator="==",
+            expected=True,
+            observed=v,
+        )
+        for k, v in gates.items()
+        if not v
+    ]
+    value: Json = dict(
+        experiment_id=8791,
+        task_id=m.TASK,
+        milestone="2026.11.753",
+        run_date=work["run_date"],
+        invocation_id=work["invocation_id"],
+        honest_verdict="complete_"
+        + verdict
+        + (
+            "_upstream_evidence_or_resource"
+            if verdict == "blocked"
+            else "_v753_evidence_intervention_methods"
+        ),
+        verdict_class=verdict,
+        gate_check_summary=diagnostics,
+        inference_substrate="deterministic_verifier",
+        inference_substrate_class="no_model_load",
+        MODEL_SPECS=[],
+        model_invocation_counts=dict(ZERO_INVOCATION_COUNTS),
+        numerical_training_calls=0,
+        rows=rows,
+        intended_count=72,
+        completed_count=len(rows),
+        failed_count=0,
+        censored_count=72 - len(rows),
+        excluded_count=0,
+        independent_count=int(bool(rows)),
+        n_samples=int(bool(rows)),
+        verifier_is_oracle=True,
+        exposure_scope="Exp8777/8779 remain exposed history. One tiny constructed control cluster is measured;120 future worlds are sealed only. No faithful natural-language extraction is tested.",
+        independent_generalization_score=0,
+        acceptance_gates=gates,
+        required_checks_passed=bool(checks),
+        flagged_adversarial=verdict == "disqualified",
+        validation_receipts=validation["receipts"],
+        terminal_validation_sidecar_path=str(Path(work["raw"]) / "terminal_validation.json"),
+        preconditions_checked=work["preconditions_checked"],
+        duration_s=work["duration_s"],
+        started_at_utc=work["started_at_utc"],
+        ended_at_utc=work["ended_at_utc"],
+        phase_spans=work["phase_spans"],
+        random_seed=m.SEED,
+        source_artifact_hashes=frozen["authentication"]["references"],
+        code_config_hashes=work["sources"],
+        raw_shard_hashes=work["shards"] + validation.get("raw_references", []),
+        cited_upstream_artifacts=frozen["authentication"]["references"][:2],
+        repository_health_reference=work["repository_health_reference"],
+        scoped_validation_scope=dict(
+            owned=m.OWNED,
+            tests=m.TESTS,
+            consumers=original.CONSUMERS,
+            named_e2es=["E2E-018 private CLI", "E2E-021 private CLI"],
+            native_roundtrips="E2E-003/004 not applicable: no native code or serialization path",
+            full_suite_pass_claimed=False,
+        ),
+        evidence_interventions_ready_score=int(ready),
+        frozen_method_reference=work["method_reference"],
+        intervention_manifest=dict(
+            conditions=list(c.CONDITIONS),
+            orderings=["forward", "reverse"],
+            token_bins=list(c.BINS),
+            labels_evaluator_only=True,
+            future_comparison_executed=False,
+            reference=work["frozen_reference"],
+        ),
+        split_manifest=frozen["plan"]["split_manifest"],
+        truth_control_rows=truth,
+        length_balance_rows=frozen["plan"]["length_balance_rows"],
+        primitive_budget_definition=m.method()["primitive_budget_definition"],
+        original_arm_failures=[
+            r for r in rows if r["arm"] == "evidence_set" and not r["raw_numerator"]
+        ],
+        owned_statement_coverage=validation["coverage"],
+        retained_child_custody=validation["union"],
+        primitive_reference=reference(Path(work["raw"]) / "work.json"),
+        validation_reference=reference(Path(work["raw"]) / "validation.json"),
+        publication_output=str(output.absolute()),
+        methodology_note="Method qualification only. Freeze120 new11–13-edge worlds, six evidence interventions, two exact protocol-token bins and two orders. Each bin balances supported and insufficient labels. Only one tiny world is compared; independent Boolean completions and hand-inspected counterexamples check the strong solver. Absence remains unknown, conflicts insufficient, and alternative proofs valid. Original V751 semantics remain unchanged. Exact symbolic correctness is circular evidence and gives no natural extraction, hallucination benefit or hidden-game transfer claim. No model or numerical training executes.",
+    )
+    value["field_principles"] = dict.fromkeys(
+        [*value, "field_principles", "reproducibility_checksum"],
+        "Bind exact task, invocation and sealed operands; constructed qualification is not natural extraction evidence.",
+    )
+    value["reproducibility_checksum"] = canonical_hash(value)
+    return value
+
+
+def replay(path: Path) -> bool:
+    """Independent seals bind primitives before semantic reconstruction rejects rehashed tampering."""
+    try:
+        value = json.loads(path.read_bytes())
+        work, validation = load(value["primitive_reference"]), load(value["validation_reference"])
+        seal = json.loads((Path(work["raw"]) / "independent_seal.json").read_bytes())
+        if seal != {k: value[k] for k in ["primitive_reference", "validation_reference"]}:
+            return False
+        if not audit_validation(validation):
+            return False
+        frozen = load(work["frozen_reference"])
+        if (
+            m.authenticate(Path(work["upstream_method"]), Path(work["upstream_rows"]))
+            != frozen["authentication"]
+        ):
+            return False
+        for ref in work["sources"] + work["shards"] + validation.get("raw_references", []):
+            if reference(Path(ref["path"])) != ref:
+                return False
+        if frozen["authentication"]["passed"] and work["preconditions_checked"]["passed"]:
+            if (
+                frozen["fixtures"] != c.fixtures()
+                or frozen["plan"] != json.loads(json.dumps(c.freeze()))
+                or load(work["method_reference"]) != m.method()
+            ):
+                return False
+        return bool(value == build(work, validation, Path(value["publication_output"])))
+    except (OSError, ValueError, KeyError, TypeError):
+        return False

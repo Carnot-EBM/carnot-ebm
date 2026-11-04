@@ -1,0 +1,93 @@
+..F...F......                                                            [100%]
+=================================== FAILURES ===================================
+_________________ test_semantics_metamorphisms_and_real_costs __________________
+
+    def test_semantics_metamorphisms_and_real_costs():
+        """SCENARIO-REPORT-8791-INTERVENTIONS: absence is unknown and alternatives are accepted."""
+        rows = m.measure([r["input"] for r in c.fixtures()])
+        assert len(rows) == 72
+>       assert m.audit(c.fixtures(), rows)
+E       AssertionError: assert False
+E        +  where False = <function audit at 0x7fc10d169e40>([{'condition': 'clean_support', 'expected': 'support', 'input': {'facts': [['w', 'r0', 'a', True], ['w', 'r1', 'b', Tr...adictory': False, 'decision': 'insufficient', 'models_examined': 12, 'satisfiable_outcomes': [False, True]}, ...}, ...], [{'arm': 'local_record', 'cpu_time_s': 0.000278182, 'decision': 'support', 'evaluator_invocations': 2, ...}, {'arm': '.....}, {'arm': 'joint_symbolic', 'cpu_time_s': 0.000427792, 'decision': 'support', 'evaluator_invocations': 1, ...}, ...])
+E        +    where <function audit at 0x7fc10d169e40> = m.audit
+E        +    and   [{'condition': 'clean_support', 'expected': 'support', 'input': {'facts': [['w', 'r0', 'a', True], ['w', 'r1', 'b', Tr...adictory': False, 'decision': 'insufficient', 'models_examined': 12, 'satisfiable_outcomes': [False, True]}, ...}, ...] = <function fixtures at 0x7fc10d16a520>()
+E        +      where <function fixtures at 0x7fc10d16a520> = c.fixtures
+
+tests/python/test_evidence_intervention_methods_8791.py:69: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8791] phase=tiny_controls completed=18 pending=54
+[exp8791] phase=tiny_controls completed=36 pending=36
+[exp8791] phase=tiny_controls completed=54 pending=18
+[exp8791] phase=tiny_controls completed=72 pending=0
+[exp8791] phase=tiny_controls completed=18 pending=54
+[exp8791] phase=tiny_controls completed=36 pending=36
+[exp8791] phase=tiny_controls completed=54 pending=18
+[exp8791] phase=tiny_controls completed=72 pending=0
+_____________________ test_normal_entry_and_blocked_entry ______________________
+
+tmp_path = PosixPath('/tmp/exp8791-private-7ored14u/collection-d1336d411b3b468aab97bf6b46c2e349/0/tmp/test_normal_entry_and_blocked_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc1102f9a60>
+
+    def test_normal_entry_and_blocked_entry(tmp_path, monkeypatch):
+        """REQ-VERIFY-8791: failed owned checks disqualify, while external absence blocks."""
+        monkeypatch.setattr(
+            runner.validator,
+            "validate",
+            runner.previous.private_validation_adapter
+            if hasattr(runner.previous, "private_validation_adapter")
+            else lambda raw, private: runner.previous.private_validation(raw),
+        )
+        output = tmp_path / (m.NAME + ".json")
+        assert runner.main(["--output", str(output)]) == 0
+        value = json.loads(output.read_bytes())
+        work, validation = load(value["primitive_reference"]), load(value["validation_reference"])
+        qualified = deepcopy(validation)
+        qualified.update(
+            receipts=[dict(passed=True)], union=dict(passed=True), coverage=dict(complete=True)
+        )
+>       assert report.build(work, qualified, output)["evidence_interventions_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_evidence_intervention_methods_8791.py:180: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8791] phase=start_no_model_load completed=0 pending=0
+[exp8791] phase=authenticate_history completed=0 pending=0
+[exp8791] phase=seal_future_interventions completed=20 pending=100
+[exp8791] phase=seal_future_interventions completed=40 pending=80
+[exp8791] phase=seal_future_interventions completed=60 pending=60
+[exp8791] phase=seal_future_interventions completed=80 pending=40
+[exp8791] phase=seal_future_interventions completed=100 pending=20
+[exp8791] phase=seal_future_interventions completed=120 pending=0
+[exp8791] phase=methods_and_labels_sealed completed=2880 pending=0
+[exp8205] phase=before_subprocess_input_only_tiny_controls completed=0 pending=1
+[exp8205] phase=after_subprocess_input_only_tiny_controls completed=1 pending=0
+[exp8791] phase=before_scoped_validation completed=0 pending=0
+[exp8205] phase=before_subprocess_private_owned_failure completed=0 pending=1
+[exp8205] phase=after_subprocess_private_owned_failure completed=1 pending=0
+[exp8791] phase=after_scoped_validation completed=0 pending=0
+[exp8791] phase=tiny_controls completed=18 pending=54
+[exp8791] phase=tiny_controls completed=36 pending=36
+[exp8791] phase=tiny_controls completed=54 pending=18
+[exp8791] phase=tiny_controls completed=72 pending=0
+[exp8791] phase=before_terminal_publication completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+[exp8791] phase=terminal_published_disqualified completed=72 pending=0
+[exp8791] phase=tiny_controls completed=18 pending=54
+[exp8791] phase=tiny_controls completed=36 pending=36
+[exp8791] phase=tiny_controls completed=54 pending=18
+[exp8791] phase=tiny_controls completed=72 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_evidence_intervention_methods_8791.py::test_semantics_metamorphisms_and_real_costs
+FAILED tests/python/test_evidence_intervention_methods_8791.py::test_normal_entry_and_blocked_entry
+2 failed, 11 passed, 1 warning in 167.11s (0:02:47)

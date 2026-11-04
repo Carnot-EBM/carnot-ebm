@@ -1,0 +1,323 @@
+"""REQ-REPORT-8791 / REQ-VERIFY-8791: independent truth and sealed qualification."""
+
+from copy import deepcopy
+import json
+from pathlib import Path
+import sys
+
+import pytest
+
+from carnot.reporting import evidence_intervention_methods_8791 as m
+from carnot.reporting import evidence_intervention_corpus_8791 as c
+from carnot.reporting import evidence_intervention_report_8791 as report
+from carnot.reporting import evidence_intervention_runner_8791 as runner
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+from carnot.reporting.v746_retained_evidence import reference, load
+from carnot.reporting.v709_execution import child
+
+
+def test_authentication_and_diagnostics(tmp_path):
+    """REQ-VERIFY-8791: exact producer bytes cannot be replaced with aliases or zero gates."""
+    assert m.authenticate(m.UPSTREAM_METHOD, m.UPSTREAM_ROWS)["passed"]
+    for target in [tmp_path / "absent", tmp_path / "altered.json"]:
+        if target.name == "altered.json":
+            atomic_json(target, dict(experiment_id=8777, evidence_methods_ready_score=0))
+        result = m.authenticate(target, m.UPSTREAM_ROWS)
+        assert not result["passed"]
+        assert {
+            "upstream",
+            "path",
+            "sha256",
+            "check",
+            "field",
+            "operator",
+            "expected",
+            "observed",
+        } <= result["diagnostics"][0].keys()
+    assert not m.authenticate(m.UPSTREAM_METHOD, tmp_path / "absent")["passed"]
+
+
+def test_roster_and_balanced_projection():
+    """REQ-REPORT-8791: reserved graphs never become measured independent worlds."""
+    manifest = c.roster()
+    assert len(manifest["worlds"]) == 120
+    assert {r["edge_count"] for r in manifest["worlds"]} == {11, 12, 13}
+    assert manifest["disjoint"] and manifest["reserved_learning_edge_counts"] == [8, 9, 10]
+    fixtures = c.fixtures()
+    assert len(fixtures) == 24
+    assert c.audit(fixtures)
+    assert len({r["world_id"] for r in fixtures}) == 1
+    assert {r["condition"] for r in fixtures} == set(c.CONDITIONS)
+    for r in fixtures:
+        assert set(r["input"]) == {"facts", "query"}
+        assert c.tokens(r["input"]) == r["token_bin"]
+    for bin_size in c.BINS:
+        group = [r for r in fixtures if r["token_bin"] == bin_size]
+        assert sum(r["expected"] == "support" for r in group) == 6
+    for field, value in [("expected", "refute"), ("token_bin", 7), ("condition", "hidden")]:
+        bad = deepcopy(fixtures)
+        bad[0][field] = value
+        assert not c.audit(bad)
+    with pytest.raises(ValueError, match="padding"):
+        c.pad(fixtures[0]["input"], 1)
+
+
+def test_semantics_metamorphisms_and_real_costs():
+    """SCENARIO-REPORT-8791-INTERVENTIONS: absence is unknown and alternatives are accepted."""
+    rows = m.measure([r["input"] for r in c.fixtures()])
+    assert len(rows) == 72
+    assert m.audit(c.fixtures(), rows)
+    for i, fixture in enumerate(c.fixtures()):
+        row = rows[i * 3 + 2]
+        assert row["decision"] == fixture["expected"]
+        assert row["primitive_operations"] > row["evaluator_invocations"]
+        assert row["predicate_inspections"] > 0
+        renamed = c.rename(fixture["input"])
+        assert m.strong(renamed) == row["decision"]
+    for payload, expected in c.counterexamples():
+        assert m.strong(payload) == expected
+    assert m.strong(dict(facts=[], query=[["a", "r", "b"]])) == "insufficient"
+    assert m.strong(dict(facts=[["a", "r", "b", False]], query=[["a", "r", "b"]])) == "refute"
+    long = dict(facts=[], query=[["a", str(i), "b"] for i in range(6)])
+    assert m.evaluate("local_record", long)[1] == 5
+    with pytest.raises(ValueError, match="arm"):
+        m.evaluate("bad", long)
+    for field in ["label", "condition", "world_id"]:
+        with pytest.raises(ValueError, match="input_fields"):
+            m.measure([dict(long, **{field: "leaked"})])
+    bad = deepcopy(rows)
+    bad[0]["decision"] = "invented"
+    assert not m.audit(c.fixtures(), bad)
+    assert not m.audit(c.fixtures(), rows[:-1])
+
+
+def test_freeze_before_results_and_preconditions(tmp_path, monkeypatch):
+    """REQ-VERIFY-8791: projections use measured clocks and memory separately from acceptance."""
+    pre = runner.preconditions(tmp_path)
+    assert pre["passed"] and pre["resource_projection"]["measured_probe_seconds"] >= 0
+    assert pre["resource_projection"]["reserved_validation_seconds"] == 900
+    method = m.method()
+    assert method["MODEL_SPECS"] == [] and method["maximum_evaluator_invocations"] == 5
+    monkeypatch.setattr(
+        runner.yaml, "safe_load", lambda _: dict(retired=[dict(experiment_id=8791)])
+    )
+    assert not runner.preconditions(tmp_path)["passed"]
+
+
+@pytest.fixture()
+def private_artifact(tmp_path):
+    """Real CLI children write only private artifacts, including deliberate failed validation."""
+    output = tmp_path / (m.NAME + ".json")
+    receipt = child(
+        "private8791",
+        [sys.executable, m.CLI, "--private-control", "--output", str(output)],
+        tmp_path / "logs",
+        deadline=120,
+    )
+    assert receipt["passed"]
+    return output
+
+
+def test_cli_terminal_and_rehashed_attacks(private_artifact, tmp_path):
+    """SCENARIO-VERIFY-8791-REPLAY: fresh replay rejects rewritten reductions and primitive seals."""
+    value = json.loads(private_artifact.read_bytes())
+    assert (
+        value["verdict_class"] == "disqualified"
+        and value["evidence_interventions_ready_score"] == 0
+    )
+    assert report.replay(private_artifact)
+    replay = child(
+        "cold8791",
+        [sys.executable, m.CLI, "--cold-replay", str(private_artifact)],
+        tmp_path / "cold",
+        deadline=60,
+    )
+    assert replay["passed"]
+    bad = deepcopy(value)
+    bad["rows"][0]["decision"] = "tampered"
+    bad.pop("reproducibility_checksum")
+    bad["reproducibility_checksum"] = canonical_hash(bad)
+    altered = tmp_path / "tamper.json"
+    atomic_json(altered, bad)
+    assert not report.replay(altered)
+    assert not report.replay(tmp_path / "absent")
+    work_path = Path(value["primitive_reference"]["path"])
+    work = load(value["primitive_reference"])
+    work["run_date"] = "forged"
+    atomic_json(work_path, work)
+    value["primitive_reference"] = reference(work_path)
+    atomic_json(altered, value)
+    assert not report.replay(altered)
+
+
+def test_future_interventions_are_sealed_without_arm_execution():
+    """REQ-REPORT-8791: all future variants have matched bins and independently sealed labels."""
+    plan = c.freeze()
+    assert len(plan["inputs"]) == len(plan["labels"]) == 2880
+    assert len(plan["length_balance_rows"]) == 240
+    assert all(r["passed"] for r in plan["length_balance_rows"])
+    assert all(set(r["input"]) == {"facts", "query"} for r in plan["inputs"])
+    assert not set(plan["inputs"][0]["input"]) & {"expected", "condition"}
+
+
+def test_normal_entry_and_blocked_entry(tmp_path, monkeypatch):
+    """REQ-VERIFY-8791: failed owned checks disqualify, while external absence blocks."""
+    monkeypatch.setattr(
+        runner.validator,
+        "validate",
+        runner.previous.private_validation_adapter
+        if hasattr(runner.previous, "private_validation_adapter")
+        else lambda raw, private: runner.previous.private_validation(raw),
+    )
+    output = tmp_path / (m.NAME + ".json")
+    assert runner.main(["--output", str(output)]) == 0
+    value = json.loads(output.read_bytes())
+    work, validation = load(value["primitive_reference"]), load(value["validation_reference"])
+    qualified = deepcopy(validation)
+    qualified.update(
+        receipts=[dict(passed=True)], union=dict(passed=True), coverage=dict(complete=True)
+    )
+    assert report.build(work, qualified, output)["evidence_interventions_ready_score"] == 1
+    blocked = tmp_path / "blocked" / output.name
+    assert (
+        runner.main(["--output", str(blocked), "--upstream-method", str(tmp_path / "absent")]) == 0
+    )
+    blocked_value = json.loads(blocked.read_bytes())
+    assert blocked_value["verdict_class"] == "blocked" and blocked_value["completed_count"] == 0
+    assert report.replay(blocked)
+    bad_validation = deepcopy(validation)
+    bad_validation["receipts"] = []
+    assert report.build(work, bad_validation, output)["verdict_class"] == "disqualified"
+
+
+def test_cli_arguments_and_input_only_boundary(tmp_path):
+    """REQ-VERIFY-8791: serialized controls reject metadata and protect production output."""
+    for arguments in [
+        ["--date", "20261103"],
+        ["--private-control"],
+        ["--decide-input", str(tmp_path / "none")],
+    ]:
+        with pytest.raises(SystemExit):
+            runner.main(arguments)
+    path, out = tmp_path / "inputs.json", tmp_path / "decisions.json"
+    atomic_json(path, dict(rows=[c.fixtures()[0]["input"]]))
+    assert runner.main(["--decide-input", str(path), "--decisions", str(out)]) == 0
+    assert len(json.loads(out.read_bytes())["rows"]) == 3
+    assert runner.main(["--cold-replay", str(tmp_path / "none")]) == 1
+
+
+def test_cost_instrumentation_and_historical_negative_controls(monkeypatch):
+    """REQ-VERIFY-8791: execute instrumentation directly and preserve historical rejection paths."""
+    m.instruction_counter(test_cost_instrumentation_and_historical_negative_controls.__code__, 0)
+    assert list(m.Meter([1, 2])) == [1, 2]
+    for fixture in c.fixtures():
+        for arm in m.ARMS:
+            assert m.evaluate(arm, fixture["input"])[1] <= 5
+    real_freeze = m.history.freeze
+    monkeypatch.setattr(m.history, "freeze", lambda _: dict(passed=False))
+    assert not m.authenticate(m.UPSTREAM_METHOD, m.UPSTREAM_ROWS)["passed"]
+    monkeypatch.setattr(m.history, "freeze", real_freeze)
+    monkeypatch.setattr(m.history, "audit", lambda *args: False)
+    assert not m.authenticate(m.UPSTREAM_METHOD, m.UPSTREAM_ROWS)["passed"]
+
+
+def test_missing_dependency_blocks_and_failed_child_disqualifies(tmp_path, monkeypatch):
+    """REQ-VERIFY-8791: external failure never starts decisions; failed owned work cannot block."""
+    monkeypatch.setattr(
+        runner.validator, "validate", lambda raw, private: runner.previous.private_validation(raw)
+    )
+    real_pre = runner.preconditions
+
+    def absent(private):
+        raise OSError("private scratch unavailable")
+
+    monkeypatch.setattr(runner, "preconditions", absent)
+    output = tmp_path / "blocked" / (m.NAME + ".json")
+    assert runner.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_bytes())["verdict_class"] == "blocked"
+    monkeypatch.setattr(runner, "preconditions", real_pre)
+
+    def failed_child(*args, **kwargs):
+        return dict(passed=False)
+
+    monkeypatch.setattr(runner, "child", failed_child)
+    output = tmp_path / "failed" / (m.NAME + ".json")
+    assert runner.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_bytes())["verdict_class"] == "disqualified"
+
+
+def test_serialized_hidden_fields_are_rejected(tmp_path):
+    """REQ-VERIFY-8791: a real child cannot consume an evaluator-only condition tag."""
+    path = tmp_path / "leaked.json"
+    atomic_json(path, dict(rows=[dict(c.fixtures()[0]["input"], condition="hidden")]))
+    receipt = child(
+        "reject_condition",
+        [
+            sys.executable,
+            m.CLI,
+            "--decide-input",
+            str(path),
+            "--decisions",
+            str(tmp_path / "out.json"),
+        ],
+        tmp_path / "logs",
+        expected=1,
+    )
+    assert receipt["passed"] and "input_fields" in Path(receipt["stderr_path"]).read_text()
+
+
+def test_readiness_diagnostics_and_source_drift(tmp_path, monkeypatch):
+    """REQ-VERIFY-8791: missing fields, zero, foreign identity and changed source remain distinct."""
+    for producer, check in [
+        ([], "rejected_producer"),
+        ({}, "missing_field"),
+        ({"evidence_methods_ready_score": 0}, "observed_zero"),
+        ({"evidence_methods_ready_score": 1, "task_id": "alias"}, "rejected_producer"),
+    ]:
+        path = tmp_path / "producer.json"
+        atomic_json(path, producer)
+        result = m.authenticate(path, m.UPSTREAM_ROWS)
+        assert result["diagnostics"][0]["check"] == check
+    real_reference = m.reference
+    selected = m.ROOT / m.original.OWNED[0]
+
+    def changed_reference(path):
+        value = real_reference(path)
+        return dict(value, sha256="changed") if path == selected else value
+
+    monkeypatch.setattr(m, "reference", changed_reference)
+    result = m.authenticate(m.UPSTREAM_METHOD, m.UPSTREAM_ROWS)
+    assert (
+        not result["passed"] and result["diagnostics"][0]["diagnostic"] == "historical_source_drift"
+    )
+
+
+def test_replay_reconstructs_despite_repaired_seals(private_artifact, tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8791-REPLAY: repaired hashes cannot authenticate corrupt oracle labels."""
+    value = json.loads(private_artifact.read_bytes())
+    work = load(value["primitive_reference"])
+    with monkeypatch.context() as patch:
+        patch.setattr(report, "audit_validation", lambda _: False)
+        assert not report.replay(private_artifact)
+    with monkeypatch.context() as patch:
+        patch.setattr(m, "authenticate", lambda *args: dict(passed=False))
+        assert not report.replay(private_artifact)
+    real_reference = report.reference
+    with monkeypatch.context() as patch:
+        patch.setattr(
+            report, "reference", lambda path: dict(real_reference(path), sha256="changed")
+        )
+        assert not report.replay(private_artifact)
+    frozen_path = Path(work["frozen_reference"]["path"])
+    frozen = load(work["frozen_reference"])
+    frozen["fixtures"][0]["expected"] = "refute"
+    atomic_json(frozen_path, frozen)
+    work["frozen_reference"] = reference(frozen_path)
+    work["shards"] = [reference(Path(r["path"])) for r in work["shards"]]
+    work_path = Path(value["primitive_reference"]["path"])
+    atomic_json(work_path, work)
+    value["primitive_reference"] = reference(work_path)
+    seal_path = work_path.parent / "independent_seal.json"
+    atomic_json(seal_path, {k: value[k] for k in ["primitive_reference", "validation_reference"]})
+    atomic_json(private_artifact, value)
+    assert not report.replay(private_artifact)

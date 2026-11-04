@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-11-04 UTC — Fix Exp8791 producer type diagnostics
+
+- Reject non-object producer JSON before dictionary coercion while retaining
+  exact-byte verification for producer objects and historical sources.
+- Extend the existing diagnostic regression with null, boolean, numeric,
+  string and key/value pair array inputs; preserve all original assertions.
+- Keep the conductor, historical code and primary research artifacts intact.
+- Pass all 94 conductor-subset tests, 50 private qualification/E2E tests and
+  ten repair-gate tests (141 distinct). Fresh unit/child coverage is 377/377
+  statements with no exclusions. Scoped lint, format, strict types, spec
+  tracing, terminal validators and outside-checkout cold replay pass.
+- Retain the existing global reconciliation debt: stale architecture date
+  and 1,142 missing spec references. The full repository suite was not rerun.
+  Receipts: `/var/tmp/carnot-8791-repair-njbh608h/`.
+
 ## 2026-11-04 UTC — Fix V753 preflight cost projection
 
 - Measure dependency/custody setup separately from repeatable authority parsing;

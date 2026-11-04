@@ -1,0 +1,83 @@
+{
+  "MODEL_SPECS": [],
+  "arms": [
+    "local_record",
+    "evidence_set",
+    "joint_symbolic"
+  ],
+  "bins": [
+    1024,
+    1536
+  ],
+  "evidence_set": "unchanged V751 decide; all global conflicts insufficient",
+  "frozen_before_evaluation": true,
+  "future_primary": "world-cluster paired robustness to order/length versus sensitivity to independently changed truth; no population comparison in this qualification",
+  "implementation_references": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/evidence_intervention_methods_8791.py",
+      "sha256": "sha256:14dffd0724f080aaea4c6b359b13f4a7de03fabcf2fa3fbf5ef5a1852ff1eea2"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/evidence_intervention_corpus_8791.py",
+      "sha256": "sha256:632c9dd68b234f871ca750bb8bad0bbd97456428ae38b21d5ca4270a815a9f63"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/evidence_intervention_report_8791.py",
+      "sha256": "sha256:319bb0c2e49cbf5efdc864d85012459280a4f9c59e2630a36f7d811503424b47"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/evidence_intervention_runner_8791.py",
+      "sha256": "sha256:830de2b2cbdeee12ee50164b4b6628b4ca972091536f1912798e715b4a071b02"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8791_v753_evidence_intervention_methods.py",
+      "sha256": "sha256:5164090f0077bbfb0a0eab3e870fe1c49554ba96d23a1ea7d68af25ad15c859b"
+    }
+  ],
+  "joint_symbolic": "complete shared assignment sufficiency; explicit signed falsity only; any global conflict insufficient; alternative witnesses accepted",
+  "local_record": "original five-premise interface ceiling, no shared joins",
+  "maximum_evaluator_invocations": 5,
+  "original_method": {
+    "arms": [
+      "local_record",
+      "joint_symbolic",
+      "evidence_set"
+    ],
+    "early_exit_between_units": false,
+    "feature_allowlist": [
+      "facts",
+      "query"
+    ],
+    "maximum_evaluator_invocations": 5,
+    "opt_in": true,
+    "schema": "carnot.v751.evidence-set.v1",
+    "seed": 7518768,
+    "semantics": "Open world; absence unknown; explicit opposite can refute; any conflict insufficient.",
+    "split_design": "60 distinct four-edge development graphs; 120 distinct five-edge evaluation graphs; disjoint entities, templates and graph isomorphism classes",
+    "statistical_protocol": {
+      "cluster": "world_id",
+      "comparators": 2,
+      "draws": 10000,
+      "familywise_confidence": 0.975,
+      "individual_two_sided_confidence": 0.9875,
+      "multiplicity": "Bonferroni two comparisons",
+      "paired": true,
+      "percentile_indices": [
+        62,
+        9937
+      ],
+      "primary": "macro three-class error averaged per evaluation world",
+      "promotion": "both lower improvements > 0; no added false acceptance or valid rejection; exact correct invariance",
+      "seed": 7518768
+    }
+  },
+  "primitive_budget_definition": {
+    "fairness": "interface ceiling is not an equal primitive-work budget",
+    "interface": "at most five evaluator calls; joint and evidence_set each use one batched call",
+    "predicate_inspections": "all input facts/query visits including parse and repeated scans",
+    "primitive_limit": null,
+    "primitive_operations": "input-record inspections plus evaluator invocations; not an equal computation budget",
+    "python_instruction_count": "measured Python VM operations, runtime cache dependent; C builtin internals excluded"
+  },
+  "token_definition": "Unicode words or single non-whitespace punctuation in canonical JSON; protocol tokens, not LLM tokens"
+}

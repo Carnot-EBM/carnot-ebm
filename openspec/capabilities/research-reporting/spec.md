@@ -105369,3 +105369,31 @@ and outside-checkout cold replay pass with 100 percent current/original
 statement coverage. The existing implementation is unchanged and continues to
 grant administrative qualification only. Receipts are retained under
 `results/raw/carnot-v753-recheck-qs7qlka3/`.
+
+## REQ-REPORT-8791: Freeze length-balanced evidence interventions
+
+Authenticate exact Exp8777 methods and Exp8779 raw decisions without reopening
+exposed comparisons. Freeze120 canonical worlds with11–13 edges, disjoint from
+all V751/V752 structures and the reserved8–10-edge learning family. Seal labels
+and condition tags outside facts/query. Pair six conditions across two orders
+and two exact protocol-token bins. Each bin has equal supported and unsupported
+counts. Padding uses relations absent from the query. Independently enumerate
+truth, including explicit tiny counterexamples. Freeze local_record, unchanged
+evidence_set and a strong joint_symbolic with sufficiency, shared bindings,
+conflicts and alternative witnesses before evaluation. Count actual predicate
+inspections and Python primitive operations separately from five interface calls.
+Execute only tiny qualification controls; the120-world comparison is deferred.
+
+### SCENARIO-REPORT-8791-INTERVENTIONS
+
+Renaming, order and irrelevant padding preserve truth. Omission, mismatched
+bindings and signed contradictions change support to insufficiency. Missing
+premises remain unknown. A valid alternative proof remains supported. Preserve
+any original arm failure without repairing it. Readiness requires authenticated
+history, independent truth, exact balance and strong-reference agreement.
+Constructed symbolic qualification establishes no natural extraction benefit.
+
+Implementation20261104: `evidence_intervention_methods_8791` freezes unchanged
+V751 semantics and the strong reference before tiny evaluation. The corpus
+module seals2880 balanced future inputs and independent evaluator records.
+The terminal artifact owns qualification; no120-world comparison is executed.
