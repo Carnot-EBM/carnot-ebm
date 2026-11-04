@@ -58255,3 +58255,31 @@ Private CLI controls publish disqualified with zero readiness on real failed
 validation. Missing file, missing readiness field, zero readiness and rejected
 producer retain exact upstream/path/hash/check/field/operator/expected/observed
 diagnostics. Changed primitives, source bytes, decisions and summaries reject.
+
+## REQ-VERIFY-8783: Seal producer and consumer qualification
+
+Write failing requirement-linked tests first. Freeze the descriptor, exact nodes,
+source/extension identities, private disk preconditions and resource projection.
+Use bounded serial children with flushed progress and a heartbeat at most60s.
+Retain argv, normal exits, exact node outcomes, JUnit, coverage SQLite and log
+hashes. Require100 percent newly owned executable statements, scoped consumers,
+Ruff check/format, strict mypy, explicit spec tracing and private E2E-018/021.
+Keep the single full-suite health diagnostic separate from scoped acceptance.
+
+### SCENARIO-VERIFY-8783-REPLAY
+
+Unchanged adversarial and strict row validators accept terminal bytes before
+atomic publication. Fresh cold replay reconstructs all fields from independently
+sealed operands and rejects changed identity, primitives or validation. Failed
+owned checks disqualify and zero readiness. Missing external evidence is terminal
+blocked with the exact upstream/path/hash/check/field/operator/expected/observed.
+Private controls cannot write production results. Ops and BMAD reconciliation
+are conductor-owned for this task.
+
+Implementation20261103 for REQ-VERIFY-8783:16 private tests cover exact identity,
+real durable CLI children, restart parity, original independent replay seals,
+consumer alias rejection and failed owned checks. Preflight covered all229 owned
+statements without exclusions. The production collector freezes exact node
+inventories, preserves JUnit and child SQLite, and runs the private E2E-018/021
+nodes, Ruff, strict mypy and spec tracing. Terminal publication uses unchanged
+scanners and cold replay. A single bounded full-suite diagnostic remains separate.

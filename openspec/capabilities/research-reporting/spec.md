@@ -105170,3 +105170,32 @@ All8640 arm observations are retained; exposed and new metrics remain separate.
 A perfect comparator yields no benefit. Complete authenticated execution can
 release evidence_rows_ready_score=1 even for a scientific null. MODEL_SPECS=[];
 model loads, generation and numerical training calls are zero.
+
+## REQ-REPORT-8783: Bind a fresh durable producer to its exact task
+
+Bind one descriptor for exp8783-durable-producer-identity, milestone2026.11.752,
+its declared deliverable and the current invocation. Pass it through fresh
+Python, JSON-native and resident-native ordinary windows, publication, cold
+replay and consumer authentication. Run one matched32-update middle window per
+arm with a process restart at2048. Authenticate Exp8771 ordinary states, archived
+V747 authority, source bytes, native binary and retained parity, acknowledgement,
+restart and synthetic threshold controls. A preserved roadmap may replace a
+moving historical roadmap only with exactly the original SHA-256.
+
+### SCENARIO-REPORT-8783-IDENTITY
+
+A published identifier different from the exact task contract rejects, including
+an alias whose candidate and primitive hashes have been recomputed. Both current
+primary readers select the exact new identity. The old Exp8772 mismatch and cost
+intervals stay outside current hardware evidence. Readiness requires complete
+matched execution, exact restart parity, full consumers and owned coverage.
+No model loads or calls occur; qualification makes no throughput or learning claim.
+
+Implementation20261103 for REQ-REPORT-8783: durable_producer_identity_8783 and
+its thin runner/CLI bind the exact descriptor throughout three fresh matched
+ordinary windows and both primary readers. The preserved V751 design is used
+only under its original hash; archived V747 authority and retained lifecycle
+controls remain authenticated. Historical aliased intervals are excluded.
+The16 new private tests pass; preflight covered229 owned statements. Production
+acceptance retains a separate fresh scoped validation and repository health
+receipt. Ops and BMAD reconciliation remain conductor-owned.
