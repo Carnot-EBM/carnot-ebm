@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.753",
+  "generated_at": "2026-11-04T09:41:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 35.4,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Reconcile twelve outcomes and close unchanged research continuations",
+      "duration_minutes": 18.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify original failure publication and bind twelve independent task slots",
+      "duration_minutes": 10.26,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Seal length-balanced evidence interventions and strong solver controls",
+      "duration_minutes": 6.93,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Separate timer overhead from process variation on durable update windows",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.753 completed 4 synthesis-only experiments (0 compute-bound) in 35.4 minutes (35 minutes / 0.6 hours) of wall time, averaging 9 minutes per experiment under disk-mtime reconstruction (retro_timing_fallback after live git-log found 0 commits). Wall time was led by 'Reconcile twelve outcomes and close unchanged research continuations' (18.18 minutes / 18min), 'Qualify original failure publication and bind twelve independent task slots' (10.26 minutes / 10min), 'Seal length-balanced evidence interventions and strong solver controls' (6.93 minutes / 7min), and 'Separate timer overhead from process variation on durable update windows' (0.03 minutes / 0min). Because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 49C) is expected non-GPU synthesis behavior.",
+  "bottlenecks_identified": [
+    "Live git-log timing collection found 0 commits, requiring fallback to disk-mtime reconstruction (retro_timing_fallback) for all 4 completed experiments across 35.4 minutes (35 minutes / 0.6 hours) of milestone wall time.",
+    "Across the 4 synthesis-only experiments (averaging 9 minutes per experiment, with 0 compute-bound experiments), wall time concentrated in 'Reconcile twelve outcomes and close unchanged research continuations' (18.18 minutes / 18min) and 'Qualify original failure publication and bind twelve independent task slots' (10.26 minutes / 10min), ahead of 'Seal length-balanced evidence interventions and strong solver controls' (6.93 minutes / 7min) and 'Separate timer overhead from process variation on durable update windows' (0.03 minutes / 0min)."
+  ],
+  "improvements_suggested": [
+    "Restore commit-anchored git-log timing capture so milestone retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback when live git-log finds 0 commits).",
+    "Template multi-slot outcome reconciliation and failure-publication qualification artifacts to reduce synthesis turnaround on tasks such as 'Reconcile twelve outcomes and close unchanged research continuations' (18.18 minutes / 18min) and 'Qualify original failure publication and bind twelve independent task slots' (10.26 minutes / 10min).",
+    "Free the resident 2856MB Python process (PID 1913316 on GPU 0, holding 2866/24576MB / 12% at 0% utilization and 49C across 2282.7s CPU / 141491s wall) when unused, or batch 8-16 questions per forward pass for a 4-8x throughput improvement when single-process Python inference is active; do not enforce DualGPURunner unless 2+ models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair git-log commit visibility for milestone timing telemetry so future runs avoid the 0-commit retro_timing_fallback disk-mtime path.",
+    "Automate schema and slot-binding validation for twelve-slot synthesis capstone and qualification steps ('Reconcile twelve outcomes and close unchanged research continuations' at 18.18 minutes / 18min and 'Qualify original failure publication and bind twelve independent task slots' at 10.26 minutes / 10min).",
+    "Reclaim the 2856MB resident Python process (PID 1913316 on GPU 0, 2866/24576MB / 12% allocated at 0% utilization) during synthesis-only milestones or apply 8-16 question batching per forward pass for 4-8x throughput gain during active single-model inference."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "All 4 experiments in milestone 2026.11.753 were synthesis-only (0 compute-bound) over 35.4 minutes (35 minutes / 0.6 hours, averaging 9 minutes per experiment), so gpu_idle_on_compute_bound_tasks is null and 0% utilization on GPU 0 is normal rather than a GPU bottleneck. DualGPURunner was not applicable because 0 compute-bound tasks and only 1 resident Python process (PID 1913316) were present."
+}

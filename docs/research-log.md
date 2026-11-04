@@ -7610,6 +7610,12 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 7 compute-bound experiments (0 synthesis-only) finished in 69.1 wall-time minutes (69 minutes / 1.2 hours, averaging 10 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by measuring complete ordinary update costs with low-overhead component clocks (17.78 min / 18min), binding thirteen tasks and admitting independent branch inputs (17.53 min / 18min), qualifying evidence-set failure publication with original truth controls (14.83 min / 15min), reconciling thirteen outcomes and closing unsupported continuations (9.25 min / 9min), and measuring evidence sufficiency on exposed and unseen graph families (7.68 min / 8min); locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner did not apply to the single Python inference process on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 0% utilization, 46C, PID 1913316 at 2856MB over 2135.4s CPU / 117578s wall), and batching 8-16 questions per forward pass is recommended for a 4-8x throughput improvement.
 - acceptance: no data available this milestone
 
+### Milestone 2026.11.753
+- exp_range: no data available this milestone
+- theme: Operational review of 4 completed synthesis-only experiments (0 compute-bound) across 35.4 wall-time minutes (35 minutes / 0.6 hours, averaging 9 minutes per experiment).
+- key result: honest operational negative — 4 synthesis-only experiments (0 compute-bound) completed in 35.4 wall-time minutes (35 minutes / 0.6 hours, averaging 9 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by reconciling twelve outcomes and closing unchanged research continuations (18.18 min / 18min), qualifying original failure publication and binding twelve independent task slots (10.26 min / 10min), sealing length-balanced evidence interventions and strong solver controls (6.93 min / 7min), and separating timer overhead from process variation on durable update windows (0.03 min / 0min); because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 2866/24576MB / 12%, 49C, 1 Python process PID 1913316 at 2856MB over 2282.7s CPU / 141491s wall) reflects expected behavior for synthesis-only tasks.
+- acceptance: no data available this milestone
+
 
 
 
