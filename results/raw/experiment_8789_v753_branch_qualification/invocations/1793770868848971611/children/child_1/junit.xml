@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="7" time="187.595" timestamp="2026-11-04T00:44:24.621980-05:00" hostname="icbfl1"><testcase classname="results.raw.experiment_8789_v753_branch_qualification.invocations.1793770868848971611.original_family.test_v752_branch_methods_8776" name="test_contract_mutations_and_activation" time="77.630" /><testcase classname="results.raw.experiment_8789_v753_branch_qualification.invocations.1793770868848971611.original_family.test_v752_branch_methods_8776" name="test_protocol_isolation_and_causal_requirements" time="0.337" /><testcase classname="results.raw.experiment_8789_v753_branch_qualification.invocations.1793770868848971611.original_family.test_v752_branch_methods_8776" name="test_runtime_once_absence_and_provenance" time="0.002" /><testcase classname="results.raw.experiment_8789_v753_branch_qualification.invocations.1793770868848971611.original_family.test_v752_branch_methods_8776" name="test_private_cli_replay_and_owned_failure" time="23.018"><failure message="AssertionError: assert ([] == []&#10;  &#10;  Use -v to get more diff and False)&#10; +  where False = &lt;function replay at 0x7f28bcc4fd80&gt;(PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_private_cli_replay_and_ow0/experiment_8776_v752_branch_methods.json'))&#10; +    where &lt;function replay at 0x7f28bcc4fd80&gt; = report.replay">tmp_path = PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_private_cli_replay_and_ow0')
+
+    def test_private_cli_replay_and_owned_failure(tmp_path):
+        """SCENARIO-VERIFY-8776-REPLAY: real private children publish and reject tampering."""
+        output = tmp_path / (api.NAME + ".json")
+        command = [sys.executable, str(api.ROOT / api.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("replay", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "missing")], 1),
+            ("date", ["--date", "20260101"], 2),
+            ("unsafe", ["--private-control"], 2),
+        ]:
+            receipt = child(name, command + args, tmp_path / "logs", expected=expected, deadline=120)
+            assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+        value = json.loads(output.read_bytes())
+        assert value["verdict_class"] == "disqualified"
+        assert all(value[k] == 0 for k in report.SCORES)
+&gt;       assert value["MODEL_SPECS"] == [] and report.replay(output)
+E       AssertionError: assert ([] == []
+E         
+E         Use -v to get more diff and False)
+E        +  where False = &lt;function replay at 0x7f28bcc4fd80&gt;(PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_private_cli_replay_and_ow0/experiment_8776_v752_branch_methods.json'))
+E        +    where &lt;function replay at 0x7f28bcc4fd80&gt; = report.replay
+
+results/raw/experiment_8789_v753_branch_qualification/invocations/1793770868848971611/original_family/test_v752_branch_methods_8776.py:122: AssertionError</failure></testcase><testcase classname="results.raw.experiment_8789_v753_branch_qualification.invocations.1793770868848971611.original_family.test_v752_branch_methods_8776" name="test_independent_scores_and_failed_owned_validation" time="1.535" /><testcase classname="results.raw.experiment_8789_v753_branch_qualification.invocations.1793770868848971611.original_family.test_v752_branch_methods_8776" name="test_validation_uses_repaired_private_archives" time="2.325" /><testcase classname="results.raw.experiment_8789_v753_branch_qualification.invocations.1793770868848971611.original_family.test_v752_branch_methods_8776" name="test_main_dispatch_without_recursive_validation" time="81.888"><failure message="ValueError: candidate_rejected">tmp_path = PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_main_dispatch_without_rec0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f28bbfe7680&gt;
+
+    def test_main_dispatch_without_recursive_validation(tmp_path, monkeypatch):
+        """REQ-VERIFY-8776: production dispatch has the same sealing and publication path."""
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(runner, "Coverage", lambda **kw: SimpleNamespace(start=lambda: None))
+        monkeypatch.setattr(
+            runner,
+            "validate",
+            lambda raw, tracer: dict(
+                receipts=[dict(passed=False)],
+                union=dict(passed=False),
+                coverage=dict(complete=False),
+                raw_references=[],
+                ended_at_utc=runner.now(),
+            ),
+        )
+        output = tmp_path / (api.NAME + ".json")
+&gt;       assert runner.main(["--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8789_v753_branch_qualification/invocations/1793770868848971611/original_family/test_v752_branch_methods_8776.py:227: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v752_branch_runner.py:131: in main
+    published = publish_primary(output, value, lambda candidate: terminal.terminal(candidate, raw))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_main_dispatch_without_rec0/experiment_8776_v752_branch_methods.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'contract': False, 'exclusion': True, 'memory_protocol': True, 'mutation_cont... 'sha256': 'sha256:bae0676342b3f95be81e168a7dd56448d436bbb62e96aaf29390b6ba3e3c5903'}, 'arc_new_outcome_refs': [], ...}
+validator = &lt;function main.&lt;locals&gt;.&lt;lambda&gt; at 0x7f28bcc947c0&gt;
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -&gt; dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+&gt;               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py:73: ValueError</failure></testcase></testsuite></testsuites>

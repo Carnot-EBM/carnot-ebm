@@ -1,0 +1,25 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> results/raw/carnot-v753-fix-validation/raw/experiment_8789_v753_branch_qualification/invocations/1793772095737714931/original_family/test_v752_branch_methods_8776.py:3:1
+   |
+ 1 |   """REQ-REPORT-8776 / REQ-VERIFY-8776: independent administrative custody."""
+ 2 |
+ 3 | / from copy import deepcopy
+ 4 | | import json
+ 5 | | from pathlib import Path
+ 6 | | import sys
+ 7 | | from types import SimpleNamespace
+ 8 | |
+ 9 | | import pytest
+10 | | import yaml
+11 | |
+12 | | from carnot.reporting import v752_branch_methods as api
+13 | | from carnot.reporting import v752_branch_report as report
+14 | | from carnot.reporting import v752_branch_runner as runner
+15 | | from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+16 | | from carnot.reporting.v709_execution import child
+   | |_________________________________________________^
+   |
+help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

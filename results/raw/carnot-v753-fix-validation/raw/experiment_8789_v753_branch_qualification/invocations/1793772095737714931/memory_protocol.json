@@ -1,0 +1,304 @@
+{
+  "architecture": {
+    "energy_normalization": "exp(-energy)",
+    "hidden_dims": [
+      4
+    ],
+    "input_dim": 9
+  },
+  "architecture_tuning": "freeze architecture, clipping, epoch and learning-rate grid before development-only tuning",
+  "arms": [
+    "read_only",
+    "additions_only",
+    "calibration_only",
+    "combined",
+    "shuffled_feedback"
+  ],
+  "bootstrap_draws": 10000,
+  "canonical_tasks_sha256": "472ded8826d2026a662403a8908a9c6fb1a9ef90c3d52b5d3547a65b05b1432b",
+  "causal_gates": [
+    "prediction_sealed_before_label_release",
+    "fixed_read_state_within_query",
+    "no_truth_bearing_features",
+    "delayed_verified_template_addition",
+    "atomic_template_and_coefficient_commit",
+    "duplicate_acknowledgment_rejected",
+    "restart_equals_uninterrupted",
+    "dropped_feedback_never_trains"
+  ],
+  "check_budget": 5,
+  "comparison_family_size": 10,
+  "decision_indicators": [
+    "support",
+    "refute",
+    "insufficient"
+  ],
+  "delay_queries": 8,
+  "development_exposure": "exposed material only",
+  "error_contrasts": [
+    "combined_minus_read_only_false_accept",
+    "combined_minus_read_only_false_reject"
+  ],
+  "evaluation_performed": false,
+  "implementation_certified": false,
+  "independent_streams": 30,
+  "independent_unit": "reset_stream",
+  "inputs": [
+    "visible_signed_facts",
+    "query",
+    "partial_symbolic_checks",
+    "released_verified_feedback"
+  ],
+  "labels_accessible_only_after_prediction_seal": true,
+  "loss": "proper_three_class_Brier",
+  "model": "opt_in_GibbsModel_small_energy_policy",
+  "observed_features": [
+    "checked_predicates",
+    "satisfied_local_predicates",
+    "missing_predicates",
+    "shared_variables",
+    "observed_sign_conflicts",
+    "current_successful_bindings"
+  ],
+  "old_learning_union_authorized": false,
+  "oracle_feedback": true,
+  "pending_capacity": 32,
+  "planned_online_rows": 14400,
+  "primary_Brier_upper_bound_lt": -0.01,
+  "primary_contrasts": [
+    "combined_minus_read_only",
+    "combined_minus_calibration_only"
+  ],
+  "required_manifests": [
+    "40_fit_20_tune_exposed",
+    "30x32_new_worlds",
+    "30x12_disjoint_retention"
+  ],
+  "required_positive_controls": [
+    "actual_changed_checks",
+    "later_decision_change",
+    "oracle_headroom"
+  ],
+  "reset_learned_state_between_streams": true,
+  "retention_and_error_upper_bound_le": 0.02,
+  "retention_checkpoints": [
+    0,
+    16,
+    32
+  ],
+  "retention_contrasts": "three adaptive arms minus read_only at steps16/32",
+  "retention_worlds_per_stream": 12,
+  "seeds": [
+    11,
+    23,
+    37
+  ],
+  "simultaneous_interval_percent": 99.5,
+  "split_isolation": [
+    "canonical_graph_disjoint",
+    "all_surface_siblings_same_split",
+    "fit_and_tune_only_development",
+    "no_retention_updates",
+    "no_stream_tuning"
+  ],
+  "splits": {
+    "fit": 40,
+    "tune": 20
+  },
+  "structural_hashes_disjoint": true,
+  "task_ids": [
+    8790,
+    8792,
+    8797
+  ],
+  "task_operands": [
+    {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8790_v753_delayed_memory_prototype.json",
+      "estimated_wall_time_min": 60,
+      "gated_on": [
+        {
+          "artifact_field": "memory_protocol_ready_score",
+          "op": "==",
+          "upstream": "exp8789-branch-qualification",
+          "value": 1
+        }
+      ],
+      "id": "exp8790-delayed-memory-prototype",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 50,
+      "milestone": "2026.11.753",
+      "per_unit_rows": true,
+      "phase": 1,
+      "prior_failures": [
+        {
+          "addressed_by": "Gate on Exp8789 original private-failure coverage correction; use new disjoint streams and distinct memory/calibration arms. The previous prototype did not execute.",
+          "experiment_id": "exp8116-independent-online-memory",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_owned_validation"
+        },
+        {
+          "addressed_by": "Gate on Exp8789 original private-failure coverage correction; use new disjoint streams and distinct memory/calibration arms. The previous prototype did not execute.",
+          "experiment_id": "exp8766-causal-brier-stream",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Gate on Exp8789 original private-failure coverage correction; use new disjoint streams and distinct memory/calibration arms. The previous prototype did not execute.",
+          "experiment_id": "exp8778-delayed-memory-prototype",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. Exp8778 was never executed because exp8776.memory_protocol_ready_score was zero. This attempt requires the measured original failure-path correction in Exp8789. Memoir motivates fixed reads within a query. No large generator weights change.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; scripts/experiment_template.py; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; python/carnot/reporting/primary_publication.py; python/carnot/learn/constraint_memory.py; python/carnot/pipeline/constraint_template_library.py; python/carnot/learning/continual_constraint_memory.py; python/carnot/memory/transactional_constraint_memory.py; python/carnot/autoresearch/calibrated_decision_benchmark.py; python/carnot/models/gibbs/__init__.py; python/carnot/reporting/evidence_set_methods_8768.py; python/carnot/reporting/evidence_qualification_8777.py\n\nTASK:\nBuild a causal template store and small calibrated energy policy. Deliver results/experiment_8790_v753_delayed_memory_prototype.json. Use scripts/experiments/experiment_8790_v753_delayed_memory_prototype.py as a thin CLI. Store raw evidence in results/raw/experiment_8790_v753_delayed_memory_prototype/. No LLM is needed: MODEL_SPECS=[], inference_substrate_class=no_model_load, zero LLM calls. Record deterministic_verifier, cpu_energy_training, or aggregation_from_upstream_artifacts according to actual work; no large model is loaded.\n\nCONCRETE STEPS:\n0. PRECONDITIONS (before execution): Check private scratch, dependency imports, exact upstream identity, source hashes, and a measured time/memory projection. Missing required resources produce complete_blocked_<resource> with gate_check_summary and no measurement.\n1. Print a flushed progress line at each phase boundary and before and after every model load, generation, benchmark, or subprocess that can take minutes. Print completed and pending counts inside long loops. Emit a parent heartbeat every 60 seconds during long calls; keep every silence gap under 600 seconds. Poll children through tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between them; keep every write call small. Silence can end a task at 1200 seconds despite its 4800-second hard cap. Reserve 900 seconds for validation and terminal publication.\n2. Read the listed sources and prior failures. Add task-specific REQ-* and SCENARIO-* to the relevant existing capability spec before implementation, then write failing tests. Reuse existing modules and thin CLIs. Preserve original assertions and historical input hashes. Use private scratch for tests and CLI children. Do not weaken validation to admit a result. Freeze methods before evaluation; keep resource projections separate from scientific acceptance.\n3. Authenticate Exp8789 memory_protocol_ready_score=1 and its frozen protocol, plus the qualified Exp8777 evidence-method reference. Reuse GibbsModel with input_dim=9 and hidden_dims=[4]: six observed counts plus three decision bits. Features are performed-check count, satisfied local count, missing count, shared-variable count, observed sign conflicts, and successful bindings. Count global information gathering against the same budget. Exclude truth, final full-verifier output, world IDs, condition tags and unavailable checks.\n4. Normalize exp(-energy) over support/refute/insufficient and minimize multiclass Brier loss with bounded SGD and JAX autodiff. Map support/refute to accept/reject only above frozen thresholds, otherwise escalate. Fit on40 exposed development worlds and tune on20 only; freeze learning-rate grid, clipping, steps, seed list and thresholds before tuning. This is small-policy training, not LLM loading.\n5. Implement five nonidentical arms with equal initial head and development template library: read_only, additions_only, calibration_only, combined, shuffled_feedback. Read_only updates neither component; additions_only updates templates; calibration_only updates coefficients; combined updates both; shuffled_feedback permutes released labels within the available released buffer, never future labels. Templates add alpha-normalized join/conflict checks, not cached world answers. Each check costs one of five calls; cap templates at32.\n6. Freeze memory throughout a query, seal probabilities before any release, and commit templates, coefficients, pending prediction IDs and acknowledgments atomically between queries. Test delayed and duplicate release, label injection, unauthorized reads, query-time write rejection, hard exit and exact resume. Use independent truth only as delayed supervision. A constructed gain remains circular_positive.\n7. Generate and seal30 disjoint32-query streams and12 retention worlds per stream with new8-10-edge structures, separate from all exposed V751/V752 graphs and development. Reject isomorphic renamings as new worlds. Three model seeds are nested repeats, not independent samples. Store labels outside policy input. Run only tiny qualification fixtures here, including a positive control where an added general rule changes a later decision and an unrelated-rule negative control.\n8. Emit memory_execution_ready_score only after actual coefficient changes, useful template application on the qualification control, causal ordering and restart parity all pass. Log CPU counter/lookup/check/training/durable operations for later hardware mapping. Do not tune on evaluation or retention worlds.\n9. Run scoped unit and consumer tests with real unit/CLI-child coverage of every owned executable statement, exact collected-node inventories, normal child exits, JUnit and coverage SQLite receipts. Run Ruff check/format, strict mypy on owned Python modules, explicit spec coverage, and private E2E-018/021 where authority/publication paths apply; use E2E-003/004 for native round trips. Preserve all original negative controls. Validate terminal bytes with unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict, then cold-replay sealed primitives and reject rehashed tampering. Failed owned validation is disqualified. Unchanged external absence is terminal blocked, never partial. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primary artifacts, shared validators, generator weights, ARC policy defaults, active roadmap and exclusion manifest. Record scoped validation separately from whole-repository health.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind exact task identity and this invocation; aliases cannot authenticate a producer.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal prefix and exactly one of positive | circular_positive | null | blocked | disqualified | partial. Only retryable unfinished owned work is partial; unchanged external absence is blocked.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* verdict records upstream, path/hash, check, field, operator, expected and observed value; distinguish missing file, missing field, zero and rejected producer.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls: principle: Describe actual compute; small energy-policy training is separate from LLM loading. A skipped model path records zero calls and no_model_load.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, n_samples: principle: Retain every intended unit and arm with raw metric, numerator, denominator, missingness and cost; seeds, surfaces and repeated timings do not create independent units.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Execution-grounded positives are circular_positive; constructed feedback cannot establish natural factuality or hidden-game transfer.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Separate execution readiness from benefit; failed acceptance gates forbid positive classes and quarantined artifacts cannot supply headlines.\npreconditions_checked, duration_s, started_at_utc, ended_at_utc, phase_spans, random_seed, reproducibility_checksum: principle: Preserve real clocks, resources and seeds; never pad a duration floor or reuse another process's clock epoch.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind each imported field and result to immutable operands and explain its evidence boundary.\nrepository_health_reference, scoped_validation_scope: principle: A scoped pass is not a full-repository pass.\nmemory_execution_ready_score, policy_checkpoint, feature_allowlist, memory_schema, memory_template_rows, release_schedule, split_manifest, checkpoint_replay_rows, hardware_operation_counts: principle: Implementation readiness requires a real trained small head, information-adding templates and causal state, independent of eventual benchmark benefit.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8790_v753_delayed_memory_prototype.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Build a causal template store and small calibrated energy policy",
+      "track": "self_learning"
+    },
+    {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8792_v753_causal_template_learning.json",
+      "estimated_wall_time_min": 60,
+      "gated_on": [
+        {
+          "artifact_field": "memory_execution_ready_score",
+          "op": "==",
+          "upstream": "exp8790-delayed-memory-prototype",
+          "value": 1
+        }
+      ],
+      "id": "exp8792-causal-template-learning",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 50,
+      "milestone": "2026.11.753",
+      "per_unit_rows": true,
+      "phase": 2,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp8790 qualifies the newly runnable prototype after original failure-path coverage is fixed. Reset streams replace invalid independence assumptions across causally linked queries; current same-roadmap gates replace the skipped chain.",
+          "experiment_id": "exp8116-independent-online-memory",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_owned_validation"
+        },
+        {
+          "addressed_by": "Exp8790 qualifies the newly runnable prototype after original failure-path coverage is fixed. Reset streams replace invalid independence assumptions across causally linked queries; current same-roadmap gates replace the skipped chain.",
+          "experiment_id": "exp8766-causal-brier-stream",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp8790 qualifies the newly runnable prototype after original failure-path coverage is fixed. Reset streams replace invalid independence assumptions across causally linked queries; current same-roadmap gates replace the skipped chain.",
+          "experiment_id": "exp8531-causal-brier-learning",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp8790 qualifies the newly runnable prototype after original failure-path coverage is fixed. Reset streams replace invalid independence assumptions across causally linked queries; current same-roadmap gates replace the skipped chain.",
+          "experiment_id": "exp8780-causal-template-learning",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. Exp8780 was cascade-skipped after the prototype gate failed. Exp8790 now supplies a separately qualified small policy and causal store. The unit of statistical independence is a reset stream, since earlier feedback changes later decisions.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; scripts/experiment_template.py; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; python/carnot/reporting/primary_publication.py; python/carnot/learning/continual_constraint_memory.py; python/carnot/pipeline/constraint_template_library.py; python/carnot/autoresearch/calibrated_decision_benchmark.py; scripts/experiments/experiment_8790_v753_delayed_memory_prototype.py; results/experiment_8790_v753_delayed_memory_prototype.json; openspec/change-proposals/research-roadmap-vNEXT.md\n\nTASK:\nMeasure future calibrated decisions after delayed constraint additions. Deliver results/experiment_8792_v753_causal_template_learning.json. Use scripts/experiments/experiment_8792_v753_causal_template_learning.py as a thin CLI. Store raw evidence in results/raw/experiment_8792_v753_causal_template_learning/. No LLM is needed: MODEL_SPECS=[], inference_substrate_class=no_model_load, zero LLM calls. Record deterministic_verifier, cpu_energy_training, or aggregation_from_upstream_artifacts according to actual work; no large model is loaded.\n\nCONCRETE STEPS:\n0. PRECONDITIONS (before execution): Check private scratch, dependency imports, exact upstream identity, source hashes, and a measured time/memory projection. Missing required resources produce complete_blocked_<resource> with gate_check_summary and no measurement.\n1. Print a flushed progress line at each phase boundary and before and after every model load, generation, benchmark, or subprocess that can take minutes. Print completed and pending counts inside long loops. Emit a parent heartbeat every 60 seconds during long calls; keep every silence gap under 600 seconds. Poll children through tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between them; keep every write call small. Silence can end a task at 1200 seconds despite its 4800-second hard cap. Reserve 900 seconds for validation and terminal publication.\n2. Read the listed sources and prior failures. Add task-specific REQ-* and SCENARIO-* to the relevant existing capability spec before implementation, then write failing tests. Reuse existing modules and thin CLIs. Preserve original assertions and historical input hashes. Use private scratch for tests and CLI children. Do not weaken validation to admit a result. Freeze methods before evaluation; keep resource projections separate from scientific acceptance.\n3. Authenticate memory_execution_ready_score, split hashes and checkpoint from Exp8790. Run30 independent32-query streams, each from a reset common initial state, with three nested training seeds. Run read_only, additions_only, calibration_only, combined and shuffled_feedback on the same inputs, order and label release. Total planned online rows=14400. No stream or retention label may tune a hyperparameter.\n4. Use fixed delay8, pending capacity32, template capacity32 and at most five paid checks per query. Seal probabilities, typed action, input hash, read-state hash and check trace before releasing eligible feedback. Write memory only between queries. Record constraints newly admitted and applied, parameter deltas, and decisions changed. A full sufficiency-aware symbolic solver runs separately as a costed reference, never as a free policy feature.\n5. At steps0,16,32 evaluate12 held-out retention worlds assigned to each stream without updates. Retention does not release training labels. Drain pending feedback after the final measured prediction and account for drain work separately and in total cost. Never score post-drain predictions as if they were issued before feedback.\n6. Measure full read/check/feature/decision/update/serialization/fsync costs and bytes. Batch JAX evaluation where semantics allow, with compilation timed separately and included in amortized cost. Before scaling, time one full stream including retention; if projected execution exceeds3000 seconds, emit blocked_resource_projection with all intended counts rather than silently shortening the panel.\n7. Use checkpoints between streams. Prove exact restart equivalence on a fixed qualification slice. Publish complete per-query Brier and false-accept/false-reject/escalation rows plus stream aggregates, pending labels and failure rows. Set memory_rows_ready_score and learning_cost_ready_score for complete causal data regardless of benefit. Do not claim improvement before Exp8797 audits the registered contrasts.\n8. Run scoped unit and consumer tests with real unit/CLI-child coverage of every owned executable statement, exact collected-node inventories, normal child exits, JUnit and coverage SQLite receipts. Run Ruff check/format, strict mypy on owned Python modules, explicit spec coverage, and private E2E-018/021 where authority/publication paths apply; use E2E-003/004 for native round trips. Preserve all original negative controls. Validate terminal bytes with unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict, then cold-replay sealed primitives and reject rehashed tampering. Failed owned validation is disqualified. Unchanged external absence is terminal blocked, never partial. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primary artifacts, shared validators, generator weights, ARC policy defaults, active roadmap and exclusion manifest. Record scoped validation separately from whole-repository health.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind exact task identity and this invocation; aliases cannot authenticate a producer.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal prefix and exactly one of positive | circular_positive | null | blocked | disqualified | partial. Only retryable unfinished owned work is partial; unchanged external absence is blocked.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* verdict records upstream, path/hash, check, field, operator, expected and observed value; distinguish missing file, missing field, zero and rejected producer.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls: principle: Describe actual compute; small energy-policy training is separate from LLM loading. A skipped model path records zero calls and no_model_load.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, n_samples: principle: Retain every intended unit and arm with raw metric, numerator, denominator, missingness and cost; seeds, surfaces and repeated timings do not create independent units.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Execution-grounded positives are circular_positive; constructed feedback cannot establish natural factuality or hidden-game transfer.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Separate execution readiness from benefit; failed acceptance gates forbid positive classes and quarantined artifacts cannot supply headlines.\npreconditions_checked, duration_s, started_at_utc, ended_at_utc, phase_spans, random_seed, reproducibility_checksum: principle: Preserve real clocks, resources and seeds; never pad a duration floor or reuse another process's clock epoch.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind each imported field and result to immutable operands and explain its evidence boundary.\nrepository_health_reference, scoped_validation_scope: principle: A scoped pass is not a full-repository pass.\nmemory_rows_ready_score, learning_cost_ready_score, prequential_rows, per_stream_results, memory_admission_rows, parameter_update_rows, constraint_application_rows, retention_rows, pending_feedback_rows, complete_cost_rows, restart_rows: principle: Later decisions and complete costs, with prediction-before-release custody, measure learning rather than movement of weights.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8792_v753_causal_template_learning.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Measure future calibrated decisions after delayed constraint additions",
+      "track": "self_learning"
+    },
+    {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8797_v753_learning_benefit_audit.json",
+      "estimated_wall_time_min": 45,
+      "gated_on": [
+        {
+          "artifact_field": "memory_rows_ready_score",
+          "op": "==",
+          "upstream": "exp8792-causal-template-learning",
+          "value": 1
+        }
+      ],
+      "id": "exp8797-learning-benefit-audit",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 50,
+      "milestone": "2026.11.753",
+      "per_unit_rows": true,
+      "phase": 3,
+      "prior_failures": [
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8658-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "no producer honest_verdict; conductor cascade-skip: upstream retired exp8657-causal-brier-stream"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8644-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "no producer honest_verdict; conductor cascade-skip: upstream retired exp8643-causal-brier-stream"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8672-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "GATE_BLOCK"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8686-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "GATE_BLOCK: Pre-emptive skip: upstream retired (exp8685-causal-brier-stream)"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8700-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "no producer honest_verdict; conductor cascade-skip: upstream retired exp8699-causal-brier-stream"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8728-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "GATE_BLOCKED"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8741-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8753-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8767-learning-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Read newly qualified Exp8792 causal primitives after Exp8789/8790 repair. Audit independent reset streams with nested seeds and a fixed10-contrast family rather than treating linked queries as independent samples.",
+          "experiment_id": "exp8785-memory-benefit-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. Exp8785 never ran because no qualified learning producer existed. Exp8792 supplies sealed predictions and delayed updates from reset streams. The question is whether reusable constraint additions help later decisions beyond coefficient calibration alone.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; scripts/experiment_template.py; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; python/carnot/reporting/primary_publication.py; python/carnot/verify/restricted_decision_audit_8210.py; python/carnot/reporting/evidence_set_analysis_8768.py; results/experiment_8790_v753_delayed_memory_prototype.json; results/experiment_8792_v753_causal_template_learning.json; openspec/change-proposals/research-roadmap-vNEXT.md\n\nTASK:\nAudit later Brier benefit and retention across independent streams. Deliver results/experiment_8797_v753_learning_benefit_audit.json. Use scripts/experiments/experiment_8797_v753_learning_benefit_audit.py as a thin CLI. Store raw evidence in results/raw/experiment_8797_v753_learning_benefit_audit/. No LLM is needed: MODEL_SPECS=[], inference_substrate_class=no_model_load, zero LLM calls. Record deterministic_verifier, cpu_energy_training, or aggregation_from_upstream_artifacts according to actual work; no large model is loaded.\n\nCONCRETE STEPS:\n0. PRECONDITIONS (before execution): Check private scratch, dependency imports, exact upstream identity, source hashes, and a measured time/memory projection. Missing required resources produce complete_blocked_<resource> with gate_check_summary and no measurement.\n1. Print a flushed progress line at each phase boundary and before and after every model load, generation, benchmark, or subprocess that can take minutes. Print completed and pending counts inside long loops. Emit a parent heartbeat every 60 seconds during long calls; keep every silence gap under 600 seconds. Poll children through tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between them; keep every write call small. Silence can end a task at 1200 seconds despite its 4800-second hard cap. Reserve 900 seconds for validation and terminal publication.\n2. Read the listed sources and prior failures. Add task-specific REQ-* and SCENARIO-* to the relevant existing capability spec before implementation, then write failing tests. Reuse existing modules and thin CLIs. Preserve original assertions and historical input hashes. Use private scratch for tests and CLI children. Do not weaken validation to admit a result. Freeze methods before evaluation; keep resource projections separate from scientific acceptance.\n3. Authenticate memory_rows_ready_score and all Exp8792 primitives. Recompute probabilities-to-Brier, typed confusion counts and all denominators without importing aggregate metrics as truth. Require30 independent stream resets,32 issued decisions, three nested seeds and all five arms; missing rows cannot be silently dropped.\n4. Audit every prediction/read-state/release/acknowledgment ordering and feature trace. Detect world-ID or condition leakage, truth-bearing features, held-out label reads, future-label permutation and templates that store answers. Replay actual added constraints on later queries. Prove that claimed additions changed performed checks and at least one later decision on a positive-control slice.\n5. Freeze the primary comparisons as combined minus read_only and combined minus calibration_only for future mean Brier. Use10000 bootstrap draws of whole streams, retaining all seeds and chronological rows within a draw. Require both simultaneous interval upper bounds below -0.01 to claim addition benefit. A loss increase is a negative finding, never a sign-flipped success.\n6. Use a10-comparison Bonferroni family: two primary Brier contrasts; six retention contrasts for additions_only/calibration_only/combined versus read_only at steps16/32; two combined-minus-read_only error contrasts for false accept and false reject. Use99.5-percent intervals for each. Require every retention and error upper bound <=0.02. Report achievable precision and no natural-data or sub-percentage-point claim.\n7. Report shuffled-feedback results, headroom and the costed full solver. If a null occurs without changed checks or oracle headroom, label it uninformative and name the failed positive control. Set learning_audit_ready_score after complete independent recomputation, but learning_benefit_ready_score only when all registered benefit/safety gates pass. Construction-dependent gains remain circular_positive. Never declare partial because an upstream artifact is absent.\n8. Run scoped unit and consumer tests with real unit/CLI-child coverage of every owned executable statement, exact collected-node inventories, normal child exits, JUnit and coverage SQLite receipts. Run Ruff check/format, strict mypy on owned Python modules, explicit spec coverage, and private E2E-018/021 where authority/publication paths apply; use E2E-003/004 for native round trips. Preserve all original negative controls. Validate terminal bytes with unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict, then cold-replay sealed primitives and reject rehashed tampering. Failed owned validation is disqualified. Unchanged external absence is terminal blocked, never partial. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primary artifacts, shared validators, generator weights, ARC policy defaults, active roadmap and exclusion manifest. Record scoped validation separately from whole-repository health.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind exact task identity and this invocation; aliases cannot authenticate a producer.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal prefix and exactly one of positive | circular_positive | null | blocked | disqualified | partial. Only retryable unfinished owned work is partial; unchanged external absence is blocked.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* verdict records upstream, path/hash, check, field, operator, expected and observed value; distinguish missing file, missing field, zero and rejected producer.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls: principle: Describe actual compute; small energy-policy training is separate from LLM loading. A skipped model path records zero calls and no_model_load.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count, n_samples: principle: Retain every intended unit and arm with raw metric, numerator, denominator, missingness and cost; seeds, surfaces and repeated timings do not create independent units.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Execution-grounded positives are circular_positive; constructed feedback cannot establish natural factuality or hidden-game transfer.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Separate execution readiness from benefit; failed acceptance gates forbid positive classes and quarantined artifacts cannot supply headlines.\npreconditions_checked, duration_s, started_at_utc, ended_at_utc, phase_spans, random_seed, reproducibility_checksum: principle: Preserve real clocks, resources and seeds; never pad a duration floor or reuse another process's clock epoch.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind each imported field and result to immutable operands and explain its evidence boundary.\nrepository_health_reference, scoped_validation_scope: principle: A scoped pass is not a full-repository pass.\nlearning_audit_ready_score, learning_benefit_ready_score, per_stream_results, brier_recomputation_rows, retention_rows, simultaneous_intervals, leakage_rows, added_constraint_effect_rows, null_explanations: principle: Proper future loss, retained prior performance and actual new checks distinguish useful learning from parameter motion or leaked feedback.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8797_v753_learning_benefit_audit.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Audit later Brier benefit and retention across independent streams",
+      "track": "self_learning"
+    }
+  ],
+  "template_limit": 32,
+  "template_schema": "alpha_normalized_join_or_conflict_constraint; no stored world answers",
+  "typed_decisions": [
+    "accept",
+    "reject",
+    "escalate"
+  ],
+  "worlds_per_stream": 32
+}

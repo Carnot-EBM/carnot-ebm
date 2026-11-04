@@ -1,0 +1,219 @@
+"""REQ-VERIFY-8789: real original children and independently retained coverage."""
+
+import argparse
+import json
+import os
+from pathlib import Path
+import shutil
+import sys
+import tempfile
+import time
+from typing import Any
+from types import SimpleNamespace
+
+from coverage import Coverage
+
+from carnot.reporting import v753_branch_qualification as a
+from carnot.reporting import v752_capstone_runner as shared
+from carnot.reporting.current_work_receipt import atomic_json
+from carnot.reporting.primary_publication import publish_primary
+from carnot.reporting.v709_execution import child
+from carnot.reporting.v748_collection_contract import namespace
+
+Json = dict[str, Any]
+
+
+def original_root(root: Path) -> Path:
+    """A retained design restores historical authority without changing the active queue."""
+    design = root / a.DESIGN
+    design.parent.mkdir(parents=True, exist_ok=True)
+    design.write_bytes((a.ROOT / a.ARCHIVE).read_bytes())
+    tasks = a.parse_design(design.read_text(), milestone=a.old.MILESTONE)[1]
+    for name in [a.ACTIVE, a.STAGED]:
+        (root / name).write_text(a.yaml.safe_dump(dict(milestone=a.old.MILESTONE, tasks=tasks)))
+    saved = root / a.ARCHIVE
+    saved.write_bytes(design.read_bytes())
+    return root
+
+
+def original_failure(raw: Path) -> Json:
+    """Run the unchanged original CLI and retain its deliberate failed pytest exit."""
+    root = original_root(raw / "original_authority")
+    scratch = Path(tempfile.mkdtemp(prefix="exp8789-original-", dir="/var/tmp"))
+    output = scratch / (a.old.NAME + ".json")
+    config = raw / "original_coverage.ini"
+    config.write_text(
+        f"[run]\nparallel=true\npatch=subprocess\ndata_file={raw}/original_sqlite/.coverage\n[report]\nexclude_lines=\n"
+    )
+    (raw / "original_sqlite").mkdir()
+    receipt = child(
+        "original_private_failure",
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "--rcfile=" + str(config),
+            str(a.ROOT / a.old.CLI),
+            "--private-control",
+            "--root",
+            str(root),
+            "--output",
+            str(output),
+        ],
+        raw / "original_checks",
+        deadline=120,
+    )
+    value = json.loads(output.read_bytes())
+    validation = a.load(value["validation_reference"])
+    failed = validation["receipts"][0]
+    cov = Coverage(data_file=str(raw / "original_sqlite" / ".coverage"), config_file=False)
+    cov.combine(keep=True)
+    cov.save()
+    lines = cov.get_data().lines(str(a.ROOT / a.old.OWNED[2])) or []
+    executed = [n for n in [88, 89, 90, 107] if n in lines]
+    scores = {k: value[k] for k in a.old_report.SCORES}
+    refs = [
+        a.reference(output),
+        value["validation_reference"],
+        value["primitive_reference"],
+        a.reference(Path(cov.config.data_file)),
+    ]
+    shutil.copytree(scratch / "raw", raw / "original_publication")
+    shutil.copyfile(output, raw / "original_failure_primary.json")
+    return dict(
+        passed=receipt["passed"]
+        and failed["normal_exit"]
+        and failed["exit_code"] == 1
+        and value["verdict_class"] == "disqualified"
+        and not any(scores.values())
+        and len(executed) == 4,
+        receipt=receipt,
+        failed_pytest_receipt=failed,
+        readiness_scores=scores,
+        missing_statement_lines_executed=executed,
+        sqlite_reference=refs[-1],
+        references=refs,
+        original_primary_sha256=a.reference(a.ROOT / "results" / (a.old.NAME + ".json"))["sha256"],
+    )
+
+
+def original_suite(raw: Path) -> str:
+    """Keep original test bytes and assertions; bind only their historical fixture paths."""
+    root = original_root(raw / "unit_authority")
+    suite = raw / "original_family" / "test_v752_branch_methods_8776.py"
+    suite.parent.mkdir()
+    suite.write_bytes((a.ROOT / a.old.TESTS[0]).read_bytes())
+    wrapper = suite.parent / "original_cli.py"
+    wrapper.write_text(
+        "import sys\nfrom carnot.reporting.v752_branch_runner import main\n"
+        f"raise SystemExit(main(sys.argv[1:] + ['--root', {str(root)!r}]))\n"
+    )
+    (suite.parent / "conftest.py").write_text(
+        "import pytest\nfrom carnot.reporting import v752_branch_methods as api\n"
+        "@pytest.fixture(autouse=True)\ndef historical_bindings(monkeypatch):\n"
+        f"    monkeypatch.setattr(api, 'DESIGN', {a.ARCHIVE!r})\n"
+        f"    monkeypatch.setattr(api, 'CLI', {str(wrapper)!r})\n"
+    )
+    return os.path.relpath(suite, a.ROOT)
+
+
+def coverage_summary(path: Path, names: list[str]) -> Json:
+    """Read actual executable statement inventories; no exclusion can grant readiness."""
+    cov = Coverage(data_file=str(path), config_file=False)
+    cov.load()
+    rows = []
+    for name in names:
+        _, statements, excluded, missing, _ = cov.analysis2(str(a.ROOT / name))
+        rows.append(dict(path=name, statements=len(statements), excluded=excluded, missing=missing))
+    total = sum(r["statements"] for r in rows)
+    missing_count = sum(len(r["missing"]) for r in rows)
+    return dict(
+        complete=total > 0 and missing_count == 0 and not any(r["excluded"] for r in rows),
+        percent=100 * (total - missing_count) / max(total, 1),
+        files=rows,
+        combined_reference=a.reference(path),
+    )
+
+
+def validate(raw: Path, original: Json) -> Json:
+    """Reuse exact node/JUnit custody and add the measured original failure child."""
+    validator = namespace(shared, "v753_validation")
+    validator.c = SimpleNamespace(**vars(a))
+    validator.c.TESTS = a.TESTS + [original_suite(raw)]
+    validator.c.CONSUMERS = a.CONSUMERS + ["tests/python/test_v752_archive_8776.py"]
+    result = dict(validator.validate(raw))
+    joint = raw / "original_joint"
+    joint.mkdir()
+    for i, ref in enumerate(
+        [result["coverage"]["combined_reference"], original["sqlite_reference"]]
+    ):
+        shutil.copyfile(ref["path"], joint / f".coverage.{i}")
+    cov = Coverage(data_file=str(joint / ".coverage"), config_file=False)
+    cov.combine(keep=True)
+    cov.save()
+    result["original_coverage"] = coverage_summary(joint / ".coverage", a.old.OWNED)
+    result["original_node_inventory"] = [
+        n for n in result["union"]["node_ids"] if "original_family" in n or "test_v752_archive" in n
+    ]
+    result["raw_references"] += [a.reference(joint / ".coverage"), *original["references"]]
+    return result
+
+
+terminal_runner = namespace(shared, "v753_terminal")
+terminal_runner.c = a
+terminal = terminal_runner.terminal
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Only checked terminal bytes become visible to the current roadmap's readers."""
+    a.progress("start_no_model_load")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", choices=["20261104"], default="20261104")
+    parser.add_argument("--root", type=Path, default=a.ROOT)
+    parser.add_argument("--output", type=Path, default=a.ROOT / "results" / (a.NAME + ".json"))
+    parser.add_argument("--private-control", action="store_true")
+    parser.add_argument("--cold-replay", type=Path)
+    args = parser.parse_args(argv)
+    if args.cold_replay:
+        passed = a.replay(args.cold_replay)
+        a.progress("replay_passed" if passed else "replay_rejected")
+        return int(not passed)
+    output = args.output.absolute()
+    if args.private_control and output.resolve().is_relative_to(a.ROOT.resolve()):
+        parser.error("private output must be outside the checkout")
+    raw = output.parent / "raw" / a.NAME / "invocations" / str(time.time_ns())
+    work = a.freeze(args.root, raw, args.date)
+    a.progress("freeze_complete", 12, 0)
+    if args.private_control or not work["preconditions"]["projection_fits"]:
+        work["original_failure"] = dict(passed=False)
+        validation = dict(
+            receipts=[dict(name="private_control", passed=False)],
+            union=dict(passed=False, node_ids=[]),
+            coverage=dict(complete=False),
+            original_coverage=dict(complete=False),
+            raw_references=[],
+            ended_at_utc=a.now(),
+        )
+    else:
+        work["mutation_rows"] = a.mutations(Path(work["root"]), raw / "mutations")
+        a.progress("original_private_failure_before")
+        work["original_failure"] = original_failure(raw)
+        a.progress("original_private_failure_after")
+        validation = validate(raw, work["original_failure"])
+    atomic_json(raw / "work.json", work)
+    atomic_json(raw / "frozen_inputs.json", work)
+    atomic_json(raw / "validation.json", validation)
+    atomic_json(
+        raw / "independent_seal.json",
+        dict(
+            primitive_reference=a.reference(raw / "work.json"),
+            validation_reference=a.reference(raw / "validation.json"),
+        ),
+    )
+    value = a.build(work, validation, output)
+    a.progress("terminal_validation_before")
+    published = publish_primary(output, value, lambda candidate: terminal(candidate, raw))
+    atomic_json(raw / "publication_receipt.json", published)
+    a.progress("published_" + value["verdict_class"], 12, 0)
+    return 0

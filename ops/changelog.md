@@ -1,5 +1,26 @@
 # Carnot — Changelog
 
+## 2026-11-04 UTC — Fix V753 preflight cost projection
+
+- Measure dependency/custody setup separately from repeatable authority parsing;
+  charge setup once while retaining the validation reserve and resource gates.
+- Add regressions for cold setup, setup exhaustion and expensive parsing. Keep
+  every original assertion, the historical source bytes and conductor intact.
+- Execute retained original tests unchanged and lint their canonical source,
+  preserving the repository's existing test policy after relocation.
+- All 64 scoped tests pass, including retained originals and E2E-018/021.
+  Subprocess SQLite covers 322 current plus 300 original statements (100%),
+  with zero exclusions. Ten repair-gate tests and the E2E-018 CLI also pass.
+- The final isolated qualification passes every validation receipt, terminal
+  scanner and standalone cold replay from outside the checkout. No scientific
+  readiness is promoted; the earlier failed lint receipt remains retained.
+- Revalidated the existing repair without further implementation changes:
+  155 distinct scoped tests pass, including the exact conductor subset and
+  64-node qualification. Fresh current/original coverage is 622/622 statements
+  without exclusions. Receipts: `results/raw/carnot-v753-recheck-qs7qlka3/`
+  and `/var/tmp/carnot-v753-recheck-qs7qlka3/`. Global reconciliation still
+  reports the existing architecture-date and spec-reference debt.
+
 ## 2026-11-04 — V753 research plan staged
 
 - Added the V753 reference scan, including November type-aware verification,

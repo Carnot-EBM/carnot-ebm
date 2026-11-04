@@ -58348,3 +58348,51 @@ private disk scratch. Requirement-linked unit/CLI and copied original V751
 assertion tests preserve normal exits, exact JUnit nodes and coverage SQLite.
 The unchanged validators and independent sealed replay control publication.
 Repository-health evidence remains separate from scoped acceptance.
+## REQ-VERIFY-8789: Measure original failure publication without exclusions
+
+Execute the unchanged original Exp8776 private-control runner in a real child.
+Retain its intentional pytest assertion failure, normal process exits and zero
+readiness. Combine original unit and child SQLite coverage; require every
+original owned statement including lines88-90 and107. Preserve all original
+assertions under private authority and retained-input snapshots. Require exact
+node inventories, JUnit, current owned coverage100 percent, scoped consumers,
+Ruff, strict mypy and spec tracing. Validate exact terminal bytes with unchanged
+scanners and cold replay. Reject rehashed tampering. Record full-suite health
+separately. The conductor owns ops/status, changelog and BMAD reconciliation.
+
+### SCENARIO-VERIFY-8789-REPLAY
+
+Missing prerequisites block before measurement. Failed owned validation
+disqualifies and zeros CPU readiness. Original private failure cannot publish
+readiness. Sealed input, receipt, protocol and aggregate mutation rejects replay.
+
+### SCENARIO-VERIFY-8789-PREFLIGHT-COST
+
+Measure one-time dependency imports and custody checks separately from the
+repeatable authority-parsing probe. Charge setup once in the validation
+projection; only repeated parsing cost scales with the planned repetitions.
+Cold dependency setup alone must not cause a false resource block. Exhausted
+time, memory or scratch space and missing tools or imports still block work.
+
+### SCENARIO-VERIFY-8789-CANONICAL-LINT
+
+Execute retained original test bytes in the private authority tree. Lint those
+same authenticated bytes at their canonical source path so repository test
+policy remains unchanged after relocation. Keep the retained copy in pytest
+commands, node inventories, JUnit and coverage; canonical lint cannot replace
+execution of any original test or weaken its assertions.
+
+Implementation20261104: all 64 scoped tests pass with exact node inventories,
+normal exits and real SQLite coverage: 322/322 current and 300/300 original
+statements, no exclusions. The four original failure-publication statements
+execute in the genuine failed child. Canonical Ruff, formatting, strict types,
+spec tracing, terminal scanners and standalone cold replay pass. The conductor
+and original test/source bytes are unchanged. Global documentation/spec debt
+remains separate from this scoped qualification.
+
+Revalidation20261104: the existing implementation passes the exact 94-test
+conductor subset, 35 fix-gate/private E2E tests and all 64 qualification nodes
+(155 distinct scoped tests). Current/original coverage remains 622/622 with
+zero exclusions. Terminal validation and outside-checkout cold replay pass;
+no further implementation changes were needed. Receipts are retained under
+`results/raw/carnot-v753-recheck-qs7qlka3/`.

@@ -1,5 +1,31 @@
 # Carnot — Traceability Matrix
 
+## V753 preflight cost repair — 2026-11-04 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-8789 / SCENARIO-VERIFY-8789-PREFLIGHT-COST | `v753_branch_qualification.preflight` separates one-time setup from repeated authority parsing | Three new timing regressions and every existing V753 assertion pass; 322/322 owned module/CLI statements covered without exclusions |
+| REQ-VERIFY-8789 / SCENARIO-VERIFY-8789-CANONICAL-LINT | `v753_qualification_runner.validate` preserves canonical lint policy for unchanged retained tests | The SQLite/validation regression executes real Ruff and verifies pytest commands keep the retained path |
+| REQ-REPORT-8789 / SCENARIO-REPORT-8789-BRANCHES | Preserve exact authority, historical custody and independent branch gates | All 64 scoped tests pass; original private failure executes all four required statements; all 622 current/original statements covered without exclusions |
+| REQ-CONDUCTOR-FIXGATE-1 | Existing tests and conductor preserved | Ten repair-gate tests pass; E2E-018 CLI passes 91 affected and 106 consumer tests, mutations, validators and cold replay |
+
+Final validation, E2E-018/021, terminal scanners and standalone cold replay from
+outside the checkout all pass. The isolated qualification grants no scientific
+gain; historical source bytes and disqualifications remain intact.
+
+Fresh revalidation preserves the repair unchanged: 94 conductor-subset tests,
+35 fix-gate/private E2E tests and the 64-node qualification pass (155 distinct
+scoped tests). Genuine current/original SQLite still covers 622/622 statements
+without exclusions. Terminal validation and outside-checkout cold replay pass.
+Receipts: `results/raw/carnot-v753-recheck-qs7qlka3/` and
+`/var/tmp/carnot-v753-recheck-qs7qlka3/`.
+
+Scoped lint, formatting, strict types and spec tracing pass. Global reconciliation
+retains the architecture date of 2026-10-11 and 1,142 pre-existing missing spec
+references. The whole repository suite was not rerun. Receipts:
+`/var/tmp/carnot-v753-fix-validation/` and
+`results/raw/carnot-v753-fix-validation-final/`.
+
 ## V753 staged research plan — 2026-11-04
 
 | Requirement / scenario | Planned artifact | Verification scope |
@@ -14,7 +40,7 @@ The reference scan precedes experiment design. The previous V752 design is
 preserved. This entry stages research; it changes no runtime behavior or
 scientific readiness. See the V753 operational entry for validation results.
 
-**Last Updated:** 2026-11-03
+**Last Updated:** 2026-11-04
 
 ## Exp8763 private archive repair — 2026-11-03 UTC
 

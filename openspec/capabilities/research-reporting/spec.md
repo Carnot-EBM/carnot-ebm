@@ -105338,3 +105338,34 @@ solve provenance. External missing inputs produce blocked, not partial.
 Implementation status — 2026-11-04: planning only. The two design authorities
 and reference scan are written. Experiment implementations and their scientific
 outcomes remain pending; planning checks do not grant those outcomes.
+## REQ-REPORT-8789: Bind exact V753 tasks and independent protocols
+
+Bind all twelve complete task objects, Exp8789 through Exp8800, across the
+visible table, embedded JSON and activated YAML. Accept only the established
+literal-brace prompt encoding. Reject changed fields and coordinated rehashing.
+Freeze thirty independent streams of thirty-two new canonical worlds, three
+nested seeds, five arms, eight-decision delay and twelve retention worlds per
+stream. Development uses forty fit and twenty tuning exposed worlds. Freeze
+six observable features, three typed decisions, five calls, capacity32 and the
+design's full acceptance family. Structural hashes must be disjoint. Seal
+predictions before labels. Reset learned state per stream. No prototype runs.
+Read runtime and ARC authority once each; their absence gates only their branch.
+Preserve historical disqualification and the closed original learning union.
+
+### SCENARIO-REPORT-8789-BRANCHES
+
+Every task field, count, ordering, table, digest and coordinated rehash mutation
+rejects. A qualified CPU protocol remains ready with absent CUDA or ARC evidence.
+No model, numerical training, live game or native round trip occurs.
+
+Implementation20261104: V753 preflight records one-time setup separately
+from repeated authority parsing. The validation projection charges setup once
+and retains the existing reserve, task cap and resource/custody rejection gates.
+Retained original tests execute unchanged in private authority trees; Ruff
+checks the authenticated canonical source so its existing test policy applies.
+
+Revalidation20261104: all 64 qualification nodes, unchanged terminal validators
+and outside-checkout cold replay pass with 100 percent current/original
+statement coverage. The existing implementation is unchanged and continues to
+grant administrative qualification only. Receipts are retained under
+`results/raw/carnot-v753-recheck-qs7qlka3/`.

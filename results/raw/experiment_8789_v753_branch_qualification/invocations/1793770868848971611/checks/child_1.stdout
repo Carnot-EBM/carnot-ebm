@@ -1,0 +1,150 @@
+...F..F                                                                  [100%]
+=================================== FAILURES ===================================
+__________________ test_private_cli_replay_and_owned_failure ___________________
+
+tmp_path = PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_private_cli_replay_and_ow0')
+
+    def test_private_cli_replay_and_owned_failure(tmp_path):
+        """SCENARIO-VERIFY-8776-REPLAY: real private children publish and reject tampering."""
+        output = tmp_path / (api.NAME + ".json")
+        command = [sys.executable, str(api.ROOT / api.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("replay", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "missing")], 1),
+            ("date", ["--date", "20260101"], 2),
+            ("unsafe", ["--private-control"], 2),
+        ]:
+            receipt = child(name, command + args, tmp_path / "logs", expected=expected, deadline=120)
+            assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+        value = json.loads(output.read_bytes())
+        assert value["verdict_class"] == "disqualified"
+        assert all(value[k] == 0 for k in report.SCORES)
+>       assert value["MODEL_SPECS"] == [] and report.replay(output)
+E       AssertionError: assert ([] == []
+E         
+E         Use -v to get more diff and False)
+E        +  where False = <function replay at 0x7f28bcc4fd80>(PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_private_cli_replay_and_ow0/experiment_8776_v752_branch_methods.json'))
+E        +    where <function replay at 0x7f28bcc4fd80> = report.replay
+
+results/raw/experiment_8789_v753_branch_qualification/invocations/1793770868848971611/original_family/test_v752_branch_methods_8776.py:122: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+[exp8205] phase=before_subprocess_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_replay completed=1 pending=0
+[exp8205] phase=before_subprocess_missing completed=0 pending=1
+[exp8205] phase=after_subprocess_missing completed=1 pending=0
+[exp8205] phase=before_subprocess_date completed=0 pending=1
+[exp8205] phase=after_subprocess_date completed=1 pending=0
+[exp8205] phase=before_subprocess_unsafe completed=0 pending=1
+[exp8205] phase=after_subprocess_unsafe completed=1 pending=0
+_______________ test_main_dispatch_without_recursive_validation ________________
+
+tmp_path = PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_main_dispatch_without_rec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f28bbfe7680>
+
+    def test_main_dispatch_without_recursive_validation(tmp_path, monkeypatch):
+        """REQ-VERIFY-8776: production dispatch has the same sealing and publication path."""
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(runner, "Coverage", lambda **kw: SimpleNamespace(start=lambda: None))
+        monkeypatch.setattr(
+            runner,
+            "validate",
+            lambda raw, tracer: dict(
+                receipts=[dict(passed=False)],
+                union=dict(passed=False),
+                coverage=dict(complete=False),
+                raw_references=[],
+                ended_at_utc=runner.now(),
+            ),
+        )
+        output = tmp_path / (api.NAME + ".json")
+>       assert runner.main(["--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8789_v753_branch_qualification/invocations/1793770868848971611/original_family/test_v752_branch_methods_8776.py:227: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v752_branch_runner.py:131: in main
+    published = publish_primary(output, value, lambda candidate: terminal.terminal(candidate, raw))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/capstone8788-checks-p_ckwdvs/collection-86fe4e67a7804576872b9e78c98bff6d/1/tmp/test_main_dispatch_without_rec0/experiment_8776_v752_branch_methods.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'contract': False, 'exclusion': True, 'memory_protocol': True, 'mutation_cont... 'sha256': 'sha256:bae0676342b3f95be81e168a7dd56448d436bbb62e96aaf29390b6ba3e3c5903'}, 'arc_new_outcome_refs': [], ...}
+validator = <function main.<locals>.<lambda> at 0x7f28bcc947c0>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8776] phase=start_no_model_load completed=0 pending=0
+[exp8776] phase=freeze_before completed=0 pending=0
+[exp8776] phase=protocols_frozen_before_evaluation completed=4 pending=0
+[exp8776] phase=runtime_authority_once completed=0 pending=0
+[exp8602] phase=optional_cuda_reader_before completed=0 pending=1
+[exp8602] phase=optional_cuda_reader_after completed=1 pending=0
+[exp8776] phase=arc_frontier_once completed=0 pending=0
+[exp8776] phase=freeze_after completed=13 pending=0
+[exp8776] phase=full_object_controls completed=1 pending=12
+[exp8776] phase=full_object_controls completed=2 pending=11
+[exp8776] phase=full_object_controls completed=3 pending=10
+[exp8776] phase=full_object_controls completed=4 pending=9
+[exp8776] phase=full_object_controls completed=5 pending=8
+[exp8776] phase=full_object_controls completed=6 pending=7
+[exp8776] phase=full_object_controls completed=7 pending=6
+[exp8776] phase=full_object_controls completed=8 pending=5
+[exp8776] phase=full_object_controls completed=9 pending=4
+[exp8776] phase=full_object_controls completed=10 pending=3
+[exp8776] phase=full_object_controls completed=11 pending=2
+[exp8776] phase=full_object_controls completed=12 pending=1
+[exp8776] phase=full_object_controls completed=13 pending=0
+[exp8776] phase=scoped_validation_before completed=0 pending=0
+[exp8776] phase=scoped_validation_after completed=0 pending=0
+[exp8776] phase=terminal_validation_before completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED results/raw/experiment_8789_v753_branch_qualification/invocations/1793770868848971611/original_family/test_v752_branch_methods_8776.py::test_private_cli_replay_and_owned_failure
+FAILED results/raw/experiment_8789_v753_branch_qualification/invocations/1793770868848971611/original_family/test_v752_branch_methods_8776.py::test_main_dispatch_without_recursive_validation
+2 failed, 5 passed, 1 warning in 187.68s (0:03:07)

@@ -1,5 +1,38 @@
 # Carnot — Operational Status
 
+## 2026-11-04 UTC — V753 preflight cost repair
+
+V753 preflight now charges imports and custody checks once instead of scaling
+them with 600 authority parses. Slow setup no longer falsely blocks a small
+parsing workload; genuine time overruns and resource/custody failures still block.
+Retained original tests execute in private authority trees. Ruff checks the
+authenticated canonical source, preserving the existing path-based test policy.
+
+All 64 scoped tests pass, including retained originals and E2E-018/021.
+Subprocess SQLite covers all 322 current and 300 original module/CLI statements
+with no exclusions (622/622, 100%). Ten repair-gate tests pass. The
+original failure child executes lines 88–90 and 107, retains its failed pytest
+receipt and publishes zero readiness. The private E2E-018 CLI passes 91 affected
+and 106 consumer tests, twelve mutation controls, validators and cold replay.
+The conductor and historical source/assertion bytes are unchanged.
+Every final validation receipt and terminal scanner passes. Standalone cold
+replay also passes from outside the checkout with PYTHONPATH removed. The
+isolated result qualifies administrative custody and grants no scientific gain.
+
+Fresh revalidation passes 94 conductor-subset tests, 35 fix-gate/private E2E
+tests and the 64-node qualification (155 distinct scoped tests overall).
+Current and original coverage remains 622/622 statements without exclusions;
+terminal validators and outside-checkout cold replay pass. No further
+implementation changes were needed. Receipts are in
+`results/raw/carnot-v753-recheck-qs7qlka3/` and
+`/var/tmp/carnot-v753-recheck-qs7qlka3/`.
+
+Scoped lint, format, strict types and spec tracing pass. Global reconciliation
+retains the architecture date of 2026-10-11 and 1,142 existing missing spec
+references; the whole repository test suite was not rerun. Validation receipts:
+`/var/tmp/carnot-v753-fix-validation/` and
+`results/raw/carnot-v753-fix-validation-final/`.
+
 ## 2026-11-04 — V753 staged research plan
 
 The next plan contains exactly 12 tasks, Exp8789–Exp8800, in four phases.
@@ -18,7 +51,7 @@ Research findings and source-access limits were appended before task design.
 This plan is not activated. Experiment results, runtime repair, physical
 hardware benefit and publication authorization remain unclaimed.
 
-**Last Updated:** 2026-11-03
+**Last Updated:** 2026-11-04
 
 ## 2026-11-03 UTC — Exp8763 private archive repair
 

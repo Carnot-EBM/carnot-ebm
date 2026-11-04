@@ -21266,3 +21266,5 @@ code |
 | 2026-11-04 04:26 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
 | 2026-11-04 05:10 UTC | Plan milestone 2026.11.753 | OK | 12 tasks proposed |
 | 2026-11-04 05:28 UTC | Milestone 2026.11.753 activated | OK | 12 tasks queued |
+| 2026-11-04 07:02 UTC | Qualify original failure publication and bind twel | FAIL | Post-tests failed: > assert good["projection_fits"] and good["dependency_imports_passed"] |
+| 2026-11-04 07:04 UTC | Qualify original failure publication and bind twel | OK | Deliverable already exists in repo |
