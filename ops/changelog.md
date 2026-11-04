@@ -23068,3 +23068,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   checks passed. Final exclusion/gate rechecks are recorded in the design footer.
 - Planning only: no experiment, activation, conductor/active-roadmap/manifest edit,
   deployment, external publication, commit or push was performed.
+- 2026-11-04: Bind thirteen tasks and ingest selective-decision methods without a global science gate (⚠️ Research Finding) — honest_verdict=complete_disqualified_v755_branch_contract; results/experiment_8814_v755_branch_contract.json
