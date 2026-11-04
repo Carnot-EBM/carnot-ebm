@@ -21274,3 +21274,5 @@ code |
 | 2026-11-04 07:57 UTC | Compare feedback admission only when the pending q | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8790-delayed-memory-prototype) |
 | 2026-11-04 07:59 UTC | Measure evidence invariance and semantic sensitivi | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8791-evidence-intervention-methods.evidence_interventions_ready_score (actual=0 == expected=1) |
 | 2026-11-04 08:02 UTC | Probe mandated Qwen extraction under paired irrele | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8789-branch-qualification.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-11-04 08:29 UTC | Separate timer overhead from process variation on  | OK | 98 passed, 1 warning in 40.38s |
+| 2026-11-04 08:31 UTC | Audit later Brier benefit and retention across ind | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8792-causal-template-learning) |
