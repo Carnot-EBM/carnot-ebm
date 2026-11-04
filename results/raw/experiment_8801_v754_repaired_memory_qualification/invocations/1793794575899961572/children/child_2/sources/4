@@ -1,0 +1,180 @@
+"""REQ-REPORT-8801 / REQ-VERIFY-8801: repaired custody cannot imply learning."""
+
+import json
+from pathlib import Path
+import sys
+
+import pytest
+import yaml
+
+from carnot.reporting import v754_repaired_memory as api
+from carnot.reporting import v754_memory_runner as runner
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+from carnot.reporting.v709_execution import child
+
+
+def test_authority_activation_and_negative_controls(tmp_path):
+    """SCENARIO-REPORT-8801-AUTHORITY: every supplied field binds to frozen tasks."""
+    root = api.previous.snapshot(api.ROOT, tmp_path / "authority")
+    assert api.authority(root)["ready"]
+    assert len(api.authority(root)["rows"]) == 13
+    assert all(r["passed"] for r in api.mutations(root, tmp_path / "mutations"))
+    tasks = api.parse_design((root / api.DESIGN).read_text(), milestone=api.MILESTONE)[1]
+    for task in tasks:
+        task["prompt"] = api.previous.encode(task["prompt"])
+    (root / api.STAGED).write_text(yaml.safe_dump(dict(milestone=api.MILESTONE, tasks=tasks)))
+    (root / api.ACTIVE).write_text("milestone: 2026.11.753\ntasks: []\n")
+    assert api.authority(root)["ready"]
+    assert api.authority(root)["active_state"] == "expected_pre_activation_v753"
+    (root / api.ACTIVE).write_text("milestone: wrong\ntasks: []\n")
+    assert not api.authority(root)["ready"]
+    assert not api.authority(tmp_path / "absent")["ready"]
+
+
+def test_protocol_and_repaired_sources(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8801-PROTOCOL: sealed operands grant only protocol custody."""
+    p = api.protocols([])["memory"]
+    assert (p["independent_streams"], p["worlds_per_stream"]) == (30, 32)
+    assert len(p["seeds"]) == 3 and len(p["arms"]) == 5
+    assert p["delay_queries"] == 8 and p["template_limit"] == 32
+    assert p["task_ids"] == [8802, 8804, 8809, 8810]
+    assert p["old_learning_union_authorized"] is False and api.memory_ready(p)
+    p["delay_queries"] = 0
+    assert not api.memory_ready(p)
+    good = api.preflight(tmp_path)
+    assert good["projection_fits"] and all(r["passed"] for r in good["repair_source_checks"])
+    monkeypatch.setattr(api.previous.shutil, "which", lambda name: None)
+    assert not api.preflight(tmp_path)["projection_fits"]
+
+
+def test_build_independent_gates_and_owned_failure(tmp_path):
+    """REQ-VERIFY-8801: optional zero is independent; failed owned work disqualifies."""
+    work = api.freeze(api.ROOT, tmp_path / "raw", "20261104")
+    work["mutation_rows"] = [dict(passed=True)]
+    work["original_failure"] = dict(passed=True)
+    validation = dict(
+        receipts=[dict(passed=True)],
+        union=dict(passed=True, node_ids=[]),
+        coverage=dict(complete=True),
+        original_coverage=dict(complete=True),
+        repaired_coverage=dict(complete=True),
+        raw_references=[],
+        ended_at_utc=api.now(),
+    )
+    output = tmp_path / (api.NAME + ".json")
+    atomic_json(tmp_path / "raw/work.json", work)
+    atomic_json(tmp_path / "raw/validation.json", validation)
+    value = api.build(work, validation, output)
+    for citation in value["cited_upstream_artifacts"]:
+        upstream = api.load(dict(path=citation["path"], sha256=citation["sha256"]))
+        assert set(citation["fields_imported"]) <= upstream.keys()
+    assert value["verdict_class"] == "null" and value["memory_protocol_ready_score"] == 1
+    assert value["runtime_repair_ready_score"] == value["arc_new_outcomes_available_score"] == 0
+    validation["receipts"][0]["passed"] = False
+    assert api.build(work, validation, output)["verdict_class"] == "disqualified"
+    work["preconditions"]["projection_fits"] = False
+    assert api.build(work, validation, output)["verdict_class"] == "blocked"
+
+
+def test_private_cli_replay_and_tamper(tmp_path):
+    """SCENARIO-VERIFY-8801-TERMINAL: private success and failure retain real exits."""
+    output = tmp_path / (api.NAME + ".json")
+    cmd = [sys.executable, str(api.ROOT / api.CLI)]
+    for name, args, expected in [
+        ("private", ["--private-control", "--output", str(output)], 0),
+        ("replay", ["--cold-replay", str(output)], 0),
+        ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+        ("unsafe", ["--private-control"], 2),
+        ("date", ["--date", "20260101"], 2),
+    ]:
+        receipt = child(name, cmd + args, tmp_path / "logs", expected=expected, deadline=120)
+        assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+    value = json.loads(output.read_bytes())
+    raw = Path(value["primitive_reference"]["path"]).parent
+    assert json.loads((raw / "terminal_candidate.json").read_bytes()) == value
+    assert value["verdict_class"] == "disqualified" and value["memory_protocol_ready_score"] == 0
+    assert api.replay(output)
+    value["full_task_objects"][0]["prompt"] += "forged"
+    value.pop("reproducibility_checksum")
+    value["reproducibility_checksum"] = canonical_hash(value)
+    atomic_json(output, value)
+    assert not api.replay(output)
+
+
+def test_production_dispatch_and_resource_block(tmp_path, monkeypatch):
+    """REQ-VERIFY-8801: dispatch seals failed validation and never measures absent resources."""
+    monkeypatch.setattr(runner.historical, "original_failure", lambda raw: dict(passed=True))
+    monkeypatch.setattr(runner, "validate", lambda raw, original: runner.unqualified())
+    output = tmp_path / (api.NAME + ".json")
+    assert runner.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_bytes())["verdict_class"] == "disqualified"
+    preflight = api.preflight
+    monkeypatch.setattr(api, "preflight", lambda raw: dict(preflight(raw), projection_fits=False))
+    monkeypatch.setattr(runner.historical, "original_failure", lambda raw: pytest.fail("measured"))
+    assert runner.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_bytes())["verdict_class"] == "blocked"
+
+
+def test_validation_combines_actual_sqlite(tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8801-ORIGINAL: shared orchestration reads real executable inventories."""
+    from types import SimpleNamespace
+
+    database = tmp_path / "import.sqlite"
+    receipt = child(
+        "import_coverage",
+        [
+            sys.executable,
+            "-m",
+            "coverage",
+            "run",
+            "--data-file=" + str(database),
+            "-m",
+            "carnot.reporting.v752_branch_methods",
+        ],
+        tmp_path / "logs",
+    )
+    assert receipt["passed"]
+    ref = api.reference(database)
+    result = dict(
+        coverage=dict(combined_reference=ref),
+        union=dict(node_ids=["original_family::test_original"]),
+        receipts=[],
+        raw_references=[],
+    )
+    validator = SimpleNamespace(child=child)
+
+    def validate(raw):
+        retained = runner.historical.os.path.relpath(
+            raw / "repaired_family/test_v753_branch_qualification_8789.py", api.ROOT
+        )
+        old = runner.original.os.path.relpath(
+            raw / "original_family/test_v752_branch_methods_8776.py", api.ROOT
+        )
+        for name, argv in [
+            ("ruff_check", [str(api.ROOT / ".venv/bin/ruff"), "check", retained, old]),
+            ("ruff_format", [str(api.ROOT / ".venv/bin/ruff"), "format", "--check", retained, old]),
+            ("probe", [sys.executable, "-c", "pass"]),
+        ]:
+            receipt = validator.child(name, argv, raw / "lint")
+            assert receipt["passed"]
+        return result
+
+    validator.validate = validate
+    monkeypatch.setattr(runner, "namespace", lambda *args: validator)
+    value = runner.validate(tmp_path, dict(sqlite_reference=ref, references=[ref]))
+    assert not value["original_coverage"]["complete"]
+    assert not value["repaired_coverage"]["complete"]
+    assert value["original_node_inventory"] == ["original_family::test_original"]
+    retained = tmp_path / "repaired_family/test_v753_branch_qualification_8789.py"
+    assert retained.read_bytes() == (api.ROOT / api.previous.TESTS[0]).read_bytes()
+
+
+def test_repaired_original_cli_has_actual_statement_custody(tmp_path):
+    """SCENARIO-VERIFY-8801-ORIGINAL: the wrapper cannot substitute for original CLI bytes."""
+    runner.historical.suite(tmp_path)
+    result = runner.historical.repaired_control(tmp_path)
+    assert result["passed"] and not any(result["readiness_scores"].values())
+    coverage = runner.original.coverage_summary(
+        Path(result["sqlite_reference"]["path"]), api.previous.OWNED[-1:]
+    )
+    assert coverage["complete"] and coverage["files"][0]["statements"] == 6

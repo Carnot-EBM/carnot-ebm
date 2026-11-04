@@ -58495,6 +58495,22 @@ The positive, negative and leakage controls in the V754 prompt must run before
 a benefit claim. New owned code needs actual unit/child statement coverage;
 constructed exact-oracle success cannot become an oracle-distinct headline.
 
+#### SCENARIO-VERIFY-8801-ORIGINAL
+
+Authenticate the November 4 repaired source and unchanged original assertions.
+Execute the original intentional failure under preserved V752 authority and
+require zero readiness and actual runner statements88,89,90,107. Combine fresh
+unit and child SQLite for all original and owned executable statements, with
+zero exclusions. Preserve historical primaries and quarantine dispositions.
+
+#### SCENARIO-VERIFY-8801-TERMINAL
+
+Execute private success/failure controls and E2E-018/021, Ruff check and format,
+strict mypy and scoped spec coverage. Run one full Python suite as repository
+health. Retain failed validation and rejected candidates. Cold replay outside
+the checkout without PYTHONPATH must accept sealed bytes and reject rehashed
+tampering. Missing external resources block without scientific measurement.
+
 ### REQ-VERIFY-8802: Build and validate causal template additions with a calibrated energy head
 
 Exp8802 SHALL execute its V754 protocol only after its own preconditions and

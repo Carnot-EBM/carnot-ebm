@@ -1,0 +1,316 @@
+"""REQ-REPORT-8801: qualify repaired controls without promoting historical science."""
+
+from copy import deepcopy
+import json
+from pathlib import Path
+from types import FunctionType
+from typing import Any
+
+import yaml
+
+from carnot.reporting import v753_branch_qualification as previous
+from carnot.reporting import v752_branch_report
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+from carnot.reporting.roadmap_contract import compare_contract, parse_design
+from carnot.reporting.v746_retained_evidence import load, reference
+from carnot.reporting.v748_collection_contract import namespace
+
+Json = dict[str, Any]
+ROOT, DESIGN, ACTIVE, STAGED = previous.ROOT, previous.DESIGN, previous.ACTIVE, previous.STAGED
+NAME, TASK, MILESTONE = (
+    "experiment_8801_v754_repaired_memory_qualification",
+    "exp8801-repaired-memory-qualification",
+    "2026.11.754",
+)
+PIN = "0b68a8e4c6204741488e67c13ef1c95cfac160316e3fb67ac95d8106033b57cf"
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [
+    f"python/carnot/reporting/v754_{p}.py"
+    for p in [
+        "repaired_memory",
+        "memory_runner",
+        "memory_history",
+    ]
+] + [CLI]
+TESTS = ["tests/python/test_v754_repaired_memory_8801.py"]
+CONSUMERS = previous.CONSUMERS
+MODEL_SPECS: list[Json] = []
+ARCHIVES = [
+    f"openspec/change-proposals/research-roadmap-v{v}-preserved-{d}.md"
+    for v, d in [(752, "20261103"), (753, "20261104")]
+]
+REPAIR = "results/raw/carnot-v753-recheck-qs7qlka3/experiment_8789_v753_branch_qualification.json"
+REPAIR_PIN = "sha256:577147139fd7bb65690b5355bf2b8d992149a8cd974ac54a8c051caa13026766"
+now, digest = previous.now, previous.digest
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush actual phase boundaries so the parent can observe bounded work."""
+    print(f"[exp8801] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def gate(path: Path, field: str, observed: Any, expected: Any = True, upstream: str = TASK) -> Json:
+    """Name missing operands and exact producers rather than silently coercing absence."""
+    value = previous.gate(path, field, observed, expected, upstream)
+    value["artifact_field"] = field
+    return value
+
+
+def authority(root: Path) -> Json:
+    """Accept an older active queue only while an exact V754 staged queue exists."""
+    try:
+        text = (root / DESIGN).read_text()
+        table, tasks = parse_design(text, milestone=MILESTONE)
+        active = yaml.safe_load((root / ACTIVE).read_bytes())
+        staged = (
+            yaml.safe_load((root / STAGED).read_bytes()) if (root / STAGED).is_file() else active
+        )
+        state = "active_v754"
+        if active["milestone"] == "2026.11.753" and (root / STAGED).is_file():
+            active, state = staged, "expected_pre_activation_v753"
+        for supplied in [active, staged]:
+            for actual, expected in zip(supplied["tasks"], tasks):
+                if actual == dict(expected, prompt=previous.encode(expected["prompt"])):
+                    actual["prompt"] = expected["prompt"]
+        result = compare_contract(
+            text, staged, active, milestone=MILESTONE, first_id=8801, count=13
+        )
+        for i, row in enumerate(result["rows"]):
+            row["checks"]["full_object"] = (
+                i < min(len(tasks), len(active["tasks"]), len(staged["tasks"]))
+                and tasks[i] == active["tasks"][i] == staged["tasks"][i]
+            )
+            matched = all(row["checks"].values())
+            row.update(
+                task_object=deepcopy(tasks[i]) if i < len(tasks) else None,
+                matched=matched,
+                absolute_metric=int(matched),
+                metric=int(matched),
+                denominator=1,
+                cluster_id="administrative_contract",
+                arm="custody",
+                seed=None,
+                status="completed" if matched else "censored",
+                censored=not matched,
+                excluded=False,
+                effective_independent_groups=0,
+                cost_s=None,
+                missing_reason=None if matched else "authority_mismatch",
+            )
+        ready = (
+            result["passed"]
+            and all(r["matched"] for r in result["rows"])
+            and digest(tasks) == PIN
+            and f"Canonical tasks SHA-256: `{PIN}`" in text
+            and "<!-- V754_TASK_CONTRACT_END -->" in text
+        )
+        return dict(
+            ready=bool(ready),
+            rows=result["rows"],
+            visible_table=table,
+            active_state=state,
+            references=[
+                reference(root / p) for p in [DESIGN, ACTIVE, STAGED] if (root / p).is_file()
+            ],
+        )
+    except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError):
+        return dict(ready=False, rows=[], visible_table=[], references=[], active_state="rejected")
+
+
+def mutations(source: Path, root: Path) -> list[Json]:
+    """Attack complete objects in private trees, including historical dependency and gate drift."""
+    root.mkdir(parents=True)
+    text = (source / DESIGN).read_text()
+    tasks = parse_design(text, milestone=MILESTONE)[1]
+    design = root / DESIGN
+    design.parent.mkdir(parents=True)
+    rows = []
+    cases = [(i, field) for i, task in enumerate(tasks) for field in task]
+    cases += [
+        (0, mode)
+        for mode in [
+            "valid",
+            "order",
+            "missing_file",
+            "malformed_json",
+            "retired_dependency",
+            "gate_name",
+        ]
+    ]
+    for i, field in cases:
+        changed, body = deepcopy(tasks), text
+        if field == "order":
+            changed.reverse()
+        elif field == "malformed_json":
+            body = body.replace('"tasks": [', '"tasks": invalid [', 1)
+        elif field == "retired_dependency":
+            changed[0]["depends_on"] = ["exp8778-retired"]
+        elif field == "gate_name":
+            changed[1]["gated_on"][0]["field"] = "forged_readiness"
+        elif field not in {"valid", "missing_file"}:
+            changed[i].pop(field)
+        design.write_text(body)
+        active = root / ACTIVE
+        active.write_text(json.dumps(dict(milestone=MILESTONE, tasks=changed)))
+        if field == "missing_file":
+            active.unlink()
+        observed = authority(root)["ready"]
+        rows.append(
+            dict(
+                task_id=tasks[i]["id"],
+                mutation=field,
+                expected=field == "valid",
+                observed=observed,
+                passed=observed == (field == "valid"),
+            )
+        )
+        if len(rows) % 20 == 0:
+            progress("negative_controls", len(rows), len(cases) - len(rows))
+    return rows
+
+
+def protocols(tasks: list[Json]) -> Json:
+    """Reuse the prespecified estimand while binding only the new memory task operands."""
+    value = previous.protocols([])["memory"]
+    value.update(
+        task_ids=[8802, 8804, 8809, 8810],
+        canonical_tasks_sha256=PIN,
+        task_operands=[
+            deepcopy(t) for t in tasks if int(t["id"].split("-")[0][3:]) in {8802, 8804, 8809, 8810}
+        ],
+    )
+    return dict(memory=value)
+
+
+def memory_ready(value: Json) -> bool:
+    """Any changed decision or threshold invalidates protocol custody before evaluation."""
+    return value == protocols(value.get("task_operands", []))["memory"]
+
+
+def preflight(raw: Path) -> Json:
+    """Charge existing import/custody checks once and authenticate repaired source bytes."""
+    result = previous.preflight(raw)
+    repair = load(dict(path=str(ROOT / REPAIR), sha256=REPAIR_PIN))
+    checks = [
+        gate(
+            Path(ref["path"]),
+            "repaired_source_bytes",
+            reference(Path(ref["path"]))["sha256"],
+            ref["sha256"],
+        )
+        for ref in repair["code_config_hashes"]
+    ]
+    result.update(repair_source_checks=checks, repair_receipt_reference=reference(ROOT / REPAIR))
+    result["projection_fits"] = result["projection_fits"] and all(r["passed"] for r in checks)
+    return result
+
+
+def freeze(root: Path, raw: Path, run_date: str) -> Json:
+    """Freeze source custody and both independent external readers before child validation."""
+    bindings = dict(vars(previous))
+    bindings.update(
+        ROOT=ROOT,
+        OWNED=OWNED,
+        TESTS=TESTS,
+        NAME=NAME,
+        TASK=TASK,
+        authority=authority,
+        protocols=protocols,
+        memory_ready=memory_ready,
+        preflight=preflight,
+        progress=progress,
+    )
+    freezer = FunctionType(previous.freeze.__code__, bindings)
+    work = dict(freezer(root, raw, run_date))
+    refs = []
+    for name in ARCHIVES + [
+        "results/experiment_8789_v753_branch_qualification.json",
+        "results/experiment_8800_v753_capstone.json",
+    ]:
+        target = raw / "preserved" / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((ROOT / name).read_bytes())
+        refs += [reference(ROOT / name), reference(target)]
+    work.update(
+        preserved_authority_refs=refs,
+        original_family_lookup_rows=[
+            dict(
+                family=v,
+                default_design=api.DESIGN,
+                passed=api.DESIGN != DESIGN,
+                observed="mutable_vNEXT_default",
+                resolved_design=ARCHIVES[i],
+                resolved_sha256=reference(ROOT / ARCHIVES[i])["sha256"],
+            )
+            for i, (v, api) in enumerate([(752, previous.old), (753, previous)])
+        ],
+    )
+    work["references"] += refs + [reference(ROOT / REPAIR)]
+    return work
+
+
+reducer = namespace(v752_branch_report, "v754_reducer")
+base_build = reducer.build
+
+
+def build(work: Json, validation: Json, output: Path) -> Json:
+    """Only reproduced original controls and fresh complete coverage can expose memory readiness."""
+    checked = deepcopy(validation)
+    qualified = bool(
+        work.get("original_failure", {}).get("passed")
+        and validation.get("original_coverage", {}).get("complete")
+        and validation.get("repaired_coverage", {}).get("complete")
+    )
+    checked["receipts"] += [dict(name="repaired_original_controls", passed=qualified)]
+    value = dict(base_build(work, checked, output))
+    verdict = "null" if value["verdict_class"] == "positive" else value["verdict_class"]
+    if not work["preconditions"]["projection_fits"]:
+        verdict = "blocked"
+    for row in value["gate_check_summary"]:
+        row["artifact_field"] = row.get("field", row["check"])
+    value.update(
+        experiment_id=8801,
+        honest_verdict=f"complete_{verdict}_v754_repaired_memory_qualification",
+        verdict_class=verdict,
+        intended_count=13,
+        n_samples=0,
+        random_seed=7548801,
+        original_failure_publication=work.get("original_failure", {}),
+        original_owned_statement_coverage=validation.get("original_coverage", {}),
+        repaired_owned_statement_coverage=validation.get("repaired_coverage", {}),
+        original_family_lookup_rows=work["original_family_lookup_rows"],
+        preserved_authority_refs=work["preserved_authority_refs"],
+        methodology_note="Administrative qualification only. Historical primaries and quarantine states remain preserved. Thirty reset streams are planned, with nested seeds and arms; no learner, model, GPU probe or game is run. Exact historical fixtures replace mutable default lookups. Optional runtime and ARC absence gates only their branch.",
+    )
+    value["acceptance_gates"]["repaired_original_validation"] = qualified
+    if verdict in {"blocked", "disqualified"}:
+        for score in v752_branch_report.SCORES:
+            value[score] = 0
+    value["cited_upstream_artifacts"] = [
+        dict(experiment_id=n, fields_imported=fields, **reference(ROOT / path))
+        for n, fields, path in [
+            (
+                8789,
+                ["honest_verdict", "code_config_hashes"],
+                "results/experiment_8789_v753_branch_qualification.json",
+            ),
+            (
+                8800,
+                ["verdict_class", "scientific_measurement_count"],
+                "results/experiment_8800_v753_capstone.json",
+            ),
+            (8789, ["code_config_hashes"], REPAIR),
+        ]
+    ]
+    value["field_principles"] = dict.fromkeys(
+        [*value, "field_principles"],
+        "Exact operands and measured execution certify administrative custody only; no scientific benefit or independent generalization is imported.",
+    )
+    value.pop("reproducibility_checksum")
+    value["reproducibility_checksum"] = canonical_hash(value)
+    return value
+
+
+reducer.a = __import__(__name__, fromlist=["*"])
+reducer.build = build
+replay = reducer.replay

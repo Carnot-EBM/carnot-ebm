@@ -1,0 +1,400 @@
+{
+  "arms": [
+    "Python",
+    "JSON_native",
+    "resident_native"
+  ],
+  "canonical_tasks_sha256": "96a277806aa53175f8661b2e09da69a3c62ddab8f88d0eaaf21e6f25aadc945d",
+  "clock_reconciliation_max": 0.02,
+  "components": [
+    "startup",
+    "feature_constraint",
+    "update",
+    "transfer",
+    "serialization",
+    "file_sync",
+    "directory_sync",
+    "acknowledgment",
+    "restart_verification",
+    "shutdown",
+    "unassigned"
+  ],
+  "evaluation_performed": false,
+  "exact_producer_identity_required": true,
+  "implementation_certified": false,
+  "observer_overhead_max": 0.05,
+  "ordinary_starts": 3,
+  "paired_process_repeats": 2,
+  "per_feedback_durability": true,
+  "prefix_preparation_separate": true,
+  "task_ids": [
+    8783,
+    8784,
+    8787
+  ],
+  "task_operands": [
+    {
+      "MODEL_SPECS": [],
+      "agent_type": "claude",
+      "deliverable": "results/experiment_8783_v752_durable_producer_identity.json",
+      "estimated_wall_time_min": 45,
+      "gated_on": [],
+      "id": "exp8783-durable-producer-identity",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 100,
+      "milestone": "2026.11.752",
+      "model": "opus",
+      "per_unit_rows": true,
+      "phase": 3,
+      "prior_failures": [
+        {
+          "addressed_by": "A concrete producer/consumer task-id mismatch is now known. Bind one exact new descriptor and test both sides without accepting the old alias.",
+          "experiment_id": "exp8573-resident-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "A concrete producer/consumer task-id mismatch is now known. Bind one exact new descriptor and test both sides without accepting the old alias.",
+          "experiment_id": "exp8610-lean-resident-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "A concrete producer/consumer task-id mismatch is now known. Bind one exact new descriptor and test both sides without accepting the old alias.",
+          "experiment_id": "exp8732-resident-update-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_durability_budget"
+        },
+        {
+          "addressed_by": "A concrete producer/consumer task-id mismatch is now known. Bind one exact new descriptor and test both sides without accepting the old alias.",
+          "experiment_id": "exp8745-bounded-durable-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_original_window_prerequisite"
+        },
+        {
+          "addressed_by": "A concrete producer/consumer task-id mismatch is now known. Bind one exact new descriptor and test both sides without accepting the old alias.",
+          "experiment_id": "exp8759-ordinary-durable-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "A concrete producer/consumer task-id mismatch is now known. Bind one exact new descriptor and test both sides without accepting the old alias.",
+          "experiment_id": "exp8772-ordinary-durable-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_ordinary_durable_cost"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. Exp8772 emitted exp8772-ordinary-update-cost although the roadmap required exp8772-ordinary-durable-cost. Its own checks accepted costs; Exp8774 rejected producer identity. Those historical bytes stay unchanged. The new task must prove publication and downstream consumption agree.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; scripts/experiment_template.py; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; python/carnot/reporting/primary_publication.py; python/carnot/reporting/ordinary_durable_cost_8772.py; python/carnot/reporting/ordinary_durable_runner_8772.py; python/carnot/reporting/lifecycle_archive_8771.py; python/carnot/reporting/hardware_operation_inputs_8774.py; results/experiment_8771_v751_lifecycle_archive_qualification.json; results/experiment_8772_v751_ordinary_durable_cost.json; results/experiment_8774_v751_hardware_operation_decision.json\n\nTASK:\nQualify a fresh durable-window producer with exact task identity. Deliver results/experiment_8783_v752_durable_producer_identity.json. Use scripts/experiments/experiment_8783_v752_durable_producer_identity.py as a thin CLI. Store raw evidence in results/raw/experiment_8783_v752_durable_producer_identity/ and notes in docs/research-notes/v752-durable-producer-identity.md. No LLM is needed: MODEL_SPECS=[], inference_substrate_class=no_model_load, zero LLM calls. Any later LLM scope requires the mandated unsloth/Qwen3.8-27B-GGUF and a revised contract.\n\nCONCRETE STEPS:\n1. Print a flushed progress line at each phase boundary. Print before and after every model load, generation, benchmark, or subprocess that can take minutes. Print counts inside long loops. Emit a parent heartbeat at least every 60 seconds during long calls. Keep every silence gap under 600 seconds. Poll child processes in tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between them. Do not compose a huge file in one call. Silence can end work at 1200 seconds despite the 4800-second hard cap. Reserve 900 seconds for validation and terminal publication.\n2. Read the listed sources and prior failures. Check the task-specific REQ-* and SCENARIO-* before code changes. Write failing tests first. Check private scratch, dependency availability, frozen input hashes, and the resource projection before execution. Reuse existing modules and thin runners. Isolate historical test authority from moving roadmap paths. Preserve original assertions. Never run tests against production result files.\n3. Write a regression that fails when the published task_id differs from the exact current task contract. Bind the new producer descriptor once and pass it through measurement, cold replay and consumer authentication. Do not whitelist the historical alias or rewrite Exp8772.\n4. Reuse Exp8771 authenticated ordinary starting states and archived V747 authority. Retain all old parity, durable-ack, restart and synthetic-threshold controls. Validate the exact source/extension identities before using any retained receipt.\n5. Execute a small fresh matched ordinary window through Python, JSON-native and resident-native paths. Confirm that current primary readers accept the exact new task ID and reject the old alias even after rehashing. This is qualification only, not a new throughput study.\n6. Set durable_producer_ready_score only after genuine statement coverage, full consumer checks and exact restart parity. Explicitly keep the old task-id mismatch and old cost intervals outside admitted current hardware evidence.\n7. Run scoped unit and consumer tests with genuine unit/CLI-child coverage of every owned executable statement. Use bounded serial children with exact node inventories. Run Ruff check/format, strict mypy, explicit spec coverage, and private E2E-018/021. Record argv, normal exits, node outcomes, JUnit, coverage SQLite, and log hashes. Keep repository health separate from scoped acceptance. Validate terminal bytes with unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict, then cold-replay from sealed primitives. Failed owned validation is disqualified. Unchanged external absence is terminal blocked, never partial. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, shared validators, generator weights, ARC policy defaults, the active roadmap and the exclusion manifest.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind the exact task identifier and current invocation; aliases are invalid.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal prefix and positive | circular_positive | null | blocked | disqualified | partial. Only unfinished owned work that another attempt can finish is partial.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* verdict names upstream, path/hash, check, field, operator, expected and observed value. Distinguish missing file, missing field, observed zero and rejected producer.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls: principle: Declare actual computation. Small energy-head training is separate from LLM loading. A blocked model path records zero calls and its actual substrate.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count: principle: Preserve each intended unit and arm with its raw metric, denominator, missingness and cost. Seeds, surfaces, siblings and repetitions do not create independent worlds.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Oracle-dependent positives are circular_positive. Constructed-world learning does not establish natural factuality or hidden-game transfer.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Readiness means complete execution, not scientific improvement. Failed acceptance gates forbid a positive verdict class.\npreconditions_checked, duration_s, started_at_utc, ended_at_utc, phase_spans, random_seed, reproducibility_checksum: principle: Retain actual clocks and seeds. Never pad duration floors or import old monotonic epochs.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind every result and imported field to immutable source bytes.\nrepository_health_reference, scoped_validation_scope: principle: A scoped pass is not a full-repository pass.\ndurable_producer_ready_score, producer_descriptor, producer_identity_rows, original_authority_rows, ordinary_starting_state_rows, parity_rows, restart_rows, consumer_admission_rows: principle: Emit these exact fields from sealed task operands; downstream gates read these spellings.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8783_v752_durable_producer_identity.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Qualify a fresh durable-window producer with exact task identity",
+      "track": "deployment"
+    },
+    {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8784_v752_durable_cost_components.json",
+      "estimated_wall_time_min": 55,
+      "gated_on": [
+        {
+          "artifact_field": "durable_producer_ready_score",
+          "op": "==",
+          "upstream": "exp8783-durable-producer-identity",
+          "value": 1
+        }
+      ],
+      "id": "exp8784-durable-cost-components",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 50,
+      "milestone": "2026.11.752",
+      "per_unit_rows": true,
+      "phase": 3,
+      "prior_failures": [
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8573-resident-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8610-lean-resident-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8732-resident-update-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_durability_budget"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8745-bounded-durable-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_original_window_prerequisite"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8759-ordinary-durable-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8772-ordinary-durable-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_ordinary_durable_cost"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8635-installed-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8647-installed-complete-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8703-installed-batch-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8744-single-extraction-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8757-feature-reuse-cost",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_positive_feature_reuse_cost"
+        },
+        {
+          "addressed_by": "Fresh producer identity and coarse clock placement address the rejected producer and observer overhead. This measures cost composition on six bounded windows, not another long-run speedup attempt.",
+          "experiment_id": "exp8770-optimized-cost-attribution",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_optimized_cost_attribution"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. V751 ordinary-window resident/Python throughput was1.05465 with CI95[0.99385,1.12933]. V751 installed observer overhead reached8.02 percent and selected no target. New identity qualification allows a bounded component study, not a repeated long-workload speed claim.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; scripts/experiment_template.py; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; python/carnot/reporting/primary_publication.py; python/carnot/reporting/ordinary_durable_cost_8772.py; python/carnot/reporting/ordinary_durable_runner_8772.py; python/carnot/reporting/optimized_cost_attribution_measure_8770.py; results/experiment_8772_v751_ordinary_durable_cost.json; results/experiment_8770_v751_optimized_cost_attribution.json\n\nTASK:\nMeasure complete ordinary update costs with low-overhead component clocks. Deliver results/experiment_8784_v752_durable_cost_components.json. Use scripts/experiments/experiment_8784_v752_durable_cost_components.py as a thin CLI. Store raw evidence in results/raw/experiment_8784_v752_durable_cost_components/ and notes in docs/research-notes/v752-durable-cost-components.md. No LLM is needed: MODEL_SPECS=[], inference_substrate_class=no_model_load, zero LLM calls. Any later LLM scope requires the mandated unsloth/Qwen3.8-27B-GGUF and a revised contract.\n\nCONCRETE STEPS:\n1. Print a flushed progress line at each phase boundary. Print before and after every model load, generation, benchmark, or subprocess that can take minutes. Print counts inside long loops. Emit a parent heartbeat at least every 60 seconds during long calls. Keep every silence gap under 600 seconds. Poll child processes in tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between them. Do not compose a huge file in one call. Silence can end work at 1200 seconds despite the 4800-second hard cap. Reserve 900 seconds for validation and terminal publication.\n2. Read the listed sources and prior failures. Check the task-specific REQ-* and SCENARIO-* before code changes. Write failing tests first. Check private scratch, dependency availability, frozen input hashes, and the resource projection before execution. Reuse existing modules and thin runners. Isolate historical test authority from moving roadmap paths. Preserve original assertions. Never run tests against production result files.\n3. Freeze three ordinary starting states from Exp8771 and two paired process repeats for each. Run32 updates per window in Python, JSON-native and resident-native arms. Randomize arm order per repeat. Preserve per-feedback durability, real restart and the same numerical sequence.\n4. Measure non-overlapping spans for feature/constraint work, update arithmetic, boundary transfer, serialization, file sync, directory sync and acknowledgment. Parent clocks cover startup and shutdown. Record unassigned time rather than forcing components to sum.\n5. Pair each instrumented run with an uninstrumented same-work run. Use coarse per-block timers rather than per-operation Python wrappers. Admit attribution only if worst paired overhead is at most5 percent and non-overlapping spans reconcile within2 percent of parent elapsed. Otherwise keep raw complete timings and set component_cost_ready_score=0.\n6. Report prefix preparation separately. Include restart and post-restart verification within each complete window. Do not estimate natural dense-event frequency from constructed threshold states. Do not extrapolate omitted prefixes to whole-service throughput.\n7. Emit all per-update and per-process costs with world/workload count1. Compute descriptive paired ratios and observed ranges; six process pairs do not establish population speedup. Set durable_cost_rows_ready_score for complete admitted costs independent of any advantage.\n8. Run scoped unit and consumer tests with genuine unit/CLI-child coverage of every owned executable statement. Use bounded serial children with exact node inventories. Run Ruff check/format, strict mypy, explicit spec coverage, and private E2E-018/021. Record argv, normal exits, node outcomes, JUnit, coverage SQLite, and log hashes. Keep repository health separate from scoped acceptance. Validate terminal bytes with unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict, then cold-replay from sealed primitives. Failed owned validation is disqualified. Unchanged external absence is terminal blocked, never partial. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, shared validators, generator weights, ARC policy defaults, the active roadmap and the exclusion manifest.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind the exact task identifier and current invocation; aliases are invalid.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal prefix and positive | circular_positive | null | blocked | disqualified | partial. Only unfinished owned work that another attempt can finish is partial.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* verdict names upstream, path/hash, check, field, operator, expected and observed value. Distinguish missing file, missing field, observed zero and rejected producer.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls: principle: Declare actual computation. Small energy-head training is separate from LLM loading. A blocked model path records zero calls and its actual substrate.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count: principle: Preserve each intended unit and arm with its raw metric, denominator, missingness and cost. Seeds, surfaces, siblings and repetitions do not create independent worlds.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Oracle-dependent positives are circular_positive. Constructed-world learning does not establish natural factuality or hidden-game transfer.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Readiness means complete execution, not scientific improvement. Failed acceptance gates forbid a positive verdict class.\npreconditions_checked, duration_s, started_at_utc, ended_at_utc, phase_spans, random_seed, reproducibility_checksum: principle: Retain actual clocks and seeds. Never pad duration floors or import old monotonic epochs.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind every result and imported field to immutable source bytes.\nrepository_health_reference, scoped_validation_scope: principle: A scoped pass is not a full-repository pass.\ndurable_cost_rows_ready_score, component_cost_ready_score, per_update_rows, per_window_rows, process_pair_rows, component_cost_rows, observer_overhead_rows, unassigned_cost_rows, prefix_preparation_cost_rows, restart_rows: principle: Emit these exact fields from sealed task operands; downstream gates read these spellings.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8784_v752_durable_cost_components.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Measure complete ordinary update costs with low-overhead component clocks",
+      "track": "deployment"
+    },
+    {
+      "MODEL_SPECS": [],
+      "deliverable": "results/experiment_8787_v752_hardware_operation_boundary.json",
+      "estimated_wall_time_min": 20,
+      "gated_on": [],
+      "id": "exp8787-hardware-operation-boundary",
+      "inference_substrate_class": "no_model_load",
+      "max_turns": 20,
+      "milestone": "2026.11.752",
+      "per_unit_rows": true,
+      "phase": 4,
+      "prior_failures": [
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8665-hardware-operation-evidence",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v743_hardware_operation_evidence"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8651-hardware-operation-evidence",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_hardware_operation_evidence"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8679-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v744_hardware_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8693-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v745_hardware_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8707-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_missing_complete_cost_or_physical_execution"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8721-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_missing_complete_cost_or_physical_execution"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8735-hardware-cost-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_hardware_cost_or_physical_execution"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8747-hardware-cost-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_hardware_cost_or_physical_execution"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8761-hardware-cost-boundaries",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_hardware_cost_boundaries"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8774-hardware-operation-decision",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_hardware_operation_decision"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp3160-hardware-sampler-evidence-boundary-v7",
+          "retire_if_same_verdict": true,
+          "verdict": "complete: hardware_sampler_evidence_boundary_v7_ready=true; authenticated_speedup_claim_allowed=false; no_hardware_commands_run=true; cuda_status=runtime_ready_no_sampler_speedup_claim_flagged_adversarial; gatemate_status=blocked_operator_evidence_incomplete_no_speedup_claim; extropic_thrml_status=architecture_bounded; kona_status=architecture_bounded"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp5231-hardware-continuity-pbit-boundary-v478",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8016-v694-hardware-update-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_no_qualified_update_trajectory_or_board_custody"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8068-v698-hardware-feature-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_new_workload_bound"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8134-v703-hardware-service-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_complete_service_ready_score"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8148-v704-hardware-workload-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_complete_service_ready_score"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8162-v705-hardware-workload-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_acquisition_composition_ready_score"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8176-v706-hardware-workload-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_composition_replay_ready_score"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8203-v708-hardware-decision-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_exists"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8399-v723-board-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_board_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8454-v727-board-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v727_board_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8469-v728-board-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v728_board_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8483-v729-board-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v729_board_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8497-v730-board-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v730_board_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8550-v734-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v734_hardware_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8563-v735-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v735_hardware_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8577-v736-resident-hardware-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v736_resident_hardware_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8589-v737-resident-hardware-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v737_resident_hardware_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8600-v738-resident-hardware-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v738_resident_hardware_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8613-v739-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v739_hardware_operation_boundary"
+        },
+        {
+          "addressed_by": "The new relational-memory workload and fresh exact producer identity change the inputs. Read branches separately and retain rejected old identity and missing physical-operation support.",
+          "experiment_id": "exp8625-v740-hardware-operation-boundary",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_blocked_v740_hardware_operation_boundary"
+        }
+      ],
+      "priority": "high",
+      "prompt": "CONTEXT:\nWork in {project_root} on {date}. Complete sparse-update benefit and physical acceleration remain unproved. The new small head adds constraint lookup and calibration work. Hardware mapping must name those operations rather than multiplying a kernel speed by the whole service.\n\nEXISTING CODE TO READ FIRST:\nCLAUDE.md; CODEX.md; ops/e2e-test-plan.md; ops/exclusion_manifest.yaml; scripts/experiment_template.py; openspec/capabilities/research-reporting/spec.md; openspec/capabilities/verification/spec.md; python/carnot/reporting/primary_publication.py; python/carnot/reporting/hardware_operation_decision_8774.py; python/carnot/reporting/hardware_operation_inputs_8774.py; research-hardware-wishlist.md; results/experiment_8774_v751_hardware_operation_decision.json; results/experiment_8707_v746_hardware_operation_boundary.json\n\nTASK:\nMap new learning and durable costs to supported hardware operations. Deliver results/experiment_8787_v752_hardware_operation_boundary.json. Use scripts/experiments/experiment_8787_v752_hardware_operation_boundary.py as a thin CLI. Store raw evidence in results/raw/experiment_8787_v752_hardware_operation_boundary/ and notes in docs/research-notes/v752-hardware-operation-boundary.md. No LLM is needed: MODEL_SPECS=[], inference_substrate_class=no_model_load, zero LLM calls. Any later LLM scope requires the mandated unsloth/Qwen3.8-27B-GGUF and a revised contract.\n\nCONCRETE STEPS:\n1. Print a flushed progress line at each phase boundary. Print before and after every model load, generation, benchmark, or subprocess that can take minutes. Print counts inside long loops. Emit a parent heartbeat at least every 60 seconds during long calls. Keep every silence gap under 600 seconds. Poll child processes in tool calls of at most 60 seconds. Write any file over about 200 lines in several tool calls, with a progress message between them. Do not compose a huge file in one call. Silence can end work at 1200 seconds despite the 4800-second hard cap. Reserve 900 seconds for validation and terminal publication.\n2. Read the listed sources and prior failures. Check the task-specific REQ-* and SCENARIO-* before code changes. Write failing tests first. Check private scratch, dependency availability, frozen input hashes, and the resource projection before execution. Reuse existing modules and thin runners. Isolate historical test authority from moving roadmap paths. Preserve original assertions. Never run tests against production result files.\n3. Run unconditionally as an evidence reader. Independently authenticate Exp8780, Exp8784 and Exp8785 if present. Distinguish absent primary, missing field, zero readiness, valid null and rejected producer. A failed branch cannot erase qualified evidence from another.\n4. Map exact operations to CPU, CUDA, KV260, PolarFire and GateMate. KV260 qualified pairwise fabric retains k_max<=5; it does not imply spline training or general relational joins. PolarFire evidence remains Linux CPU dispatch. Preserve GateMate physical/JTAG blockage. No board command or purchase runs.\n5. Compute Amdahl bounds only from complete, admitted, non-overlapping costs. To support100x end-to-end, compatible accelerated work must exceed99 percent even at infinite kernel speed. Keep unknown and host/durable work in the denominator. Return a failed feasibility target if that condition fails.\n6. Record the redesign needed for100x as a conditional architectural question, never a measured gain. Compare sparse KAN locality, distributed Ising communication and Extropic Z1T topology without transferring vendor numbers. List device access, SDK and operation support as explicit acquisition prerequisites.\n7. Emit hardware_mapping_ready_score for a complete mapping. Keep physical_hardware_ready_score=0 without authenticated physical workload evidence. Preserve separate inference, new template learning, old sparse arithmetic and durable-window boundaries.\n8. Run scoped unit and consumer tests with genuine unit/CLI-child coverage of every owned executable statement. Use bounded serial children with exact node inventories. Run Ruff check/format, strict mypy, explicit spec coverage, and private E2E-018/021. Record argv, normal exits, node outcomes, JUnit, coverage SQLite, and log hashes. Keep repository health separate from scoped acceptance. Validate terminal bytes with unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict, then cold-replay from sealed primitives. Failed owned validation is disqualified. Unchanged external absence is terminal blocked, never partial. Reconcile OpenSpec, _bmad/traceability.md, ops/status.md and ops/changelog.md. Preserve historical primaries, shared validators, generator weights, ARC policy defaults, the active roadmap and the exclusion manifest.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, invocation_id: principle: Bind the exact task identifier and current invocation; aliases are invalid.\nhonest_verdict, verdict_class: principle: Use a complete_ terminal prefix and positive | circular_positive | null | blocked | disqualified | partial. Only unfinished owned work that another attempt can finish is partial.\ngate_check_summary: principle: Every blocked_* or complete_blocked_* verdict names upstream, path/hash, check, field, operator, expected and observed value. Distinguish missing file, missing field, observed zero and rejected producer.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls: principle: Declare actual computation. Small energy-head training is separate from LLM loading. A blocked model path records zero calls and its actual substrate.\nrows, intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count: principle: Preserve each intended unit and arm with its raw metric, denominator, missingness and cost. Seeds, surfaces, siblings and repetitions do not create independent worlds.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: Oracle-dependent positives are circular_positive. Constructed-world learning does not establish natural factuality or hidden-game transfer.\nacceptance_gates, required_checks_passed, flagged_adversarial, validation_receipts, terminal_validation_sidecar_path: principle: Readiness means complete execution, not scientific improvement. Failed acceptance gates forbid a positive verdict class.\npreconditions_checked, duration_s, started_at_utc, ended_at_utc, phase_spans, random_seed, reproducibility_checksum: principle: Retain actual clocks and seeds. Never pad duration floors or import old monotonic epochs.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts, field_principles: principle: Bind every result and imported field to immutable source bytes.\nrepository_health_reference, scoped_validation_scope: principle: A scoped pass is not a full-repository pass.\nhardware_mapping_ready_score, physical_hardware_ready_score, operation_support_rows, branch_admission_rows, conditional_acceleration_bounds, compatible_fraction_rows, acquisition_prerequisites, complete_100x_learning_ready_score: principle: Emit these exact fields from sealed task operands; downstream gates read these spellings.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu PYTHONPATH=python:. PYTHONUNBUFFERED=1 .venv/bin/python -u scripts/experiments/experiment_8787_v752_hardware_operation_boundary.py --date {date}\n\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "requires_gpu": false,
+      "title": "Map new learning and durable costs to supported hardware operations",
+      "track": "hardware"
+    }
+  ],
+  "timing_repeats_are_independent": false,
+  "updates_per_window": 32,
+  "workload_count": 1
+}

@@ -105498,6 +105498,22 @@ A private cold replay reconstructs aggregates and rejects changed authority,
 missing producer fields and rehashed aggregate tampering. External absence is
 terminal blocked; failed owned validation is disqualified with readiness zero.
 
+#### SCENARIO-REPORT-8801-AUTHORITY
+
+Bind exactly thirteen ordered complete objects to the independent V754 digest.
+Use staged YAML with active V753 before activation, or active V754 after
+activation. Reject missing authority, fields, malformed JSON, retired dependencies,
+gate drift and reordered tasks. Snapshot V752 and V753 designs and primaries;
+record mutable historical default lookups as failed contracts without using them.
+
+#### SCENARIO-REPORT-8801-PROTOCOL
+
+Freeze thirty reset streams of thirty-two queries, three nested seeds, five arms,
+delay eight and at most thirty-two alpha-normalized templates. Memory readiness
+requires reproduced original validation and complete owned coverage. Qualified
+administration is null, with no learning or independent generalization claim.
+Runtime and ARC zeros shall not suppress qualified memory protocol custody.
+
 ### REQ-REPORT-8802: Build and validate causal template additions with a calibrated energy head
 
 Exp8802 SHALL publish `results/experiment_8802_v754_causal_memory_prototype.json` with exact source hashes,
