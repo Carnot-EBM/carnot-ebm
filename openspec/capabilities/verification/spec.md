@@ -58283,3 +58283,25 @@ statements without exclusions. The production collector freezes exact node
 inventories, preserves JUnit and child SQLite, and runs the private E2E-018/021
 nodes, Ruff, strict mypy and spec tracing. Terminal publication uses unchanged
 scanners and cold replay. A single bounded full-suite diagnostic remains separate.
+
+## REQ-VERIFY-8784: Validate complete durable component clocks
+
+See REQ-REPORT-8784 and SCENARIO-VERIFY-8784-REPLAY in research-reporting.
+Write failing private tests first. Preserve raw clocks, exact nodes, JUnit,
+child SQLite and normal exits. Require100 percent newly owned statements,
+private E2E-018/021, scoped Ruff/format, strict mypy and explicit spec tracing.
+Reject rehashed changes through independent seals and cold reduction. Owned
+failures disqualify; external absence blocks. Global health is separate.
+
+Implementation20261104 for REQ-VERIFY-8784: the fixed public roster is frozen
+before the admission probe, source hashes and exact test nodes are retained,
+and the shared validator collects unit/CLI SQLite and JUnit without exclusions.
+Private CLI fixtures cannot grant readiness. Independent measurement/validation
+seals and unchanged terminal scanners precede atomic primary publication.
+
+Scoped execution20261104: all32 nodes pass without skips, including18 new tests
+and private E2E-018/021. Fresh source coverage is372/372 statements, with no
+exclusions. Ruff check/format, strict mypy and explicit spec tracing pass. All36
+measured windows and1,152 updates complete without failure/censoring; worst
+paired observer overhead18.6708706221 percent rejects component attribution.
+Repository health and terminal publication remain separately receipted.

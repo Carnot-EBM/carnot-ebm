@@ -105199,3 +105199,52 @@ controls remain authenticated. Historical aliased intervals are excluded.
 The16 new private tests pass; preflight covered229 owned statements. Production
 acceptance retains a separate fresh scoped validation and repository health
 receipt. Ops and BMAD reconciliation remain conductor-owned.
+
+## REQ-REPORT-8784: Complete ordinary durable component costs
+
+Bind exp8784-durable-cost-components, milestone2026.11.752, date20261104 and
+current invocation. Authenticate Exp8783 exact identity and original Exp8771
+ordinary states. Freeze offsets0/2032/4064, two process repeats, three randomized
+arms,32 updates and paired instrumented/plain conditions. Each complete window
+includes startup, checkpoint import, two durable commits per feedback, a real
+restart after16 updates, post-restart verification and shutdown. Prefix work is
+separate. Report one constructed workload, descriptive ratios/ranges only.
+
+### SCENARIO-REPORT-8784-COMPONENTS
+
+Direct coarse block clocks and storage-barrier clocks form non-overlapping
+exclusive spans. Retain unassigned time. Native binding and native arithmetic
+cannot be separated by Python clocks and SHALL be labeled as a combined cost.
+Admit components only if every paired overhead<=5 percent and independently
+observed spans reconcile within2 percent of parent time. Rejected attribution
+keeps complete raw costs and component_cost_ready_score=0. Complete admitted
+cost rows qualify durable_cost_rows_ready_score independently of any advantage.
+No whole-service extrapolation, natural dense-frequency or population gain.
+
+## REQ-VERIFY-8784: Sealed ordinary cost evidence and owned validation
+
+Tests precede implementation and reference these requirements. Tests use private
+fixtures, never production primaries. Retain exact serial nodes, JUnit, normal
+exits, argv, coverage SQLite and stream hashes. Require100 percent owned unit/CLI
+statements, Ruff check/format, strict mypy, explicit spec coverage and private
+E2E-018/021 with original historical assertions. One bounded full Python suite
+receipt is separate repository health. Preserve historical primaries, validators,
+weights, ARC defaults, roadmap, conductor and exclusion manifest.
+
+### SCENARIO-VERIFY-8784-REPLAY
+
+Authenticate source/code/raw hashes and independent measurement/validation seals.
+Cold replay reduces sealed primitives and rejects rehashed summary tampering.
+Unchanged adversarial and strict row validators check terminal bytes before
+atomic publication. Owned failure disqualifies. External absence blocks with
+upstream/path/hash/check/field/operator/expected/observed diagnostics. Zero model
+loads/calls, MODEL_SPECS=[], no_model_load. Conductor owns ops/BMAD reconciliation.
+
+Implementation20261104 for REQ-REPORT-8784: `durable_cost_components_8784`,
+`durable_component_clocks_8784` and `durable_component_runner_8784` reuse the
+original numerical/store bodies, durable assertions, validation custody and
+primary publisher. The thin CLI binds the exact new task and date. Eighteen
+private requirement-linked tests cover arm/restart parity, missing inputs,
+overhead admission, failure rows, identity, rehashed replay and repository-health
+separation. The terminal artifact and its sealed receipts determine actual
+readiness; the implementation does not require a speed advantage.
