@@ -21276,3 +21276,5 @@ code |
 | 2026-11-04 08:02 UTC | Probe mandated Qwen extraction under paired irrele | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp8789-branch-qualification.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-04 08:29 UTC | Separate timer overhead from process variation on  | OK | 98 passed, 1 warning in 40.38s |
 | 2026-11-04 08:31 UTC | Audit later Brier benefit and retention across ind | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8792-causal-template-learning) |
+| 2026-11-04 08:33 UTC | Assess cross-game supervisor choices from newly ad | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8789-branch-qualification.arc_new_outcomes_available_score (actual=0 == expected=1) |
+| 2026-11-04 08:35 UTC | Bound hardware benefit from newly measured complet | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8792-causal-template-learning) |
