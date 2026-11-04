@@ -105856,6 +105856,21 @@ Exp8813 SHALL publish `results/experiment_8813_v754_capstone.json` with exact so
 per-unit rows, measured durations, verdict_class, field principles and explicit
 blocked-gate operands, following the frozen V754 task contract.
 
+#### SCENARIO-REPORT-8813-ACCOUNTING
+
+All thirteen pinned visible tasks SHALL match full embedded objects and staged
+or activated YAML. An older active V753 queue remains history before activation.
+Every slot retains its declared primary or authenticated conductor receipt;
+missing external work remains blocked even when administrative readiness is1.
+
+#### SCENARIO-REPORT-8813-REDUCTION
+
+Independently reduce admitted primary rows by branch, arm and independent
+cluster. Preserve quarantine, exact-oracle circularity and descriptive canaries.
+Retirement decisions retain every complete prior_failures registration, exact
+historical bytes and explicit changed-input reopening conditions. Historical
+G1/G2/G3/G4 do not authorize publication, activation or new scientific claims.
+
 #### SCENARIO-REPORT-8813-REPLAY
 
 A private cold replay reconstructs aggregates and rejects changed authority,

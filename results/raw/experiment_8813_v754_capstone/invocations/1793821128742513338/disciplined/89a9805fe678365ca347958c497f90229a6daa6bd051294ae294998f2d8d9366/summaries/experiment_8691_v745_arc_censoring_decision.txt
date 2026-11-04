@@ -1,0 +1,18 @@
+==============================================================================
+ARTIFACT  experiment_8691_v745_arc_censoring_decision.json
+------------------------------------------------------------------------------
+  verdict          : complete_disqualified_arc_censoring_decision
+  flagged_adversarial (stamped): True   |   LIVE re-check: clean
+    note: stamped-flagged but live re-check is clean (rule may have been fixed since; verify the corrigendum).
+  acceptance gates :
+      [?   ] acceptance_gates = {'arc_decision_ready_score': 0, 'authenticated_upstream': True, 'no_censored_promotion': True, 'owned_validation': False, 'unchanged_policy': True}
+      [?   ] gate_check_summary = [{'check': 'qualified_public_observations', 'expected': 1, 'expected_hash': 'sha256:6a6cfe0b065cbe0a30e2b45a4dde6683e90bc203025a4ff96c24aad24116aa8a', 'field': 'observer_delivery_ready_score', 'observed': 1, 'operand_state': 'observed_value', 'operator': '==', 'passed': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8677_v744_arc_observation_ownership.json', 'sha256': 'sha256:6a6cfe0b065cbe0a30e2b45a4dde6683e90bc203025a4ff96c24aad24116aa8a', 'upstream': 'exp8677-arc-observation-ownership'}, {'check': 'qualified_public_observations', 'expected': 1, 'expected_hash': 'sha256:6928301fc9c7443f8bf301a001207196d9b63a3c096655a8921cec122b4ca498', 'field': 'arc_rows_ready_score', 'observed': 1, 'operand_state': 'observed_value', 'operator': '==', 'passed': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8678_v744_arc_observer_transfer.json', 'sha256': 'sha256:6928301fc9c7443f8bf301a001207196d9b63a3c096655a8921cec122b4ca498', 'upstream': 'exp8678-arc-observer-transfer'}]
+  duration_s       : 444.895387234   substrate: aggregation_from_upstream_artifacts
+  duration floor   : no_model_load >=0.0001s (substrate_class)
+  methodology      : offline_arc_methodology_descriptor via learned_verifier_checkpoint, offline_reproduced, reproducibility_checksum, verifier_checkpoint
+  headline metrics :
+      arc_decision_ready_score = 0
+      generalized_learning_benefit_score = 0
+      independent_generalization_score = 0
+      promotion_ready_score = 0
+  adversarial flags: none

@@ -1,0 +1,18 @@
+==============================================================================
+ARTIFACT  experiment_8747_v749_hardware_cost_boundary.json
+------------------------------------------------------------------------------
+  verdict          : complete_disqualified_hardware_cost_or_physical_execution
+  flagged_adversarial (stamped): True   |   LIVE re-check: clean
+    note: stamped-flagged but live re-check is clean (rule may have been fixed since; verify the corrigendum).
+  acceptance gates :
+      [?   ] acceptance_gates = {'board_authority': True, 'owned_validation': False, 'physical_execution': False}
+      [?   ] gate_check_summary = [{'check': 'authenticated_field', 'expected': 1, 'field': 'learning_cost_ready_score', 'observed': None, 'operand_state': 'missing_file', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8740_v749_causal_brier_stream.json', 'sha256': None, 'upstream': 'exp8740-causal-brier-stream'}, {'check': 'authenticated_field', 'expected': 1, 'field': 'installed_cost_ready_score', 'observed': None, 'operand_state': 'missing_file', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8744_v749_single_extraction_cost.json', 'sha256': None, 'upstream': 'exp8744-single-extraction-cost'}, {'check': 'authenticated_field', 'expected': 1, 'field': 'bounded_update_cost_ready_score', 'observed': 0, 'operand_state': 'observed_zero', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8745_v749_bounded_durable_cost.json', 'sha256': 'sha256:8852ad29e6bff49d22deb10793acca2348d79ddf42b3deafd5504c83d670df6b', 'upstream': 'exp8745-bounded-durable-cost'}, {'check': 'compatible_physical_execution', 'expected': 1, 'field': 'physical_hardware_ready_score', 'observed': 0, 'operand_state': 'observed_zero', 'operator': '==', 'passed': False, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8735_v748_hardware_cost_boundary.json', 'sha256': 'sha256:d60f2112d6ba55c48675c39a5c38039d42f3d1877b4ae1ad79fd60be7bae7651', 'upstream': 'target_boards'}, {'check': 'full_python_suite', 'expected': True, 'field': 'passed', 'observed': False, 'operand_state': 'failed_owned_validation', 'operator': '==', 'passed': False, 'path': '/var/tmp/carnot8747-full-suite/full_python_suite.stdout', 'sha256': 'sha256:99f0e5f33e05befe5aae40c9764e176007a5e265e65f23f38f3c48ecff84ee30', 'upstream': 'exp8747-hardware-cost-boundary'}]
+  duration_s       : 1.453569557   substrate: aggregation_from_upstream_artifacts
+  duration floor   : no_model_load >=0.0001s (substrate_class)
+  headline metrics :
+      complete_100x_learning_ready_score = 0
+      generalized_learning_benefit_score = 0
+      hardware_mapping_ready_score = 0
+      independent_generalization_score = 0
+      physical_hardware_ready_score = 0
+  adversarial flags: none

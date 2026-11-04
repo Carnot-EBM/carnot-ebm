@@ -1,0 +1,242 @@
+"""REQ-REPORT-8813: retain exact operands while keeping accounting separate from science."""
+
+from collections import defaultdict
+import json
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+from carnot.reporting import v753_capstone as previous
+from carnot.reporting import v752_capstone as base
+from carnot.reporting import v754_repaired_memory as q
+from carnot.reporting.v753_branch_qualification import snapshot
+from carnot.reporting.current_work_receipt import atomic_json as atomic_json
+from carnot.reporting.primary_publication import validate_primary
+from carnot.reporting.roadmap_contract import parse_design
+from carnot.reporting.v748_collection_contract import namespace
+
+Json = dict[str, Any]
+ROOT, PIN, MILESTONE = q.ROOT, q.PIN, q.MILESTONE
+NAME, TASK = "experiment_8813_v754_capstone", "exp8813-capstone"
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [f"python/carnot/reporting/v754_capstone{s}.py" for s in ["", "_report", "_runner"]] + [CLI]
+TESTS = ["tests/python/test_v754_capstone_8813.py"]
+CONSUMERS = previous.CONSUMERS
+MODEL_SPECS: list[Json] = []
+now, reference, digest, load, observe = (
+    previous.now,
+    previous.reference,
+    previous.digest,
+    previous.load,
+    previous.observe,
+)
+BRANCHES = {
+    "memory_execution": (
+        [8801, 8802, 8804],
+        "Qualify causal execution; exact verifier labels remain constructed.",
+    ),
+    "future_benefit": (
+        [8809, 8810],
+        "Require corrected simultaneous future-query benefit and retention gates on fresh independent streams.",
+    ),
+    "evidence_robustness": (
+        [8803, 8805],
+        "Reduce false accepts without exceeding the paired primitive-check budget on disjoint evidence worlds.",
+    ),
+    "consensus_errors": (
+        [8806],
+        "Reduce unanimous-wrong false accepts and corrected Brier loss against the strongest non-oracle baseline.",
+    ),
+    "natural_extraction": (
+        [8807],
+        "Require runtime_repair_ready_score=1 before a fresh Qwen canary; small counts remain descriptive.",
+    ),
+    "cost_attribution": (
+        [8808],
+        "Reduce observer overhead to<=0.05 and reconciliation error to<=0.02 for complete new learning operations.",
+    ),
+    "arc_outcomes": (
+        [8811],
+        "Require authenticated new ARC outcomes beyond the frozen frontier; history cannot supply the denominator.",
+    ),
+    "hardware_bounds": (
+        [8812],
+        "Require component_cost_ready_score=1 and measured full-operation fractions before a hardware bound.",
+    ),
+}
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush real boundaries so the parent can distinguish work from a stalled process."""
+    print(f"[exp8813] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def contract(root: Path) -> Json:
+    """Use the existing full-object and activation checker without changing historical authority."""
+    result = q.authority(root)
+    if not result["ready"]:
+        raise ValueError("v754_full_object_authority")
+    tasks = parse_design((root / q.DESIGN).read_text(), milestone=MILESTONE)[1]
+    return dict(tasks=tasks, visible_table=result["visible_table"], comparison=result)
+
+
+def authenticate(path: Path, task_id: str) -> Json:
+    """Reuse primary validation and check raw and command custody for producer schema variants."""
+    value = load(reference(path))
+    validate_primary(value, path)
+    if value.get("task_id") != task_id:
+        raise ValueError("producer_task_identity")
+    refs = [
+        r
+        for key in ["raw_shard_hashes", "code_config_hashes", "source_artifact_hashes"]
+        for r in value.get(key, [])
+        if isinstance(r, dict) and r.get("path")
+    ]
+    receipts = value.get("validation_receipts", [])
+    if (
+        not refs
+        or not receipts
+        or not value.get("owned_statement_coverage", {}).get("percent") == 100
+    ):
+        raise ValueError("producer_validation_missing")
+    for receipt in receipts:
+        for stream in ["stdout", "stderr"]:
+            if stream + "_path" in receipt:
+                refs.append(
+                    dict(path=receipt[stream + "_path"], sha256=receipt[stream + "_sha256"])
+                )
+        if receipt.get("scope") != "repository_health" and not receipt["passed"]:
+            raise ValueError("producer_owned_validation_failure")
+    if any(reference(Path(r["path"]))["sha256"] != r["sha256"] for r in refs):
+        raise ValueError("producer_operand_drift")
+    return dict(value=value, references=refs)
+
+
+_base = namespace(base, "v754_slots")
+_base.authenticate = authenticate
+
+
+def slot(task: Json, root: Path, raw: Path) -> Json:
+    """Keep alternate scheduler receipts distinct from the declared primary's scientific verdict."""
+    row: Json = _base.slot(task, root)
+    value = load(row["primary_reference"]) if row["primary_reference"]["sha256"] else {}
+    qualified = (
+        row["producer_executed"]
+        and not row["authentication_errors"]
+        and value.get("required_checks_passed") is True
+        and not value.get("flagged_adversarial")
+        and value.get("verdict_class") != "disqualified"
+    )
+    row.update(
+        producer_qualified=qualified,
+        verdict_class=value["verdict_class"] if qualified else row["verdict_class"],
+        excluded=bool(value.get("flagged_adversarial")),
+        exposure_scope=value.get("exposure_scope", "no admitted measurement"),
+    )
+    row["disposition"] = "quarantined_evidence" if row["excluded"] else row["verdict_class"]
+    progress("source_summary_before", row["experiment_id"] - 8801, 8813 - row["experiment_id"])
+    row["summary_references"] = [
+        previous.disciplined(p, raw)
+        for p in sorted((root / "results").glob(f"experiment_{row['experiment_id']}_*.json"))
+    ]
+    progress("source_summary_after", row["experiment_id"] - 8800, 8812 - row["experiment_id"])
+    row["excluded"] = row["excluded"] or any(
+        r["summary_status"] >= 2 for r in row["summary_references"]
+    )
+    row["producer_qualified"] = row["producer_qualified"] and not row["excluded"]
+    row["disposition"] = "quarantined_evidence" if row["excluded"] else row["verdict_class"]
+    scheduler_ok = False
+    if row["conductor_reference"]:
+        receipt = load(row["conductor_reference"])
+        scheduler_ok = (
+            receipt.get("experiment") == row["experiment_id"]
+            and receipt.get("title") == task["title"]
+            and receipt.get("blocked_at_layer") == "conductor_pre_gate"
+            and receipt.get("honest_verdict") == "blocked_gate_check_failed"
+        )
+        for recorded in row["conductor_gate_receipts"]:
+            ref = dict(path=recorded["artifact_path"], sha256=recorded["artifact_sha256"])
+            actual = observe(
+                ref, recorded["upstream"], recorded["artifact_field"], recorded["expected"]
+            )
+            scheduler_ok = (
+                scheduler_ok
+                and actual["observed"] == recorded["actual"]
+                and actual["passed"] == recorded["passed"]
+            )
+    row["accounted"] = bool(
+        row["producer_executed"] or scheduler_ok or row["conductor_disposition_lines"]
+    )
+    row.update(
+        cluster_id="administrative_task_slots",
+        seed=None,
+        metric=int(row["accounted"]),
+        denominator=1,
+        missing_reason=None if row["accounted"] else "missing_external_receipt",
+    )
+    return row
+
+
+def reduce_rows(rows: list[Json]) -> Json:
+    """Recompute arm means from complete rows and count clusters once across sibling seeds."""
+    groups: dict[str, list[Json]] = defaultdict(list)
+    complete = [r for r in rows if r.get("status") == "completed"]
+    for row in complete:
+        groups[str(row["arm"])].append(row)
+    return dict(
+        completed_rows=len(complete),
+        scheduled_rows=len(rows),
+        independent_clusters=len({r["cluster_id"] for r in complete}),
+        arms={
+            arm: dict(
+                row_count=len(group),
+                denominator=sum(r["denominator"] for r in group),
+                metric_mean=sum(r["metric"] for r in group) / len(group),
+            )
+            for arm, group in groups.items()
+        },
+    )
+
+
+_shared = namespace(previous, "v754_freeze")
+_shared.q = SimpleNamespace(snapshot=snapshot, DESIGN=q.DESIGN, ACTIVE=q.ACTIVE, STAGED=q.STAGED)
+_shared.contract, _shared.slot, _shared.progress = contract, slot, progress
+_shared.OWNED, _shared.TESTS, _shared.CONSUMERS = OWNED, TESTS, CONSUMERS
+
+
+def freeze(root: Path, raw: Path, run_date: str) -> Json:
+    """Charge shared custody once, then retain exact row reductions without running producers."""
+    work: Json = _shared.freeze(root, raw, run_date)
+    work["sources"] += [reference(ROOT / p) for p in [__file__, q.__file__]]
+    work["references"] += [reference(ROOT / p) for p in q.ARCHIVES]
+    reductions = []
+    for row in work["slots"]:
+        value = load(row["primary_reference"]) if row["primary_reference"]["sha256"] else {}
+        reductions.append(
+            dict(
+                task_id=row["task_id"],
+                experiment_id=row["experiment_id"],
+                admitted=row["producer_qualified"],
+                reference=row["primary_reference"],
+                reported_verdict=value.get("verdict_class"),
+                reduction=reduce_rows(value.get("rows", [])) if row["producer_qualified"] else {},
+                scores={k: v for k, v in value.items() if k.endswith("_score")},
+                scientific_denominators={
+                    k: value.get(k)
+                    for k in [
+                        "intended_count",
+                        "completed_count",
+                        "independent_count",
+                        "numerical_training_calls",
+                    ]
+                },
+                verifier_is_oracle=value.get("verifier_is_oracle"),
+                exposure_scope=row["exposure_scope"],
+            )
+        )
+    work["reductions"] = reductions
+    atomic_json(raw / "work.json", work)
+    return work
+
+
+from carnot.reporting.v754_capstone_report import build as build, replay as replay

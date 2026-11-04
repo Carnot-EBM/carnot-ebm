@@ -1,0 +1,278 @@
+"""REQ-REPORT-8813: reconstruct all dispositions without upgrading constructed science."""
+
+from copy import deepcopy
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+from carnot.reporting import v754_capstone as c
+from carnot.reporting import v752_capstone_report as previous
+from carnot.reporting.current_work_receipt import ZERO_INVOCATION_COUNTS
+from carnot.reporting.v748_collection_contract import namespace
+
+Json = dict[str, Any]
+
+
+def build(work: Json, validation: Json, output: Path) -> Json:
+    """Administrative completion requires receipts; scientific absence keeps the overall claim blocked."""
+    owned = (
+        bool(validation["receipts"])
+        and all(r["passed"] for r in validation["receipts"])
+        and validation["coverage"]["complete"]
+        and validation["union"]["passed"]
+    )
+    rows = deepcopy(work["slots"])
+    ready = owned and work["preconditions"]["projection_fits"] and all(r["accounted"] for r in rows)
+    verdict = "blocked" if owned else "disqualified"
+    honest = "complete_" + verdict + "_v754_capstone"
+    gates = []
+    by_id = {r["task_id"]: r for r in rows}
+    for task, row in zip(work["tasks"], rows):
+        for registered in task["gated_on"]:
+            producer = by_id[registered["upstream"]]
+            check = c.observe(
+                producer["primary_reference"],
+                registered["upstream"],
+                registered["artifact_field"],
+                registered["value"],
+            )
+            check.update(artifact_field=registered["artifact_field"], consumer_task_id=task["id"])
+            gates.append(check)
+        if not row["producer_qualified"]:
+            gates.append(
+                dict(
+                    row["primary_reference"],
+                    check="producer_admission",
+                    upstream=task["id"],
+                    artifact_field="qualified_primary",
+                    expected=True,
+                    observed="quarantined_evidence"
+                    if row["excluded"]
+                    else "rejected_producer"
+                    if row["producer_executed"]
+                    else "missing_file",
+                    passed=False,
+                )
+            )
+    rows.append(
+        dict(
+            task_id=c.TASK,
+            experiment_id=8813,
+            unit_id=c.TASK,
+            cluster_id="administrative_task_slots",
+            arm="scheduled_task",
+            seed=None,
+            metric=int(ready),
+            denominator=1,
+            status="completed",
+            missing_reason=None,
+            verdict_class=verdict,
+            honest_verdict=honest,
+            excluded=False,
+            producer_executed=True,
+            producer_qualified=owned,
+            accounted=owned,
+            disposition="validated_reconciliation" if owned else "disqualified",
+            scheduler_outcome="self_reconciliation",
+            effective_independent_groups=0,
+            censored=False,
+            absolute_metric=int(ready),
+            raw_numerator=int(ready),
+            raw_denominator=1,
+        )
+    )
+    decisions, retirements = [], []
+    for task, row in zip(work["tasks"], rows, strict=True):
+        branch = next(
+            (name for name, (ids, _) in c.BRANCHES.items() if row["experiment_id"] in ids),
+            "reconciliation",
+        )
+        change = (
+            c.BRANCHES[branch][1]
+            if branch in c.BRANCHES
+            else "Supply changed authenticated scientific operands; retain every task receipt."
+        )
+        decisions.append(
+            dict(
+                task_id=task["id"],
+                branch=branch,
+                automatic_rerun_authorized=False,
+                comparison_closed=True,
+                changed_operand=change,
+                falsifiable_gates=task["gated_on"],
+            )
+        )
+        for prior in task["prior_failures"]:
+            evidence = next(
+                p
+                for p in work["prior_outcomes"]
+                if p["task_id"] == task["id"] and p["prior_task_id"] == prior["experiment_id"]
+            )
+            same = bool(
+                evidence["registered_verdict_matches"]
+                and evidence["exact_identity_matches"]
+                and row["honest_verdict"] == evidence["actual_honest_verdict"]
+            )
+            skipped = row["scheduler_outcome"] in {"conductor_pre_gate", "conductor_cascade_skip"}
+            unchanged = same
+            retirements.append(
+                dict(
+                    task_id=task["id"],
+                    registration=prior,
+                    prior_evidence=evidence,
+                    observed_producer_verdict=row["honest_verdict"],
+                    exact_repeat=same,
+                    unchanged_terminal_class=unchanged,
+                    explicit_conductor_skip=skipped,
+                    recommendation="retire_unchanged_scope"
+                    if prior["retire_if_same_verdict"] and (unchanged or skipped)
+                    else "close_prior_comparison",
+                    reopening_conditions=[change, prior["addressed_by"]],
+                    manifest_edited=False,
+                )
+            )
+    primitive = c.reference(Path(work["raw"]) / "work.json")
+    validation_ref = c.reference(Path(work["raw"]) / "validation.json")
+    for check, observed in work["preconditions"].items():
+        if observed is False:
+            gates.append(
+                dict(
+                    primitive,
+                    check="precondition",
+                    upstream=c.TASK,
+                    artifact_field=check,
+                    expected=True,
+                    observed=False,
+                    passed=False,
+                )
+            )
+    if not owned:
+        gates.append(
+            dict(
+                validation_ref,
+                check="owned_validation",
+                upstream=c.TASK,
+                artifact_field="required_checks_passed",
+                expected=True,
+                observed=False,
+                passed=False,
+            )
+        )
+    duration = (
+        datetime.fromisoformat(validation["ended_at_utc"])
+        - datetime.fromisoformat(work["started_at_utc"])
+    ).total_seconds()
+    publication = work["publication_gates"]
+    branches = [
+        dict(
+            branch=name,
+            task_ids=ids,
+            next_measurement=change,
+            source_reductions=[r for r in work["reductions"] if r["experiment_id"] in ids],
+            independent_generalization_score=0,
+            current_measurements=0,
+        )
+        for name, (ids, change) in c.BRANCHES.items()
+    ]
+    value = dict(
+        experiment_id=8813,
+        task_id=c.TASK,
+        milestone=c.MILESTONE,
+        run_date=work["run_date"],
+        honest_verdict=honest,
+        verdict_class=verdict,
+        inference_substrate="aggregation_from_upstream_artifacts",
+        inference_substrate_class="no_model_load",
+        MODEL_SPECS=[],
+        model_invocation_counts=dict(ZERO_INVOCATION_COUNTS),
+        numerical_training_calls=0,
+        verifier_is_oracle=False,
+        duration_s=duration,
+        random_seed=7548813,
+        source_artifact_hashes=work["references"],
+        code_config_hashes=work["sources"],
+        raw_shard_hashes=[primitive, validation_ref, *validation.get("raw_references", [])],
+        preconditions_checked=work["preconditions"],
+        started_at_utc=work["started_at_utc"],
+        ended_at_utc=validation["ended_at_utc"],
+        phase_spans=[
+            dict(
+                phase="custody_and_validation",
+                start_utc=work["started_at_utc"],
+                end_utc=validation["ended_at_utc"],
+                duration_s=duration,
+            )
+        ],
+        rows=rows,
+        intended_count=13,
+        completed_count=len(rows),
+        censored_count=0,
+        failed_count=sum(r["verdict_class"] == "disqualified" for r in rows),
+        excluded_count=sum(r["excluded"] for r in rows),
+        independent_count=0,
+        n_samples=0,
+        gate_check_summary=[g for g in gates if not g["passed"]],
+        gate_edge_rows=gates,
+        acceptance_gates=dict(
+            owned_validation=owned,
+            complete_accounting=bool(ready),
+            authority=work["comparison"]["ready"],
+        ),
+        required_checks_passed=owned,
+        owned_statement_coverage=validation["coverage"],
+        validation_receipts=validation["receipts"],
+        exposure_scope="administrative thirteen-slot accounting; upstream constructed science remains scoped",
+        independent_generalization_score=0,
+        reconciliation_ready_score=int(ready),
+        task_outcome_rows=rows,
+        retirement_recommendations=retirements,
+        next_measurement_priorities=decisions,
+        scientific_measurement_count=0,
+        scientific_reconstruction=branches,
+        source_admission_rows=work["reductions"],
+        full_task_objects=work["tasks"],
+        canonical_tasks_sha256=c.PIN,
+        visible_task_table=work["visible_table"],
+        historical_publication_scope="historical FoVer paper only",
+        publication_gates=publication,
+        paper_ready=publication["paper_ready"],
+        unmet_gates=publication["unmet_gates"],
+        publication_authorized=False,
+        activation_authorized=False,
+        flagged_adversarial=False,
+        primitive_reference=primitive,
+        validation_reference=validation_ref,
+        publication_output=str(output.absolute()),
+        original_node_union=validation["union"],
+        repository_health_reference=work.get("repository_health_reference", {}),
+        global_reconciliation_debt="Whole-suite health is separate from owned validation; operations reconciliation is conductor-owned.",
+        cited_upstream_artifacts=[
+            dict(
+                experiment_id=r["experiment_id"],
+                fields_imported=[
+                    "honest_verdict",
+                    "verdict_class",
+                    "rows",
+                    "*_score",
+                    "validation_receipts",
+                    "raw_shard_hashes",
+                ],
+                **r["reference"],
+            )
+            for r in work["reductions"]
+            if r["reference"]["sha256"]
+        ],
+        methodology_note="Independently reduce admitted rows and retain rejected evidence. Exact checks remain circular; learned results remain constructed. Missing natural extraction, new ARC outcomes and qualified hardware-cost operands block the overall scientific claim. Historical publication readiness supplies no evidence for these hypotheses.",
+        **publication["gates"],
+    )
+    value["field_principles"] = dict.fromkeys(
+        [*value, "field_principles", "reproducibility_checksum"],
+        "Retain exact operand bytes and scheduled denominators; separate accounting, constructed science and historical publication.",
+    )
+    value["reproducibility_checksum"] = c.digest(value)
+    return value
+
+
+_replay = namespace(previous, "v754_replay")
+_replay.c, _replay.build = c, build
+replay = _replay.replay

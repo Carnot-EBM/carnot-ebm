@@ -58834,6 +58834,21 @@ Exp8813 SHALL execute its V754 protocol only after its own preconditions and
 structured gates qualify. Preserve historical assertions, causal information
 boundaries, exact model/substrate declarations and every scheduled denominator.
 
+#### SCENARIO-VERIFY-8813-OWNED
+
+Real private unit and CLI coverage SHALL combine actual SQLite shards with zero
+exclusions and cover100 percent of new executable statements. Run unchanged
+private E2E-018/021 readers, scoped Ruff check/format, strict mypy and explicit
+spec tracing. Retain one bounded whole-suite health receipt separately.
+
+#### SCENARIO-VERIFY-8813-SEALED
+
+Outside-checkout replay without PYTHONPATH SHALL reconstruct the terminal
+candidate from sealed operands and reject rehashed aggregate or authority drift.
+Unchanged adversarial and strict row validators SHALL inspect published bytes.
+Owned failure disqualifies with readiness0; unavailable resources block with
+explicit field/path/hash diagnostics and no scientific measurement.
+
 #### SCENARIO-VERIFY-8813-CONTROLS
 
 The positive, negative and leakage controls in the V754 prompt must run before
