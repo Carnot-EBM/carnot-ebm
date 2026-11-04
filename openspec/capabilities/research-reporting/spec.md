@@ -105538,6 +105538,35 @@ A private cold replay reconstructs aggregates and rejects changed authority,
 missing producer fields and rehashed aggregate tampering. External absence is
 terminal blocked; failed owned validation is disqualified with readiness zero.
 
+#### SCENARIO-REPORT-8803-COHORTS
+
+Before evaluation labels are opened, seal 120 intervention, 60 consensus
+development, 120 consensus test and 12 unused canary worlds. Each query has
+11–13 edges. Reject canonical graph collisions with all V751–V753 rosters,
+including the exposed 120-world V753 roster; renaming does not create novelty.
+Cross six frozen evidence interventions plus alternative proofs with two token
+bins and both orders. Balance support/refute/insufficient within each bin/order.
+Consensus candidates are constructed; cross unanimous-correct, unanimous-wrong
+and disagreement with sufficient/insufficient evidence. Scorers receive only
+facts/query (and candidate decisions), never group, split or truth tags.
+
+#### SCENARIO-REPORT-8803-BUDGET
+
+Retain original local and set-level implementations. Count Python executable
+line events as the common primitive, cap each arm at 200000 events and report
+actual use and exhaustion. Publish the unlimited exact reference separately.
+Check it against the independent Boolean-completion oracle and explicit
+absence, conflict, refutation and alternative-proof counterexamples. Readiness
+fields are independent integers; exact-oracle agreement earns at most
+circular_positive, and never independent generalization credit.
+
+Implementation20261104: the deterministic runner seals312 disjoint worlds,
+rejects120 exposed graph collisions and writes5760 intervention views plus6480
+consensus views. Both protocol token bins and orders balance all three truth
+classes. Twelve canary worlds remain reserved. Only17 tiny explicit controls
+(68 arm rows) are measured here; future study inputs have separate label files.
+No model is loaded and no numerical training occurs.
+
 ### REQ-REPORT-8804: Measure future Brier loss after delayed constraint additions
 
 Exp8804 SHALL publish `results/experiment_8804_v754_causal_template_streams.json` with exact source hashes,

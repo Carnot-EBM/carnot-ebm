@@ -58535,6 +58535,35 @@ The positive, negative and leakage controls in the V754 prompt must run before
 a benefit claim. New owned code needs actual unit/child statement coverage;
 constructed exact-oracle success cannot become an oracle-distinct headline.
 
+#### SCENARIO-VERIFY-8803-ORIGINAL
+
+Replay unchanged original V753 assertions and JSON null, scalar, list-of-pairs,
+empty-object and byte-drift controls under preserved V753 authority. Combine
+actual unit and child SQLite and require 377/377 historical and every newly
+owned statement, without exclusions. Strict types, Ruff, traced owned tests,
+private E2E-018/021 and unchanged terminal scanners must pass. Missing external
+resources block before measurements; owned failures disqualify with readiness
+zero. Preserve historical source, tests and quarantined primary bytes.
+
+#### SCENARIO-VERIFY-8803-TERMINAL
+
+Cold replay outside the checkout without PYTHONPATH reconstructs frozen inputs,
+labels, decisions, budgets, reductions and exact identity from sealed operands.
+Missing operands, authority drift, leaked tags and rehashed aggregate changes
+fail. Retain every scheduled denominator and real phase/child clocks. Charge
+imports/custody once; a measured cheap unit plus 900 seconds of validation must
+fit the 4800 second deadline. Global suite debt remains a separate receipt.
+Conductor owns ops/status/changelog and BMAD reconciliation after exit.
+
+Implementation20261104: all eight new owned tests pass in the production
+qualification child. Its actual unit/subprocess SQLite union covers363/363 new
+executable statements with zero exclusions. Original V753 assertions, historical
+377-statement coverage, E2E-018/021 and terminal checks retain independent command
+and stream receipts under `results/raw/experiment_8803_v754_repaired_evidence_methods/`.
+Final readiness derives from those completed receipts. The full Python diagnostic
+recorded failures and hit its300-second bound; this separate global debt is not
+reported as a passing suite. Conductor owns subsequent ops/BMAD reconciliation.
+
 ### REQ-VERIFY-8804: Measure future Brier loss after delayed constraint additions
 
 Exp8804 SHALL execute its V754 protocol only after its own preconditions and

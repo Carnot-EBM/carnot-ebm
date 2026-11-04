@@ -1,0 +1,101 @@
+......F.                                                                 [100%]
+=================================== FAILURES ===================================
+__________________ test_shared_validation_uses_real_coverage ___________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T133210-3861496-b81fb0a8/test_shared_validation_uses_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4370312c00>
+
+    def test_shared_validation_uses_real_coverage(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8803-ORIGINAL: actual SQLite inventories cannot be replaced by percentages."""
+        from types import SimpleNamespace
+    
+        database = tmp_path / "probe.sqlite"
+        receipt = child(
+            "coverage_probe",
+            [
+                sys.executable,
+                "-m",
+                "coverage",
+                "run",
+                "--data-file=" + str(database),
+                "-m",
+                "carnot.reporting.repaired_evidence_8803",
+            ],
+            tmp_path / "logs",
+        )
+        assert receipt["passed"]
+        monkeypatch.setattr(
+            runner,
+            "namespace",
+            lambda *args: SimpleNamespace(
+                validate=lambda raw, private: dict(
+                    coverage=dict(combined_reference=m.reference(database))
+                )
+            ),
+        )
+>       measured = runner.validate(tmp_path / "raw", tmp_path)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_repaired_evidence_8803.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/repaired_evidence_runner_8803.py:143: in validate
+    result = dict(validator.validate(raw, private))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/python/test_repaired_evidence_8803.py:207: in <lambda>
+    coverage=dict(combined_reference=m.reference(database))
+                                     ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v746_retained_evidence.py:34: in reference
+    return dict(path=str(path.absolute()), sha256=sha256_file(path))
+                                                  ^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:52: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T133210-3861496-b81fb0a8/test_shared_validation_uses_re0/probe.sqlite')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/pytest-carnot-ianblenke/20261104T133210-3861496-b81fb0a8/test_shared_validation_uses_re0/probe.sqlite'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_coverage_probe completed=0 pending=1
+[exp8205] phase=after_subprocess_coverage_probe completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_repaired_evidence_8803.py::test_shared_validation_uses_real_coverage
+1 failed, 7 passed, 1 warning in 142.86s (0:02:22)

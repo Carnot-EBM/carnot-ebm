@@ -1,0 +1,133 @@
+...FF...                                                                 [100%]
+=================================== FAILURES ===================================
+______________________ test_private_cli_replay_and_tamper ______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T132732-3859301-f007e797/test_private_cli_replay_and_ta0')
+
+    def test_private_cli_replay_and_tamper(tmp_path):
+        """SCENARIO-VERIFY-8803-TERMINAL: private children preserve negative verdict and cold replay."""
+        output = tmp_path / (m.NAME + ".json")
+        cmd = [sys.executable, str(m.ROOT / m.CLI)]
+        for name, args, expected in [
+            ("private", ["--private-control", "--output", str(output)], 0),
+            ("cold", ["--cold-replay", str(output)], 0),
+            ("missing", ["--cold-replay", str(tmp_path / "absent")], 1),
+            ("unsafe", ["--private-control"], 2),
+            ("date", ["--date", "20260101"], 2),
+        ]:
+            receipt = child(name, cmd + args, tmp_path / "logs", expected=expected, deadline=120)
+>           assert receipt["passed"], Path(receipt["stderr_path"]).read_text()
+E           AssertionError: Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8803_v754_repaired_evidence_methods.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/repaired_evidence_runner_8803.py", line 564, in main
+E                 receipt = publish_primary(output, value, lambda candidate: terminal(candidate, raw))
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E                 raise ValueError("candidate_rejected")
+E             ValueError: candidate_rejected
+E             
+E           assert False
+
+tests/python/test_repaired_evidence_8803.py:85: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8205] phase=before_subprocess_private completed=0 pending=1
+[exp8205] phase=after_subprocess_private completed=1 pending=0
+_______________ test_build_failure_gates_and_production_dispatch _______________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T132732-3859301-f007e797/test_build_failure_gates_and_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc408bf4620>
+
+    def test_build_failure_gates_and_production_dispatch(tmp_path, monkeypatch):
+        """REQ-VERIFY-8803: missing external resources block; owned failures disqualify."""
+        output = tmp_path / (m.NAME + ".json")
+        monkeypatch.setattr(runner, "validate", lambda raw, private: runner.unqualified())
+>       assert runner.main(["--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_repaired_evidence_8803.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/repaired_evidence_runner_8803.py:564: in main
+    receipt = publish_primary(output, value, lambda candidate: terminal(candidate, raw))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261104T132732-3859301-f007e797/test_build_failure_gates_and_p0/experiment_8803_v754_repaired_evidence_methods.json')
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'disjoint': True, 'independent_truth': True, 'input_only_child': True, 'lengt...intervention_methods.json', 'sha256': 'sha256:7fabfb973c9ce2b0c9ea38c285da0fe08bdc3ba5d1713bb40cf6b03c58781533'}], ...}
+validator = <function main.<locals>.<lambda> at 0x7fc4071254e0>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8803] phase=start_no_model_load completed=0 pending=0
+[exp8803] phase=preconditions_before completed=0 pending=0
+[exp8803] phase=preconditions_after completed=0 pending=0
+[exp8803] phase=seal_worlds completed=20 pending=292
+[exp8803] phase=seal_worlds completed=40 pending=272
+[exp8803] phase=seal_worlds completed=60 pending=252
+[exp8803] phase=seal_worlds completed=80 pending=232
+[exp8803] phase=seal_worlds completed=100 pending=212
+[exp8803] phase=seal_worlds completed=120 pending=192
+[exp8803] phase=seal_worlds completed=140 pending=172
+[exp8803] phase=seal_worlds completed=160 pending=152
+[exp8803] phase=seal_worlds completed=180 pending=132
+[exp8803] phase=seal_worlds completed=200 pending=112
+[exp8803] phase=seal_worlds completed=220 pending=92
+[exp8803] phase=seal_worlds completed=240 pending=72
+[exp8803] phase=seal_worlds completed=260 pending=52
+[exp8803] phase=seal_worlds completed=280 pending=32
+[exp8803] phase=seal_worlds completed=300 pending=12
+[exp8803] phase=cohorts_sealed_before_evaluation completed=312 pending=0
+[exp8205] phase=before_subprocess_input_only_controls completed=0 pending=1
+[exp8205] phase=after_subprocess_input_only_controls completed=1 pending=0
+[exp8803] phase=validation_before completed=0 pending=0
+[exp8803] phase=validation_after completed=0 pending=0
+[exp8803] phase=terminal_publication_before completed=0 pending=0
+[exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+[exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+[exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+[exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+[exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+[exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_repaired_evidence_8803.py::test_private_cli_replay_and_tamper
+FAILED tests/python/test_repaired_evidence_8803.py::test_build_failure_gates_and_production_dispatch
+2 failed, 6 passed, 1 warning in 43.70s
