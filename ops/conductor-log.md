@@ -21272,3 +21272,4 @@ code |
 | 2026-11-04 07:55 UTC | Seal length-balanced evidence interventions and st | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 92.96s (0:01:32) |
 | 2026-11-04 07:57 UTC | Measure future calibrated decisions after delayed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8790-delayed-memory-prototype) |
 | 2026-11-04 07:57 UTC | Compare feedback admission only when the pending q | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8790-delayed-memory-prototype) |
+| 2026-11-04 07:59 UTC | Measure evidence invariance and semantic sensitivi | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8791-evidence-intervention-methods.evidence_interventions_ready_score (actual=0 == expected=1) |
