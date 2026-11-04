@@ -105397,3 +105397,36 @@ Implementation20261104: `evidence_intervention_methods_8791` freezes unchanged
 V751 semantics and the strong reference before tiny evaluation. The corpus
 module seals2880 balanced future inputs and independent evaluator records.
 The terminal artifact owns qualification; no120-world comparison is executed.
+# REQ-REPORT-8796: Observer intervention admission and honest missing costs
+
+Bind exp8796-observer-intervention, milestone2026.11.753, date20261104 and
+the current invocation. Authenticate original Exp8783 identity, ordinary starts
+and Exp8784 timing primitives without changing their assertions or hashes.
+Freeze Python/resident-native, offsets0/2032/4064, two repeats,32 updates and
+a restart after16; counterbalance all six orders of plain/sham/clock across
+the six start/repeat combinations. Sham uses identical dispatch and preallocated
+buffers without timestamp reads; clock records block boundaries. Preserve all
+durability, tail-drain, acknowledgement and output checks. Format after timing.
+
+### SCENARIO-REPORT-8796-DISTURBANCE
+
+Report signed and absolute sham/plain and clock/plain differences for twelve
+matched triples. Every absolute disturbance must be <=0.05, parent/block
+discrepancy <=0.02 and parity and known-extra-operation controls must pass.
+A negative41-percent difference rejects attribution. Unassigned and observer
+costs remain explicit. Rows and component readiness are separate. Confidence
+limits concern this one constructed workload only; no production optimization,
+population throughput or hardware acceleration follows from rejected components.
+
+### SCENARIO-REPORT-8796-BLOCKED
+
+Check private scratch, imports, exact sources and measured preflight resources.
+If retained authority rejects the active contract, publish complete_blocked
+with every upstream/path/hash/check/field/operator/expected/observed operand.
+Retain36 censored windows and twelve missing triples, with null clocks and zero
+readiness; do not run any timing control or window. A triple-based execution
+projection is unavailable while admission is blocked, never fabricated from
+preflight latency. Freeze the2400-second execution cap and900-second validation
+reserve separately from scientific acceptance. The current implementation may
+close this invocation at preflight; an admitted workload requires separately
+qualified observer execution and must never fall through to the old observer.

@@ -58428,3 +58428,22 @@ does not replace coverage tracing. Rehashed oracle-label corruption is rejected
 by semantic reconstruction. Terminal validation owns the final scoped verdict;
 whole-repository failures remain separately recorded. Ops/BMAD updates are
 reserved for the conductor's reconciliation step.
+# REQ-VERIFY-8796: Sealed observer preconditions and terminal publication
+
+Write requirement-linked tests before implementation. Run real private CLI
+children, retain exact collected-node inventories, normal exits, JUnit and
+coverage SQLite, and require100 percent newly owned executable statements.
+Run Ruff check/format, strict mypy, explicit spec coverage and private
+E2E-018/021 for authority/publication. E2E-003/004 apply if native execution
+occurs. Keep one full Python suite health receipt separate from scoped checks.
+Use MODEL_SPECS=[], no_model_load and zero model/training calls.
+
+### SCENARIO-VERIFY-8796-REPLAY
+
+Seal source, code, preflight and validation bytes independently. Cold replay
+rebuilds terminal rows and rejects identity changes, rehashed summaries and
+rehashed primitive changes. Unchanged adversarial and strict row validators
+inspect final bytes before atomic publication. Owned validation failure
+disqualifies; unchanged external contract absence blocks with no measurement.
+Preserve historical artifacts, shared validators, conductor, roadmap, exclusion
+manifest, weights and ARC defaults. The conductor owns ops and BMAD updates.
