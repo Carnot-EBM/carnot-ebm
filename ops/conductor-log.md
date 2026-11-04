@@ -21258,3 +21258,5 @@ code |
 | 2026-11-04 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_rising_intrinsic_reward_magnitude age-week 5: OPEN 3 |
 | 2026-11-04 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence age-week  |
 | 2026-11-04 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8492_v730_publication_cost_model.json age-week 3: OPEN 21 days: CLAIM |
+| 2026-11-04 01:26 UTC | Measure complete ordinary update costs with low-ov | OK | 99 passed, 1 warning in 261.39s (0:04:21) |
+| 2026-11-04 01:28 UTC | Audit future calibration constraint additions and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8780-causal-template-learning) |
