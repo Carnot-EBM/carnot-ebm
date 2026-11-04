@@ -105773,6 +105773,59 @@ A private cold replay reconstructs aggregates and rejects changed authority,
 missing producer fields and rehashed aggregate tampering. External absence is
 terminal blocked; failed owned validation is disqualified with readiness zero.
 
+
+#### SCENARIO-REPORT-8810-SEALED-CENSUS
+
+Allocate all 14400 online and 16200 retention identities before authentication.
+A missing row or sealed file remains censored with a reason and prevents benefit
+readiness. Raw receipts bind original source bytes, exact historical authorities
+and the current contract; no historical contract resolves through mutable vNEXT.
+
+#### SCENARIO-REPORT-8810-TERMINAL
+
+The thin no-model CLI publishes only after owned tests, zero-exclusion combined
+unit/child statement coverage, private E2E-018/021, Ruff, strict mypy, explicit
+spec tracing, unchanged scanners and outside-checkout cold replay. Failed owned
+checks disqualify with readiness zero. External absence is terminal blocked.
+Constructed gains are circular_positive and independent_generalization_score=0.
+
+
+Verification 2026-11-04, Exp8810: independently authenticated all14400 online
+and16200 retention slots across30 reset streams. Future combined-minus-read-only
+Brier is+0.0008122334 (simultaneous99.5 percent interval
+[+0.0003348147,+0.0014341765]); combined-minus-calibration is+0.0000867022
+([+0.0000769600,+0.0000948848]). Both required improvement margins fail, so
+learning_benefit_ready_score=0 and the measured verdict is null. All six
+retention bounds and both error bounds pass, but decision coverage is zero in
+every arm: zero false accepts/rejects do not establish useful decisions.
+Owned qualification passed18 tests and37 unchanged private E2E/consumer tests;
+combined unit/real-child coverage is427/427 statements with zero exclusions.
+Ruff check/format, strict mypy and owned spec tracing pass. The one unchanged
+whole-suite health command timed out at300 seconds before a test summary;
+that receipt is separate reconciliation debt. Publication requires the unchanged
+terminal scanners and outside-checkout cold replay. No model or gradient calls
+were made; constructed labels give independent_generalization_score=0.
+
+#### SCENARIO-REPORT-8810-ROW-RECEIPT
+
+The independently_recomputed_rows field SHALL contain completed/online/retention
+counts and the canonical hash of rows. These are census reconciliation operands,
+not a second scientific metric. Reject altered row hashes or counts. Retain any
+rejected scalar-count candidate and unchanged scanner failure receipts. A schema
+repair may reuse exact retained measurements after recording original code bytes,
+new code hashes and fresh owned validation; cold replay must still reconstruct all
+measurements from sealed upstream operands before publication.
+
+Schema qualification repair, 2026-11-04: the original scalar recomputed-row
+count was rejected by the unchanged adversarial scanner as a duplicate metric.
+Its candidate, failure receipts and measured code copies remain under raw/.
+The field now holds completed/online/retention counts and a canonical row hash.
+Scientific rows and all ten intervals are unchanged. Fresh qualification passes
+19 owned and37 private E2E/consumer tests, with432/432 owned statements covered
+and zero exclusions. Ruff check/format, strict mypy, explicit spec tracing,
+unchanged adversarial verification (zero flags) and strict row consistency pass.
+Outside-checkout cold reconstruction remains the final publication gate.
+
 ### REQ-REPORT-8811: Assess cross-game supervisor generalization from new live outcomes
 
 Exp8811 SHALL publish `results/experiment_8811_v754_new_arc_outcome_analysis.json` with exact source hashes,

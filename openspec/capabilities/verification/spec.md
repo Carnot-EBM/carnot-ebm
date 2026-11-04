@@ -58754,6 +58754,56 @@ The positive, negative and leakage controls in the V754 prompt must run before
 a benefit claim. New owned code needs actual unit/child statement coverage;
 constructed exact-oracle success cannot become an oracle-distinct headline.
 
+
+#### SCENARIO-VERIFY-8810-INDEPENDENT-REDUCTION
+
+Recompute three-class Brier, false accepts, false rejects and coverage from every
+authenticated probability and label, without producer aggregation functions.
+Reject duplicate identities, altered state hashes, prediction/label release
+order violations, changed-predicate claims unsupported by actual checks, and
+shuffled labels not drawn from the released prefix. Full state snapshot hashes
+include parameters, templates, pending predictions, acknowledgements and labels.
+
+#### SCENARIO-VERIFY-8810-FAMILYWISE
+
+Freeze ten paired comparisons: combined-minus-read-only/calibration future
+Brier on ordinals 9 through31; additions/calibration/combined retention Brier
+at16/32 minus0; combined-minus-read-only false accept/reject incidence. Average
+queries within seed then seeds within stream. Resample whole streams with10000
+draws and Bonferroni two-sided99.5 percent family coverage (tail0.00025 per
+comparison). Both future Brier upper bounds must be below-0.01; all eight
+retention/error upper bounds must be at most0.02, with complete denominators,
+real future changed-check use and a valid nonidentity shuffled control. Coverage
+and the exact-oracle ceiling remain separate. No gradient motion or extra
+checks certify benefit. A natural-data test needs new independent sources,
+prospectively sealed predictions, delayed labels, frozen budgets and thresholds,
+and the same clustered uncertainty and retention gates.
+
+
+Verification 2026-11-04, Exp8810: all30600 planned slots are authenticated,
+with zero missing, failed or excluded slots. Recomputed31050 full snapshot/final
+state identities,606 future combined changed-check uses and1683 nonidentity
+shuffled labels. All predictions precede recorded truth and delayed feedback.
+The10000 whole-stream draws average seeds11/23/47 within each of30 streams.
+Both future Brier contrasts are positive, so the required upper bounds below
+-0.01 fail. The six retention bounds remain at most0.000070227, below0.02;
+both error contrasts are zero because all future decisions escalate. The
+exact-oracle ceiling remains separate from observed zero coverage. Numerical
+gradients and intermediate tail coefficients are not refitted: every complete
+serving snapshot and the tail final state are authenticated. All427 new owned
+statements are covered without exclusions;18 owned and37 private E2E/consumer
+tests pass. The bounded full-suite health timeout remains separate debt.
+
+Schema qualification repair, 2026-11-04: the original scalar recomputed-row
+count was rejected by the unchanged adversarial scanner as a duplicate metric.
+Its candidate, failure receipts and measured code copies remain under raw/.
+The field now holds completed/online/retention counts and a canonical row hash.
+Scientific rows and all ten intervals are unchanged. Fresh qualification passes
+19 owned and37 private E2E/consumer tests, with432/432 owned statements covered
+and zero exclusions. Ruff check/format, strict mypy, explicit spec tracing,
+unchanged adversarial verification (zero flags) and strict row consistency pass.
+Outside-checkout cold reconstruction remains the final publication gate.
+
 ### REQ-VERIFY-8811: Assess cross-game supervisor generalization from new live outcomes
 
 Exp8811 SHALL execute its V754 protocol only after its own preconditions and
