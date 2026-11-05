@@ -106641,6 +106641,15 @@ producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
 
+Exp8852 SHALL retain the registered queue hash even when the supplied design
+is truncated or staged YAML is absent. This does not reconstruct missing design
+authority: report that absence as blocked while completing thirteen-slot custody.
+Recompute admitted future, selective and cost estimands from frozen operands;
+deduplicate streams, worlds and draw indices across producer/audit reuse. Report
+calibration, additions, retention, conditional risk and CPU windows separately.
+Own validation failure disqualifies readiness; repository-wide health is separate.
+Cold replay SHALL reject rehashed aggregate, admission and authority tampering.
+
 Exp8840 execution SHALL treat an incomplete embedded design JSON as missing
 external contract authority. The active queue may be compared after activation
 using only the conductor's literal-brace encoding; it SHALL NOT supply missing

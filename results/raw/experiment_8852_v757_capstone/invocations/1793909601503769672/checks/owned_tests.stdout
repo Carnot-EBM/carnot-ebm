@@ -1,0 +1,196 @@
+...F....                                                                 [100%]
+=================================== FAILURES ===================================
+________________________________ test_reducers _________________________________
+
+frozen = {'code': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v757_capstone.py', 'sha256': '...nstructed relational evidence with previously sealed labels; no natural-language certification', ...}, ...], ...}, ...}
+
+    def test_reducers(frozen):
+        """REQ-REPORT-8852: recompute each endpoint and reject changed producer summaries."""
+        from carnot.reporting.v757_capstone_reduction import reduce
+    
+        for n in [8841, 8842, 8843, 8844, 8846, 8847, 8848, 8851]:
+            path = next((c.ROOT / "results").glob(f"experiment_{n}_v757*.json"))
+            value = json.loads(path.read_bytes())
+            rebuilt = reduce(value)
+            assert rebuilt["natural_generalization_count"] == 0
+            if n == 8844:
+                value["certificate_firing_count"] = -1
+                with pytest.raises(ValueError, match="estimand"):
+                    reduce(value)
+            if n == 8846:
+                value["rows"] = []
+                with pytest.raises(ValueError, match="future_rows"):
+                    reduce(value)
+        work = deepcopy(frozen)
+        work["contract"]["ready"] = True
+        work["slots"] = [r for r in work["slots"] if r["experiment_id"] != 8846]
+>       value = c.build(work, validation())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v757_capstone_8852.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v757_capstone.py:168: in build
+    value: Json = report.build(work, validation)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'code': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v757_capstone.py', 'sha256': '...nstructed relational evidence with previously sealed labels; no natural-language certification', ...}, ...], ...}, ...}
+validation = {'coverage': {'complete': True, 'percent': 100}, 'receipts': [{'name': 'unit', 'passed': True}]}
+
+    def build(work: Json, validation: Json) -> Json:
+        """Keep independent branch conclusions even while missing external science blocks the total."""
+        owned = (
+            bool(validation["receipts"])
+            and all(
+                r["passed"] for r in validation["receipts"] if r.get("scope") != "repository_health"
+            )
+            and validation["coverage"]["complete"]
+            and validation["coverage"]["percent"] == 100
+        )
+        ready = bool(owned and work["contract"]["ready"] and all(r["accounted"] for r in work["slots"]))
+        verdict = "blocked" if owned else "disqualified"
+        honest = "complete_" + verdict + "_v756_capstone"
+        rows = [
+            {k: deepcopy(v) for k, v in r.items() if k not in {"producer", "snapshots", "reduction"}}
+            for r in work["slots"]
+        ]
+        rows.append(
+            dict(
+                task_id=c.TASK,
+                experiment_id=8839,
+                unit_id=c.TASK,
+                cluster_id="administrative_task_slots",
+                arm="scheduled_task",
+                seed=None,
+                metric=int(ready),
+                denominator=1,
+                status="completed",
+                missing_reason=None,
+                accounted=owned,
+                disposition="validated_reconciliation" if owned else "disqualified",
+                verdict_class=verdict,
+                primary_honest_verdict=honest,
+                admitted=owned,
+            )
+        )
+        branches, rejected, retirements = [], [], []
+        gates = deepcopy(work["edges"])
+        if not owned:
+            gates.append(
+                dict(
+                    path=str(Path(work["raw"]) / "validation.json"),
+                    sha256=None,
+                    check="owned_validation",
+                    upstream=c.TASK,
+                    artifact_field="required_checks_passed",
+                    expected=True,
+                    observed=False,
+                    passed=False,
+                    missing_reason="rejected_producer",
+                )
+            )
+        historical = {r["task_id"]: r for r in work["historical"]["rows"]}
+        by_id = {r["task_id"]: r for r in rows}
+        for slot in work["slots"]:
+            producer = slot["producer"]
+            branches.append(
+                dict(
+                    task_id=slot["task_id"],
+                    disposition=slot["disposition"],
+                    verdict_class=slot["verdict_class"],
+                    admitted=slot["admitted"],
+                    exposure_scope=producer.get("exposure_scope", "no admitted measurement"),
+                    reduction=slot["reduction"],
+                    acceptance_gates=producer.get("acceptance_gates", {}),
+                    scores={k: v for k, v in producer.items() if k.endswith("_score")},
+                )
+            )
+            gates.extend(producer.get("gate_check_summary", []))
+            if not slot["admitted"]:
+                rejected.append(
+                    dict(
+                        task_id=slot["task_id"],
+                        reference=slot["primary_reference"],
+                        errors=slot["admission_errors"],
+                        disposition=slot["disposition"],
+                        reported_row_count=producer["reported_completed_rows"],
+                        science_admitted=False,
+                    )
+                )
+                gates.append(
+                    dict(
+                        slot["primary_reference"],
+                        check="producer_admission",
+                        upstream=slot["task_id"],
+                        artifact_field="qualified_primary",
+                        expected=True,
+                        observed=False,
+                        passed=False,
+                        missing_reason="rejected_producer"
+                        if producer.get("task_id")
+                        else "missing_file",
+                    )
+                )
+        for task in work["contract"]["tasks"]:
+            for prior in task["prior_failures"]:
+                old = historical.get(prior["experiment_id"], {})
+                actual = old.get("primary_honest_verdict")
+>               row = by_id[task["id"]]
+                      ^^^^^^^^^^^^^^^^^
+E               KeyError: 'exp8846-future-benefit-audit'
+
+python/carnot/reporting/v756_capstone_report.py:112: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8846] phase=reconstructed_streams completed=1 pending=23
+[exp8846] phase=reconstructed_streams completed=2 pending=22
+[exp8846] phase=reconstructed_streams completed=3 pending=21
+[exp8846] phase=reconstructed_streams completed=4 pending=20
+[exp8846] phase=reconstructed_streams completed=5 pending=19
+[exp8846] phase=reconstructed_streams completed=6 pending=18
+[exp8846] phase=reconstructed_streams completed=7 pending=17
+[exp8846] phase=reconstructed_streams completed=8 pending=16
+[exp8846] phase=reconstructed_streams completed=9 pending=15
+[exp8846] phase=reconstructed_streams completed=10 pending=14
+[exp8846] phase=reconstructed_streams completed=11 pending=13
+[exp8846] phase=reconstructed_streams completed=12 pending=12
+[exp8846] phase=reconstructed_streams completed=13 pending=11
+[exp8846] phase=reconstructed_streams completed=14 pending=10
+[exp8846] phase=reconstructed_streams completed=15 pending=9
+[exp8846] phase=reconstructed_streams completed=16 pending=8
+[exp8846] phase=reconstructed_streams completed=17 pending=7
+[exp8846] phase=reconstructed_streams completed=18 pending=6
+[exp8846] phase=reconstructed_streams completed=19 pending=5
+[exp8846] phase=reconstructed_streams completed=20 pending=4
+[exp8846] phase=reconstructed_streams completed=21 pending=3
+[exp8846] phase=reconstructed_streams completed=22 pending=2
+[exp8846] phase=reconstructed_streams completed=23 pending=1
+[exp8846] phase=reconstructed_streams completed=24 pending=0
+[exp8846] phase=bootstrap completed=1000 pending=9000
+[exp8846] phase=bootstrap completed=2000 pending=8000
+[exp8846] phase=bootstrap completed=3000 pending=7000
+[exp8846] phase=bootstrap completed=4000 pending=6000
+[exp8846] phase=bootstrap completed=5000 pending=5000
+[exp8846] phase=bootstrap completed=6000 pending=4000
+[exp8846] phase=bootstrap completed=7000 pending=3000
+[exp8846] phase=bootstrap completed=8000 pending=2000
+[exp8846] phase=bootstrap completed=9000 pending=1000
+[exp8846] phase=bootstrap completed=10000 pending=0
+[exp8846] phase=bootstrap completed=1000 pending=9000
+[exp8846] phase=bootstrap completed=2000 pending=8000
+[exp8846] phase=bootstrap completed=3000 pending=7000
+[exp8846] phase=bootstrap completed=4000 pending=6000
+[exp8846] phase=bootstrap completed=5000 pending=5000
+[exp8846] phase=bootstrap completed=6000 pending=4000
+[exp8846] phase=bootstrap completed=7000 pending=3000
+[exp8846] phase=bootstrap completed=8000 pending=2000
+[exp8846] phase=bootstrap completed=9000 pending=1000
+[exp8846] phase=bootstrap completed=10000 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v757_capstone_8852.py::test_reducers - KeyError: 'ex...
+1 failed, 7 passed, 1 warning in 399.77s (0:06:39)

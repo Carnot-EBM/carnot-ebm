@@ -1,0 +1,51 @@
+{
+  "experiment": 8850,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-05",
+  "started_at": "2026-11-05T19:27:31.219157+00:00",
+  "finished_at": "2026-11-05T19:27:31.219157+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Audit live supervisor transfer only when new applied outcomes arrive",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8840-branch-contract",
+  "failed_field": "arc_new_outcomes_available_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8840_v757_branch_contract.json",
+  "failed_evidence_sha256": "sha256:f58e5248daf988f09ae888a953d8586abe261512a9b3d3456bdd70e4471f0e72",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8840-branch-contract",
+    "failed_field": "arc_new_outcomes_available_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8840_v757_branch_contract.json",
+    "failed_evidence_sha256": "sha256:f58e5248daf988f09ae888a953d8586abe261512a9b3d3456bdd70e4471f0e72"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8840-branch-contract.arc_new_outcomes_available_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8840-branch-contract",
+      "artifact_field": "arc_new_outcomes_available_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8840_v757_branch_contract.json",
+      "artifact_sha256": "sha256:f58e5248daf988f09ae888a953d8586abe261512a9b3d3456bdd70e4471f0e72"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
