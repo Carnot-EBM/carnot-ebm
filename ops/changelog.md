@@ -23090,3 +23090,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   authorship receipt under `/var/tmp/carnot-8818-repair-prbp7kav/`.
 - Keep existing global reconciliation debt (architecture freshness and 1,142
   missing spec references) separate. The whole repository suite was not rerun.
+- 2026-11-05: Measure useful evidence decisions under equal computational budgets (⚠️ Blocked) — honest_verdict=complete_blocked_evidence_decisive_coverage; results/experiment_8818_v755_evidence_decisive_coverage.json
