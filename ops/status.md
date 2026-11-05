@@ -18898,3 +18898,21 @@ gate edges passed; exclusion and prior-failure lint were clean. The 120 selected
 unit/private E2E checks, scoped lint and scoped spec tracing passed. Global spec
 tracing retains 1,142 existing missing references. Active-roadmap, conductor,
 manifest and archived-design hashes were verified. No research producer ran.
+
+## 2026-11-05 — V758 research plan staged
+
+Milestone 2026.11.758 proposes exactly thirteen tasks, Exp8853–Exp8865, across
+four phases. The design table and complete embedded task objects match
+research-roadmap-next.yaml. The original truncated V757 design is preserved as
+openspec/change-proposals/research-roadmap-v757-preserved-20261105.md.
+
+The plan tests matched linear learning ablations, finite-population selective
+feasibility, independent selection/certification, an installed exact witness
+path, and complete request/adaptation costs. A Qwen3.8 bounded canary requires
+new authenticated CUDA evidence. The November 5 ARC suspension is honored.
+Hardware mapping and reconciliation read independent branches unconditionally.
+
+The source scan was recorded before design. Planned OpenSpec requirements,
+BMAD traceability and architecture boundaries are aligned. Initial full-contract
+and gate checks pass; remaining validation is in progress. This planning change
+runs no experiment and does not activate the milestone.

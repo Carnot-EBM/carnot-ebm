@@ -7,24 +7,26 @@
 
 | Verdict | Count |
 |---|---|
-| `AUTHENTIC` | 15 |
+| `AUTHENTIC` | 13 |
 | `HONEST_HEURISTIC` | 2 |
-| `DISHONEST_NAMING` | 2 |
-| `ADVERSARIAL_GAMING` | 1 |
+| `DISHONEST_NAMING` | 5 |
+| `ADVERSARIAL_GAMING` | 0 |
 | `CANNOT_DETERMINE` | 0 |
 | `UNKNOWN` | 0 |
 | `OUTRIGHT_FAKE` | 0 |
 
 ### FLAGGED — operator action recommended
-- `python/carnot/verify/fover_semantic_calibration.py` — **ADVERSARIAL_GAMING**
-- `python/carnot/verify/gated_sota_repair_micro_panel_v10.py` — **DISHONEST_NAMING**
-- `python/carnot/verify/graph_grounding_fact_verifier_defabricated.py` — **DISHONEST_NAMING**
+- `python/carnot/verify/hallufield_verifier.py` — **DISHONEST_NAMING**
+- `python/carnot/verify/halueval_fever_exact_frontier_expansion.py` — **DISHONEST_NAMING**
+- `python/carnot/verify/headline_sota_repair_panel_v11.py` — **DISHONEST_NAMING**
+- `python/carnot/verify/hierarchical_logcons.py` — **DISHONEST_NAMING**
+- `python/carnot/verify/ir_conformal_verifier.py` — **DISHONEST_NAMING**
 
 ---
 
 Scanned 20 verifier file(s) with codex as the hostile reviewer.
 
-## python/carnot/verify/fit_sentence_capture_8182.py
+## python/carnot/verify/group_conditional_calibration.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -32,25 +34,26 @@ Scanned 20 verifier file(s) with codex as the hostile reviewer.
 AUTHENTIC
 
 ## CLAIMS
-No paper, named-model, or hardware claim. The docstring says “collect fixed-source evidence without fitting a head” and explicitly states “neither transport nor exposed labels establish semantic benefit.”
+No paper, neural-model, or compute-substrate claims. The docstrings claim statistical operations, including “Fit isotonic calibration for one verifier group and score test rows.”
 
 ## IMPLEMENTATION_REALITY
-Authenticates historical artifacts, reuses matching calls, delegates fresh generation to imported Carnot canary code, and aggregates sentence predictions alongside historical control features. There is no direct model loader or HTTP inference call here; fixed fixture responses are explicitly disclosed and excluded from live readiness.
+Computes score ranks with NumPy, combines values using SciPy’s chi-square distribution, fits scikit-learn isotonic regression, and evaluates held-out AUROC across seeded splits. It imports and invokes sklearn; no neural inference is claimed or performed.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
 
 ## GAMING_PATTERNS
-none
+none. Logarithm-input clipping and isotonic boundary clipping are ordinary numerical handling. Seeds control train/test splits; no random features are generated.
 
 ## RECOMMENDATION
 KEEP
 
 ## RATIONALE
-The implementation matches its narrow evidence-collection claim and makes no claim to implement a paper’s method. The duration threshold checks measured elapsed time; there is no sleep-padding, score-capping, or random feature generation. Keep this as collection infrastructure: its readiness and trainability scores do not establish semantic accuracy or justify headline AUROC inclusion, and the delegated inference implementation is outside the supplied excerpt.
+This is an actual statistical calibration pipeline, with no invented model invocation, paper attribution, or hardware claim. Nothing shown attempts to evade adversarial checks.
+Upstream verifier authenticity and statistical validity remain unverified; this verdict does not certify headline AUROC numbers.
 
 
-## python/carnot/verify/fixedpoint_sparse_8003.py
+## python/carnot/verify/guarded_transaction_8053.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -58,110 +61,90 @@ The implementation matches its narrow evidence-collection claim and makes no cla
 AUTHENTIC
 
 ## CLAIMS
-“integer CPU emulation preserves measurable numerical errors.”
+“compare the same guarded work through Python and PyO3.”
 
-“The input scaler remains a host operation. Lookup, products, sums and stored updates use the declared integer format; no accelerator executes this code.”
+“The binding computes real gradients and calibrated probabilities. Policy decisions stay in Python, so its conversion and guard overhead remain charged to native work.”
+
+No paper, LLM, or GPU claim.
 
 ## IMPLEMENTATION_REALITY
-Calls the imported Carnot sparse head’s prediction/update functions and compares their results with 16/24-bit fixed-point emulation. Implements quantized coefficients, rounded products, saturating arithmetic, and explicit error measurements using NumPy/SciPy.
+Calls `native.RustNumericalUpdate8027(...).update_batch(...)`; the inspected PyO3 binding and Rust core implement actual gradient updates and sigmoid probabilities using supplied calibration coefficients. The module imports NumPy and Carnot modules, compares Python/native results, measures complete transactions, and checks persisted state after reload.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
 
 ## GAMING_PATTERNS
-none
+none. NumPy randomness selects workloads, randomizes execution order, and bootstraps measured timings; it does not fabricate classified features. Synthetic fixtures are explicitly marked, with zero natural-workload credit; no sleep-padding, perfect-dodging caps, or named adversarial-check evasion appears.
 
 ## RECOMMENDATION
 KEEP
 
 ## RATIONALE
-The CPU-emulation claim is supported by actual arithmetic and comparisons against the floating-point head. Saturation implements the declared numerical format, and 0.99 is an agreement requirement; neither constitutes score manipulation. Keep this as numerical-validation tooling; its readiness score provides no independent verifier performance evidence for headline AUROC.
+The claimed numerical work exists in the native implementation; this is not regex masquerading as model computation. Keep it as benchmark infrastructure: it supplies no standalone verifier score and establishes no headline AUROC or production ensemble accuracy. Runtime execution and empirical calibration quality were not checked.
 
 
-## python/carnot/verify/focal_capture_8263.py
+## python/carnot/verify/hallufield_verifier.py
 
-**Verdict:** `AUTHENTIC`
+**Verdict:** `DISHONEST_NAMING`
 
 ## VERDICT
-AUTHENTIC
+DISHONEST_NAMING
 
 ## CLAIMS
-“The peer is supplied by later GPU tasks.” Current qualification explicitly “uses scripted peers with real serialized requests and parsed replies; it never pretends to acquire a model.”
+> “HalluField Tier 0m synthetic-logit hallucination detector.”
 
-“Serve private protocol controls; these responses have no model provenance.”
+> “This module implements the CPU approximation of the field-theoretic token-path energy.”
 
 ## IMPLEMENTATION_REALITY
-Serializes requests, dispatches them through a server context, validates reply bindings, parses responses, and journals/checkpoints results. The supplied peer generates scripted protocol responses; no model invocation or ML framework import appears in this source.
+Imports only NumPy and consumes caller-supplied logprobs; no model invocation occurs. It divides those scalars by temperature, computes negative mean values and softmax entropy across sequence positions, then multiplies their standard deviations across temperatures.
 
 ## CLAIM_VS_REALITY_GAP
-NONE
+UNDISCLOSED_PROXY
 
 ## GAMING_PATTERNS
 none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The docstrings accurately describe protocol infrastructure and explicitly disclaim model provenance. The timeout fixture tests an unresponsive child; it does not pad reported duration. Keep this as protocol qualification infrastructure; its scripted responses cannot establish production verification quality or support headline AUROC.
-
-
-## python/carnot/verify/focal_protocol_8263.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No paper, model, or compute-substrate claims. The docstrings explicitly describe “Exact vocabulary counts,” an “explicit raw-completion endpoint,” and a “frozen maximum-Jaccard selector.”
-
-## IMPLEMENTATION_REALITY
-The code constructs token-budgeted completion requests, parses predicted relations and citations, and creates deletion views using lexical Jaccard overlap and token-count matching. It invokes no model and imports no model framework; its Carnot imports provide hashing, view construction, and sentence transport.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The lexical selector is explicitly identified, and the completion endpoint appears in request metadata without any claim that this module executes inference. There is no fabricated neural method or adversarial-check evasion. Keep it as supporting infrastructure; it produces no independent verification scores that would establish a contribution to headline AUROC.
-
-
-## python/carnot/verify/fover_semantic_calibration.py
-
-**Verdict:** `ADVERSARIAL_GAMING`
-
-## VERDICT
-ADVERSARIAL_GAMING
-
-## CLAIMS
-No explicit paper, model, or compute-substrate claims. The docstring claims “FoVer semantic validation calibration” that “keeps DVI as the first-pass signal” and applies “deterministic fallbacks.”
-
-## IMPLEMENTATION_REALITY
-Thresholds a caller-supplied probability, delegates arithmetic diagnostics to `Z3MathVerifier`, and uses ground-truth labels to decide when to overwrite predictions. It imports a Carnot verifier but contains no direct model invocation or ML-framework import.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-
-- **Ground-truth leakage:** `label_is_incorrect` and `dvi_matches_label` control fallbacks that change `semantic_result` toward the known answer.
-- **Source-conditioned correction:** For incorrect examples with matching certificates and recognized arithmetic sources, it forces `REPAIR_HINT` even when the arithmetic verifier detects nothing.
-- No sleep-padding, score-capping, random features, or named-check dodges appear.
 
 ## RECOMMENDATION
 REIMPLEMENT_PROPERLY
 
 ## RATIONALE
-With `label="incorrect"`, `source="fover"`, a parseable `REPAIR_HINT` certificate, and DVI probability `0.1`, this code changes `SAT` to `REPAIR_HINT` even when the arithmetic score is zero. Ground-truth-dependent prediction correction contaminates evaluation, so these adjusted outputs must not contribute to headline AUROC. The returned DVI probability remains unchanged apart from rounding; production inference must remove label-dependent decision logic.
+HalluField uses vocabulary-level token entropy and weighted variations across token paths; this code substitutes entropy across sequence positions and `std(energies) * std(entropies)`. [HalluField, §§3–4](https://arxiv.org/html/2509.10753v1).
+“CPU approximation” and “synthetic-logit” do not explicitly disclose those algorithmic substitutions.
+Upstream logprob provenance and ensemble wiring were not checked; exclude this implementation from production headline AUROC until corrected.
 
 
-## python/carnot/verify/fregelogic_hybrid.py
+## python/carnot/verify/halluhard_provenance_memory_microbench_v480.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+
+- “HalluHard-style provenance-memory microbench.”
+- “It does not claim to replicate HalluHard, and it does not use network retrieval at benchmark time.”
+- “Small subprocess wrapper around a CUDA-capable `llama-completion` binary.”
+
+## IMPLEMENTATION_REALITY
+The default execution path invokes `llama-completion` six times against a local GGUF model, requesting GPU offload and measuring actual elapsed time. It imports a Carnot model-discovery module and conditionally imports `torch`; response grading uses regex, answer aliases, and predetermined fixture labels.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+No sleep-padding, score-capping, random features, or named check dodges. `empty_arm_result()` manufactures perfect metrics without inference, but the shown benchmark execution path never calls it.
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+Keep as the explicitly limited microbenchmark it claims to be: there is real inference code and no claim to implement HalluHard itself. Production-ensemble or headline AUROC inclusion is unjustified: typed memory receives gold-derived support diagnostics, generation failures can still yield “complete” artifacts, and missing responses on unanswerable cases count as supported.
+
+Source-only audit; actual model execution and GPU offload were not checked.
+
+
+## python/carnot/verify/halt_probe.py
 
 **Verdict:** `HONEST_HEURISTIC`
 
@@ -169,12 +152,398 @@ With `label="incorrect"`, `source="fover"`, a parseable `REPAIR_HINT` certificat
 HONEST_HEURISTIC
 
 ## CLAIMS
-- “FregeLogic-style neural prefilter with Z3 as the tiebreaker.”
-- “uses cached Semantic Energy scores and a lightweight LaaB-style alignment score as the neural pre-filters”
-- “this pre-filter uses deterministic text features that approximate assertion alignment failures”
+
+- “HALT uses residual probes on hidden states at question tokens.”
+- “The live SOTA telemetry available to Carnot does not persist those hidden states, so this Tier 0j prototype works from cached token logprobs and top-k alternatives”
+- “proxy C trains a small LogisticRegression probe on those logprob features.”
 
 ## IMPLEMENTATION_REALITY
-Calls an imported Carnot Semantic Energy detector on cached top-k logprobs and computes the LaaB score using regex, text length, and substring checks; no model inference occurs in this file. On disagreement, it genuinely invokes Z3 to check equality between integers already extracted or calculated by Python.
+Computes numerical statistics from supplied cached logprobs, then applies fixed sigmoid formulas or an actual scikit-learn `StandardScaler`/`LogisticRegression` model using `fit` and `predict_proba`. Evaluation uses stratified out-of-fold predictions; no LLM invocation or hidden-state probing occurs.
+
+## CLAIM_VS_REALITY_GAP
+DISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none. Probability clamping preserves the endpoints `[0,1]`; sigmoid bounds provide numerical stabilization. Timing uses actual elapsed time, and random seeds control training/fold splitting without generating synthetic features.
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The docstring explicitly discloses the missing hidden states and accurately describes the implemented substitutes. Keep as a clearly identified cached-logprob proxy; the 36-row evaluation does not establish production suitability or justify attributing its AUROC to the original HALT method.
+
+Not executed; telemetry provenance and production generalization remain unverified.
+
+
+## python/carnot/verify/halt_rag_nli.py
+
+**Verdict:** `HONEST_HEURISTIC`
+
+## VERDICT
+HONEST_HEURISTIC
+
+## CLAIMS
+“HALT-RAG NLI Detector.”
+
+“Ensembles 3 NLI proxy signals via CalibratedClassifierCV and applies an abstention threshold to improve calibration.”
+
+No explicit paper citation, neural-model claim, or compute-substrate claim.
+
+## IMPLEMENTATION_REALITY
+Fits a real scikit-learn logistic regression with cross-validated probability calibration on three imported Carnot detector scores. Prediction returns the hallucination probability, replaced with 0.5 when confidence falls below the abstention threshold; no NLI model invocation appears here.
+
+## CLAIM_VS_REALITY_GAP
+DISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none. Returning 0.5 implements disclosed abstention; random seeds control reproducibility, and duration measures actual elapsed time.
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The docstring explicitly says “proxy signals,” and the claimed classifier calibration and abstention mechanisms exist. This is a trained proxy ensemble; improved calibration is an unverified benefit, not a demonstrated result.
+
+Not checked: imported detector internals or runtime execution; evaluating only 36 entries does not establish production or headline-AUROC reliability.
+
+
+## python/carnot/verify/halueval_fever_exact_frontier_expansion.py
+
+**Verdict:** `DISHONEST_NAMING`
+
+## VERDICT
+DISHONEST_NAMING
+
+## CLAIMS
+“Z3 decides constant string, year, and date-order constraints; plain Python only loads rows and verifies that the expected text anchors are still present.”
+
+No paper or learned-model claim.
+
+## IMPLEMENTATION_REALITY
+It selects eight hard-coded dataset IDs, checks substring anchors, and genuinely invokes Z3 for year equality and date ordering. FEVER’s anchored-entailment path returns literal `"sat"` without invoking Z3, yet its certificates advertise the Z3 backend; there are no model invocations or ML-framework imports.
+
+## CLAIM_VS_REALITY_GAP
+UNDISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+RENAME_TO_REFLECT_REALITY
+
+## RATIONALE
+The manual scope and absence of natural-language theorem proving are disclosed, but the claim that Z3 decides string constraints is false: those certificates receive a hard-coded solver status after Python substring checks. Exclude this module from production ensemble contributions and headline AUROC until its documentation and certificate backend attribution accurately distinguish those paths.
+
+Runtime behavior and external artifacts were not checked.
+
+
+## python/carnot/verify/hard_exit_learning_qualification_8206.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+“qualify unchanged learning with Coverage.py's real exit patch.”
+
+“Private fixtures establish that recovery and calibration execute correctly. They provide no independent evidence of natural learning benefit.”
+
+No paper, neural model, or GPU inference claim.
+
+## IMPLEMENTATION_REALITY
+Configures Coverage.py’s `_exit` patch, launches crash/resume subprocesses through delegated code, collects coverage, and compares recovered states against an uninterrupted baseline. No model invocation or model-library import appears in this file.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The implementation supports its stated coverage and recovery purpose without inventing a model-based method. Keep it as a mechanics qualification harness; its fixture results provide no evidence supporting production ensemble AUROC. Runtime tests were not run; this was a static audit.
+
+
+## python/carnot/verify/headline_replication_fresh_corpus.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+“The module scores cached, non-FoVer GSM8K process-integrity rows with the same production score formula used by the frozen FoVer headline path.”
+
+“It does not run live LLM inference and does not mutate the frozen FoVer artifact.”
+
+No paper, neural-model, or accelerator claim.
+
+## IMPLEMENTATION_REALITY
+Loads cached traces and labels, delegates scoring to `carnot.eval.fover_memory_leakage_v3`, combines scores, and computes AUROC. There is no direct model invocation or ML-framework import; randomness selects existing rows.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The implementation matches its explicit cached-evaluation disclosure and measures elapsed time without padding. This is an evaluation harness, so retaining it does not justify adding an independent ensemble vote.
+Not checked: delegated scorers or corpus artifacts; their authenticity and headline validity remain unverified.
+
+
+## python/carnot/verify/headline_sota_repair_panel_v11.py
+
+**Verdict:** `DISHONEST_NAMING`
+
+## VERDICT
+DISHONEST_NAMING
+
+## CLAIMS
+“generates one repair per case with an available mandated local GGUF model”
+
+“two independent gates agree: the calibrated clean verifier says ACCEPT and the deterministic exact checker passes.”
+
+## IMPLEMENTATION_REALITY
+The default runner genuinely instantiates `llama_cpp.Llama` with GPU offload requested and calls `create_chat_completion` for generation and judgment. However, Exp 3287 supplies readiness metadata: the runner neither verifies that its selected model matches the calibrated verifier nor receives its policy, instead using a hardcoded prompt and grammar.
+
+## CLAIM_VS_REALITY_GAP
+UNDISCLOSED_PROXY
+
+## GAMING_PATTERNS
+Forced-success reporting pattern: `honest_verdict()` always emits `complete:`, including blocked runs, and validation requires a success prefix. No sleep-padding, score-capping, random features, or named adversarial-check dodges; an actual check bypass is not established.
+
+## RECOMMENDATION
+REIMPLEMENT_PROPERLY
+
+## RATIONALE
+Real GGUF inference does not establish that these decisions come from the claimed calibrated verifier; that identity and policy must be enforced.
+
+Not checked: live inference or test execution.  
+Risk: exclude this module from the production ensemble and headline AUROC until the calibration claim is substantiated.
+
+
+## python/carnot/verify/hierarchical_logcons.py
+
+**Verdict:** `DISHONEST_NAMING`
+
+## VERDICT
+DISHONEST_NAMING
+
+## CLAIMS
+“Verifier enforcing hierarchical instruction compliance via Z3 partial-order constraints.”
+
+## IMPLEMENTATION_REALITY
+It invokes Z3, but the solver result reduces to detecting `system:`, `instruction:`, or `claim: system` in the response, with an additional bracket/punctuation penalty. Actual instruction contents are unused, and the instantiated `FregeLogicHybrid` never contributes to verification.
+
+## CLAIM_VS_REALITY_GAP
+UNDISCLOSED_PROXY
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+REIMPLEMENT_PROPERLY
+
+## RATIONALE
+The docstring does not disclose that its claimed instruction-compliance check is a keyword heuristic: harmless quotations can fail, while actual instruction violations without those strings pass.
+Imported dependency internals were not inspected.
+Exclude this verifier from production-ensemble headline AUROC until it actually checks instruction compliance.
+
+
+## python/carnot/verify/hive_ensemble.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+- “HIVE-style soft-vote ensemble over cached Tier 0 verifier scores.”
+- “It learns nonnegative soft-vote weights from verifier score columns with LogisticRegression and reports held-out scores from a stratified cross-validation loop.”
+
+No specific paper, neural model, GPU, or live inference claim.
+
+## IMPLEMENTATION_REALITY
+The code invokes imported Carnot verifiers on cached telemetry, fits an actual sklearn `LogisticRegression`, and converts its coefficients into normalized nonnegative voting weights. Evaluation learns weights and normalization within stratified training folds, with nested out-of-fold HALT training scores and held-out predictions.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The implementation delivers the cached-score learned ensemble its docstrings describe. Clipping normalized scores to [0,1] and bounding sigmoid inputs are numerical safeguards; elapsed time is measured, and random seeds do not generate fabricated features.
+
+Underlying verifiers, telemetry provenance, and runtime behavior were not checked; this module’s authenticity does not establish that its constituent scores qualify for headline AUROC.
+
+
+## python/carnot/verify/hive_ensemble_v4.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+None. The supplied source contains no docstring claiming a paper, model architecture, or compute substrate.
+
+## IMPLEMENTATION_REALITY
+Collects component verifier scores and fits actual scikit-learn logistic regression models with sigmoid calibration inside stratified cross-validation. Uses held-out probabilities for AUROC, assigning uncertain predictions 0.5, and measures actual elapsed runtime.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The supplied code makes no unsupported method claims and genuinely trains statistical models. Feature normalization clipping, seeded fold shuffling, and explicit abstention handling provide no evidence of the specified gaming patterns. Inherited score collection and component verifiers are outside the supplied source; their integrity and possible label leakage remain unchecked.
+
+
+## python/carnot/verify/independent_concurrent_service_8242.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+> “measure fresh requests with one fixed Rust durable service.”
+
+> “Each workload owns a fresh server.”
+
+No paper attribution or learned-feature claim.
+
+## IMPLEMENTATION_REALITY
+Constructs and loads a fresh `runtime.QwenRuntime` per workload, calls `runtime.generate`, delegates durable scoring through a loaded service binding, and measures timings and cleanup. It imports Carnot inference/service modules; NumPy randomness resamples observed latency differences for bootstrap intervals.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The supplied code follows the claimed service-measurement workflow and explicitly limits its statistical conclusions to the designed workloads. This is benchmark infrastructure; it supplies no verifier predictions that independently justify inclusion in headline AUROC numbers. Imported runtime and binding implementations were not inspected, so actual GPU execution and Rust backing remain unverified.
+
+
+## python/carnot/verify/independent_online_memory_8116.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+
+- “learn a bounded residual without fitting or loading Qwen.”
+- “Preserve the original Qwen logit as a fixed offset outside the residual.”
+- “Run finite CPU heads, preserving all exact inputs and every causal boundary.”
+
+## IMPLEMENTATION_REALITY
+NumPy/SciPy and Carnot’s radial module compute Gaussian features and train residual coefficients using four clipped gradient steps per released training label. Cached logits supply the fixed offset; there is no Qwen loading or invocation, exactly as disclosed.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The claimed residual learning actually exists, and zero current model invocations are explicitly disclosed. Random sampling selects existing training observations, coefficient clipping bounds learned weights, and durations measure elapsed time; none constitutes the specified gaming.
+
+Not checked: runtime execution or upstream Qwen provenance; production ensemble suitability and headline AUROC validity remain unestablished.
+
+
+## python/carnot/verify/intervention_protocol_7868.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+“Build four CPU fixture views from authenticated source bytes.”
+
+“A scripted reply checks request construction. It cannot tell us whether any edited source changes the truth of the answer.”
+
+No paper, learned-model, or live-inference claim.
+
+## IMPLEMENTATION_REALITY
+Uses standard-library operations and Carnot helpers to construct up to four requests, parse a supplied reply, match context lengths, and check source-byte fidelity. No model invocation appears; supplied hashes are copied, and `semantic_sensitivity` remains `None`.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The docstring explicitly describes fixture construction and disclaims semantic verification; the implementation matches that scope. Keep it as fixture infrastructure, with no independent contribution to headline AUROC.
+Imported helpers and upstream source authentication were not checked; this file alone establishes neither authentication nor semantic accuracy.
+
+
+## python/carnot/verify/interwhen_monitor.py
+
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+None. The supplied source contains no docstrings or claims about papers, models, or compute substrates.
+
+## IMPLEMENTATION_REALITY
+Imports only `dataclasses`; performs literal substring matching against constraints and fixed phrase lists. The trajectory score combines final-state constraint and evidence-marker scores with the average commitment-marker penalty.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none — `min(1.0, ...)` normalizes marker counts and permits perfect scores; it is not perfect-dodging.
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+There is no claimed paper implementation or model invocation to counterfeit, and no adversarial-check gaming appears. The functions count phrases; they do not establish evidence quality, semantic constraint satisfaction, or whether commitments are supported. Execution and predictive performance were not checked; suitability for the production ensemble remains unproven.
+
+
+## python/carnot/verify/ir_conformal_verifier.py
+
+**Verdict:** `DISHONEST_NAMING`
+
+## VERDICT
+DISHONEST_NAMING
+
+## CLAIMS
+No docstring is supplied. The artifact title claims “Internal Representation Conformal Verifier (Tier 0n).” Its metadata explicitly describes the calculation as a “proxy for || H_L(x) - mean_calib(H_L) || / std_calib(H_L).” No paper, specific model, or compute substrate is claimed.
+
+## IMPLEMENTATION_REALITY
+It computes a position-weighted ratio of squared, precomputed token logprobs, then standardizes that scalar using the first ten examples. There is no model invocation, hidden-state extraction, or model-library import; NumPy, SciPy, and Carnot evaluation utilities provide statistics and bookkeeping.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -186,40 +555,10 @@ none
 RENAME_TO_REFLECT_REALITY
 
 ## RATIONALE
-The LaaB docstring explicitly discloses its deterministic proxy, and cached logprob use is stated openly. Calling both filters “neural” still overstates the implementation and warrants renaming. The 36-row evaluation does not establish production suitability or justify presenting headline AUROC as validation of the full named methods.
+The metadata acknowledges the hidden-state proxy, but the name still misrepresents a logprob heuristic as internal-representation conformal verification: standardization alone supplies no conformal calibration procedure. Calibration examples are included in evaluation, although standardization itself preserves AUROC rankings. Exclude it from headline AUROC under the claimed identity until accurately renamed and independently validated; upstream telemetry authenticity cannot be established from this snippet.
 
 
-## python/carnot/verify/freq_aware_attention.py
-
-**Verdict:** `HONEST_HEURISTIC`
-
-## VERDICT
-HONEST_HEURISTIC
-
-## CLAIMS
-“Frequency-Aware Attention cached top-k proxy.”
-
-“Frequency-Aware Attention needs raw attention matrices to measure attention energy on high-frequency token fragments.”
-
-“The live SOTA telemetry cached for Exp 2397 does not persist attention tensors, so this Tier 0f prototype uses the available top-k token distributions as a deterministic proxy”
-
-## IMPLEMENTATION_REALITY
-Computes renormalized cached top-k probability mass assigned to fixed stopword/punctuation matches, falling back to counting matching token texts. There is no model invocation or attention computation; NumPy aggregates statistics, and the Carnot import provides AUROC calculation.
-
-## CLAIM_VS_REALITY_GAP
-DISCLOSED_PROXY
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The docstring explicitly discloses the missing attention tensors and the substituted heuristic. The [0,1] clamp preserves perfect endpoints, duration measures actual elapsed time, and `random_seed` generates no random features. Keep as a clearly labeled heuristic; this implementation neither validates the actual attention method nor establishes production ensemble suitability, and its AUROC must not be attributed to that method.
-
-
-## python/carnot/verify/fresh_acquisition_cost_8118.py
+## python/carnot/verify/ising.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -227,14 +566,13 @@ The docstring explicitly discloses the missing attention tensors and the substit
 AUTHENTIC
 
 ## CLAIMS
-“new requests measure acquisition without truth labels.”
+“Ising energy constraint check for hardware verification.”
+“Calculate Ising energy for a given spin state.”
 
-“An empty private service cache separates current model work from prior captures.”
-
-No paper, named model, or hardware claim.
+No paper citation, learned-model claim, or claim of execution on hardware.
 
 ## IMPLEMENTATION_REALITY
-Acquisition delegates through Carnot modules to `runtime.generate(...)`; the live runtime posts to llama.cpp’s `/v1/chat/completions`. This file imports no ML framework directly and handles response parsing, measured timings, cache checks, evidence hashes, and source-cluster counts.
+Computes the Ising Hamiltonian directly: −Σᵢ hᵢsᵢ − Σᵢ<ⱼ Jᵢⱼsᵢsⱼ, using Python loops and default unit couplings. Imports only `typing`; no model invocation is needed for this calculation.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -246,10 +584,12 @@ none
 KEEP
 
 ## RATIONALE
-The delegated implementation contains real model invocation, with no undisclosed statistical proxy or adversarial-check gaming. Keep this as acquisition instrumentation; its binary readiness flag must not contribute as a correctness score to headline AUROC. All 15 focused tests and lint passed; repository-wide spec coverage failed on 1,142 tests missing requirement references.
+The claimed Ising energy calculation is actually implemented; “for hardware verification” describes its purpose, not its execution substrate. There is no substituted heuristic or audit manipulation.
+
+Static review only; this energy calculator alone establishes no suitability for LLM verification or headline ensemble AUROC.
 
 
-## python/carnot/verify/fresh_cohort_8084.py
+## python/carnot/verify/journal_equivalence_8465.py
 
 **Verdict:** `AUTHENTIC`
 
@@ -257,10 +597,10 @@ The delegated implementation contains real model invocation, with no undisclosed
 AUTHENTIC
 
 ## CLAIMS
-No paper, model, or compute-substrate claims. The docstring states: “seal public roles before complete-response annotation access” and explicitly acknowledges unknown pretraining and external access.
+No paper, model, or inference-hardware claims. The storage claims include: “Commit certificates identify the fsynced prefix before a response can escape” and “Independent operands reconstruct each response and coefficient.”
 
 ## IMPLEMENTATION_REALITY
-The code inventories recorded source exposure, hashes and deduplicates sources, assigns deterministic cohort roles, and writes selection and evaluator manifests. No model invocation or ML-library import appears; the Carnot imports reference reporting, cohort, target, and normalization utilities.
+The code implements a filesystem transaction journal using locks, fsync, commit certificates, sealed transaction records, and checkpoints. It reconstructs state through the imported service’s arithmetic and compares persisted evidence against expected records; no model invocation appears.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -272,316 +612,5 @@ none
 KEEP
 
 ## RATIONALE
-There is no claimed neural method being replaced with regex, and no sleep-padding, score manipulation, random-feature fabrication, or check-name evasion. This is cohort-management infrastructure: keep it in that role, but it produces no prediction scores and cannot itself contribute to ensemble AUROC.
-
-
-## python/carnot/verify/fresh_feedback_8064.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-“causal CPU learning with durable one-use admission.”
-
-“The same event equations drive a cold reader. Labels enter those equations only at their original release slots; repeated seeds do not add independent sources.”
-
-## IMPLEMENTATION_REALITY
-Executes calibrated logistic predictions and real gradient updates using NumPy and an imported sigmoid, with delayed label release and admission guards. SQLite persists events, and the reader reruns the trajectory to verify them; no LLM invocation or deep-learning framework is present or claimed.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The CPU learning claim is backed by actual parameter optimization, and admission consumption and deterministic replay are implemented explicitly. Timing measures actual CPU work, repeated seeds are explicitly marked non-independent, and there is no claimed paper method or model being replaced with regex.
-
-
-## python/carnot/verify/fresh_learning_audit_8065.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No paper, model, or compute-substrate claims. The docstring claims “independent arithmetic on primitive chronological journals” and states: “The reader imports no learner transition, optimizer, guard or role selector.”
-
-## IMPLEMENTATION_REALITY
-NumPy arithmetic reconstructs predictions, gradient updates, admission guards and commits, checking them against chronological SQLite events. It imports Carnot audit helpers, invokes no neural model or inference API, and uses random indices solely to bootstrap observed differences.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation performs the arithmetic journal audit it advertises; there is no fabricated paper method, model inference or compute claim. Bootstrap resampling is legitimate uncertainty estimation. Keep this as an audit utility; its retrospective, label-dependent analysis does not establish suitability as a production ensemble scorer or warrant independent headline AUROC credit.
-
-
-## python/carnot/verify/gaming_resistance_mitigation_v2.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-“This module reuses the shipped Exp 2837 FoVer verifier ensemble” and “adds a bounded suspicion boost when arithmetic evidence has been compacted into a conclusion-only fragment.”
-
-No claim of a paper implementation, learned model, or GPU inference.
-
-## IMPLEMENTATION_REALITY
-Delegates ensemble scoring to the imported Carnot verifier module `exp3790`, then adds a weighted heuristic using token overlap, character compression, and regex-based number/equation loss. No direct model invocation or model-framework import appears; NumPy handles arrays, comparisons, and checksum serialization.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The docstring describes the actual text-comparison heuristic, and the artifact explicitly discloses “Re-scores cached and perturbed triples; no live model.” The clamp permits both 0 and 1, and duration uses elapsed time; neither dodges the identified checks. Keep for its stated opt-in use requiring original text; this snippet does not independently validate the imported ensemble or the frozen headline AUROC.
-
-
-## python/carnot/verify/gated_sota_repair_micro_panel_v10.py
-
-**Verdict:** `DISHONEST_NAMING`
-
-## VERDICT
-DISHONEST_NAMING
-
-## CLAIMS
-
-- “asks one available mandated local GGUF model to repair those local failures”
-- “the Exp 3287 calibrated clean-verifier decision contract says ACCEPT”
-- “That separation keeps a model from grading its own repair.”
-
-## IMPLEMENTATION_REALITY
-The default runner constructs a real `llama_cpp.Llama` with GPU offload requested, then uses the **same model instance** to generate repairs and judge them through separate chat calls. Acceptance additionally requires a deterministic exact-answer comparison.
-
-## CLAIM_VS_REALITY_GAP
-UNDISCLOSED_PROXY
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-REIMPLEMENT_PROPERLY
-
-## RATIONALE
-The model explicitly grades its own repair, contradicting the docstring; the deterministic check supplies an additional veto, not an independent model judge. The claimed calibrated verifier is represented here by a generic prompt, output grammar, and token parser, with no Exp 3287 calibration loaded or applied. Exclude this module from headline AUROC numbers; its artifact validator already prohibits headline claims.
-
-
-## python/carnot/verify/gencp_domain_preview_repair_compiler_v1.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-“compile bounded repair domains without model calls.”
-
-“reads checked-in certificate, canonical-answer, fixture, and frontier artifacts, then writes a preview manifest”
-
-GenCP is named, but no paper citation, learned model, GPU execution, or full research-method implementation is claimed.
-
-## IMPLEMENTATION_REALITY
-Uses standard-library JSON parsing, dictionary lookups, deterministic candidate filtering, source hashing, and manifest generation. There are no model invocations or model-library imports; MCS/frontier rules and rejection predicates are recorded as metadata rather than executed verification.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The module explicitly describes an artifact-only preview compiler and explicitly disclaims model calls, matching the implementation. Keep it as offline preparation tooling; it produces no verifier scores and provides no basis for production ensemble scoring or headline AUROC contributions.
-
-
-## python/carnot/verify/gguf_inference.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-“Robust local GGUF generation harness for live verifier experiments.”
-
-“the same llama.cpp loading path, and the same generate-smoke gate.”
-
-“treats a model as ready only after it emits text through a real one-token generation call.”
-
-## IMPLEMENTATION_REALITY
-Imports `llama_cpp.Llama`, loads a cached GGUF model, and calls `generator("2+2=", max_tokens=1, temperature=0.0)`. Returns the generator only after checking for nonempty output and a positive reported or estimated token count.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation performs the model loading and inference its docstring claims. Timing measures actual execution; batch limits and token-count estimation are not score manipulation. This is inference infrastructure with no verification score, so it cannot independently contribute an ensemble AUROC result.
-
-
-## python/carnot/verify/graph_coloring.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-“Graph coloring constraint satisfaction -- JAX implementation.”
-
-“Encodes graph coloring as differentiable energy terms. Each node has a continuous color value; adjacent nodes must differ.”
-
-## IMPLEMENTATION_REALITY
-Imports `jax` and `jax.numpy` and implements the documented pairwise repulsion and range penalties, assembled through `ComposedEnergy`. No model inference occurs or is claimed.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The claimed JAX substrate and energy formulas match the implementation. The continuous representation is explicitly disclosed, and there are no fabricated paper claims or adversarial-check evasion patterns.
-
-
-## python/carnot/verify/graph_grounding_fact_verifier_defabricated.py
-
-**Verdict:** `DISHONEST_NAMING`
-
-## VERDICT
-DISHONEST_NAMING
-
-## CLAIMS
-- “with a live local SOTA GGUF extraction pass”
-- “The graph score follows the HalluGraph decomposition: Entity Grounding plus Relation Preservation produce a Composite Fidelity Index”
-- “Live llama.cpp extractor for response/evidence entity-relation graphs.”
-
-## IMPLEMENTATION_REALITY
-The default extractor genuinely imports and instantiates `llama_cpp.Llama`, invokes it, and scores extracted graphs using token matching and weighted grounding ratios. When both parsed graphs are empty, it substitutes rule-based `GraphGroundingProbe` extraction and includes those heuristic scores in the same evaluation.
-
-## CLAIM_VS_REALITY_GAP
-UNDISCLOSED_PROXY
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-REIMPLEMENT_PROPERLY
-
-## RATIONALE
-The docstring never discloses the rule-based fallback; `parse_fallback_used` metadata does not satisfy that requirement. Malformed model output can produce heuristic-derived AUROC while the artifact still declares live GGUF extraction and `model_invoked=True`. Exclude this implementation from production headline AUROC until fallback results are rejected or explicitly separated and evaluated as heuristics.
-
-
-## python/carnot/verify/graph_grounding_probe.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-> “a small graph-alignment probe inspired by MemGraphRAG, HalluGraph, and GraphRAG hallucination-detection work, but it is not a model-backed KG-alignment system.”
-
-> “It uses heuristic text rules to extract subject-relation-object triples”
-
-> “It does not invoke NTK, SAE, attention, GGUF, NLI, or learned verifier substrates.”
-
-## IMPLEMENTATION_REALITY
-Regex-derived triples are compared using weighted Jaccard similarity, token support, and a number-mismatch penalty. No direct model invocation or ML-framework import appears; Carnot imports provide metrics and baseline verifiers, while `nvidia-smi` only queries GPU status.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation matches the explicitly advertised rule-based prototype; the paper references claim inspiration, and the absence of learned inference is disclosed. `_clamp01` preserves both endpoints, and default duration reporting measures elapsed time without sleep-padding. Keep the labeled prototype, but this source alone does not establish production ensemble suitability or justify headline AUROC claims.
-
-
-## python/carnot/verify/graph_verifier_facts_complementarity_v2.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-No affirmative paper, model, or live-compute claims. Explicitly states: “This module does not score a model and does not re-run the Exp 3862 graph prototype.” It “reads the Exp 3862 JSON artifact” and measures complementarity using cached labels and scores.
-
-## IMPLEMENTATION_REALITY
-Uses only standard-library code to load cached scores, threshold predictions, compute catch sets and error-mask correlation, and write an audit artifact. No model invocation or ML-library imports.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation matches its explicitly limited cached-analysis claims. Keep it as an offline audit; it supplies no independent production verifier scores or separate headline AUROC contribution. The authenticity of the upstream scores is not established by this file.
-
-
-## python/carnot/verify/grounded_claims.py
-
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-“Check only exact, typed propositions in native tool source.”
-
-“The model proposes pointers.” This describes upstream input; it does not claim this module runs a model. No paper, learned method, or compute substrate is claimed.
-
-## IMPLEMENTATION_REALITY
-The code validates a bounded JSON pointer schema and checks cited UTF-8 byte ranges against source atoms. Support requires a supplied truth witness marked `observed` with an identical evidence span; no model invocation appears.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-Deterministic byte and witness checks match the stated narrow purpose. The code explicitly leaves whole-answer and causal meaning unchecked. Its correctness depends on the supplied truth witnesses; this snippet does not establish their provenance or justify broader ensemble performance claims.
+The implementation visibly performs the journaling and replay operations described, with no fabricated model branding or adversarial-check manipulation. Keep it as journal infrastructure; this file produces no LLM-verification score and provides no basis for headline AUROC inclusion. Imported service behavior and actual crash durability were not tested, so production durability remains unverified.
 

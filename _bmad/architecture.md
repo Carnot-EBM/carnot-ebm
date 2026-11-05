@@ -875,3 +875,21 @@ New authenticated CUDA evidence gates bounded Qwen3.8 source extraction. New
 applied live outcomes gate ARC analysis. Per-board mappings preserve KV260,
 PolarFire and GateMate limits. The capstone accounts for every primary or skip.
 These are planned studies only, not deployed behavior or scientific results.
+
+## Planned V758 learning and installed verification boundaries — 2026-11-05
+
+The thirteen-task plan, Exp8853–Exp8865, uses the qualified linear energy head
+and causal store. Six matched arms isolate calibration, template additions and
+delay. Predictions precede feedback. Untouched retention and true-label controls
+must qualify alongside future loss. Generator weights remain fixed.
+
+A separate fixed-population diagnostic gates independent rule selection and
+certification at equal total label cost. Census feasibility is exposed evidence,
+not a selected production rule. The installed indexed evaluator remains opt-in
+and preserves exact witness, request ownership and operation-budget semantics.
+Complete cold/resident and durable costs precede any native or physical claim.
+
+Only changed authenticated CUDA evidence releases the bounded Qwen3.8 canary.
+The November 5 operator suspension removes ARC tasks. Independent CPU branches
+retain their own input gates. Hardware mapping and capstone readers run without
+a global scientific gate. This section describes planned work only.

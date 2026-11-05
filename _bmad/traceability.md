@@ -4570,3 +4570,26 @@ contain exactly13 tasks, Exp8840–Exp8852. V756 authority is preserved separate
 Plan validation uses the existing contract parser, schema, gate and exclusion
 linters, planning unit tests, scoped spec tracing and private E2E-018/021 checks.
 No execution result, activation or new publication readiness is claimed.
+
+## Planned V758 research milestone — 2026-11-05
+
+FR-06/FR-11: linear causal learning (8854/8856/8860/8862). FR-12: selective
+risk and exact verification (8855/8857/8858/8859/8863). FR-05/FR-08/NFR-01:
+installed and hardware cost boundaries (8858/8861/8862/8864). FR-09/FR-10:
+contract and reconciliation (8853/8865). All entries remain planned.
+
+| Requirement / scenario | Task | Deliverable | State |
+|---|---|---|---|
+| REQ-REPORT-8853; SCENARIO-REPORT-8853-CONTRACT | exp8853-branch-contract | `results/experiment_8853_v758_branch_contract.json` | Planned |
+| REQ-REPORT-8854; SCENARIO-REPORT-8854-CONTRACT | exp8854-linear-ablation-methods | `results/experiment_8854_v758_linear_ablation_methods.json` | Planned |
+| REQ-REPORT-8855; SCENARIO-REPORT-8855-CONTRACT | exp8855-selective-ceiling | `results/experiment_8855_v758_selective_ceiling.json` | Planned |
+| REQ-REPORT-8856; SCENARIO-REPORT-8856-CONTRACT | exp8856-linear-causal-streams | `results/experiment_8856_v758_linear_causal_streams.json` | Planned |
+| REQ-REPORT-8857; SCENARIO-REPORT-8857-CONTRACT | exp8857-split-certificate-methods | `results/experiment_8857_v758_split_certificate_methods.json` | Planned |
+| REQ-REPORT-8858; SCENARIO-REPORT-8858-CONTRACT | exp8858-installed-indexed-verifier | `results/experiment_8858_v758_installed_indexed_verifier.json` | Planned |
+| REQ-REPORT-8859; SCENARIO-REPORT-8859-CONTRACT | exp8859-split-certificate-evaluation | `results/experiment_8859_v758_split_certificate_evaluation.json` | Planned |
+| REQ-REPORT-8860; SCENARIO-REPORT-8860-CONTRACT | exp8860-linear-benefit-audit | `results/experiment_8860_v758_linear_benefit_audit.json` | Planned |
+| REQ-REPORT-8861; SCENARIO-REPORT-8861-CONTRACT | exp8861-installed-index-cost | `results/experiment_8861_v758_installed_index_cost.json` | Planned |
+| REQ-REPORT-8862; SCENARIO-REPORT-8862-CONTRACT | exp8862-linear-durable-cost | `results/experiment_8862_v758_linear_durable_cost.json` | Planned |
+| REQ-REPORT-8863; SCENARIO-REPORT-8863-CONTRACT | exp8863-qwen-source-canary | `results/experiment_8863_v758_qwen_source_canary.json` | Planned |
+| REQ-REPORT-8864; SCENARIO-REPORT-8864-CONTRACT | exp8864-hardware-budget | `results/experiment_8864_v758_hardware_budget.json` | Planned |
+| REQ-REPORT-8865; SCENARIO-REPORT-8865-CONTRACT | exp8865-capstone | `results/experiment_8865_v758_capstone.json` | Planned |

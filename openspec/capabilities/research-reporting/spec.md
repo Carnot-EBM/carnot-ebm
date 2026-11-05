@@ -107027,3 +107027,215 @@ Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
 producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
+
+## Planned V758 research contracts — 2026-11-05
+
+Exactly thirteen tasks, Exp8853–Exp8865. The design specifies each method,
+acceptance threshold and claim boundary. Planning does not implement these tasks.
+
+### REQ-REPORT-8853: Bind the complete V758 contract and admit changed external evidence
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8853_v758_branch_contract.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8853-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8854: Qualify matched linear-energy ablations and freeze causal stream methods
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8854_v758_linear_ablation_methods.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8854-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8855: Separate finite-population discrimination from certificate sample requirements
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8855_v758_selective_ceiling.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8855-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8856: Measure continuous linear-energy learning with isolated template and delay effects
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8856_v758_linear_causal_streams.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8856-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8857: Freeze independent rule selection and certification at equal label cost
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8857_v758_split_certificate_methods.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8857-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8858: Expose the qualified indexed witness evaluator through an opt-in installed path
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8858_v758_installed_indexed_verifier.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8858-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+### REQ-REPORT-8859: Measure certificate availability and served risk under split calibration
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8859_v758_split_certificate_evaluation.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8859-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8860: Audit linear future benefit and joint retention from sealed causal rows
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8860_v758_linear_benefit_audit.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8860-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8861: Measure complete installed verifier costs across evidence sizes
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8861_v758_installed_index_cost.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8861-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8862: Measure complete linear adaptation cost with equal causal and durability work
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8862_v758_linear_durable_cost.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8862-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8863: Measure source-faithful Qwen extraction through the installed witness path
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8863_v758_qwen_source_canary.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8863-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8864: Map installed verification and linear learning costs to actual hardware operations
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8864_v758_hardware_budget.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8864-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.
+
+### REQ-REPORT-8865: Reconcile thirteen outcomes and decide learning verification and hardware continuations
+
+**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+The experiment shall follow the complete frozen task contract in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
+It shall publish `results/experiment_8865_v758_capstone.json` with source-bound per-unit evidence,
+actual substrate, a closed verdict class and explicit failed-gate diagnostics.
+
+#### SCENARIO-REPORT-8865-CONTRACT
+
+Given the registered inputs and preserved historical authorities, execution shall
+retain every scheduled unit and enforce its frozen gates. Missing external inputs
+shall produce blocked. Failed owned controls shall disqualify readiness. A valid
+null result shall remain terminal. The full task and its named producer fields
+shall match the visible design and YAML queue before execution.

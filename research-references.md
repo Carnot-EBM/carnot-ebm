@@ -55160,3 +55160,100 @@ enum. Exp8831's ordered schedule increased paid operations by about23.7 percent;
 changing order again is unsupported. Exp8835 qualified90 complete CPU windows,
 but mode differences do not identify arithmetic or durability fractions. New
 work must preserve these negative and disqualified findings as historical facts.
+
+## V758 planning scan — 2026-11-05
+
+Recorded before the V758 design. Primary abstracts and selected full texts were
+retrieved. This scan distinguishes research methods from local evidence.
+The November 5 suspension in CLAUDE.md removes the ARC scheduling floor.
+
+### New leads and decisions
+
+- [Strongly Adaptive Online Learning with Time-Varying Movement Costs](https://arxiv.org/abs/2610.32740),
+  October 23, 2026; [full text](https://arxiv.org/html/2610.32740v1) retrieved.
+  The paper evaluates online learning over intervals with changing movement
+  costs. Use interval-level loss and parameter movement to diagnose delayed
+  updates. Do not import its convex regret guarantees into Carnot's changing
+  template representation. First test the existing linear-energy head, which
+  outperformed the categorical head in Exp8846. No new optimizer is justified.
+- [A Reduction from Delayed to Immediate Feedback for Online Convex Optimization
+  with Improved Guarantees](https://arxiv.org/abs/2602.02634), February 2, 2026.
+  The abstract separates learning loss from delay-induced drift. Add matched
+  delay schedules and parameter-movement rows to future learning studies.
+  Treat immediate feedback as a diagnostic comparator. It cannot replace the
+  real delayed-feedback acceptance condition.
+- [Chance-Constrained Inference for Hallucination Risk Control in Large Language
+  Models](https://arxiv.org/abs/2602.01637), February 2, 2026;
+  [full text](https://arxiv.org/html/2602.01637v1) retrieved. The paper separates
+  selective confidence from risk guarantees and studies finite-sample inference.
+  This motivates separating population feasibility from certification power.
+  A simple independent selection/certification split can test multiplicity cost
+  without implementing a new sequential algorithm. Preserve the risk target,
+  charge all samples, and use an untouched evaluation sample. This is a local
+  experimental adaptation, not a reproduction of the paper's guarantees.
+- [Kolmogorov-Arnold Classifier Systems as Universal Approximators](https://arxiv.org/abs/2609.37958),
+  September 29, 2026. Dimension-wise rule organization reduces parameter growth
+  in the paper's setting. Retain as a future compact-rule representation lead.
+  V757 favors the existing linear head; do not add KACS or a spline architecture
+  before the simpler control establishes future benefit and retention.
+- [An FPGA-ASIC Co-Design Framework for Capacity-Constrained Physics-Based Ising
+  Chips](https://arxiv.org/abs/2602.15985), February 17, revised September 4, 2026.
+  The revised title and abstract focus on orchestration and boundary traffic.
+  Carry full request construction, transport and durable state costs into the
+  hardware budget. Its hybrid Ising hardware does not implement Carnot's exact
+  joins or categorical normalization. No local speedup follows from its figures.
+
+### Required topic scan
+
+| Topic | Primary sources retrieved | Planning decision |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092), July 2, 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), May 25, 2026 | Keep normalized small energy policies. Model equivalence and low energy do not certify extracted premises. |
+| Neural constraint satisfaction | [PAL v3](https://arxiv.org/abs/2503.19466), June 16, 2025; [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 11, 2025 | Encoded feasibility remains separate from natural-language truth. Do not replace exact relational witnesses with a continuous solver. |
+| Ising applications in ML | [Scaling Up Thermodynamic AI Models](https://arxiv.org/abs/2607.00170), June 30, 2026 | Binary sampling and exact finite-category evaluation are different operations. |
+| Hallucination mitigation | Chance-constrained inference above; [HalluScoring 2026](https://arxiv.org/abs/2609.38355), September 29, 2026 | Separate new-question and new-model claims. Existing exposed corpora cannot establish either. |
+| KAN | KACS above; [KAN-CL](https://arxiv.org/abs/2605.12306), May 12, 2026 | Retain local parameter and retention ideas. No unchanged importance-anchoring rerun. |
+| Guided and constrained generation | [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), July 10, 2025; [automata-constrained diffusion](https://arxiv.org/abs/2607.07026), July 8, 2026 | Vision and diffusion assumptions do not establish a text-GGUF decoding method. Source fidelity remains the prerequisite. |
+| Hardware sampling | FPGA-ASIC revision above; Extropic sources below | Charge supported operations and host overhead separately. |
+| Continuous learning | Delayed-feedback and movement-cost papers above | Compare future loss, template use, movement and untouched retention under sealed causal ordering. |
+
+### Secondary channels and retrieval limits
+
+- OpenReview was searched for ICLR/ICML EBM reasoning work. The
+  [reasoning paper](https://openreview.net/pdf?id=bYkfHTcR1v) returned a browser
+  challenge on direct opening. Search exposed an EBT proceedings PDF; the
+  [official ICLR proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html)
+  independently identifies EBT as an ICLR 2026 conference paper. Do not assert
+  acceptance for the challenged reasoning submission.
+- Semantic Scholar citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  were inaccessible through the browser. Follow-up domain searches did not
+  establish a new citation relationship. Citation discovery remains incomplete.
+- [Hugging Face verification papers](https://huggingface.co/papers?q=verification)
+  was readable as a discovery index. Claims above use primary papers.
+- [GitHub Python Trending](https://github.com/trending/python?since=monthly) and
+  [Rust Trending](https://github.com/trending/rust?since=monthly) were checked.
+  No new relevant ranked repository was established from those views. Author
+  code links are leads, not verified trending status or approved dependencies.
+- [Extropic writing](https://extropic.ai/writing) exposed navigation. The
+  [October 1 recursive intelligence update](https://extropic.ai/writing/baby-thermo-rsi/)
+  and [September 4 Z1T article](https://extropic.ai/writing/z1t) were readable.
+  They discuss hardware/software co-design and thermodynamic learning tooling.
+  Vendor efficiency estimates do not provide local TSU access or Carnot costs.
+- [Logical Intelligence Kona 1.0](https://logicalintelligence.com/kona) was
+  readable. Its constraint-layer description supplied no reproducible new
+  implementation or benchmark protocol in this retrieval.
+
+### Local evidence that changes the research question
+
+V757 has eleven primary artifacts and two gate skips. Exp8840 is disqualified:
+the design ends inside its embedded task list, before the last task and closing
+marker. The next design must include a complete, independently checked contract.
+Exp8841 qualifies the original causal store. Exp8846 favors the linear head:
+its future Brier change versus frozen is -0.13634, while categorical minus
+linear is +0.08973. The joint categorical benefit and retention gates are zero.
+Exp8844 reports zero selective utility under the registered certificate protocol.
+Exp8847 reports 85.16 percent fewer paid operations and an 8.93x request timing
+ratio on constructed worlds; the 16-fact stress case has no operation benefit.
+Exp8848 qualifies complete occupancy costs without component attribution.
+These are constructed or CPU results, not new natural-text generalization.

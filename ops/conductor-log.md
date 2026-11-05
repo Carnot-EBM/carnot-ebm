@@ -21406,3 +21406,4 @@ code |
 | 2026-11-05 19:29 UTC | Audit live supervisor transfer only when new appli | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8840-branch-contract.arc_new_outcomes_available_score (actual=0 == expected=1) |
 | 2026-11-05 19:54 UTC | Map index and memory costs to KV260 PolarFire and  | OK | 89 passed, 1 warning in 46.13s |
 | 2026-11-05 20:54 UTC | Reconcile all thirteen outcomes and decide which m | OK | 89 passed, 1 warning in 320.68s (0:05:20) |
+| 2026-11-05 22:24 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

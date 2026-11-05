@@ -23150,3 +23150,20 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Measure complete adaptation cost as verified template memory fills (⚠️ Research Finding) — honest_verdict=complete_null_memory_size_cost; results/experiment_8848_v757_memory_size_cost.json
 - 2026-11-05: Map index and memory costs to KV260 PolarFire and GateMate operations (⚠️ Research Finding) — honest_verdict=complete_null_hardware_operation_budget; results/experiment_8851_v757_hardware_operation_budget.json
 - 2026-11-05: Reconcile all thirteen outcomes and decide which mechanisms merit continuation (⚠️ Blocked) — honest_verdict=complete_blocked_incomplete_v757_design_authority; results/experiment_8852_v757_capstone.json
+
+## 2026-11-05 — Plan milestone 2026.11.758
+
+- Record the primary-source scan before design, including delayed learning,
+  risk certification, KAN and hardware work, plus requested source-access limits.
+- Preserve V757's original truncated design. Stage complete matching V758
+  design/YAML contracts for thirteen tasks, Exp8853–Exp8865, in four phases.
+- Follow the linear head recommended by Exp8846 with missing causal ablations.
+  Diagnose selective feasibility before new calibration. Qualify installed exact
+  verification and full costs before acceleration claims.
+- Gate the bounded mandated-Qwen canary on changed CUDA evidence. Honor the
+  November 5 suspension by scheduling no ARC task.
+- Declare per-unit evidence, exact producer fields, terminal verdict classes,
+  complete prior-failure metadata, heartbeats and bounded writes in every task.
+- Add planned requirements and BMAD traceability. Contract and gate checks pass;
+  further validation is in progress. No active roadmap or conductor edit, push,
+  experiment execution or external publication occurs.

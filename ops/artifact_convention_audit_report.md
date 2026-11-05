@@ -9,26 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 4 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_8831_v756_ordered_evidence_cost.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The paid-operation-reduction gate failed its 0.20 threshold while all other listed acceptance gates passed.
-
-## WHAT IS MISSING
-The remainder of "decision_rows" and observed statistics underlying "acceptance_gates": the supplied artifact ends mid-row, preventing reconciliation with "completed_count": 4320.
-
-## THE CHECK A READER CANNOT DO
-Do the complete paired results justify the reported failure of the 0.20 paid-operation-reduction gate?
-
-## experiment_8832_v756_selective_availability.json
+## experiment_8845_v757_indexed_witness.json
 
 **CANNOT_DETERMINE**
 
@@ -36,15 +20,52 @@ Do the complete paired results justify the reported failure of the 0.20 paid-ope
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no claim
+The indexed witness evaluator preserves reference decisions across the full roster and passes semantic-readiness gates.
 
 ## WHAT IS MISSING
-The artifact is truncated mid-value at `"bootstrap_control_rows"` → `"calibration_rows"` → `"metrics"` → `"brier"`, leaving any headline conclusion and remaining evidence unavailable.
+The remainder of "parity_rows": the supplied artifact ends mid-row, while "completed_count" reports 7200 and "acceptance_gates" reports success.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact make a comparative or blocked claim with supporting rows or a blocker diagnostic?
+Does every intended unit have matching "indexed_decision" and "reference_decision"?
+No rerun performed; truncation prevents checking the full roster.
 
-## experiment_8833_causal_objective_streams.json
+## experiment_8846_v757_future_benefit_audit.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The audit reports a completed null future-benefit result in `"honest_verdict": "complete_null_future_benefit_audit"`.
+
+## WHAT IS MISSING
+Per-stream, per-arm Brier metrics for all 24 streams are not visible. `"per_stream_results"` is named in `"field_principles"`, but the artifact truncates inside `"influence_rows"` at `"estimate_without_s`, before those results can be inspected.
+
+## THE CHECK A READER CANNOT DO
+What were the Brier scores of `categorical_combined` and `categorical_frozen` on each of the 24 streams?
+
+The unprovided remainder cannot be checked; it may contain the needed rows.
+
+## experiment_8847_v757_indexed_cost.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The evaluation met gates for at least 20% paid-operation reduction, completed-decision parity, and coverage loss and semantic false-accept increase each bounded by 1%.
+
+## WHAT IS MISSING
+Matched per-unit paid-operation counts, decisions, coverage outcomes, and semantic false-accept outcomes for the compared arms. “acceptance_gates” records “passed”: true; visible “complete_request_rows” provide identifiers, timings, and completion status. The artifact ends mid-row, preventing assessment of whether the remaining rows supply the missing metrics.
+
+## THE CHECK A READER CANNOT DO
+Do matched per-unit measurements reproduce the operation-reduction and quality gates marked as passed?
+
+The truncated remainder could not be checked.
+
+## experiment_8848_v757_memory_size_cost.json
 
 **CHECKABLE**
 
@@ -52,7 +73,7 @@ Does the complete artifact make a comparative or blocked claim with supporting r
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Experiment 8833 was blocked because upstream `memory_execution_ready_score` was 0, failing the requirement that it equal 1.
+The artifact reports completed cost measurements for 60 windows across ten paired blocks, with per-unit costs and paired differences, and explicitly makes no benefit claim.
 
 ## WHAT IS MISSING
 nothing
@@ -60,7 +81,9 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8835_v756_complete_adaptation_cost.json
+Execution was not rerun or independently verified; this assessment covers the supplied record only.
+
+## experiment_8849_qwen_witness_canary.json
 
 **CHECKABLE**
 
@@ -68,7 +91,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run completed 90 adaptation-cost windows across three arms without establishing a scientific speed gain.
+Source-span extraction was blocked because `runtime_repair_ready_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +99,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8836_qwen_witness_canary.json
+## experiment_8850_arc_outcome_transfer.json
 
 **CHECKABLE**
 
@@ -84,7 +107,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `runtime_repair_ready_score` was 0, failing the required value of 1.
+The audit was blocked because `arc_new_outcomes_available_score` was 0, while the gate required 1, as recorded in `gate_check_summary` and `gates_evaluated`.
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +115,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8837_arc_outcome_transfer.json
+## experiment_8851_v757_hardware_operation_budget.json
 
 **CHECKABLE**
 
@@ -100,7 +123,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The assessment was blocked because upstream `arc_new_outcomes_available_score` was 0, while the gate required 1.
+Hardware acquisition should be deferred because no complete, supported physical workload benefit has been measured.
 
 ## WHAT IS MISSING
 nothing
@@ -108,34 +131,20 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8838_v756_hardware_operation_budget.json
+Assessment uses only the supplied excerpt; no experiment was re-run, and physical acceleration remains unmeasured.
 
-**CHECKABLE**
+## experiment_8852_v757_capstone.json
+
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The mapping audit passes, but physical acceleration is not established, with board operations recorded as host-only or blocked by a JTAG result of 0xffffffff.
+The visible portion reports complete accounting and owned validation passed, while natural generalization failed and activation was not authorized.
 
 ## WHAT IS MISSING
-nothing
+The artifact’s remainder: it cuts off inside "branch_conclusions" → "reduction" → "draw_ids", so the complete conclusions and any supporting per-unit metrics are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8839_v756_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The categorical candidate clears the development Brier improvement gate in all five seeds, but activation remains unauthorized because natural generalization is absent.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+Does the complete artifact include per-unit metrics supporting its comparative claims, if any? The truncated remainder cannot be checked and may contain that evidence.
