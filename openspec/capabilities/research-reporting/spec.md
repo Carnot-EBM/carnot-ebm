@@ -106641,6 +106641,16 @@ producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
 
+Exp8840 execution SHALL treat an incomplete embedded design JSON as missing
+external contract authority. The active queue may be compared after activation
+using only the conductor's literal-brace encoding; it SHALL NOT supply missing
+design tasks. A blocked contract retains zero readiness while independent
+private V756 children still measure the original 28 missing runner statements.
+Coverage SHALL come from real SQLite traces with empty exclusion lists. Frozen
+upstream V755 qualification may be reused only after authenticating its operands
+and checks; all V756 assertions run unchanged against the preserved V756 design.
+Cold replay SHALL rederive the result and reject changed rows or operands.
+
 ### REQ-REPORT-8841: Qualify the original causal energy store through its missing rejection paths
 
 The experiment SHALL qualify original runner statements81 and290 with all unchanged numerical and causal controls before publishing memory readiness.

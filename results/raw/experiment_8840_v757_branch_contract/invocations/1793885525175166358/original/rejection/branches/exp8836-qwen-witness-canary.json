@@ -1,0 +1,64 @@
+{
+  "administrative_root_required": false,
+  "gates": [
+    {
+      "artifact_field": "runtime_repair_ready_score",
+      "op": "==",
+      "upstream": "exp8827-branch-contract",
+      "value": 1
+    },
+    {
+      "artifact_field": "canary_protocol_ready_score",
+      "op": "==",
+      "upstream": "exp8829-selective-methods",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [
+      "unsloth/Qwen3.8-27B-GGUF"
+    ],
+    "deliverable": "results/experiment_8836_v756_qwen_witness_canary.json",
+    "estimated_wall_time_min": 40,
+    "gated_on": [
+      {
+        "artifact_field": "runtime_repair_ready_score",
+        "op": "==",
+        "upstream": "exp8827-branch-contract",
+        "value": 1
+      },
+      {
+        "artifact_field": "canary_protocol_ready_score",
+        "op": "==",
+        "upstream": "exp8829-selective-methods",
+        "value": 1
+      }
+    ],
+    "id": "exp8836-qwen-witness-canary",
+    "inference_substrate_class": "model_bounded_generation",
+    "max_turns": 50,
+    "milestone": "2026.11.756",
+    "operator_override": "2026-05-29 standing operator directive in CLAUDE.md: versioned lineage continuation of exp8823-qwen-witness-canary and exp8382-runtime-evidence-delta; only a new causal CUDA receipt admits the newly sealed extraction canary.",
+    "per_unit_rows": true,
+    "phase": 4,
+    "prior_failures": [
+      {
+        "addressed_by": "Require a new current runtime repair admission and a new disjoint source-span protocol; unchanged runtime absence pre-gates the task without another model probe.",
+        "experiment_id": "exp8823-qwen-witness-canary",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      },
+      {
+        "addressed_by": "Only a causal hash-bound library/environment change can admit generation; this task never repeats unchanged CUDA inspection.",
+        "experiment_id": "exp8382-runtime-evidence-delta",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_blocked_cuda_environment_unchanged"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.756, exp8836-qwen-witness-canary. The V755 canary skipped because no changed CUDA runtime receipt existed. This bounded canary examines extraction before exact checking, preserving the specification-versus-premise distinction in Specification-Guided Generation. It is not a general benchmark or a generator update.\nChanged scope: Require a new current runtime repair admission and a new disjoint source-span protocol; unchanged runtime absence pre-gates the task without another model probe. Only a causal hash-bound library/environment change can admit generation; this task never repeats unchanged CUDA inspection.\n\nEXISTING CODE TO READ FIRST:\n- scripts/experiment_template.py\n- python/carnot/reporting/selective_evidence_8816.py\n- results/experiment_8827_v756_branch_contract.json\n- results/experiment_8829_v756_selective_methods.json\n- ops/cuda-runtime-repair-receipt.json\n- CLAUDE.md\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8836; SCENARIO-REPORT-8836-CONTRACT)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nProbe source-faithful Qwen extraction after authenticated runtime change. Deliver results/experiment_8836_v756_qwen_witness_canary.json with hash-bound raw operands under results/raw/experiment_8836_v756_qwen_witness_canary/. Implement scripts/experiments/experiment_8836_v756_qwen_witness_canary.py with --date and private-output/replay options. This task is research execution, not milestone activation.\n\nCONCRETE STEPS:\n0. PRECONDITIONS (before all measurement): Check the two exact producer scores=1 and authenticate their hashes before any inference. Require the supplied causal runtime change, locally cached mandated GGUF revision/checksum, supported CUDA build, available GPU memory, proven context/copy operation and actual offload. Use the cached_sota_pair() evidence pattern in scripts/experiment_template.py without treating an old model as the mandate. Missing resources yield complete_blocked_<resource>, verdict_class=blocked and exact gate_check_summary; no fabrication, fallback or repair loop.\n1. Emit a flushed progress line at each phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. Use python -u and print(..., flush=True). Inside long loops print completed/pending counts at least every 60 seconds; forward child output and emit elapsed/phase heartbeats every 60 seconds. Keep every silence gap below 600 seconds, including reasoning between tool calls. Heartbeats never extend measured deadlines.\n2. Keep every tool call bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Put experiment scripts in scripts/experiments/, real tests in tests/python/, and throwaway probes in /tmp; no root scratch scripts.\n3. Recheck both current gates and exact causal runtime/GGUF provenance before loading. Run one genuine load of unsloth/Qwen3.8-27B-GGUF with verified revision, quantization/file checksum, llama.cpp build and actual GPU offload evidence. Record CUDA devices, offloaded layers and attributable memory deltas. No request-only n_gpu_layers evidence, CPU substitution, synthetic fallback, generator fine-tuning or unbounded install/repair loop.\n4. Use only the12 sealed canary worlds, with four paired renderings each: original, irrelevant padding, harmless reordering and a critical-evidence change. Make48 calls, each at most128 output tokens, with a fixed prompt requesting complete source sentences, relation bindings and a typed abstention for missing evidence. Grammar may constrain syntax, never inject truth or force a correct finite answer ID. Preserve all raw prompts, responses, timings and parse failures.\n5. Separate source-span fidelity, binding fidelity, qualifier preservation, parse success and downstream exact verification. Run exact checks on extracted statements and independently on source truth, with distinct labels. Paired failures remain in all48 denominators. At least90 percent source-faithful extraction is a canary target, not a statistically established model benchmark; report world-level intervals and critical-evidence failures.\n6. Declare inference_substrate=live_llm_inference and inference_substrate_class=model_bounded_generation (10-second floor). Use model_full_generation only for a separate real generative workload (60 seconds) and model_load_no_generation for load/embedding-only work (2 seconds). Do not pad time. Legacy Qwen3.5-0.8B or gemma-4-E4B-it can be separate CPU smoke fixtures only, never headline replacements.\n7. Before implementation, read CODEX.md and CLAUDE.md; extend the named REQ/SCENARIO and relevant learning or verification spec, then write failing tests. Reuse current_work_receipt, primary_publication and scoped validation; do not copy a whole historical runner. Preserve original assertions and immutable historical authorities, including the preserved V755 design; mutable vNEXT is never an old fixture. Run scoped pytest with real unit/subprocess statement coverage at 100 percent and zero exclusions, Ruff check/format, strict mypy and scripts/check_spec_coverage.py with test paths as positional arguments. Run applicable private E2E-018/021 from ops/e2e-test-plan.md; add E2E-003/004 and cargo test/fmt/clippy only for native changes. Cold-replay outside the checkout with PYTHONPATH absent; run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the prospective artifact. Bind actual logs and code hashes. A failed owned check disqualifies readiness; repository health debt is separate and never silently waived. Reconcile openspec/, _bmad/traceability.md, ops/status.md and ops/changelog.md. No active-roadmap, conductor, exclusion-manifest or historical-primary rewrite.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date: principle: bind evidence to this scheduled producer, not a predecessor.\nhonest_verdict: terminal complete_ prefix; principle: preserve the measured outcome without implying success from completion.\nverdict_class: positive | circular_positive | null | blocked | disqualified | partial; principle: partial is retryable unfinished OWN work only; unchanged external absence is blocked. Exact-oracle success is circular_positive, never positive.\ninference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls: principle: distinguish CPU arithmetic and small-head training from actual LLM work; no duration padding.\nverifier_is_oracle, exposure_scope, independent_generalization_score: principle: exact encoded checks and constructed corpora do not establish natural-text or hidden-game generalization.\nduration_s, random_seed, reproducibility_checksum: principle: measured time and fixed inputs permit independent reproduction.\nsource_artifact_hashes, code_config_hashes, raw_shard_hashes: principle: bind claims to immutable operands and executed code.\nphase_spans, preconditions_checked: principle: show actual execution and resources checked before work.\nrows: principle: retain each unit, arm and seed with unit_id, cluster_id, metric, denominator, status and missing_reason; aggregates must recompute from these rows.\nintended_count, completed_count, failed_count, censored_count, excluded_count, independent_count: principle: failed attempts stay in denominators; variants and seeds do not create independent worlds.\ngate_check_summary: principle: every blocked result names check, upstream, artifact_field, expected, observed, path and hash; distinguish missing_file, missing_field, rejected_producer and observed_zero.\nacceptance_gates: principle: each frozen threshold has an explanatory principle and separates evidence readiness from scientific benefit.\nrequired_checks_passed, validation_receipts, owned_statement_coverage: principle: actual owned validation, including failure routes, controls publication.\nfield_principles: principle: every added field explains its evidentiary role; a hash or self-report is not proof of a scientific result.\ncanary_rows_ready_score, extraction_fidelity_score: integer 0/1; principle: generated source evidence and scientific extraction quality are distinct.\nper_call_rows, raw_generation_refs, exact_model_revision, gguf_checksum, gpu_offload_evidence, model_load_count, output_token_counts, source_fidelity_rows: principle: actual bounded mandated-model generation must be auditable at each call.\n\nRun command: cd {project_root} && CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8836_v756_qwen_witness_canary.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": true,
+    "title": "Probe source-faithful Qwen extraction after authenticated runtime change",
+    "track": "research"
+  }
+}
