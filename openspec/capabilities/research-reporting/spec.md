@@ -107049,6 +107049,19 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Execution detail, 2026-11-05: compare all thirteen complete objects against an
+independent canonical digest and the visible table. Accept literal-brace prompt
+encoding only in activated YAML. Private controls shall reject a missing final
+task, truncated JSON, changed prompt, wrong gate, wrong model and missing closing
+marker. Preserve the disqualified V757 primary and truncated design unchanged.
+Read supplied runtime evidence without device probes. Missing, unchanged or
+unauthenticated runtime evidence shall keep optional Qwen admission at zero;
+independent CPU roots shall have no dependency on that admission. Seal the V758
+paper-to-method map, source scans, measured resources, controls and validation
+logs. Cold replay shall reconstruct authority and reject rehashed claim changes.
+Owned statement coverage shall be 100 percent with zero excluded statements.
+Publication shall follow scoped tests, private E2E-018/021 and terminal scanners.
+
 ### REQ-REPORT-8854: Qualify matched linear-energy ablations and freeze causal stream methods
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
