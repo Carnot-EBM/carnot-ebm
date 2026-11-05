@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/candidate.json --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/candidate.json",
+        "--json"
+      ],
+      "duration_s": 0.508483509067446,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/terminal/00_adversarial.log",
+      "log_sha256": "sha256:8167d9efbe1cda7bf9cd79c01583828ede398de522c31ff3cfebb147571daf39",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8841,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_circular_positive_memory_execution\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/candidate.json"
+      ],
+      "duration_s": 0.0379666619701311,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/terminal/01_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "env -u PYTHONPATH -C /tmp /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8841_v757_memory_execution.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/candidate.json",
+      "command_argv": [
+        "env",
+        "-u",
+        "PYTHONPATH",
+        "-C",
+        "/tmp",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8841_v757_memory_execution.py",
+        "--replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/candidate.json"
+      ],
+      "duration_s": 15.827023086021654,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8841_v757_memory_execution/invocations/1793887216960177086/terminal/02_cold_replay.log",
+      "log_sha256": "sha256:683b37bdd878c9875f747ab632799599ba1790d9b9eadcaf4604ff9c8a74294b",
+      "name": "cold_replay",
+      "output_tail": "pending=0\n[exp8830] phase=preconditions_after completed=1 pending=0\n[exp8830] phase=head_fit_before completed=0 pending=15\n[exp8830] phase=head_fit_after completed=1 pending=14\n[exp8830] phase=causal_control_after completed=24 pending=336\n[exp8830] phase=head_fit_before completed=1 pending=14\n[exp8830] phase=head_fit_after completed=2 pending=13\n[exp8830] phase=causal_control_after completed=48 pending=312\n[exp8830] phase=head_fit_before completed=2 pending=13\n[exp8830] phase=head_fit_after completed=3 pending=12\n[exp8830] phase=causal_control_after completed=72 pending=288\n[exp8830] phase=head_fit_before completed=3 pending=12\n[exp8830] phase=head_fit_after completed=4 pending=11\n[exp8830] phase=causal_control_after completed=96 pending=264\n[exp8830] phase=head_fit_before completed=4 pending=11\n[exp8830] phase=head_fit_after completed=5 pending=10\n[exp8830] phase=causal_control_after completed=120 pending=240\n[exp8830] phase=head_fit_before completed=5 pending=10\n[exp8830] phase=head_fit_after completed=6 pending=9\n[exp8830] phase=causal_control_after completed=144 pending=216\n[exp8830] phase=head_fit_before completed=6 pending=9\n[exp8830] phase=head_fit_after completed=7 pending=8\n[exp8830] phase=causal_control_after completed=168 pending=192\n[exp8830] phase=head_fit_before completed=7 pending=8\n[exp8830] phase=head_fit_after completed=8 pending=7\n[exp8830] phase=causal_control_after completed=192 pending=168\n[exp8830] phase=head_fit_before completed=8 pending=7\n[exp8830] phase=head_fit_after completed=9 pending=6\n[exp8830] phase=causal_control_after completed=216 pending=144\n[exp8830] phase=head_fit_before completed=9 pending=6\n[exp8830] phase=head_fit_after completed=10 pending=5\n[exp8830] phase=causal_control_after completed=240 pending=120\n[exp8830] phase=head_fit_before completed=10 pending=5\n[exp8830] phase=head_fit_after completed=11 pending=4\n[exp8830] phase=causal_control_after completed=264 pending=96\n[exp8830] phase=head_fit_before completed=11 pending=4\n[exp8830] phase=head_fit_after completed=12 pending=3\n[exp8830] phase=causal_control_after completed=288 pending=72\n[exp8830] phase=head_fit_before completed=12 pending=3\n[exp8830] phase=head_fit_after completed=13 pending=2\n[exp8830] phase=causal_control_after completed=312 pending=48\n[exp8830] phase=head_fit_before completed=13 pending=2\n[exp8830] phase=head_fit_after completed=14 pending=1\n[exp8830] phase=causal_control_after completed=336 pending=24\n[exp8830] phase=head_fit_before completed=14 pending=1\n[exp8830] phase=head_fit_after completed=15 pending=0\n[exp8830] phase=causal_control_after completed=360 pending=0\n[exp8830] phase=gradient_and_shuffle_before completed=0 pending=0\n[exp8830] phase=gradient_and_shuffle_after completed=12 pending=0\n[exp7303-validation] before_subprocess zero elapsed_s=0.000 unit=1/1\n[exp7303-validation:zero] [exp8841] phase=imports_before completed=0 pending=1\n[exp7303-validation:zero] [exp8841] phase=imports_after completed=1 pending=0\n[exp7303-validation:zero] [exp8830] phase=preconditions_before completed=0 pending=0\n[exp7303-validation] after_subprocess zero elapsed_s=1.834 exit=0 unit=1/1\n[exp7303-validation] before_subprocess producer elapsed_s=0.000 unit=1/1\n[exp7303-validation:producer] [exp8841] phase=imports_before completed=0 pending=1\n[exp7303-validation:producer] [exp8841] phase=imports_after completed=1 pending=0\n[exp7303-validation:producer] [exp8830] phase=preconditions_before completed=0 pending=0\n[exp7303-validation] after_subprocess producer elapsed_s=1.818 exit=0 unit=1/1\n[exp7303-validation] before_subprocess relative elapsed_s=0.000 unit=1/1\n[exp7303-validation:relative] [exp8841] phase=imports_before completed=0 pending=1\n[exp7303-validation:relative] [exp8841] phase=imports_after completed=1 pending=0\n[exp7303-validation] after_subprocess relative elapsed_s=1.723 exit=0 unit=1/1\n{\"passed\": true, \"replay_passed\": true, \"rows\": 360, \"numerical_training_calls\": 9961, \"original_missing_statements\": [81, 290]}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}

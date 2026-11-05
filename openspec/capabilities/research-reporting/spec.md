@@ -106656,6 +106656,24 @@ Cold replay SHALL rederive the result and reject changed rows or operands.
 The experiment SHALL qualify original runner statements81 and290 with all unchanged numerical and causal controls before publishing memory readiness.
 The deliverable SHALL be `results/experiment_8841_v757_memory_execution.json`.
 
+Qualification SHALL authenticate the complete admitted Exp8828 replay, original
+configuration and preserved Exp8830 source bytes. Private real children SHALL
+exercise zero readiness, rejected producer (original statement81), and relative
+validation-log resolution (statement290), checking exact diagnostics and unchanged
+fixture bytes. No patch may bypass those statements. All original tests and
+numerical/causal controls remain required. The six counts, three candidate bits,
+width4, SGD rate0.1, delay8 and capacities32 remain fixed.
+
+The new producer SHALL expose deterministic in-process initialization recipes,
+private output and outside-checkout replay without PYTHONPATH. Readiness requires
+100 percent original and new owned statements with no exclusions, private
+E2E-018/021, scoped lint/types/spec checks and unchanged terminal scanners.
+Repository-wide health is a separate bounded receipt. The complete validation
+and replay pilot SHALL fit4200 seconds without extending child deadlines.
+Hash-bound operands, initialization, source/config bytes and measured logs SHALL
+permit independent reconstruction. Historical disqualification and primaries
+remain unchanged; this execution qualification establishes no future-loss gain.
+
 #### SCENARIO-REPORT-8841-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact

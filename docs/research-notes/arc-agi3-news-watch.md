@@ -816,3 +816,11 @@ Gemini 4 Argon’s Standard evaluation suffered API failures: its best-scoring c
 
 **October 1 — Milestone #2 results:** Daniel Franzen won **$25,000 (27.9%)**, Lord Han Solo **$7,500 (23.8%)**, and Lohit Siriki **$5,000 (22.5%)**. All three winning solutions were open-sourced. [Official announcement](https://x.com/arcprize/status/2105737436450201734) · [Readable mirror](https://site.twstalker.com/arcprize/status/2105737436450201734)
 
+## 2026-11-05 14:12 UTC -- NEW
+
+- **September 3 — GPT-6 Astra:** ARC Prize reported **99.9% on ARC-AGI-3 Semi-Private** using its Provider Adapter harness, versus **62.7% with the Standard harness**. ARC Prize also announced that future leaderboard reporting would show both harness configurations separately. [Official announcement](https://arcprize.org/blog/astra)
+
+- **October 13 — Gemini 4 Argon:** ARC Prize published a **97.5% Semi-Private score** using the Provider Adapter harness at low reasoning. [Official benchmark results](https://arcprize.org/results/google-gemini-4-argon)
+
+Live Kaggle standings and the full discussion index were inaccessible; discussion checks were limited to indexed threads.
+
