@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/candidate.json --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/candidate.json",
+        "--json"
+      ],
+      "duration_s": 21.67643189197406,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/terminal/00_adversarial.log",
+      "log_sha256": "sha256:852fd68fdb84ab3e4e508230fc6f87e91815c16e3dc083efb3f22e9b6625cb08",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8843,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_circular_positive_causal_streams\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/candidate.json"
+      ],
+      "duration_s": 0.9410134160425514,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/terminal/01_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "env -u PYTHONPATH -C /tmp /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8843_v757_causal_streams.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/candidate.json",
+      "command_argv": [
+        "env",
+        "-u",
+        "PYTHONPATH",
+        "-C",
+        "/tmp",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8843_v757_causal_streams.py",
+        "--replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/candidate.json"
+      ],
+      "duration_s": 41.391889506950974,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8843_v757_causal_streams/invocations/1793893310591496760/terminal/02_cold_replay.log",
+      "log_sha256": "sha256:6c1963e0146d063764f3a1965c2735a76fc886f989d1327bf3a748b876988135",
+      "name": "cold_replay",
+      "output_tail": "stream completed=16 pending=8\n[exp8843] phase=stream-16/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-16/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-16/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-16/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-16/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-16/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=17 pending=7\n[exp8843] phase=stream-17/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-17/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-17/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-17/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-17/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-17/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=18 pending=6\n[exp8843] phase=stream-18/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-18/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-18/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-18/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-18/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-18/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=19 pending=5\n[exp8843] phase=stream-19/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-19/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-19/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-19/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-19/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-19/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=20 pending=4\n[exp8843] phase=stream-20/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-20/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-20/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-20/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-20/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-20/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=21 pending=3\n[exp8843] phase=stream-21/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-21/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-21/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-21/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-21/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-21/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=22 pending=2\n[exp8843] phase=stream-22/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-22/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-22/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-22/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-22/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-22/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=23 pending=1\n[exp8843] phase=stream-23/categorical_frozen completed=48 pending=240\n[exp8843] phase=stream-23/categorical_calibration_only completed=96 pending=192\n[exp8843] phase=stream-23/categorical_combined completed=144 pending=144\n[exp8843] phase=stream-23/categorical_shuffled_combined completed=192 pending=96\n[exp8843] phase=stream-23/linear_frozen completed=240 pending=48\n[exp8843] phase=stream-23/linear_combined completed=288 pending=0\n[exp8843] phase=replay_stream completed=24 pending=0\n{\"passed\": true, \"replay_passed\": true, \"completed_count\": 12096}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}

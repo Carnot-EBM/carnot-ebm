@@ -106728,12 +106728,44 @@ SHALL execute outside the checkout without PYTHONPATH or live primary writes.
 The experiment SHALL seal predictions before delay8 feedback in24 independent48-query streams with six fixed arms, restart24 and untouched retention; emit12096 total rows.
 The deliverable SHALL be `results/experiment_8843_v757_causal_streams.json`.
 
+Reconstruct categorical and linear heads with the original400-update fitting
+recipe and inputs, SGD0.1, seeds11/23/37/47/59 assigned cyclically before labels.
+Freeze categorical frozen/calibration-only/combined/prefix-shuffled combined
+and linear frozen/combined arms. All arms share a seed within a reset stream.
+Use24 independent stream RNGs; model seed reuse adds no independent units.
+Freeze48 online and12 retention worlds per stream before feedback opens.
+Six-term queries and an injective disconnected branch marker SHALL distinguish
+fresh worlds from exposed fit, calibration and evaluation operands. Preserve
+recipe and error type outside serving inputs; verify historical disjointness.
+Only released verified feedback can train or add templates; prefix shuffling
+uses the released prefix, never future labels. Pending/template caps remain32.
+Restart each durable arm at query24, drain all feedback after48, and score
+retention without mutations at0/24/48. Retain6912 online and5184 retention rows,
+actual gradient arrays, parameter movements, seals, state transitions and acks.
+Two disjoint development timing streams SHALL project the full workload plus
+validation and cold replay under4200 seconds without reducing the cohort.
+Readiness means complete integrity; Exp8846 alone reduces independent benefit.
+Missing external authority blocks; owned validation failure disqualifies;
+unfinished owned execution is partial with exact counts and censored slots.
+Require actual100-percent owned unit/child statement coverage, zero exclusions,
+private E2E-018/021, Ruff, strict mypy, positional spec checks, a bounded full
+Python-suite health receipt, unchanged terminal scanners and outside-checkout
+cold replay without PYTHONPATH. Bind actual logs and original code authorities.
+Ops and traceability reconciliation remains conductor-owned for this execution.
+
 #### SCENARIO-REPORT-8843-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
 producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
+
+Tests SHALL first fail for missing implementation, then check frozen census,
+seed pairing, disjointness, delay and active-query guards, verified additions,
+prefix-only shuffling, retention immutability, restart identity, tail drain,
+gradient arrays and exact initialization. Private CLI tests SHALL execute date,
+blocked, replay and rehashed-tamper routes from outside the checkout. Replay
+SHALL rebuild rows and transitions rather than trust repaired outer hashes.
 
 ### REQ-REPORT-8844: Measure certificate availability and served risk on independent population draws
 
