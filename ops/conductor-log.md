@@ -21372,3 +21372,5 @@ code |
 | 2026-11-05 01:35 UTC | Assess live supervisor generalization only from ne | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8814-branch-contract.arc_new_outcomes_available_score (actual=0 == expected=1) |
 | 2026-11-05 02:00 UTC | Map the new learner operations to KV260 PolarFire  | OK | 93 passed, 1 warning in 12.67s |
 | 2026-11-05 02:21 UTC | Reconcile thirteen outcomes and distinguish constr | OK | 89 passed, 1 warning in 21.17s |
+| 2026-11-05 03:51 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-05 03:56 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

@@ -4523,3 +4523,25 @@ Design: `openspec/change-proposals/research-roadmap-vNEXT.md`; execution queue:
 | REQ-REPORT-8824 | exp8824-arc-outcome-transfer | `results/experiment_8824_v755_arc_outcome_transfer.json` | Planned |
 | REQ-REPORT-8825 | exp8825-hardware-operation-map | `results/experiment_8825_v755_hardware_operation_map.json` | Planned |
 | REQ-REPORT-8826 | exp8826-capstone | `results/experiment_8826_v755_capstone.json` | Planned |
+
+## V756 research plan — 2026-11-04
+
+Planned only; no new runtime implementation or experiment result. FR-06/FR-11
+map to8828/8830/8833/8834; FR-12 to8829/8831/8832/8836; FR-05/FR-08/NFR-01
+to8835/8838. The standing ARC generalization floor maps to8837.
+
+| Requirement | Task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-8827; SCENARIO-REPORT-8827-CONTRACT | exp8827-branch-contract | `results/experiment_8827_v756_branch_contract.json` | Planned |
+| REQ-REPORT-8828; SCENARIO-REPORT-8828-CONTRACT | exp8828-signal-replay-qualification | `results/experiment_8828_v756_signal_replay_qualification.json` | Planned |
+| REQ-REPORT-8829; SCENARIO-REPORT-8829-CONTRACT | exp8829-selective-methods | `results/experiment_8829_v756_selective_methods.json` | Planned |
+| REQ-REPORT-8830; SCENARIO-REPORT-8830-CONTRACT | exp8830-categorical-memory | `results/experiment_8830_v756_categorical_memory.json` | Planned |
+| REQ-REPORT-8831; SCENARIO-REPORT-8831-CONTRACT | exp8831-ordered-evidence-cost | `results/experiment_8831_v756_ordered_evidence_cost.json` | Planned |
+| REQ-REPORT-8832; SCENARIO-REPORT-8832-CONTRACT | exp8832-selective-availability | `results/experiment_8832_v756_selective_availability.json` | Planned |
+| REQ-REPORT-8833; SCENARIO-REPORT-8833-CONTRACT | exp8833-causal-objective-streams | `results/experiment_8833_v756_causal_objective_streams.json` | Planned |
+| REQ-REPORT-8834; SCENARIO-REPORT-8834-CONTRACT | exp8834-future-benefit-audit | `results/experiment_8834_v756_future_benefit_audit.json` | Planned |
+| REQ-REPORT-8835; SCENARIO-REPORT-8835-CONTRACT | exp8835-complete-adaptation-cost | `results/experiment_8835_v756_complete_adaptation_cost.json` | Planned |
+| REQ-REPORT-8836; SCENARIO-REPORT-8836-CONTRACT | exp8836-qwen-witness-canary | `results/experiment_8836_v756_qwen_witness_canary.json` | Planned |
+| REQ-REPORT-8837; SCENARIO-REPORT-8837-CONTRACT | exp8837-arc-outcome-transfer | `results/experiment_8837_v756_arc_outcome_transfer.json` | Planned |
+| REQ-REPORT-8838; SCENARIO-REPORT-8838-CONTRACT | exp8838-hardware-operation-budget | `results/experiment_8838_v756_hardware_operation_budget.json` | Planned |
+| REQ-REPORT-8839; SCENARIO-REPORT-8839-CONTRACT | exp8839-capstone | `results/experiment_8839_v756_capstone.json` | Planned |

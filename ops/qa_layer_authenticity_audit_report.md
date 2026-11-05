@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-11-04
 
-Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -14,246 +14,74 @@ Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21)
 | `CLEAN` | 2 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 4 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `run_stop_authority.py` — The valid JSON value `null` in an old live harness’s output file, with zero rows and a dead declared server port.
-- `exclusion_manifest_lint.py` — Do not skip preconditions. Check KV260 readiness via ls /dev/mmcblk* on the host.
-- `in_process_doc_reconcile.py` — Actual headings from `openspec/capabilities/research-harnesses/spec.md`, supplied as additions in a commit: ```markdown ### REQ-HARNESS-7726: Bound V673 administrative checks to selected bytes #### SCENARIO-HARNESS-7726-SELECTED ``` Neither ID is recognized. Actual verdict from `results/experiment_2011_pypi_final_recheck.json`: ```text cancelled: workflow timed out — re-trigger via workflow_dispat
-- `adversarial_verify.py::check_terminal_artifact_readiness` — results/experiment_4217_non_capstone_ablation.json` carrying the first payload above: a plausible constructed non-capstone filename, not an observed corpus incident.
+- `adversarial_verify.py::_is_finite_number` — An in-memory artifact containing `"auroc": Decimal("1.0")` and `"n_samples": 32`.
+- `adversarial_verify.py::_is_count_field` — {"train_loss": 0.0}` — an exactly zero training loss silently bypasses the caller’s zero-loss warning. `{"prompt_tokens": 158}` — a genuine combinatorial count is not recognized.
+- `adversarial_verify.py::_is_timestamp_field` — - `"execution_time_ms": 705.7332992553711` — actual field in `results/experiment_1688_casal_sampler.json`; a measured duration incorrectly classified as a timestamp. - `"started_at": 1779494306.8178258` — actual field in `results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json`; an epoch timestamp the recognizer misses. - `run_start_ts_ns` and `unix_time_s` — conventional timestamp 
+- `adversarial_verify.py::_is_chance_floor_score` — binary_random_label_accuracy` and `coin_flip_score`, each reporting 0.5 for balanced binary chance controls.
+- `adversarial_verify.py::_is_identifier_field` — json { "seed_used": 20260703, "cv_random_state": 20260703 } ``` Both fields record RNG-seed metadata. Neither is recognized; the live verifier incorrectly emits a critical tautology flag for their equality.
+- `adversarial_verify.py::_is_reference_field` — baseline_auroc` This actual top-level field appears with value `0.887409` in `results/experiment_1163_nrgpt_energy_native_prototype.json`. The helper returns false for it while accepting the suffix spelling `auroc_baseline`.
 
 ### FLAGGED — operator action recommended
-- `run_stop_authority.py` — **SILENT_NON_FIRING**
-- `exclusion_manifest_lint.py` — **SILENT_NON_FIRING**
-- `in_process_doc_reconcile.py` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_terminal_artifact_readiness` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_finite_number` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_count_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_timestamp_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_chance_floor_score` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_identifier_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_reference_field` — **SILENT_NON_FIRING**
 
 ---
 
-## run_stop_authority.py
+## adversarial_verify.py::_is_finite_number
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CONCEPT
-Prevent unattended resource waste by reaping provably unowned llama servers and stopping or escalating persistently dead ARC runs, while preserving process safety and truthful action records.
+## CLAIM
+Recognize any finite real numeric measurement, including NumPy scalars, while rejecting booleans and integers too large for float conversion.
 
 ## FINDINGS
+1. **A/B/F — Finite Decimal metrics silently bypass numeric checks.** `if isinstance(v, numbers.Real):` excludes Python Decimal values, including ordinary finite probabilities. They reach the terminal `return False`, indistinguishable from nonnumeric input. I reproduced the consequence: the downstream perfect-score check emits no flag for the Decimal artifact below, while its float equivalent triggers a flag.
 
-1. **Silent no-row exemption — L313–332.** A successfully parsed JSON value can produce `None` without a read error. `if doc is not None` excludes it, the fallback accepts only `("missing", "stale_unparseable")`, and `if not row_evidence:` silently skips the run. The concrete input below produced zero candidates, packets, actions, and notes on two scans 30 minutes apart. This is the default-disables-check defect: the recognizers have no diagnostic fallback for an unclassified document.
+2. **Docstring and numeric-domain mismatch.** `return math.isfinite(float(v))` checks finiteness after conversion to Python float. A finite extended-precision NumPy number can become infinity during conversion and return False. This is narrower than `Accepts any real number`; the documented oversized-integer exception does not describe this additional exclusion.
 
-2. **Failed actions disable retries for 14 days — L628–671, L715.** Both action paths write `state["written"][key] = now_iso` after unsuccessful outcomes. `_dedupe_ok` subsequently suppresses another attempt. Reproduced: an orphan reap returned `eperm`; after permission was restored, the next scan sent no signal and recorded no new note. The armed run path behaves similarly.
+3. **C — Exception branches lack direct regression coverage.** Removing either `ValueError` or `TypeError` from `except (OverflowError, ValueError, TypeError):` leaves all six existing direct numeric regression methods passing. Removing the boolean rejection or the OverflowError handler causes failures. This establishes gaps in those direct tests; whole-suite mutation survival was not tested.
 
-3. **Persistence tracks recycled PIDs as the same process — L382–385, L423–433.** `_fingerprint` omits `start_epoch`. A replacement process inheriting the same PID and output path therefore inherits the previous process’s persistence window. Reproduced: a 60-second-old run was stopped immediately using a 26-minute-old observation. `expected_start` only compares evaluation with signaling; it does not establish identity across scans. Old action fingerprints can also suppress replacement processes.
-
-4. **Failed run stop still kills its server and claims success — L677–715.** Server signaling proceeds regardless of the harness outcome. Reproduced: harness signaling returned `eperm`, its port-matched server received SIGTERM despite its opt-out environment, and the log recorded `INVALID_RUN_STOPPED`. The server call also omits `expected_start` and any environment verification. Require truthful outcomes and independently verified server eligibility.
-
-5. **Systemd exclusion is a sample of service ownership — L224.** `/system.slice/` recognizes system services but misses user systemd services. A detached child can have PPID 1 while remaining inside an active user service’s cgroup. A temporary fixture with that shape was classified as an orphan and signaled. The docstring promises exclusion of systemd services generally.
-
-6. **Missing port permits unrelated log evidence — L336–357.** `sentinel.find_server_logs(Path(log_dir), port)` receives `None` when the run declares no port; the imported finder then searches logs for every port. Reproduced: an undeclared-port run qualified using a different port’s failure log while the listener probe reported a listener. This does not establish the run’s own server failure.
-
-7. **Unverifiable checks disappear without the promised notes.** L353–354 catches `OSError` and continues without recording unreadable log evidence. L359–365 silently rejects a run when the listener probe returns `None`; an isolated probe returned zero candidates and empty notes. L400–404 similarly uses `except (OSError, json.JSONDecodeError):` followed by `pass`, silently resetting persistence. Repeated state loss can postpone action indefinitely.
-
-8. **Import failure reports successful CLI completion — L559–579, L783.** The import exception does preserve an explicit failure note, so this is not completely silent. However, it returns zero actionable candidates, refreshes the receipt, and `return 2 if summary["actionable"] else 0` returns zero. Reproduced: no conductor-log or known-issues alarm was written. The repository’s receipt reader checks freshness only, so repeated import failures satisfy its health check.
-
-9. **Pattern definitions versus samples.** The two candidate kinds, finding code/severity contract, opt-out marker and value, signal outcomes, timestamp format, and socket-command arguments define specific protocols; arbitrary aliases are not required. The read-reason tuple and systemd marker are narrower than their concepts, as findings 1 and 5 demonstrate. Row recognition and failure-text matching are delegated; this file supplies no independent completeness check for them.
-
-10. **Scope remains limited.** Discovery misses module-launched Python harnesses, nonmatching harness names, and other server implementations. This file contains no fallback covering those omissions and performs no staged-diff or historical-artifact audit. It also checks zero rows ever, rather than the docstring’s broader absence-of-progress wording: a run retaining valid earlier rows can stall indefinitely without qualifying. The repository specification explicitly describes the narrower zero-ever predicate.
-
-11. **Safety rules survive deletion in the focused suite.** The ordinary isolated test invocation returned **31 passed, 1 failed**: log discovery uses today’s clock while the fallback test supplies August timestamps. With the clock controlled, all 32 tests passed. Of 39 individual mutations, **18 survived**, removing:
-    - PPID restriction; orphan unknown-age veto; run unreadable-environment and unknown-start vetoes.
-    - Either finding-code or severity restriction; either no-row age floor.
-    - Removal of recovered candidates from persistence.
-    - Either action caller’s `expected_start` argument.
-    - Packet dedupe check, stamp, or write protection during dry runs.
-    - Orphan action dedupe check or stamp.
-    - Server protected-PID veto; old written-entry pruning.
-
-    The finding-code restriction is currently redundant with the imported evaluator’s severity output. The severity restriction and other safety checks need distinguishing tests. The identity test exercises the primitive directly, allowing both production callers’ identity arguments to disappear undetected.
-
-12. **Write targets and measurements.** No operator-specific absolute write target exists in the supplied script: `REPO = Path(__file__).resolve().parents[1]` and `Path.home()` derive its paths. Normal execution intentionally rewrites operational state and appends operational documents; a test calling `main` without overriding paths would perform those writes. The existing focused tests isolate their destinations and signals, and no historical results overwrite was found. No duration/count measurement computed before its measured work was found.
+4. **Other requested classes:** No dictionary-field reads, free-text matching, negation handling, threshold comparisons, filesystem paths, writes, or workload measurements occur in this function. Rejecting wrappers, lists, and None is consistent with a scalar predicate; this snippet does not establish a field-unwrapping defect.
 
 ## COUNTEREXAMPLE
-An hour-old, discovered process has this command line:
+```python
+from decimal import Decimal
 
-```text
-python scripts/arc_scored_path_lever_harness.py --out /tmp/dead-tier/rows.json --port 8995
+artifact = {
+    "auroc": Decimal("1.0"),
+    "n_samples": 32,
+}
 ```
 
-Its readable environment has no opt-out. Its output contains exactly:
+The predicate returns False for the AUROC. Running the repository’s perfect-score check on this fragment produces zero flags; replacing the Decimal with float `1.0` produces `IMPLAUSIBLE_PERFECT`.
 
-```json
-null
-```
-
-Port 8995 has no listener. The authority is armed.
-
-An automation serializing an uninitialized optional result can produce this file. Isolated scans at the initial time and 30 minutes later both returned:
-
-```text
-run_candidates=0, actions=[], packets=0, notes=[]
-```
-
-Parsing succeeds, but the resulting document value bypasses both row-evidence branches. Persistence never begins.
+Separately, `numpy.longdouble("1e400")` is finite on the tested platform, satisfies `numbers.Real`, and is nevertheless rejected.
 
 ## MISSED INPUT
-The valid JSON value `null` in an old live harness’s output file, with zero rows and a dead declared server port.
+An in-memory artifact containing `"auroc": Decimal("1.0")` and `"n_samples": 32`.
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-The guard silently exempts a zero-row run that satisfies its stated evidence concept. Its state handling also confuses attempted actions with completed actions and process identifiers with persistent process identity. Document classification, retry eligibility, and action receipts need explicit outcomes and tests before this authority can be trusted unattended.
+The numeric type gate excludes a standard finite numeric representation, allowing downstream checks to skip the measurement silently. Widen recognition without accepting numeric strings, and add regressions for Decimal values, extended-precision finiteness, and conversion exceptions. The demonstrated fabrication-check bypass concerns the documented in-memory path; ordinary JSON parsing produces built-in numeric types.
 
 
-## exclusion_manifest_lint.py
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## FINDINGS
-
-1. **A — Confirmed silent pass:** The KV260 preflight below prints clean and exits 0 against the real checkout. `_is_negated_context` treats an unrelated preceding instruction as negating the forbidden mechanism. Its markers also lack boundaries, permitting matches inside longer words.
-
-2. **B — Incomplete retirement inventory:** `_load_manifest_exp_ids` represents all retired experiment IDs but reads only `retired` before returning. The actual manifest also contains retired_experiments, including experiment 887; that ID is absent from the loaded map, disabling its ID and dependency protections.
-
-3. **F — Unavailable checks become passes:** Missing/unreadable manifests produce empty collections, and `if not manifest and not blocked_patterns` skips every check—including the independent wrong-mechanism rule. Ledger loading failures set `ledger = None`; ledger checking exceptions are swallowed. Neither case distinguishes unverified work from clean work.
-
-4. **First occurrence hides later violations:** `path_hit = retired_path_pat.search(prompt_text)` examines only the first device-path occurrence. A negated example followed by an affirmative instruction to use the forbidden mechanism escapes detection, even when that later instruction lies outside the negation window.
-
-5. **Title truncation disables matching:** `task_title` is truncated to 120 characters before classification. A blocked phrase or sole board reference appearing later in a legitimate long title is never scanned.
-
-6. **Exemptions exceed their justification:** `_SCOPE_AUDIT_TASK_RE` exempts tasks solely by name, regardless of whether their prompt actually orders a retired rerun; ordinary slash/space audit titles are omitted. Separately, any structurally valid `prior_failures` block—even concerning an unrelated experiment—can erase blocked-pattern risks entirely, whereas the docstring promises a warning.
-
-7. **Prior differentiation is context blind:** `_prose_addresses_prior` represents meaningful differentiation using unrestricted substrings. `was blocked` and `continuation of` establish no changed mechanism; negated differentiation can also downgrade a genuine rerun. Prior IDs lack boundaries, and explicit root-cause-fix phrasing is omitted.
-
-8. **Board vocabulary is incomplete:** `_WRONG_MECHANISM_PATTERNS` enumerates four capitalization variants without case-insensitive matching. The ordinary uppercase board spelling shown below receives no wrong-mechanism check.
-
-9. **Historical wrappers bypass the scope gate:** Roadmap task fields are normalized, but `FailureLedger.load_from_artifacts(PROJECT_ROOT)` skips historical artifacts whose honest_verdict uses principle/value wrapping. Reproducing an otherwise identical bare versus wrapped failed artifact changes the result from HARD to no risk.
-
-10. **Override recognition confuses text with authorization:** `_has_operator_override` accepts any string satisfying `len(stripped) >= 10`, or a terminal prefix, without establishing a directive source. An explicit denial can therefore authorize activation.
-
-11. **C — Confirmed mutation survivors:** All 31 focused tests still pass after individually deleting either complete prefix, every individual prior-differentiation marker, every negation marker except `guard against`, or three board alternatives. Removing the left blocked-pattern boundary, whitespace normalization, audit-title recognition, underscore ID support, or dependency case-insensitivity also survives. The complete-prefix tests are double-covered by the length check.
-
-## COUNTEREXAMPLE
-
-```yaml
-tasks:
-  - id: exp9002-preflight-v755
-    title: KV260 preflight
-    prompt: >
-      Do not skip preconditions. Check KV260 readiness via ls /dev/mmcblk* on the host.
-```
-
-Expected: HARD wrong-mechanism violation. Actual: clean, exit 0.
-
-Other concrete failures:
-
-- `Refrain from using /dev/mmcblk* for KV260 readiness; use SSH.` — compliant prohibition reported HARD.
-- `Check KRIA readiness via ls /dev/mmcblk* on the host.` — missed when no other board reference exists.
-- `PHASE 0B source/scope audit` — unrecognized audit title.
-- `exp9001-widget-v1: the root cause is fixed now.` — differentiation unrecognized.
-- `operator_override: not approved` — accepted as an override.
-
-## MISSED INPUT
-`Do not skip preconditions. Check KV260 readiness via ls /dev/mmcblk* on the host.`
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Prohibited work receives clean, successful output despite 31 passing focused tests. All eight terminal prefixes and top-level task wrappers are supported; the file derives its root from `__file__`, writes no tracked state, and contains no premature measurement. Focused spec coverage passes; repository-wide spec coverage reports 1,142 existing missing references.
-
-
-## in_process_doc_reconcile.py
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## FINDINGS
-1. **A — Real spec additions silently disappear.** `_REQ_PATTERN` and `_SCENARIO_PATTERN` recognize only IDs immediately enclosed in double asterisks. The project uses ordinary Markdown headings. Reproducing a commit with actual project headings yielded no extracted IDs, zero traceability rows, no status update, and `skipped_reason=None`.
-
-2. **B — The classification lists incompletely represent their concepts.** `_FAILED_TOKENS` represents execution failures but misses spaced timeout wording; an actual workflow timeout becomes Research Finding. `_BLOCKED_TOKENS` represents missing prerequisites but misses unavailable-GPU wording. `_PARTIAL_TOKENS` represents unsuccessful outcomes but misses spaced nonviability, which instead matches a win. `_WIN_TOKENS` represents successful outcomes but omits verified wording, present in experiment 1673. The six-member declared enum and its label table are complete for their explicitly closed vocabulary.
-
-3. **Substring matching reverses outcomes.** Every token uses unrestricted containment. Negative completion wording contains `complete`; the opposite of blocked contains `blocked`; the opposite of effective contains `effective`. Reproduced results include an incomplete experiment labeled Complete and an actual unblocked repair gate labeled Blocked.
-
-4. **Terminal-prefix recognition exists, but context handling fails.** All eight required prefix forms match win tokens. Earlier categories nevertheless override them without considering negation, successful prevention, or zero counts. CLAUDE.md’s successful telemetry-audit example becomes Blocked; explicitly exception-free execution becomes Failed; experiment 3187’s zero negative-control regressions produce Research Finding.
-
-5. **Principle wrapping is handled inconsistently.** `_declared_verdict_class` unwraps its field, but `classify_artifact` passes a wrapped `honest_verdict` to `.lower()`, causing an exception. Wrapped closure values silently miss the upgrade, and `extract_key_metric` silently discards wrapped scalar metrics. `build_changelog_entry` also prints wrappers instead of their values.
-
-6. **Other field lists are samples of broader concepts.** The retrospective-closure recognizer accepts only `retro_*_closed`, missing the existing plural closure-list representation: experiment 830 records two closures without triggering promotion. `_KEY_METRIC_FIELDS` represents representative measurements but omits pass rate; experiment 1673 has a scalar pass rate and emits no metric.
-
-7. **Spec-file recognition also overmatches.** `_commit_added_lines_in_specs` searches for `spec.md` anywhere in the diff header rather than checking the destination filename. A different filename containing those characters can supply requirement IDs and trigger reconciliation.
-
-8. **Scenario-only additions incorrectly update capability status.** The enclosing `if new_reqs or new_scenarios:` allows a successful scenario-only commit to append to `ops/status.md`. This contradicts the documented requirement that this update requires new requirements. Reproduced with no requirement IDs.
-
-9. **F — Failed inspection silently disables dependent work.** Git exceptions return an empty list, and unsuccessful process exits are not checked. A timeout becomes indistinguishable from a successful inspection finding no additions: reconciliation still reports Complete with no skip reason. The unknown-verdict default itself is conservative; this inspection fallback is the silent bypass.
-
-10. **C — Mutation tests expose substantial noncoverage.** All 63 focused tests remain green after deleting every `_PARTIAL_TOKENS` entry together, removing the string-valued closure upgrade, or removing the closure-suffix guard. Individual removal also survives for `crash`, `gpu_required`, `synthesis_required`, `succeeded`, and 17 metric selectors. The string-closure test already contains `implemented`, so its success does not exercise the upgrade; `viable_tier` is universally redundant with `viable`.
-
-## COUNTEREXAMPLE
-```json
-{"honest_verdict": "incomplete: pre-test still raises ImportError"}
-```
-
-Actual: ✅ Complete. Expected: a non-Complete outcome.
-
-Additional reproduced classification failures:
-
-| Verdict | Actual | Expected |
-|---|---|---|
-| `not viable` | ✅ Complete | ⚠️ Research Finding |
-| `gpu_unavailable` | ⚠️ Research Finding | ⚠️ Blocked |
-| `success: crash-free inference; no exception occurred` | ❌ Failed | ✅ Complete |
-| `complete: adversarial audit blocked the telemetry claim` | ⚠️ Blocked | ✅ Complete |
-
-## MISSED INPUT
-Actual headings from `openspec/capabilities/research-harnesses/spec.md`, supplied as additions in a commit:
-
-```markdown
-### REQ-HARNESS-7726: Bound V673 administrative checks to selected bytes
-#### SCENARIO-HARNESS-7726-SELECTED
-```
-
-Neither ID is recognized.
-
-Actual verdict from `results/experiment_2011_pypi_final_recheck.json`:
-
-```text
-cancelled: workflow timed out — re-trigger via workflow_dispatch
-```
-
-The execution-failure classifier does not recognize it.
-
-Actual closure field in experiment 830:
-
-```json
-"retros_closed": [
-  "RETRO-ISING-INJECTION-NO-DISCRIMINATION",
-  "RETRO-GGUF-CACHE-IMPORT"
-]
-```
-
-The closure recognizer ignores it.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The reproduced failures span recognition, context, field normalization, and silent inspection failure; another token addition cannot address them together. The 63 focused tests, Ruff, and scoped spec coverage pass, while repository-wide spec coverage reports 1,142 existing missing references. `PROJECT_ROOT` derives from `__file__`, production writes append to documents, tests isolate their targets, and no fixed historical-artifact overwrite or prematurely computed runtime measurement was found.
-
-
-## adversarial_verify.py::_declares_terminal_artifact_readiness
+## adversarial_verify.py::_numeric_pairs
 
 **Verdict:** `CLEAN`
 
@@ -261,7 +89,7 @@ The reproduced failures span recognition, context, field normalization, and sile
 CLEAN
 
 ## CLAIM
-Identify payloads declaring participation in terminal-artifact readiness validation through a top-level status marker.
+Return all distinct pairs of finite-numeric top-level keys.
 
 ## FINDINGS
 none found
@@ -276,68 +104,10 @@ none found
 KEEP
 
 ## RATIONALE
-REQ-INFRA-6262 explicitly defines `"status"` presence as enrollment; the caller separately validates terminal state, so this return value does not approve readiness. Dictionary membership matches the exact key regardless of its value’s shape; there are no substring checks, thresholds, absolute paths, writes, or measurements. Five focused tests passed, covering wrapped fields, missing markers and downstream nonterminal rejection; full-suite mutation coverage was not checked.
+Caller inspection confirms annotated fields are unwrapped before this helper runs, so its direct rejection of wrappers is not a live bypass. `items[i + 1 :]` correctly enumerates each unordered pair once; boundary/filtering probes and 11 targeted regression tests passed. No text matching, hardcoded patterns, writes, permissive recognizer defaults, or timing measurements occur here; full-suite mutation testing was not performed.
 
 
-## adversarial_verify.py::check_terminal_artifact_readiness
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Flag declared artifacts whose exact path has no terminal state.`, with an explicit exemption for partial capstones.
-
-## FINDINGS
-1. **A / B / 3 / 5 — Negated filenames still suppress the critical flag.** `and "capstone" in _name_tokens(path_name)` establishes token presence, not affirmative capstone identity. The negated basename in MISSED INPUT passes this condition. Reproduced through the actual classifier: classification partial, terminal false, zero flags. This preserves the documented defect for negations separated by underscores.
-
-2. **B / 1 / 5 — Raw spelling causes false positives.** `status = str(classification.status_raw or "").lower()` and `verdict = str(classification.honest_verdict_raw or "").lower()` preserve hyphens, while the upstream classifier normalizes them to underscores. Consequently, `status.startswith("complete_partial")` and `verdict.startswith("complete_partial")` reject an accepted alternate spelling. Reproduced: an honest partial capstone receives a critical flag solely because both markers use hyphens.
-
-3. **C — The direct regressions leave exemption requirements unprotected.** In-memory mutation showed that deleting `status.startswith("complete_partial")` leaves both existing direct regression tests passing. Removing the entire prefix requirement, or removing `classification.classification == "partial"`, also leaves both passing. Removing the verdict alternative or replacing token matching with substring matching causes failures. These results concern those two tests; whole-suite mutation survival was not established.
-
-4. **1 / 2 — No independent wrapper or substring-collision finding.** This function reads a typed classification object, not artifact dictionaries. Its producer supplies string-or-None raw markers, and None is handled. Whole-token filename matching prevents the documented longer-word collision; the remaining filename defect is negation blindness.
-
-5. **4 / D / E / F / G — No applicable defect found.** There are no numeric thresholds, baked-in absolute paths, filesystem writes, or measurements here. The only mutation is appending to the supplied flags list. Unknown nonterminal classifications reach `flags.append(`; there is no default branch that silently disables checking.
-
-## COUNTEREXAMPLE
-False negative, reproduced using this path and payload:
-
-```text
-results/experiment_4217_non_capstone_ablation.json
-```
-
-```json
-{
-  "status": "complete_partial",
-  "honest_verdict": "complete_partial: this non-capstone ablation stopped before validation"
-}
-```
-
-Expected: one critical nonterminal flag. Actual: zero flags.
-
-False positive, using `results/experiment_4217_capstone_ablation.json`:
-
-```json
-{
-  "status": "complete-partial",
-  "honest_verdict": "complete-partial: runtime evidence still blocked"
-}
-```
-
-The classifier recognizes partial completion, but this function flags it instead of applying its deliberate capstone exemption.
-
-## MISSED INPUT
-`results/experiment_4217_non_capstone_ablation.json` carrying the first payload above: a plausible constructed non-capstone filename, not an observed corpus incident.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-A whole-word match still grants an exemption to a filename explicitly denying capstone identity, silently dropping a required critical flag. Base the exemption on validated affirmative capstone identity and canonical status markers, and add independent tests for each exemption condition.
-
-
-## adversarial_verify.py::_flag_summary
+## adversarial_verify.py::_name_tokens
 
 **Verdict:** `CLEAN`
 
@@ -345,7 +115,7 @@ A whole-word match still grants an exemption to a filename explicitly denying ca
 CLEAN
 
 ## CLAIM
-The name `_flag_summary` implies summarizing supplied flags into their count, maximum severity rank, and serialized entries; there is no docstring or detection claim.
+Extract “Whole words in a field name, so a marker can be matched as a word.”
 
 ## FINDINGS
 none found
@@ -360,5 +130,257 @@ none found
 KEEP
 
 ## RATIONALE
-This helper summarizes internal flags without reading artifact fields, matching text, applying detection thresholds, writing files, or measuring work. Isolated checks passed for empty input, each supported severity, and mixed severities, including serialization. Full-suite mutation coverage was not assessed.
+Eight isolated checks passed, including the documented examples, uppercase normalization, and rejection of embedded markers. This helper has no artifact-field reads, numeric thresholds, writes, permissive recognizer fallback, or measurements; full-suite mutation coverage was not established.
+
+
+## adversarial_verify.py::_is_count_field
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Identify a “Field whose name implies a combinatorial count” so small-integer coincidences can be treated as plausible.
+
+## FINDINGS
+1. **A — Confirmed silent bypass.** `return any(m in nl for m in count_markers)` lets `"n_"` match inside an ordinary measurement name. The zero training-loss fragment below returns true; executing its caller confirms that the zero-loss warning is suppressed.
+
+2. **Substring boundaries are missing.** `"count"` can occur inside an unrelated word, and `"_n"` matches the beginning of an unrelated suffix. These matches classify continuous measurements as counts. The initial token check does not constrain the subsequent substring fallback.
+
+3. **Context blindness survives adding boundaries.** `"total"`, `"size"`, `"step"`, `"iteration"`, and `"epoch"` can qualify continuous measurements. Likewise, `tokens & _COUNT_WORDS` accepts a count noun occurring in a rate. The implementation is broader than its combinatorial-count claim; recognizing a word does not establish the field’s units.
+
+4. **B — The vocabulary also misses genuine counts.** `count_markers` and `_COUNT_WORDS` stand in for combinatorial cardinalities, but omit ordinary token and error counts shown below. Both return false with the repository’s current definitions. Executing the caller on the zero error count produces an erroneous implausible-perfect flag.
+
+5. **C — A provably redundant rule.** Every occurrence matching `"_num"` already matches `"_n"`. Deleting `"_num"` cannot change classification; an in-memory deletion confirmed unchanged probe results. Full-suite mutation survival of the remaining markers was not established.
+
+6. **Other requested classes:** `nl = name.lower()` requires a string field name, consistent with the signature; this function reads no artifact values, so principle wrappers are irrelevant here. There are no forbidden-phrase scans, numeric thresholds, absolute paths, writes, or measured operations. Unrecognized names return false and therefore withhold the count exemption; the default itself does not disable checking.
+
+## COUNTEREXAMPLE
+Verified against the repository implementation and its implausible-perfect caller:
+
+| Artifact fragment | Classification and consequence |
+|---|---|
+| `{"train_loss": 0.0}` | Count=true because `"n_"` occurs at the end of `"train_"`; the zero-loss check emits no flag. |
+| `{"total_loss": 0.0}` | Count=true because of `"total"`; the zero-loss check emits no flag despite complete token boundaries. |
+| `{"errors": 0}` | Count=false; an honest zero error count receives an implausible-perfect flag. |
+| `{"prompt_tokens": 158}` | Count=false despite being an ordinary token cardinality. |
+
+Additional verified false count classifications: `"discount_factor"`, `"auroc_normalized"`, `"effect_size"`, and `"samples_per_second"`.
+
+## MISSED INPUT
+`{"train_loss": 0.0}` — an exactly zero training loss silently bypasses the caller’s zero-loss warning.
+
+`{"prompt_tokens": 158}` — a genuine combinatorial count is not recognized.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The exemption accepts incidental substrings and ambiguous qualifiers while rejecting ordinary cardinalities. Boundary matching is necessary but insufficient: classification must distinguish counts from losses, sizes, and rates, with regression tests covering the resulting caller behavior. The counterexamples were executed without writing artifacts; the full test suite was not run.
+
+
+## adversarial_verify.py::_is_timestamp_field
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Identify fields containing a “wall-clock TIMESTAMP (not a measured metric)” so timestamp coincidences are exempted while measured durations remain checked.
+
+## FINDINGS
+
+1. **A / 5 — Measured durations silently escape detection.** The real execution_time_ms field in Exp 1688 returns true. The expression `t in kl for t in ("time", "clock", "epoch", "stamp")` recognizes timing vocabulary without establishing that the value represents an instant. Reproduced: copied execution timing and GPU latency produce no tautology flag; renaming the execution field to a latency field restores the critical flag.
+
+2. **2 / B — Substrings and timestamp-related measurements receive unjustified exemptions.** Both `if "mtime" in kl or "timestamp" in kl:` and the unit-qualified substring scan accept longer words and measured quantities. The interval helper excludes some duration names, but its vocabulary omits differences, uptime and latency. The additional counterexamples below all return true despite describing measurements.
+
+3. **A / B — Genuine timestamp recognition is incomplete.** The tuple `("_ts", "_epoch", "_unixtime")` represents timestamp naming conventions but omits the corpus’s started_at convention. The tuple `("_ns", "_us", "_ms")` represents time units but omits seconds. The marker tuple omits the timestamp abbreviation explicitly advertised in `time/ts/clock/epoch/stamp`. Reproduced: two nanosecond epoch instants two seconds apart receive a critical tautology flag.
+
+4. **C — Several recognizers lack independent regression protection.** In-memory deletion of any individual `"mtime"`, `"_unixtime"`, `"_us"`, `"_ms"`, `"time"`, `"epoch"` or `"stamp"` recognizer leaves all 15 timestamp regressions passing. The original modification-time regression survives deletion of `"mtime"` because the later `"time"` substring rule also recognizes its fields. The other tested recognizers and interval guard caused failures when deleted. Full-suite mutation testing was not performed.
+
+5. **1 / 3 / 4 / D–G — No additional findings in these classes.** There are no dict-value reads: `kl = k.lower()` consumes a field-name string, so principle-wrapped values are irrelevant here. There is no verdict scanning, numeric threshold comparison, executable absolute path, write operation or measurement computation. The terminal `return False` retains unrecognized fields in tautology checking; it does not disable that check.
+
+## COUNTEREXAMPLE
+
+False negative: these distinct measured timings produce no tautology flag because execution_time_ms is incorrectly exempted.
+
+```json
+{
+  "honest_verdict": "success_measured_cpu_and_gpu_paths",
+  "execution_time_ms": 705.7332992553711,
+  "gpu_latency_ms": 705.7332992553711
+}
+```
+
+Additional misclassified duration names: `checkpoint_mtime_diff_ns`, `uptime_ms`, and `timestamping_latency_ms` all return true.
+
+False positive: these honest epoch instants produce a critical tautology flag.
+
+```json
+{
+  "honest_verdict": "success_recorded_run_bounds",
+  "run_start_ts_ns": 1782447824586658300,
+  "run_end_ts_ns": 1782447826586658300
+}
+```
+
+## MISSED INPUT
+
+- `"execution_time_ms": 705.7332992553711` — actual field in `results/experiment_1688_casal_sampler.json`; a measured duration incorrectly classified as a timestamp.
+- `"started_at": 1779494306.8178258` — actual field in `results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json`; an epoch timestamp the recognizer misses.
+- `run_start_ts_ns` and `unix_time_s` — conventional timestamp names that return false.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Timing vocabulary does not establish that a number represents an instant, and the current exemption silently removes real measurements from fabrication detection. Require explicit instant-versus-interval semantics and independently exercised recognizers; another isolated synonym patch preserves the general defect.
+
+
+## adversarial_verify.py::_is_chance_floor_score
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Identifies score fields whose chance floor is 0.5 so legitimate chance coincidences avoid tautology flags.
+
+## FINDINGS
+1. **A/B — Missing legitimate chance scores.** The tuple represents scores whose chance expectation is 0.5, but omits ordinary names for random-label binary accuracy and fair-coin scores. Both names in MISSED INPUT return false. Reproducing their equality through the repository caller produces a tautology flag against honest controls.
+
+2. **Substring collision suppresses detection.** `t in kl` matches `"auc"` inside Cauchy. The Cauchy-loss counterexample below therefore receives the chance-score exemption despite having no 0.5 chance floor. The repository caller emits no tautology flag; disabling this exemption restores the flag.
+
+3. **The implementation is broader than its claim.** The docstring specifies a `SCORE whose chance floor` `is 0.5`, but `"probe"`, `"control"`, `"baseline"`, `"majority"`, `"shuffled"`, and `"permut"` establish neither condition. They also describe losses, durations, regression scores, and multiclass accuracies. Reproducing the R² example below confirms that an unrelated measurement coincidence is silently exempted. Token boundaries alone cannot fix this semantic error.
+
+4. **C — Individual markers lack independent regression coverage.** In-memory deletion against all five direct helper tests left those tests green for `"auc"`, `"probe"`, `"control"`, `"chance"`, `"baseline"`, `"majority"`, and `"shuffled"`. Only deleting `"auroc"` or `"permut"` caused failures. Full-suite mutation survival remains unverified.
+
+5. **Other requested classes:** No dict-value extraction occurs; `kl = k.lower()` appropriately expects a string field name, rather than a principle-wrapped value. There are no forbidden-phrase scans, numeric comparisons, absolute paths, writes, or measurements here. An unmatched name returns false and leaves tautology checking active, so class F’s disabling default is absent.
+
+## COUNTEREXAMPLE
+False negative from an unrelated substring:
+
+```json
+{"cauchy_loss": 0.5, "validation_energy": 0.5}
+```
+
+False negative from incorrect score semantics:
+
+```json
+{"symbolic_probe_r2": 0.5, "validation_energy": 0.5}
+```
+
+Both produced no tautology flag through the repository caller; removing the chance exemption restored the flag.
+
+False positive for honest balanced-binary chance controls:
+
+```json
+{"binary_random_label_accuracy": 0.5, "coin_flip_score": 0.5}
+```
+
+Both names return false, and the caller emits a tautology flag.
+
+## MISSED INPUT
+`binary_random_label_accuracy` and `coin_flip_score`, each reporting 0.5 for balanced binary chance controls.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Substring membership cannot establish that a field is a score or that its chance value is 0.5. Grant the exemption using metric semantics and evidence of the applicable chance value, then add independent tests for each recognizer and negative tests for losses, durations, and other score families.
+
+
+## adversarial_verify.py::_is_identifier_field
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Exclude identifiers, seeds, timestamps and metadata from tautology comparisons while keeping measured metrics eligible.
+
+## FINDINGS
+
+1. **A/B — Missed seed metadata.** `kl.endswith("_seed_used")` requires a preceding underscore, missing the ordinary bare form. `_IDENTIFIER_FIELDS` also omits cross-validation random-state metadata already produced by experiment 732. The MISSED INPUT below incorrectly generates a critical tautology flag.
+
+2. **B/5 — Overbroad exemptions silently suppress detection.** `kl.endswith("_id")` treats in-distribution metric names as identifiers. `kl.endswith("_seed")` similarly exempts measured scores whose names specify a fixed seed. Both contradict the claim `not a measured metric`. These are semantic errors; the suffix boundaries themselves are correctly anchored.
+
+3. **C — All three suffix rules lack independent regression coverage in the selected tests.** Deleting each suffix condition individually left all 22 selected identifier/tautology tests passing. Existing seed/identifier positive cases are already covered by `_IDENTIFIER_FIELDS`. Removing the exact-name branch failed one test; removing the timestamp branch failed seven. Full-suite mutation survival was not checked.
+
+4. **1–4/D–G — No additional defect established.** `kl = k.lower()` expects a string key; JSON guarantees string keys, and wrapped field values never reach this operation. This helper contains no free-text negation checks, numeric thresholds, absolute paths, writes or measurements. Unrecognized names remain eligible for comparison, so its default does not disable detection.
+
+## COUNTEREXAMPLE
+```json
+{
+  "auroc_id": 0.913456789,
+  "auroc_ood": 0.913456789
+}
+```
+
+ID means in-distribution. The live verifier emits no tautology flag. Renaming the first key to `auroc_in_distribution`, with identical values, produces a critical tautology flag.
+
+## MISSED INPUT
+```json
+{
+  "seed_used": 20260703,
+  "cv_random_state": 20260703
+}
+```
+
+Both fields record RNG-seed metadata. Neither is recognized; the live verifier incorrectly emits a critical tautology flag for their equality.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Suffix spelling is being treated as proof of field meaning, allowing measured metrics to bypass detection while honest seed metadata triggers investigation. Use explicit field roles and independently exercised exemption tests; the mutation evidence here covers the 22 selected tests, not the full suite.
+
+
+## adversarial_verify.py::_is_reference_field
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Return true for fields naming a known prior baseline/reference, using anchored matching to avoid confusing measured outcomes with references.
+
+## FINDINGS
+
+1. **A/B — Ordinary baseline names silently go unrecognized.** The alternatives `kl in ("baseline", "reference", "ref")` and `kl.endswith(("_baseline", "_reference", "_ref"))` represent baseline/reference identities, but omit a leading baseline token followed by a metric name. The real field identified below returns false. Reproduction with two equal-valued aliases for one carried baseline produced a critical tautology flag.
+
+2. **B/5 — Internal tokens incorrectly exempt measured outcomes.** `or "_baseline_" in kl` and `or "_reference_" in kl` contradict the claim `Suffix-anchored to avoid substring collisions with measured outcomes.` A measurement of improvement over a baseline is not itself that baseline. Both delta fields in the counterexample return true, causing the caller to downgrade their suspicious equality to a warning despite having no operands establishing valid arithmetic. Underscore boundaries prevent partial-word collisions; they do not establish reference semantics.
+
+3. **C — Most recognition rules lack independent regression protection.** In-memory mutation against all nine baseline-identity tests showed that deleting either infix branch, the entire prefix branch, or the exact-name branch leaves every test passing. Individually deleting `"_reference"` or `"_ref"` from the suffix tuple also leaves them passing; only deleting `"_baseline"` causes failures. The reference-suffix assertion also matches the baseline infix rule, masking deletion. These results concern the nine focused tests, not the entire repository suite.
+
+The helper reads field names, not dictionary values, so principle-wrapped values introduce no extraction bug here. It contains no numeric thresholds, free-text negation checks, filesystem operations, absolute paths, or measurements. Its false result does not itself authorize skipping verification. The prefixes lack a trailing token delimiter, but no realistic unrelated-word counterexample was established.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "success: accuracy and AUROC improved over baseline",
+  "accuracy_baseline_delta": 0.137281,
+  "auroc_baseline_delta": 0.137281
+}
+```
+
+Both fields are classified as references. The caller emits a warning instead of a critical tautology flag, although neither delta has supporting arithmetic operands.
+
+## MISSED INPUT
+
+`baseline_auroc`
+
+This actual top-level field appears with value `0.887409` in `results/experiment_1163_nrgpt_energy_native_prototype.json`. The helper returns false for it while accepting the suffix spelling `auroc_baseline`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The recognizer misses an ordinary reference spelling while granting reference exemptions to unverified outcome fields. Reference identity needs evidence beyond an internal token, with tests independently protecting each recognition rule and rejecting measured derivatives. All nine focused tests, scoped spec coverage, and undefined-name lint passed despite the reproduced misclassifications.
 

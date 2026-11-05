@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-11-04 America/New_York — Plan milestone 2026.11.756
+
+- Add primary-source findings on selective-risk availability, ordered evidence
+  checks and causal feedback, with all requested source channels and access limits.
+- Preserve V755 and stage matching thirteen-task V756 design/YAML contracts,
+  Exp8827–Exp8839, across four phases. Keep complete task objects in both files.
+- Plan original coverage/replay qualification, causal learning with a linear
+  control, repaired disjoint cohorts, calibration-support diagnostics and whole
+  adaptation costs independent of new learning success.
+- Keep Qwen and ARC branches conditional on new authenticated evidence; retain
+  per-board hardware limits and unconditional reconciliation.
+- Add planned OpenSpec requirements, architecture boundaries and traceability.
+  Validation is pending. The active roadmap and conductor are unchanged.
+
 ## 2026-11-05 UTC — Operational retrospective for milestone 2026.11.755
 
 - Updated `results/operational_retro_2026_11_755.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.755`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 7 completed synthesis-only experiments (0 compute-bound) across 26.8 wall-time minutes (27 minutes / 0.4 hours, averaging 4 minutes per experiment).

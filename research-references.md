@@ -54968,3 +54968,104 @@ risk on genuinely fresh graph structures. Whole-operation parent timing can
 measure the new learner without borrowing rejected component attribution.
 CUDA and new live ARC outcomes remain separate conditional branches. Every
 hardware comparison must state which operations a board actually supports.
+
+## V756 planning scan — 2026-11-04 (America/New_York)
+
+Recorded before designing V756. The V755 completion receipts extend into
+November 5 UTC. Its seven primaries and six skips are terminal scheduling
+outcomes, not seven successful experiments. The archive currently ends at
+V754. This scan uses the actual V755 artifacts and conductor receipts.
+
+### Findings and proposed uses
+
+- [Certified by Abstention](https://arxiv.org/abs/2610.09541), October 7, 2026;
+  [full text](https://arxiv.org/html/2610.09541v1) retrieved. Small calibration
+  sets can produce valid procedures that rarely serve an answer. Report the
+  probability of issuing a certificate separately from error among served
+  answers. This directly motivates diagnosing V755's zero decisive coverage.
+  Count independent worlds, not repeated candidates, when checking whether a
+  risk target is statistically attainable. A zero-error bootstrap interval is
+  not an exact finite-sample certificate. Benchmark shift remains outside the
+  exchangeability assumption; this paper does not certify Carnot's graph data.
+- [Available Guardrails](https://arxiv.org/abs/2609.22048), September 18, 2026;
+  primary abstract retrieved. It studies the trade-off between certification
+  support, reporting granularity and traffic served. Compare predeclared
+  calibration budgets before changing a selector architecture. Keep reporting
+  groups fixed; merging groups after seeing failures would change the question.
+- [PriceCheck](https://arxiv.org/abs/2609.37493), September 27, 2026;
+  [full text](https://arxiv.org/html/2609.37493v1) and
+  [author code](https://github.com/js-lee-AI/PriceCheck) retrieved. It separates
+  fitting the cost and usefulness of checks from independent risk calibration.
+  Adapt the cost-accounting idea to a small menu of ordered evidence checks.
+  Measure complete operations and decisions against always-running the joint
+  solver. Carnot's deterministic checks are correlated and partly oracle-like;
+  do not import the paper's performance numbers or independence assumptions.
+- [Error Feedback Calibration](https://arxiv.org/abs/2610.22872), October 16,
+  2026; primary abstract retrieved. Revealed historical errors can guide future
+  correction, with temporal validation limiting overcorrection. Carry the causal
+  timing and frozen-control principle into delayed constraint learning. This is
+  a forecasting result, not justification for a new untested residual learner.
+- [Specification-Guided Generation](https://arxiv.org/abs/2610.41511), October
+  30, 2026; primary abstract retrieved. Feasible continuation filtering enforces
+  an encoded specification; it does not prove that extracted premises match the
+  source. Keep extraction fidelity separate. Defer decoder integration while
+  the mandated CUDA runtime is unqualified; do not revive retired finite-ID
+  answer transport or projection-repair scopes.
+- [Stepwise Reasoning Verification: Don't Generate, Classify!](https://arxiv.org/abs/2610.25441),
+  October 18, revised November 1, 2026; primary abstract retrieved. It compares
+  classification with generated verdicts on reasoning prefixes. This supports
+  testing a small typed decision head, while leaving the mandated generator
+  unchanged. Its reported results do not establish cross-domain verification.
+
+### Requested topic coverage and retained leads
+
+| Topic | Primary sources checked | Decision |
+|---|---|---|
+| EBM verification and reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, May 2026](https://arxiv.org/abs/2512.15605); [distributional EBM, May 2026](https://arxiv.org/abs/2605.18871) | Separate normalized energy learning, exact witnesses and extraction truth. Retain the simple linear-energy comparator. |
+| Neural constraint satisfaction | [Probabilistic Algebraic Layer, March 2025](https://arxiv.org/abs/2503.19466); specification-guided generation above | Exact encoded feasibility is circular evidence, not natural-text correctness. |
+| Ising applications in ML | [Scaling Up Thermodynamic AI Models, June/July 2026](https://arxiv.org/abs/2607.00170) | A model trained for binary Gibbs inference is different from the current categorical head. No automatic hardware mapping. |
+| Hallucination detection | Stepwise verification and Certified by Abstention above | Measure useful coverage, conditional error and model/source shift separately. |
+| Kolmogorov–Arnold Networks | [KAN-CL, May 2026](https://arxiv.org/abs/2605.12306); [KAC, March 2025](https://arxiv.org/abs/2503.21076) | Retention and local arithmetic remain useful concerns; do not reopen unchanged importance anchoring. |
+| Energy-guided generation | Specification-guided generation; [automata-constrained diffusion, July 2026](https://arxiv.org/abs/2607.07026) | Keep as future leads. Diffusion algorithms do not directly apply to the mandated autoregressive GGUF. |
+| FPGA and thermodynamic sampling | [Pipelined p-computer, July 2026](https://arxiv.org/abs/2607.21077); [million p-bits, June 2026](https://arxiv.org/abs/2606.25313) | Include memory and boundary traffic; a sampling kernel cannot accelerate unmeasured host durability. |
+| Continual constraint learning | Error Feedback Calibration; [hierarchical delayed feedback, March 2026](https://arxiv.org/abs/2603.04247) | Seal predictions before feedback, preserve a frozen control, and test future loss before policy-dependent feedback. |
+
+These checks revisit retained literature as well as adding the selective-risk
+and check-scheduling leads. No claim of a comprehensive literature review is made.
+
+### Secondary checks and access limits
+
+- OpenReview searches returned ICLR 2026 EBM and implicit-energy reasoning
+  leads. The [forum](https://openreview.net/forum?id=bYkfHTcR1v) and its PDF
+  returned a browser challenge. No venue acceptance or unretrieved algorithm
+  is asserted. Primary arXiv sources carry the experiment rationale.
+- Both Semantic Scholar citation API requests returned HTTP 429 in this scan:
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  Citation discovery remains incomplete; no new citing-paper relationship is claimed.
+- [Hugging Face verification](https://huggingface.co/papers?q=verification) and
+  its [PriceCheck page](https://huggingface.co/papers/2609.37493) were readable.
+  Dates and methods above come from primary papers.
+- [Python Trending](https://github.com/trending/python?since=monthly) and
+  [Rust Trending](https://github.com/trending/rust?since=monthly) were checked.
+  No relevant new ranked repository was established from the retrieved views.
+  PriceCheck's author repository is a method reference, not a trending claim
+  or an added dependency.
+- [Extropic writing](https://extropic.ai/writing) exposed navigation, while
+  [Z1T](https://extropic.ai/writing/z1t) was readable. Its hardware/software
+  efficiency claims are vendor evidence, not local TSU measurements or access.
+- [Logical Intelligence](https://logicalintelligence.com/) and
+  [Kona 1.0](https://logicalintelligence.com/kona) were checked. The pages describe
+  a constraint reasoning layer but supplied no reproducible new implementation
+  or benchmark protocol in this retrieval.
+
+### Local changes that can justify a new attempt
+
+Exp8814 missed fourteen statements in its owned runner. Exp8815 passed its
+scanners but its cold replay timed out while authenticating historical rows;
+the raw objective comparison remains rejected evidence. Exp8818's calibration
+collision repair now reserves calibration invariants before generating evaluation
+worlds, with private validation recorded in ops/status.md. New experiments must
+qualify these concrete changes without rewriting historical verdicts. V755's
+admitted consensus result has zero decisive coverage, so further threshold
+sweeps need a finite-sample feasibility diagnosis first.

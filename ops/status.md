@@ -1,5 +1,24 @@
 # Carnot — Operational Status
 
+## 2026-11-04 America/New_York — V756 research plan staged
+
+The next plan contains exactly thirteen tasks, Exp8827–Exp8839, across four
+phases. The visible design table and full embedded task objects match
+`research-roadmap-next.yaml`. V755's full design is preserved in
+`openspec/change-proposals/research-roadmap-v755-preserved-20261104.md`.
+
+The plan targets original replay qualification, delayed normalized energy
+learning with a linear control, independent calibration support, ordered-check
+costs and complete adaptation costs on the available causal store. The Qwen
+canary requires changed CUDA evidence; ARC analysis requires new live outcomes.
+Gate field names, complete failure lineage, per-unit rows, terminal verdicts,
+progress heartbeats and bounded writes are explicit in every task prompt.
+
+The dated research scan was recorded before design. Planned requirements and
+traceability are aligned. Validation is pending. No experiment was executed or
+milestone activated by this planning change; historical results, the active
+roadmap and conductor remain unchanged.
+
 ## 2026-11-05 UTC — Exp8818 calibration separation repair
 
 Evaluation generation reserves all sixty calibration structure invariants before

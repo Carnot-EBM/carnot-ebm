@@ -1,5 +1,21 @@
 # Carnot — Architecture
 
+## Planned V756 evidence and learning boundaries — 2026-11-04
+
+The thirteen-task V756 plan retains the existing causal template store, small
+energy head and live ARC agent. Complete original replay must qualify before
+an opt-in normalized categorical objective can run. A linear-energy control
+stays visible. Predictions precede delayed feedback; atomic updates include
+verified template additions and state acknowledgments.
+
+Independent calibration support is measured at the world level. Ordered exact
+witness checks are evaluated for cost at retained decision quality; encoded
+truth remains circular evidence. Complete adaptation cost uses the already
+qualified store independently of new learning benefit. Optional Qwen generation
+and ARC analysis require new authenticated external evidence. Hardware mappings
+retain actual per-operation support. This describes planned work only; no
+runtime behavior, native speedup or scientific result is newly established.
+
 ## Planned V737 revision and evidence boundaries — 2026-10-16
 
 The twelve-task plan preserves the small energy head, resident workers and live

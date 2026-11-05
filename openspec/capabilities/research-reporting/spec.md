@@ -106286,3 +106286,206 @@ Ruff/formatting, strict mypy, scoped spec tracing and cold replay pass. The full
 private E2E-018 CLI also passes its complete validation manifest and twelve
 mutations. Receipts: `/var/tmp/carnot-8818-repair-prbp7kav/validation.json`.
 Global reconciliation debt remains separate from this implementation repair.
+
+## V756 planned research contract (2026-11-04)
+
+Status: planned only. Thirteen tasks, Exp8827 through Exp8839, implement the
+V756 design; no scientific result or runtime change is asserted by this section.
+Each future implementation follows spec-first, tests-first validation and retains
+original historical controls. All gates are branch-local and bind exact producer
+field names. Readiness and scientific benefit are separate.
+
+### REQ-REPORT-8827: Bind thirteen tasks and close original contract-runner coverage
+
+The experiment SHALL bind the exact thirteen full task objects and execute the fourteen missing original contract-runner statements; independently admit changed CUDA and new ARC outcome receipts.
+The deliverable SHALL be `results/experiment_8827_v756_branch_contract.json`.
+Required readiness/benefit fields: `contract_ready_score; runtime_repair_ready_score; arc_new_outcomes_available_score`.
+
+#### SCENARIO-REPORT-8827-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8828: Qualify the finite learning diagnosis with bounded original replay
+
+The experiment SHALL qualify complete original finite-diagnosis replay using one authenticated immutable primitive snapshot and bounded full-fit recomputation, preserving original deadlines and numerical criteria.
+The deliverable SHALL be `results/experiment_8828_v756_signal_replay_qualification.json`.
+Required readiness/benefit fields: `diagnosis_rows_ready_score; objective_candidate_ready_score`.
+
+#### SCENARIO-REPORT-8828-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8829: Seal independent worlds and finite-support selective decision methods
+
+The experiment SHALL qualify repaired split separation and seal independent fit/calibration/evaluation worlds, finite-support binomial methods and ordered-check protocols before labels open.
+The deliverable SHALL be `results/experiment_8829_v756_selective_methods.json`.
+Required readiness/benefit fields: `evidence_protocol_ready_score; selective_protocol_ready_score; canary_protocol_ready_score`.
+
+#### SCENARIO-REPORT-8829-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8830: Qualify normalized energy updates and a linear control in causal memory
+
+The experiment SHALL qualify normalized categorical energy, a linear control, delayed feedback and atomic verified template additions with genuine restart and gradient controls.
+The deliverable SHALL be `results/experiment_8830_v756_categorical_memory.json`.
+Required readiness/benefit fields: `memory_execution_ready_score`.
+
+#### SCENARIO-REPORT-8830-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8831: Measure ordered witness checks at matched exact decision quality
+
+The experiment SHALL measure ordered witness-check cost at retained exact decision quality on all4320 scheduled rows; missing evidence and exhaustion remain insufficient.
+The deliverable SHALL be `results/experiment_8831_v756_ordered_evidence_cost.json`.
+Required readiness/benefit fields: `evidence_rows_ready_score; schedule_benefit_score`.
+
+#### SCENARIO-REPORT-8831-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8832: Separate calibration support from learned decision discrimination
+
+The experiment SHALL measure support versus discrimination at fixed60/180/360 calibration budgets, counting one predetermined candidate per independent world for certificates and retaining zero-serve risk as null.
+The deliverable SHALL be `results/experiment_8832_v756_selective_availability.json`.
+Required readiness/benefit fields: `selective_rows_ready_score; selective_benefit_score`.
+
+#### SCENARIO-REPORT-8832-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8833: Measure future loss from delayed normalized energy and constraint additions
+
+The experiment SHALL run30 fresh64-query streams across six arms and three seeds with delayed labels, actual template additions,54000 online/retention rows and a stronger linear baseline.
+The deliverable SHALL be `results/experiment_8833_v756_causal_objective_streams.json`.
+Required readiness/benefit fields: `stream_rows_ready_score`.
+
+#### SCENARIO-REPORT-8833-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8834: Audit causal future benefit retention and the simple energy baseline
+
+The experiment SHALL independently audit future queries33-64, simultaneous retention and the linear control from sealed per-stream rows without filtering null streams.
+The deliverable SHALL be `results/experiment_8834_v756_future_benefit_audit.json`.
+Required readiness/benefit fields: `benefit_audit_ready_score; learning_benefit_score`.
+
+#### SCENARIO-REPORT-8834-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8835: Measure complete adaptation costs on the already qualified causal store
+
+The experiment SHALL measure complete adaptation cost on the already qualified V754 store independently of new scientific readiness, including startup, durability, restart and feedback drain.
+The deliverable SHALL be `results/experiment_8835_v756_complete_adaptation_cost.json`.
+Required readiness/benefit fields: `whole_cost_ready_score`.
+
+#### SCENARIO-REPORT-8835-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8836: Probe source-faithful Qwen extraction after authenticated runtime change
+
+The experiment SHALL run only an authenticated changed-runtime canary with unsloth/Qwen3.8-27B-GGUF, one load and48 calls of at most128 output tokens, declared model_bounded_generation.
+The deliverable SHALL be `results/experiment_8836_v756_qwen_witness_canary.json`.
+Required readiness/benefit fields: `canary_rows_ready_score; extraction_fidelity_score`.
+
+#### SCENARIO-REPORT-8836-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8837: Assess cross-game supervisor selection only from new live outcomes
+
+The experiment SHALL analyze only new authenticated live selected/applied ARC outcomes with cross-game overlap and censoring; preserve registry prechecks and solve provenance.
+The deliverable SHALL be `results/experiment_8837_v756_arc_outcome_transfer.json`.
+Required readiness/benefit fields: `arc_rows_ready_score`.
+
+#### SCENARIO-REPORT-8837-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8838: Map complete measured operations to supported board work
+
+The experiment SHALL map measured complete CPU operations to distinct KV260, PolarFire and GateMate support boundaries without physical probes or invented acceleration fractions.
+The deliverable SHALL be `results/experiment_8838_v756_hardware_operation_budget.json`.
+Required readiness/benefit fields: `hardware_budget_ready_score`.
+
+#### SCENARIO-REPORT-8838-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+### REQ-REPORT-8839: Reconcile thirteen outcomes and retire only unchanged failed scopes
+
+The experiment SHALL reconcile every primary and structured skip, recompute admitted estimands and preserve exact-scope retirements, historical publication gates and separate constructed/natural counts.
+The deliverable SHALL be `results/experiment_8839_v756_capstone.json`.
+Required readiness/benefit fields: `reconciliation_ready_score`.
+
+#### SCENARIO-REPORT-8839-CONTRACT
+
+Given the frozen V756 task contract, when this producer executes, it SHALL retain
+per-unit rows, exact failed-gate diagnostics, a closed verdict_class and actual
+validation receipts. Failed owned validation SHALL disqualify readiness; external
+absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
+match the YAML literally. Numeric methods and acceptance thresholds SHALL match
+the V756 design and task prompt. Historical primaries SHALL remain unchanged.
