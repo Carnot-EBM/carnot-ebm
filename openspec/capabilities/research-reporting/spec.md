@@ -106873,12 +106873,39 @@ authority, owned failure, invalid date and cold replay CLI paths.
 The experiment SHALL include index construction and all scheduled requests in matched exact-verifier cost comparisons; operation savings alone SHALL NOT establish wall-time speedup.
 The deliverable SHALL be `results/experiment_8847_v757_indexed_cost.json`.
 
+Freeze the admitted 240 evaluation worlds and 120 separate constructed stress
+worlds, forty each at 16/32/64 facts, with four balanced missing-hop,
+contradiction, binding-swap and valid-alternative variants. Five fixed seeds
+randomize paired process order. Both immutable input paths SHALL pay parse,
+dispatch, construction, joins, conflict scan, serialization and disposal under
+the same 200000-operation ceiling. Invalid and exhausted requests remain in
+denominators; exhaustion yields insufficient. Preserve primitive receipts and
+measured complete-request wall and CPU time, without inferred time fractions.
+
+Use 10000 paired whole-world bootstrap draws, collapsing scheduling repeats,
+with familywise 99-percent intervals for operation reduction, coverage loss
+and false-accept increase. Benefit requires lower operation reduction >=0.20,
+upper coverage loss <=0.01 and upper false-accept increase <=0.01, plus exact
+completed decision parity and no stress quality regression. Report stress
+sizes separately. A wall-speed claim additionally requires the paired complete
+request speed ratio lower 99-percent bound >1. Readiness measures honest
+qualified evidence separately from benefit; qualifying encoded proof remains
+circular_positive, absent benefit is null. No strategy search follows labels.
+
 #### SCENARIO-REPORT-8847-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
 producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
+
+Tests SHALL precede implementation and exercise paid construction and disposal,
+invalid and censored attempts, fixed scheduling, bootstrap denominators,
+positive and null gates, authenticated original authorities, private CLI,
+outside-checkout replay and rehashed tamper rejection. Require 100-percent
+owned unit/child statement coverage without exclusions, strict types, scoped
+lint/spec checks, private E2E-018/021 and one repository health run. The
+conductor owns ops/status/changelog and traceability reconciliation.
 
 ### REQ-REPORT-8848: Measure complete adaptation cost as verified template memory fills
 
