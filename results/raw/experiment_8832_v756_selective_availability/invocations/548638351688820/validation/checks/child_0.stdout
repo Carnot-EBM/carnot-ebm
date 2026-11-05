@@ -1,0 +1,192 @@
+....FE                                                                   [100%]
+==================================== ERRORS ====================================
+_________ ERROR at setup of test_owned_cohort_and_exact_label_failures _________
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x7f2a571d74c0>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.12/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/_pytest/runner.py:245: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.12/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.12/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.12/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.12/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.12/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.12/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.12/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.12/site-packages/_pytest/fixtures.py:1202: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/fixtures.py:908: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/tmpdir.py:289: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/tmpdir.py:276: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/tmpdir.py:136: in mktemp
+    p = make_numbered_dir(root=self.getbasetemp(), prefix=basename, mode=0o700)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/pathlib.py:229: in make_numbered_dir
+    max_existing = max(map(parse_num, find_suffixes(root, prefix)), default=-1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/_pytest/pathlib.py:188: in extract_suffixes
+    for entry in iter:
+                 ^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp')
+prefix = 'test_owned_cohort_and_exact_la'
+
+    def find_prefixed(root: Path, prefix: str) -> Iterator[os.DirEntry[str]]:
+        """Find all elements in root that begin with the prefix, case-insensitive."""
+        l_prefix = prefix.lower()
+>       for x in os.scandir(root):
+                 ^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp'
+
+.venv/lib/python3.12/site-packages/_pytest/pathlib.py:176: FileNotFoundError
+=================================== FAILURES ===================================
+______________________ test_failure_routes_and_heartbeats ______________________
+
+tmp_path = PosixPath('/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp/test_failure_routes_and_heartb0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f29fe2cc0e0>
+
+    def test_failure_routes_and_heartbeats(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-8832-ATTACKS: each rejection is an executed statement."""
+        from types import SimpleNamespace
+    
+        c = cohort()
+        c["inputs"].append(dict(c["inputs"][0], split="canary"))
+        m.prepare(c)
+        row = dict(
+            unit_id="w/u",
+            cluster_id="w",
+            candidate_index=0,
+            arm="a",
+            seed=0,
+            split="calibration",
+            probabilities=[1.0, 0.0, 0.0],
+            truth="support",
+            candidate="support",
+            certification_unit=True,
+        )
+        with pytest.raises(ValueError, match="replicated_world"):
+            m.select([row, row], 60, "a", 0)
+        clock = iter(range(0, 10000, 31))
+        monkeypatch.setattr(m, "time", SimpleNamespace(monotonic=lambda: next(clock)))
+        m.reduce([row], draws=2)
+        upstream = json.loads(m.UPSTREAM.read_text())
+        assert r.load_cohort(upstream["raw_shard_hashes"])["worlds"]
+        for missing in ["raw_shard_hashes", "source_artifact_hashes"]:
+            bad = dict(upstream)
+            bad[missing] = []
+            path = tmp_path / (missing + ".json")
+>           atomic_json(path, bad)
+
+tests/python/test_selective_availability_8832.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/current_work_receipt.py:68: in atomic_json
+    temporary.replace(path)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1376: in replace
+    os.replace(self, target)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+src = PosixPath('/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp/test_failure_routes_and_heartb0/.source_artifact_hashes.json.tmp-1821234')
+dst = PosixPath('/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp/test_failure_routes_and_heartb0/source_artifact_hashes.json')
+args = (), kwargs = {}
+redirected_src = PosixPath('/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp/test_failure_routes_and_heartb0/.source_artifact_hashes.json.tmp-1821234')
+redirected_dst = PosixPath('/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp/test_failure_routes_and_heartb0/source_artifact_hashes.json')
+
+    def _compat_os_replace(src: object, dst: object, *args: Any, **kwargs: Any) -> None:
+        redirected_src = _redirect_legacy_write_path(src, "replace from", ensure_parent=False)
+        redirected_dst = _redirect_legacy_write_path(dst, "replace onto", ensure_parent=True)
+>       return _ORIGINAL_OS_REPLACE(redirected_src, redirected_dst, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp/test_failure_routes_and_heartb0/.source_artifact_hashes.json.tmp-1821234' -> '/tmp/exp8832-validation-mbmp32ij/collection-7214e04ad7664e338cf6fba43d28ae04/0/tmp/test_failure_routes_and_heartb0/source_artifact_hashes.json'
+
+python/carnot/testing/tracked_results_guard.py:209: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8806] phase=8832_reduce completed=1 pending=2
+[exp8806] phase=8832_reduce completed=2 pending=1
+[exp8806] phase=8832_reduce completed=3 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['ops/dogfood-memory.json']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_selective_availability_8832.py::test_failure_routes_and_heartbeats
+ERROR tests/python/test_selective_availability_8832.py::test_owned_cohort_and_exact_label_failures
+1 failed, 4 passed, 2 warnings, 1 error in 40.67s

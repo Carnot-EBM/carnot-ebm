@@ -1,0 +1,311 @@
+"""REQ-REPORT-8832 and REQ-VERIFY-8832: independent support and honest nulls."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+from scipy.stats import binomtest
+
+from carnot.reporting import selective_availability_8832 as m
+from carnot.reporting import selective_availability_runner_8832 as r
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+
+
+def cohort():
+    """Small retained worlds exercise the real feature and candidate boundaries."""
+    upstream = json.loads(
+        (m.ROOT / "results/experiment_8829_v756_selective_methods.json").read_text()
+    )
+    ref = next(x for x in upstream["raw_shard_hashes"] if Path(x["path"]).name == "cohort.json")
+    full = json.loads(Path(ref["path"]).read_text())
+    worlds = [
+        w
+        for split in ["fit", "calibration", "evaluation"]
+        for w in [x for x in full["worlds"] if x["split"] == split][:3]
+    ]
+    ids = {w["world_id"] for w in worlds}
+    inputs = [u for u in full["inputs"] if u["cluster_id"] in ids]
+    return dict(
+        worlds=worlds,
+        inputs=inputs,
+        labels={u["unit_id"]: full["labels"][u["unit_id"]] for u in inputs},
+        certification_units={k: v for k, v in full["certification_units"].items() if k in ids},
+        iid_world_sampling=False,
+    )
+
+
+def test_bounds_and_empty_acceptance():
+    """SCENARIO-REPORT-8832-CONTRACT: no answers cannot certify zero risk."""
+    assert m.upper(0, 0) == 1
+    assert m.upper(5, 5) == 1
+    assert m.lower(10, 0) == 0
+    assert m.upper(100, 2) == pytest.approx(
+        binomtest(2, 100, alternative="less").proportion_ci(1 - m.ALPHA).high
+    )
+    assert m.upper(m.FLOOR, 0) <= 0.05 < m.upper(m.FLOOR - 1, 0)
+    with pytest.raises(ValueError, match="counts"):
+        m.upper(2, 3)
+    with pytest.raises(ValueError, match="counts"):
+        m.lower(2, -1)
+    rows = [
+        dict(
+            unit_id=f"w{i}/u",
+            cluster_id=f"w{i}",
+            candidate_index=0,
+            arm="learned_energy",
+            seed=m.SEEDS[0],
+            split="calibration",
+            probabilities=[0.0, 0.0, 1.0],
+            truth="support",
+            candidate="support",
+            certification_unit=True,
+        )
+        for i in range(360)
+    ]
+    choice = m.select(rows, 360, "learned_energy", m.SEEDS[0])
+    assert choice["threshold"] is None
+    assert all(x["risk"] is None and not x["eligible"] for x in choice["cutoffs"])
+    good = [dict(x, probabilities=[1.0, 0.0, 0.0]) for x in rows]
+    assert m.select(good, 360, "learned_energy", m.SEEDS[0])["threshold"] == 0.5
+    with pytest.raises(ValueError, match="calibration_only"):
+        m.select([dict(good[0], split="evaluation")], 60, "learned_energy", m.SEEDS[0])
+
+
+def test_scoring_and_attacks():
+    """SCENARIO-VERIFY-8832-ATTACKS: siblings and shuffled labels add no evidence."""
+    c = cohort()
+    inputs = m.prepare(c)
+    assert not any("truth" in u for u in inputs)
+    predictions, checks = m.legacy.predict([u for u in inputs if u["split"] != "fit"], [], [])
+    rows = m.score(predictions, c)
+    assert len(rows) == len(predictions)
+    m.audit(rows, c)
+    for bad in [
+        rows + rows[:1],
+        [dict(rows[0], cluster_id="foreign")] + rows[1:],
+        [dict(rows[0], truth="bad")] + rows[1:],
+    ]:
+        with pytest.raises(ValueError):
+            m.audit(bad, c)
+    result = m.reduce(rows, draws=5)
+    assert result["selective_benefit_score"] == 0
+    assert result["failure_decomposition"]
+    assert result["iid_assumptions"]["certificate_issued"] is False
+    assert all(x["risk"] is None for x in result["coverage_rows"] if x["accepted"] == 0)
+    # A higher-confidence, error-free synthetic reference exercises numerical eligibility.
+    artificial = [
+        dict(x, probabilities=[1.0, 0.0, 0.0], truth=x["candidate"])
+        for x in rows
+        if x["arm"] == "fixed_evidence"
+    ]
+    m.reduce(artificial, draws=5)
+    assert canonical_hash(checks)
+
+
+def test_training_seal():
+    """REQ-REPORT-8832: actual small Gibbs fitting retains post-fit gradients."""
+    c = cohort()
+    prepared = m.prepare(c)
+    fitted = m.fit(prepared, c["labels"], seeds=m.SEEDS[:1], steps=1)
+    assert len(fitted["parameters"]) == 1
+    assert len(fitted["gradients"]) == 3
+    assert all(x["gradient_hash"].startswith("sha256:") for x in fitted["gradients"])
+
+
+def test_preconditions_and_terminal_replay(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8832-CONTRACT: external absence is blocked; owned failure disqualifies."""
+    raw = tmp_path / "raw"
+    check = r.preconditions(raw, m.UPSTREAM)
+    assert check["external_ready"] and check["resources"]["passed"]
+    absent = r.preconditions(tmp_path / "absent", tmp_path / "missing.json")
+    assert absent["diagnostics"][0]["check"] == "missing_file"
+    upstream = json.loads(m.UPSTREAM.read_text())
+    for value, kind in [
+        (dict(upstream, selective_protocol_ready_score=0), "observed_zero"),
+        ({}, "missing_field"),
+        (dict(upstream, task_id="foreign"), "rejected_producer"),
+    ]:
+        path = tmp_path / "bad.json"
+        atomic_json(path, value)
+        assert r.preconditions(tmp_path / kind, path)["diagnostics"][0]["check"] == kind
+    changed = deepcopy(upstream)
+    changed["raw_shard_hashes"] = [
+        dict(x, sha256="sha256:bad") if Path(x["path"]).name == "cohort.json" else x
+        for x in changed["raw_shard_hashes"]
+    ]
+    atomic_json(tmp_path / "changed.json", changed)
+    assert not r.preconditions(tmp_path / "changed", tmp_path / "changed.json")["external_ready"]
+    output = tmp_path / (m.NAME + ".json")
+    assert (
+        r.main(
+            [
+                "--date",
+                "20261105",
+                "--private-output",
+                "--upstream",
+                str(tmp_path / "missing.json"),
+                "--output",
+                str(output),
+            ]
+        )
+        == 0
+    )
+    artifact = json.loads(output.read_text())
+    assert artifact["verdict_class"] == "blocked"
+    assert r.replay(output)["passed"]
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    replay = subprocess.run(
+        [sys.executable, "-u", str(m.ROOT / m.CLI), "--cold-replay", str(output)],
+        cwd="/tmp",
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert replay.returncode == 0, replay.stdout + replay.stderr
+    artifact["completed_count"] = 1
+    atomic_json(output, artifact)
+    with pytest.raises(ValueError):
+        r.replay(output)
+    assert r.main(["--cold-replay", str(output)]) == 1
+    # Real private execution keeps full science but cannot self-authorize validation.
+    monkeypatch.setattr(r, "load_cohort", lambda refs: cohort())
+    monkeypatch.setattr(m, "SEEDS", m.SEEDS[:1])
+    monkeypatch.setattr(m, "STEPS", 1)
+    assert r.main(["--private-output", "--output", str(output)]) == 0
+    artifact = json.loads(output.read_text())
+    assert artifact["verdict_class"] == "disqualified"
+    assert r.replay(output)["passed"]
+    for key in ["completed_count", "selected_threshold_rows", "certificate_rows"]:
+        bad = deepcopy(artifact)
+        bad[key] = [] if isinstance(bad[key], list) else -1
+        atomic_json(output, bad)
+        with pytest.raises(ValueError):
+            r.replay(output)
+    atomic_json(output, artifact)
+    # Exercise the production publication path with a separate measured validation receipt.
+    monkeypatch.setattr(
+        r,
+        "validate",
+        lambda *args: dict(
+            receipts=[],
+            coverage=dict(complete=True, percent=100, files=[]),
+            raw_references=[],
+            union=dict(passed=True),
+        ),
+    )
+    monkeypatch.setattr(r, "mechanical", lambda path, raw: dict(passed=True, receipts=[]))
+    assert r.main(["--output", str(output)]) == 0
+    assert r.replay(output)["passed"]
+
+
+def test_failure_routes_and_heartbeats(tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8832-ATTACKS: each rejection is an executed statement."""
+    from types import SimpleNamespace
+
+    c = cohort()
+    c["inputs"].append(dict(c["inputs"][0], split="canary"))
+    m.prepare(c)
+    row = dict(
+        unit_id="w/u",
+        cluster_id="w",
+        candidate_index=0,
+        arm="a",
+        seed=0,
+        split="calibration",
+        probabilities=[1.0, 0.0, 0.0],
+        truth="support",
+        candidate="support",
+        certification_unit=True,
+    )
+    with pytest.raises(ValueError, match="replicated_world"):
+        m.select([row, row], 60, "a", 0)
+    clock = iter(range(0, 10000, 31))
+    monkeypatch.setattr(m, "time", SimpleNamespace(monotonic=lambda: next(clock)))
+    m.reduce([row], draws=2)
+    upstream = json.loads(m.UPSTREAM.read_text())
+    assert r.load_cohort(upstream["raw_shard_hashes"])["worlds"]
+    for missing in ["raw_shard_hashes", "source_artifact_hashes"]:
+        bad = dict(upstream)
+        bad[missing] = []
+        path = tmp_path / (missing + ".json")
+        atomic_json(path, bad)
+        assert not r.preconditions(tmp_path / missing, path)["external_ready"]
+    bad = deepcopy(upstream)
+    bad["source_artifact_hashes"] = [dict(x, sha256="bad") for x in bad["source_artifact_hashes"]]
+    atomic_json(tmp_path / "authority.json", bad)
+    assert not r.preconditions(tmp_path / "authority", tmp_path / "authority.json")[
+        "external_ready"
+    ]
+    checker = SimpleNamespace(validate=lambda *args: dict(actual=True))
+    monkeypatch.setattr(r, "namespace", lambda *args: checker)
+    assert r.validate(tmp_path, tmp_path)["actual"]
+    output = tmp_path / (m.NAME + ".json")
+    assert (
+        r.main(
+            ["--private-output", "--upstream", str(tmp_path / "absent"), "--output", str(output)]
+        )
+        == 0
+    )
+    artifact = json.loads(output.read_text())
+    assert r.main(["--cold-replay", str(output)]) == 0
+    report = r.mechanical(output, tmp_path / "mechanical")
+    assert len(report["receipts"]) == 3
+    assert report["passed"], report
+    for bad, reason in [
+        (dict(artifact, experiment_id=0), "producer_identity"),
+        (
+            dict(artifact, raw_shard_hashes=[dict(artifact["raw_shard_hashes"][0], sha256="bad")]),
+            "operand_hash",
+        ),
+        (dict(artifact, current_work_receipt={}), "current_receipt"),
+    ]:
+        atomic_json(output, bad)
+        with pytest.raises(ValueError, match=reason):
+            r.replay(output)
+    monkeypatch.setattr(
+        r, "load_cohort", lambda refs: (_ for _ in ()).throw(ValueError("internal_control_failure"))
+    )
+    assert r.main(["--private-output", "--output", str(output)]) == 0
+    assert json.loads(output.read_text())["owned_errors"] == ["internal_control_failure"]
+    monkeypatch.setattr(
+        r,
+        "validate",
+        lambda *args: dict(
+            receipts=[],
+            coverage=dict(complete=True, percent=100, files=[]),
+            raw_references=[],
+            union=dict(passed=True),
+        ),
+    )
+    monkeypatch.setattr(r, "mechanical", lambda *args: dict(passed=False, receipts=[]))
+    assert r.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_text())["required_checks_passed"] is False
+
+
+def test_owned_cohort_and_exact_label_failures(tmp_path, monkeypatch):
+    """REQ-VERIFY-8832: a bad cohort or exact control disqualifies local execution."""
+    monkeypatch.setattr(r, "load_cohort", lambda refs: cohort())
+    monkeypatch.setattr(
+        r,
+        "validate",
+        lambda *args: dict(
+            receipts=[],
+            coverage=dict(complete=True, percent=100, files=[]),
+            raw_references=[],
+            union=dict(passed=True),
+        ),
+    )
+    monkeypatch.setattr(r, "mechanical", lambda *args: dict(passed=True, receipts=[]))
+    output = tmp_path / (m.NAME + ".json")
+    assert r.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_text())["owned_errors"] == ["cohort_roster"]
+    monkeypatch.setattr(m, "fit", lambda *args, **kwargs: dict(parameters=[], gradients=[]))
+    monkeypatch.setattr(m.legacy.old.upstream.old, "strong", lambda value: "invalid")
+    assert r.main(["--private-output", "--output", str(output)]) == 0
+    assert json.loads(output.read_text())["owned_errors"] == ["exact_label_disagreement"]

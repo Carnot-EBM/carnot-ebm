@@ -59126,3 +59126,19 @@ External absence blocks; internal or owned validation failure disqualifies.
 Private CLI execution cannot self-qualify. Cold replay recomputes costs,
 calibration selection, independent labels, all paired reductions and readiness;
 rehashed aggregate tampering and changed bound operands fail.
+
+
+### REQ-VERIFY-8832: Independent support and sealed selective replay
+
+Only one hash-selected variant and candidate per world SHALL enter each exact
+binomial diagnostic. Calibration-only selection SHALL freeze before evaluation
+scoring. Empty acceptance SHALL have null risk and no certificate. Retained
+non-IID assumptions SHALL prevent certificate issuance. Cold replay SHALL check
+operand and code hashes, candidate identities, cluster ownership, labels, counts,
+cutoff reductions and validation receipts without training or opening new labels.
+
+#### SCENARIO-VERIFY-8832-ATTACKS
+
+Duplicate candidates, wrong-world clusters, evaluation selection, label shuffling,
+altered counts and a zero-acceptance certificate SHALL be rejected. Private CLI
+and foreign-directory replay SHALL retain actual subprocess coverage and logs.

@@ -106410,6 +106410,21 @@ the V756 design and task prompt. Historical primaries SHALL remain unchanged.
 
 ### REQ-REPORT-8832: Separate calibration support from learned decision discrimination
 
+2026-11-05 execution contract: bind Exp8829's ready protocol, cohort and preserved
+V755 authority before measurement. Reuse its 120/360/240 split and unchanged
+five-feature Gibbs trainer with Exp8819's five seeds and 240 updates. Choose
+candidate lists, one variant and one candidate per world by input hashes before
+labels reach selection. Seal predictions and final NCE gradients before calibration.
+Compare the original bootstrap control with six exact-binomial cutoff rows at
+nested budgets 60/180/360. Allocate .01 across all declared arm/seed/budget/cutoff
+risk and coverage bounds; evaluation utility uses a separate .01 family allocation.
+The zero-error floor, actual error contribution and coverage failure stay separate.
+Inherited non-IID topology sampling forbids issued certificates and scientific
+benefit, while numerical eligibility and empirical availability remain reportable.
+All sibling variants use world-clustered descriptive intervals. Exact-oracle
+reference results are circular. Replay must recompute reductions and reject
+changed labels, clusters, counts, duplicate candidates and selected cutoffs.
+
 The experiment SHALL measure support versus discrimination at fixed60/180/360 calibration budgets, counting one predetermined candidate per independent world for certificates and retaining zero-serve risk as null.
 The deliverable SHALL be `results/experiment_8832_v756_selective_availability.json`.
 Required readiness/benefit fields: `selective_rows_ready_score; selective_benefit_score`.
