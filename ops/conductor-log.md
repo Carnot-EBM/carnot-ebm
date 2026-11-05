@@ -21398,3 +21398,4 @@ code |
 | 2026-11-05 15:25 UTC | Seal a fixed population and valid calibration-draw | OK | 89 passed, 1 warning in 61.09s (0:01:01) |
 | 2026-11-05 16:10 UTC | Measure delayed energy learning and template addit | OK | 91 passed, 1 warning in 110.87s (0:01:50) |
 | 2026-11-05 17:05 UTC | Measure certificate availability and served risk o | OK | 90 passed, 1 warning in 54.12s |
+| 2026-11-05 17:32 UTC | Prototype an indexed exact-witness path with uncha | OK | 101 passed, 1 warning in 28.89s |
