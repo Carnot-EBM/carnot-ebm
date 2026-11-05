@@ -1,0 +1,71 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8848_v757_memory_size_cost.json",
+  "primary_sha256": "sha256:62ddef9b5966312650bf33fecb9b02308beffab6f58929e041b31a977c2994d3",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8848_v757_memory_size_cost/terminal_candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8848_v757_memory_size_cost/terminal_candidate.json",
+          "--json"
+        ],
+        "duration_s": 13.16140582493972,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8848_v757_memory_size_cost/invocations/1793905104329907843/terminal/00_adversarial.log",
+        "log_sha256": "sha256:811e0efe235058267287090373b549ed0d054693df58d1f9f69ee96dcd20382e",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8848_v757_memory_size_cost/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8848,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_memory_size_cost\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8848_v757_memory_size_cost/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8848_v757_memory_size_cost/terminal_candidate.json"
+        ],
+        "duration_s": 0.23675818799529225,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8848_v757_memory_size_cost/invocations/1793905104329907843/terminal/01_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "env -u PYTHONPATH sh -c 'cd /tmp && exec \"$@\"' replay /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8848_v757_memory_size_cost.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8848_v757_memory_size_cost/terminal_candidate.json",
+        "command_argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "sh",
+          "-c",
+          "cd /tmp && exec \"$@\"",
+          "replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8848_v757_memory_size_cost.py",
+          "--replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8848_v757_memory_size_cost/terminal_candidate.json"
+        ],
+        "duration_s": 2.6266380610177293,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8848_v757_memory_size_cost/invocations/1793905104329907843/terminal/02_cold_replay.log",
+        "log_sha256": "sha256:175030a853636c3bed64dc96fde2901e7afdfc0788b1ee56a349fb6f8365fa6f",
+        "name": "cold_replay",
+        "output_tail": "[exp8848] phase=imports_before completed=0 pending=1\n[exp8848] phase=imports_after completed=1 pending=0\n{\"passed\": true, \"replay_passed\": true, \"windows\": 60}\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      }
+    ]
+  }
+}

@@ -106912,12 +106912,41 @@ conductor owns ops/status/changelog and traceability reconciliation.
 The experiment SHALL measure60 complete durable windows at initial verified template occupancies0/8/32; report causal preparation cost separately and preserve capacity32.
 The deliverable SHALL be `results/experiment_8848_v757_memory_size_cost.json`.
 
+Freeze ten independent blocks, each with64 identical requests across three
+occupancies and two modes: read_only and combined. Randomize the six cells
+within each block. Build warm checkpoints through verified admissions with
+delay8, retaining preparation requests, responses, clocks and source hashes.
+Never edit a checkpoint to manufacture occupancy. Keep capacity32, pending
+cap32, file/directory fsync, response serialization, restart after32 requests
+and full tail drain. Matching requests share query structure with preparation;
+novel requests use structures absent from all warm checkpoints. Report this
+exposure explicitly. Warm preparation uses additions_only, retaining attempted
+gradients while keeping starting numerical parameters equal across cells.
+
+Parent clocks SHALL surround both child startups/imports through final exit.
+Retain all60 scheduled rows, failed attempts, actual fsync counts, occupancy,
+serialized bytes, hits, additions and attempted/applied updates. A six-cell
+pilot SHALL project execution, preparation and validation below4200 seconds.
+Report per-query cost, whole-window p50/p95, preparation amortization over
+1/10/100 windows, and paired block intervals with simultaneous99-percent
+coverage across the six occupancy contrasts using Bonferroni Student-t bounds.
+Mode differences SHALL NOT be called arithmetic costs or FPGA fractions.
+
 #### SCENARIO-REPORT-8848-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
 producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
+
+Tests SHALL precede implementation and cover real child preparation, restart,
+capacity rejection, cold replay outside the checkout, rehashed tampering and
+failure denominators. Combine actual unit and child coverage with100 percent
+new statements and zero exclusions. Run private E2E-018/021, scoped Ruff,
+strict mypy, positional spec tracing and unchanged terminal scanners. Record
+one bounded repository health run separately. Bind original method authorities
+from historical artifacts; no historical consumer may resolve mutable vNEXT.
+Missing external authority is blocked; owned failures disqualify readiness.
 
 ### REQ-REPORT-8849: Test source-span extraction after new authenticated Qwen runtime evidence
 
