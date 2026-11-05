@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-05 UTC — Operational retrospective for milestone 2026.11.756
+
+- Updated `results/operational_retro_2026_11_756.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.756`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 9 completed experiments (1 compute-bound, 8 synthesis-only) across 70.4 wall-time minutes (70 minutes / 1.2 hours, averaging 8 minutes per experiment).
+- The five slowest experiments were: `Qualify the finite learning diagnosis with bounded original replay` (21.82 minutes / 22min, `compute_bound: false`), `Measure complete adaptation costs on the already qualified causal store` (18.21 minutes / 18min, `compute_bound: false`), `Qualify normalized energy updates and a linear control in causal memory` (7.51 minutes / 8min, `compute_bound: false`), `Bind thirteen tasks and close original contract-runner coverage` (7.03 minutes / 7min, `compute_bound: true`), and `Separate calibration support from learned decision discrimination` (4.63 minutes / 5min, `compute_bound: false`).
+- GPU monitor report (`2026-11-05T10:54:51.911744+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 4/24576MB (0%), 0% utilization, and Temp 44C; locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply because no compute-bound task loaded 2+ models in parallel, and 0% GPU utilization on the 8 synthesis-only experiments is expected behavior.
+- Suggested improvements: parallelize contract-runner coverage checks in the 7.03-minute (7min) compute-bound task, cache bounded replay and causal-store fixtures in the 21.82-minute (22min) and 18.21-minute (18min) synthesis tasks, persist explicit per-experiment timing metadata to eliminate `retro_timing_fallback` when live git-log has 0 commits, and free the idle 4MB GPU 0 allocation.
+
 ## 2026-11-04 America/New_York — Plan milestone 2026.11.756
 
 - Add primary-source findings on selective-risk availability, ordered evidence

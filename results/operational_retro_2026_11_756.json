@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.756",
+  "generated_at": "2026-11-05T10:54:51Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 70.4,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Qualify the finite learning diagnosis with bounded original replay",
+      "duration_minutes": 21.82,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure complete adaptation costs on the already qualified causal store",
+      "duration_minutes": 18.21,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify normalized energy updates and a linear control in causal memory",
+      "duration_minutes": 7.51,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind thirteen tasks and close original contract-runner coverage",
+      "duration_minutes": 7.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Separate calibration support from learned decision discrimination",
+      "duration_minutes": 4.63,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.756 completed 9 experiments (1 compute-bound, 8 synthesis-only) in 70.4 wall-time minutes (70 minutes / 1.2 hours, averaging 8 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). The only compute-bound task was 'Bind thirteen tasks and close original contract-runner coverage' at 7.03 minutes (7min), while synthesis-only tasks accounted for the other top durations: 'Qualify the finite learning diagnosis with bounded original replay' (21.82 minutes / 22min), 'Measure complete adaptation costs on the already qualified causal store' (18.21 minutes / 18min), 'Qualify normalized energy updates and a linear control in causal memory' (7.51 minutes / 8min), and 'Separate calibration support from learned decision discrimination' (4.63 minutes / 5min). Locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner was not needed because no compute-bound task ran 2+ models in parallel, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 44C) across the 8 synthesis-only tasks is expected behavior.",
+  "bottlenecks_identified": [
+    "Among compute-bound tasks (compute_bound_experiments_count: 1 of 9 completed experiments), 'Bind thirteen tasks and close original contract-runner coverage' required 7.03 minutes (7min) to bind thirteen tasks and close original contract-runner coverage; gpu_idle_on_compute_bound_tasks is false.",
+    "Milestone wall-time duration across the 70.4-minute (70 minutes / 1.2 hours, 8 minutes average per experiment) window was concentrated in 'Qualify the finite learning diagnosis with bounded original replay' (21.82 minutes / 22min), 'Measure complete adaptation costs on the already qualified causal store' (18.21 minutes / 18min), 'Qualify normalized energy updates and a linear control in causal memory' (7.51 minutes / 8min), and 'Separate calibration support from learned decision discrimination' (4.63 minutes / 5min).",
+    "Live git-log timing path found 0 commits, forcing disk-mtime fallback reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) for the 9 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Parallelize contract-runner coverage checks inside the 1 compute-bound task 'Bind thirteen tasks and close original contract-runner coverage' (7.03 minutes / 7min) while keeping DualGPURunner unengaged unless 2+ models are loaded in parallel.",
+    "Cache bounded replay and causal-store fixtures across 'Qualify the finite learning diagnosis with bounded original replay' (21.82 minutes / 22min), 'Measure complete adaptation costs on the already qualified causal store' (18.21 minutes / 18min), 'Qualify normalized energy updates and a linear control in causal memory' (7.51 minutes / 8min), and 'Separate calibration support from learned decision discrimination' (4.63 minutes / 5min) to lower the 8-minute per-experiment average.",
+    "Write explicit per-experiment start and completion timestamps directly into result artifacts so milestone retrospectives do not rely on disk-mtime fallback (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Free the residual 4MB allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 44C) per the GPU Monitor Report suggestion."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Reuse pre-qualified replay and causal-store fixtures in 'Qualify the finite learning diagnosis with bounded original replay' (21.82 minutes / 22min) and 'Measure complete adaptation costs on the already qualified causal store' (18.21 minutes / 18min).",
+    "Parallelize contract-runner coverage verification in the 1 compute-bound experiment 'Bind thirteen tasks and close original contract-runner coverage' (7.03 minutes / 7min).",
+    "Persist direct experiment timing metadata to avoid disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log) and release the idle 4MB GPU 0 allocation (4/24576MB, 0% utilization, Temp 44C)."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.756 executed 9 experiments (1 compute-bound, 8 synthesis-only) in 70.4 minutes (70 minutes / 1.2 hours, averaging 8 minutes per experiment) with gpu_idle_on_compute_bound_tasks locked at false and 0% GPU 0 utilization (4/24576MB, 44C) expected for the 8 synthesis-only tasks. Reducing sequential replay and causal-store evaluation overhead in the 21.82-minute (22min) and 18.21-minute (18min) synthesis tasks alongside the 7.03-minute (7min) compute-bound contract-runner task is the highest-leverage path to faster milestone turnaround."
+}
