@@ -59142,3 +59142,18 @@ cutoff reductions and validation receipts without training or opening new labels
 Duplicate candidates, wrong-world clusters, evaluation selection, label shuffling,
 altered counts and a zero-acceptance certificate SHALL be rejected. Private CLI
 and foreign-directory replay SHALL retain actual subprocess coverage and logs.
+### REQ-VERIFY-8835: Complete operation clocks and exact lifecycle parity
+
+Parent-only spans SHALL remain nonnegative and contain both fresh processes.
+Each matched mode SHALL predict64 distinct events, release each exactly once
+after eight ordinals, preserve pending state across restart and finish with an
+empty tail. Read-only preserves parameters/templates; calibration commits64
+updates without additions; combined also admits reusable checks. Failed owned
+checks or lifecycle drift disqualify readiness. External absence is blocked.
+
+#### SCENARIO-VERIFY-8835-PARITY
+
+Tests SHALL reject changed authorities, missing fields, duplicate/lost updates,
+negative spans, stale states, rehashed aggregate drift and failed validation.
+Real private subprocess and foreign-directory replay SHALL execute without
+PYTHONPATH. Tests SHALL preserve timeout output and incomplete window counts.

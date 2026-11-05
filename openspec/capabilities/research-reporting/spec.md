@@ -106474,6 +106474,20 @@ The experiment SHALL measure complete adaptation cost on the already qualified V
 The deliverable SHALL be `results/experiment_8835_v756_complete_adaptation_cost.json`.
 Required readiness/benefit fields: `whole_cost_ready_score`.
 
+Authenticate the shipped Exp8802 store, original control rows and preserved V755
+design by immutable hashes. Exp8828 and Exp8830 SHALL NOT gate historical costs.
+Seal optional arm admission before timing; a rejected categorical producer stays
+an explicitly absent optional arm. Use thirty randomized stream blocks, three
+matched modes and64 queries, restart after32, then drain all delayed feedback.
+Two fixed pilot windows SHALL precede schedule admission under a4200-second
+budget with900 seconds reserved for validation. Preserve every failed attempt.
+Only parent monotonic clocks measure complete windows and coarse service halves.
+Include startup/imports, feature construction, typed responses, unchanged gradient
+work, serialization, file/directory fsync, restart and final response. No internal
+component clock or additive attribution is permitted. Report absolute window/query
+costs, paired99-percent block intervals and order diagnostics. Total/100 is only
+a future latency requirement. No native speedup or generalization is established.
+
 #### SCENARIO-REPORT-8835-CONTRACT
 
 Given the frozen V756 task contract, when this producer executes, it SHALL retain
@@ -106482,6 +106496,11 @@ validation receipts. Failed owned validation SHALL disqualify readiness; externa
 absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
 match the YAML literally. Numeric methods and acceptance thresholds SHALL match
 the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+Cold replay SHALL authenticate raw operands, exact code, receipts, response and
+durable state hashes, event identity and aggregate reductions. Owned validation
+requires100-percent new statements with zero exclusions, real subprocess paths,
+Ruff, strict mypy, spec tracing, private E2E-018/021 and unchanged terminal checks.
 
 ### REQ-REPORT-8836: Probe source-faithful Qwen extraction after authenticated runtime change
 
