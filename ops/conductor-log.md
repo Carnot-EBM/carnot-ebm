@@ -21382,3 +21382,5 @@ code |
 | 2026-11-05 07:35 UTC | Qualify normalized energy updates and a linear con | OK | 92 passed, 1 warning in 75.57s (0:01:15) |
 | 2026-11-05 08:18 UTC | Measure ordered witness checks at matched exact de | OK | 93 passed, 1 warning in 40.24s |
 | 2026-11-05 08:48 UTC | Separate calibration support from learned decision | FLAGGED | adversarial_verify CRITICAL: SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 87 passed, 1 warning in 24.34s |
+| 2026-11-05 08:51 UTC | Measure future loss from delayed normalized energy | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8830-categorical-memory.memory_execution_ready_score (actual=0 == expected=1) |
+| 2026-11-05 08:53 UTC | Audit causal future benefit retention and the simp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8833-causal-objective-streams) |
