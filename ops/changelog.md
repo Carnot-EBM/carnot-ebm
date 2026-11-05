@@ -23091,3 +23091,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - Keep existing global reconciliation debt (architecture freshness and 1,142
   missing spec references) separate. The whole repository suite was not rerun.
 - 2026-11-05: Measure useful evidence decisions under equal computational budgets (⚠️ Blocked) — honest_verdict=complete_blocked_evidence_decisive_coverage; results/experiment_8818_v755_evidence_decisive_coverage.json
+- 2026-11-05: Test calibrated consensus energy at frozen risk and coverage targets (⚠️ Research Finding) — honest_verdict=complete_null_consensus_selective_energy; results/experiment_8819_v755_consensus_selective_energy.json
