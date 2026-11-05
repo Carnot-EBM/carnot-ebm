@@ -106547,3 +106547,18 @@ CLI children. The final receipt owns statement coverage and terminal scanner
 results. One broad Python health check timed out during collection at 180 seconds;
 that debt remains separate from producer qualification. This producer performs
 no activation and makes no claim of scientific benefit.
+
+#### SCENARIO-REPORT-8831-PAID-ORDER (2026-11-05)
+
+Authenticate immutable Exp8829 bytes and exact split, protocol and selection
+hashes. Its absent risk certificate does not block the cost hypothesis. Select
+the least paid ordered schedule on calibration at matched comparator decisions;
+freeze before evaluation. Execute three schedules on240 worlds x6 variants,
+4320 attempts, at200000 operations including parsing and schedule work. Seal
+predictions before independent labels. Keep unrestricted reference work separate.
+Four paired whole-world bootstrap intervals have98.75 percent confidence:
+relative mean paid-operation reduction lower >=.20, correct decisive coverage
+loss upper <=.01, semantic false-accept increase upper <=.01, and decisive
+coverage lower >=.30. A qualified null has evidence readiness1 and benefit0.
+Exact success is circular_positive. Keep alternate witnesses and no-change
+controls visible. Exhausted attempts remain insufficient in the denominator.

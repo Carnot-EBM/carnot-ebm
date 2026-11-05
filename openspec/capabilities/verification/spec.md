@@ -59109,3 +59109,20 @@ Given a frozen head, finite differences agree with analytic gradients within
 0.0001, probabilities sum to one, and a failed atomic write preserves both memory
 and disk. Real fresh CLI processes recover pending predictions and acknowledge
 exactly once. Constructed controls establish execution, never generalization.
+
+### REQ-VERIFY-8831: Ordered evidence cost custody
+
+Authenticate the Exp8829 readiness, split roster and frozen schedule menu before
+measurement. Count parsing and every compared check under one request ceiling.
+Tests reject absent authority, changed hashes, unsafe local decisions, lost
+alternatives, censored proofs, altered predictions and repaired reductions.
+Retain actual owned unit/subprocess coverage at100 percent with no exclusions,
+scoped lint, strict types, spec tracing, private E2E-018/021, cold replay outside
+the checkout without PYTHONPATH, and unchanged adversarial and row validators.
+External absence blocks; internal or owned validation failure disqualifies.
+
+#### SCENARIO-VERIFY-8831-REPLAY
+
+Private CLI execution cannot self-qualify. Cold replay recomputes costs,
+calibration selection, independent labels, all paired reductions and readiness;
+rehashed aggregate tampering and changed bound operands fail.
