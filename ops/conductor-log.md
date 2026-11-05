@@ -21404,3 +21404,4 @@ code |
 | 2026-11-05 19:21 UTC | Measure complete adaptation cost as verified templ | OK | 97 passed, 1 warning in 53.84s |
 | 2026-11-05 19:25 UTC | Test source-span extraction after new authenticate | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8840-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-05 19:29 UTC | Audit live supervisor transfer only when new appli | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8840-branch-contract.arc_new_outcomes_available_score (actual=0 == expected=1) |
+| 2026-11-05 19:54 UTC | Map index and memory costs to KV260 PolarFire and  | OK | 89 passed, 1 warning in 46.13s |
