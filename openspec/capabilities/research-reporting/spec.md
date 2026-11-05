@@ -106805,6 +106805,21 @@ Historical primaries and shared validators SHALL remain unchanged.
 The experiment SHALL qualify request-local predicate indexing against complete exact-witness semantics, including global sign conflicts, variable binding, duplicates and exhausted budgets.
 The deliverable SHALL be `results/experiment_8845_v757_indexed_witness.json`.
 
+The opt-in evaluator SHALL build one immutable request-local predicate index.
+Only relations and bound constant positions may filter candidate facts. Preserve
+fact multiplicity, complete shared bindings, repeated variables, global sign
+conflicts, valid alternatives and explicit universal refutation. Keep the
+200000-operation ceiling. Charge parsing, construction, lookups, joins, conflicts,
+serialization and disposal. A censored partial join SHALL remain insufficient.
+Reject stale index access and cross-request mutation. Leave historical and default
+evaluators unchanged. Exhaustive small-domain tests and all original V756
+conditions SHALL establish typed-decision parity when both paths complete.
+Retain witness-order differences separately from semantic differences. Bind raw
+operands and actual owned unit/child coverage with zero exclusions. Run private
+E2E-018/021, real subprocess and outside-checkout replay controls. Readiness
+qualifies exact semantics; it establishes no cost benefit or generalization.
+Ops and traceability reconciliation remains conductor-owned for this execution.
+
 #### SCENARIO-REPORT-8845-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
