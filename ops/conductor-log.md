@@ -21400,3 +21400,4 @@ code |
 | 2026-11-05 17:05 UTC | Measure certificate availability and served risk o | OK | 90 passed, 1 warning in 54.12s |
 | 2026-11-05 17:32 UTC | Prototype an indexed exact-witness path with uncha | OK | 101 passed, 1 warning in 28.89s |
 | 2026-11-05 18:00 UTC | Audit future loss and untouched retention against  | OK | 105 passed, 1 warning in 71.13s (0:01:11) |
+| 2026-11-05 18:43 UTC | Measure indexed witness costs with construction an | OK | 95 passed, 1 warning in 115.53s (0:01:55) |
