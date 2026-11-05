@@ -106184,3 +106184,58 @@ are constructed-population evidence, without distribution-free certification.
 The protocol freezes matched coverage, equal paid checks and separate oracle
 costs. Mutation controls cover label exposure, absence versus false, nuisance
 invariance and split contamination. V754 nulls and acceptance gates stay intact.
+
+#### SCENARIO-REPORT-8818-PAID-COVERAGE
+
+REQ-REPORT-8818 SHALL freeze the authenticated Exp8816 protocol and unchanged
+local-record, evidence-set and joint-symbolic functions before evaluation.
+The study SHALL seal 240 new eight-vertex structures with two or three shared
+variables, each with intact, padding, reordered, missing-hop, conflict and
+binding-swap variants. Distinct graph invariants certify distinct structures;
+vertex counts exclude all historical structures. Valid alternative witnesses
+are reported separately. Every method receives 200000 explicit operations,
+counting comparisons, candidate bindings, joins, visits and dictionary lookups.
+Source lines are never computation units. Exhaustion returns insufficient and
+remains censored in the 4320-row denominator. An unrestricted exact reference
+has separate measured cost and never schedules a method. Whole-world paired
+98.75 percent intervals cover useful coverage gain, false-accept difference,
+nuisance invariance and insufficient-to-decision rate. The fixed strongest
+comparator is selected on separate calibration worlds before evaluation labels
+open. Gain lower bound >0.05, false-accept upper bound <=0.01 and invariance
+lower bound >=0.99 are conjunctive. Unknown truth never becomes refutation.
+Readiness qualifies evidence rather than benefit. Historical nulls remain null.
+
+#### SCENARIO-REPORT-8818-SEALED-REPLAY
+
+Input-only decisions SHALL be committed before independent labels are opened.
+Replay SHALL recompute operations, decisions, labels and every reduction,
+reject absent or duplicate attempts and altered aggregates, and preserve all
+censored attempts. Private CLI publication and replay work outside the checkout
+without PYTHONPATH. Owned checks require real unit/child statement coverage
+of 100 percent with no exclusions; failed owned checks disqualify readiness.
+Exact encoded outcomes are circular and establish no natural-text, learned
+semantic or hidden-game generalization. Global suite debt is recorded apart.
+
+REQ-REPORT-8818 SHALL reserve calibration structure invariants before generating
+evaluation worlds and reject collisions across these splits. An internal cohort
+or control failure is disqualified; blocked is reserved for external authority
+absence. Every failed precondition retains exact operands and bound raw paths.
+Collision diagnostics SHALL bind both cohort files and list the overlapping
+structure invariants. An empty calibration comparator menu is an internal
+qualification failure and SHALL disqualify readiness.
+
+REQ-REPORT-8818 implementation repair (2026-11-05):
+`evidence_decisive_8818.cohort` deterministically reserves the sixty calibration
+invariants before evaluation generation, including fresh-process replay.
+`evidence_decisive_runner_8818.prepare` retains overlapping invariants and
+hash-bound evaluation/calibration operands. Existing paid-coverage and boundary
+regressions plus the empty-comparator regression verify the repair without
+changing the original solver rules, operation ceiling or scientific gates.
+
+Repair validation passes the 100-test conductor subset and 44 private
+qualification cases, with real combined unit/child SQLite measuring 467/467
+owned executable statements and zero exclusions. Original private E2E-018/021,
+Ruff/formatting, strict mypy, scoped spec tracing and cold replay pass. The full
+private E2E-018 CLI also passes its complete validation manifest and twelve
+mutations. Receipts: `/var/tmp/carnot-8818-repair-prbp7kav/validation.json`.
+Global reconciliation debt remains separate from this implementation repair.

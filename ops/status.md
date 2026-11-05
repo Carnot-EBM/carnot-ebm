@@ -1,5 +1,30 @@
 # Carnot — Operational Status
 
+## 2026-11-05 UTC — Exp8818 calibration separation repair
+
+Evaluation generation reserves all sixty calibration structure invariants before
+accepting new worlds. Internal collisions retain the overlapping invariants and
+hash-bound calibration/evaluation files. Collisions and empty comparator menus
+disqualify readiness; missing external authority remains blocked.
+
+The original conductor subset passes 100 tests, including both reported failures
+and one added regression. The ten conductor repair-gate tests also pass.
+Existing test assertions and `scripts/research_conductor.py` are preserved.
+Private qualification passes 44/44 tests, including the original E2E-018/021
+cases. Combined unit/subprocess SQLite covers all 467 owned module/CLI
+statements with zero exclusions. Ruff, formatting, strict mypy and scoped spec
+coverage pass. The full private E2E-018 CLI additionally passes 91 affected
+and 106 consumer tests, twelve mutations, terminal validators and cold replay.
+Receipts: `/var/tmp/carnot-8818-repair-prbp7kav/validation.json` and `e2e-018/`.
+
+Global reconciliation retains the existing 2026-10-11 architecture date and
+1,142 missing spec references. The whole repository suite was not rerun.
+The test guard noticed the concurrently authored status/changelog/traceability
+edits; they are intentional repair documentation, preserved with the marker
+and an authorship receipt in the private repair directory.
+The older pre-existing marker for conductor-log audit rows remains untouched;
+no commit was attempted.
+
 ## 2026-11-04 UTC — Exp8800 standalone import repair
 
 V753 capstone imports add their own checkout root before loading retained

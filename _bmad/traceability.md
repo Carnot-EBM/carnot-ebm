@@ -1,5 +1,23 @@
 # Carnot — Traceability Matrix
 
+## Exp8818 calibration separation repair — 2026-11-05 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8818 / SCENARIO-REPORT-8818-PAID-COVERAGE | `evidence_decisive_8818.cohort` reserves all sixty calibration invariants before generating evaluation worlds | Original full-size disjointness regression and real standalone replay |
+| REQ-VERIFY-8818 / SCENARIO-VERIFY-8818-BOUNDARIES | Runner binds collision operands and disqualifies internal collisions or empty comparator menus | Existing assertions plus bound-path, overlapping-invariant and empty-menu checks |
+| REQ-CONDUCTOR-FIXGATE-1 | Preserve existing assertions, implementation work and conductor bytes | All ten repair-gate tests pass; no skips or reversions |
+
+The original subset passes 100 tests; private qualification passes 44 tests,
+including E2E-018/021. Combined unit/child SQLite covers 467/467 owned statements
+with zero exclusions. Scoped Ruff, formatting, strict mypy and spec tracing pass.
+The full private E2E-018 CLI passes 91 affected and 106 consumer tests, twelve
+mutations, terminal validators and cold replay. Receipts:
+`/var/tmp/carnot-8818-repair-prbp7kav/`. Global reconciliation retains the
+2026-10-11 architecture date and 1,142 missing spec references; the whole
+repository suite was not rerun. Documentation edits flagged during testing are
+intentional authored changes and are retained with an archived marker receipt.
+
 ## Exp8800 standalone import repair — 2026-11-04 UTC
 
 | Requirement / scenario | Implementation | Verification |
@@ -4485,7 +4503,8 @@ Original repair qualification is 8801; unconditional reconciliation is 8813.
 
 ## Planned V755 research milestone — 2026-11-04
 
-All entries below are planned; implementation, tests and results are pending.
+Entries retain their planned status except for the explicitly recorded Exp8818
+implementation repair. Scientific qualification remains a separate outcome.
 Design: `openspec/change-proposals/research-roadmap-vNEXT.md`; execution queue:
 `research-roadmap-next.yaml`; exactly13 tasks, Exp8814–Exp8826.
 
@@ -4495,7 +4514,7 @@ Design: `openspec/change-proposals/research-roadmap-vNEXT.md`; execution queue:
 | REQ-REPORT-8815 | exp8815-learning-signal-diagnosis | `results/experiment_8815_v755_learning_signal_diagnosis.json` | Planned |
 | REQ-REPORT-8816 | exp8816-selective-evidence-methods | `results/experiment_8816_v755_selective_evidence_methods.json` | Planned |
 | REQ-REPORT-8817 | exp8817-categorical-memory-prototype | `results/experiment_8817_v755_categorical_memory_prototype.json` | Planned |
-| REQ-REPORT-8818 | exp8818-evidence-decisive-coverage | `results/experiment_8818_v755_evidence_decisive_coverage.json` | Planned |
+| REQ-REPORT-8818; REQ-VERIFY-8818 | exp8818-evidence-decisive-coverage | `results/experiment_8818_v755_evidence_decisive_coverage.json` | Implemented; calibration/evaluation separation and internal-failure repair, 2026-11-05 |
 | REQ-REPORT-8819 | exp8819-consensus-selective-energy | `results/experiment_8819_v755_consensus_selective_energy.json` | Planned |
 | REQ-REPORT-8820 | exp8820-causal-objective-streams | `results/experiment_8820_v755_causal_objective_streams.json` | Planned |
 | REQ-REPORT-8821 | exp8821-future-benefit-audit | `results/experiment_8821_v755_future_benefit_audit.json` | Planned |

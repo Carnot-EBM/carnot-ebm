@@ -23071,3 +23071,22 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-04: Bind thirteen tasks and ingest selective-decision methods without a global science gate (⚠️ Research Finding) — honest_verdict=complete_disqualified_v755_branch_contract; results/experiment_8814_v755_branch_contract.json
 - 2026-11-04: Separate feature ambiguity from optimization failure in the causal energy head (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_check; results/experiment_8815_v755_learning_signal_diagnosis.json
 - 2026-11-05: Seal fresh evidence worlds and a fixed risk-coverage decision protocol (⚠️ Research Finding) — honest_verdict=complete_circular_positive_selective_evidence_protocol; results/experiment_8816_v755_selective_evidence_methods.json
+
+## 2026-11-05 — Exp8818 calibration separation repair
+
+- Reserve calibration structure invariants before evaluation generation so
+  independent random seeds cannot admit duplicate structures across splits.
+- Retain hash-bound collision operands and disqualify internal cohort/comparator
+  failures. Preserve external blocking, solver semantics and acceptance gates.
+- Preserve both failing tests and strengthen diagnostics coverage; add an
+  empty-comparator regression. The original subset passes 100 tests and the
+  conductor repair-gate suite passes ten tests.
+- Pass 44 private qualification tests, original E2E-018/021 cases, all 467 owned
+  unit/subprocess statements without exclusions, scoped Ruff/formatting, strict
+  mypy and spec tracing. The full private E2E-018 CLI passes 91 affected tests,
+  106 consumer tests, twelve mutations, terminal checks and cold replay.
+- Preserve intentional status/changelog/traceability edits flagged by the test
+  guard during concurrent documentation work; archive that marker and its
+  authorship receipt under `/var/tmp/carnot-8818-repair-prbp7kav/`.
+- Keep existing global reconciliation debt (architecture freshness and 1,142
+  missing spec references) separate. The whole repository suite was not rerun.

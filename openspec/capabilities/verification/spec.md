@@ -58971,3 +58971,32 @@ Given a frozen cohort, a reader cannot release labels with absent, duplicate,
 incomplete, altered or metadata-bearing prediction rows. Mutation controls
 and cold replay reject changed split, labels, protocol, readiness or raw bytes.
 Private CLI controls do not inherit production qualification receipts.
+
+### REQ-VERIFY-8818: Preserve solver semantics under explicit operation ceilings
+
+Freeze existing solver source bytes before labels open. Add operation charges
+through syntax instrumentation without replacing reasoning rules. Count each
+comparison, assignment, binding join, record visit and dictionary lookup; stop
+before an operation would exceed the identical 200000 ceiling. Exhaustion
+returns insufficient and remains in every scheduled denominator. Validate
+instrumented decisions against unchanged methods on explicit controls, with
+separately costed unrestricted exact references. Authenticate pinned upstream
+readiness and retain exact missing-file, missing-field, zero and rejected-source
+operands. Cold replay independently reduces hash-bound private inputs, labels,
+decisions, controls and validation evidence before atomic publication.
+
+#### SCENARIO-VERIFY-8818-BOUNDARIES
+
+Tests SHALL reject label-bearing inputs, missing and altered authorities,
+duplicate attempts and rehashed semantic tampering. They SHALL exercise signed
+refutation, unknown evidence, contradictory records, valid alternatives,
+binding swaps, nuisance invariance and budget exhaustion. Private output
+cannot grant itself production qualification. No optional branch is needed.
+
+REQ-VERIFY-8818 implementation repair (2026-11-05): collision and empty
+calibration-menu failures produce disqualified verdicts with zero readiness;
+external authority absence retains the blocked disposition. Regression tests
+in `tests/python/test_evidence_decisive_coverage_8818.py` preserve the original
+assertions and additionally inspect both bound cohort paths and the collision
+invariants. The private CLI and outside-checkout replay exercise these owned
+modules without promoting fixture execution to production qualification.

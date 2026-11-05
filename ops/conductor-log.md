@@ -21361,3 +21361,5 @@ code |
 | 2026-11-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor age- |
 | 2026-11-05 00:06 UTC | Seal fresh evidence worlds and a fixed risk-covera | OK | 87 passed, 1 warning in 35.83s |
 | 2026-11-05 00:09 UTC | Qualify a normalized categorical energy objective  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8815-learning-signal-diagnosis.objective_candidate_ready_score (actual=0 == expected=1) |
+| 2026-11-05 00:34 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 7: OPEN 55 days: REAL_B |
+| 2026-11-05 00:34 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 7: OPEN 54 da |
