@@ -23070,3 +23070,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   deployment, external publication, commit or push was performed.
 - 2026-11-04: Bind thirteen tasks and ingest selective-decision methods without a global science gate (⚠️ Research Finding) — honest_verdict=complete_disqualified_v755_branch_contract; results/experiment_8814_v755_branch_contract.json
 - 2026-11-04: Separate feature ambiguity from optimization failure in the causal energy head (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_check; results/experiment_8815_v755_learning_signal_diagnosis.json
+- 2026-11-05: Seal fresh evidence worlds and a fixed risk-coverage decision protocol (⚠️ Research Finding) — honest_verdict=complete_circular_positive_selective_evidence_protocol; results/experiment_8816_v755_selective_evidence_methods.json
