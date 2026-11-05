@@ -23124,3 +23124,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Separate calibration support from learned decision discrimination (⚠️ Research Finding) — honest_verdict=complete_disqualified_selective_availability; results/experiment_8832_v756_selective_availability.json
 - 2026-11-05: Measure complete adaptation costs on the already qualified causal store (⚠️ Research Finding) — honest_verdict=complete_null_complete_adaptation_cost; results/experiment_8835_v756_complete_adaptation_cost.json
 - 2026-11-05: Map complete measured operations to supported board work (⚠️ Research Finding) — honest_verdict=complete_null_hardware_operation_budget; results/experiment_8838_v756_hardware_operation_budget.json
+- 2026-11-05: Reconcile thirteen outcomes and retire only unchanged failed scopes (⚠️ Blocked) — honest_verdict=complete_blocked_v756_capstone; results/experiment_8839_v756_capstone.json
