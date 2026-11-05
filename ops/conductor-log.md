@@ -21364,3 +21364,7 @@ code |
 | 2026-11-05 00:34 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 7: OPEN 55 days: REAL_B |
 | 2026-11-05 00:34 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 7: OPEN 54 da |
 | 2026-11-05 01:01 UTC | Measure useful evidence decisions under equal comp | OK | 100 passed, 1 warning in 61.18s (0:01:01) |
+| 2026-11-05 01:28 UTC | Test calibrated consensus energy at frozen risk an | OK | 92 passed, 1 warning in 26.23s |
+| 2026-11-05 01:30 UTC | Measure future decisions after normalized energy u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8817-categorical-memory-prototype) |
+| 2026-11-05 01:30 UTC | Audit causal future benefit and retention without | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8820-causal-objective-streams) |
+| 2026-11-05 01:30 UTC | Measure complete adaptation cost with parent clock | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8817-categorical-memory-prototype) |
