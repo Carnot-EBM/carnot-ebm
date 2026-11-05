@@ -58951,3 +58951,23 @@ mixed-loss update parity against the existing trainer. The owned tests cover
 finite feature floors,canonical structure splits,numeric controls,private CLI
 execution,replay tampering and failure dispositions. The terminal artifact and
 its private validation receipts determine readiness; no future stream is run.
+
+### REQ-VERIFY-8816: Preserve private selective-protocol custody and checked publication
+
+The new protocol SHALL bind immutable historical primaries, split manifests,
+private labels, protocol bytes, code and actual validation receipts by SHA256.
+Readiness is separate for evidence, consensus and canaries and grants no benefit
+claim. Failed owned checks disqualify and set all readiness scores to zero.
+Missing external inputs block with path/hash and missing-file, missing-field,
+rejected-producer or observed-zero diagnostics. Actual unit and CLI statement
+coverage must be 100 percent with zero exclusions. Private E2E-018/021 checks,
+strict types, Ruff, owned spec coverage, adversarial verification and strict row
+consistency precede publication. Cold replay from outside the checkout without
+PYTHONPATH rejects semantic tampering even if the outer hash is recomputed.
+
+#### SCENARIO-VERIFY-8816-CUSTODY
+
+Given a frozen cohort, a reader cannot release labels with absent, duplicate,
+incomplete, altered or metadata-bearing prediction rows. Mutation controls
+and cold replay reject changed split, labels, protocol, readiness or raw bytes.
+Private CLI controls do not inherit production qualification receipts.

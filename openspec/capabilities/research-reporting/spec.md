@@ -106155,3 +106155,32 @@ execution,private output/raw locations and cold replay. Traced checks live in
 artifact records measured outcomes and qualification; these implementation
 paths alone assert no readiness or scientific benefit. Ops and traceability
 reconciliation remain conductor-owned for this task.
+
+#### SCENARIO-REPORT-8816-FRESH-SPLITS
+
+REQ-REPORT-8816 SHALL seal 60 fit, 60 calibration, 240 evaluation and 12
+canary connected six-vertex directed worlds. Canonical unlabeled topology,
+independent of entity, relation, variable names and query order, is unique
+across every split. V751–V754 use at most five vertices and are excluded by
+vertex count. One- and two-variable queries and support/refute/insufficient
+labels are balanced within each split. Exhausted structural support blocks
+with counts. Two independent exact evaluators agree before private label seal.
+No evaluation labels are released without an exact prediction-row commitment.
+
+#### SCENARIO-REPORT-8816-FROZEN-ENDPOINTS
+
+Exp8818 SHALL require correct decisive coverage gain >=0.05 and semantic
+false-accept noninferiority <=0.01 against the strongest calibration-selected
+prespecified budgeted comparator. Exp8819 SHALL retain unconditional Brier,
+wrong decisions per non-escalation, decisive coverage per scheduled unit and
+insufficient-to-decision per insufficient unit. Insufficient truth always
+requires escalation. Thresholds [0.5,0.6,0.7,0.8,0.9,0.95] are selected once
+per arm and nested seed on calibration only. Consensus requires risk upper
+bound <=0.05, coverage lower bound >=0.30 and useful-coverage gain lower bound
+>=0.05 over fixed evidence at its own frozen safe threshold. Whole worlds are
+resampled after averaging seeds within worlds. Empty eligible menus return
+no candidate before evaluation and preserve all calibration rows. Intervals
+are constructed-population evidence, without distribution-free certification.
+The protocol freezes matched coverage, equal paid checks and separate oracle
+costs. Mutation controls cover label exposure, absence versus false, nuisance
+invariance and split contamination. V754 nulls and acceptance gates stay intact.
