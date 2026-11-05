@@ -2,6 +2,24 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8839: Qualify current capstone custody and replay
+
+Before reduction check readable hash-bound inputs, repository Python, CPU
+dependencies, writable private output and disk space. Require actual owned
+unit and subprocess statement coverage of 100 percent with zero exclusions,
+scoped lint/types/spec checks and private E2E-018/021. Bind current historical
+G1-G4 command output without granting publication authority. A fresh process
+outside the checkout without PYTHONPATH shall rebuild counts and retirement
+decisions from frozen evidence. Failed owned checks disqualify readiness;
+external missing evidence blocks overall science. Run the full Python suite
+once and retain its actual outcome separately as repository health.
+
+### SCENARIO-VERIFY-8839-TAMPER
+
+Rehashed false aggregates, changed task authority, altered producer reductions,
+missing operands, failed validation and unchanged-class/different-cause
+retirement claims shall fail closed. Skipped slots have no primary verdict.
+
 ## REQ-VERIFY-8826: Qualify V755 capstone without optional science
 
 Owned unit and actual CLI statements SHALL have 100 percent coverage with zero

@@ -106567,6 +106567,18 @@ The experiment SHALL reconcile every primary and structured skip, recompute admi
 The deliverable SHALL be `results/experiment_8839_v756_capstone.json`.
 Required readiness/benefit fields: `reconciliation_ready_score`.
 
+Execution clarification 2026-11-05: Freeze all thirteen complete V756 objects,
+current primary and scheduler bytes, rejected producers, quarantine receipts and
+the preserved V755 design before reduction. Authenticate producer validation
+logs as well as declared operands. Recompute learning selection, finite support,
+ordered costs and complete CPU costs only from admitted rows. Count unique
+constructed worlds across arms, seeds and reused branches; derivative hardware
+rows do not add measurements. Preserve V755's 2160 measurements, 240 worlds and
+zero natural generalization as historical evidence. Equal verdict classes alone
+do not establish unchanged failure: retirement requires the registered exact
+failed verdict and observed same cause. Environmental absence preserves the
+broader hypothesis. Ops/status/traceability reconciliation is conductor-owned.
+
 #### SCENARIO-REPORT-8839-CONTRACT
 
 Given the frozen V756 task contract, when this producer executes, it SHALL retain
