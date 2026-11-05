@@ -21384,3 +21384,4 @@ code |
 | 2026-11-05 08:48 UTC | Separate calibration support from learned decision | FLAGGED | adversarial_verify CRITICAL: SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 87 passed, 1 warning in 24.34s |
 | 2026-11-05 08:51 UTC | Measure future loss from delayed normalized energy | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8830-categorical-memory.memory_execution_ready_score (actual=0 == expected=1) |
 | 2026-11-05 08:53 UTC | Audit causal future benefit retention and the simp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8833-causal-objective-streams) |
+| 2026-11-05 09:35 UTC | Measure complete adaptation costs on the already q | OK | 96 passed, 1 warning in 24.36s |
