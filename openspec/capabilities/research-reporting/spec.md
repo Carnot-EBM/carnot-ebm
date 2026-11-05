@@ -106341,6 +106341,20 @@ the V756 design and task prompt. Historical primaries SHALL remain unchanged.
 
 ### REQ-REPORT-8829: Seal independent worlds and finite-support selective decision methods
 
+Execution contract (2026-11-05): qualify the repaired original controls with
+measured child coverage before sealing 120 fit, 360 calibration, 240 evaluation
+and 12 canary eight-vertex worlds. Reserve exact topology invariants, including
+previously exposed structures, before evaluation. Seal inputs before policies
+and require two independent label evaluators. Retain six nuisance/defect views;
+only one input-hash-selected view per world contributes certification support.
+Freeze budgets 60/180/360, six cutoffs and three paid-check schedules at a
+200000-operation request ceiling. Select a schedule on the first 60 calibration
+worlds by minimum paid work subject to empirical risk .05 and coverage .30;
+report exact risk separately. Exact zero-error support requires 125 worlds at
+delta .01 and six cutoffs. Without iid sampling, bounds are empirical diagnostics
+and SHALL NOT be described as certificates. No safe schedule disqualifies the
+schedule gate. Private output and standalone replay SHALL preserve this result.
+
 The experiment SHALL qualify repaired split separation and seal independent fit/calibration/evaluation worlds, finite-support binomial methods and ordered-check protocols before labels open.
 The deliverable SHALL be `results/experiment_8829_v756_selective_methods.json`.
 Required readiness/benefit fields: `evidence_protocol_ready_score; selective_protocol_ready_score; canary_protocol_ready_score`.

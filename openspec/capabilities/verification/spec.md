@@ -58985,6 +58985,25 @@ incomplete, altered or metadata-bearing prediction rows. Mutation controls
 and cold replay reject changed split, labels, protocol, readiness or raw bytes.
 Private CLI controls do not inherit production qualification receipts.
 
+### REQ-VERIFY-8829: Verify independent support and paid-check schedules
+
+Exact binomial inversion SHALL count accepted independent worlds, never views
+or seed replicas. Compare boundary counts 0/60/124/125/180 against SciPy and
+independent binomial-CDF bisection. Reuse the unchanged metered verifiers for
+local-then-joint, joint-first and always-joint schedules. Exhausted partial joins
+and unknown truth SHALL abstain. Raw inputs, private labels, policy commitments,
+protocols, collision operands and actual validation logs SHALL be hash-bound.
+Cold replay SHALL recompute invariants, labels, operation ledgers, selections
+and reductions, rejecting rehashed semantic tampering. Failed owned validation
+disqualifies; unavailable external authority blocks with exact diagnostics.
+
+#### SCENARIO-VERIFY-8829-BOUNDARIES
+
+Given zero, replicated, erroneous or exhausted evidence, when the producer or
+standalone replay checks it, then no false support, certificate or readiness is
+issued. Calibration/evaluation collisions and empty comparator rejection retain
+the repaired original controls and immutable historical authorities.
+
 ### REQ-VERIFY-8818: Preserve solver semantics under explicit operation ceilings
 
 Freeze existing solver source bytes before labels open. Add operation charges

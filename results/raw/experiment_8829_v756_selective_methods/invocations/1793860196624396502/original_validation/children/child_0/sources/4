@@ -1,0 +1,484 @@
+"""REQ-REPORT-8818 / REQ-VERIFY-8818: preserve paid decisions and historical nulls."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+
+from carnot.reporting import evidence_decisive_8818 as m
+from carnot.reporting import evidence_decisive_runner_8818 as r
+from carnot.reporting import evidence_operation_meter_8818 as meter
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+
+
+def test_operation_semantics_and_exhaustion():
+    """SCENARIO-VERIFY-8818-BOUNDARIES: metering preserves signed open-world decisions."""
+    payloads = [
+        dict(facts=[["a", "r", "b", True]], query=[["?x", "r", "b"]]),
+        dict(facts=[["a", "r", "b", False]], query=[["a", "r", "b"]]),
+        dict(facts=[], query=[["a", "r", "b"]]),
+        dict(facts=[["a", "r", "b", True], ["a", "r", "b", False]], query=[["a", "r", "b"]]),
+        m.variants([[i, (i + 1) % 8] for i in range(8)], 2, True)[0]["input"],
+    ]
+    for payload in payloads:
+        for arm in m.ARMS:
+            measured = meter.run(arm, payload, None)
+            assert measured["decision"] == m.old.evaluate(arm, payload)[0]
+            assert measured["primitive_operations"] == sum(measured["operation_counts"].values())
+            assert measured["wall_time_s"] >= 0
+            exhausted = meter.run(arm, payload, 0)
+            assert exhausted["decision"] == "insufficient" and exhausted["budget_exhausted"]
+            assert exhausted["primitive_operations"] == 0
+    with pytest.raises(ValueError, match="input_fields"):
+        meter.run("evidence_set", dict(payloads[0], truth="support"), 100)
+    with pytest.raises(ValueError, match="arm"):
+        meter.run("unknown", payloads[0], 100)
+
+
+def test_authority_authentication(tmp_path):
+    """SCENARIO-VERIFY-8818-BOUNDARIES: a readiness scalar never replaces signed authority."""
+    path = tmp_path / "source.json"
+    assert m.authenticate(path)["diagnostics"][0]["check"] == "missing_file"
+    for value, expected in [
+        (None, "rejected_producer"),
+        ({}, "missing_field"),
+        ({"evidence_protocol_ready_score": 0}, "observed_zero"),
+        ({"evidence_protocol_ready_score": 1}, "rejected_producer"),
+    ]:
+        atomic_json(path, value)
+        assert m.authenticate(path)["diagnostics"][0]["check"] == expected
+    assert m.authenticate(m.UPSTREAM)["passed"]
+
+
+def test_sealed_worlds_and_reduction():
+    """SCENARIO-REPORT-8818-PAID-COVERAGE: new structures and complete denominators survive."""
+    cohort = m.cohort(4, "test")
+    assert len(cohort["worlds"]) == len({w["structure"] for w in cohort["worlds"]}) == 4
+    assert all(w["vertices"] == 8 and w["variables"] >= 2 for w in cohort["worlds"])
+    decisions = m.measure(cohort["inputs"])
+    rows = m.score(cohort, decisions)
+    assert len(rows) == 4 * 6 * 4
+    reduced = m.reduce(rows, "joint_symbolic")
+    assert len(reduced["per_world_results"]) == 12
+    assert len(reduced["operation_budget_rows"]) == 72
+    assert len(reduced["exact_reference_rows"]) == 24
+    assert reduced["whole_world_intervals"]["coverage_gain"]["confidence"] == 0.9875
+    assert reduced["whole_world_intervals"]["nuisance_invariance"]["lower"] == 1
+    assert not reduced["acceptance_gates"]["coverage_gain"]
+    with pytest.raises(ValueError, match="attempt_roster"):
+        m.score(cohort, decisions[:-1])
+    with pytest.raises(ValueError, match="attempt_roster"):
+        m.score(cohort, decisions + decisions[:1])
+    changed = deepcopy(rows)
+    changed[0]["decision"] = "refute"
+    assert m.reduce(changed, "joint_symbolic") != reduced
+    unknown = [x for x in rows if x["truth"] == "insufficient"]
+    assert unknown and all(x["decision"] != "refute" for x in unknown)
+
+
+def test_independent_label_and_controls():
+    """SCENARIO-VERIFY-8818-BOUNDARIES: signed absence, alternatives and swaps stay distinct."""
+    variants = m.variants([[i, (i + 1) % 8] for i in range(8)], 3, True)
+    assert [m.label(x["input"]) for x in variants] == ["support"] * 3 + ["insufficient"] * 3
+    assert all(x["passed"] for x in m.controls())
+    assert m.label(dict(facts=[["a", "r", "b", False]], query=[["a", "r", "b"]])) == "refute"
+
+
+def test_private_cli_and_cold_replay(tmp_path):
+    """SCENARIO-REPORT-8818-SEALED-REPLAY: real private children cannot self-qualify."""
+    output = tmp_path / (m.NAME + ".json")
+    command = [
+        sys.executable,
+        str(m.ROOT / m.CLI),
+        "--date",
+        "20261105",
+        "--private-output",
+        "--output",
+        str(output),
+    ]
+    assert (
+        subprocess.run(
+            command, cwd=tmp_path, capture_output=True, text=True, timeout=600
+        ).returncode
+        == 0
+    )
+    value = json.loads(output.read_bytes())
+    assert value["verdict_class"] == "disqualified" and value["evidence_rows_ready_score"] == 0
+    assert len(value["rows"]) == 4320
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    replay = [sys.executable, str(m.ROOT / m.CLI), "--cold-replay", str(output)]
+    publication = json.loads(
+        (Path(value["work_reference"]["path"]).parent / "publication_receipt.json").read_bytes()
+    )
+    terminal = json.loads(Path(publication["sidecar_path"]).read_bytes())["report"]
+    assert all(x["passed"] for x in terminal["receipts"])
+    assert any(x["name"] == "cold_replay" for x in terminal["receipts"])
+    value["rows"][0]["metric"] = 17
+    atomic_json(output, value)
+    assert (
+        subprocess.run(replay, cwd=tmp_path, env=env, capture_output=True, timeout=600).returncode
+        == 1
+    )
+    assert not r.replay(tmp_path / "absent.json")
+
+
+def test_cli_argument_boundaries():
+    """SCENARIO-VERIFY-8818-BOUNDARIES: private paths and run dates fail before writes."""
+    with pytest.raises(SystemExit):
+        r.main(["--date", "20250101"])
+    with pytest.raises(SystemExit):
+        r.main(["--private-output"])
+
+
+def test_calibration_selection_and_no_candidate():
+    """SCENARIO-REPORT-8818-PAID-COVERAGE: selection uses private calibration only."""
+    cohort = m.cohort(3, "calibration")
+    rows = m.score(cohort, m.measure(cohort["inputs"]))
+    selected = m.select(rows)
+    assert selected["comparator"] in m.ARMS
+    assert all("risk_upper" in x and "coverage_lower" in x for x in selected["menu"])
+    assert len(selected["menu"]) == 3
+    abstain = [dict(x, decision="insufficient", metric=0) for x in rows]
+    assert m.select(abstain)["comparator"] is None
+    with pytest.raises(ValueError, match="calibration_only"):
+        m.select([dict(rows[0], unit_id="evaluation/unsealed")])
+
+
+def test_zero_budget_and_reference_disagreement(monkeypatch):
+    """SCENARIO-VERIFY-8818-BOUNDARIES: exhausted and corrupted attempts never disappear."""
+    cohort = m.cohort(1, "exhaustion")
+    monkeypatch.setattr(m, "BUDGET", 0)
+    decisions = m.measure(cohort["inputs"])
+    rows = m.score(cohort, decisions)
+    assert sum(x["status"] == "censored" for x in rows) == 18
+    assert m.reduce(rows, "joint_symbolic")["exhausted_count"] == 18
+    exact = next(x for x in decisions if x["arm"] == "unrestricted_exact_reference")
+    exact["decision"] = "refute"
+    with pytest.raises(ValueError, match="independent_reference_disagreement"):
+        m.score(cohort, decisions)
+
+
+def test_changed_authenticated_source(tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8818-BOUNDARIES: correctly rehashed producers cannot hide source drift."""
+    source = tmp_path / "bound.json"
+    atomic_json(source, {"value": 1})
+    from carnot.reporting.v746_retained_evidence import reference
+
+    bound = reference(source)
+    atomic_json(source, {"value": 2})
+    path = tmp_path / "producer.json"
+    value = dict(
+        evidence_protocol_ready_score=1,
+        verdict_class="circular_positive",
+        source_artifact_hashes=[bound],
+        code_config_hashes=[],
+        raw_shard_hashes=[],
+    )
+    atomic_json(path, value)
+    monkeypatch.setattr(m, "PIN", reference(path)["sha256"])
+    assert m.authenticate(path)["diagnostics"][0]["error"] == "source_drift"
+    source.unlink()
+    assert m.authenticate(path)["diagnostics"][0]["check"] == "missing_file"
+
+
+def test_duplicate_graph_rejection(monkeypatch):
+    """SCENARIO-REPORT-8818-PAID-COVERAGE: repeated construction attempts add no worlds."""
+    rng = m.random.Random(77)
+    sample = rng.sample
+    saved = []
+
+    def repeated(population, count):
+        if not saved:
+            saved.append(sample(population, count))
+            return saved[0]
+        if len(saved) == 1:
+            saved.append(None)
+            return saved[0]
+        return sample(population, count)
+
+    monkeypatch.setattr(rng, "sample", repeated)
+    monkeypatch.setattr(rng, "randint", lambda *args: 3)
+    monkeypatch.setattr(m.random, "Random", lambda *args: rng)
+    assert len(m.cohort(2, "duplicate")["worlds"]) == 2
+
+
+def test_independent_audit_rejects_rehashed_operations():
+    """SCENARIO-REPORT-8818-SEALED-REPLAY: byte integrity alone cannot validate false work."""
+    cohort = m.cohort(1, "audit")
+    decisions = m.measure(cohort["inputs"])
+    assert r.audit(cohort, decisions)
+    assert not r.audit(cohort, decisions[:-1])
+    decisions[0]["primitive_operations"] += 1
+    assert not r.audit(cohort, decisions)
+
+
+def test_validation_configuration(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8818-SEALED-REPLAY: owned paths reach the shared real validator."""
+    from types import SimpleNamespace
+
+    configured = SimpleNamespace(validate=lambda *args: {"sentinel": True})
+    monkeypatch.setattr(r, "namespace", lambda *args: configured)
+    assert r.validate(tmp_path, tmp_path) == {"sentinel": True}
+    assert configured.e.OWNED == m.OWNED and configured.e.TESTS == m.TESTS
+    assert len(configured.original.CONSUMERS) == 2
+
+
+def test_loop_heartbeats(monkeypatch):
+    """SCENARIO-REPORT-8818-SEALED-REPLAY: elapsed heartbeats never change work budgets."""
+    ticks = iter(range(0, 10000, 31))
+    cohort = m.cohort(1, "heartbeat")
+    with monkeypatch.context() as patch:
+        patch.setattr(m.time, "monotonic", lambda: next(ticks))
+        rows = m.score(cohort, m.measure(cohort["inputs"]))
+    assert len(rows) == 24
+
+
+def small_work():
+    """REQ-REPORT-8818: small explicit controls exercise publication without claiming science."""
+    from carnot.reporting.current_work_receipt import build_current_work_receipt
+
+    cohort = m.cohort(1, "evaluation")
+    rows = m.score(cohort, m.measure(cohort["inputs"]))
+    receipt = build_current_work_receipt(
+        run_id="test",
+        owner_pid=os.getpid(),
+        events=[],
+        inference_substrate="deterministic_local",
+        inference_substrate_details={},
+        inference_substrate_class="cpu_exact_solver_or_simulator",
+        execution_venue="host",
+        started_monotonic_ns=0,
+        ended_monotonic_ns=1,
+    )
+    return dict(
+        rows=rows,
+        selection=dict(comparator="joint_symbolic"),
+        controls=m.controls(),
+        preconditions_checked=dict(passed=True),
+        current_work_receipt=receipt,
+        code_config_hashes=[],
+        source_artifact_hashes=[],
+        raw_shard_hashes=[],
+        gate_check_summary=[],
+        global_test_spec_debt={},
+    )
+
+
+def test_verdicts_and_production_main(tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8818-BOUNDARIES: failed own checks always force readiness zero."""
+    work = small_work()
+    qualified = dict(
+        union=dict(passed=True),
+        coverage=dict(complete=True, percent=100),
+        receipts=[dict(passed=True)],
+        raw_references=[],
+    )
+    value = r.build(work, qualified, "20261105")
+    assert value["verdict_class"] == "null" and value["evidence_rows_ready_score"] == 1
+    blocked = deepcopy(work)
+    blocked["preconditions_checked"]["passed"] = False
+    assert r.build(blocked, qualified, "20261105")["verdict_class"] == "blocked"
+    broken = deepcopy(qualified)
+    broken["receipts"][0]["passed"] = False
+    assert r.build(work, broken, "20261105")["evidence_rows_ready_score"] == 0
+    checks = deepcopy(work)
+    checks["controls"][0]["passed"] = False
+    assert r.build(checks, qualified, "20261105")["verdict_class"] == "disqualified"
+    summary = m.reduce(work["rows"], "joint_symbolic")
+    summary["acceptance_gates"] = {k: True for k in summary["acceptance_gates"]}
+    with monkeypatch.context() as patch:
+        patch.setattr(m, "reduce", lambda *args: summary)
+        positive = r.build(work, qualified, "20261105")
+        assert positive["verdict_class"] == "circular_positive" and positive["verifier_is_oracle"]
+    monkeypatch.setattr(r, "prepare", lambda raw: work)
+    monkeypatch.setattr(r, "validate", lambda *args: r.unqualified())
+    monkeypatch.setattr(r, "terminal", lambda *args: dict(passed=True))
+    output = tmp_path / (m.NAME + ".json")
+    assert r.main(["--output", str(output)]) == 0
+    assert json.loads(output.read_bytes())["verdict_class"] == "disqualified"
+
+
+def test_rehashed_replay_mutations(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8818-SEALED-REPLAY: independent reductions reject forged sealed evidence."""
+    from carnot.reporting.v746_retained_evidence import reference
+
+    evaluation, calibration = m.cohort(1, "evaluation"), m.cohort(1, "calibration")
+    eval_decisions, cal_decisions = (
+        m.measure(evaluation["inputs"]),
+        m.measure(calibration["inputs"]),
+    )
+    eval_rows, cal_rows = m.score(evaluation, eval_decisions), m.score(calibration, cal_decisions)
+    selection = m.select(cal_rows)
+    baseline = small_work()
+    baseline.update(rows=eval_rows, selection=selection)
+    validation = r.unqualified()
+    monkeypatch.setattr(
+        m, "cohort", lambda count, split: calibration if split == "calibration" else evaluation
+    )
+    monkeypatch.setattr(r, "audit", lambda *args: True)
+    validation_path = tmp_path / "validation.json"
+    atomic_json(validation_path, validation)
+    work_path, output = tmp_path / "work.json", tmp_path / "candidate.json"
+
+    def candidate(change=None):
+        work = deepcopy(baseline)
+        files = {
+            "inputs.json": deepcopy(evaluation),
+            "decisions.json": dict(
+                rows=deepcopy(eval_decisions), commitment=canonical_hash(eval_decisions)
+            ),
+            "calibration.json": dict(
+                cohort=deepcopy(calibration),
+                decisions=deepcopy(cal_decisions),
+                rows=deepcopy(cal_rows),
+            ),
+        }
+        if change:
+            change(work, files)
+        for name, content in files.items():
+            atomic_json(tmp_path / name, content)
+        work["raw_shard_hashes"] = [reference(tmp_path / name) for name in files]
+        atomic_json(work_path, work)
+        value = r.sealed_value(
+            work, validation, "20261105", reference(work_path), reference(validation_path)
+        )
+        atomic_json(output, value)
+        return value
+
+    candidate()
+    assert r.replay(output)
+    mutations = [
+        lambda w, f: f["inputs.json"]["worlds"][0].update(vertices=9),
+        lambda w, f: f["calibration.json"]["cohort"].update(split="forged"),
+        lambda w, f: f["decisions.json"].update(commitment="forged"),
+        lambda w, f: w["rows"][0].update(metric=99),
+        lambda w, f: f["calibration.json"]["rows"][0].update(metric=99),
+        lambda w, f: w["selection"].update(comparator="local_record"),
+        lambda w, f: w["controls"][0].update(passed=False),
+        lambda w, f: w["current_work_receipt"].update(event_sha256="forged"),
+        lambda w, f: w["code_config_hashes"].append(
+            dict(path=str(validation_path), sha256="forged")
+        ),
+    ]
+    for mutation in mutations:
+        candidate(mutation)
+        assert not r.replay(output)
+    value = candidate()
+    value["evidence_utility_score"] = 1
+    value["reproducibility_checksum"] = canonical_hash(
+        {k: v for k, v in value.items() if k != "reproducibility_checksum"}
+    )
+    atomic_json(output, value)
+    assert not r.replay(output)
+    value = candidate()
+    value["required_checks_passed"] = True
+    value["reproducibility_checksum"] = canonical_hash(
+        {k: v for k, v in value.items() if k != "reproducibility_checksum"}
+    )
+    atomic_json(output, value)
+    assert not r.replay(output)
+    candidate()
+    monkeypatch.setattr(r, "audit", lambda *args: False)
+    assert not r.replay(output)
+
+
+def test_actual_validation_evidence(tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8818-BOUNDARIES: forged qualification requires actual child and coverage proof."""
+    from carnot.reporting.v746_retained_evidence import reference
+
+    assert not r.validation_evidence(r.unqualified())
+    program = tmp_path / "actual.py"
+    program.write_text('print("actual covered child", flush=True)\n')
+    database = tmp_path / ".coverage"
+    assert (
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "coverage",
+                "run",
+                "--rcfile=/dev/null",
+                "--data-file=" + str(database),
+                str(program),
+            ],
+            capture_output=True,
+        ).returncode
+        == 0
+    )
+    monkeypatch.setattr(m, "OWNED", [str(program)])
+    union = dict(passed=True, retained_child_rows=[], node_ids=[])
+    monkeypatch.setattr(r, "aggregate", lambda *args: union)
+    validation = dict(
+        union=union,
+        coverage=dict(
+            combined_reference=reference(database),
+            files=[dict(path=str(program), statements=1, missing=[], excluded=[])],
+        ),
+    )
+    assert r.validation_evidence(validation)
+    validation["coverage"]["files"][0]["statements"] = 2
+    assert not r.validation_evidence(validation)
+    validation["coverage"]["combined_reference"]["sha256"] = "forged"
+    assert not r.validation_evidence(validation)
+    monkeypatch.setattr(r, "aggregate", lambda *args: dict(passed=False))
+    assert not r.validation_evidence(validation)
+
+
+def test_calibration_evaluation_global_disjointness():
+    """SCENARIO-REPORT-8818-PAID-COVERAGE: separate seeds cannot certify disjoint structures."""
+    calibration = m.cohort(60, "calibration")
+    evaluation = m.cohort(240, "evaluation")
+    assert not (
+        {w["structure"] for w in calibration["worlds"]}
+        & {w["structure"] for w in evaluation["worlds"]}
+    )
+
+
+def test_internal_collision_is_disqualified(tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8818-BOUNDARIES: internal construction failures cannot masquerade as external absence."""
+    cohort = m.cohort(1, "calibration")
+    monkeypatch.setattr(m, "cohort", lambda *args: cohort)
+    work = r.prepare(tmp_path)
+    assert not work["preconditions_checked"]["graph_structures_disjoint"]
+    assert any(
+        x["artifact_field"] == "graph_structures_disjoint"
+        and x["observed"] is False
+        and x["sha256"]
+        for x in work["gate_check_summary"]
+    )
+    validation = dict(
+        union=dict(passed=True),
+        coverage=dict(complete=True),
+        receipts=[dict(passed=True)],
+        raw_references=[],
+    )
+    value = r.build(work, validation, "20261105")
+    assert value["verdict_class"] == "disqualified" and value["evidence_rows_ready_score"] == 0
+    diagnostic = next(
+        x for x in work["gate_check_summary"] if x["artifact_field"] == "graph_structures_disjoint"
+    )
+    assert diagnostic["expected"] is True
+    assert diagnostic["overlapping_structures"] == [cohort["worlds"][0]["structure"]]
+    assert diagnostic["path"] == str(tmp_path / "inputs.json")
+    assert diagnostic["calibration_reference"]["path"] == str(tmp_path / "calibration.json")
+
+
+def test_empty_calibration_menu_is_disqualified():
+    """SCENARIO-VERIFY-8818-BOUNDARIES: absent safe comparators are internal failures."""
+    work = small_work()
+    work["selection"]["comparator"] = None
+    work["preconditions_checked"]["passed"] = False
+    validation = dict(
+        union=dict(passed=True),
+        coverage=dict(complete=True),
+        receipts=[dict(passed=True)],
+        raw_references=[],
+    )
+    value = r.build(work, validation, "20261105")
+    assert value["verdict_class"] == "disqualified"
+    assert value["evidence_rows_ready_score"] == value["evidence_utility_score"] == 0

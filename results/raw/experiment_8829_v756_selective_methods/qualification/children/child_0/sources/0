@@ -1,0 +1,301 @@
+"""REQ-REPORT-8829: count independent structures before comparing paid checks."""
+
+from collections import defaultdict
+from itertools import permutations, product
+import math
+from pathlib import Path
+import random
+import time
+from typing import Any
+
+from scipy.stats import beta
+
+from carnot.reporting import evidence_decisive_8818 as original
+from carnot.reporting.evidence_set_corpus_8768 import enumerate_truth
+from carnot.reporting.current_work_receipt import canonical_hash
+
+Json = dict[str, Any]
+__all__ = ["original", "beta"]
+ROOT = Path(__file__).resolve().parents[3]
+NAME, TASK = "experiment_8829_v756_selective_methods", "exp8829-selective-methods"
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [f"python/carnot/reporting/selective_methods{s}_8829.py" for s in ["", "_runner"]] + [CLI]
+TESTS = ["tests/python/test_selective_methods_8829.py"]
+SEED, CAP = 7568829, 200000
+MAX_ATTEMPTS = 100000
+COUNTS = dict(fit=120, calibration=360, evaluation=240, canary=12)
+CUTOFFS = [0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+SCHEDULES = ["local_then_joint", "joint_first", "always_joint"]
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush real counts so long operations stay distinguishable from stalled work."""
+    print(f"[exp8829] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def risk_upper(n: int, errors: int) -> float:
+    """A zero-error sample still needs enough independent support to bound future risk."""
+    if not 0 <= errors <= n:
+        raise ValueError("binomial_counts")
+    if not n or errors == n:
+        return 1.0
+    return float(
+        -math.expm1(math.log(0.01 / 6) / n)
+        if not errors
+        else beta.isf(0.01 / 6, errors + 1, n - errors)
+    )
+
+
+def numerical_upper(n: int, errors: int) -> float:
+    """Binomial-tail bisection checks the library without sharing its beta inversion."""
+    if not n or errors == n:
+        return 1.0
+    low, high = 0.0, 1.0
+    for _ in range(80):
+        p = (low + high) / 2
+        cdf = sum(math.comb(n, k) * p**k * (1 - p) ** (n - k) for k in range(errors + 1))
+        if cdf > 0.01 / 6:
+            low = p
+        else:
+            high = p
+    return (low + high) / 2
+
+
+def topology(edges: list[list[int]]) -> str:
+    """Exact degree-partition permutations erase names without relying on a graph hash heuristic."""
+    vertices = sorted({v for e in edges for v in e})
+    groups: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for v in vertices:
+        groups[sum(a == v for a, b in edges), sum(b == v for a, b in edges)].append(v)
+    best = []
+    for blocks in product(*(permutations(groups[k]) for k in sorted(groups))):
+        order = [v for block in blocks for v in block]
+        rename = {v: i for i, v in enumerate(order)}
+        best.append(tuple(sorted((rename[a], rename[b]) for a, b in edges)))
+    return canonical_hash([len(vertices), min(best)])
+
+
+def truth(payload: Json) -> str:
+    """Completion enumeration and a separate relational evaluator must agree before truth seals."""
+    if set(payload) != {"facts", "query"}:
+        raise ValueError("input_fields")
+    answer = str(enumerate_truth(payload)["decision"])
+    if answer != original.label(payload):
+        raise ValueError("independent_evaluators_disagree")
+    return answer
+
+
+def freeze(exposed: set[str], counts: Json = COUNTS) -> Json:
+    """Reserve every earlier split before constructing later worlds; rejected draws add no support."""
+    rng = random.Random(SEED)
+    seen = set(exposed)
+    worlds: list[Json] = []
+    inputs: list[Json] = []
+    labels: Json = {}
+    chosen: Json = {}
+    ring = [(i, (i + 1) % 8) for i in range(8)]
+    other = [(a, b) for a in range(8) for b in range(8) if a != b and (a, b) not in ring]
+    attempts = 0
+    for split in ["fit", "calibration", "evaluation", "canary"]:
+        if split not in counts:
+            continue
+        count = counts[split]
+        progress("before_seal_" + split, len(worlds), sum(counts.values()) - len(worlds))
+        while sum(w["split"] == split for w in worlds) < count:
+            attempts += 1
+            if attempts > MAX_ATTEMPTS:
+                raise ValueError("cohort_support_exhausted")
+            edges = [list(e) for e in sorted(ring + rng.sample(other, rng.randint(2, 12)))]
+            key = topology(edges)
+            if key in seen:
+                continue
+            seen.add(key)
+            i = sum(w["split"] == split for w in worlds)
+            wid = f"v756/8829/{split}/{i:03d}"
+            world: Json = dict(
+                world_id=wid,
+                split=split,
+                vertices=8,
+                variables=2 + i % 2,
+                structure=key,
+                query_invariant=key,
+                edges=edges,
+            )
+            worlds.append(world)
+            siblings = []
+            for variant in original.variants(edges, world["variables"], False):
+                unit = dict(
+                    variant,
+                    unit_id=wid + "/" + variant["condition"],
+                    cluster_id=wid,
+                    split=split,
+                    input_sha256=canonical_hash(variant["input"]),
+                )
+                inputs.append(unit)
+                siblings.append(unit)
+                labels[unit["unit_id"]] = truth(unit["input"])
+            chosen[wid] = min(siblings, key=lambda u: u["input_sha256"])["unit_id"]
+            if len(worlds) % 30 == 0:
+                progress("world_seal", len(worlds), sum(counts.values()) - len(worlds))
+        progress("after_seal_" + split, len(worlds), sum(counts.values()) - len(worlds))
+    return dict(
+        worlds=worlds,
+        inputs=inputs,
+        labels=labels,
+        certification_units=chosen,
+        attempts=attempts,
+        iid_world_sampling=False,
+        assumption_failure="rejection of previously exposed and duplicate topologies conditions draws",
+    )
+
+
+def schedule(name: str, payload: Json, cap: int = CAP) -> Json:
+    """Every check pays the unchanged meter and shares a single request ceiling."""
+    if name not in SCHEDULES:
+        raise ValueError("schedule")
+    order = {
+        "local_then_joint": ["local_record", "joint_symbolic"],
+        "joint_first": ["joint_symbolic", "local_record"],
+        "always_joint": ["joint_symbolic"],
+    }[name]
+    calls, paid, decision = [], 0, "insufficient"
+    for arm in order:
+        call = original.meter.run(arm, payload, cap - paid)
+        calls.append(dict(call, arm=arm))
+        paid += call["primitive_operations"]
+        decision = call["decision"]
+        if decision != "insufficient" or call["budget_exhausted"]:
+            break
+    return dict(
+        decision=decision,
+        primitive_operations=paid,
+        primitive_limit=cap,
+        operation_counts={
+            k: sum(c["operation_counts"][k] for c in calls) for k in original.meter.KINDS
+        },
+        budget_exhausted=any(c["budget_exhausted"] for c in calls),
+        calls=calls,
+    )
+
+
+def measure(inputs: list[Json], arms: list[str]) -> list[Json]:
+    """Serving sees only inputs; sealed labels never reach a check or its ordering."""
+    rows = []
+    last = time.monotonic()
+    progress("before_benchmark", 0, len(inputs) * len(arms))
+    for unit in inputs:
+        for arm in arms:
+            result = schedule(arm, unit["input"])
+            rows.append(
+                dict(
+                    result,
+                    unit_id=unit["unit_id"],
+                    cluster_id=unit["cluster_id"],
+                    split=unit["split"],
+                    condition=unit["condition"],
+                    arm=arm,
+                    seed=SEED,
+                    input_sha256=unit["input_sha256"],
+                )
+            )
+        if time.monotonic() - last >= 30:
+            progress("benchmark", len(rows), len(inputs) * len(arms) - len(rows))
+            last = time.monotonic()
+    progress("after_benchmark", len(rows), 0)
+    return rows
+
+
+def score(decisions: list[Json], cohort: Json) -> list[Json]:
+    """Complete rosters keep censored requests in denominators before labels release."""
+    units = {u["unit_id"]: u for u in cohort["inputs"] if u["split"] != "fit"}
+    expected = {(u, a) for u in units for a in SCHEDULES}
+    if len(decisions) != len(expected) or {(r["unit_id"], r["arm"]) for r in decisions} != expected:
+        raise ValueError("attempt_roster")
+    return [
+        dict(
+            r,
+            truth=cohort["labels"][r["unit_id"]],
+            certification_unit=cohort["certification_units"][r["cluster_id"]] == r["unit_id"],
+            metric=int(
+                r["decision"] != "insufficient" and r["decision"] == cohort["labels"][r["unit_id"]]
+            ),
+            denominator=1,
+            raw_denominator=1,
+            raw_numerator=int(
+                r["decision"] != "insufficient" and r["decision"] == cohort["labels"][r["unit_id"]]
+            ),
+            status="censored" if r["budget_exhausted"] else "completed",
+            missing_reason="operation_budget_exhausted" if r["budget_exhausted"] else None,
+        )
+        for r in decisions
+    ]
+
+
+def diagnose(rows: list[Json]) -> list[Json]:
+    """One frozen variant per world bounds support; the remaining siblings are descriptive."""
+    ids = [(r["unit_id"], r["arm"], r["seed"]) for r in rows]
+    if len(ids) != len(set(ids)):
+        raise ValueError("replicated_support")
+    result = []
+    for arm in SCHEDULES:
+        chosen = sorted(
+            [r for r in rows if r["arm"] == arm and r["certification_unit"]],
+            key=lambda r: r["cluster_id"],
+        )
+        if len(chosen) != len({r["cluster_id"] for r in chosen}):
+            raise ValueError("replicated_world")
+        for budget in [60, 180, 360]:
+            sample = chosen[:budget]
+            for cutoff in CUTOFFS:
+                accepted = [r for r in sample if int(r["decision"] != "insufficient") >= cutoff]
+                n = len(accepted)
+                errors = sum(r["decision"] != r["truth"] for r in accepted)
+                result.append(
+                    dict(
+                        arm=arm,
+                        seed=SEED,
+                        budget=budget,
+                        cutoff=cutoff,
+                        accepted_worlds=n,
+                        errors=errors,
+                        independent_count=len(sample),
+                        risk_upper=risk_upper(n, errors),
+                        empirical_risk=errors / n if n else None,
+                        coverage=n / len(sample) if sample else 0,
+                        paid_work=sum(r["primitive_operations"] for r in sample),
+                        iid_world_sampling=False,
+                        certificate_issued=False,
+                        interpretation="empirical finite-support diagnostic; iid assumption fails",
+                    )
+                )
+    return result
+
+
+def select(rows: list[Json]) -> Json:
+    """Selection uses only the first 60 calibration worlds; infeasibility cannot tune evaluation."""
+    if any(r["split"] != "calibration" for r in rows):
+        raise ValueError("calibration_only")
+    menu = [
+        dict(r, eligible=r["risk_upper"] <= 0.05 and r["coverage"] >= 0.30)
+        for r in diagnose(rows)
+        if r["budget"] == 60 and r["cutoff"] == 0.5
+    ]
+    safe = [r for r in menu if r["eligible"]]
+    best = min(safe, key=lambda r: (r["paid_work"], r["arm"])) if safe else None
+    return dict(
+        schedule=best["arm"] if best else None,
+        menu=menu,
+        reason="selected" if best else "finite_support_no_safe_schedule",
+        calibration_rows_sha256=canonical_hash(rows),
+        frozen_before_evaluation=True,
+    )
+
+
+def stable(value: Any) -> Any:
+    """Replay compares semantic work independently of nondeterministic clock readings."""
+    timing = {"wall_time_s", "cpu_time_s", "started_monotonic_ns", "ended_monotonic_ns"}
+    if isinstance(value, dict):
+        return {k: stable(v) for k, v in value.items() if k not in timing}
+    if isinstance(value, list):
+        return [stable(v) for v in value]
+    return value

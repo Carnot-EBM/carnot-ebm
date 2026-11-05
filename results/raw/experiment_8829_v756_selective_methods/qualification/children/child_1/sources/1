@@ -1,0 +1,601 @@
+"""REQ-REPORT-8829: seal independent operands and publish only checked terminal bytes."""
+
+import argparse
+import json
+import os
+from pathlib import Path
+import shutil
+import sys
+from tempfile import TemporaryDirectory
+import time
+from types import SimpleNamespace
+from typing import Any
+
+import scipy
+
+from carnot.reporting import selective_methods_8829 as m
+from carnot.reporting import evidence_decisive_runner_8818 as repaired
+from carnot.reporting import evidence_evaluation_runner_8779 as shared
+from carnot.reporting.current_work_receipt import (
+    atomic_json,
+    canonical_hash,
+    sha256_file,
+    build_current_work_receipt,
+    validate_current_work_receipt,
+)
+from carnot.reporting.primary_publication import publish_primary
+from carnot.reporting.selective_runner_8816 import stream, unqualified
+from carnot.reporting.v746_retained_evidence import reference, load
+from carnot.reporting.v748_collection_contract import namespace
+
+Json = dict[str, Any]
+checker = namespace(repaired, "selective8829_checks")
+checker.m = m
+
+
+def validate(raw: Path, private: Path) -> Json:
+    """Use the existing exact-node validator and retain actual child SQLite coverage."""
+    validator = namespace(shared, "selective8829_validation")
+    validator.e = SimpleNamespace(OWNED=m.OWNED, TESTS=m.TESTS, ROOT=m.ROOT)
+    validator.original = SimpleNamespace(
+        CONSUMERS=[
+            "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+            "tests/python/test_restricted_decision_audit_8210.py",
+        ]
+    )
+    validator.child = stream
+    return dict(validator.validate(raw, private))
+
+
+def preconditions(raw: Path) -> Json:
+    """Check external operands, numerical tools and writable capacity before constructing data."""
+    raw.mkdir(parents=True, exist_ok=True, mode=0o700)
+    raw.chmod(0o700)
+    atomic_json(raw / "writable.json", dict(probe="private output"))
+    authority = m.original.authenticate(m.original.UPSTREAM)
+    refs = list(authority["references"])
+    diagnostics = list(authority["diagnostics"])
+    for name in [
+        "experiment_8818_v755_evidence_decisive_coverage",
+        "experiment_8819_v755_consensus_selective_energy",
+    ]:
+        path = m.ROOT / "results" / (name + ".json")
+        diagnostic = dict(
+            upstream=name,
+            artifact_field="raw_shard_hashes",
+            expected="readable bound inputs",
+            observed=None,
+            path=str(path),
+            sha256=None,
+        )
+        try:
+            ref = reference(path)
+            value = load(ref)
+            refs.append(ref)
+            for operand in value["raw_shard_hashes"]:
+                if Path(operand["path"]).name in {"cohort.json", "inputs.json", "calibration.json"}:
+                    diagnostic.update(
+                        artifact_field="sha256",
+                        expected=operand["sha256"],
+                        path=operand["path"],
+                        observed=sha256_file(Path(operand["path"]))
+                        if Path(operand["path"]).is_file()
+                        else None,
+                    )
+                    load(operand)
+                    refs.append(operand)
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            diagnostics.append(
+                dict(
+                    diagnostic,
+                    check="missing_file"
+                    if isinstance(error, OSError)
+                    else "missing_field"
+                    if isinstance(error, KeyError)
+                    else "rejected_producer",
+                    error=str(error),
+                    sha256=sha256_file(Path(diagnostic["path"]))
+                    if Path(diagnostic["path"]).is_file()
+                    else None,
+                )
+            )
+    preserved = m.ROOT / "openspec/change-proposals/research-roadmap-v755-preserved-20261104.md"
+    try:
+        refs.append(reference(preserved))
+    except OSError as error:
+        diagnostics.append(
+            dict(
+                check="missing_file",
+                upstream="preserved_v755_design",
+                artifact_field="sha256",
+                expected="readable immutable design",
+                observed=str(error),
+                path=str(preserved),
+                sha256=None,
+            )
+        )
+    resources = dict(
+        repository_virtualenv=(m.ROOT / ".venv/bin/python").is_file(),
+        cpu_numerical_dependencies=scipy.__version__,
+        private_output_writable=(raw / "writable.json").is_file(),
+        free_disk_bytes=shutil.disk_usage(raw).free,
+    )
+    resources["passed"] = bool(
+        resources["repository_virtualenv"] and resources["free_disk_bytes"] >= 128 * 1024 * 1024
+    )
+    return dict(
+        resources=resources,
+        references=refs,
+        diagnostics=diagnostics,
+        external_ready=not diagnostics,
+    )
+
+
+def exposed_structures(refs: list[Json]) -> set[str]:
+    """Historical structures stay excluded even when their former readiness was zero."""
+    found: set[str] = set()
+
+    def visit(value: Any) -> None:
+        if isinstance(value, dict):
+            if "edges" in value and "world_id" in value:
+                found.add(m.topology(value["edges"]))
+            for child in value.values():
+                visit(child)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child)
+
+    for ref in refs:
+        if Path(ref["path"]).name in {"cohort.json", "inputs.json", "calibration.json"}:
+            visit(load(ref))
+    for split, count in [("calibration", 60), ("evaluation", 240)]:
+        visit(m.original.cohort(count, split))
+    return found
+
+
+def prepare(raw: Path, qualification: Json) -> Json:
+    """Freeze all inputs before policies and commit calibration selection before evaluation."""
+    start = time.monotonic_ns()
+    m.progress("before_preconditions")
+    pre = preconditions(raw)
+    old_cal = m.original.cohort(60, "calibration")
+    old_eval = m.original.cohort(240, "evaluation")
+    collisions = sorted(
+        {w["structure"] for w in old_cal["worlds"]} & {w["structure"] for w in old_eval["worlds"]}
+    )
+    controls = m.original.controls() if pre["external_ready"] and pre["resources"]["passed"] else []
+    atomic_json(
+        raw / "original_controls.json",
+        dict(
+            calibration=old_cal,
+            evaluation=old_eval,
+            collisions=collisions,
+            controls=controls,
+            qualification=qualification,
+        ),
+    )
+    if collisions:
+        pre["diagnostics"].append(
+            dict(
+                check="internal_failure",
+                upstream=m.TASK,
+                artifact_field="graph_structures_disjoint",
+                expected=[],
+                observed=collisions,
+                **reference(raw / "original_controls.json"),
+            )
+        )
+    exposed = exposed_structures(pre["references"])
+    protocol = dict(
+        counts=m.COUNTS,
+        calibration_budgets=[60, 180, 360],
+        cutoffs=m.CUTOFFS,
+        schedules=m.SCHEDULES,
+        primitive_cap=m.CAP,
+        risk=0.05,
+        delta=0.01,
+        confidence_allocation="delta/K=.01/6 per arm/seed family; no cross-family superiority claim",
+        candidate_selection="minimum input hash per world; other variants descriptive",
+        learning="no training; reserve fit data for downstream; binary decisive scores",
+        schedule_selection="first 60 calibration worlds; exact upper risk <=.05, coverage >=.30; minimum total paid work",
+        iid_world_sampling=False,
+        scipy_version=scipy.__version__,
+    )
+    atomic_json(raw / "protocol.json", protocol)
+    m.progress("after_preconditions_before_world_seal")
+    cohort: Json = (
+        m.freeze(exposed)
+        if pre["external_ready"] and pre["resources"]["passed"]
+        else dict(
+            worlds=[],
+            inputs=[],
+            labels={},
+            certification_units={},
+            attempts=0,
+            iid_world_sampling=False,
+            assumption_failure="preconditions_failed",
+        )
+    )
+    atomic_json(raw / "cohort.json", cohort)
+    (raw / "cohort.json").chmod(0o600)
+    atomic_json(
+        raw / "inputs.json",
+        dict(rows=cohort["inputs"], certification_units=cohort["certification_units"]),
+    )
+    atomic_json(raw / "private_labels.json", dict(labels=cohort["labels"]))
+    (raw / "private_labels.json").chmod(0o600)
+    frozen = time.monotonic_ns()
+    calibration = [u for u in cohort["inputs"] if u["split"] == "calibration"]
+    calibration_decisions = m.measure(calibration, m.SCHEDULES)
+    calibration_cohort = dict(cohort, inputs=calibration)
+    calibration_rows = m.score(calibration_decisions, calibration_cohort)
+    selection = m.select(calibration_rows)
+    atomic_json(raw / "selection.json", selection)
+    selected_at = time.monotonic_ns()
+    evaluation = [u for u in cohort["inputs"] if u["split"] in {"evaluation", "canary"}]
+    decisions = calibration_decisions + m.measure(evaluation, m.SCHEDULES)
+    atomic_json(raw / "decisions.json", dict(rows=decisions, commitment=canonical_hash(decisions)))
+    rows = m.score(decisions, cohort)
+    end = time.monotonic_ns()
+    spans = [
+        dict(phase=p, start_s=(a - start) / 1e9, end_s=(b - start) / 1e9)
+        for p, a, b in [
+            ("preconditions_controls_seal", start, frozen),
+            ("calibration_selection", frozen, selected_at),
+            ("frozen_evaluation", selected_at, end),
+        ]
+    ]
+    receipt = build_current_work_receipt(
+        run_id=str(start),
+        owner_pid=os.getpid(),
+        events=[],
+        inference_substrate="deterministic_local",
+        inference_substrate_class="cpu_exact_solver_or_simulator",
+        inference_substrate_details=dict(
+            scope="exact encoded signed graphs and CPU binomial arithmetic"
+        ),
+        execution_venue="host",
+        started_monotonic_ns=start,
+        ended_monotonic_ns=end,
+        phase_spans=spans,
+    )
+    return dict(
+        rows=rows,
+        selection=selection,
+        diagnostic_rows=m.diagnose(calibration_rows),
+        preconditions_checked=pre,
+        prior_structures=sorted(exposed),
+        protocol=protocol,
+        controls=controls,
+        collisions=collisions,
+        current_work_receipt=receipt,
+        original_qualification=qualification,
+        source_artifact_hashes=pre["references"],
+        code_config_hashes=[
+            reference(m.ROOT / p)
+            for p in m.OWNED
+            + m.TESTS
+            + m.original.OWNED
+            + [
+                "python/carnot/reporting/current_work_receipt.py",
+                "python/carnot/reporting/primary_publication.py",
+                "python/carnot/reporting/evidence_evaluation_runner_8779.py",
+                "python/carnot/reporting/evidence_set_corpus_8768.py",
+                "python/carnot/reporting/evidence_set_methods_8768.py",
+                "python/carnot/reporting/evidence_intervention_methods_8791.py",
+                "python/carnot/reporting/evidence_qualification_8777.py",
+                "python/carnot/reporting/v749_verifier_protocol.py",
+                "python/carnot/reporting/verifier_family_surface_8755.py",
+            ]
+        ],
+        raw_shard_hashes=qualification["raw_references"]
+        + [
+            reference(raw / p)
+            for p in [
+                "original_controls.json",
+                "protocol.json",
+                "cohort.json",
+                "inputs.json",
+                "private_labels.json",
+                "selection.json",
+                "decisions.json",
+            ]
+        ],
+    )
+
+
+def qualified(validation: Json) -> bool:
+    """Failed child outcomes or missing executed statements must zero readiness."""
+    return bool(
+        validation["union"]["passed"]
+        and validation["coverage"]["complete"]
+        and all(r["passed"] for r in validation["receipts"])
+    )
+
+
+def sealed_value(
+    work: Json, validation: Json, date: str, work_ref: Json, validation_ref: Json
+) -> Json:
+    """Readiness qualifies a protocol; exact success cannot imply independent generalization."""
+    pre = work["preconditions_checked"]
+    valid = qualified(validation) and qualified(work["original_qualification"])
+    intact = not work["collisions"] and all(r["passed"] for r in work["controls"])
+    verdict = (
+        "disqualified"
+        if not intact or not pre["resources"]["passed"]
+        else "blocked"
+        if not pre["external_ready"]
+        else "disqualified"
+        if not valid
+        else "circular_positive"
+        if work["selection"]["schedule"]
+        else "null"
+    )
+    ready = int(valid and intact and pre["external_ready"] and pre["resources"]["passed"])
+    rows = work["rows"]
+    receipt = work["current_work_receipt"]
+    raw = Path(work_ref["path"]).parent
+    cohort = load(reference(raw / "cohort.json"))
+    boundary = [
+        dict(
+            accepted_worlds=n,
+            errors=0,
+            risk_upper=m.risk_upper(n, 0),
+            independent_check=m.numerical_upper(n, 0),
+            library_check=1.0 if not n else float(m.beta.isf(0.01 / 6, 1, n)),
+            attainable=m.risk_upper(n, 0) <= 0.05,
+        )
+        for n in [0, 60, 124, 125, 180]
+    ]
+    manifest = {s: [w["world_id"] for w in cohort["worlds"] if w["split"] == s] for s in m.COUNTS}
+    disjoint = [
+        dict(
+            split=a,
+            other_split=b,
+            overlap=sorted(
+                {w["structure"] for w in cohort["worlds"] if w["split"] == a}
+                & {w["structure"] for w in cohort["worlds"] if w["split"] == b}
+            ),
+        )
+        for i, a in enumerate(manifest)
+        for b in list(manifest)[i + 1 :]
+    ]
+    gates = dict(
+        original_controls=dict(
+            passed=intact, principle="Internal collisions disqualify; external absence is separate"
+        ),
+        owned_validation=dict(
+            passed=valid, principle="Actual owned statements and child outcomes control readiness"
+        ),
+        structure_disjointness=dict(
+            passed=not any(r["overlap"] for r in disjoint),
+            principle="Entity names and seeds cannot multiply independent support",
+        ),
+        selected_schedule=dict(
+            passed=work["selection"]["schedule"] is not None,
+            principle="Scientific attainability is separate from protocol readiness",
+        ),
+        iid_certificate=dict(
+            passed=False,
+            principle="Conditioned topology sampling does not justify iid certificates",
+        ),
+    )
+    value = dict(
+        experiment_id=8829,
+        task_id=m.TASK,
+        milestone="2026.11.756",
+        run_date=date,
+        honest_verdict=f"complete_{verdict}_selective_methods",
+        verdict_class=verdict,
+        inference_substrate=receipt["inference_substrate"],
+        inference_substrate_class=receipt["inference_substrate_class"],
+        MODEL_SPECS=[],
+        model_invocation_counts=receipt["invocation_counts"],
+        numerical_training_calls=0,
+        verifier_is_oracle=True,
+        exposure_scope="constructed encoded eight-vertex worlds; exact checks only",
+        independent_generalization_score=0,
+        duration_s=receipt["duration_s"],
+        random_seed=m.SEED,
+        source_artifact_hashes=work["source_artifact_hashes"],
+        code_config_hashes=work["code_config_hashes"],
+        raw_shard_hashes=work["raw_shard_hashes"] + validation["raw_references"],
+        phase_spans=receipt["phase_spans"],
+        preconditions_checked=pre,
+        rows=rows,
+        intended_count=11016,
+        completed_count=sum(r["status"] == "completed" for r in rows),
+        failed_count=0,
+        censored_count=sum(r["status"] == "censored" for r in rows),
+        excluded_count=0,
+        independent_count=len(cohort["worlds"]),
+        gate_check_summary=pre["diagnostics"],
+        acceptance_gates=gates,
+        required_checks_passed=valid,
+        validation_receipts=validation["receipts"] + work["original_qualification"]["receipts"],
+        owned_statement_coverage=validation["coverage"],
+        evidence_protocol_ready_score=ready,
+        selective_protocol_ready_score=ready,
+        canary_protocol_ready_score=ready,
+        split_manifest=manifest,
+        structure_disjointness_rows=disjoint,
+        certificate_boundary_rows=boundary,
+        finite_support_rows=work["diagnostic_rows"],
+        schedule_menu=work["protocol"]["schedules"],
+        threshold_menu=m.CUTOFFS,
+        protocol_hashes=dict(
+            protocol=canonical_hash(work["protocol"]),
+            inputs=reference(raw / "inputs.json")["sha256"],
+            selection=canonical_hash(work["selection"]),
+        ),
+        label_custody=dict(
+            inputs_frozen_before_policy=True,
+            independent_evaluators_agree=True,
+            labels_reference=reference(raw / "private_labels.json"),
+            decisions_reference=reference(raw / "decisions.json"),
+            release="decisions committed before scoring; canary worlds separate",
+        ),
+        schedule_selection=work["selection"],
+        current_work_receipt=receipt,
+        work_reference=work_ref,
+        validation_reference=validation_ref,
+        flagged_adversarial=False,
+        methodology_note="No models or training. Exact encoded checks are circular. Fixed binary scores cannot discriminate across cutoffs. Finite-support bounds are empirical diagnostics because topology rejection conditions draws. No cross-family superiority claim.",
+        global_test_spec_debt=dict(
+            scope="separate repository health diagnostic",
+            receipt=reference(Path("/tmp/carnot-8829-full-suite/summary.json"))
+            if Path("/tmp/carnot-8829-full-suite/summary.json").is_file()
+            else None,
+        ),
+    )
+    value["field_principles"] = {
+        k: "Bind this producer to immutable operands; readiness is distinct from scientific benefit."
+        for k in value
+    }
+    value["field_principles"].update(
+        rows="Every attempt retains denominator one; variants and seeds share one world.",
+        independent_count="Sealed world count includes reserved fit/calibration/evaluation/canary; accepted support is per family.",
+        finite_support_rows="Exact binomial bounds diagnose sample support under iid; constructed sampling fails that assumption.",
+        field_principles="Each field explains its evidence role; a hash is a transport binding.",
+        reproducibility_checksum="Bind the complete reduction, not a scientific correctness assertion.",
+    )
+    value["reproducibility_checksum"] = canonical_hash(value)
+    return value
+
+
+def replay(path: Path) -> bool:
+    """Recompute structures, labels and paid work so rehashing a false result cannot validate it."""
+    try:
+        value = json.loads(path.read_bytes())
+        work, validation = load(value["work_reference"]), load(value["validation_reference"])
+        for ref in (
+            work["source_artifact_hashes"]
+            + work["code_config_hashes"]
+            + work["raw_shard_hashes"]
+            + validation["raw_references"]
+        ):
+            if sha256_file(Path(ref["path"])) != ref["sha256"]:
+                return False
+        if value["required_checks_passed"] and (
+            not checker.validation_evidence(validation)
+            or not repaired.validation_evidence(work["original_qualification"])
+        ):
+            return False
+        raw = Path(value["work_reference"]["path"]).parent
+        cohort = load(reference(raw / "cohort.json"))
+        exposed = exposed_structures(work["source_artifact_hashes"])
+        if (
+            work["preconditions_checked"]["external_ready"]
+            and work["preconditions_checked"]["resources"]["passed"]
+            and cohort != m.freeze(exposed, work["protocol"]["counts"])
+        ):
+            return False
+        original = load(reference(raw / "original_controls.json"))
+        old_cal = m.original.cohort(60, "calibration")
+        old_eval = m.original.cohort(240, "evaluation")
+        collisions = sorted(
+            {w["structure"] for w in old_cal["worlds"]}
+            & {w["structure"] for w in old_eval["worlds"]}
+        )
+        if (
+            original["calibration"] != old_cal
+            or original["evaluation"] != old_eval
+            or original["collisions"] != collisions
+            or work["collisions"] != collisions
+        ):
+            return False
+        expected = {
+            "cohort.json": cohort,
+            "inputs.json": dict(
+                rows=cohort["inputs"], certification_units=cohort["certification_units"]
+            ),
+            "private_labels.json": dict(labels=cohort["labels"]),
+            "protocol.json": work["protocol"],
+            "selection.json": work["selection"],
+        }
+        if any(load(reference(raw / name)) != content for name, content in expected.items()):
+            return False
+        if validate_current_work_receipt(work["current_work_receipt"]):
+            return False
+        decisions = load(reference(raw / "decisions.json"))
+        measured = m.measure([u for u in cohort["inputs"] if u["split"] != "fit"], m.SCHEDULES)
+        if m.stable(measured) != m.stable(decisions["rows"]) or decisions[
+            "commitment"
+        ] != canonical_hash(decisions["rows"]):
+            return False
+        scored = m.score(decisions["rows"], cohort)
+        calibration = [r for r in scored if r["split"] == "calibration"]
+        if (
+            scored != work["rows"]
+            or m.select(calibration) != work["selection"]
+            or m.diagnose(calibration) != work["diagnostic_rows"]
+            or work["controls"]
+            != (
+                m.original.controls()
+                if work["preconditions_checked"]["external_ready"]
+                and work["preconditions_checked"]["resources"]["passed"]
+                else []
+            )
+        ):
+            return False
+        return bool(
+            value
+            == sealed_value(
+                work,
+                validation,
+                value["run_date"],
+                value["work_reference"],
+                value["validation_reference"],
+            )
+        )
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Private runs retain real science but cannot grant themselves owned qualification."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", choices=["20261105"], default="20261105")
+    parser.add_argument("--output", type=Path, default=m.ROOT / "results" / (m.NAME + ".json"))
+    parser.add_argument("--private-output", action="store_true")
+    parser.add_argument("--cold-replay", type=Path)
+    args = parser.parse_args(argv)
+    if args.cold_replay:
+        passed = replay(args.cold_replay)
+        m.progress("replay_passed" if passed else "replay_rejected")
+        return int(not passed)
+    output = args.output.absolute()
+    if args.private_output and output.resolve().is_relative_to(m.ROOT):
+        parser.error("private outputs must remain outside checkout")
+    raw = output.parent / "raw" / m.NAME / "invocations" / str(time.time_ns())
+    m.progress("start_no_model_load_before_resource_checks")
+    pre = preconditions(raw)
+    with TemporaryDirectory(prefix="exp8829-original-") as directory:
+        m.progress("before_original_qualification")
+        old_validation = (
+            unqualified()
+            if args.private_output or not pre["external_ready"] or not pre["resources"]["passed"]
+            else repaired.validate(raw / "original_validation", Path(directory))
+        )
+        m.progress("after_original_qualification")
+    work = prepare(raw, old_validation)
+    atomic_json(raw / "work.json", work)
+    with TemporaryDirectory(prefix="exp8829-owned-") as directory:
+        m.progress("before_owned_validation")
+        validation = (
+            unqualified() if args.private_output else validate(raw / "validation", Path(directory))
+        )
+        m.progress("after_owned_validation")
+    atomic_json(raw / "validation.json", validation)
+    value = sealed_value(
+        work,
+        validation,
+        args.date,
+        reference(raw / "work.json"),
+        reference(raw / "validation.json"),
+    )
+    m.progress("before_terminal_publication")
+    publication = publish_primary(output, value, lambda candidate: checker.terminal(candidate, raw))
+    atomic_json(raw / "publication_receipt.json", publication)
+    m.progress("complete_" + value["verdict_class"], len(value["rows"]), 0)
+    return 0

@@ -1,0 +1,101 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8829_v756_selective_methods.json",
+  "primary_sha256": "sha256:80b78a54f399eed31035062bcde37659e46ee259ce339755067c9819939cad9c",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/terminal_candidate.json",
+        "deadline_s": 180,
+        "duration_s": 11.770460337,
+        "ended_monotonic_ns": 542061667745183,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/adversarial.stdout",
+        "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 542049897284846,
+        "started_wall_ns": 1793861552685103845,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/adversarial.stdout",
+        "stdout_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/terminal_candidate.json",
+          "--strict"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/terminal_candidate.json --strict",
+        "deadline_s": 180,
+        "duration_s": 0.620997944,
+        "ended_monotonic_ns": 542062332205217,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/rows_strict.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "rows_strict",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 542061711207273,
+        "started_wall_ns": 1793861564499026493,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/rows_strict.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/rows_strict.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,runpy,sys; os.chdir(sys.argv.pop(1)); runpy.run_path(sys.argv.pop(1),run_name='__main__')",
+          "/tmp/exp8818-cold-7m5o3851",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8829_v756_selective_methods.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/terminal_candidate.json"
+        ],
+        "command": "env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,runpy,sys; os.chdir(sys.argv.pop(1)); runpy.run_path(sys.argv.pop(1),run_name='\"'\"'__main__'\"'\"')' /tmp/exp8818-cold-7m5o3851 /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8829_v756_selective_methods.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/terminal_candidate.json",
+        "deadline_s": 300,
+        "duration_s": 249.433621346,
+        "ended_monotonic_ns": 542311799888486,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/cold_replay.stdout",
+        "log_sha256": "sha256:403f33f8cfeec655cb54d07af176ae94f9ef9e894e0db41bd4291711584bac21",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 542062366267140,
+        "started_wall_ns": 1793861565154085959,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8829_v756_selective_methods/invocations/1793860196624396502/requalification/terminal/cold_replay.stdout",
+        "stdout_sha256": "sha256:403f33f8cfeec655cb54d07af176ae94f9ef9e894e0db41bd4291711584bac21",
+        "timed_out": false
+      }
+    ]
+  }
+}

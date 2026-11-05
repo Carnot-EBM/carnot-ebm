@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="11" time="100.810" timestamp="2026-11-05T01:41:26.499689-05:00" hostname="icbfl1"><testcase classname="tests.python.test_selective_methods_8829" name="test_binomial_boundaries" time="0.003" /><testcase classname="tests.python.test_selective_methods_8829" name="test_exact_invariants_and_sealed_splits" time="7.188" /><testcase classname="tests.python.test_selective_methods_8829" name="test_paid_schedules_and_support" time="2.155" /><testcase classname="tests.python.test_selective_methods_8829" name="test_private_cli_and_semantic_replay" time="31.779" /><testcase classname="tests.python.test_selective_methods_8829" name="test_cli_boundaries_and_validation_binding" time="0.003" /><testcase classname="tests.python.test_selective_methods_8829" name="test_exhaustion_replication_and_heartbeats" time="0.163" /><testcase classname="tests.python.test_selective_methods_8829" name="test_precondition_diagnostics" time="0.082" /><testcase classname="tests.python.test_selective_methods_8829" name="test_world_progress_and_collision_operand" time="16.432" /><testcase classname="tests.python.test_selective_methods_8829" name="test_blocked_and_failed_owned_verdicts" time="3.834" /><testcase classname="tests.python.test_selective_methods_8829" name="test_standalone_semantic_tampering" time="34.343" /><testcase classname="tests.python.test_selective_methods_8829" name="test_failed_resources_and_production_route" time="0.634"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8829-owned-i2f75imj/collection-21363452eb8645c994f8dcaadc825858/0/tmp/test_failed_resources_and_prod0/raw/experiment_8829_v756_selective_methods/invocations/1793860987194408957/repository_health.stdout'">tmp_path = PosixPath('/tmp/exp8829-owned-i2f75imj/collection-21363452eb8645c994f8dcaadc825858/0/tmp/test_failed_resources_and_prod0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f569bbcc860&gt;
+
+    def test_failed_resources_and_production_route(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8829-CONTRACT: real publication works with failed qualification and empty science."""
+        for split in m.COUNTS:
+            monkeypatch.setitem(m.COUNTS, split, 1)
+        pre = r.preconditions(tmp_path / "pre")
+        pre["resources"]["passed"] = False
+        monkeypatch.setattr(r, "preconditions", lambda raw: pre)
+        monkeypatch.setattr(r.repaired, "validate", lambda *args: r.unqualified())
+        monkeypatch.setattr(r, "validate", lambda *args: r.unqualified())
+        monkeypatch.setattr(r.checker, "terminal", lambda *args: dict(passed=True))
+&gt;       assert r.main(["--output", str(tmp_path / (m.NAME + ".json"))]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_selective_methods_8829.py:304: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/selective_methods_runner_8829.py:687: in main
+    shutil.copyfile(receipt[suffix + "_path"], target)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:262: in copyfile
+    with open(dst, 'wb') as fdst:
+         ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/tmp/exp8829-owned-i2f75imj/collection-21363452eb8645c994f8dcaadc825858/0/tmp/test_failed_resources_and_prod0/raw/experiment_8829_v756_selective_methods/invocations/1793860987194408957/repository_health.stdout')
+mode = 'wb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_builtin_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -&gt; Any:
+        target = (
+            _redirect_legacy_write_path(file, "open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+&gt;       return _ORIGINAL_BUILTIN_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8829-owned-i2f75imj/collection-21363452eb8645c994f8dcaadc825858/0/tmp/test_failed_resources_and_prod0/raw/experiment_8829_v756_selective_methods/invocations/1793860987194408957/repository_health.stdout'
+
+python/carnot/testing/tracked_results_guard.py:148: FileNotFoundError</failure></testcase></testsuite></testsuites>

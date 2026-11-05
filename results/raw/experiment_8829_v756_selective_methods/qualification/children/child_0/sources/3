@@ -1,0 +1,275 @@
+"""REQ-REPORT-8829 / REQ-VERIFY-8829: independent support precedes selection."""
+
+from copy import deepcopy
+import json
+import math
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+from scipy.stats import beta
+
+from carnot.reporting import selective_methods_8829 as m
+from carnot.reporting import selective_methods_runner_8829 as r
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+
+
+def test_binomial_boundaries():
+    """SCENARIO-VERIFY-8829-BOUNDARIES: independent worlds set the support floor."""
+    for n in [0, 60, 124, 125, 180]:
+        upper = m.risk_upper(n, 0)
+        assert upper == pytest.approx(1 if not n else beta.ppf(1 - 0.01 / 6, 1, n))
+        assert upper == pytest.approx(m.numerical_upper(n, 0), abs=1e-12)
+        assert (upper <= 0.05) == (n >= 125)
+    for n, errors in [(60, 1), (180, 3), (125, 125)]:
+        assert m.risk_upper(n, errors) == pytest.approx(m.numerical_upper(n, errors))
+    for n, e in [(-1, 0), (1, 2), (1, -1)]:
+        with pytest.raises(ValueError):
+            m.risk_upper(n, e)
+
+
+def test_exact_invariants_and_sealed_splits():
+    """SCENARIO-REPORT-8829-CONTRACT: names and views cannot create new worlds."""
+    edges = [[i, (i + 1) % 8] for i in range(8)] + [[0, 3], [3, 7]]
+    assert m.topology(edges) == m.topology([[7 - a, 7 - b] for a, b in edges])
+    sealed = m.freeze(set(), dict(fit=2, calibration=3, evaluation=2, canary=1))
+    assert len(sealed["worlds"]) == 8
+    assert len({w["structure"] for w in sealed["worlds"]}) == 8
+    assert len(sealed["inputs"]) == 48
+    assert all(m.truth(u["input"]) == sealed["labels"][u["unit_id"]] for u in sealed["inputs"])
+    assert all(w["variables"] in [2, 3] and w["vertices"] == 8 for w in sealed["worlds"])
+    rejected = m.freeze({w["structure"] for w in sealed["worlds"]}, dict(fit=1))
+    assert rejected["worlds"][0]["structure"] not in {w["structure"] for w in sealed["worlds"]}
+    with pytest.raises(ValueError, match="input_fields"):
+        m.truth(dict(sealed["inputs"][0]["input"], truth="support"))
+    with pytest.raises(ValueError, match="independent"):
+        from unittest.mock import patch
+
+        with patch.object(m.original, "label", return_value="bad"):
+            m.truth(sealed["inputs"][0]["input"])
+
+
+def test_paid_schedules_and_support():
+    """SCENARIO-VERIFY-8829-BOUNDARIES: paid partial work never becomes an answer."""
+    c = m.freeze(set(), dict(calibration=3))
+    rows = m.measure(c["inputs"], m.SCHEDULES)
+    scored = m.score(rows, c)
+    assert len(scored) == 54
+    assert all(x["primitive_operations"] <= m.CAP for x in scored)
+    assert all(x["decision"] == "insufficient" for x in scored if x["truth"] == "insufficient")
+    selected = m.select(scored)
+    assert selected["schedule"] in m.SCHEDULES or selected["schedule"] is None
+    diag = m.diagnose(scored)
+    assert len(diag) == 3 * 3 * 6
+    assert max(x["accepted_worlds"] for x in diag) <= 3
+    with pytest.raises(ValueError, match="replicated"):
+        m.diagnose(scored + scored[:1])
+    with pytest.raises(ValueError, match="calibration_only"):
+        m.select([dict(scored[0], split="evaluation")])
+    assert (
+        m.select([dict(x, decision="insufficient", metric=0) for x in scored])["schedule"] is None
+    )
+    for schedule in m.SCHEDULES:
+        result = m.schedule(schedule, c["inputs"][0]["input"], 0)
+        assert result["decision"] == "insufficient" and result["budget_exhausted"]
+    with pytest.raises(ValueError):
+        m.schedule("bad", c["inputs"][0]["input"])
+    with pytest.raises(ValueError, match="attempt_roster"):
+        m.score(rows[:-1], c)
+
+
+def test_private_cli_and_semantic_replay(tmp_path):
+    """SCENARIO-REPORT-8829-CONTRACT: actual CLI survives a foreign working directory."""
+    output = tmp_path / (m.NAME + ".json")
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    command = [
+        sys.executable,
+        "-u",
+        "-c",
+        "import sys,runpy; sys.path[:0]="
+        + repr([str(m.ROOT / "python"), str(m.ROOT)])
+        + "; from carnot.reporting import selective_methods_8829 as m; "
+        "m.COUNTS.update(fit=2,calibration=3,evaluation=2,canary=1); "
+        "sys.argv[0]=sys.argv.pop(1); runpy.run_path(sys.argv[0],run_name='__main__')",
+        str(m.ROOT / m.CLI),
+    ]
+    child = subprocess.run(
+        command + ["--date", "20261105", "--private-output", "--output", str(output)],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=600,
+    )
+    assert child.returncode == 0, child.stdout + child.stderr
+    value = json.loads(output.read_bytes())
+    assert value["verdict_class"] == "disqualified"
+    assert value["independent_count"] == 8
+    assert value["selective_protocol_ready_score"] == 0
+    assert r.replay(output)
+    value["certificate_boundary_rows"][0]["risk_upper"] = 0
+    value["reproducibility_checksum"] = canonical_hash(
+        {k: v for k, v in value.items() if k != "reproducibility_checksum"}
+    )
+    atomic_json(output, value)
+    assert not r.replay(output)
+    assert not r.replay(tmp_path / "absent")
+
+
+def test_cli_boundaries_and_validation_binding(tmp_path, monkeypatch):
+    """SCENARIO-VERIFY-8829-BOUNDARIES: isolation and original controls remain required."""
+    for argv in [["--date", "20250101"], ["--private-output"]]:
+        with pytest.raises(SystemExit):
+            r.main(argv)
+    assert r.main(["--cold-replay", str(tmp_path / "absent")]) == 1
+
+
+def test_exhaustion_replication_and_heartbeats(monkeypatch):
+    """SCENARIO-VERIFY-8829-BOUNDARIES: exhausted construction and repeated worlds fail explicitly."""
+    with monkeypatch.context() as patch:
+        patch.setattr(m, "MAX_ATTEMPTS", 0)
+        with pytest.raises(ValueError, match="cohort_support_exhausted"):
+            m.freeze(set(), dict(fit=1))
+    cohort = m.freeze(set(), dict(calibration=1))
+    ticks = iter(range(0, 100000, 31))
+    with monkeypatch.context() as patch:
+        patch.setattr(m.time, "monotonic", lambda: next(ticks))
+        rows = m.score(m.measure(cohort["inputs"], m.SCHEDULES), cohort)
+    certified = next(x for x in rows if x["certification_unit"])
+    with pytest.raises(ValueError, match="replicated_world"):
+        m.diagnose(rows + [dict(certified, unit_id="another/variant")])
+    artificial = [
+        dict(
+            certified,
+            unit_id=f"calibration/{i}",
+            cluster_id=f"calibration/{i:03}",
+            truth="support",
+            decision="support",
+        )
+        for i in range(180)
+    ]
+    assert max(x["accepted_worlds"] for x in m.diagnose(artificial)) == 180
+    assert m.stable([dict(wall_time_s=1, decision="support")]) == [dict(decision="support")]
+
+
+def test_precondition_diagnostics(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8829-CONTRACT: absent or malformed external operands remain explicit."""
+    monkeypatch.setattr(m, "ROOT", tmp_path)
+    pre = r.preconditions(tmp_path / "raw")
+    assert not pre["external_ready"] and not pre["resources"]["passed"]
+    assert all(x["check"] == "missing_file" for x in pre["diagnostics"])
+    for name in [
+        "experiment_8818_v755_evidence_decisive_coverage",
+        "experiment_8819_v755_consensus_selective_energy",
+    ]:
+        atomic_json(tmp_path / "results" / (name + ".json"), dict(unbound=True))
+    pre = r.preconditions(tmp_path / "raw")
+    assert any(x["check"] == "missing_field" and x["sha256"] for x in pre["diagnostics"])
+
+
+@pytest.fixture
+def small_work(tmp_path, monkeypatch):
+    """REQ-REPORT-8829: small real inputs exercise trust boundaries without claiming a research cohort."""
+    for split in m.COUNTS:
+        monkeypatch.setitem(m.COUNTS, split, 1)
+    raw = tmp_path / "raw"
+    work = r.prepare(raw, r.unqualified())
+    atomic_json(raw / "work.json", work)
+    validation = r.unqualified()
+    atomic_json(raw / "validation.json", validation)
+    return raw, work, validation
+
+
+def test_blocked_and_failed_owned_verdicts(small_work, monkeypatch):
+    """SCENARIO-VERIFY-8829-BOUNDARIES: absent authority blocks; internal and owned failures disqualify."""
+    raw, work, validation = small_work
+    from carnot.reporting.v746_retained_evidence import reference
+
+    good = dict(
+        union=dict(passed=True),
+        coverage=dict(complete=True),
+        receipts=[dict(passed=True)],
+        raw_references=[],
+    )
+    work["original_qualification"] = good
+    build = lambda: r.sealed_value(
+        work, good, "20261105", reference(raw / "work.json"), reference(raw / "validation.json")
+    )
+    assert build()["verdict_class"] == "null"
+    work["selection"]["schedule"] = "always_joint"
+    assert build()["verdict_class"] == "circular_positive"
+    work["preconditions_checked"]["external_ready"] = False
+    assert build()["verdict_class"] == "blocked"
+    work["collisions"] = ["collision"]
+    assert build()["verdict_class"] == "disqualified"
+    configured = type("Validator", (), {})()
+    configured.validate = lambda *args: validation
+    monkeypatch.setattr(r, "namespace", lambda *args: configured)
+    assert r.validate(raw, raw) == validation
+    assert configured.e.OWNED == m.OWNED
+    assert len(configured.original.CONSUMERS) == 2
+
+
+def test_standalone_semantic_tampering(small_work):
+    """SCENARIO-VERIFY-8829-BOUNDARIES: rehashed labels, work and reductions cannot become valid."""
+    raw, baseline, validation = small_work
+    from carnot.reporting.v746_retained_evidence import reference
+
+    files = {p.name: json.loads(p.read_bytes()) for p in raw.glob("*.json")}
+    output = raw.parent / (m.NAME + ".json")
+
+    def candidate(change=lambda w, f: None):
+        work, operands = deepcopy(baseline), deepcopy(files)
+        change(work, operands)
+        for name, content in operands.items():
+            atomic_json(raw / name, content)
+        work["raw_shard_hashes"] = [
+            reference(Path(ref["path"])) for ref in work["raw_shard_hashes"]
+        ]
+        atomic_json(raw / "work.json", work)
+        value = r.sealed_value(
+            work,
+            validation,
+            "20261105",
+            reference(raw / "work.json"),
+            reference(raw / "validation.json"),
+        )
+        atomic_json(output, value)
+        return value
+
+    candidate()
+    assert r.replay(output)
+    mutations = [
+        lambda w, f: w["code_config_hashes"][0].update(sha256="forged"),
+        lambda w, f: f["cohort.json"]["worlds"][0].update(structure="forged"),
+        lambda w, f: f["original_controls.json"].update(collisions=["forged"]),
+        lambda w, f: f["inputs.json"]["rows"][0].update(input_sha256="forged"),
+        lambda w, f: w["current_work_receipt"].update(event_sha256="forged"),
+        lambda w, f: f["decisions.json"]["rows"][0].update(primitive_operations=999),
+        lambda w, f: w["rows"][0].update(metric=999),
+    ]
+    for change in mutations:
+        candidate(change)
+        assert not r.replay(output)
+    value = candidate()
+    value["required_checks_passed"] = True
+    atomic_json(output, value)
+    assert not r.replay(output)
+
+
+def test_failed_resources_and_production_route(tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8829-CONTRACT: real publication works with failed qualification and empty science."""
+    for split in m.COUNTS:
+        monkeypatch.setitem(m.COUNTS, split, 1)
+    pre = r.preconditions(tmp_path / "pre")
+    pre["resources"]["passed"] = False
+    monkeypatch.setattr(r, "preconditions", lambda raw: pre)
+    monkeypatch.setattr(r.repaired, "validate", lambda *args: r.unqualified())
+    monkeypatch.setattr(r, "validate", lambda *args: r.unqualified())
+    monkeypatch.setattr(r.checker, "terminal", lambda *args: dict(passed=True))
+    assert r.main(["--output", str(tmp_path / (m.NAME + ".json"))]) == 0
+    value = json.loads((tmp_path / (m.NAME + ".json")).read_bytes())
+    assert value["verdict_class"] == "disqualified" and value["independent_count"] == 0
