@@ -106772,6 +106772,27 @@ SHALL rebuild rows and transitions rather than trust repaired outer hashes.
 The experiment SHALL train only on fitting worlds, calibrate cutoffs on independent draws, and measure certificate firing, conditional failure and served risk against the post-selection population census.
 The deliverable SHALL be `results/experiment_8844_v757_selective_availability.json`.
 
+Authenticate Exp8842 and its frozen protocol bytes, original method authorities,
+raw operands and executed code. Fit five unchanged heads for240 steps using
+fitting labels alone. Seal all seven population score arrays before calibration.
+Preserve every replacement draw and all failed policy slots. Select each rule
+using only its calibration prefix and delta=.01/(7x3x6). Seal all630 rules before
+opening independent evaluation labels or the4096-world census.
+Retain draw-level decisions, cutoff menus, refusals, census scores and exact
+accepted/error denominators. Empty served risk and conditional failure are null.
+Report exact99-percent binomial availability/failure intervals;30 replicates
+cannot establish a1-percent universal failure guarantee. Utility requires census
+risk<=.05 and coverage>=.30 in24/30 replicates at budget360, separately per seed.
+Use paired replicate coverage differences and simultaneous99-percent lower
+bounds across ten learned/baseline comparisons. A learned benefit requires a
+lower bound>=.05 at retained risk for every seed against both baselines.
+Conservative bounded-variable intervals are allowed and SHALL name their method.
+Reject shuffled fitting labels, fabricated duplicate RNG traces, changed scores,
+and rehashed reduction drift on cold replay outside the checkout. Run actual
+unit/child100-percent statement coverage without exclusions and unchanged
+private E2E-018/021 and terminal scanners. Repository health is separate.
+Ops and traceability reconciliation remains conductor-owned for this execution.
+
 #### SCENARIO-REPORT-8844-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
