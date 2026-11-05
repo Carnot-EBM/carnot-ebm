@@ -4545,3 +4545,28 @@ to8835/8838. The standing ARC generalization floor maps to8837.
 | REQ-REPORT-8837; SCENARIO-REPORT-8837-CONTRACT | exp8837-arc-outcome-transfer | `results/experiment_8837_v756_arc_outcome_transfer.json` | Planned |
 | REQ-REPORT-8838; SCENARIO-REPORT-8838-CONTRACT | exp8838-hardware-operation-budget | `results/experiment_8838_v756_hardware_operation_budget.json` | Planned |
 | REQ-REPORT-8839; SCENARIO-REPORT-8839-CONTRACT | exp8839-capstone | `results/experiment_8839_v756_capstone.json` | Planned |
+
+## V757 planned research traceability — 2026-11-05
+
+These requirements are planned, not implemented. The design and staged queue
+contain exactly13 tasks, Exp8840–Exp8852. V756 authority is preserved separately.
+
+| Requirement / scenario | Planned task | Planned deliverable |
+|---|---|---|
+| REQ-REPORT-8840 / SCENARIO-REPORT-8840-CONTRACT | exp8840-branch-contract | `results/experiment_8840_v757_branch_contract.json` |
+| REQ-REPORT-8841 / SCENARIO-REPORT-8841-CONTRACT | exp8841-memory-execution | `results/experiment_8841_v757_memory_execution.json` |
+| REQ-REPORT-8842 / SCENARIO-REPORT-8842-CONTRACT | exp8842-selective-population | `results/experiment_8842_v757_selective_population.json` |
+| REQ-REPORT-8843 / SCENARIO-REPORT-8843-CONTRACT | exp8843-causal-streams | `results/experiment_8843_v757_causal_streams.json` |
+| REQ-REPORT-8844 / SCENARIO-REPORT-8844-CONTRACT | exp8844-selective-availability | `results/experiment_8844_v757_selective_availability.json` |
+| REQ-REPORT-8845 / SCENARIO-REPORT-8845-CONTRACT | exp8845-indexed-witness | `results/experiment_8845_v757_indexed_witness.json` |
+| REQ-REPORT-8846 / SCENARIO-REPORT-8846-CONTRACT | exp8846-future-benefit-audit | `results/experiment_8846_v757_future_benefit_audit.json` |
+| REQ-REPORT-8847 / SCENARIO-REPORT-8847-CONTRACT | exp8847-indexed-cost | `results/experiment_8847_v757_indexed_cost.json` |
+| REQ-REPORT-8848 / SCENARIO-REPORT-8848-CONTRACT | exp8848-memory-size-cost | `results/experiment_8848_v757_memory_size_cost.json` |
+| REQ-REPORT-8849 / SCENARIO-REPORT-8849-CONTRACT | exp8849-qwen-witness-canary | `results/experiment_8849_v757_qwen_witness_canary.json` |
+| REQ-REPORT-8850 / SCENARIO-REPORT-8850-CONTRACT | exp8850-arc-outcome-transfer | `results/experiment_8850_v757_arc_outcome_transfer.json` |
+| REQ-REPORT-8851 / SCENARIO-REPORT-8851-CONTRACT | exp8851-hardware-operation-budget | `results/experiment_8851_v757_hardware_operation_budget.json` |
+| REQ-REPORT-8852 / SCENARIO-REPORT-8852-CONTRACT | exp8852-capstone | `results/experiment_8852_v757_capstone.json` |
+
+Plan validation uses the existing contract parser, schema, gate and exclusion
+linters, planning unit tests, scoped spec tracing and private E2E-018/021 checks.
+No execution result, activation or new publication readiness is claimed.

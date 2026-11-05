@@ -10,42 +10,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 6 |
-| BLOCKED_WITHOUT_DIAGNOSTIC | 1 |
-| CANNOT_DETERMINE | 1 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_8816_v755_selective_evidence_methods.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The prospective selective-evidence protocol is complete and ready; “scientific_benefit_measured” is false, and no current comparative benefit or blocked verdict is asserted.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8817_categorical_memory_prototype.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Qualification was blocked because upstream `objective_candidate_ready_score` was 0, failing the required `== 1` gate.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8818_v755_evidence_decisive_coverage.json
+## experiment_8831_v756_ordered_evidence_cost.json
 
 **CANNOT_DETERMINE**
 
@@ -53,15 +20,31 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-“acceptance_gates” reports that coverage gain failed while the other three gates passed.
+The paid-operation-reduction gate failed its 0.20 threshold while all other listed acceptance gates passed.
 
 ## WHAT IS MISSING
-The artifact cuts off inside “exact_reference_rows”. Those visible rows cover “unrestricted_exact_reference”; “comparator_selection.menu” contains calibration aggregates. Paired evaluation rows recording “unit_id”, “arm”, and “metric” for the compared arms are not visible, and truncation prevents determining whether they appear later.
+The remainder of "decision_rows" and observed statistics underlying "acceptance_gates": the supplied artifact ends mid-row, preventing reconciliation with "completed_count": 4320.
 
 ## THE CHECK A READER CANNOT DO
-Do the compared arms’ per-unit evaluation results substantiate “acceptance_gates.coverage_gain”: false?
+Do the complete paired results justify the reported failure of the 0.20 paid-operation-reduction gate?
 
-## experiment_8819_v755_consensus_selective_energy.json
+## experiment_8832_v756_selective_availability.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+The artifact is truncated mid-value at `"bootstrap_control_rows"` → `"calibration_rows"` → `"metrics"` → `"brier"`, leaving any headline conclusion and remaining evidence unavailable.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact make a comparative or blocked claim with supporting rows or a blocker diagnostic?
+
+## experiment_8833_causal_objective_streams.json
 
 **CHECKABLE**
 
@@ -69,7 +52,7 @@ Do the compared arms’ per-unit evaluation results substantiate “acceptance_g
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment completed without establishing selective benefit, with every recorded calibration threshold ineligible and "benefit_passed" false.
+Experiment 8833 was blocked because upstream `memory_execution_ready_score` was 0, failing the requirement that it equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -77,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8823_qwen_witness_canary.json
+## experiment_8835_v756_complete_adaptation_cost.json
 
 **CHECKABLE**
 
@@ -85,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `runtime_repair_ready_score` was 0 rather than the required 1.
+The run completed 90 adaptation-cost windows across three arms without establishing a scientific speed gain.
 
 ## WHAT IS MISSING
 nothing
@@ -93,7 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8824_arc_outcome_transfer.json
+## experiment_8836_qwen_witness_canary.json
 
 **CHECKABLE**
 
@@ -101,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The assessment was blocked because upstream `arc_new_outcomes_available_score` was 0, failing the required equality to 1.
+The experiment was blocked because upstream `runtime_repair_ready_score` was 0, failing the required value of 1.
 
 ## WHAT IS MISSING
 nothing
@@ -109,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8825_v755_hardware_operation_map.json
+## experiment_8837_arc_outcome_transfer.json
 
 **CHECKABLE**
 
@@ -117,7 +100,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The static three-board operation audit is complete, with no speedup claim and explicit blockers recorded in "gate_check_summary".
+The assessment was blocked because upstream `arc_new_outcomes_available_score` was 0, while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -125,18 +108,34 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8826_v755_capstone.json
+## experiment_8838_v756_hardware_operation_budget.json
 
-**BLOCKED_WITHOUT_DIAGNOSTIC**
+**CHECKABLE**
 
 ## VERDICT
-BLOCKED_WITHOUT_DIAGNOSTIC
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The capstone reports a selective-benefit null and declares several branches blocked.
+The mapping audit passes, but physical acceleration is not established, with board operations recorded as host-only or blocked by a JTAG result of 0xffffffff.
 
 ## WHAT IS MISSING
-For `"exp8817-categorical-memory-prototype"`, the failed check and its observed value are missing: `"verdict_class": "blocked"` and `"disposition": "conductor_pre_gate"` identify no specific prerequisite. `"gate_check_summary"` appears only in `"field_principles"`, without diagnostic entries in the supplied artifact.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Which prerequisite blocked exp8817, and what observed value caused it to fail?
+none
+
+## experiment_8839_v756_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The categorical candidate clears the development Brier improvement gate in all five seeds, but activation remains unauthorized because natural generalization is absent.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none

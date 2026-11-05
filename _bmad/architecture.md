@@ -855,3 +855,23 @@ and tail drain. Rejected component clocks cannot feed hardware fractions.
 KV260, PolarFire and GateMate retain operation-specific limits; the map runs
 even when another branch is blocked. Independent CPU methods have no global
 CUDA or contract-producer gate. These are planned studies, not deployed changes.
+
+## Planned V757 execution and sampling boundaries — 2026-11-05
+
+V757 stages thirteen tasks, Exp8840–Exp8852, in four phases. Original causal-store
+execution qualifies before a bounded24-stream delayed-feedback study. Frozen
+and adaptive linear controls remain visible beside the categorical head. The
+independent audit measures future loss, actual template use and untouched
+retention. The generator and live ARC policy receive no training changes.
+
+A fixed constructed population is frozen before independent with-replacement
+calibration and evaluation draws. Certificate availability and conditional
+failure remain separate from served error; the claim is limited to that
+population. A separate opt-in predicate index must preserve complete witness
+semantics before its full request cost is measured. Template occupancy costs
+retain durable writes, restart and delayed-feedback tail drain.
+
+New authenticated CUDA evidence gates bounded Qwen3.8 source extraction. New
+applied live outcomes gate ARC analysis. Per-board mappings preserve KV260,
+PolarFire and GateMate limits. The capstone accounts for every primary or skip.
+These are planned studies only, not deployed behavior or scientific results.

@@ -21389,3 +21389,5 @@ code |
 | 2026-11-05 09:43 UTC | Assess cross-game supervisor selection only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8827-branch-contract.arc_new_outcomes_available_score (actual=0 == expected=1) |
 | 2026-11-05 10:16 UTC | Map complete measured operations to supported boar | OK | 93 passed, 1 warning in 24.22s |
 | 2026-11-05 10:49 UTC | Reconcile thirteen outcomes and retire only unchan | OK | 91 passed, 1 warning in 86.89s (0:01:26) |
+| 2026-11-05 12:16 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-05 12:21 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

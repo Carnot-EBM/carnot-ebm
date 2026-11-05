@@ -106622,3 +106622,165 @@ loss upper <=.01, semantic false-accept increase upper <=.01, and decisive
 coverage lower >=.30. A qualified null has evidence readiness1 and benefit0.
 Exact success is circular_positive. Keep alternate witnesses and no-change
 controls visible. Exhausted attempts remain insufficient in the denominator.
+
+## V757 planned research — 2026-11-05
+
+Status: planned, not implemented. The complete numeric methods and frozen acceptance
+thresholds are in research-roadmap-vNEXT.md and research-roadmap-next.yaml.
+No V756 historical verdict changes by adding these requirements.
+
+### REQ-REPORT-8840: Bind the V757 contract and qualify existing branch-admission execution
+
+The experiment SHALL bind the complete thirteen-task contract and execute the original28 missed runner statements; optional runtime and ARC admission remain independent of CPU roots.
+The deliverable SHALL be `results/experiment_8840_v757_branch_contract.json`.
+
+#### SCENARIO-REPORT-8840-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8841: Qualify the original causal energy store through its missing rejection paths
+
+The experiment SHALL qualify original runner statements81 and290 with all unchanged numerical and causal controls before publishing memory readiness.
+The deliverable SHALL be `results/experiment_8841_v757_memory_execution.json`.
+
+#### SCENARIO-REPORT-8841-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8842: Seal a fixed population and valid calibration-draw protocol
+
+The experiment SHALL freeze a4096-world population before independent with-replacement calibration/evaluation draws; preserve repeats and distinguish draw count from distinct support.
+The deliverable SHALL be `results/experiment_8842_v757_selective_population.json`.
+
+#### SCENARIO-REPORT-8842-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8843: Measure delayed energy learning and template additions on fresh query streams
+
+The experiment SHALL seal predictions before delay8 feedback in24 independent48-query streams with six fixed arms, restart24 and untouched retention; emit12096 total rows.
+The deliverable SHALL be `results/experiment_8843_v757_causal_streams.json`.
+
+#### SCENARIO-REPORT-8843-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8844: Measure certificate availability and served risk on independent population draws
+
+The experiment SHALL train only on fitting worlds, calibrate cutoffs on independent draws, and measure certificate firing, conditional failure and served risk against the post-selection population census.
+The deliverable SHALL be `results/experiment_8844_v757_selective_availability.json`.
+
+#### SCENARIO-REPORT-8844-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8845: Prototype an indexed exact-witness path with unchanged decision semantics
+
+The experiment SHALL qualify request-local predicate indexing against complete exact-witness semantics, including global sign conflicts, variable binding, duplicates and exhausted budgets.
+The deliverable SHALL be `results/experiment_8845_v757_indexed_witness.json`.
+
+#### SCENARIO-REPORT-8845-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8846: Audit future loss and untouched retention against frozen and linear controls
+
+The experiment SHALL independently audit future loss, causal template use and untouched retention using whole-stream paired uncertainty and the frozen linear comparator.
+The deliverable SHALL be `results/experiment_8846_v757_future_benefit_audit.json`.
+
+#### SCENARIO-REPORT-8846-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8847: Measure indexed witness costs with construction and censoring included
+
+The experiment SHALL include index construction and all scheduled requests in matched exact-verifier cost comparisons; operation savings alone SHALL NOT establish wall-time speedup.
+The deliverable SHALL be `results/experiment_8847_v757_indexed_cost.json`.
+
+#### SCENARIO-REPORT-8847-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8848: Measure complete adaptation cost as verified template memory fills
+
+The experiment SHALL measure60 complete durable windows at initial verified template occupancies0/8/32; report causal preparation cost separately and preserve capacity32.
+The deliverable SHALL be `results/experiment_8848_v757_memory_size_cost.json`.
+
+#### SCENARIO-REPORT-8848-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8849: Test source-span extraction after new authenticated Qwen runtime evidence
+
+The experiment SHALL use only authenticated unsloth/Qwen3.8-27B-GGUF bounded generation on the24-call source-span canary and separate source fidelity from encoded feasibility.
+The deliverable SHALL be `results/experiment_8849_v757_qwen_witness_canary.json`.
+
+#### SCENARIO-REPORT-8849-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8850: Audit live supervisor transfer only when new applied outcomes arrive
+
+The experiment SHALL admit only new reachable live selected/applied outcomes for supported cross-game analysis; preserve registry novelty and solve provenance requirements.
+The deliverable SHALL be `results/experiment_8850_v757_arc_outcome_transfer.json`.
+
+#### SCENARIO-REPORT-8850-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8851: Map index and memory costs to KV260 PolarFire and GateMate operations
+
+The experiment SHALL map qualified new costs independently to KV260, PolarFire and GateMate operation boundaries without physical probes or invented acceleration fractions.
+The deliverable SHALL be `results/experiment_8851_v757_hardware_operation_budget.json`.
+
+#### SCENARIO-REPORT-8851-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.
+
+### REQ-REPORT-8852: Reconcile all thirteen outcomes and decide which mechanisms merit continuation
+
+The experiment SHALL reconcile all thirteen primary-or-skip outcomes, exact failed-scope lineage and stable G1-G4 publication gates without activation or external publication.
+The deliverable SHALL be `results/experiment_8852_v757_capstone.json`.
+
+#### SCENARIO-REPORT-8852-CONTRACT
+
+Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
+producer gate fields, closed verdict_class, actual compute provenance and owned
+validation. External absence is blocked; failed owned checks disqualify.
+Historical primaries and shared validators SHALL remain unchanged.

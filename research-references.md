@@ -55069,3 +55069,94 @@ worlds, with private validation recorded in ops/status.md. New experiments must
 qualify these concrete changes without rewriting historical verdicts. V755's
 admitted consensus result has zero decisive coverage, so further threshold
 sweeps need a finite-sample feasibility diagnosis first.
+
+## V757 planning scan — 2026-11-05
+
+Recorded before the V757 experiment design. This scan read primary abstracts,
+selected full text, and all requested discovery channels. Search dates alone do
+not establish publication dates. Local conclusions come from V756 primaries and
+its capstone; conductor `OK` means execution completed, not scientific success.
+
+### Findings to carry into the design
+
+- [VIGIL](https://arxiv.org/abs/2610.04287), October 3, 2026;
+  [full text](https://arxiv.org/html/2610.04287v1). Delayed feedback updates a
+  bounded calibrator and selector while the generator and candidate pool stay
+  fixed. Some replay-approved updates still harm held-out accuracy. Use this
+  as a reason to measure future loss and untouched retention separately from
+  update acceptance. It does not prove that Carnot's memory improves decisions.
+- [Certified by Abstention](https://arxiv.org/abs/2610.09541), October 7, 2026.
+  Rechecked the distinction between certificate validity, how often a certificate
+  is issued, and error among served answers. V756 used topology-conditioned
+  sampling without an i.i.d. certificate. A new study should freeze a population
+  before calibration, draw with replacement, and retain repeated draws honestly.
+  It must report finite-population performance separately from novel-structure
+  generalization. Repeated candidate variants are not extra independent draws.
+- [Anechoic](https://arxiv.org/abs/2610.13368), October 9, revised November 4,
+  2026. The new version describes an Onsager correction for synchronous Ising
+  updates and measurements on an Alveo V80. Carry its operation-level accounting
+  into the hardware review. The reported dense Max-Cut engine does not establish
+  KV260 support, a correct Gibbs sampler, or faster durable constraint learning.
+  [Author repository](https://github.com/skethz/anechoic) is a source lead, not a
+  verified trending entry or an approved dependency.
+- [Thermodynamic learning](https://arxiv.org/abs/2609.04732), September 4, 2026.
+  It studies learning through applied fields in an Ising system. Retain as a
+  longer-term hardware-learning lead; the current causal software store and its
+  exact categorical normalization are different computational mechanisms.
+- [NFA-constrained generation](https://arxiv.org/abs/2609.40185), September 30,
+  revised October 6, 2026. Its tractable approximate generation engine relies
+  on stated automaton/model assumptions. Keep feasible output syntax separate
+  from faithful extraction of premises; do not transplant an HMM guarantee to
+  Qwen's autoregressive GGUF implementation.
+- [Type-aware hallucination analysis](https://arxiv.org/abs/2611.02258),
+  November 1, 2026. The abstract reports substantial differences between error
+  types and length/grounding confounds. Keep sign, binding, missing-evidence and
+  valid-alternative strata visible. Generated or model-verified labels do not
+  supply an independent natural-language truth source.
+
+### Topic coverage and retained sources
+
+| Topic | Primary source checked | Use or limit |
+|---|---|---|
+| EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), May 2026 | Retain normalized energy and a linear baseline; low energy alone is not correctness. |
+| Learned plus exact verification | [Distributional EBM](https://arxiv.org/abs/2605.18871), May 2026 | Keep learned decisions distinct from exact encoded checks and model-identity shortcuts. |
+| Neural constraints | [PAL](https://arxiv.org/abs/2503.19466), June 2025 revision | Exact normalization can certify encoded constraints, not the extraction that produced them. |
+| Ising in ML | Thermodynamic learning above; [learning-to-sample hardness](https://arxiv.org/abs/2605.24752), May 2026 | Optimization, parameter fitting and distributional sampling need separate tests. |
+| KAN | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [KAC](https://arxiv.org/abs/2503.21076), March 2025 | Keep local parameter updates and untouched retention checks; unchanged importance anchoring remains retired. |
+| Guided decoding | [Energy-guided object decoding](https://arxiv.org/abs/2507.07731), July 2025; NFA-LM above | Vision results and HMM assumptions do not transfer automatically to text GGUF generation. |
+| Hardware sampling | Anechoic v2 above; [FPGA decomposition](https://arxiv.org/abs/2602.15985), February 2026 | Charge host work and communication; target only supported board operations. |
+| Continual learning | VIGIL above | Delayed updates require sealed earlier predictions and an audit outside the promotion data. |
+
+### Secondary channels and access limits
+
+- OpenReview search retrieved the [ICLR 2026 EBT paper](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  and [On the Emergence of Reasoning](https://openreview.net/pdf?id=bYkfHTcR1v).
+  The latter retrieved PDF says under review; no acceptance claim is made.
+- Semantic Scholar citation endpoints for [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  were inaccessible through the web tool. Follow-up domain searches did not
+  establish a new citing-paper relationship. Citation coverage is incomplete.
+- [Hugging Face verification papers](https://huggingface.co/papers?q=verification)
+  was readable. It is a discovery index; paper dates and claims use primary sources.
+- [GitHub Python Trending](https://github.com/trending/python?since=monthly) and
+  [Rust Trending](https://github.com/trending/rust?since=monthly) were checked.
+  No new relevant ranked repository was established from the retrieved pages.
+- [Extropic writing](https://extropic.ai/writing) search exposed the October 1
+  [Thermodynamic Recursive Intelligence update](https://extropic.ai/writing/baby-thermo-rsi/).
+  It describes Torx, Thermalizers, THRML and specialized research agents.
+  [Z1T](https://extropic.ai/writing/z1t) remains a vendor estimate for a mixed
+  hardware boundary. Neither page supplies local TSU access or Carnot timings.
+- [Kona 1.0](https://logicalintelligence.com/kona) was readable. It describes a
+  constraint reasoning layer but provides no newly reproducible implementation
+  or benchmark protocol in this retrieval. Treat it as architectural context.
+
+### Local evidence that changes the next question
+
+Exp8828 qualified all five development gains, but the linear control was better
+than the categorical head in every seed. Exp8830 missed runner statements81
+and290; its numerical and causal controls passed but readiness remains zero.
+Exp8832 used `small_ebm_training`, which is outside the actual closed substrate
+enum. Exp8831's ordered schedule increased paid operations by about23.7 percent;
+changing order again is unsupported. Exp8835 qualified90 complete CPU windows,
+but mode differences do not identify arithmetic or durability fractions. New
+work must preserve these negative and disqualified findings as historical facts.

@@ -11,65 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 6 |
+| CLAIM_SUPPORTED | 3 |
+| NO_CLAIM | 4 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_8816_v755_selective_evidence_methods.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative benefit is asserted here. A future benefit claim would fail if coverage gains missed the prespecified margins against the strongest budgeted comparator or fixed_evidence, or violated the risk bounds.
-
-## WAS THAT CHECKED
-No. Those comparisons are prospective. The displayed rows document protocol sealing; oracle-based infrastructure checks do not establish added value, and the artifact explicitly leaves benefit unmeasured.
-
-## EVIDENCE
-
-- `scientific_benefit_measured`: `false`
-- `constructed protocol seal; no policy evaluation`
-- `prospectively frozen; Exp8818/8819 must select before evaluation; no study predictions in this slot`
-- `Exact-oracle construction and mutation controls qualify infrastructure only. Readiness is valid evidence, not measured benefit. No natural-text or hidden-game generalization.`
-- `protocol_seal`
-- `independent_topology_sealed`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8817_categorical_memory_prototype.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No scientific result is asserted. A passing sole prerequisite gate would contradict the reported reason for blocking, but would not establish that the objective qualified.
-
-## WAS THAT CHECKED
-Yes, the prerequisite gate was checked and failed: actual 0 versus expected 1. This is a blocked-gate receipt; it reports no objective qualification test or comparative result.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `artifact_field`: `objective_candidate_ready_score`
-- `expected`: `1`; `actual`: `0`; `passed`: `false`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8818_v755_evidence_decisive_coverage.json
+## experiment_8831_v756_ordered_evidence_cost.json
 
 **CLAIM_SUPPORTED**
 
@@ -77,61 +23,34 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The evaluated joint_symbolic arm shows no decisive-coverage gain over the preselected evidence_set comparator, leaving the benefit claim blocked.
+On this constructed evaluation cohort, the selected ordered schedule failed to achieve the required paid-operation savings against always_joint despite matching decision quality.
 
 ## WHAT WOULD REFUTE IT
-A positive evaluation coverage gain for joint_symbolic over evidence_set while satisfying the stated error constraints would contradict this bounded no-gain finding.
+A paired evaluation showing at least 20% operation reduction against always_joint, with the confidence interval’s lower bound meeting that threshold and all decision-quality gates passing, would contradict the reported failure to qualify for benefit.
 
 ## WAS THAT CHECKED
-Yes. The reported coverage-gain interval across 240 evaluation worlds is zero throughout, and the displayed world gives both arms identical coverage and error rates. The serious symbolic comparator ties evidence_set; the artifact records that tie as a failed benefit gate.
+Yes. Selection was frozen before evaluation, and whole-world intervals measured operation reduction separately from decision quality. The reduction estimate was negative, with an entirely negative interval. The serious baseline, always_joint, was cheaper in all three displayed world summaries.
 
-Oracle-based correctness cannot establish independent semantic value, but the artifact makes no positive value claim. It also assigns generalization a zero score and acknowledges overlapping graph structures. The displayed scored rows contain explicit truth, decision, metric, and denominator fields; no visible row-validity exclusion or wrong-key error contradicts the null.
+The oracle defines correctness, but this is an honest cost-benefit null, not a positive claim about verifier value. No model was invoked, and no generalization success is asserted. The displayed false valid_alternative flags concern intact inputs; they do not establish invalid cost measurements. The compared operations fields exist in the displayed world summaries.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_blocked_evidence_decisive_coverage`; `verdict_class`: `blocked`.
-- `coverage_gain`: `estimate` = `0.0`, `lower` = `0.0`, `upper` = `0.0`, `independent_worlds` = `240`.
-- Displayed `per_world_results` for `evidence_set` and `joint_symbolic`: `correct_decisive_coverage` = `0.5`; `wrong_decision_rate` = `0.0`.
-- `selection_before_evaluation`: `true`.
-- `verifier_is_oracle`: `true`; `independent_generalization_score`: `0`; `graph_structures_disjoint`: `false`.
-- `methodology_note`: `Exact encoded reasoning remains circular. No learned-semantic, natural-text, LLM or hidden-game improvement claim. Readiness means valid evidence, not benefit.`
+- `honest_verdict`: `complete_null_ordered_evidence_cost`; `verdict_class`: `null`.
+- `frozen_before_evaluation`: `true`; `schedule`: `joint_first`.
+- `paid_operation_reduction`: `threshold`: `0.2`; `passed`: `false`; `estimate`: `-0.23715857852844158`; `lower`: `-0.2610656529889671`; `upper`: `-0.21847799982965366`.
+- `correct_decisive_coverage_loss`: `estimate`: `0.0`; `semantic_false_accept_increase`: `estimate`: `0.0`.
+- `always_joint`: `operations`: `4540.833333333333`; `joint_first`: `operations`: `7536.666666666667`.
+- `verifier_is_oracle`: `true`; `model_invoked`: `false`; `independent_generalization_score`: `0`.
+- `condition`: `intact`; `status`: `completed`; `valid_alternative`: `false`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8819_v755_consensus_selective_energy.json
+## experiment_8832_v756_selective_availability.json
 
-**CLAIM_SUPPORTED**
+**SKIPPED_ALREADY_FLAGGED**
 
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The learned energy selector demonstrated no selective benefit under the specified gates on this constructed corpus.
-
-## WHAT WOULD REFUTE IT
-A calibration-selected learned cutoff that subsequently passed all five evaluation gates: risk upper bound ≤0.05, coverage lower bound ≥0.30, insufficient-to-decision upper bound ≤0.05, Brier gain lower bound ≥0.01, and useful coverage gain lower bound ≥0.05 against fixed evidence.
-
-## WAS THAT CHECKED
-Yes. The threshold rows test six cutoffs across five learned seeds. Cutoffs offering sufficient coverage fail the risk requirement; safe cutoffs provide insufficient coverage. All five seeds therefore select no candidate. This outcome follows measured errors and coverage, rather than an automatic success criterion.
-
-The exact oracle is excluded from learned benefit. The artifact makes no independent generalization claim. Fixed evidence, the cheap substantive comparator, also selects no candidate. That tie supports the reported null.
-
-The false eligibility flags reject cutoffs while retaining their metrics. Undefined risk and unestimable benefit contrasts remain explicit; they are not presented as successful safety or comparative gains.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_null_consensus_selective_energy`; `benefit_passed`: `false`; `selective_benefit_score`: `0`.
-- `selection`: `safe risk upper <=.05 and coverage lower >=.30; maximize correct coverage, then lowest cutoff; none => escalate`.
-- For `learned_energy`, seed `7558819`, threshold `0.6`: `coverage_lower` is `0.3333333333333333`; `risk_upper` is `0.3488430232558136`.
-- For `learned_energy`, seed `7558821`, threshold `0.9`: `risk_upper` is `0.0`; `coverage_lower` is `0.061111111111111116`; `eligible` is `false`.
-- `status`: `no_candidate`; `risk`: `undefined_denominator`; `brier_gain` and `useful_coverage_gain`: `not_estimable`.
-- `scope`: `separate exact reference; excluded from policy benefit`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8823_qwen_witness_canary.json
+## experiment_8833_causal_objective_streams.json
 
 **NO_CLAIM**
 
@@ -142,42 +61,16 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-gate receipt, with no extraction-performance or comparative-value claim.
+There is no experimental claim to falsify. This artifact records a prerequisite failure, not a result about future loss or the method’s value.
 
 ## WAS THAT CHECKED
-No performance claim was tested. The prerequisite checks recorded a failed runtime-readiness gate and a stop before the experiment.
-
-## EVIDENCE
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `runtime_repair_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8824_arc_outcome_transfer.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-gate receipt, with no generalization result or comparative claim to falsify.
-
-## WAS THAT CHECKED
-No generalization assessment occurred. The prerequisite was checked in `gates_evaluated`: observed 0 versus required 1, so execution was blocked.
+Only the prerequisite gate was checked. Its observed value was 0 against a required value of 1, so execution was blocked before the experiment could test its objective.
 
 ## EVIDENCE
 - `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
 - `honest_verdict`: `blocked_gate_check_failed`
-- `artifact_field`: `arc_new_outcomes_available_score`
+- `artifact_field`: `memory_execution_ready_score`
 - `expected`: `1`
 - `actual`: `0`
 - `passed`: `false`
@@ -186,34 +79,39 @@ No generalization assessment occurred. The prerequisite was checked in `gates_ev
 ## RECOMMENDATION
 KEEP
 
-## experiment_8825_v755_hardware_operation_map.json
+## experiment_8835_v756_complete_adaptation_cost.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The artifact reports complete-operation CPU costs on constructed streams without establishing a speed gain.
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a static audit and blocker receipt, with no comparative performance or added-value claim to falsify.
+A paired cost interval entirely below zero would contradict the reported absence of demonstrated speed gain for that comparison. A missing scheduled window, failed state control, or omitted operation inside the declared boundary would contradict completeness.
 
 ## WAS THAT CHECKED
-No comparative performance test was conducted. The operation rows record unmeasured timings, and the terminal verdict remains blocked. Audit readiness is explicitly limited to evidence validity.
+Yes, through parent timing, completion/state gates, and two cost comparisons against read-only and calibration-only controls. Both comparisons report 30 complete pairs, with 99% intervals spanning zero. Timing outcomes could have supported a gain; the null was not guaranteed.
+
+The oracle defines correctness, but the claim concerns measured costs rather than verifier value. No generalization benefit is asserted. Completion checks report all 90 windows valid; elided rows limit direct inspection. The null does not establish equivalence.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_blocked_hardware_operation_map`
-- `operation`: `static source/design audit; no model or device execution`
-- `physical_acceleration`: `false`
-- `operation_status`: `unmeasured`; `measured_time_s`: `null`
-- `All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.`
+- `honest_verdict`: `complete_null_complete_adaptation_cost`
+- `scientific_speed_gain`: `passed`: `false`
+- `principle`: `Benefit is not required for cost readiness.`
+- `control`: `read_only`; `treatment`: `calibration_only`; `lower99_ns`: `-1255811193.0838332`; `upper99_ns`: `749533387.0483329`
+- `control`: `calibration_only`; `treatment`: `combined`; `lower99_ns`: `-1624028711.688`; `upper99_ns`: `83562880.78149894`
+- `paired_blocks`: `30`; `missing_pairs`: `0`
+- `complete_valid_windows`: `passed`: `true`; `principle`: `All90 windows and exact state controls must pass.`
+- `intended_count`: `90`; `completed_count`: `90`; `failed_count`: `0`; `excluded_count`: `0`; `censored_count`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8826_v755_capstone.json
+## experiment_8836_qwen_witness_canary.json
 
 **NO_CLAIM**
 
@@ -224,19 +122,101 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative method-benefit claim is asserted to falsify. This is a custody and reconciliation artifact reporting blocked science, not demonstrated superiority or generalization.
+There is no extraction-performance claim to refute. The blocking diagnosis would be contradicted if all evaluated gates passed.
 
 ## WAS THAT CHECKED
-No comparative benefit test is shown here. The branch conclusions and gate checks record rejected producers, failed prerequisites, and protocol qualification without measured benefit. The overall verdict remains blocked; administrative completion is not presented as scientific success.
+Yes, for the blocking diagnosis: `gates_evaluated` records runtime readiness failing and protocol readiness passing. This is a prerequisite-check receipt; it provides no extraction results or comparative claim.
+
+## EVIDENCE
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `runtime_repair_ready_score`
+- `failed_expected`: `1`
+- `failed_observed`: `0`
+- `gate_check_summary`: `gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8827-branch-contract.runtime_repair_ready_score (actual=0 == expected=1)`
+- `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8837_arc_outcome_transfer.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; this artifact records a blocked prerequisite gate and makes no comparative claim about supervisor selection.
+
+## WAS THAT CHECKED
+The prerequisite was checked and failed: observed 0 versus required 1. No outcome-transfer assessment is reported.
+
+## EVIDENCE
+`blocked_gate_check_v1`, `blocked_gate_check_failed`, `arc_new_outcomes_available_score`, `actual=0 == expected=1`, `passed`: `false`, `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8838_v756_hardware_operation_budget.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The audited evidence does not establish hardware acceleration; the 100× latency figures are future requirements.
+
+## WHAT WOULD REFUTE IT
+A correctness-preserving, compatible board execution demonstrating acceleration against the same complete CPU workload, including host, transfer, startup, and durability costs.
+
+## WAS THAT CHECKED
+Yes, as an evidence audit: the physical-acceleration gate failed, and the displayed board rows report host-only work with null board timings. No physical performance trial occurred, so this supports the scoped conclusion that acceleration remains unestablished, not that acceleration is impossible. The artifact does not promote its CPU comparisons or scheduling comparators into a positive benefit claim.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_blocked_v755_capstone`
+- `honest_verdict`: `complete_null_hardware_operation_budget`
+- `physical_acceleration`: `passed`: `false`
+- `threshold`: `measured compatible complete board work`
+- `operation_status`: `host_only`
+- `measured_board_time_s`: `null`
+- `principle`: `Valid mapping evidence does not establish acceleration`
+- `claim`: `future100x latency requirement; no predicted gain`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `exposure_scope`: `thirteen-task custody; admitted constructed evidence and CPU nulls only`
-- `scientific_benefit_measured`: `false`
-- `methodology_note`: `Independent registered row reductions retain constructed nulls. Exact oracle success remains circular. Missing natural extraction, ARC outcomes and qualified hardware costs block overall science.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8839_v756_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no current comparative scientific claim to falsify. A scheduled slot lacking primary or skip custody would refute the administrative accounting statement.
+
+## WAS THAT CHECKED
+Yes, administrative accounting is checked through the completion gate and task outcome rows. The capstone preserves null and circular outcomes, excludes rejected evidence from scientific support, and withholds publication and activation. The linear comparator beats the categorical candidate in every displayed seed, but categorical superiority over linear is not claimed.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_v756_capstone`
+- `inference_substrate`: `aggregation_from_upstream_artifacts`
+- `complete_accounting`: `Every scheduled slot needs primary or skip custody`
+- `verdict_class`: `null`, `circular_positive`
+- `science_admitted`: `false`
+- `natural_generalization_count`: `0`
 - `publication_authorized`: `false`
+- `activation_authorized`: `false`
 
 ## RECOMMENDATION
 KEEP
