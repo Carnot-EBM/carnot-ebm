@@ -1,0 +1,49 @@
+{
+  "calibration_budgets": [
+    60,
+    180,
+    360
+  ],
+  "candidate_selection": "minimum input hash per world; other variants descriptive",
+  "confidence_allocation": "delta/K=.01/6 per arm/seed family; no cross-family superiority claim",
+  "counts": {
+    "calibration": 360,
+    "canary": 12,
+    "evaluation": 240,
+    "fit": 120
+  },
+  "cutoffs": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95
+  ],
+  "delta": 0.01,
+  "iid_world_sampling": false,
+  "learning": "no training; reserve fit data for downstream; binary decisive scores",
+  "ordered_checks": {
+    "always_joint": [
+      "joint_symbolic"
+    ],
+    "joint_first": [
+      "joint_symbolic",
+      "local_record"
+    ],
+    "local_then_joint": [
+      "local_record",
+      "joint_symbolic"
+    ]
+  },
+  "primitive_cap": 200000,
+  "risk": 0.05,
+  "schedule_selection": "first 60 calibration worlds; exact upper risk <=.05, coverage >=.30; minimum total paid work",
+  "schedules": [
+    "local_then_joint",
+    "joint_first",
+    "always_joint"
+  ],
+  "scipy_version": "1.17.1",
+  "zero_error_floor_accepted_worlds": 125
+}

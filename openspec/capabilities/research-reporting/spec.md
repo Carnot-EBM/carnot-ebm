@@ -106538,6 +106538,14 @@ The experiment SHALL map measured complete CPU operations to distinct KV260, Pol
 The deliverable SHALL be `results/experiment_8838_v756_hardware_operation_budget.json`.
 Required readiness/benefit fields: `hardware_budget_ready_score`.
 
+Exp8838 independently admits the hash-bound Exp8835 whole-cost and Exp8831 paid
+witness producers. Exp8825 supplies board boundaries only. Retain every measured
+unit, arm and seed. Report absolute window and query costs, paired mode differences
+and total/100 as a future latency requirement. Count feature checks, dense updates
+including discarded read-only gradients, template admissions and paid witness
+operations separately. Component fractions, bus traffic and component time remain
+unknown. No sampler mapping by analogy, Amdahl curve or physical acceleration claim.
+
 #### SCENARIO-REPORT-8838-CONTRACT
 
 Given the frozen V756 task contract, when this producer executes, it SHALL retain
@@ -106546,6 +106554,12 @@ validation receipts. Failed owned validation SHALL disqualify readiness; externa
 absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
 match the YAML literally. Numeric methods and acceptance thresholds SHALL match
 the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+Missing or rejected sibling evidence cannot suppress an admitted producer.
+Absent external operands block; owned validation failure disqualifies. Mapping
+readiness requires valid audit execution, independently of physical readiness.
+Original spec bytes may be recovered from an immutable Git commit only when their
+hash matches the producer's recorded hash. Never substitute mutable vNEXT.
 
 ### REQ-REPORT-8839: Reconcile thirteen outcomes and retire only unchanged failed scopes
 

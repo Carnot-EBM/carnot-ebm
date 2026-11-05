@@ -1,5 +1,23 @@
 # Hardware operation boundary specification
 
+## REQ-VERIFY-8838: Complete-cost board audit custody
+
+Before reduction, check the repository virtualenv, private writable output and
+free disk. Bind readable producer, raw, code and original document bytes. CPU
+numerical dependencies are unnecessary for this reader. Preserve KV260 quadratic
+k_max<=5 and SSH-only scope, authenticated PolarFire Linux CPU dispatch with
+unqualified fabric, and GateMate's unchanged 0xffffffff physical block.
+
+### SCENARIO-VERIFY-8838-REPLAY
+
+Private execution, cold replay outside the checkout without PYTHONPATH, missing
+and rehashed evidence controls SHALL run with real statement tracing at100 percent
+and zero exclusions. Bind actual scoped validation logs and code hashes. Require
+Ruff, strict mypy, positional spec tracing, private E2E-018/021 and unchanged
+terminal scanners before atomic publication. Failed owned checks disqualify.
+No model load, physical probe, flash, acquisition or milestone activation occurs.
+Ops/status/changelog/traceability reconciliation remains conductor-owned.
+
 ## REQ-VERIFY-8825: Independent categorical operation and board boundaries
 
 Preserve KV260 quadratic fabric k_max<=5 and future SSH-only access, authenticated

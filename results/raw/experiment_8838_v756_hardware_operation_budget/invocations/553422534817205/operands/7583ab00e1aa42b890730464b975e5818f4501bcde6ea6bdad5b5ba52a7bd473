@@ -1,0 +1,600 @@
+"""REQ-REPORT-8838: measured host work has no implied FPGA speedup."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import time
+from typing import Any
+
+from carnot.reporting.current_work_receipt import (
+    atomic_json,
+    build_current_work_receipt,
+    canonical_hash,
+    sha256_file,
+    validate_current_work_receipt,
+)
+from carnot.reporting.hardware_operation_map_8825 import BOARDS
+
+Json = dict[str, Any]
+ROOT = Path(__file__).resolve().parents[3]
+NAME = "experiment_8838_v756_hardware_operation_budget"
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [
+    "python/carnot/reporting/hardware_operation_budget_8838.py",
+    "python/carnot/reporting/hardware_budget_validation_8838.py",
+    CLI,
+]
+TEST = "tests/python/test_hardware_operation_budget_8838.py"
+SPEC_COMMIT = "cdfe0b141b2eda315967dc435ad65166d41b9e03"
+PRODUCERS = {
+    "whole": (
+        "results/experiment_8835_v756_complete_adaptation_cost.json",
+        "sha256:87688903046083ca1ddad418c9f72d1c054712f4f8b496ff2b8241fb2f6fff49",
+        "whole_cost_ready_score",
+        8835,
+    ),
+    "witness": (
+        "results/experiment_8831_v756_ordered_evidence_cost.json",
+        "sha256:633cc57fd922b35e1cae7bcae5527a4610d85dfde65339278b5235bb1fe08891",
+        "evidence_rows_ready_score",
+        8831,
+    ),
+}
+HISTORY = {
+    "results/experiment_8825_v755_hardware_operation_map.json": "sha256:265fa2eb178f2b9816d13bd28db6b79705084dc805e3042cfda3d9541cf25064",
+    "openspec/change-proposals/research-roadmap-v755-preserved-20261104.md": "sha256:90a2b04b863a04a452035e88efb9c5634297f8777ed8469f8852a3649895a3d8",
+}
+SOURCES = [
+    "research-hardware-wishlist.md",
+    "ops/hardware-bringup-prep.md",
+    "hardware/kv260/discrete_sb_256.v",
+    "research-references.md",
+    "scripts/experiment_template.py",
+    "python/carnot/reporting/current_work_receipt.py",
+    "python/carnot/reporting/primary_publication.py",
+    "python/carnot/reporting/experiment_7303_validation_scope.py",
+    "python/carnot/reporting/hardware_operation_map_8825.py",
+    "openspec/capabilities/hardware-operation-boundary/spec.md",
+    "openspec/capabilities/research-reporting/spec.md",
+    "pyproject.toml",
+    "docs/research-notes/v756-hardware-operation-budget.md",
+    *OWNED,
+    TEST,
+]
+OPERATIONS = {
+    "feature_counting": (
+        "integer counts; six features",
+        "facts, five checks and variable bindings",
+    ),
+    "symbolic_joins": ("exact strings/Boolean", "content-dependent bindings and template lookups"),
+    "dense_forward": ("float32; 9x4 then4x1; SiLU", "45 parameters (180 bytes); three candidates"),
+    "categorical_normalization": (
+        "float32 stable three-label softmax",
+        "three logits/probabilities; exact enumeration",
+    ),
+    "dense_gradient": (
+        "float32 dense autodiff",
+        "45 weights plus gradients; no spline-local kernel",
+    ),
+    "template_writes": ("exact normalized strings", "template admission and full store rewrite"),
+    "serialization": ("JSON bytes", "parameters, templates, pending predictions, acknowledgements"),
+    "fsync": ("filesystem durability", "file flush, rename and directory flush where implemented"),
+    "state_transfer": (
+        "board wire format unqualified",
+        "inputs, weights, gradients, outputs; bytes unknown",
+    ),
+    "sampler_calls": ("none", "zero MCMC; no Ising-compatible call observed"),
+}
+
+
+def progress(phase: str) -> None:
+    """Flush audit boundaries so validation cannot conceal a stopped process."""
+    print(f"[exp8838] phase={phase}", flush=True)
+
+
+def retain(path: Path, raw: Path, expected: str | None = None) -> Json:
+    """Recover only exact old spec bytes; executable drift must remain a failure."""
+    data = path.read_bytes()
+    digest = sha256_file(path)
+    if expected is not None and digest != expected:
+        relative = path.relative_to(ROOT).as_posix()
+        if not (relative.startswith("openspec/capabilities/") and relative.endswith("/spec.md")):
+            raise ValueError("operand_hash_drift:" + str(path))
+        progress("original_spec_git_before")
+        data = subprocess.check_output(
+            ["git", "show", SPEC_COMMIT + ":" + relative], cwd=ROOT, timeout=15
+        )
+        progress("original_spec_git_after")
+    target = raw / "operands" / (expected or digest).split(":")[-1]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(data)
+    actual = sha256_file(target)
+    if expected is not None and actual != expected:
+        raise ValueError("operand_hash_drift:" + str(path))
+    return dict(path=str(target.absolute()), sha256=actual, original_path=str(path))
+
+
+def admission(value: Json, branch: str) -> str | None:
+    """Readiness and valid row operands are both required for admission."""
+    field = PRODUCERS[branch][2]
+    if value.get(field) is None:
+        return "missing_field"
+    if value[field] == 0:
+        return "observed_zero"
+    rows = value.get("window_rows" if branch == "whole" else "rows", [])
+    if (
+        value[field] != 1
+        or value.get("experiment_id") != PRODUCERS[branch][3]
+        or value.get("required_checks_passed") is not True
+        or value.get("flagged_adversarial", False) is not False
+        or value.get("verdict_class") not in {"positive", "circular_positive", "null"}
+        or not str(value.get("honest_verdict", "")).startswith("complete_")
+        or not rows
+        or any(
+            r.get("status") != "completed"
+            or not isinstance(r.get("denominator"), int)
+            or r["denominator"] <= 0
+            for r in rows
+        )
+    ):
+        return "rejected_producer"
+    return None
+
+
+def collect(raw: Path) -> Json:
+    """Check resources and each external producer independently before reduction."""
+    start = time.monotonic_ns()
+    progress("preconditions_before")
+    raw.mkdir(parents=True, exist_ok=True, mode=0o700)
+    raw.chmod(0o700)
+    atomic_json(raw / "writable.json", dict(private=True))
+    checks = dict(
+        repository_virtualenv=(ROOT / ".venv/bin/python").is_file(),
+        private_output_writable=True,
+        free_disk_bytes=shutil.disk_usage(raw).free,
+        minimum_free_bytes=256 * 1024**2,
+        cpu_numerical_dependencies="not used; standard library reader",
+    )
+    refs, failures = [], []
+    internal_failure = False
+    for name in [*SOURCES, *HISTORY]:
+        path = ROOT / name
+        try:
+            refs.append(retain(path, raw, HISTORY.get(name)))
+        except (OSError, ValueError, subprocess.SubprocessError) as exc:
+            failures.append(
+                dict(
+                    check="required_operand",
+                    upstream="board_authority_or_source",
+                    artifact_field="sha256",
+                    expected=HISTORY.get(name, "readable bytes"),
+                    observed=sha256_file(path) if path.is_file() else None,
+                    path=str(path),
+                    sha256=sha256_file(path) if path.is_file() else None,
+                    missing_reason="missing_file"
+                    if isinstance(exc, OSError)
+                    else "rejected_producer",
+                )
+            )
+            internal_failure |= name in [*OWNED, TEST]
+    evidence = {}
+    for branch, (name, pin, field, _) in PRODUCERS.items():
+        path = ROOT / name
+        diagnostic = dict(
+            check="producer_admission",
+            upstream=branch,
+            artifact_field=field,
+            expected=1,
+            observed=None,
+            path=str(path),
+            sha256=None,
+            expected_sha256=pin,
+            missing_reason="missing_file",
+        )
+        try:
+            diagnostic["sha256"] = sha256_file(path)
+            diagnostic.update(artifact_field="sha256", expected=pin, observed=diagnostic["sha256"])
+            primary = retain(path, raw, pin)
+            diagnostic["sha256"] = primary["sha256"]
+            value = json.loads(Path(primary["path"]).read_bytes())
+            diagnostic.update(
+                artifact_field=field,
+                expected=1,
+                observed=value.get(field),
+                missing_reason=admission(value, branch),
+            )
+            if diagnostic["missing_reason"]:
+                failures.append(diagnostic)
+                continue
+            bound = [primary]
+            for key in ["source_artifact_hashes", "code_config_hashes", "raw_shard_hashes"]:
+                operands = value[key]
+                for operand in operands.values() if isinstance(operands, dict) else operands:
+                    observed = (
+                        sha256_file(Path(operand["path"]))
+                        if Path(operand["path"]).is_file()
+                        else None
+                    )
+                    diagnostic.update(
+                        path=operand["path"],
+                        artifact_field="sha256",
+                        expected=operand["sha256"],
+                        observed=observed,
+                        sha256=observed,
+                    )
+                    bound.append(retain(Path(operand["path"]), raw, operand["sha256"]))
+            refs.extend(bound)
+            evidence[branch] = primary
+        except (OSError, ValueError, KeyError, subprocess.SubprocessError) as exc:
+            diagnostic.update(
+                missing_reason="missing_file" if isinstance(exc, OSError) else "rejected_producer",
+                error=str(exc),
+            )
+            failures.append(diagnostic)
+    progress("preconditions_after")
+    return dict(
+        evidence=evidence,
+        refs=refs,
+        failures=failures,
+        checks=checks,
+        started_ns=start,
+        ended_ns=time.monotonic_ns(),
+        owner_pid=os.getpid(),
+        internal_failure=internal_failure,
+    )
+
+
+def reduce(evidence: Json) -> Json:
+    """Map paid operations without dividing whole clocks into invented fractions."""
+    costs, witnesses, targets = [], [], []
+    whole = evidence.get("whole", {})
+    for row in whole.get("window_rows", []):
+        predictions = [p for s in row["segments"] for p in s["predictions"]]
+        releases = [r for s in row["segments"] for r in s["releases"]]
+        counts = dict(
+            feature_observations=len(predictions),
+            primitive_checks=sum(p["primitive_checks"] for p in predictions),
+            prediction_normalizations=len(predictions),
+            training_normalizations=len(releases),
+            dense_gradient_calls=sum(r["optimizer_steps"] for r in releases),
+            parameter_commits=sum(r["coefficient_committed"] for r in releases),
+            template_writes=sum(r["template_added"] for r in releases),
+            feedback_verifier_calls=sum(r["feedback_verifier_calls"] for r in releases),
+            store_saves=len(predictions) + len(releases) + len(row["segments"]),
+            sampler_calls=0,
+        )
+        total = row["complete_ns"] / 1e9
+        cost = {
+            k: row[k] for k in ("unit_id", "cluster_id", "arm", "seed", "status", "denominator")
+        }
+        cost.update(
+            metric=total / row["denominator"],
+            missing_reason=None,
+            complete_operation_s=total,
+            query_count=len(predictions),
+            complete_query_s=total / len(predictions),
+            operation_counts=counts,
+            source_branch="whole",
+        )
+        costs.append(cost)
+        targets.append(
+            dict(
+                unit_id=row["unit_id"],
+                arm=row["arm"],
+                complete_operation_s=total,
+                target_latency_s=total / 100,
+                query_target_latency_s=total / len(predictions) / 100,
+                claim="future100x latency requirement; no predicted gain",
+            )
+        )
+    for row in evidence.get("witness", {}).get("rows", []):
+        witnesses.append({**row, "source_branch": "witness"})
+    boards = []
+    host_counts = {
+        k: sum(r["operation_counts"][k] for r in costs)
+        for k in (costs[0]["operation_counts"] if costs else [])
+    }
+    witness_counts = {
+        k: sum(r["operation_counts"].get(k, 0) for r in witnesses)
+        for k in (witnesses[0]["operation_counts"] if witnesses else [])
+    }
+    for board, boundary in BOARDS.items():
+        for operation, (precision, traffic) in OPERATIONS.items():
+            boards.append(
+                dict(
+                    unit_id=board + "/" + operation,
+                    cluster_id=board,
+                    arm=operation,
+                    seed=0,
+                    denominator=1,
+                    metric=0,
+                    status="completed",
+                    missing_reason=None,
+                    operation_status="blocked" if board == "GateMate" else "host_only",
+                    boundary=boundary["boundary"],
+                    precision=precision,
+                    memory_state_traffic=traffic,
+                    host_work=traffic,
+                    unknowns=["component time", "wire bytes", "compatible kernel fraction"],
+                    measured_board_time_s=None,
+                    fabric_supported=False,
+                    paid_host_counts=host_counts,
+                    paid_witness_counts=witness_counts,
+                    count_scope="whole CPU workload inventory; not compatible fabric fractions",
+                )
+            )
+    return dict(
+        rows=costs + witnesses + boards,
+        board_operation_rows=boards,
+        complete_cost_refs=costs,
+        paid_witness_rows=witnesses,
+        measured_mode_differences=whole.get("paired_cost_intervals", []),
+        witness_schedule_benefit_score=evidence.get("witness", {}).get("schedule_benefit_score"),
+        target_latency_requirements=targets,
+        sampling_call_count=0,
+        unsupported_operations=[r["unit_id"] for r in boards],
+        unknown_costs=[
+            "disjoint compatible component fractions",
+            "joins and feature component time",
+            "serialization and fsync component time",
+            "board startup and transfer",
+            "wire precision and bus traffic",
+            "NPU and TSU compatible kernels",
+        ],
+        physical_evidence_state=BOARDS,
+    )
+
+
+def build(work: Json, validation: Json) -> Json:
+    """Audit readiness is independent of scientific benefit and physical access."""
+    evidence = {
+        b: json.loads(Path(ref["path"]).read_bytes()) for b, ref in work["evidence"].items()
+    }
+    reduced = reduce(evidence)
+    checks = work["checks"]
+    owned_valid = (
+        validation["passed"]
+        and validation["coverage"]["complete"]
+        and not work.get("internal_failure", False)
+    )
+    valid = (
+        owned_valid
+        and checks["repository_virtualenv"]
+        and checks["private_output_writable"]
+        and checks["free_disk_bytes"] >= checks["minimum_free_bytes"]
+    )
+    verdict = (
+        "disqualified"
+        if not owned_valid
+        else "blocked"
+        if work["failures"] or not valid
+        else "null"
+    )
+    start, end = work["started_ns"], work["ended_ns"]
+    receipt = build_current_work_receipt(
+        run_id=str(start),
+        owner_pid=work["owner_pid"],
+        events=[],
+        inference_substrate="aggregation_from_upstream_artifacts",
+        inference_substrate_class="no_model_load",
+        execution_venue="host",
+        inference_substrate_details=dict(operation="CPU evidence read and board design audit"),
+        started_monotonic_ns=start,
+        ended_monotonic_ns=end,
+        phase_spans=[dict(phase="operand_admission", start_s=0, end_s=(end - start) / 1e9)],
+    )
+    refs = work["refs"]
+    rows = reduced["rows"]
+    value = dict(
+        **reduced,
+        **receipt,
+        experiment_id=8838,
+        task_id="exp8838-hardware-operation-budget",
+        milestone="2026.11.756",
+        run_date="20261105",
+        honest_verdict="complete_" + verdict + "_hardware_operation_budget",
+        verdict_class=verdict,
+        hardware_budget_ready_score=int(valid),
+        required_checks_passed=bool(valid),
+        model_invocation_counts=receipt["invocation_counts"],
+        numerical_training_calls=0,
+        verifier_is_oracle=False,
+        exposure_scope="constructed upstream streams; no natural text or hidden games",
+        independent_generalization_score=0,
+        independent_count=0,
+        random_seed=7568838,
+        source_artifact_hashes=refs,
+        raw_shard_hashes=refs,
+        code_config_hashes=[
+            r for r in refs if r["original_path"] in {str(ROOT / p) for p in OWNED}
+        ],
+        reproducibility_checksum=canonical_hash(dict(evidence=work["evidence"], refs=refs)),
+        phase_work=work,
+        preconditions_checked=checks,
+        gate_check_summary=work["failures"],
+        intended_count=len(rows),
+        completed_count=len(rows),
+        failed_count=0,
+        censored_count=0,
+        excluded_count=0,
+        acceptance_gates=dict(
+            audit=dict(
+                passed=bool(valid),
+                threshold="all owned checks and100 percent statements",
+                principle="Valid mapping evidence does not establish acceleration",
+            ),
+            physical_acceleration=dict(
+                passed=False,
+                threshold="measured compatible complete board work",
+                principle="CPU work cannot qualify fabric or transfer speed",
+            ),
+        ),
+        validation_receipts=validation["receipts"],
+        validation_state=validation,
+        repository_health=[
+            r for r in validation["receipts"] if r.get("scope") == "repository_health"
+        ],
+        owned_statement_coverage=validation["coverage"],
+        flagged_adversarial=False,
+        methodology_note="Whole parent clocks include imports, restart, feedback tail, serialization and durability. Current audit loads no model and performs no numerical training. Cited read_only mode still pays for discarded gradients. Counts do not give component fractions. Three-label enumeration requires no MCMC. No Amdahl curve, native10x or hardware100x gain is established.",
+    )
+    value["field_principles"] = {
+        k: "Bind the current audit to exact evidence; keep board support, cost, benefit and unknowns separate."
+        for k in value
+    }
+    value["field_principles"]["field_principles"] = (
+        "Field explanations state evidence limits; hashes alone prove no scientific benefit."
+    )
+    for fields, principle in [
+        (
+            "experiment_id task_id milestone run_date",
+            "Identify this scheduled audit; predecessor identity cannot stand in for execution.",
+        ),
+        (
+            "honest_verdict verdict_class hardware_budget_ready_score required_checks_passed",
+            "Separate terminal completion, valid mapping and benefit; failed owned validation disqualifies.",
+        ),
+        (
+            "MODEL_SPECS model_invocation_counts numerical_training_calls inference_substrate inference_substrate_class",
+            "Current CPU evidence reading owns zero model and training calls; cited numerical work stays upstream.",
+        ),
+        (
+            "source_artifact_hashes code_config_hashes raw_shard_hashes reproducibility_checksum random_seed",
+            "Bind original operand and executed-code bytes for reproduction; hashes prove identity rather than acceleration.",
+        ),
+        (
+            "rows intended_count completed_count failed_count censored_count excluded_count independent_count",
+            "Keep each unit, mode and seed with its original denominator; copied variants create no independent worlds.",
+        ),
+        (
+            "complete_cost_refs measured_mode_differences target_latency_requirements",
+            "Preserve full elapsed costs and negative paired differences; total/100 states a future requirement only.",
+        ),
+        (
+            "board_operation_rows unsupported_operations unknown_costs physical_evidence_state sampling_call_count",
+            "Preserve each substrate boundary; unknown component time and absent sampler work cannot justify hardware gain.",
+        ),
+        (
+            "gate_check_summary preconditions_checked",
+            "Name exact missing, rejected or zero authority and actual resource checks before reduction.",
+        ),
+        (
+            "validation_receipts validation_state owned_statement_coverage repository_health",
+            "Actual logs, exits and zero-exclusion statement traces control owned readiness; broad health debt remains separate.",
+        ),
+        (
+            "exposure_scope independent_generalization_score verifier_is_oracle",
+            "Constructed encoded checks and a design audit establish no natural-text or hidden-game generalization.",
+        ),
+    ]:
+        value["field_principles"].update({field: principle for field in fields.split()})
+    return value
+
+
+def verify_validation(validation: Json) -> None:
+    """A passing flag needs the recorded commands, unchanged logs and real coverage."""
+    receipts = validation["receipts"]
+    for row in receipts:
+        if sha256_file(ROOT / row["log_path"]) != row["log_sha256"]:
+            raise ValueError("validation_log_drift")
+    if validation["passed"]:
+        names = {
+            "owned_pytest",
+            "private_e2e018_021",
+            "ruff_check",
+            "ruff_format",
+            "strict_mypy",
+            "spec_coverage",
+        }
+        if not names.issubset({r["name"] for r in receipts if r["passed"] and r["exit_code"] == 0}):
+            raise ValueError("validation_receipt_drift")
+        coverage = validation["coverage"]
+        report = Path(coverage["path"])
+        if sha256_file(report) != coverage["sha256"]:
+            raise ValueError("coverage_hash_drift")
+        data = json.loads(report.read_bytes())
+        if (
+            len(data["files"]) != len(OWNED)
+            or data["files"] != coverage["files"]
+            or any(r["missing_lines"] or r["excluded_lines"] for r in data["files"].values())
+        ):
+            raise ValueError("coverage_statement_drift")
+
+
+def replay(path: Path) -> Json:
+    """Original pins constrain rows even when someone repairs the artifact checksum."""
+    value = json.loads(path.read_bytes())
+    present = {(r["original_path"], r["sha256"]) for r in value["source_artifact_hashes"]}
+    for branch, ref in value["phase_work"]["evidence"].items():
+        name, pin, _, _ = PRODUCERS[branch]
+        if (
+            ref["original_path"] != str(ROOT / name)
+            or ref["sha256"] != pin
+            or (ref["original_path"], pin) not in present
+            or sha256_file(Path(ref["path"])) != pin
+        ):
+            raise ValueError("authority_pin_drift")
+        producer = json.loads(Path(ref["path"]).read_bytes())
+        required = []
+        for key in ["source_artifact_hashes", "code_config_hashes", "raw_shard_hashes"]:
+            operands = producer[key]
+            required.extend(operands.values() if isinstance(operands, dict) else operands)
+        if any((r["path"], r["sha256"]) not in present for r in required):
+            raise ValueError("operand_manifest_drift")
+    for ref in value["source_artifact_hashes"]:
+        if sha256_file(Path(ref["path"])) != ref["sha256"]:
+            raise ValueError("operand_hash_drift:" + ref["path"])
+        original = ref["original_path"]
+        pins = {str(ROOT / p): h for p, h in HISTORY.items()}
+        pins.update({str(ROOT / p): h for p, h, _, _ in PRODUCERS.values()})
+        if original in pins and ref["sha256"] != pins[original]:
+            raise ValueError("authority_pin_drift")
+    if validate_current_work_receipt(value):
+        raise ValueError("current_receipt_drift")
+    verify_validation(value["validation_state"])
+    expected = build(value["phase_work"], value["validation_state"])
+    if value != expected:
+        raise ValueError("reduction_drift")
+    return dict(passed=True, checked_sha256=sha256_file(path))
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Keep private runs explicit and validate prospective primary bytes atomically."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--date", choices=["20261105"], default="20261105")
+    parser.add_argument("--private-output", type=Path)
+    parser.add_argument("--replay", "--cold-replay", type=Path)
+    args = parser.parse_args(argv)
+    if args.replay:
+        try:
+            print(json.dumps(replay(args.replay)), flush=True)
+            return 0
+        except (OSError, ValueError, KeyError) as exc:
+            print(json.dumps(dict(passed=False, reason=str(exc))), flush=True)
+            return 1
+    from carnot.reporting.hardware_budget_validation_8838 import qualify, terminal
+    from carnot.reporting.primary_publication import publish_primary
+
+    output = (args.private_output or ROOT / "results" / (NAME + ".json")).absolute()
+    raw = output.parent / "raw" / NAME / "invocations" / str(time.monotonic_ns())
+    work = collect(raw)
+    atomic_json(raw / "work.json", work)
+    validation = (
+        dict(passed=False, receipts=[], coverage=dict(complete=False))
+        if args.private_output
+        else qualify(raw)
+    )
+    progress("reduction_before")
+    value = build(work, validation)
+    progress("publication_before")
+    report = publish_primary(
+        output, value, lambda p: replay(p) if args.private_output else terminal(p, raw)
+    )
+    atomic_json(raw / "publication.json", report)
+    progress("complete")
+    return 0

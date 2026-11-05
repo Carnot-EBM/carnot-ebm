@@ -1,0 +1,30 @@
+"""Repeat owned qualification after formatting; preserve the single health attempt."""
+
+import json
+from pathlib import Path
+import sys
+
+root = Path('/home/ianblenke/github.com/ianblenke/carnot')
+sys.path[:0] = [str(root / 'python'), str(root)]
+from carnot.reporting import hardware_operation_budget_8838 as m
+from carnot.reporting import hardware_budget_validation_8838 as v
+
+previous = root / 'results/raw/experiment_8838_v756_hardware_operation_budget/invocations/553422534817205/validation.json'
+state = json.loads(previous.read_bytes())
+health = next(row for row in state['receipts'] if row['scope'] == 'repository_health')
+original_run = v.checker.run_commands
+
+
+def scoped(root_path, plan, **kwargs):
+    owned = [spec for spec in plan if spec.scope != 'repository_health']
+    receipts = original_run(root_path, owned, **kwargs)
+    if len(owned) != len(plan):
+        print('[exp8838] retained single repository-health attempt; no second broad run', flush=True)
+        receipts.append(dict(health, reused_from=str(previous), reused_from_sha256=m.sha256_file(previous)))
+    return receipts
+
+
+v.checker.run_commands = scoped
+m.SOURCES.extend([str(Path(__file__).resolve()), str(previous)])
+print('[exp8838] phase=owned_requalification_after_format_fix', flush=True)
+raise SystemExit(m.main(['--date', '20261105']))

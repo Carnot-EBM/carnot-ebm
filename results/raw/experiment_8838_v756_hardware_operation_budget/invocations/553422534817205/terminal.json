@@ -1,0 +1,65 @@
+{
+  "passed": false,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8838_v756_hardware_operation_budget/terminal_candidate.json --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8838_v756_hardware_operation_budget/terminal_candidate.json",
+        "--json"
+      ],
+      "duration_s": 10.118966029025614,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_8838_v756_hardware_operation_budget/invocations/553422534817205/terminal/00_adversarial.log",
+      "log_sha256": "sha256:8fedaed8c6b13fe3b8076f476ec9be84d74b1f437d9ab4b955ca4aba1f154be0",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8838_v756_hardware_operation_budget/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8838,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_hardware_operation_budget\",\n      \"flag_count\": 1,\n      \"max_severity\": 2,\n      \"flags\": [\n        {\n          \"kind\": \"TAUTOLOGY\",\n          \"severity\": \"critical\",\n          \"detail\": \"ended_monotonic_ns=553423900905741.0 and started_monotonic_ns=553422534819890.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.\"\n        }\n      ],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 1\n}\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8838_v756_hardware_operation_budget/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8838_v756_hardware_operation_budget/terminal_candidate.json"
+      ],
+      "duration_s": 0.3085233869496733,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_8838_v756_hardware_operation_budget/invocations/553422534817205/terminal/01_row_consistency.log",
+      "log_sha256": "sha256:1089f890e7fb90694396504619a49aebf28c54a25434ff43fbfd3ad26f708811",
+      "name": "row_consistency",
+      "output_tail": "\n  terminal_candidate.json\n    [BLOCK] ALL_ROWS_NULL: 4440 row(s) and not one numeric value among ['precision'] -- the verdict summarises nothing measured\n\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  1 blocking, 0 advisory. These say the ROWS do not support the headline -- read the rows before citing the verdict, and correct the artifact rather than the reader.\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "env -u PYTHONPATH -C /tmp /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8838_v756_hardware_operation_budget.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8838_v756_hardware_operation_budget/terminal_candidate.json",
+      "command_argv": [
+        "env",
+        "-u",
+        "PYTHONPATH",
+        "-C",
+        "/tmp",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8838_v756_hardware_operation_budget.py",
+        "--replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8838_v756_hardware_operation_budget/terminal_candidate.json"
+      ],
+      "duration_s": 1.1760162229184061,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8838_v756_hardware_operation_budget/invocations/553422534817205/terminal/02_cold_replay.log",
+      "log_sha256": "sha256:9228693dba40c1840e4be42cd21b979b0cafe5b9f5f60ea13f4399d574841946",
+      "name": "cold_replay",
+      "output_tail": "[exp8838] phase=imports_before\n[exp8838] phase=imports_after\n{\"passed\": true, \"checked_sha256\": \"sha256:6130fc1d148517e02910d2d29cac95a27723e000a7c18c4f051000697d2d2108\"}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}
