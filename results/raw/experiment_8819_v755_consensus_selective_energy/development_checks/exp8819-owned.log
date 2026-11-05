@@ -1,0 +1,215 @@
+...FFF.                                                                  [100%]
+=================================== FAILURES ===================================
+_________________ test_fixed_representation_training_and_seal __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261105T010953-94259-ccf1f8b0/test_fixed_representation_trai0')
+
+    def test_fixed_representation_training_and_seal(tmp_path):
+        """SCENARIO-VERIFY-8819-CUSTODY: labels release after complete input-only rows."""
+        worlds = [
+            dict(
+                world_id=f"private/{i}", split=s, edges=[[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0]]
+            )
+            for i, s in enumerate(["fit"] * 3 + ["calibration"] * 3 + ["evaluation"] * 3)
+        ]
+>       cohort = m.construct(worlds)
+                 ^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_consensus_selective_energy_8819.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/consensus_selective_energy_8819.py:51: in construct
+    rows = old.construct(worlds)
+           ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/consensus_energy_8806.py:47: in construct
+    base = upstream.variants(world["edges"])[[0, 8, 7][i % 3]]["input"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+edges = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0]]
+
+    def variants(edges: Any) -> list[Json]:
+        """Balance three truth classes without treating nuisance siblings as independent worlds."""
+        nodes = ["?x", "a", "b", "c", "d"]
+>       query = [[nodes[a], f"r{i}", nodes[b]] for i, (a, b) in enumerate(edges)]
+                                     ^^^^^^^^
+E       IndexError: list index out of range
+
+python/carnot/reporting/repaired_evidence_8803.py:51: IndexError
+_________________________ test_private_cli_and_replay __________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261105T010953-94259-ccf1f8b0/test_private_cli_and_replay0')
+
+    def test_private_cli_and_replay(tmp_path):
+        """SCENARIO-REPORT-8819-REPLAY: real child and cold interpreter reject drift."""
+        output = tmp_path / (r.NAME + ".json")
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        cli = str(r.ROOT / r.CLI)
+        commands = [
+            (["--date", "19000101"], 2),
+            (["--private-output"], 2),
+            (["--date", "20261105", "--private-output", "--output", str(output)], 0),
+        ]
+        for argv, expected in commands:
+            completed = subprocess.run(
+                [sys.executable, "-u", cli, *argv],
+                cwd=tmp_path,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+>           assert completed.returncode == expected, completed.stdout + completed.stderr
+E           AssertionError: [exp8806] phase=8819_start completed=0 pending=0
+E             [exp8806] phase=8819_before_construct completed=0 pending=9
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8819_v755_consensus_selective_energy.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_selective_runner_8819.py", line 399, in main
+E                 work = prepare(raw, args.private_output)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_selective_runner_8819.py", line 129, in prepare
+E                 cohort = m.construct(worlds)
+E                          ^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_selective_energy_8819.py", line 52, in construct
+E                 rows = old.construct(worlds)
+E                        ^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_energy_8806.py", line 47, in construct
+E                 base = upstream.variants(world["edges"])[[0, 8, 7][i % 3]]["input"]
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/repaired_evidence_8803.py", line 51, in variants
+E                 query = [[nodes[a], f"r{i}", nodes[b]] for i, (a, b) in enumerate(edges)]
+E                                              ~~~~~^^^
+E             IndexError: list index out of range
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c... for i, (a, b) in enumerate(edges)]\n                                 ~~~~~^^^\nIndexError: list index out of range\n').returncode
+
+tests/python/test_consensus_selective_energy_8819.py:170: AssertionError
+__________________________ test_build_failure_classes __________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261105T010953-94259-ccf1f8b0/test_build_failure_classes0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7a7954c140>
+
+    def test_build_failure_classes(tmp_path, monkeypatch):
+        """REQ-VERIFY-8819: owned failure disqualifies and external absence blocks."""
+        monkeypatch.setattr(r, "SOURCE", tmp_path / "missing")
+        work = r.prepare(tmp_path / "raw")
+        validation = r.unqualified()
+>       value = r.build(work, validation)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_consensus_selective_energy_8819.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+work = {'code_config_hashes': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_select... 'fit': {'numerical_training_calls': 0, 'parameters': [], 'selected_threshold_rows': [], 'shortcut_controls': []}, ...}
+validation = {'coverage': {'complete': False, 'files': [], 'percent': 0}, 'raw_references': [], 'receipts': [{'name': 'private_unqualified', 'passed': False}], 'union': {'passed': False}}
+
+    def build(work: Json, validation: Json) -> Json:
+        """Valid evidence can be a null; neither abstention nor the oracle grants benefit."""
+        qualified = bool(
+            validation["union"]["passed"]
+            and validation["coverage"]["complete"]
+            and all(x["passed"] for x in validation["receipts"])
+        )
+        external = work["preconditions_checked"]["passed"]
+        fit = work["fit"]
+        controls = bool(fit["shortcut_controls"]) and all(x["passed"] for x in fit["shortcut_controls"])
+        summary = m.summarize(work["per_candidate_rows"], fit["selected_threshold_rows"])
+        ready = int(qualified and external and controls)
+        verdict = (
+            "blocked"
+            if not external
+            else "disqualified"
+            if not ready
+            else "positive"
+            if summary["benefit_passed"]
+            else "null"
+        )
+        candidates = work["per_candidate_rows"]
+        grouped: dict[str, list[Json]] = {}
+        for row in candidates:
+            if row["arm"] == "learned_energy":
+                grouped.setdefault(row["unit_id"], []).append(row)
+        rows = [
+            dict(
+                unit_id=u,
+                cluster_id=g[0]["cluster_id"],
+                arm="learned_energy",
+                seed=None,
+                metric=sum(x["metric"] for x in g) / len(g),
+                denominator=len(g),
+                status="completed",
+                missing_reason=None,
+            )
+            for u, g in grouped.items()
+        ]
+        receipt = work["current_work_receipt"]
+>       value = dict(
+            experiment_id=8819,
+            task_id=TASK,
+            milestone="2026.11.755",
+            run_date="20261105",
+            honest_verdict="complete_" + verdict + "_consensus_selective_energy",
+            verdict_class=verdict,
+            inference_substrate=receipt["inference_substrate"],
+            inference_substrate_class=receipt["inference_substrate_class"],
+            MODEL_SPECS=[],
+            target_model="GibbsModel(input_dim=5, hidden_dims=[4]); three NCE heads per seed",
+            model_invocation_counts=receipt["invocation_counts"],
+            numerical_training_calls=fit["numerical_training_calls"],
+            verifier_is_oracle=False,
+            duration_s=receipt["duration_s"],
+            random_seed=m.SEEDS[0],
+            source_artifact_hashes=work["source_artifact_hashes"],
+            code_config_hashes=work["code_config_hashes"],
+            raw_shard_hashes=work["raw_shard_hashes"],
+            phase_spans=receipt["phase_spans"],
+            preconditions_checked=work["preconditions_checked"],
+            rows=rows,
+            intended_count=2160,
+            completed_count=len(rows),
+            failed_count=0,
+            censored_count=2160 - len(rows),
+            excluded_count=0,
+            independent_count=summary["independent_count"],
+            gate_check_summary=work["preconditions_checked"]["diagnostics"],
+            required_checks_passed=qualified,
+            validation_receipts=validation["receipts"],
+            owned_statement_coverage=validation["coverage"],
+            exposure_scope="constructed six-vertex relational evidence and oracle-constructed agreement; no natural-text or hidden-game generalization",
+            independent_generalization_score=0,
+            cited_upstream_artifacts=work["source_artifact_hashes"],
+            consensus_rows_ready_score=ready,
+            selective_benefit_score=int(ready and summary["benefit_passed"]),
+            selected_threshold_rows=fit["selected_threshold_rows"],
+            calibration_eligibility_rows=[
+                dict(arm=x["arm"], seed=x["seed"], **row)
+                for x in fit["selected_threshold_rows"]
+                for row in x["calibration_rows"]
+            ],
+            per_candidate_rows=candidates,
+            shortcut_controls=fit["shortcut_controls"],
+            cost_rows=fit.get("cost_rows", []) + work["cost_rows"],
+            current_work_receipt=receipt,
+            protocol=m.protocol(),
+            oracle_verdict_class="circular_positive",
+            methodology_note="Five 99-percent whole-world bootstrap intervals; nested seeds averaged within worlds. Zero decisive risk is undefined. No fixed safe cutoff makes contrasts not estimable. Matched random comparisons are descriptive. Constructed oracle reference is separately costed and grants no learned benefit.",
+            global_test_spec_debt="One full-suite attempt retained separately; owned qualification uses exact scoped tests.",
+            **summary,
+        )
+E       TypeError: dict() got multiple values for keyword argument 'independent_count'
+
+python/carnot/reporting/consensus_selective_runner_8819.py:229: TypeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_consensus_selective_energy_8819.py::test_fixed_representation_training_and_seal
+FAILED tests/python/test_consensus_selective_energy_8819.py::test_private_cli_and_replay
+FAILED tests/python/test_consensus_selective_energy_8819.py::test_build_failure_classes
+3 failed, 4 passed, 1 warning in 16.76s

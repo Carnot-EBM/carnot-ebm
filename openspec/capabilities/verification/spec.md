@@ -59000,3 +59000,24 @@ in `tests/python/test_evidence_decisive_coverage_8818.py` preserve the original
 assertions and additionally inspect both bound cohort paths and the collision
 invariants. The private CLI and outside-checkout replay exercise these owned
 modules without promoting fixture execution to production qualification.
+
+### REQ-VERIFY-8819: Bind selective energy decisions before label release
+
+Authenticate the immutable Exp8816 consensus readiness and every referenced
+cohort byte before using its disjoint fit/calibration/evaluation structures.
+Reuse the unchanged Exp8806 feature extractor, Gibbs heads and NCE training.
+Bind prospective protocol, input-only predictions, typed actions, five-check
+receipts, weights, independent labels and actual validation by SHA256. Require
+100 percent owned unit/child statements with zero exclusions, scoped tests,
+Ruff, strict mypy, spec tracing, private E2E-018/021, outside-checkout replay
+without PYTHONPATH, adversarial verification and strict row checks. Owned
+failures disqualify with readiness zero; external absence blocks with exact
+path/hash and missing-file/field, rejected-producer or observed-zero operands.
+
+#### SCENARIO-VERIFY-8819-CUSTODY
+
+Tests reject leaked metadata, missing or altered producer/sidecars, invalid
+prediction seals, changed probabilities/actions and rehashed aggregate
+forgeries. Private fixtures cannot inherit production qualification. Cold
+replay recomputes selection, probabilities, random thinning and reductions;
+exact oracle checks remain separately costed and circular in scope.

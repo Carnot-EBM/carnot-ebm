@@ -106007,6 +106007,26 @@ is rejected. Readiness never substitutes for the task's independent benefit gate
 
 ### REQ-REPORT-8819: Test calibrated consensus energy at frozen risk and coverage targets
 
+Prospective amendment before fitting (2026-11-05): freeze five primary 99-percent
+whole-world intervals (Bonferroni 0.05/5): decisive risk upper <=0.05, decisive
+coverage lower >=0.30, correct decisive coverage gain lower >=0.05 and
+unconditional Brier gain lower >=0.01 versus independently calibrated fixed
+evidence, and insufficient-to-decision upper <=0.05. Fit the unchanged three
+five-count Gibbs heads for 240 steps on 60 worlds with five nested seeds;
+select from [0.5,0.6,0.7,0.8,0.9,0.95] on 60 separate worlds. Retain all rows
+when no cutoff qualifies; missing fixed cutoff makes contrasts not estimable.
+Freeze random selection probabilities from calibration, never held-out labels
+or coverage. Seal predictions/actions/check receipts before opening evaluation
+labels for 240 x 3 evidence x 3 agreement groups of three candidates. Average
+seeds within worlds; 2160 groups are only 240 independent worlds. A failed gate
+is terminal null. Oracle correctness has only circular-positive scope.
+
+#### SCENARIO-REPORT-8819-SELECTIVE
+
+Tests exercise independent calibration, zero-decision undefined risk, rejected
+cutoffs, unconditional Brier, frozen random thinning, five simultaneous bounds,
+seed nesting, insufficient escalation, and non-estimable fixed contrasts.
+
 The experiment SHALL publish `results/experiment_8819_v755_consensus_selective_energy.json` under the exact V755 protocol.
 It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
 source and configuration hashes, owned validation and exact blocked-gate operands.

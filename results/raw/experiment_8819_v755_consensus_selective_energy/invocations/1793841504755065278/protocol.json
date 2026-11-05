@@ -1,0 +1,54 @@
+{
+  "amendment": "five 99-percent endpoints supersede Exp8816 four-endpoint family before any fit",
+  "bootstrap_draws": 2000,
+  "bootstrap_seed": 7558819,
+  "checks": "five unchanged visible count features; shared per group, not multiplied by candidates or seeds",
+  "confidence": 0.99,
+  "endpoints": 5,
+  "gates": {
+    "brier_gain": [
+      "lower",
+      0.01
+    ],
+    "coverage": [
+      "lower",
+      0.3
+    ],
+    "insufficient_to_decision": [
+      "upper",
+      0.05
+    ],
+    "risk": [
+      "upper",
+      0.05
+    ],
+    "useful_coverage_gain": [
+      "lower",
+      0.05
+    ]
+  },
+  "intervals": "paired whole-world bootstrap after averaging nested seeds; empirical constructed-population intervals",
+  "random": "hash-uniform thinning of unthresholded learned decisive actions; probability frozen from calibration coverage",
+  "seeds": [
+    7558819,
+    7558820,
+    7558821,
+    7558822,
+    7558823
+  ],
+  "selection": "safe risk upper <=.05 and coverage lower >=.30; maximize correct coverage, then lowest cutoff; none => escalate",
+  "split_counts": {
+    "calibration": 60,
+    "evaluation": 240,
+    "fit": 60
+  },
+  "steps": 240,
+  "threshold_menu": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95
+  ]
+}

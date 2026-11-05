@@ -1,0 +1,86 @@
+....F
+=================================== FAILURES ===================================
+_________________________ test_private_cli_and_replay __________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261105T011114-95820-a69e86ef/test_private_cli_and_replay0')
+
+    def test_private_cli_and_replay(tmp_path):
+        """SCENARIO-REPORT-8819-REPLAY: real child and cold interpreter reject drift."""
+        output = tmp_path / (r.NAME + ".json")
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        cli = str(r.ROOT / r.CLI)
+        commands = [
+            (["--date", "19000101"], 2),
+            (["--private-output"], 2),
+            (["--date", "20261105", "--private-output", "--output", str(output)], 0),
+        ]
+        for argv, expected in commands:
+            completed = subprocess.run(
+                [sys.executable, "-u", cli, *argv],
+                cwd=tmp_path,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=180,
+            )
+>           assert completed.returncode == expected, completed.stdout + completed.stderr
+E           AssertionError: [exp8806] phase=8819_start completed=0 pending=0
+E             [exp8806] phase=8819_before_construct completed=0 pending=9
+E             [exp8806] phase=8819_after_construct completed=9 pending=0
+E             [exp8806] phase=8819_before_model_initialization_and_training completed=0 pending=1
+E             [exp8806] phase=trained_seed_1 completed=1 pending=2
+E             [exp8806] phase=trained_seed_1 completed=2 pending=1
+E             [exp8806] phase=trained_seed_1 completed=3 pending=0
+E             [exp8806] phase=8819_after_model_initialization_and_training completed=1 pending=0
+E             [exp8806] phase=8819_before_control_training_permuted_released_labels completed=0 pending=1
+E             [exp8806] phase=trained_seed_1 completed=1 pending=2
+E             [exp8806] phase=trained_seed_1 completed=2 pending=1
+E             [exp8806] phase=trained_seed_1 completed=3 pending=0
+E             [exp8806] phase=8819_after_control_training_permuted_released_labels completed=1 pending=0
+E             [exp8806] phase=8819_before_control_training_all_features_ablated completed=0 pending=1
+E             [exp8806] phase=trained_seed_1 completed=1 pending=2
+E             [exp8806] phase=trained_seed_1 completed=2 pending=1
+E             [exp8806] phase=trained_seed_1 completed=3 pending=0
+E             [exp8806] phase=8819_after_control_training_all_features_ablated completed=1 pending=0
+E             [exp8806] phase=8819_before_generation completed=0 pending=27
+E             [exp8806] phase=8819_after_generation_before_label_release completed=27 pending=0
+E             [exp8806] phase=8819_before_owned_validation completed=0 pending=1
+E             [exp8806] phase=8819_after_owned_validation completed=1 pending=0
+E             [exp8806] phase=8819_before_publication completed=0 pending=1
+E             [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E             Scanned 1 artifact(s); 0 flagged.
+E             
+E             [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E             [exp8205] phase=before_subprocess_rows_strict completed=0 pending=1
+E             
+E             verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+E               No row/verdict contradictions among the artifacts that could be checked.
+E             [exp8205] phase=after_subprocess_rows_strict completed=1 pending=0
+E             [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E             [exp8806] phase=8819_replay_rejected completed=0 pending=0
+E             [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8819_v755_consensus_selective_energy.py", line 14, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/consensus_selective_runner_8819.py", line 409, in main
+E                 publish_primary(output, value, lambda candidate: terminal(candidate, raw))
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E                 raise ValueError("candidate_rejected")
+E             ValueError: candidate_rejected
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_consensus_selective_energy_8819.py:170: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_consensus_selective_energy_8819.py::test_private_cli_and_replay
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 4 passed, 1 warning in 31.45s
