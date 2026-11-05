@@ -23137,3 +23137,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Seal a fixed population and valid calibration-draw protocol (⚠️ Research Finding) — honest_verdict=complete_null_selective_population; results/experiment_8842_v757_selective_population.json
 - 2026-11-05: Measure delayed energy learning and template additions on fresh query streams (⚠️ Research Finding) — honest_verdict=complete_circular_positive_causal_streams; results/experiment_8843_v757_causal_streams.json
 - 2026-11-05: Measure certificate availability and served risk on independent population draws (⚠️ Research Finding) — honest_verdict=complete_null_selective_availability; results/experiment_8844_v757_selective_availability.json
+- 2026-11-05: Prototype an indexed exact-witness path with unchanged decision semantics (⚠️ Research Finding) — honest_verdict=complete_circular_positive_indexed_witness; results/experiment_8845_v757_indexed_witness.json
