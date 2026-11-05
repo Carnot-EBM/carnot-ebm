@@ -615,3 +615,19 @@ No submission-linked public code or technique writeup was found. **Classificatio
 
 These classifications cover the disclosed mechanisms, which require neither game-source access nor per-game hardcoding. Complete-submission exploit status remains unverified.
 
+## 2026-11-05 14:40 UTC -- NEW
+
+**Yi-Chia Chen — new November 4 solution disclosure:**
+
+- **(b), general-purpose compression:** Prunes Flash-Next from **512→320 experts**, uses INT3 weights/FP8 activations, then distills the unpruned teacher’s **top-32 logits**. **POSSIBLE CARNOT LEVER:** Recover compressed-generator quality without RL. [Writeup](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755795)
+
+- **(b), general-purpose serving:** Stores full KV history in host RAM, retaining hot regions on GPU; NVFP4 KV supports an **11.7M-token effective pool**. **POSSIBLE CARNOT LEVER:** Retain more concurrent candidate histories. [Implementation description](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755795)
+
+- **(b), general-purpose speculative decoding:** Initializes DFlash from existing MTP weights; acceptance length reaches **3.06 versus 2.17** after 1,000 training steps. **POSSIBLE CARNOT LEVER:** Improve draft initialization. [Training comparison](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755795)
+
+- **(b), general-purpose stall recovery:** After **45 minutes** on one stage, a read-only reviewer inspects workspace/history and suggests changes. **POSSIBLE CARNOT LEVER:** Diagnose stalled searches selectively. [Harness description](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755795)
+
+- **(b), general-purpose RL handoff:** Runs the distilled base for **six hours**, then GRPO-trained weights for **three**. Reports better difficult-stage solving, but successful runs exceeding human action counts increased **16%→26%**. [Training and switching details](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/755795)
+
+Not independently checked: complete code or causal gains. These mechanisms require no source exploitation; whole-submission exploit status remains unverified.
+

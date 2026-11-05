@@ -106686,12 +106686,42 @@ Historical primaries and shared validators SHALL remain unchanged.
 The experiment SHALL freeze a4096-world population before independent with-replacement calibration/evaluation draws; preserve repeats and distinguish draw count from distinct support.
 The deliverable SHALL be `results/experiment_8842_v757_selective_population.json`.
 
+Freeze120 fitting worlds and12 separate source-span canary worlds. Exclude all
+authenticated historical topology/query invariants before sealing the population.
+Construction has a measured300-second pilot limit and never reduces4096.
+Use30 replicate seeds with independent calibration/evaluation RNG streams,
+nested calibration budgets60/180/360 and240 evaluation draws. Retain repeats,
+initial/final RNG states, indices and the hash-fixed variant/candidate per world.
+Freeze five unchanged small-head policies at seeds11/23/37/47/59,240 updates,
+fixed consensus and fixed local evidence. Share draws across all seven policies.
+Allocate delta0.01 over7x3x6 exact one-sided risk bounds per replicate.
+Select maximum accepted coverage with upper risk<=0.05, then the lowest cutoff;
+zero acceptance never certifies. Audit selected rules against the4096-world
+census only after selection. Report certificate firing and conditional failure
+separately; no novel-structure or natural-text guarantee follows.
+Keep canary custody/readiness separate from calibration readiness. Record the
+retrieved method source, closed compute vocabulary and unchanged output contracts.
+Small in-process CPU heads declare no_model_load and actual numerical training.
+Quarantined8832 is historical context, never an authority granting readiness.
+Bind every operand and executed method, validation log and child coverage file.
+Recompute RNG traces and reductions on cold replay; reject rehashed drift.
+Run one bounded full Python-suite health check, scoped unit/child100-percent
+statement coverage without exclusions, private E2E-018/021 and unchanged lints.
+Ops and traceability reconciliation remains conductor-owned for this execution.
+
 #### SCENARIO-REPORT-8842-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
 producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
+
+Tests SHALL reject empty/floor-minus-one/all-error certification, deterministic
+row duplication presented as independent RNG draws, permuted scoring labels,
+calibration/evaluation stream aliasing, changed operands and rehashed reductions.
+The exact zero-error floor SHALL agree with SciPy inversion and direct logarithms.
+Private CLI success, invalid date, blocked input, cold replay and tamper rejection
+SHALL execute outside the checkout without PYTHONPATH or live primary writes.
 
 ### REQ-REPORT-8843: Measure delayed energy learning and template additions on fresh query streams
 
