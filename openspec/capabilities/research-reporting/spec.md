@@ -106116,6 +106116,17 @@ Given admitted immutable inputs, private execution and cold replay reproduce the
 registered row reductions; missing inputs block, and rehashed semantic tampering
 is rejected. Readiness never substitutes for the task's independent benefit gate.
 
+#### SCENARIO-REPORT-8825-OPERATIONS
+
+Audit every operation for all three boards even when Exp8820 or Exp8822 is absent.
+Count categorical dense arithmetic and exact three-label normalization separately
+from template joins, durable bytes, actual sampler calls and measured whole time.
+Missing files, missing fields, rejected producers and observed zero have distinct
+gate operands. Only authenticated complete-operation costs permit total/100 target
+requirements. No component fractions or Amdahl curves are inferred from counts.
+Private outputs and outside-checkout replay bind retained source bytes and reject
+rehashing of altered rows. Owned failures disqualify and clear mapping readiness.
+
 ### REQ-REPORT-8826: Reconcile thirteen outcomes and distinguish constructed measurements from generalization
 
 The experiment SHALL publish `results/experiment_8826_v755_capstone.json` under the exact V755 protocol.

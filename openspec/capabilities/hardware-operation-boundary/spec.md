@@ -1,5 +1,24 @@
 # Hardware operation boundary specification
 
+## REQ-VERIFY-8825: Independent categorical operation and board boundaries
+
+Preserve KV260 quadratic fabric k_max<=5 and future SSH-only access, authenticated
+PolarFire Linux CPU dispatch with unqualified fabric, and unchanged GateMate
+0xffffffff until a dated physical change. No device command or flash is allowed.
+Three-label softmax is exact enumeration; dense Gibbs backpropagation has no
+established spline-local FPGA implementation. Zero current MCMC calls establish
+zero current sampler-eligible work, not a timing fraction. CPU counters are an
+immediate next measurement; GPU batch training is a feasible future path.
+
+### SCENARIO-VERIFY-8825-SEALED
+
+Freeze immutable historical authorities and source snapshots; never bind mutable
+vNEXT as historical evidence. Require unit and real-child statement coverage at
+100 percent without exclusions, scoped Ruff, strict mypy, owned spec tracing,
+private E2E-018/021 and unchanged candidate scanners before atomic publication.
+Retain failed receipts. Unknown precision, transfer, startup and durability costs
+remain visible. Reconciliation of ops and traceability remains conductor-owned.
+
 ## REQ-REPORT-8693: Independent integer and complete-cost hardware mapping
 
 Exp8693 SHALL authenticate Exp8692 precision, Exp8685 learning costs and Exp8689

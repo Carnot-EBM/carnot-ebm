@@ -1,0 +1,65 @@
+{
+  "passed": false,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /tmp/carnot8825-terminal-prototype/experiment_8825_v755_hardware_operation_map.json --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot8825-terminal-prototype/experiment_8825_v755_hardware_operation_map.json",
+        "--json"
+      ],
+      "duration_s": 0.8832154579577036,
+      "exit_code": 1,
+      "log_path": "/tmp/carnot8825-terminal-prototype/terminal/00_adversarial.log",
+      "log_sha256": "sha256:bed5de78e1de040e3552d1257d162c87983a41f4d47b2c722e8c64052f0cca85",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot8825-terminal-prototype/experiment_8825_v755_hardware_operation_map.json\",\n      \"loaded\": true,\n      \"exp_id\": 8825,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_hardware_operation_map\",\n      \"flag_count\": 1,\n      \"max_severity\": 2,\n      \"flags\": [\n        {\n          \"kind\": \"SUBSTRATE_CLASS_MISMATCH\",\n          \"severity\": \"critical\",\n          \"detail\": \"duration_s=1e-09 is below the 0.0001s floor of the declared inference_substrate_class=no_model_load. Either the class is wrong or the duration was not measured.\"\n        }\n      ],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 1\n}\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /tmp/carnot8825-terminal-prototype/experiment_8825_v755_hardware_operation_map.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot8825-terminal-prototype/experiment_8825_v755_hardware_operation_map.json"
+      ],
+      "duration_s": 0.12664732104167342,
+      "exit_code": 1,
+      "log_path": "/tmp/carnot8825-terminal-prototype/terminal/01_row_consistency.log",
+      "log_sha256": "sha256:7557e623d1e9a144373001865878728f734f60fadd0fa86f74c34e6d91cb9d94",
+      "name": "row_consistency",
+      "output_tail": "\n  experiment_8825_v755_hardware_operation_map.json\n    [BLOCK] ALL_ROWS_NULL: 30 row(s) and not one numeric value among ['precision_state_transfer_requirements'] -- the verdict summarises nothing measured\n\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  1 blocking, 0 advisory. These say the ROWS do not support the headline -- read the rows before citing the verdict, and correct the artifact rather than the reader.\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "env -u PYTHONPATH -C /tmp /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8825_v755_hardware_operation_map.py --replay /tmp/carnot8825-terminal-prototype/experiment_8825_v755_hardware_operation_map.json",
+      "command_argv": [
+        "env",
+        "-u",
+        "PYTHONPATH",
+        "-C",
+        "/tmp",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8825_v755_hardware_operation_map.py",
+        "--replay",
+        "/tmp/carnot8825-terminal-prototype/experiment_8825_v755_hardware_operation_map.json"
+      ],
+      "duration_s": 0.2685704989708029,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot8825-terminal-prototype/terminal/02_cold_replay.log",
+      "log_sha256": "sha256:554c6886578f5efed83b9d849b45814ac5b052e12b80dd82c68d4464e6555400",
+      "name": "cold_replay",
+      "output_tail": "[exp8825] phase=imports_before completed=0 pending=1\n[exp8825] phase=imports_after completed=1 pending=0\n[exp8825] phase=preconditions completed=0 pending=0\n{\"passed\": true, \"checked_sha256\": \"sha256:9c3b919dd38b5034908975d124632e322849e4089a9324dd2851a8ec5b7b1c58\"}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}

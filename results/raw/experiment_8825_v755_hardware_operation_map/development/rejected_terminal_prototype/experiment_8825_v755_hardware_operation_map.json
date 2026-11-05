@@ -1,0 +1,1328 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gates": {
+    "owned_validation": false,
+    "physical_acceleration": false,
+    "three_boards_audited": true
+  },
+  "board_operation_rows": [
+    {
+      "arm": "categorical_energy",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32; three 9-input candidates, 4 hidden SiLU units; 45 parameters",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/categorical_energy"
+    },
+    {
+      "arm": "dense_forward",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32 dense 9x4 and 4x1 multiplies; 120 scalar multiplies per three candidates",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/dense_forward"
+    },
+    {
+      "arm": "three_label_normalization",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "stable logsumexp/softmax of three logits; exact enumeration",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/three_label_normalization"
+    },
+    {
+      "arm": "dense_backpropagation",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 gradients and optimizer state; no established spline-local FPGA implementation",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/dense_backpropagation"
+    },
+    {
+      "arm": "template_joins",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "exact symbolic joins; variable bindings and template store; content-dependent counts",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/template_joins"
+    },
+    {
+      "arm": "durable_bytes",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "serialized parameters, templates, acknowledgement and fsync/restart state; bytes unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/durable_bytes"
+    },
+    {
+      "arm": "state_transfer",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "input, parameters, output and gradient buffers; wire precision/layout unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/state_transfer"
+    },
+    {
+      "arm": "sampler_calls",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "zero owned MCMC calls; categorical enumeration supplies no sampler-eligible work",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/sampler_calls"
+    },
+    {
+      "arm": "quadratic_ising",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 1,
+      "missing_reason": null,
+      "operation_status": "supported",
+      "precision_state_transfer_requirements": "historical quadratic fabric only; independent from categorical learning",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/quadratic_ising"
+    },
+    {
+      "arm": "cpu_dispatch",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "historical authenticated Linux CPU dispatch; categorical workload and timing unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/cpu_dispatch"
+    },
+    {
+      "arm": "categorical_energy",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32; three 9-input candidates, 4 hidden SiLU units; 45 parameters",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/categorical_energy"
+    },
+    {
+      "arm": "dense_forward",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32 dense 9x4 and 4x1 multiplies; 120 scalar multiplies per three candidates",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/dense_forward"
+    },
+    {
+      "arm": "three_label_normalization",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "stable logsumexp/softmax of three logits; exact enumeration",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/three_label_normalization"
+    },
+    {
+      "arm": "dense_backpropagation",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 gradients and optimizer state; no established spline-local FPGA implementation",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/dense_backpropagation"
+    },
+    {
+      "arm": "template_joins",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "exact symbolic joins; variable bindings and template store; content-dependent counts",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/template_joins"
+    },
+    {
+      "arm": "durable_bytes",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "serialized parameters, templates, acknowledgement and fsync/restart state; bytes unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/durable_bytes"
+    },
+    {
+      "arm": "state_transfer",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "input, parameters, output and gradient buffers; wire precision/layout unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/state_transfer"
+    },
+    {
+      "arm": "sampler_calls",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "zero owned MCMC calls; categorical enumeration supplies no sampler-eligible work",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/sampler_calls"
+    },
+    {
+      "arm": "quadratic_ising",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "historical quadratic fabric only; independent from categorical learning",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/quadratic_ising"
+    },
+    {
+      "arm": "cpu_dispatch",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 1,
+      "missing_reason": null,
+      "operation_status": "supported",
+      "precision_state_transfer_requirements": "historical authenticated Linux CPU dispatch; categorical workload and timing unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/cpu_dispatch"
+    },
+    {
+      "arm": "categorical_energy",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32; three 9-input candidates, 4 hidden SiLU units; 45 parameters",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/categorical_energy"
+    },
+    {
+      "arm": "dense_forward",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 dense 9x4 and 4x1 multiplies; 120 scalar multiplies per three candidates",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/dense_forward"
+    },
+    {
+      "arm": "three_label_normalization",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "stable logsumexp/softmax of three logits; exact enumeration",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/three_label_normalization"
+    },
+    {
+      "arm": "dense_backpropagation",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 gradients and optimizer state; no established spline-local FPGA implementation",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/dense_backpropagation"
+    },
+    {
+      "arm": "template_joins",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "exact symbolic joins; variable bindings and template store; content-dependent counts",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/template_joins"
+    },
+    {
+      "arm": "durable_bytes",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "serialized parameters, templates, acknowledgement and fsync/restart state; bytes unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/durable_bytes"
+    },
+    {
+      "arm": "state_transfer",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "input, parameters, output and gradient buffers; wire precision/layout unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/state_transfer"
+    },
+    {
+      "arm": "sampler_calls",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "zero owned MCMC calls; categorical enumeration supplies no sampler-eligible work",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/sampler_calls"
+    },
+    {
+      "arm": "quadratic_ising",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "historical quadratic fabric only; independent from categorical learning",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/quadratic_ising"
+    },
+    {
+      "arm": "cpu_dispatch",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "historical authenticated Linux CPU dispatch; categorical workload and timing unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/cpu_dispatch"
+    }
+  ],
+  "censored_count": 0,
+  "cited_upstream_artifacts": {
+    "cost": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8822_v755_parent_window_cost.json",
+      "sha256": null,
+      "value": null
+    },
+    "learning": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8820_v755_causal_objective_streams.json",
+      "sha256": null,
+      "value": null
+    }
+  },
+  "code_config_hashes": {
+    "python/carnot/reporting/hardware_operation_map_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/hardware_operation_map_8825.py",
+      "sha256": "sha256:9e2040075ecade1a617d973afb490351ce04f35e68543bec73061116057c0506"
+    },
+    "python/carnot/reporting/hardware_operation_runner_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/hardware_operation_runner_8825.py",
+      "sha256": "sha256:e60d2861046dc89d4667968ad5947553ec0174f543f0bd3f350680842dfc41c4"
+    },
+    "scripts/experiments/experiment_8825_v755_hardware_operation_map.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/scripts/experiments/experiment_8825_v755_hardware_operation_map.py",
+      "sha256": "sha256:3de95120b230c77740606ea6684358e356da42672b81831599aa7c64ef885022"
+    }
+  },
+  "completed_count": 30,
+  "current_invocation_events": [],
+  "current_owner_pid": 121674,
+  "current_run_id": "1",
+  "duration_s": 1e-09,
+  "ended_monotonic_ns": 2,
+  "event_count": 0,
+  "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "excluded_count": 0,
+  "execution_venue": "host",
+  "experiment_id": 8825,
+  "exposure_scope": "private source/design audit; no natural text or hidden game evidence",
+  "failed_count": 0,
+  "field_principles": {
+    "MODEL_SPECS": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "acceptance_gates": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "board_operation_rows": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "censored_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "cited_upstream_artifacts": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "code_config_hashes": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "completed_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "current_invocation_events": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "current_owner_pid": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "current_run_id": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "duration_s": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "ended_monotonic_ns": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "event_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "event_sha256": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "excluded_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "execution_venue": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "experiment_id": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "exposure_scope": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "failed_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "field_principles": "Every extra field has a stated evidence limit.",
+    "flagged_adversarial": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "gate_check_summary": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "hardware_map_ready_score": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "honest_verdict": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "independent_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "independent_generalization_score": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "inference_substrate": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "inference_substrate_class": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "inference_substrate_details": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "intended_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "invocation_counts": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "measured_complete_cost_refs": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "methodology_note": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "milestone": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "model_invocation_counts": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "model_invoked": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "numerical_training_calls": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "operation_inventory": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "owned_statement_coverage": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "phase_spans": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "physical_evidence_state": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "preconditions_checked": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "random_seed": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "raw_shard_hashes": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "receipt_sidecars": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "rejected_profiler_evidence": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "reproducibility_checksum": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "required_checks_passed": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "rows": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "run_date": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "sampling_call_count": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "small_ebm_training": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "source_artifact_hashes": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "started_monotonic_ns": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "supported_operation_counts": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "target_latency_requirements": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "task_id": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "unknown_costs": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "validation_receipts": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "validation_state": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "verdict_class": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only.",
+    "verifier_is_oracle": "All three board boundaries stay separate. Source counts are not timing; unknown is not zero. Readiness is evidence validity only."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "artifact_field": "stream_rows_ready_score",
+      "check": "producer_admission",
+      "expected": 1,
+      "missing_reason": "missing_file",
+      "observed": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8820_v755_causal_objective_streams.json",
+      "sha256": null,
+      "upstream": "learning"
+    },
+    {
+      "artifact_field": "whole_cost_ready_score",
+      "check": "producer_admission",
+      "expected": 1,
+      "missing_reason": "missing_file",
+      "observed": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8822_v755_parent_window_cost.json",
+      "sha256": null,
+      "upstream": "cost"
+    }
+  ],
+  "hardware_map_ready_score": 0,
+  "honest_verdict": "complete_disqualified_hardware_operation_map",
+  "independent_count": 0,
+  "independent_generalization_score": 0,
+  "inference_substrate": "deterministic_verifier",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "operation": "static source/design audit; no model or device execution"
+  },
+  "intended_count": 30,
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "measured_complete_cost_refs": [],
+  "methodology_note": "Static source counts are distinct from whole-operation parent timings. No MCMC, hardware probe, flash, Amdahl curve or speedup claim. CPU counters are immediate; GPU batch training is a feasible future path. hardware100x remains an aspiration requiring a measured compatible fraction.",
+  "milestone": "2026.11.755",
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "model_invoked": false,
+  "numerical_training_calls": 0,
+  "operation_inventory": {
+    "categorical_energy": {
+      "candidates": 3,
+      "hidden_silu": 12,
+      "parameter_float32_bytes": 180,
+      "parameter_scalars": 45
+    },
+    "dense_backpropagation": {
+      "count": null,
+      "scope": "AD compiler operations and optimizer state unmeasured"
+    },
+    "dense_forward": {
+      "formula": "3*(9*4+4)",
+      "scalar_multiplies": 120,
+      "scope": "static per decision; excludes backprop compiler and activation arithmetic"
+    },
+    "durable_bytes": {
+      "count": null,
+      "scope": "180 parameter bytes exclude JSON/templates/WAL/fsync"
+    },
+    "sampler_calls": {
+      "count": 0,
+      "scope": "owned audit calls only; upstream absence is not zero"
+    },
+    "template_joins": {
+      "count": null,
+      "scope": "content dependent; no learner executed"
+    },
+    "three_label_normalization": {
+      "candidates": 3,
+      "denominator_adds": 2,
+      "exponentials": 3,
+      "logsumexp_logarithms": 1,
+      "probability_divisions": 3,
+      "scope": "conceptual stable normalization; fused implementation counts unmeasured"
+    }
+  },
+  "owned_statement_coverage": {
+    "percent": 0
+  },
+  "phase_spans": [
+    {
+      "end_s": 1e-09,
+      "phase": "source_operation_audit",
+      "start_s": 0
+    }
+  ],
+  "physical_evidence_state": {
+    "GateMate": {
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "next_evidence": "dated cable/port/power change, then IDCODE0x20000001 and ordered n16 smoke",
+      "retry_allowed": false
+    },
+    "KV260": {
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "next_evidence": "compatible kernel, precision parity and complete SSH/host/transfer/durable timing"
+    },
+    "PolarFire": {
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "next_evidence": "categorical CPU dispatch parity and complete costs; separate fabric qualification"
+    }
+  },
+  "preconditions_checked": [
+    {
+      "check": "audit_only_no_probe_no_flash",
+      "passed": true
+    },
+    {
+      "check": "immutable_historical_authorities",
+      "passed": true
+    }
+  ],
+  "random_seed": 0,
+  "raw_shard_hashes": {
+    "docs/research-notes/v755-hardware-operation-map.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/docs/research-notes/v755-hardware-operation-map.md",
+      "sha256": "sha256:c92981c9dfba7aa4becceab3584bf60d1228f01a7ddcdaea6631555996f46a1f"
+    },
+    "hardware/kv260/discrete_sb_256.v": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/hardware/kv260/discrete_sb_256.v",
+      "sha256": "sha256:abec5987c3e701ae025e2a0f3143776a8a30ab70c7f0109e5d6289eb02f6434b"
+    },
+    "openspec/capabilities/hardware-operation-boundary/spec.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/openspec/capabilities/hardware-operation-boundary/spec.md",
+      "sha256": "sha256:4ba695581a26cf987185eb3b6d442eabe4540ee15eb50b4b1164253d8555ec4b"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:f60464fd523b615379d4e6beb46663877c37169441cc676bd86b29f4a6783d97"
+    },
+    "openspec/change-proposals/research-roadmap-v754-preserved-20261104.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/openspec/change-proposals/research-roadmap-v754-preserved-20261104.md",
+      "sha256": "sha256:021962592d30e304c97c7d45b99ffef9997837e4a21b395893c3d76316a56f17"
+    },
+    "ops/hardware-bringup-prep.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/ops/hardware-bringup-prep.md",
+      "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+    },
+    "pyproject.toml": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/pyproject.toml",
+      "sha256": "sha256:894adfa5d81b880ec1e16d1c9d63517238de175633e9e510926b1f96efd02249"
+    },
+    "python/carnot/memory/causal_memory_8802.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/memory/causal_memory_8802.py",
+      "sha256": "sha256:8a9d7c5242199fd4f8cb82b892fb4aef3e80b1d68fa909dc0ca96d6c5063a3c8"
+    },
+    "python/carnot/models/gibbs/__init__.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/models/gibbs/__init__.py",
+      "sha256": "sha256:a08e2ef56a946eabc9901cdee4846e34f7d39dbb4eb8355da011aaf2174afcbd"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229"
+    },
+    "python/carnot/reporting/hardware_operation_map_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/hardware_operation_map_8825.py",
+      "sha256": "sha256:9e2040075ecade1a617d973afb490351ce04f35e68543bec73061116057c0506"
+    },
+    "python/carnot/reporting/hardware_operation_runner_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/hardware_operation_runner_8825.py",
+      "sha256": "sha256:e60d2861046dc89d4667968ad5947553ec0174f543f0bd3f350680842dfc41c4"
+    },
+    "python/carnot/reporting/learning_signal_diagnosis_8815.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/learning_signal_diagnosis_8815.py",
+      "sha256": "sha256:a75749ae4642eb306d7bbe6af12198ac45499c09587d9a15cb416e0d61c23565"
+    },
+    "python/carnot/reporting/primary_publication.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    "research-hardware-wishlist.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/research-hardware-wishlist.md",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    "research-references.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/research-references.md",
+      "sha256": "sha256:b58eddf4796167c49a55da81d20fbf3d4ededdf5056260d1e9ee68636040d425"
+    },
+    "results/experiment_8230_v711_kv260_workload_boundary.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8230_v711_kv260_workload_boundary.json",
+      "sha256": "sha256:dc98bfa0f84e104175aa8fbb7f77c7e6450ecdb0b8f26f5c4c95f262f4f1f75b"
+    },
+    "results/experiment_8259_v713_polarfire_dispatch_qualification.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8259_v713_polarfire_dispatch_qualification.json",
+      "sha256": "sha256:9933e509b6d05112843986d8271455df2194dc74f4000a2e68abbf52e0d04589"
+    },
+    "results/experiment_8302_v716_gatemate_physical_delta.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8302_v716_gatemate_physical_delta.json",
+      "sha256": "sha256:fb847291bb18a922ed944e08f38b98d486a6dbc1dce29cf322155a7f61ee6f12"
+    },
+    "results/experiment_8808_v754_archived_observer_costs.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8808_v754_archived_observer_costs.json",
+      "sha256": "sha256:b02bc692bf349161c46c76d78752eba701c6d376abaacdd2f9113918a0a2904b"
+    },
+    "scripts/experiment_template.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_8825_v755_hardware_operation_map.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/scripts/experiments/experiment_8825_v755_hardware_operation_map.py",
+      "sha256": "sha256:3de95120b230c77740606ea6684358e356da42672b81831599aa7c64ef885022"
+    },
+    "tests/python/test_hardware_operation_map_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/tests/python/test_hardware_operation_map_8825.py",
+      "sha256": "sha256:ae91cfe5dda9e912e52c2d5895aba942f877b75a0b7ec11100409c543db4f1f4"
+    }
+  },
+  "receipt_sidecars": [],
+  "rejected_profiler_evidence": {
+    "component_cost_ready_score": 0,
+    "source_path": "results/experiment_8808_v754_archived_observer_costs.json",
+    "source_sha256": "sha256:b02bc692bf349161c46c76d78752eba701c6d376abaacdd2f9113918a0a2904b",
+    "use": "historical rejection only; supplies no compatible fraction"
+  },
+  "reproducibility_checksum": "sha256:1552220dce2cc282799dd56a5ba6c9634dec8efcc438d90bddfa4166b9006961",
+  "required_checks_passed": false,
+  "rows": [
+    {
+      "arm": "categorical_energy",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32; three 9-input candidates, 4 hidden SiLU units; 45 parameters",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/categorical_energy"
+    },
+    {
+      "arm": "dense_forward",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32 dense 9x4 and 4x1 multiplies; 120 scalar multiplies per three candidates",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/dense_forward"
+    },
+    {
+      "arm": "three_label_normalization",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "stable logsumexp/softmax of three logits; exact enumeration",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/three_label_normalization"
+    },
+    {
+      "arm": "dense_backpropagation",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 gradients and optimizer state; no established spline-local FPGA implementation",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/dense_backpropagation"
+    },
+    {
+      "arm": "template_joins",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "exact symbolic joins; variable bindings and template store; content-dependent counts",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/template_joins"
+    },
+    {
+      "arm": "durable_bytes",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "serialized parameters, templates, acknowledgement and fsync/restart state; bytes unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/durable_bytes"
+    },
+    {
+      "arm": "state_transfer",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "input, parameters, output and gradient buffers; wire precision/layout unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/state_transfer"
+    },
+    {
+      "arm": "sampler_calls",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "zero owned MCMC calls; categorical enumeration supplies no sampler-eligible work",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/sampler_calls"
+    },
+    {
+      "arm": "quadratic_ising",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 1,
+      "missing_reason": null,
+      "operation_status": "supported",
+      "precision_state_transfer_requirements": "historical quadratic fabric only; independent from categorical learning",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/quadratic_ising"
+    },
+    {
+      "arm": "cpu_dispatch",
+      "boundary": "quadratic fabric k_max<=5; SSH-only future access",
+      "cluster_id": "KV260",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "historical authenticated Linux CPU dispatch; categorical workload and timing unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "KV260/cpu_dispatch"
+    },
+    {
+      "arm": "categorical_energy",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32; three 9-input candidates, 4 hidden SiLU units; 45 parameters",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/categorical_energy"
+    },
+    {
+      "arm": "dense_forward",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "float32 dense 9x4 and 4x1 multiplies; 120 scalar multiplies per three candidates",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/dense_forward"
+    },
+    {
+      "arm": "three_label_normalization",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "stable logsumexp/softmax of three logits; exact enumeration",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/three_label_normalization"
+    },
+    {
+      "arm": "dense_backpropagation",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 gradients and optimizer state; no established spline-local FPGA implementation",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/dense_backpropagation"
+    },
+    {
+      "arm": "template_joins",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "exact symbolic joins; variable bindings and template store; content-dependent counts",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/template_joins"
+    },
+    {
+      "arm": "durable_bytes",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "serialized parameters, templates, acknowledgement and fsync/restart state; bytes unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/durable_bytes"
+    },
+    {
+      "arm": "state_transfer",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "input, parameters, output and gradient buffers; wire precision/layout unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/state_transfer"
+    },
+    {
+      "arm": "sampler_calls",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "zero owned MCMC calls; categorical enumeration supplies no sampler-eligible work",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/sampler_calls"
+    },
+    {
+      "arm": "quadratic_ising",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unmeasured",
+      "precision_state_transfer_requirements": "historical quadratic fabric only; independent from categorical learning",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/quadratic_ising"
+    },
+    {
+      "arm": "cpu_dispatch",
+      "boundary": "authenticated Linux CPU dispatch; fabric unqualified",
+      "cluster_id": "PolarFire",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 1,
+      "missing_reason": null,
+      "operation_status": "supported",
+      "precision_state_transfer_requirements": "historical authenticated Linux CPU dispatch; categorical workload and timing unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "PolarFire/cpu_dispatch"
+    },
+    {
+      "arm": "categorical_energy",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32; three 9-input candidates, 4 hidden SiLU units; 45 parameters",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/categorical_energy"
+    },
+    {
+      "arm": "dense_forward",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 dense 9x4 and 4x1 multiplies; 120 scalar multiplies per three candidates",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/dense_forward"
+    },
+    {
+      "arm": "three_label_normalization",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "stable logsumexp/softmax of three logits; exact enumeration",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/three_label_normalization"
+    },
+    {
+      "arm": "dense_backpropagation",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "float32 gradients and optimizer state; no established spline-local FPGA implementation",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/dense_backpropagation"
+    },
+    {
+      "arm": "template_joins",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "exact symbolic joins; variable bindings and template store; content-dependent counts",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/template_joins"
+    },
+    {
+      "arm": "durable_bytes",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "serialized parameters, templates, acknowledgement and fsync/restart state; bytes unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/durable_bytes"
+    },
+    {
+      "arm": "state_transfer",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "input, parameters, output and gradient buffers; wire precision/layout unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/state_transfer"
+    },
+    {
+      "arm": "sampler_calls",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "zero owned MCMC calls; categorical enumeration supplies no sampler-eligible work",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/sampler_calls"
+    },
+    {
+      "arm": "quadratic_ising",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "historical quadratic fabric only; independent from categorical learning",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/quadratic_ising"
+    },
+    {
+      "arm": "cpu_dispatch",
+      "boundary": "unchanged 0xffffffff JTAG blocker",
+      "cluster_id": "GateMate",
+      "denominator": 1,
+      "measured_time_s": null,
+      "metric": 0,
+      "missing_reason": null,
+      "operation_status": "unsupported",
+      "precision_state_transfer_requirements": "historical authenticated Linux CPU dispatch; categorical workload and timing unmeasured",
+      "seed": 0,
+      "status": "completed",
+      "unit_id": "GateMate/cpu_dispatch"
+    }
+  ],
+  "run_date": "20261105",
+  "sampling_call_count": 0,
+  "small_ebm_training": {
+    "performed": false
+  },
+  "source_artifact_hashes": {
+    "docs/research-notes/v755-hardware-operation-map.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/docs/research-notes/v755-hardware-operation-map.md",
+      "sha256": "sha256:c92981c9dfba7aa4becceab3584bf60d1228f01a7ddcdaea6631555996f46a1f"
+    },
+    "hardware/kv260/discrete_sb_256.v": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/hardware/kv260/discrete_sb_256.v",
+      "sha256": "sha256:abec5987c3e701ae025e2a0f3143776a8a30ab70c7f0109e5d6289eb02f6434b"
+    },
+    "openspec/capabilities/hardware-operation-boundary/spec.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/openspec/capabilities/hardware-operation-boundary/spec.md",
+      "sha256": "sha256:4ba695581a26cf987185eb3b6d442eabe4540ee15eb50b4b1164253d8555ec4b"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:f60464fd523b615379d4e6beb46663877c37169441cc676bd86b29f4a6783d97"
+    },
+    "openspec/change-proposals/research-roadmap-v754-preserved-20261104.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/openspec/change-proposals/research-roadmap-v754-preserved-20261104.md",
+      "sha256": "sha256:021962592d30e304c97c7d45b99ffef9997837e4a21b395893c3d76316a56f17"
+    },
+    "ops/hardware-bringup-prep.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/ops/hardware-bringup-prep.md",
+      "sha256": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f"
+    },
+    "pyproject.toml": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/pyproject.toml",
+      "sha256": "sha256:894adfa5d81b880ec1e16d1c9d63517238de175633e9e510926b1f96efd02249"
+    },
+    "python/carnot/memory/causal_memory_8802.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/memory/causal_memory_8802.py",
+      "sha256": "sha256:8a9d7c5242199fd4f8cb82b892fb4aef3e80b1d68fa909dc0ca96d6c5063a3c8"
+    },
+    "python/carnot/models/gibbs/__init__.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/models/gibbs/__init__.py",
+      "sha256": "sha256:a08e2ef56a946eabc9901cdee4846e34f7d39dbb4eb8355da011aaf2174afcbd"
+    },
+    "python/carnot/reporting/current_work_receipt.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "sha256": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229"
+    },
+    "python/carnot/reporting/hardware_operation_map_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/hardware_operation_map_8825.py",
+      "sha256": "sha256:9e2040075ecade1a617d973afb490351ce04f35e68543bec73061116057c0506"
+    },
+    "python/carnot/reporting/hardware_operation_runner_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/hardware_operation_runner_8825.py",
+      "sha256": "sha256:e60d2861046dc89d4667968ad5947553ec0174f543f0bd3f350680842dfc41c4"
+    },
+    "python/carnot/reporting/learning_signal_diagnosis_8815.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/learning_signal_diagnosis_8815.py",
+      "sha256": "sha256:a75749ae4642eb306d7bbe6af12198ac45499c09587d9a15cb416e0d61c23565"
+    },
+    "python/carnot/reporting/primary_publication.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    "research-hardware-wishlist.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/research-hardware-wishlist.md",
+      "sha256": "sha256:63a3c732ef0af6d2ff1413faac5706d0872faeee97522f3ef801c58527892aa7"
+    },
+    "research-references.md": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/research-references.md",
+      "sha256": "sha256:b58eddf4796167c49a55da81d20fbf3d4ededdf5056260d1e9ee68636040d425"
+    },
+    "results/experiment_8230_v711_kv260_workload_boundary.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8230_v711_kv260_workload_boundary.json",
+      "sha256": "sha256:dc98bfa0f84e104175aa8fbb7f77c7e6450ecdb0b8f26f5c4c95f262f4f1f75b"
+    },
+    "results/experiment_8259_v713_polarfire_dispatch_qualification.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8259_v713_polarfire_dispatch_qualification.json",
+      "sha256": "sha256:9933e509b6d05112843986d8271455df2194dc74f4000a2e68abbf52e0d04589"
+    },
+    "results/experiment_8302_v716_gatemate_physical_delta.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8302_v716_gatemate_physical_delta.json",
+      "sha256": "sha256:fb847291bb18a922ed944e08f38b98d486a6dbc1dce29cf322155a7f61ee6f12"
+    },
+    "results/experiment_8808_v754_archived_observer_costs.json": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/results/experiment_8808_v754_archived_observer_costs.json",
+      "sha256": "sha256:b02bc692bf349161c46c76d78752eba701c6d376abaacdd2f9113918a0a2904b"
+    },
+    "scripts/experiment_template.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_8825_v755_hardware_operation_map.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/scripts/experiments/experiment_8825_v755_hardware_operation_map.py",
+      "sha256": "sha256:3de95120b230c77740606ea6684358e356da42672b81831599aa7c64ef885022"
+    },
+    "tests/python/test_hardware_operation_map_8825.py": {
+      "path": "/tmp/carnot8825-terminal-prototype/inputs/tests/python/test_hardware_operation_map_8825.py",
+      "sha256": "sha256:ae91cfe5dda9e912e52c2d5895aba942f877b75a0b7ec11100409c543db4f1f4"
+    }
+  },
+  "started_monotonic_ns": 1,
+  "supported_operation_counts": {
+    "GateMate": 0,
+    "KV260": 1,
+    "PolarFire": 1
+  },
+  "target_latency_requirements": [],
+  "task_id": "exp8825-hardware-operation-map",
+  "unknown_costs": [
+    "complete learner costs when absent",
+    "transfer",
+    "startup",
+    "durability",
+    "backpropagation",
+    "template joins",
+    "compatible measured fraction"
+  ],
+  "validation_receipts": [],
+  "validation_state": {
+    "coverage": {
+      "percent": 0
+    },
+    "passed": false,
+    "receipts": []
+  },
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}
