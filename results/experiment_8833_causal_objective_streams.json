@@ -1,0 +1,51 @@
+{
+  "experiment": 8833,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-11-05",
+  "started_at": "2026-11-05T08:50:14.440439+00:00",
+  "finished_at": "2026-11-05T08:50:14.440439+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure future loss from delayed normalized energy and constraint additions",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8830-categorical-memory",
+  "failed_field": "memory_execution_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8830_v756_categorical_memory.json",
+  "failed_evidence_sha256": "sha256:32510433286802ef6ab88a3cab65b85999ac0839af33d17fab8999274c762ad3",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8830-categorical-memory",
+    "failed_field": "memory_execution_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8830_v756_categorical_memory.json",
+    "failed_evidence_sha256": "sha256:32510433286802ef6ab88a3cab65b85999ac0839af33d17fab8999274c762ad3"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8830-categorical-memory.memory_execution_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8830-categorical-memory",
+      "artifact_field": "memory_execution_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8830_v756_categorical_memory.json",
+      "artifact_sha256": "sha256:32510433286802ef6ab88a3cab65b85999ac0839af33d17fab8999274c762ad3"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
