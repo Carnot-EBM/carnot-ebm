@@ -106977,12 +106977,35 @@ Historical primaries and shared validators SHALL remain unchanged.
 The experiment SHALL map qualified new costs independently to KV260, PolarFire and GateMate operation boundaries without physical probes or invented acceleration fractions.
 The deliverable SHALL be `results/experiment_8851_v757_hardware_operation_budget.json`.
 
+Admit Exp8847 indexed_cost_ready_score and Exp8848 whole_cost_ready_score
+independently against frozen primary hashes and every immutable operand. Retain
+all original rows and complete clocks, including preparation, restart, feedback,
+serialization and fsync. Report index construction, lookup, binding joins,
+energy, gradients, serialization, feedback and fsync separately as operation
+counts; no total clock may be divided into inferred component fractions.
+Keep measured state sizes and occupancy bounds separate from unknown wire cost.
+Preserve dated board receipts: KV260 ssh kria and k_max<=5, PolarFire Linux CPU
+dispatch, GateMate physical/JTAG0xffffffff until recorded cable/port/power change.
+NPU/TSU remain unqualified. Compare Anechoic synchronous Max-Cut and Torx/
+Thermalizers stochastic assumptions without equating optimization and Gibbs
+sampling or claiming local access from vendor pages. Describe FR-11 host counter,
+template and small-head paths with full durable cost.100x and Rust10x remain
+unproved targets; acquisition requires measured supported work.
+
 #### SCENARIO-REPORT-8851-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
 producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
+
+Before implementation, tests SHALL exercise independent branches, exact original
+authorities, zero/missing/rejected gates, private CLI and outside-checkout cold
+replay, including rehashed tampering. Require100 percent newly owned unit/child
+statements with zero exclusions, scoped Ruff/strict mypy/positional spec checks,
+private E2E-018/021 and unchanged terminal scanners. Run one bounded repository
+health check separately. Use actual code/log hashes, preserve historical bytes
+and quarantine, and leave ops/status/changelog/traceability to the conductor.
 
 ### REQ-REPORT-8852: Reconcile all thirteen outcomes and decide which mechanisms merit continuation
 

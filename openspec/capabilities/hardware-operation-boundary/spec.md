@@ -181,3 +181,18 @@ No historical controller runs. Cold replay rejects missing operands and rehashed
 tampering using independent seals. Unchanged primary, adversarial and strict row
 validators inspect final bytes. External incompleteness is complete_blocked;
 failed owned checks disqualify. Conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8851: Preserve supported boundaries for indexed and occupancy costs
+
+Independently map authenticated Exp8847 and Exp8848 complete CPU operations to
+KV260, PolarFire and GateMate. Historical board receipts retain their dates and
+age. No physical probes are permitted. Exact symbolic indexing, categorical
+energy and gradient fitting have no qualified fabric kernel on these boards;
+serialization, feedback and fsync stay on the host. Measured durable state bytes
+do not define a board wire format. Unknown component costs remain unknown.
+
+### SCENARIO-REPORT-8851-CONTRACT
+
+One unavailable producer does not erase the other producer's paid rows. An
+honestly validated compatibility map is null without measured physical gain;
+all new cost evidence absent is blocked, and failed owned checks disqualify.
