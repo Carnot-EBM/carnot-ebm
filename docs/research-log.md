@@ -7622,7 +7622,9 @@ criteria. This operational record makes no scientific-result claim.
 - key result: honest operational negative — 10 synthesis-only experiments (0 compute-bound) completed in 112.5 wall-time minutes (112 minutes / 1.9 hours, averaging 11 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by measuring future Brier loss after delayed constraint additions (30.51 min / 31min), qualifying repaired original memory controls under preserved authorities (13.3 min / 13min), auditing future learning benefit and retention from sealed stream rows (13.1 min / 13min), measuring semantic sensitivity and harmless-evidence invariance (12.31 min / 12min), and measuring observer disturbance using immutable durable-work authorities (11.07 min / 11min); because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) reflects expected behavior for synthesis-only tasks.
 - acceptance: no data available this milestone
 
-
-
-
+### Milestone 2026.11.755
+- exp_range: no data available this milestone
+- theme: Operational review of 7 completed synthesis-only experiments (0 compute-bound) across 26.8 wall-time minutes (27 minutes / 0.4 hours, averaging 4 minutes per experiment).
+- key result: honest operational negative — 7 synthesis-only experiments (0 compute-bound) completed in 26.8 wall-time minutes (27 minutes / 0.4 hours, averaging 4 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log), led by separating feature ambiguity from optimization failure in the causal energy head (16.68 min / 17min), mapping the new learner operations to KV260 PolarFire and GateMate boundaries (7.49 min / 7min), reconciling thirteen outcomes and distinguishing constructed measurements from genera (2.07 min / 2min), measuring useful evidence decisions under equal computational budgets (0.32 min / 0min), and testing calibrated consensus energy at frozen risk and coverage targets (0.15 min / 0min); because 0 compute-bound tasks executed, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) reflects expected behavior for synthesis-only tasks.
+- acceptance: no data available this milestone
 

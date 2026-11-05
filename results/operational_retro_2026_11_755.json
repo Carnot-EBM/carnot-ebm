@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.755",
+  "generated_at": "2026-11-05T02:27:45Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 26.8,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Separate feature ambiguity from optimization failure in the causal energy head",
+      "duration_minutes": 16.68,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Map the new learner operations to KV260 PolarFire and GateMate boundaries",
+      "duration_minutes": 7.49,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes and distinguish constructed measurements from genera",
+      "duration_minutes": 2.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure useful evidence decisions under equal computational budgets",
+      "duration_minutes": 0.32,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Test calibrated consensus energy at frozen risk and coverage targets",
+      "duration_minutes": 0.15,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.755 completed 7 synthesis-only experiments (0 compute-bound) in 26.8 wall-time minutes (27 minutes / 0.4 hours, averaging 4 minutes per experiment) reconstructed via disk-mtime fallback (0 commits in live git-log). Runtime was concentrated in 'Separate feature ambiguity from optimization failure in the causal energy head' (16.68 minutes / 17min) and 'Map the new learner operations to KV260 PolarFire and GateMate boundaries' (7.49 minutes / 7min), followed by 'Reconcile thirteen outcomes and distinguish constructed measurements from genera' (2.07 minutes / 2min), 'Measure useful evidence decisions under equal computational budgets' (0.32 minutes / 0min), and 'Test calibrated consensus energy at frozen risk and coverage targets' (0.15 minutes / 0min). Because 0 compute-bound experiments ran, gpu_idle_on_compute_bound_tasks is null and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) is expected synthesis-only behavior.",
+  "bottlenecks_identified": [
+    "No compute-bound bottlenecks occurred (0 compute-bound experiments ran; all 7 completed experiments were synthesis-only).",
+    "Synthesis-only wall time was dominated by 'Separate feature ambiguity from optimization failure in the causal energy head' at 16.68 minutes (17min) and 'Map the new learner operations to KV260 PolarFire and GateMate boundaries' at 7.49 minutes (7min), with 'Reconcile thirteen outcomes and distinguish constructed measurements from genera' taking 2.07 minutes (2min).",
+    "Live git-log timing recorded 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback) across the 26.8-minute (27 minutes / 0.4 hours) milestone window."
+  ],
+  "improvements_suggested": [
+    "Parallelize validation and verification stages inside 'Separate feature ambiguity from optimization failure in the causal energy head' (16.68 minutes / 17min) and 'Map the new learner operations to KV260 PolarFire and GateMate boundaries' (7.49 minutes / 7min) to reduce the 4-minute per-experiment average across the 7 synthesis-only tasks.",
+    "Record explicit per-experiment start and completion timestamps in conductor artifacts so milestone retrospectives do not rely on disk-mtime fallback (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Free the residual 4MB allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 49C) when idle, while keeping DualGPURunner unengaged until compute-bound tasks with 2+ models in parallel are scheduled."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Reduce runtime in 'Separate feature ambiguity from optimization failure in the causal energy head' (16.68 minutes / 17min) and 'Map the new learner operations to KV260 PolarFire and GateMate boundaries' (7.49 minutes / 7min) by caching immutable upstream verification inputs.",
+    "Persist direct experiment timing metadata to eliminate disk-mtime fallback (retro_timing_fallback) when live git-log contains 0 commits.",
+    "Release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, 49C) per the GPU Monitor Report suggestion."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "All 7 completed experiments in milestone 2026.11.755 were synthesis-only (0 compute-bound) totaling 26.8 minutes (27 minutes / 0.4 hours, averaging 4 minutes per experiment), so gpu_idle_on_compute_bound_tasks is null and DualGPURunner was not applicable. Optimizing the 16.68-minute (17min) and 7.49-minute (7min) synthesis tasks offers the primary wall-time reduction opportunity for the next milestone."
+}
