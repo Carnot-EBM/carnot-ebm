@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/CODE_OF_CONDUCT.md
