@@ -1,0 +1,49 @@
+{
+  "administrative_root_required": false,
+  "canonical_tasks_sha256": "12f51392c099f3ae4f18a879428d7512b6ac0e5fa231cea0321033859d9463f7",
+  "gates": [
+    {
+      "artifact_field": "evidence_protocol_ready_score",
+      "op": "==",
+      "upstream": "exp8816-selective-evidence-methods",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [],
+    "agent_type": "codex",
+    "deliverable": "results/experiment_8818_v755_evidence_decisive_coverage.json",
+    "estimated_wall_time_min": 45,
+    "gated_on": [
+      {
+        "artifact_field": "evidence_protocol_ready_score",
+        "op": "==",
+        "upstream": "exp8816-selective-evidence-methods",
+        "value": 1
+      }
+    ],
+    "id": "exp8818-evidence-decisive-coverage",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 50,
+    "milestone": "2026.11.755",
+    "model": "gpt-6.1-sol",
+    "per_unit_rows": true,
+    "phase": 2,
+    "prior_failures": [
+      {
+        "addressed_by": "Change the prospective estimand from reducing an already-zero error to useful decisive coverage at fixed risk and equal underlying operation budgets, on new multi-variable structures; preserve old nulls.",
+        "experiment_id": "exp8805-evidence-intervention-study",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_constructed_evidence_interventions"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.755, exp8818-evidence-decisive-coverage. Exp8805 reported zero false-accept deltas but large valid-alternative false-reject reductions. This is a new prospective utility question on unseen multi-variable graph structures, not a reinterpretation that changes Exp8805 to positive.\nChanged scope: Change the prospective estimand from reducing an already-zero error to useful decisive coverage at fixed risk and equal underlying operation budgets, on new multi-variable structures; preserve old nulls.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/reporting/evidence_set_methods_8768.py\n- python/carnot/reporting/evidence_intervention_study_8805.py\n- python/carnot/reporting/evidence_intervention_analysis_8805.py\n- results/experiment_8816_v755_selective_evidence_methods.json\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8818)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nMeasure useful evidence decisions under equal computational budgets. Deliver results/experiment_8818_v755_evidence_decisive_coverage.json and private hash-bound raw evidence under results/raw/experiment_8818_v755_evidence_decisive_coverage/. Implement scripts/experiments/experiment_8818_v755_evidence_decisive_coverage.py with --date and private-output/replay options; keep science independent of optional branches.\n\nCONCRETE STEPS:\n1. Emit a flushed progress line at every phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. During long loops emit completed/pending counts at least every 60 seconds; while a child runs, forward its output and emit elapsed/phase heartbeats every 60 seconds. Keep every output gap below 600 seconds, including tool-free reasoning. Use python -u and print(..., flush=True); heartbeat does not extend a measured deadline.\n2. Keep tool calls bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Use scripts/experiments/ for experiment entrypoints, tests/python/ for tests and /tmp for throwaway probes. Never write scratch scripts at the repository root.\n3. Authenticate evidence_protocol_ready_score and freeze local-record, evidence-set and joint-symbolic methods before opening evaluation labels. Keep all original semantics. Include a separately costed unrestricted exact reference. Do not implement a new full solver or use reference answers in scheduling.\n4. Run 240 worlds x6 fixed variants (intact, irrelevant padding, reordered facts, missing hop, conflicting fact, binding swap) x3 methods:4320 rows. Each has the same 200000 primitive-operation ceiling; explicitly count fact comparisons, candidate bindings and join attempts rather than equating a Python source line with one machine instruction. Exhaustion returns insufficient and remains in every denominator. Record actual operation and wall cost.\n5. Compare correct decisive coverage and false accepts against the strongest prespecified budgeted comparator, with valid alternatives and unknown evidence reported separately. Use four primary families with98.75-percent whole-world intervals: coverage gain, semantic false-accept difference, nuisance invariance and insufficient-to-decision rate. The coverage gain lower bound must exceed0.05, false-accept difference upper bound<=0.01 and nuisance invariance lower bound>=0.99; unknown truth cannot be counted as refute.\n6. Reduce all rows independently and preserve exhausted/censored attempts. Exact encoded reasoning gains, if any, are circular_positive with verifier_is_oracle=true. No learned-semantic, natural-text or LLM improvement claim.\n7. Before implementation, read CODEX.md and CLAUDE.md and extend the named REQ/SCENARIO in openspec/capabilities/research-reporting/spec.md (plus the relevant learning/verification capability); write failing tests first. Reuse current_work_receipt, primary_publication and existing scoped validation rather than copying an old milestone runner. Bind immutable historical authorities, never mutable vNEXT as an old fixture. Validate owned code with scoped pytest and actual unit/child coverage at 100 percent with zero exclusions, Ruff check/format, strict mypy, and scripts/check_spec_coverage.py with owned test paths as positional arguments. Run applicable private E2E-018/021, and E2E-003/004 plus cargo test/fmt/clippy only for native changes. Cold-replay the terminal artifact outside the checkout without PYTHONPATH. Run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the candidate before publishing. Retain rejected evidence; a failed owned check means disqualified and readiness zero. Record global test/spec debt separately, never silently waive an owned failure. Reconcile specs, _bmad/traceability.md, ops/status.md and ops/changelog.md.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, honest_verdict (terminal complete_ prefix); verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Partial is only unfinished own work that another attempt can complete; unchanged external absence is blocked. inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls, verifier_is_oracle, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes, phase_spans, preconditions_checked. rows: per-unit records with unit_id, cluster_id, arm, seed, metric, denominator, status, missing_reason; intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count. gate_check_summary: check, upstream, artifact_field, expected, observed, path and hash for every blocked result, distinguishing missing_file, missing_field, rejected_producer and observed zero. acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage, exposure_scope, independent_generalization_score, cited_upstream_artifacts, field_principles. Annotate all extra fields with their evidence principle. Exact-oracle success is circular_positive, never positive; constructed evidence never establishes natural-text or hidden-game generalization. Readiness means valid evidence, not benefit. Do not pad elapsed time to meet substrate floors.\nevidence_rows_ready_score, evidence_utility_score: integer 0/1; per_world_results, per_defect_rows, operation_budget_rows, whole_world_intervals, exact_reference_rows, exhausted_count. Principle: useful decisions and errors share an explicit denominator; exact semantics remain circular.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8818_v755_evidence_decisive_coverage.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Measure useful evidence decisions under equal computational budgets",
+    "track": "research"
+  },
+  "upstream_task_ids": [
+    "exp8816-selective-evidence-methods"
+  ]
+}

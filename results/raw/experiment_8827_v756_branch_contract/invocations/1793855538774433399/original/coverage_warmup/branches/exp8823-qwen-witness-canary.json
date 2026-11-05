@@ -1,0 +1,66 @@
+{
+  "administrative_root_required": false,
+  "canonical_tasks_sha256": "12f51392c099f3ae4f18a879428d7512b6ac0e5fa231cea0321033859d9463f7",
+  "gates": [
+    {
+      "artifact_field": "runtime_repair_ready_score",
+      "op": "==",
+      "upstream": "exp8814-branch-contract",
+      "value": 1
+    },
+    {
+      "artifact_field": "canary_protocol_ready_score",
+      "op": "==",
+      "upstream": "exp8816-selective-evidence-methods",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "name": "Qwen3.8-27B"
+      }
+    ],
+    "deliverable": "results/experiment_8823_v755_qwen_witness_canary.json",
+    "estimated_wall_time_min": 40,
+    "gated_on": [
+      {
+        "artifact_field": "runtime_repair_ready_score",
+        "op": "==",
+        "upstream": "exp8814-branch-contract",
+        "value": 1
+      },
+      {
+        "artifact_field": "canary_protocol_ready_score",
+        "op": "==",
+        "upstream": "exp8816-selective-evidence-methods",
+        "value": 1
+      }
+    ],
+    "id": "exp8823-qwen-witness-canary",
+    "inference_substrate_class": "model_bounded_generation",
+    "max_turns": 50,
+    "milestone": "2026.11.755",
+    "per_unit_rows": true,
+    "phase": 4,
+    "prior_failures": [
+      {
+        "addressed_by": "Require changed runtime receipts before any call, and test explicit source-span anchoring on the new disjoint protocol. The unchanged missing-runtime path skips in the conductor; no repeated CUDA probe.",
+        "experiment_id": "exp8807-qwen-evidence-canary",
+        "retire_if_same_verdict": true,
+        "verdict": "blocked_gate_check_failed"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.755, exp8823-qwen-witness-canary. The natural extraction gap remains open. V754 skipped the Qwen lane because runtime_repair_ready_score=0. A fresh source-anchored witness probe is conditional on changed causal runtime evidence, never on nvidia-smi alone.\nChanged scope: Require changed runtime receipts before any call, and test explicit source-span anchoring on the new disjoint protocol. The unchanged missing-runtime path skips in the conductor; no repeated CUDA probe.\n\nEXISTING CODE TO READ FIRST:\n- scripts/experiment_template.py\n- python/carnot/experiment_7759_v675_qwen_evidence_views.py\n- python/carnot/reporting/repaired_evidence_8803.py\n- results/experiment_8814_v755_branch_contract.json\n- results/experiment_8816_v755_selective_evidence_methods.json\n- ops/cuda-runtime-repair-receipt.json\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8823)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nProbe source-anchored extraction with mandated Qwen after authenticated runtime repair. Deliver results/experiment_8823_v755_qwen_witness_canary.json and private hash-bound raw evidence under results/raw/experiment_8823_v755_qwen_witness_canary/. Implement scripts/experiments/experiment_8823_v755_qwen_witness_canary.py with --date and private-output/replay options; keep science independent of optional branches.\n\nCONCRETE STEPS:\n1. Emit a flushed progress line at every phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. During long loops emit completed/pending counts at least every 60 seconds; while a child runs, forward its output and emit elapsed/phase heartbeats every 60 seconds. Keep every output gap below 600 seconds, including tool-free reasoning. Use python -u and print(..., flush=True); heartbeat does not extend a measured deadline.\n2. Keep tool calls bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Use scripts/experiments/ for experiment entrypoints, tests/python/ for tests and /tmp for throwaway probes. Never write scratch scripts at the repository root.\n3. Before load, authenticate runtime_repair_ready_score and canary_protocol_ready_score, exact model revision/hash, current runtime build, lease and GPU offload capability. Resolve unsloth/Qwen3.8-27B-GGUF with cached_current_model/current-only cached_sota_pair, embedded GGUF tokenizer and setup_gpu. If evidence changed but load still fails, record the actual failure once; never use a small CPU model as a headline replacement.\n4. Run one model load and at most48 calls,128 generated tokens per call, across12 sealed canary worlds and four views: intact, padding, missing premise and binding substitution. Request claim plus exact source span IDs and explicit unknown status; do not require regenerating or compressing full source sentences. Keep the complete input available and validate qualifiers/negation separately. No parser retry, token-budget growth or evaluation-driven prompt changes.\n5. Seal raw prompts, responses, token counts, model/runtime hashes, offload logs, GPU memory rise and actual elapsed time. Compare extracted claims and cited spans to independently sealed mappings: recall, unsupported additions, binding fidelity, qualifier loss, truncation and unknown preservation. These are descriptive counts over12 independent constructed texts; no population or GSM8K gain.\n6. Declare inference_substrate_class=model_bounded_generation (10s floor) and actual live_llm_inference substrate. Record no-model blocked cases truthfully without timing padding. Model_full_generation (60s) is reserved for actual full generative studies; load/embedding-only work uses model_load_no_generation (2s) and is not this canary.\n7. Before implementation, read CODEX.md and CLAUDE.md and extend the named REQ/SCENARIO in openspec/capabilities/research-reporting/spec.md (plus the relevant learning/verification capability); write failing tests first. Reuse current_work_receipt, primary_publication and existing scoped validation rather than copying an old milestone runner. Bind immutable historical authorities, never mutable vNEXT as an old fixture. Validate owned code with scoped pytest and actual unit/child coverage at 100 percent with zero exclusions, Ruff check/format, strict mypy, and scripts/check_spec_coverage.py with owned test paths as positional arguments. Run applicable private E2E-018/021, and E2E-003/004 plus cargo test/fmt/clippy only for native changes. Cold-replay the terminal artifact outside the checkout without PYTHONPATH. Run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the candidate before publishing. Retain rejected evidence; a failed owned check means disqualified and readiness zero. Record global test/spec debt separately, never silently waive an owned failure. Reconcile specs, _bmad/traceability.md, ops/status.md and ops/changelog.md.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, honest_verdict (terminal complete_ prefix); verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Partial is only unfinished own work that another attempt can complete; unchanged external absence is blocked. inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls, verifier_is_oracle, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes, phase_spans, preconditions_checked. rows: per-unit records with unit_id, cluster_id, arm, seed, metric, denominator, status, missing_reason; intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count. gate_check_summary: check, upstream, artifact_field, expected, observed, path and hash for every blocked result, distinguishing missing_file, missing_field, rejected_producer and observed zero. acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage, exposure_scope, independent_generalization_score, cited_upstream_artifacts, field_principles. Annotate all extra fields with their evidence principle. Exact-oracle success is circular_positive, never positive; constructed evidence never establishes natural-text or hidden-game generalization. Readiness means valid evidence, not benefit. Do not pad elapsed time to meet substrate floors.\ncanary_rows_ready_score: integer 0/1; MODEL_SPECS must include unsloth/Qwen3.8-27B-GGUF; per_call_rows, per_world_extraction_rows, complete_source_hashes, span_binding_rows, runtime_build_hash, model_hash, gpu_offload_evidence, token_counts. Principle: generation provenance and semantic fidelity are separate checks.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python -u scripts/experiments/experiment_8823_v755_qwen_witness_canary.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": true,
+    "title": "Probe source-anchored extraction with mandated Qwen after authenticated runtime repair",
+    "track": "research"
+  },
+  "upstream_task_ids": [
+    "exp8814-branch-contract",
+    "exp8816-selective-evidence-methods"
+  ]
+}

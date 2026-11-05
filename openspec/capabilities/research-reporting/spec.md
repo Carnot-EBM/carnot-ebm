@@ -106489,3 +106489,23 @@ validation receipts. Failed owned validation SHALL disqualify readiness; externa
 absence SHALL be blocked, not partial. Its named downstream gate fields SHALL
 match the YAML literally. Numeric methods and acceptance thresholds SHALL match
 the V756 design and task prompt. Historical primaries SHALL remain unchanged.
+
+#### Exp8827 execution clarification (2026-11-05)
+
+REQ-REPORT-8827 and SCENARIO-REPORT-8827-CONTRACT require immutable V755
+fixtures, including its original design and full tasks. Private fixture repair
+may change fixture custody only; original assertions and runner code stay intact.
+Retain measured SQLite coverage of the fourteen recorded runner statements.
+The V756 producer binds all thirteen task dictionaries through the existing
+parser. An absent staged file after activation is recorded explicitly; an
+explicit private staged copy is retained without claiming a second activation.
+Optional CUDA and ARC scores remain independent of administrative readiness.
+No calibration diagnostic or hardware cost producer inherits this contract gate.
+
+Exp8827 implementation (2026-11-05): the scheduled producer, private output and
+cold replay CLI are implemented. Fourteen focused tests pass. Original runner
+qualification uses preserved V755 fixtures and real negative, warmup and final
+CLI children. The final receipt owns statement coverage and terminal scanner
+results. One broad Python health check timed out during collection at 180 seconds;
+that debt remains separate from producer qualification. This producer performs
+no activation and makes no claim of scientific benefit.

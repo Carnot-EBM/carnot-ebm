@@ -1,0 +1,47 @@
+{
+  "administrative_root_required": false,
+  "canonical_tasks_sha256": "12f51392c099f3ae4f18a879428d7512b6ac0e5fa231cea0321033859d9463f7",
+  "gates": [
+    {
+      "artifact_field": "consensus_protocol_ready_score",
+      "op": "==",
+      "upstream": "exp8816-selective-evidence-methods",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8819_v755_consensus_selective_energy.json",
+    "estimated_wall_time_min": 50,
+    "gated_on": [
+      {
+        "artifact_field": "consensus_protocol_ready_score",
+        "op": "==",
+        "upstream": "exp8816-selective-evidence-methods",
+        "value": 1
+      }
+    ],
+    "id": "exp8819-consensus-selective-energy",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 50,
+    "milestone": "2026.11.755",
+    "per_unit_rows": true,
+    "phase": 2,
+    "prior_failures": [
+      {
+        "addressed_by": "Keep the trained evidence representation fixed and introduce a prospectively registered selective-risk contract, independent calibration, safe-threshold comparators and matched random abstention on fresh structures.",
+        "experiment_id": "exp8806-consensus-challenge-energy",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_constructed_consensus_energy"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.755, exp8819-consensus-selective-energy. Exp8806 learned energy reduced Brier from fixed-evidence0.38494 to about0.27881 but failed coverage preservation. Test prospective selective utility without letting more abstention masquerade as evidence quality. This satisfies the small energy calibrated-decision training floor.\nChanged scope: Keep the trained evidence representation fixed and introduce a prospectively registered selective-risk contract, independent calibration, safe-threshold comparators and matched random abstention on fresh structures.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/reporting/consensus_energy_8806.py\n- python/carnot/reporting/consensus_energy_runner_8806.py\n- tests/python/test_consensus_energy_8806.py\n- results/experiment_8816_v755_selective_evidence_methods.json\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8819)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nTest calibrated consensus energy at frozen risk and coverage targets. Deliver results/experiment_8819_v755_consensus_selective_energy.json and private hash-bound raw evidence under results/raw/experiment_8819_v755_consensus_selective_energy/. Implement scripts/experiments/experiment_8819_v755_consensus_selective_energy.py with --date and private-output/replay options; keep science independent of optional branches.\n\nCONCRETE STEPS:\n1. Emit a flushed progress line at every phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. During long loops emit completed/pending counts at least every 60 seconds; while a child runs, forward its output and emit elapsed/phase heartbeats every 60 seconds. Keep every output gap below 600 seconds, including tool-free reasoning. Use python -u and print(..., flush=True); heartbeat does not extend a measured deadline.\n2. Keep tool calls bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Use scripts/experiments/ for experiment entrypoints, tests/python/ for tests and /tmp for throwaway probes. Never write scratch scripts at the repository root.\n3. Authenticate consensus_protocol_ready_score and fit the same three small Gibbs heads on the60 fit worlds only; use60 separate calibration worlds to freeze one cutoff from the six-value menu per arm/seed. Retain five nested seeds,240 gradient steps, same visible count features and five paid atom checks. Do not change the neural architecture, feature extractor and threshold family together.\n4. Compare learned energy, agreement-only and fixed evidence with their own calibration-selected thresholds; add random abstention matched to each learned arm calibration coverage, plus a separately costed exact oracle. A random arm uses a frozen selection probability and seed, never evaluation labels or evaluation coverage. Apply intact/missing-hop/binding-swap evidence crossed with unanimous-correct/unanimous-wrong/disagreement:240x3x3=2160 held-out groups of three candidates.\n5. Before labels open, seal probabilities, typed accept/reject/escalate actions and paid-check receipts. Evaluate risk among decisive actions, unconditional Brier, correct decisive coverage, insufficient-to-decision rate and unanimous-wrong false acceptance. Average nested seeds within world; never claim2160 independent worlds. All arms retain raw rows even if no calibration cutoff qualifies.\n6. Use five primary99-percent intervals (Bonferroni0.05/5) for risk<=0.05, coverage>=0.30, useful-coverage gain>=0.05 over fixed evidence, Brier gain>=0.01 over fixed evidence, and insufficient-to-decision<=0.05. Require the appropriate upper/lower bound for each. Secondary matched-random comparisons are descriptive. A zero decisive denominator has undefined risk, never risk zero; if no fixed-evidence cutoff qualifies, report that contrast as not estimable instead of claiming a win over universal abstention. If any gate fails, terminal null; never choose a different test cutoff. Report constructed learned-policy benefit separately from exact-oracle checks.\n7. Before implementation, read CODEX.md and CLAUDE.md and extend the named REQ/SCENARIO in openspec/capabilities/research-reporting/spec.md (plus the relevant learning/verification capability); write failing tests first. Reuse current_work_receipt, primary_publication and existing scoped validation rather than copying an old milestone runner. Bind immutable historical authorities, never mutable vNEXT as an old fixture. Validate owned code with scoped pytest and actual unit/child coverage at 100 percent with zero exclusions, Ruff check/format, strict mypy, and scripts/check_spec_coverage.py with owned test paths as positional arguments. Run applicable private E2E-018/021, and E2E-003/004 plus cargo test/fmt/clippy only for native changes. Cold-replay the terminal artifact outside the checkout without PYTHONPATH. Run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the candidate before publishing. Retain rejected evidence; a failed owned check means disqualified and readiness zero. Record global test/spec debt separately, never silently waive an owned failure. Reconcile specs, _bmad/traceability.md, ops/status.md and ops/changelog.md.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, honest_verdict (terminal complete_ prefix); verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Partial is only unfinished own work that another attempt can complete; unchanged external absence is blocked. inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls, verifier_is_oracle, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes, phase_spans, preconditions_checked. rows: per-unit records with unit_id, cluster_id, arm, seed, metric, denominator, status, missing_reason; intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count. gate_check_summary: check, upstream, artifact_field, expected, observed, path and hash for every blocked result, distinguishing missing_file, missing_field, rejected_producer and observed zero. acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage, exposure_scope, independent_generalization_score, cited_upstream_artifacts, field_principles. Annotate all extra fields with their evidence principle. Exact-oracle success is circular_positive, never positive; constructed evidence never establishes natural-text or hidden-game generalization. Readiness means valid evidence, not benefit. Do not pad elapsed time to meet substrate floors.\nconsensus_rows_ready_score, selective_benefit_score: integer 0/1; selected_threshold_rows, calibration_eligibility_rows, per_candidate_rows, risk_numerators_denominators, coverage_rows, brier_rows, simultaneous_intervals, matched_random_rows, shortcut_controls. Principle: freeze the selector before evaluation; no claims from seed pseudoreplication.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8819_v755_consensus_selective_energy.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Test calibrated consensus energy at frozen risk and coverage targets",
+    "track": "research"
+  },
+  "upstream_task_ids": [
+    "exp8816-selective-evidence-methods"
+  ]
+}

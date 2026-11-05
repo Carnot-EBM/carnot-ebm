@@ -1,0 +1,47 @@
+{
+  "administrative_root_required": false,
+  "canonical_tasks_sha256": "12f51392c099f3ae4f18a879428d7512b6ac0e5fa231cea0321033859d9463f7",
+  "gates": [
+    {
+      "artifact_field": "memory_rows_ready_score",
+      "op": "==",
+      "upstream": "exp8820-causal-objective-streams",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8821_v755_future_benefit_audit.json",
+    "estimated_wall_time_min": 30,
+    "gated_on": [
+      {
+        "artifact_field": "memory_rows_ready_score",
+        "op": "==",
+        "upstream": "exp8820-causal-objective-streams",
+        "value": 1
+      }
+    ],
+    "id": "exp8821-future-benefit-audit",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 30,
+    "milestone": "2026.11.755",
+    "per_unit_rows": true,
+    "phase": 3,
+    "prior_failures": [
+      {
+        "addressed_by": "Consume a newly qualified objective and fresh sealed streams; preserve V754 nulls and correct the distinction between constructed measurements and independent natural generalization.",
+        "experiment_id": "exp8810-causal-learning-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_causal_learning_audit"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.755, exp8821-future-benefit-audit. V754 already closed the unchanged learner with a null. This audit addresses only the new qualified objective and fresh structural streams. Preserve actual row denominators; the prior capstone counted zero independent-generalization science despite many constructed measurements.\nChanged scope: Consume a newly qualified objective and fresh sealed streams; preserve V754 nulls and correct the distinction between constructed measurements and independent natural generalization.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/reporting/causal_learning_audit_8810.py\n- python/carnot/reporting/causal_learning_runner_8810.py\n- results/experiment_8810_v754_causal_learning_audit.json\n- results/experiment_8820_v755_causal_objective_streams.json\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8821)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nAudit causal future benefit and retention without mixing training and evaluation rows. Deliver results/experiment_8821_v755_future_benefit_audit.json and private hash-bound raw evidence under results/raw/experiment_8821_v755_future_benefit_audit/. Implement scripts/experiments/experiment_8821_v755_future_benefit_audit.py with --date and private-output/replay options; keep science independent of optional branches.\n\nCONCRETE STEPS:\n1. Emit a flushed progress line at every phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. During long loops emit completed/pending counts at least every 60 seconds; while a child runs, forward its output and emit elapsed/phase heartbeats every 60 seconds. Keep every output gap below 600 seconds, including tool-free reasoning. Use python -u and print(..., flush=True); heartbeat does not extend a measured deadline.\n2. Keep tool calls bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Use scripts/experiments/ for experiment entrypoints, tests/python/ for tests and /tmp for throwaway probes. Never write scratch scripts at the repository root.\n3. Authenticate memory_rows_ready_score and all45000 scheduled rows from immutable shards. Independently recompute each probability metric and state transition rather than importing producer summary numbers. Separate28800 online rows from16200 retention rows; tail-drain updates are not predictions. Check causal ordering, distinct streams, exact restart state, per-arm initial-state equality and effective structural independence.\n4. Freeze the primary future interval at queries33-64, averaging queries and seeds within each of30 streams. Register ten99.5-percent whole-stream intervals: combined-minus-frozen and combined-minus-calibration future Brier; two retention contrasts at32/64 for calibration and combined (four); false accept and false reject versus frozen (two); combined-minus-shuffled future Brier; combined-minus-frozen useful decisive coverage. Use10000 fixed-seed whole-stream resamples with two-sided tail probability0.0025 for each99.5-percent interval, not row resampling.\n5. Require both primary future Brier upper bounds<-0.01, all four retention upper bounds<=+0.02, both error upper bounds<=+0.02, combined-minus-shuffled upper bound<0, useful-coverage lower bound>=0, causal release, actual later template use and unchanged check budget. No calibration-only or cold-start win can substitute for added-template benefit. Preserve outcome as null if the complete valid study fails any scientific gate.\n6. Report independent constructed-stream count separately from natural-generalization count0. Attach exact fields and thresholds to each conclusion. Retire an unchanged failed objective/initialization/stream scope; do not retire the entire FR-11 problem or modify the exclusion manifest automatically.\n7. Before implementation, read CODEX.md and CLAUDE.md and extend the named REQ/SCENARIO in openspec/capabilities/research-reporting/spec.md (plus the relevant learning/verification capability); write failing tests first. Reuse current_work_receipt, primary_publication and existing scoped validation rather than copying an old milestone runner. Bind immutable historical authorities, never mutable vNEXT as an old fixture. Validate owned code with scoped pytest and actual unit/child coverage at 100 percent with zero exclusions, Ruff check/format, strict mypy, and scripts/check_spec_coverage.py with owned test paths as positional arguments. Run applicable private E2E-018/021, and E2E-003/004 plus cargo test/fmt/clippy only for native changes. Cold-replay the terminal artifact outside the checkout without PYTHONPATH. Run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the candidate before publishing. Retain rejected evidence; a failed owned check means disqualified and readiness zero. Record global test/spec debt separately, never silently waive an owned failure. Reconcile specs, _bmad/traceability.md, ops/status.md and ops/changelog.md.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, honest_verdict (terminal complete_ prefix); verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Partial is only unfinished own work that another attempt can complete; unchanged external absence is blocked. inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls, verifier_is_oracle, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes, phase_spans, preconditions_checked. rows: per-unit records with unit_id, cluster_id, arm, seed, metric, denominator, status, missing_reason; intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count. gate_check_summary: check, upstream, artifact_field, expected, observed, path and hash for every blocked result, distinguishing missing_file, missing_field, rejected_producer and observed zero. acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage, exposure_scope, independent_generalization_score, cited_upstream_artifacts, field_principles. Annotate all extra fields with their evidence principle. Exact-oracle success is circular_positive, never positive; constructed evidence never establishes natural-text or hidden-game generalization. Readiness means valid evidence, not benefit. Do not pad elapsed time to meet substrate floors.\nlearning_audit_ready_score, future_benefit_score: integer 0/1; independent_stream_rows, familywise_intervals, causality_checks, retention_checks, coverage_checks, exact_denominator_rows, retirement_recommendations. Principle: benefit claims require future loss, retention and useful decisions together.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8821_v755_future_benefit_audit.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Audit causal future benefit and retention without mixing training and evaluation rows",
+    "track": "research"
+  },
+  "upstream_task_ids": [
+    "exp8820-causal-objective-streams"
+  ]
+}

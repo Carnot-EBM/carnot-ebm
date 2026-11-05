@@ -1,0 +1,59 @@
+{
+  "administrative_root_required": false,
+  "canonical_tasks_sha256": "12f51392c099f3ae4f18a879428d7512b6ac0e5fa231cea0321033859d9463f7",
+  "gates": [
+    {
+      "artifact_field": "memory_execution_ready_score",
+      "op": "==",
+      "upstream": "exp8817-categorical-memory-prototype",
+      "value": 1
+    }
+  ],
+  "task": {
+    "MODEL_SPECS": [],
+    "deliverable": "results/experiment_8820_v755_causal_objective_streams.json",
+    "estimated_wall_time_min": 65,
+    "gated_on": [
+      {
+        "artifact_field": "memory_execution_ready_score",
+        "op": "==",
+        "upstream": "exp8817-categorical-memory-prototype",
+        "value": 1
+      }
+    ],
+    "id": "exp8820-causal-objective-streams",
+    "inference_substrate_class": "no_model_load",
+    "max_turns": 50,
+    "milestone": "2026.11.755",
+    "per_unit_rows": true,
+    "phase": 3,
+    "prior_failures": [
+      {
+        "addressed_by": "Use only the development-qualified normalized objective and fixed pretrained start; add longer fresh structural streams to isolate future benefit from cold-start optimization. Capacity-policy tuning is closed after V754 and is not repeated.",
+        "experiment_id": "exp8804-causal-template-streams",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_measurements_ready_benefit_reserved_for_exp8810"
+      },
+      {
+        "addressed_by": "Use only the development-qualified normalized objective and fixed pretrained start; add longer fresh structural streams to isolate future benefit from cold-start optimization. Capacity-policy tuning is closed after V754 and is not repeated.",
+        "experiment_id": "exp8809-delayed-feedback-capacity",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_no_corrected_useful_policy_effect"
+      },
+      {
+        "addressed_by": "Use only the development-qualified normalized objective and fixed pretrained start; add longer fresh structural streams to isolate future benefit from cold-start optimization. Capacity-policy tuning is closed after V754 and is not repeated.",
+        "experiment_id": "exp8810-causal-learning-audit",
+        "retire_if_same_verdict": true,
+        "verdict": "complete_null_causal_learning_audit"
+      }
+    ],
+    "priority": "high",
+    "prompt": "CONTEXT:\nWork in {project_root} on {date}. Milestone 2026.11.755, exp8820-causal-objective-streams. Execution readiness is not learning benefit. The original learner harmed future Brier while satisfying causal controls; this new study isolates pretrained normalization, online calibration and actual template additions.\nChanged scope: Use only the development-qualified normalized objective and fixed pretrained start; add longer fresh structural streams to isolate future benefit from cold-start optimization. Capacity-policy tuning is closed after V754 and is not repeated.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/learning/causal_template_streams_8804.py\n- python/carnot/reporting/causal_template_streams_8804.py\n- python/carnot/learning/delayed_feedback_capacity_8809.py\n- results/experiment_8817_v755_categorical_memory_prototype.json\n- openspec/capabilities/research-reporting/spec.md (REQ-REPORT-8820)\n- scripts/experiment_template.py; python/carnot/reporting/current_work_receipt.py; python/carnot/reporting/primary_publication.py\n\nTASK:\nMeasure future decisions after normalized energy updates and delayed template additions. Deliver results/experiment_8820_v755_causal_objective_streams.json and private hash-bound raw evidence under results/raw/experiment_8820_v755_causal_objective_streams/. Implement scripts/experiments/experiment_8820_v755_causal_objective_streams.py with --date and private-output/replay options; keep science independent of optional branches.\n\nCONCRETE STEPS:\n1. Emit a flushed progress line at every phase boundary and before and after every model load, generation call, benchmark and subprocess that can take minutes. During long loops emit completed/pending counts at least every 60 seconds; while a child runs, forward its output and emit elapsed/phase heartbeats every 60 seconds. Keep every output gap below 600 seconds, including tool-free reasoning. Use python -u and print(..., flush=True); heartbeat does not extend a measured deadline.\n2. Keep tool calls bounded. Write any file over about 200 lines in several tool calls of at most 150-200 lines, with a progress message between calls. Use scripts/experiments/ for experiment entrypoints, tests/python/ for tests and /tmp for throwaway probes. Never write scratch scripts at the repository root.\n3. Authenticate memory_execution_ready_score and every frozen source/config/input identity. Measure one complete pilot stream to project the exact registered workload, charging JAX import/compilation once. If the complete run plus validation will exceed4200 seconds, emit blocked_budget with measured projection; do not silently truncate streams, increase workers to hide oversubscription or change the sample plan.\n4. Run30 reset streams x64 queries x3 nested seeds x5 frozen arms=28800 online rows, delay8, capacity>=16 with measured no-overflow controls. At steps0/32/64 score12 disjoint retention worlds per stream/seed/arm=16200 retention rows, with updates disabled. Seal prediction and state before release; update once per eligible feedback; record actual template reuse and changed predicates. Include tail drain and exact restart parity.\n5. Use only the frozen initialization and objective. Distinguish original-cold comparison from the primary pretrained-combined versus pretrained-frozen and pretrained-calibration contrasts. The latter distinguishes template additions from calibration. Preserve shuffled-released-feedback as a causal negative control. No retrospective relabeling, template copying between streams or test-driven LR adjustment.\n6. Emit all45000 rows with task-bound raw shards, exposure scope, unit costs, applied/dropped/delayed feedback and update identities. Publish memory_rows_ready_score and learning_cost_ready_score independently of benefit. Exp8821 owns the scientific decision; this producer cannot self-certify improvement.\n7. Before implementation, read CODEX.md and CLAUDE.md and extend the named REQ/SCENARIO in openspec/capabilities/research-reporting/spec.md (plus the relevant learning/verification capability); write failing tests first. Reuse current_work_receipt, primary_publication and existing scoped validation rather than copying an old milestone runner. Bind immutable historical authorities, never mutable vNEXT as an old fixture. Validate owned code with scoped pytest and actual unit/child coverage at 100 percent with zero exclusions, Ruff check/format, strict mypy, and scripts/check_spec_coverage.py with owned test paths as positional arguments. Run applicable private E2E-018/021, and E2E-003/004 plus cargo test/fmt/clippy only for native changes. Cold-replay the terminal artifact outside the checkout without PYTHONPATH. Run adversarial_verify.py and verdict_row_consistency_lint.py --strict on the candidate before publishing. Retain rejected evidence; a failed owned check means disqualified and readiness zero. Record global test/spec debt separately, never silently waive an owned failure. Reconcile specs, _bmad/traceability.md, ops/status.md and ops/changelog.md.\n\nREQUIRED ARTIFACT FIELDS:\nexperiment_id, task_id, milestone, run_date, honest_verdict (terminal complete_ prefix); verdict_class: positive | circular_positive | null | blocked | disqualified | partial. Partial is only unfinished own work that another attempt can complete; unchanged external absence is blocked. inference_substrate, inference_substrate_class, MODEL_SPECS, model_invocation_counts, numerical_training_calls, verifier_is_oracle, duration_s, random_seed, reproducibility_checksum, source_artifact_hashes, code_config_hashes, raw_shard_hashes, phase_spans, preconditions_checked. rows: per-unit records with unit_id, cluster_id, arm, seed, metric, denominator, status, missing_reason; intended_count, completed_count, failed_count, censored_count, excluded_count, independent_count. gate_check_summary: check, upstream, artifact_field, expected, observed, path and hash for every blocked result, distinguishing missing_file, missing_field, rejected_producer and observed zero. acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage, exposure_scope, independent_generalization_score, cited_upstream_artifacts, field_principles. Annotate all extra fields with their evidence principle. Exact-oracle success is circular_positive, never positive; constructed evidence never establishes natural-text or hidden-game generalization. Readiness means valid evidence, not benefit. Do not pad elapsed time to meet substrate floors.\nmemory_rows_ready_score, learning_cost_ready_score: integer 0/1; frozen_manifest_hash, per_query_rows, retention_rows, complete_stream_cost_rows, release_rows, template_addition_rows, state_hashes, numerical_training_calls, inference_operation_counts. Principle: one stream is one independent unit; all nested work and durable costs remain visible.\n\nRun command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_8820_v755_causal_objective_streams.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.",
+    "requires_gpu": false,
+    "title": "Measure future decisions after normalized energy updates and delayed template additions",
+    "track": "research"
+  },
+  "upstream_task_ids": [
+    "exp8817-categorical-memory-prototype"
+  ]
+}

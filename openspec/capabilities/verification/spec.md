@@ -59034,3 +59034,22 @@ prediction seals, changed probabilities/actions and rehashed aggregate
 forgeries. Private fixtures cannot inherit production qualification. Cold
 replay recomputes selection, probabilities, random thinning and reductions;
 exact oracle checks remain separately costed and circular in scope.
+
+### REQ-VERIFY-8827: Measured original runner and branch-local admission
+
+The V756 contract producer SHALL retain original validation, real CLI children,
+and SQLite statement evidence with zero exclusions. Current checks SHALL bind
+all new owned statements. Failed owned checks disqualify readiness. Historical
+primaries and verdicts remain immutable. Runtime admission requires a new causal
+repair, current validator custody, exact mandated model revision and checksum,
+CUDA build, actual device/context/copy/offload evidence, and changed environment
+or library hashes. ARC admission requires authenticated selected/applied outcomes
+beyond Exp8760: thirty episodes, three shared games and five firings per shared
+arm cell. Neither optional gate controls independent CPU producers.
+
+#### SCENARIO-VERIFY-8827-CUSTODY
+
+Tests reject full-task mutations, missing authorities, stale or unbound optional
+receipts, insufficient ARC cells, changed raw bytes and rehashed reductions.
+Private CLI replay outside the checkout rejects tampering. Source methods bind
+versioned primary bytes, adaptations and assumptions without importing results.
