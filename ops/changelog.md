@@ -23119,3 +23119,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Bind thirteen tasks and close original contract-runner coverage (⚠️ Research Finding) — honest_verdict=complete_disqualified_v756_branch_contract; results/experiment_8827_v756_branch_contract.json
 - 2026-11-05: Qualify the finite learning diagnosis with bounded original replay (⚠️ Research Finding) — honest_verdict=complete_circular_positive_signal_replay_qualification; results/experiment_8828_v756_signal_replay_qualification.json
 - 2026-11-05: Seal independent worlds and finite-support selective decision methods (⚠️ Research Finding) — honest_verdict=complete_null_selective_methods; results/experiment_8829_v756_selective_methods.json
+- 2026-11-05: Qualify normalized energy updates and a linear control in causal memory (⚠️ Research Finding) — honest_verdict=complete_disqualified_categorical_memory; results/experiment_8830_v756_categorical_memory.json
