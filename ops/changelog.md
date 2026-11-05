@@ -23135,3 +23135,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Bind the V757 contract and qualify existing branch-admission execution (⚠️ Research Finding) — honest_verdict=complete_disqualified_v757_branch_contract; results/experiment_8840_v757_branch_contract.json
 - 2026-11-05: Qualify the original causal energy store through its missing rejection paths (⚠️ Research Finding) — honest_verdict=complete_circular_positive_memory_execution; results/experiment_8841_v757_memory_execution.json
 - 2026-11-05: Seal a fixed population and valid calibration-draw protocol (⚠️ Research Finding) — honest_verdict=complete_null_selective_population; results/experiment_8842_v757_selective_population.json
+- 2026-11-05: Measure delayed energy learning and template additions on fresh query streams (⚠️ Research Finding) — honest_verdict=complete_circular_positive_causal_streams; results/experiment_8843_v757_causal_streams.json
