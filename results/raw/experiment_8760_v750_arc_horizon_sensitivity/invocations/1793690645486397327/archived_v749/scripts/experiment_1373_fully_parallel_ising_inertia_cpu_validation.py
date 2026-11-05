@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_1373_fully_parallel_ising_inertia_cpu_validation.py

@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/milestone_progress_ledger.py

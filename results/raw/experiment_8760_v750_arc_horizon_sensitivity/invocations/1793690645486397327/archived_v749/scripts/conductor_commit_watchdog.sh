@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/conductor_commit_watchdog.sh

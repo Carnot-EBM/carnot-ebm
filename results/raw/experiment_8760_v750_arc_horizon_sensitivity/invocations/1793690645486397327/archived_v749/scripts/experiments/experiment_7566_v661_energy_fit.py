@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7566_v661_energy_fit.py

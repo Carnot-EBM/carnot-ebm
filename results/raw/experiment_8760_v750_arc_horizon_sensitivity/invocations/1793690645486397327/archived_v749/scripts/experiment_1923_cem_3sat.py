@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_1923_cem_3sat.py

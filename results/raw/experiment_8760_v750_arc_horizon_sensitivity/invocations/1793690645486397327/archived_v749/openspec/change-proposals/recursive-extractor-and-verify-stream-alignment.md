@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/recursive-extractor-and-verify-stream-alignment.md

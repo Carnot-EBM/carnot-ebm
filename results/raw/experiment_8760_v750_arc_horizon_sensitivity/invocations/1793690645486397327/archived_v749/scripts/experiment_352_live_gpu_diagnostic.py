@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_352_live_gpu_diagnostic.py

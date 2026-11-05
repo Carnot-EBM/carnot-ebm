@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/wire-trace2skill-into-conductor.md

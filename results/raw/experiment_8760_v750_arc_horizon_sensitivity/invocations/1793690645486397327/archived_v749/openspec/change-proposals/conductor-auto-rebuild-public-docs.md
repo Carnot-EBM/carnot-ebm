@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/conductor-auto-rebuild-public-docs.md

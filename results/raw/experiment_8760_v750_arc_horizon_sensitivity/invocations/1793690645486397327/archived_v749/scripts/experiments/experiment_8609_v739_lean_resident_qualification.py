@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8609_v739_lean_resident_qualification.py

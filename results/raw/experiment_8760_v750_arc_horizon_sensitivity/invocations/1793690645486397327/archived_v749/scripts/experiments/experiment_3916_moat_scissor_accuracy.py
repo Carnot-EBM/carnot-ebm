@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_3916_moat_scissor_accuracy.py

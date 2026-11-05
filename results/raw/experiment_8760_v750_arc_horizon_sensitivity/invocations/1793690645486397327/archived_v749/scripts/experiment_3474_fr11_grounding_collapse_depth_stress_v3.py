@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3474_fr11_grounding_collapse_depth_stress_v3.py

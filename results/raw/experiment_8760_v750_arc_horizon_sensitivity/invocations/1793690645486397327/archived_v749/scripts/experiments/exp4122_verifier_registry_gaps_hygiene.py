@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/exp4122_verifier_registry_gaps_hygiene.py

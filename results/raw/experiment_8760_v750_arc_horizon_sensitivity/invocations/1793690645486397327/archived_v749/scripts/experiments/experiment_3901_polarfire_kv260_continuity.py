@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_3901_polarfire_kv260_continuity.py

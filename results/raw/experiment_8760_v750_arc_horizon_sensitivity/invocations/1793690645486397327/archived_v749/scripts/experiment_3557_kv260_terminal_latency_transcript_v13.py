@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3557_kv260_terminal_latency_transcript_v13.py

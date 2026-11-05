@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3495_p01_energy_vs_sc_contested_subset_inband_v8.py

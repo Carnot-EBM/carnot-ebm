@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.py

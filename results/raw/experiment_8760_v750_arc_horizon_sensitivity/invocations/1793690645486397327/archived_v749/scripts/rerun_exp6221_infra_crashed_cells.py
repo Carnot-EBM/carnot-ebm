@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/rerun_exp6221_infra_crashed_cells.py

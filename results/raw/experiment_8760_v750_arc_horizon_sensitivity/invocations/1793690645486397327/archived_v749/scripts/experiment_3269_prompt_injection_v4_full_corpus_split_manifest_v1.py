@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3269_prompt_injection_v4_full_corpus_split_manifest_v1.py

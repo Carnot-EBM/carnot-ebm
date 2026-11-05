@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3449_p01_energy_vote_vs_self_consistency_cached_scoring_v4.py

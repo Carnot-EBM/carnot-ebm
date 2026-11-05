@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/zenil-grounded-self-distillation-deployable-stack.md

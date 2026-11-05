@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3657_deployable_second_pair_of_eyes_detector.py

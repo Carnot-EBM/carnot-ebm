@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3268_sota_receipt_methodology_supplement_v1.py

@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/exp4071_verifier_action_pruner_efficiency.py

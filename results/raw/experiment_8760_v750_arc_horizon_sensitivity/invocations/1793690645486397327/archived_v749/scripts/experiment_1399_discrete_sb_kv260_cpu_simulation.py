@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_1399_discrete_sb_kv260_cpu_simulation.py

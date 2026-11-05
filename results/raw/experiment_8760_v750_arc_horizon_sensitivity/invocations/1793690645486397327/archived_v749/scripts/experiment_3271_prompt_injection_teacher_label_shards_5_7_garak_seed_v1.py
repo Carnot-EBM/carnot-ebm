@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3271_prompt_injection_teacher_label_shards_5_7_garak_seed_v1.py

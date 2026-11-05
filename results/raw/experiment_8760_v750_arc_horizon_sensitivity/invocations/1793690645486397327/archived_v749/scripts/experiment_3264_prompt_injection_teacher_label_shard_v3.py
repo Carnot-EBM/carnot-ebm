@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3264_prompt_injection_teacher_label_shard_v3.py

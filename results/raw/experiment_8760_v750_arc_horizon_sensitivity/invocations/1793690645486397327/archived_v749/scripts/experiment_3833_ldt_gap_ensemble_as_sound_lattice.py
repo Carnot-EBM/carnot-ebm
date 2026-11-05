@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3833_ldt_gap_ensemble_as_sound_lattice.py

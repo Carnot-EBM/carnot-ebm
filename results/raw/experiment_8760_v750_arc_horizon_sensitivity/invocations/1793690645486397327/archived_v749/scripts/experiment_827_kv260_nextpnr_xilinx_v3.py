@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_827_kv260_nextpnr_xilinx_v3.py

@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/arc_grid_verifier_invariants_v2_synthesis.py

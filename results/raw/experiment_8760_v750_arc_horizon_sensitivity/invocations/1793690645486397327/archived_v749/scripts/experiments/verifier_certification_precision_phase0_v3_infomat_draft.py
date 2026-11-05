@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/verifier_certification_precision_phase0_v3_infomat_draft.py

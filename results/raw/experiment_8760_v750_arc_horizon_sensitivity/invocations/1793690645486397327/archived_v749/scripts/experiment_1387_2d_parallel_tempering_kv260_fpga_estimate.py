@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_1387_2d_parallel_tempering_kv260_fpga_estimate.py

@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py

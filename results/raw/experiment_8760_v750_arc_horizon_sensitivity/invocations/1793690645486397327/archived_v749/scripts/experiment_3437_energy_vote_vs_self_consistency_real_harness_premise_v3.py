@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3437_energy_vote_vs_self_consistency_real_harness_premise_v3.py

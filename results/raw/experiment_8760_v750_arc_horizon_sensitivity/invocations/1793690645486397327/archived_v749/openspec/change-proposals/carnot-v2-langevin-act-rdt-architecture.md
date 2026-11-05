@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/carnot-v2-langevin-act-rdt-architecture.md

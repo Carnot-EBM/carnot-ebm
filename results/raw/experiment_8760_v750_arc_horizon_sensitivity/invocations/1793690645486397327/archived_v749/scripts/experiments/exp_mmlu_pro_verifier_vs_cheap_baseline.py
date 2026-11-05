@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/exp_mmlu_pro_verifier_vs_cheap_baseline.py

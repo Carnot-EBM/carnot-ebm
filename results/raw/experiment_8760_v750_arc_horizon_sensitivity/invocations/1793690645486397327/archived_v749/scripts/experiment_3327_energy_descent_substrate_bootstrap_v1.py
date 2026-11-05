@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3327_energy_descent_substrate_bootstrap_v1.py

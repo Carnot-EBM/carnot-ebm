@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_5136_receipt_structured_pool_v2_v471.py

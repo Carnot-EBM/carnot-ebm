@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/issue-004-ecp5-nexus-open-fpga.md

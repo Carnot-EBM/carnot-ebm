@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3112_logic_regularized_verifier_pilot_v1.py

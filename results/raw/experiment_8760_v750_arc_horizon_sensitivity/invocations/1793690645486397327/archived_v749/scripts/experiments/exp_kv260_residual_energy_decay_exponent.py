@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/exp_kv260_residual_energy_decay_exponent.py

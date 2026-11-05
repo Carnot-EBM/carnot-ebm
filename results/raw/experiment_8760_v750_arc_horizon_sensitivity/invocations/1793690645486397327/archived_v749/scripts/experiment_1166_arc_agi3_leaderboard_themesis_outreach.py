@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_1166_arc_agi3_leaderboard_themesis_outreach.py

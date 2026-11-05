@@ -1,1 +1,0 @@
-/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_3265_prompt_injection_kan_train_eval_shard_v3.py
