@@ -106129,6 +106129,22 @@ rehashing of altered rows. Owned failures disqualify and clear mapping readiness
 
 ### REQ-REPORT-8826: Reconcile thirteen outcomes and distinguish constructed measurements from generalization
 
+The capstone SHALL compare all thirteen complete V755 objects and exact gates.
+Primary verdicts SHALL remain separate from scheduler skips and quarantine.
+Constructed counts SHALL include admitted measured rows, exclude protocol seals
+and design inventories, and deduplicate nested seeds by cluster. Rejected rows
+SHALL retain separate counts. Registered estimands SHALL be recomputed from rows.
+External absence SHALL block overall science without erasing valid CPU nulls.
+Continuation rows SHALL bind prior evidence, changed mechanism, acceptance gates
+and exact-scope reopening conditions. No exclusion manifest change is authorized.
+
+#### SCENARIO-REPORT-8826-ACCOUNTING
+
+Given primary, pre-gate, cascade, quarantine and failed-validation outcomes,
+all thirteen slots are accounted for without inventing a skipped primary verdict.
+Observed zero, missing field, missing file and rejected producer remain distinct.
+Cold replay rejects aggregate tampering even after its checksum is recomputed.
+
 The experiment SHALL publish `results/experiment_8826_v755_capstone.json` under the exact V755 protocol.
 It SHALL preserve per-unit evidence, independent-unit counts, explicit verdict class,
 source and configuration hashes, owned validation and exact blocked-gate operands.

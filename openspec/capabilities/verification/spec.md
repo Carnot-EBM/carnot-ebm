@@ -2,6 +2,19 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8826: Qualify V755 capstone without optional science
+
+Owned unit and actual CLI statements SHALL have 100 percent coverage with zero
+exclusions. Owned command failure SHALL disqualify and clear reconciliation
+readiness. Repository health debt SHALL remain separate. Private E2E-018/021,
+strict typing, lint, format, spec coverage, unchanged adversarial checks and
+outside-checkout replay SHALL bind the terminal candidate before publication.
+
+### SCENARIO-VERIFY-8826-TAMPER
+
+Given missing, changed or malformed evidence, admission fails closed and retains
+rejected bytes. Rehashed counts and altered task authority fail cold replay.
+
 ## REQ-VERIFY-8617: Replay original private release operands
 
 Cold replay must authenticate independently pinned Git blobs and original methods
