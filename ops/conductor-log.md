@@ -21402,3 +21402,4 @@ code |
 | 2026-11-05 18:00 UTC | Audit future loss and untouched retention against  | OK | 105 passed, 1 warning in 71.13s (0:01:11) |
 | 2026-11-05 18:43 UTC | Measure indexed witness costs with construction an | OK | 95 passed, 1 warning in 115.53s (0:01:55) |
 | 2026-11-05 19:21 UTC | Measure complete adaptation cost as verified templ | OK | 97 passed, 1 warning in 53.84s |
+| 2026-11-05 19:25 UTC | Test source-span extraction after new authenticate | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8840-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
