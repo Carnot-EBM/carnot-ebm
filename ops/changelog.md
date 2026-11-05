@@ -23121,3 +23121,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Seal independent worlds and finite-support selective decision methods (⚠️ Research Finding) — honest_verdict=complete_null_selective_methods; results/experiment_8829_v756_selective_methods.json
 - 2026-11-05: Qualify normalized energy updates and a linear control in causal memory (⚠️ Research Finding) — honest_verdict=complete_disqualified_categorical_memory; results/experiment_8830_v756_categorical_memory.json
 - 2026-11-05: Measure ordered witness checks at matched exact decision quality (⚠️ Research Finding) — honest_verdict=complete_null_ordered_evidence_cost; results/experiment_8831_v756_ordered_evidence_cost.json
+- 2026-11-05: Separate calibration support from learned decision discrimination (⚠️ Research Finding) — honest_verdict=complete_disqualified_selective_availability; results/experiment_8832_v756_selective_availability.json
