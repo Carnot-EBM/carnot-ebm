@@ -106312,6 +106312,20 @@ the V756 design and task prompt. Historical primaries SHALL remain unchanged.
 
 ### REQ-REPORT-8828: Qualify the finite learning diagnosis with bounded original replay
 
+Execution contract (2026-11-05): authenticate all complete historical operands
+through the unchanged Exp8810 reducer once per invocation. Memoize only pure
+primitive calls by their complete effective inputs. Seal their immutable results,
+original source/test bytes, preserved V755 design and every operand hash in an
+invocation-owned snapshot. Fresh replay checks these bindings and independently
+recomputes primitive values, diagnostic features, development split, controls,
+all 45 original fits and exact reductions. Each child retains its 600 second
+deadline. Pilot authentication and representative fits before admitting a full
+replay plus validation projection of at most 4200 seconds. Keep 400 updates,
+40/20 structures, the three original rates, and all five original seeds.
+The categorical rule remains >=0.01 development Brier gain in four seeds with
+passing gradients and disjointness. Show the stronger linear reference. This
+licenses no future-learning claim and does not repair Exp8815's verdict.
+
 The experiment SHALL qualify complete original finite-diagnosis replay using one authenticated immutable primitive snapshot and bounded full-fit recomputation, preserving original deadlines and numerical criteria.
 The deliverable SHALL be `results/experiment_8828_v756_signal_replay_qualification.json`.
 Required readiness/benefit fields: `diagnosis_rows_ready_score; objective_candidate_ready_score`.

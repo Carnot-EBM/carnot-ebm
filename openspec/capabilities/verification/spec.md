@@ -59053,3 +59053,22 @@ Tests reject full-task mutations, missing authorities, stale or unbound optional
 receipts, insufficient ARC cells, changed raw bytes and rehashed reductions.
 Private CLI replay outside the checkout rejects tampering. Source methods bind
 versioned primary bytes, adaptations and assumptions without importing results.
+
+### REQ-VERIFY-8828: Authenticate immutable primitives and bounded original fits
+
+Before measurement, check exact historical operand hashes, repository virtualenv,
+CPU dependencies, private output permission and free disk. Missing external
+authority blocks with the exact check, upstream, field, expected, observed, path,
+hash and absence category; internal failure disqualifies. Snapshot and children
+belong to one invocation. Reject stale operands, wrong code, missing fits,
+changed curves, controls and repaired reductions. Preserve historical tests.
+Require zero-exclusion 100 percent new unit/subprocess statement coverage, scoped
+Ruff, strict mypy, positional spec tracing, private E2E-018/021, original 600s
+children, outside-checkout replay without PYTHONPATH and unchanged scanners.
+
+#### SCENARIO-VERIFY-8828-SNAPSHOT
+
+Tests exercise snapshot creation, successful fresh-process reuse, wrong owner,
+wrong code, stale raw operands, repaired primitive changes, missing fit inventory,
+exact fit drift, failed owned checks and blocked external authorities. Progress
+and elapsed heartbeats cannot extend measured child deadlines.
