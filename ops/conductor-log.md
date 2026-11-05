@@ -21387,3 +21387,4 @@ code |
 | 2026-11-05 09:35 UTC | Measure complete adaptation costs on the already q | OK | 96 passed, 1 warning in 24.36s |
 | 2026-11-05 09:39 UTC | Probe source-faithful Qwen extraction after authen | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8827-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-05 09:43 UTC | Assess cross-game supervisor selection only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8827-branch-contract.arc_new_outcomes_available_score (actual=0 == expected=1) |
+| 2026-11-05 10:16 UTC | Map complete measured operations to supported boar | OK | 93 passed, 1 warning in 24.22s |
