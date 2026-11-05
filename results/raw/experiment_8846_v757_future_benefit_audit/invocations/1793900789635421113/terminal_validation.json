@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/candidate.json --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/candidate.json",
+        "--json"
+      ],
+      "duration_s": 11.396805841010064,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/terminal/00_adversarial.log",
+      "log_sha256": "sha256:c5bd79be200fe3b3fd7c9d65b4421f4e55202e4bb6108d86734fc7969ed4d953",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8846,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_future_benefit_audit\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/candidate.json"
+      ],
+      "duration_s": 0.5306404269067571,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/terminal/01_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "env -u PYTHONPATH -C /tmp /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8846_v757_future_benefit_audit.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/candidate.json",
+      "command_argv": [
+        "env",
+        "-u",
+        "PYTHONPATH",
+        "-C",
+        "/tmp",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8846_v757_future_benefit_audit.py",
+        "--replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/candidate.json"
+      ],
+      "duration_s": 19.978936080937274,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8846_v757_future_benefit_audit/invocations/1793900789635421113/terminal/02_cold_replay.log",
+      "log_sha256": "sha256:a9d7b7bfc6f2d2b6a1f7dc68575d44e98e5f75235eb026e51aafc5b221b54aff",
+      "name": "cold_replay",
+      "output_tail": "[exp8846] phase=imports_before completed=0 pending=1\n[exp8846] phase=imports_after completed=1 pending=0\n[exp8846] phase=reconstructed_streams completed=1 pending=23\n[exp8846] phase=reconstructed_streams completed=2 pending=22\n[exp8846] phase=reconstructed_streams completed=3 pending=21\n[exp8846] phase=reconstructed_streams completed=4 pending=20\n[exp8846] phase=reconstructed_streams completed=5 pending=19\n[exp8846] phase=reconstructed_streams completed=6 pending=18\n[exp8846] phase=reconstructed_streams completed=7 pending=17\n[exp8846] phase=reconstructed_streams completed=8 pending=16\n[exp8846] phase=reconstructed_streams completed=9 pending=15\n[exp8846] phase=reconstructed_streams completed=10 pending=14\n[exp8846] phase=reconstructed_streams completed=11 pending=13\n[exp8846] phase=reconstructed_streams completed=12 pending=12\n[exp8846] phase=reconstructed_streams completed=13 pending=11\n[exp8846] phase=reconstructed_streams completed=14 pending=10\n[exp8846] phase=reconstructed_streams completed=15 pending=9\n[exp8846] phase=reconstructed_streams completed=16 pending=8\n[exp8846] phase=reconstructed_streams completed=17 pending=7\n[exp8846] phase=reconstructed_streams completed=18 pending=6\n[exp8846] phase=reconstructed_streams completed=19 pending=5\n[exp8846] phase=reconstructed_streams completed=20 pending=4\n[exp8846] phase=reconstructed_streams completed=21 pending=3\n[exp8846] phase=reconstructed_streams completed=22 pending=2\n[exp8846] phase=reconstructed_streams completed=23 pending=1\n[exp8846] phase=reconstructed_streams completed=24 pending=0\n[exp8846] phase=bootstrap completed=1000 pending=9000\n[exp8846] phase=bootstrap completed=2000 pending=8000\n[exp8846] phase=bootstrap completed=3000 pending=7000\n[exp8846] phase=bootstrap completed=4000 pending=6000\n[exp8846] phase=bootstrap completed=5000 pending=5000\n[exp8846] phase=bootstrap completed=6000 pending=4000\n[exp8846] phase=bootstrap completed=7000 pending=3000\n[exp8846] phase=bootstrap completed=8000 pending=2000\n[exp8846] phase=bootstrap completed=9000 pending=1000\n[exp8846] phase=bootstrap completed=10000 pending=0\n[exp8846] phase=bootstrap completed=1000 pending=9000\n[exp8846] phase=bootstrap completed=2000 pending=8000\n[exp8846] phase=bootstrap completed=3000 pending=7000\n[exp8846] phase=bootstrap completed=4000 pending=6000\n[exp8846] phase=bootstrap completed=5000 pending=5000\n[exp8846] phase=bootstrap completed=6000 pending=4000\n[exp8846] phase=bootstrap completed=7000 pending=3000\n[exp8846] phase=bootstrap completed=8000 pending=2000\n[exp8846] phase=bootstrap completed=9000 pending=1000\n[exp8846] phase=bootstrap completed=10000 pending=0\n{\"passed\": true, \"replay_passed\": true}\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}

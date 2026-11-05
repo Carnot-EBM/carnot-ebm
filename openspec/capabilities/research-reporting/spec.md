@@ -106832,12 +106832,41 @@ Historical primaries and shared validators SHALL remain unchanged.
 The experiment SHALL independently audit future loss, causal template use and untouched retention using whole-stream paired uncertainty and the frozen linear comparator.
 The deliverable SHALL be `results/experiment_8846_v757_future_benefit_audit.json`.
 
+Authenticate original authorities, code pins and every sealed shard before
+reducing exactly24 streams,6912 online rows and5184 retention rows. Independently
+reconstruct predictions, delay8 released prefixes, restart24, tail drain and
+template admission/use joins; retention labels never feed an update. No fitting
+or threshold selection belongs to this audit. Preserve historical source bytes.
+For queries25-48 report paired per-stream Brier, log loss and typed decisive
+coverage/errors. Bootstrap10000 whole-stream draws, keeping arms and seeds
+nested, with Bonferroni familywise99-percent intervals for the five frozen
+Brier contrasts: categorical combined minus frozen/calibration-only/shuffled,
+linear combined minus frozen, and categorical combined minus linear combined.
+Causal benefit requires a0.01 Brier reduction versus frozen and positive lower
+improvement bound versus shuffled; addition benefit also requires0.005 versus
+calibration-only. Retention at24/48 requires upper Brier and decisive-error
+incidence increases<=0.01; categorical noninferiority uses a0.005 margin.
+Retain leave-one-stream-out influence and error-type subgroup descriptives;
+neither can select a post-hoc winner. Recommendation is read-only. Valid absent
+benefit is null; qualifying constructed evidence is circular_positive; absent
+external authority blocks and failed owned integrity/validation disqualifies.
+Require100-percent newly owned unit/child statements with zero exclusions,
+private E2E-018/021, Ruff, strict mypy, positional spec checks, one bounded full
+suite health run, unchanged scanners and outside-checkout cold replay without
+PYTHONPATH. Conductor owns ops and traceability reconciliation for this run.
+
 #### SCENARIO-REPORT-8846-CONTRACT
 
 Given the frozen V757 authority, execution SHALL retain per-unit rows, exact
 producer gate fields, closed verdict_class, actual compute provenance and owned
 validation. External absence is blocked; failed owned checks disqualify.
 Historical primaries and shared validators SHALL remain unchanged.
+
+Tests SHALL first fail for absent implementation, then reject missing rows,
+early feedback, leaked labels, altered seals, invalid retention, changed code
+and rehashed aggregate tampering. Exercise fixed bootstrap endpoints, null and
+constructed-positive gates, stream influence, private publication, blocked
+authority, owned failure, invalid date and cold replay CLI paths.
 
 ### REQ-REPORT-8847: Measure indexed witness costs with construction and censoring included
 
