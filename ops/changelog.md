@@ -23167,3 +23167,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - Add planned requirements and BMAD traceability. Contract and gate checks pass;
   further validation is in progress. No active roadmap or conductor edit, push,
   experiment execution or external publication occurs.
+- 2026-11-05: Bind the complete V758 contract and admit changed external evidence (⚠️ Research Finding) — honest_verdict=complete_null_v758_branch_contract; results/experiment_8853_v758_branch_contract.json
