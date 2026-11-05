@@ -21368,3 +21368,4 @@ code |
 | 2026-11-05 01:30 UTC | Measure future decisions after normalized energy u | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8817-categorical-memory-prototype) |
 | 2026-11-05 01:30 UTC | Audit causal future benefit and retention without | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8820-causal-objective-streams) |
 | 2026-11-05 01:30 UTC | Measure complete adaptation cost with parent clock | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8817-categorical-memory-prototype) |
+| 2026-11-05 01:32 UTC | Probe source-anchored extraction with mandated Qwe | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8814-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
