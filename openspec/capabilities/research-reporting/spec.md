@@ -106371,8 +106371,18 @@ the V756 design and task prompt. Historical primaries SHALL remain unchanged.
 ### REQ-REPORT-8830: Qualify normalized energy updates and a linear control in causal memory
 
 The experiment SHALL qualify normalized categorical energy, a linear control, delayed feedback and atomic verified template additions with genuine restart and gradient controls.
+Only hash-authenticated Exp8828 original replay may authorize this producer.
+Freeze its five seeds, LR0.1,400 development updates, serving count normalization,
+SGD and threshold0.5 before controls. Retain mixed and stronger linear arms.
+Publish all checkpoints, raw transitions, actual validation logs and code hashes.
+Fresh private CLI recovery and replay SHALL reconstruct retained operands.
+No future stream, Qwen weight, ARC behavior or historical authority may change.
 The deliverable SHALL be `results/experiment_8830_v756_categorical_memory.json`.
 Required readiness/benefit fields: `memory_execution_ready_score`.
+Invalid or missing feedback, duplicate releases and repeated tail drains SHALL
+leave state bytes unchanged. Failed owned checks disqualify execution readiness.
+Readiness measures causal execution only; a shuffled fixture must damage learning
+on a separable signal before it can qualify the learning controls.
 
 #### SCENARIO-REPORT-8830-CONTRACT
 

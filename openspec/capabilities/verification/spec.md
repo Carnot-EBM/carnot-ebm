@@ -59091,3 +59091,21 @@ Tests exercise snapshot creation, successful fresh-process reuse, wrong owner,
 wrong code, stale raw operands, repaired primitive changes, missing fit inventory,
 exact fit drift, failed owned checks and blocked external authorities. Progress
 and elapsed heartbeats cannot extend measured child deadlines.
+
+### REQ-VERIFY-8830: Opt-in normalized causal head
+
+Reuse the causal template store with categorical loss E(y)+logsumexp(-E(c))
+and a matched multinomial linear control. Keep the original mixed loss intact.
+Freeze every query snapshot and durably seal probabilities before feedback.
+Release exact verified labels only after eight query ordinals. One atomic state
+replacement admits at most one SGD update, acknowledgement and template addition.
+Bound templates at32 and pending capacity at32. Retain predicate/binding provenance
+and later template uses. Missing labels, invalid evidence, duplicate events,
+restart and repeated tail drains cannot add updates.
+
+#### SCENARIO-VERIFY-8830-CAUSAL
+
+Given a frozen head, finite differences agree with analytic gradients within
+0.0001, probabilities sum to one, and a failed atomic write preserves both memory
+and disk. Real fresh CLI processes recover pending predictions and acknowledge
+exactly once. Constructed controls establish execution, never generalization.
