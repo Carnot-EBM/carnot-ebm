@@ -23133,3 +23133,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Map complete measured operations to supported board work (⚠️ Research Finding) — honest_verdict=complete_null_hardware_operation_budget; results/experiment_8838_v756_hardware_operation_budget.json
 - 2026-11-05: Reconcile thirteen outcomes and retire only unchanged failed scopes (⚠️ Blocked) — honest_verdict=complete_blocked_v756_capstone; results/experiment_8839_v756_capstone.json
 - 2026-11-05: Bind the V757 contract and qualify existing branch-admission execution (⚠️ Research Finding) — honest_verdict=complete_disqualified_v757_branch_contract; results/experiment_8840_v757_branch_contract.json
+- 2026-11-05: Qualify the original causal energy store through its missing rejection paths (⚠️ Research Finding) — honest_verdict=complete_circular_positive_memory_execution; results/experiment_8841_v757_memory_execution.json
