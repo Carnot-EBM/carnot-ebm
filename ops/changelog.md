@@ -23141,3 +23141,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-05: Audit future loss and untouched retention against frozen and linear controls (⚠️ Research Finding) — honest_verdict=complete_null_future_benefit_audit; results/experiment_8846_v757_future_benefit_audit.json
 - 2026-11-05: Measure indexed witness costs with construction and censoring included (⚠️ Research Finding) — honest_verdict=complete_circular_positive_indexed_cost; results/experiment_8847_v757_indexed_cost.json
 - 2026-11-05: Measure complete adaptation cost as verified template memory fills (⚠️ Research Finding) — honest_verdict=complete_null_memory_size_cost; results/experiment_8848_v757_memory_size_cost.json
+- 2026-11-05: Map index and memory costs to KV260 PolarFire and GateMate operations (⚠️ Research Finding) — honest_verdict=complete_null_hardware_operation_budget; results/experiment_8851_v757_hardware_operation_budget.json
