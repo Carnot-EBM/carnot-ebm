@@ -4071,6 +4071,13 @@ CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precede
 
 ## ARC-AGI-3 Generalization-Testing Floor (MANDATORY — 2026-07-17, supersedes the retired public-solving floor)
 
+> **SUSPENDED 2026-11-05 (append-only banner).** The operator shelved ARC-AGI-3 work and
+> directed: "Stop the conductor from scheduling ARC runs". The planner must NOT reserve an
+> ARC slot, and must NOT emit ARC tasks. The slot floor below does not apply. Lint
+> `scripts/arc_levelup_guarantee_lint.py` is warn-only for this floor, so zero ARC tasks
+> does not block activation. The rule text stays unchanged per never-prune. The operator
+> lifts this banner by directive.
+
 **Origin:** follow-up to the 2026-07-17 retirement of the public-game-solving standing floor (above).
 With all 25 public survey games fully cleared (183/183 levels), the operator was asked what should fill
 the reserved ARC slot going forward and chose: **"Redirect to generalization research"** — testing and
@@ -4229,6 +4236,13 @@ Discipline" (the per-task mechanics this floor feeds) · `ops/known-issues.md` 2
 concrete task queue) · `scripts/arc_levelup_guarantee_lint.py` (mechanical enforcement).
 
 ## AVO-Method Adoption for the Live Agent (MANDATORY — 2026-08-21)
+
+> **SUSPENDED 2026-11-05 (append-only banner).** The operator shelved ARC-AGI-3 work and
+> directed: "Stop the conductor from scheduling ARC runs". The planner must NOT reserve an
+> ARC slot, and must NOT emit ARC tasks. The slot floor below does not apply. Lint
+> `scripts/arc_levelup_guarantee_lint.py` is warn-only for this floor, so zero ARC tasks
+> does not block activation. The rule text stays unchanged per never-prune. The operator
+> lifts this banner by directive.
 
 **Origin:** 2026-08-21 operator directive, verbatim:
 
