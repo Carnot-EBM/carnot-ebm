@@ -107859,6 +107859,25 @@ Status: Planned only. The thirteen tasks are defined in
 
 ### REQ-REPORT-8878: Bind the complete V760 contract and ingest new sequential-risk methods
 
+The producer shall bind exactly thirteen full independent objects, Exp8878 through
+Exp8890, to the visible table, canonical digest and V760 closing marker. Before
+activation it compares staged authority; after activation it compares the actual
+active V760 copy. Only conductor placeholder encoding may be normalized. An old
+queue cannot create new authority. Seven private mutations must reject a missing
+last task, truncated JSON, changed prompt, gate, model, table or closing marker.
+Preserve V759's truncated document, failed contract and blocked capstone bytes.
+Record eight research topics and six secondary channels with source sections,
+access limits and local method limits. Supplied runtime evidence alone may
+release the optional canary; its absence cannot block independent CPU branches.
+No activation, device probe, model invocation or external publication occurs.
+
+Tests for SCENARIO-REPORT-8878-CONTRACT shall precede implementation and cover
+staged and activated authority, stale queues, every private mutation, preserved
+history, absent/rejected runtime, blocked/disqualified/null reductions, raw drift
+and rehashed semantic tampering. Measure all new unit/child statements with zero
+exclusions. Reuse bounded private validation, cold replay and atomic publication.
+Ops and BMAD reconciliation is owned by the conductor after this task exits.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8878_v760_branch_contract.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -107872,7 +107891,9 @@ gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
 real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
-preserved. Status: planned; tests and implementation are not yet executed.
+preserved. Status: V760 producer and requirement-linked tests implemented;
+terminal validation receipts in the experiment's private raw directory determine
+readiness. No scientific benefit, activation or runtime repair is implied.
 
 ### REQ-REPORT-8879: Qualify the repaired original feedback diagnosis under immutable V759 authority
 

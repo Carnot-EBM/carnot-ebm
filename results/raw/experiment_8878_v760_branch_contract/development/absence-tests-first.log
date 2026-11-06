@@ -1,0 +1,73 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________ test_original_recorded_absence_is_preserved __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T182214-2835617-ec92e0eb/test_original_recorded_absence0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1089edf800>
+history_fixture = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T182214-2835617-ec92e0eb/test_original_recorded_absence0/original.json')
+
+    def test_original_recorded_absence_is_preserved(tmp_path, monkeypatch, history_fixture):
+        """REQ-REPORT-8878: an original null hash is an absence assertion, never source bytes."""
+        original = dict(verdict_class="blocked", code_config_hashes=[], raw_shard_hashes=[c.reference(tmp_path / "originally_absent.yaml")])
+        history_fixture.write_text(json.dumps(original))
+        monkeypatch.setattr(c, "PINS", {str(history_fixture): c.reference(history_fixture)["sha256"].split(":")[1]})
+>       result = c.history(tmp_path / "raw")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v760_branch_contract_8878.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v760_branch_contract.py:240: in history
+    refs.append(seal(path, raw))
+                ^^^^^^^^^^^^^^^
+python/carnot/reporting/v759_branch_contract.py:51: in seal
+    saved = _snapshot(source, source.read_bytes(), raw / "inputs", "operand")
+                              ^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T182214-2835617-ec92e0eb/test_original_recorded_absence0/originally_absent.yaml')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/pytest-carnot-ianblenke/20261106T182214-2835617-ec92e0eb/test_original_recorded_absence0/originally_absent.yaml'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v760_branch_contract_8878.py::test_original_recorded_absence_is_preserved
+1 failed, 9 deselected, 1 warning in 2.84s

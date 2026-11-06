@@ -1,0 +1,121 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______________ test_primary_source_hash_and_immutable_invocation _______________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T181739-2832073-65a2766e/test_primary_source_hash_and_i0')
+history_fixture = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T181739-2832073-65a2766e/test_primary_source_hash_and_i0/original.json')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd5245e5370>
+
+    def test_primary_source_hash_and_immutable_invocation(tmp_path, history_fixture, monkeypatch):
+        """REQ-REPORT-8878: rejected source bytes block; an invocation cannot overwrite evidence."""
+        root = tree(tmp_path / "root")
+        sources = json.loads((root / c.METHODS).read_bytes())
+        source = tmp_path / "paper.html"
+        source.write_text("original primary bytes")
+        sources[0]["sources"][0] = dict(path=str(source), sha256="sha256:" + "0" * 64)
+        (root / c.METHODS).write_text(json.dumps(sources))
+        archive = tmp_path / "archive.md"
+        archive.write_text("preserved truncated document")
+        monkeypatch.setitem(c.PINS, str(archive), c.reference(archive)["sha256"].split(":")[1])
+        work = c.freeze(root, tmp_path / "raw", "20261106")
+        assert not work["history"]["authenticated"]
+        assert work["history"]["failures"][0]["observed"] == "rejected_producer"
+        assert c.build(work, validation())["verdict_class"] == "blocked"
+>       with pytest.raises(FileExistsError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'FileExistsError'>
+
+tests/python/test_v760_branch_contract_8878.py:172: Failed
+----------------------------- Captured stdout call -----------------------------
+[exp8878] phase=preconditions_before completed=0 pending=13
+[exp8878] phase=authority_control_missing_last_task completed=1 pending=6
+[exp8878] phase=authority_control_truncation completed=2 pending=5
+[exp8878] phase=authority_control_prompt completed=3 pending=4
+[exp8878] phase=authority_control_gate completed=4 pending=3
+[exp8878] phase=authority_control_model completed=5 pending=2
+[exp8878] phase=authority_control_closing_marker completed=6 pending=1
+[exp8878] phase=authority_control_table completed=7 pending=0
+[exp8878] phase=preconditions_after completed=13 pending=0
+[exp8878] phase=preconditions_before completed=0 pending=13
+[exp8878] phase=authority_control_missing_last_task completed=1 pending=6
+[exp8878] phase=authority_control_truncation completed=2 pending=5
+[exp8878] phase=authority_control_prompt completed=3 pending=4
+[exp8878] phase=authority_control_gate completed=4 pending=3
+[exp8878] phase=authority_control_model completed=5 pending=2
+[exp8878] phase=authority_control_closing_marker completed=6 pending=1
+[exp8878] phase=authority_control_table completed=7 pending=0
+[exp8878] phase=preconditions_after completed=13 pending=0
+_________________ test_missing_primary_source_retains_blocker __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T181739-2832073-65a2766e/test_missing_primary_source_re0')
+history_fixture = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T181739-2832073-65a2766e/test_missing_primary_source_re0/original.json')
+
+    def test_missing_primary_source_retains_blocker(tmp_path, history_fixture):
+        """REQ-REPORT-8878: missing external source bytes produce a terminal blocker."""
+        root = tree(tmp_path / "root")
+        sources = json.loads((root / c.METHODS).read_bytes())
+        sources[0]["sources"][0] = dict(path=str(tmp_path / "missing.html"), sha256="sha256:" + "0" * 64)
+        (root / c.METHODS).write_text(json.dumps(sources))
+>       work = c.freeze(root, tmp_path / "raw", "20261106")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v760_branch_contract_8878.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v760_branch_contract.py:303: in freeze
+    snapshots.append(seal(Path(source["path"]), raw))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v759_branch_contract.py:51: in seal
+    saved = _snapshot(source, source.read_bytes(), raw / "inputs", "operand")
+                              ^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T181739-2832073-65a2766e/test_missing_primary_source_re0/missing.html')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/var/tmp/pytest-carnot-ianblenke/20261106T181739-2832073-65a2766e/test_missing_primary_source_re0/missing.html'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8878] phase=preconditions_before completed=0 pending=13
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v760_branch_contract_8878.py::test_primary_source_hash_and_immutable_invocation
+FAILED tests/python/test_v760_branch_contract_8878.py::test_missing_primary_source_retains_blocker
+2 failed, 7 deselected, 1 warning in 8.82s

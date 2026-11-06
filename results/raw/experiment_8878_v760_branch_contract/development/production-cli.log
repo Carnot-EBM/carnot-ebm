@@ -1,0 +1,29 @@
+[exp8878] phase=preconditions_before completed=0 pending=13
+[exp8878] phase=historical_operands completed=1 pending=19195
+[exp8878] phase=historical_operands completed=101 pending=19095
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8878_v760_branch_contract.py", line 17, in <module>
+    raise SystemExit(runner.main(["--date", "20261106", *sys.argv[1:]]))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v755_branch_runner.py", line 255, in main
+    return run(args.output.absolute(), raw.absolute(), args.root, args.date)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v755_branch_runner.py", line 205, in run
+    work = c.freeze(root, raw, run_date)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v760_branch_contract.py", line 280, in freeze
+    historical = history(raw)
+                 ^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v760_branch_contract.py", line 240, in history
+    refs.append(seal(path, raw))
+                ^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v759_branch_contract.py", line 51, in seal
+    saved = _snapshot(source, source.read_bytes(), raw / "inputs", "operand")
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8866_v759_branch_contract/invocations/1793960942212453784/authority/research-roadmap-next.yaml'
