@@ -21410,3 +21410,26 @@ code |
 | 2026-11-05 23:03 UTC | Plan milestone 2026.11.758 | OK | 13 tasks proposed |
 | 2026-11-05 23:19 UTC | Milestone 2026.11.758 activated | OK | 13 tasks queued |
 | 2026-11-05 23:45 UTC | Bind the complete V758 contract and admit changed  | OK | 98 passed, 1 warning in 16.92s |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 10: OPEN 70 days: SILENT_NON_FIRING on harnes |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_emit_no_llm_by_name_warning age-week 8: OPEN 56 days: SI |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_path_tokens age-week 8: OPEN 56 days: SILENT_NON_F |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_evidence_scope age-week 8: OPEN 56 days: SILENT_NO |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_methodology_claims_live_inference age-week 8: OPEN 56 da |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_identity_claims_live_inference age-week 8: OPEN 56 days: |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_null_delta_descriptor age-week 7: OPEN 49 days: |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_novelty_proposal_ablation_overclaim age-week 6: OPE |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_proposal_filter_coverage_up age-week 6: OPEN 42 d |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_proposal_filter_heldout_rejection_overclaim age-wee |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_perception_overclaim age-week 6: OPEN 42 days: SILE |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_world_model_trust_pass age-week 6: OPEN 42 days:  |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_grid_changing_correct_evidence age-week 6: OPEN 42 days: |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_s2_schema_signal age-week 6: OPEN 42 days: SILENT_NO |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_engine_selection_game_rows age-week 6: OPEN 42 days: SIL |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_candidate_outcome_values age-week 6: OPEN 42 days: SILEN |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_count_effective_selection_games age-week 6: OPEN 42 days |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_top_level_metric age-week 4: OPEN 28 days:  |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_metric_pair age-week 4: OPEN 28 days: SILEN |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_multilevel_solve_rate age-week 4: OPEN 28 d |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_real_field_all_true age-week 4: OPEN 28 days: SILENT_NON |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_generation_coverage_up age-week 4: OPEN 28 days:  |
+| 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_variant_denominators age-week 0: OPEN 1 days: SILENT_NON |

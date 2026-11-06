@@ -107078,6 +107078,36 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Implementation contract (2026-11-05, REQ-REPORT-8854): freeze six linear arms,
+SGD 0.1, the existing six counts and candidate encoding, pending/template caps32.
+Only calibration arms move weights; only addition arms admit verified templates.
+Immediate feedback follows its prediction seal and remains diagnostic. Shuffling
+uses only the released prefix. Rejected feedback and failed writes preserve bytes.
+Combined transitions must match the original linear control on identical events.
+
+Freeze24 fresh paired streams (seeds11/23/37/47/59 cyclically), each with48 online
+and48 untouched retention worlds. Twelve streams use delay8; twelve use the fixed
+4/8/12 cycle. Seven query terms distinguish this cohort from earlier learning
+queries; graph branch invariants distinguish worlds beyond entity renaming.
+Freeze queries25–48, retention checkpoints0/24/48, six error strata, all27648 row
+identities, and interval movement accounting in a hashed protocol. Retention
+labels never train. Execute two separate development pilots only; scheduled
+research rows remain explicitly censored for the later execution producer.
+
+SCENARIO-REPORT-8854-CONTRACT additionally requires finite differences within1e-4,
+valid/rejected/stale/duplicate feedback, atomic state/ack commit, failed writes,
+restart, frozen component byte identity and prefix-only shuffle. Frozen later
+audit gates are future gain0.01, additions gain0.005, shuffled superiority, and
+retention/error upper increase0.01 using simultaneous99% stream-cluster intervals.
+Readiness depends on causal integrity and measured execution/replay feasibility,
+never pilot benefit. Authenticate Exp8841's exact authority and source/config/raw
+bytes; missing external inputs block, failed owned controls disqualify. Record
+actual CPU numerical training with MODEL_SPECS=[] and no_model_load. Publication
+requires unit/child100% statement coverage with zero exclusions, private CLI and
+cold replay, scoped lint/types/spec checks, private E2E-018/021 and unchanged
+terminal scanners. Preserve historical primaries and leave ops reconciliation to
+the conductor. No roadmap activation is authorized.
+
 ### REQ-REPORT-8855: Separate finite-population discrimination from certificate sample requirements
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
