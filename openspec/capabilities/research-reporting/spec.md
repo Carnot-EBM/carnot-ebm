@@ -108205,6 +108205,33 @@ Exp8886 owns benefit testing. The conductor owns ops and BMAD reconciliation.
 
 ### REQ-REPORT-8885: Measure sequential certificate cost at matched coverage and risk
 
+Implementation contract (20261106): authenticate the original ready Exp8880
+producer and every retained operand before reexecuting its forty frozen paired
+replicates, seven policies and four groups. Reuse its population, scores,
+selection and replacement streams without fitting or changing thresholds.
+Seal selection and both protocols' first-valid certificates before releasing
+complete census labels. Retain all visited looks and all four potential bound
+events, including refused policies, for the per-replicate family violation
+audit. Evaluate the five original prevalence mixtures only; no within-group
+corruption or natural-text validity claim follows.
+Charge 240 selection labels per group plus every candidate through the terminal
+look, including repeats and rejects. Standalone policy, shared seven-policy
+union, actual joint research labels and census overhead remain separate.
+Freeze 23 two-sided simultaneous 99-percent bounded Hoeffding intervals:
+three policy families times standalone label difference and five mixture
+coverage differences, three standalone savings contrasts, and shared-union
+label difference and savings. Average the five learned seeds inside each
+replicate. Label savings require learned-family total-label savings lower
+bound above zero, all five coverage-difference lower bounds at least -.01,
+and no served census group risk above .05. Forty clean replicates are observations,
+not proof of universal coverage. Null savings is terminal. Readiness requires
+complete authenticated rows and owned validation, independently of utility.
+Use immutable invocation evidence, actual unit/child statement coverage with
+zero exclusions, private E2E-018/021, positional spec tracing, strict types,
+Ruff, unchanged scanners and foreign-directory cold replay. Preserve every
+scheduled failed/censored cell. No milestone activation or external publication
+occurs. Ops and BMAD reconciliation belong to the conductor.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8885_v760_sequential_label_cost.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108219,6 +108246,18 @@ real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Implementation record (20261106, supersedes the planning status above):
+`sequential_label_cost_8885.py`, its retained-evidence runner and the dated CLI
+implement the cost/census comparison without changing the frozen method.
+Eight scoped tests cover repeated paid draws, refused/unvisited bound events,
+correlated seeds, valid null and positive controls, external gates, owned
+failures, semantic tampering and foreign-directory CLI replay. The terminal
+artifact retains actual unit/child statement coverage, original private
+E2E-018/021, lint/types/spec receipts, unchanged scanners and cold replay.
+The label ledger distinguishes retained oracle-draw replay, census labels
+and zero fresh external annotations. Repository health remains separate.
+Ops, changelog and BMAD reconciliation remain conductor-owned.
 
 ### REQ-REPORT-8886: Audit label-specific future benefit and untouched retention
 
