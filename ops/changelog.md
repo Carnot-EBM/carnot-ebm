@@ -23186,3 +23186,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-06: Measure complete linear adaptation cost with equal causal and durability work (⚠️ Research Finding) — honest_verdict=complete_null_linear_durable_cost; results/experiment_8862_v758_linear_durable_cost.json
 - 2026-11-06: Map installed verification and linear learning costs to actual hardware operations (⚠️ Research Finding) — honest_verdict=complete_null_hardware_budget; results/experiment_8864_v758_hardware_budget.json
 - 2026-11-06: Reconcile thirteen outcomes and decide learning verification and hardware continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v758_capstone; results/experiment_8865_v758_capstone.json
+- 2026-11-06: Bind twelve tasks and ingest conditional-risk and feedback-control methods (⚠️ Blocked) — honest_verdict=complete_blocked_v759_branch_contract; results/experiment_8866_v759_branch_contract.json
