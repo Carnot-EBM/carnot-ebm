@@ -107897,6 +107897,27 @@ readiness. No scientific benefit, activation or runtime repair is implied.
 
 ### REQ-REPORT-8879: Qualify the repaired original feedback diagnosis under immutable V759 authority
 
+Qualification implementation contract (20261106): pin the original disqualified
+primary, repaired producer/test bytes and preserved V759 design and queue.
+Authenticate the private repair's raw operands, coverage database and actual
+retained health log; the repair summary is only a locator. Copy every consumed
+reference into invocation-owned immutable storage. If temporary repair evidence
+is absent, reproduce the original repaired CLI privately against its retained
+execution inputs. Never read mutable vNEXT as execution authority.
+Recompute all 28,800 units, six fixed development streams, complete released
+label multisets, actual topology cardinality and both sensitivity controls.
+No historical fit, optimizer selection or topology generalization is allowed.
+Rerun the unchanged 27 original tests, including missing/changed health logs and
+outside-directory replay. Measure all 315 original statements and every new
+adapter statement with no exclusions. Preserve failed global health separately.
+Only complete original controls, owned validation, unchanged scanners and cold
+replay permit diagnosis_ready_score=1; a scientific null still qualifies.
+Every external absence names its exact gate; owned failures disqualify. Keep
+private checkpoints, finite subprocess deadlines, flushed progress and the
+4200-second target within the 4800-second hard cap. Publication creates only the
+new qualification primary. Exp8867, validators, exclusion manifest, conductor
+and milestone activation remain unchanged. Conductor owns ops reconciliation.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8879_v760_diagnosis_qualification.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -107911,6 +107932,18 @@ real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Implementation record (20261106, supersedes the planning status above):
+`python/carnot/reporting/diagnosis_qualification_8879.py` and the direct
+`scripts/experiments/experiment_8879_v760_diagnosis_qualification.py` CLI retain
+content-addressed copies of original evidence and terminal states. The original
+diagnosis runs against those copies through a custody-only resolver. Tests in
+`tests/python/test_diagnosis_qualification_8879.py` cover missing inputs, exact
+producer and gate checks, label-multiset tampering, preserved failures, private
+publication and outside-checkout replay. The qualification primary records the
+measured validation outcome, original node inventory and statement coverage;
+repository-wide health remains separate from scientific readiness. The
+conductor owns ops/status, changelog and BMAD reconciliation.
 
 ### REQ-REPORT-8880: Freeze finite-look risk certification with explicit label accounting
 

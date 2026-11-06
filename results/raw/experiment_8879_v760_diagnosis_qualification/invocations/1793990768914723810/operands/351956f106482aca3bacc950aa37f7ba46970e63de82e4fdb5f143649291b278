@@ -1,0 +1,535 @@
+"""REQ-REPORT-8879: qualify the repaired diagnosis without changing its science.
+
+Copied original operands support replay after temporary repair storage disappears.
+A valid null releases the method; one query topology cannot show generalization.
+"""
+
+from __future__ import annotations
+
+import argparse
+from collections import Counter
+import json
+import os
+from pathlib import Path
+import shutil
+import sys
+import time
+from typing import Any
+from unittest.mock import patch
+
+from coverage import Coverage
+
+from carnot.reporting import feedback_information_8867 as d
+from carnot.reporting import feedback_information_runner_8867 as original
+from carnot.reporting.current_work_receipt import (
+    atomic_json,
+    build_current_work_receipt,
+    sha256_file,
+)
+from carnot.reporting.primary_publication import publish_primary
+from scripts.experiment_template import normalize_artifact_for_template_write
+
+Json = dict[str, Any]
+ROOT = d.ROOT
+NAME = "experiment_8879_v760_diagnosis_qualification"
+CLI = "scripts/experiments/" + NAME + ".py"
+OWNED = ["python/carnot/reporting/diagnosis_qualification_8879.py", CLI]
+TESTS = ["tests/python/test_diagnosis_qualification_8879.py"]
+BUDGET = 4200
+ORIGINAL = ROOT / "results" / (d.NAME + ".json")
+ORIGINAL_PIN = "sha256:409d171425fa05b415f3194141ee3f15ed5923eac6756f151594fce948de45a3"
+REPAIR = Path("/var/tmp/carnot-8867-repair-ij2ttux5") / (d.NAME + ".json")
+PINS = dict(
+    zip(
+        d.OWNED + d.TESTS,
+        [
+            "2b2dba3f959887450e8ec409f3630d1cd45b15d585af59a57f7754b5e3ea67d8",
+            "e126e75d81655a0c444bfb253f16b1f4442e403541d91e9cc514b48665301377",
+            "cbcfc94ec4763ebdff4d93eb0f03a9f73b5fab6e53d285dd6d14f174c07182b8",
+            "a6b5c3520f013a37bb8aa73966fa0bb88a30219707627024c58e3503e3231779",
+        ],
+        strict=True,
+    )
+)
+AUTHORITY = {
+    "openspec/change-proposals/research-roadmap-v759-preserved-20261106.md": "c0550b31623ec711c5cb833b1c6fcb8aa986ae77ce9cb03293dbb30ca68d2407",
+    "openspec/change-proposals/research-roadmap-v759-queue-preserved-20261106.yaml": "e1eb2c3ca1487fa4efc9acef930c1ecb45ed497d3fc8de87da597290b59b02ad",
+}
+validation = original.existing.validation
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Expose finite phase boundaries so custody work cannot look abandoned."""
+    print(f"[exp8879] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def snapshot(refs: list[Json], raw: Path) -> list[Json]:
+    """Keep exact bytes and original names while deduplicating identical operands."""
+    store = raw / "operands"
+    store.mkdir(parents=True, exist_ok=True)
+    manifest = []
+    unique = {(str(ROOT / r["path"]), r["sha256"]): r for r in refs}
+    for index, ((name, digest), _) in enumerate(unique.items()):
+        source = Path(name)
+        d.require(sha256_file(source) == digest, "operand_hash:" + name)
+        target = store / digest.removeprefix("sha256:")
+        if not target.exists():
+            shutil.copyfile(source, target)
+        d.require(sha256_file(target) == digest, "copy_hash:" + name)
+        manifest.append(dict(original_path=name, path=str(target), sha256=digest))
+        if index % 250 == 0:
+            progress("copy_operands", index + 1, len(unique) - index - 1)
+    return manifest
+
+
+def require_diagnosis(value: Json) -> None:
+    """A repaired producer must retain its identity, controls and exact null scope."""
+    d.require(
+        (value["experiment_id"], value["task_id"], value["milestone"])
+        == (8867, "exp8867-feedback-information-diagnosis", "2026.11.759"),
+        "rejected_producer",
+    )
+    d.require(
+        value["diagnosis_ready_score"] == 1 and value["required_checks_passed"] is True,
+        "diagnosis_ready_score:observed_zero",
+    )
+    d.require(
+        value["verdict_class"] == "null" and value["acceptance_gates"] == d.GATES,
+        "original_gate_drift",
+    )
+    d.require(
+        value["completed_count"] == value["intended_count"] == len(value["rows"]) == 28800,
+        "unit_census",
+    )
+    d.require(value["effective_information"]["distinct_query_templates"] == 1, "topology_drift")
+
+
+def authenticate(raw: Path, repair: Path) -> Json:
+    """Pin original execution inputs and copy the actual repaired evidence, not its summary."""
+    _, pre, refs = d.preflight(raw / "preflight", d.SOURCE)
+    historic = d.load(dict(path=str(ORIGINAL), sha256=ORIGINAL_PIN))
+    d.require(historic["verdict_class"] == "disqualified", "original_failure_changed")
+    for name, digest in (PINS | AUTHORITY).items():
+        d.require(sha256_file(ROOT / name) == "sha256:" + digest, "original_source:" + name)
+    if not repair.is_file():
+        progress("original_private_cli_before", 0, 1)
+        repair = raw / (d.NAME + ".json")
+        checks = validation.commands(
+            [
+                (
+                    "reproduce_original",
+                    [
+                        sys.executable,
+                        "-u",
+                        str(ROOT / d.CLI),
+                        "--date",
+                        "20261106",
+                        "--private-output",
+                        str(repair),
+                        "--raw-dir",
+                        str(raw / "reproduced"),
+                    ],
+                    "owned",
+                    1500,
+                ),
+            ],
+            raw / "reproduction_logs",
+        )
+        d.require(all(r["passed"] for r in checks), "owned_reproduction")
+        progress("original_private_cli_after", 1)
+    value = json.loads(repair.read_bytes())
+    require_diagnosis(value)
+    refs += (
+        value["source_artifact_hashes"] + value["code_config_hashes"] + value["raw_shard_hashes"]
+    )
+    refs += [d.reference(ORIGINAL), d.reference(repair)]
+    refs += [
+        dict(path=str(ROOT / name), sha256="sha256:" + digest) for name, digest in AUTHORITY.items()
+    ]
+    receipts = value["validation_receipts"]
+    for receipt in receipts:
+        refs.append(dict(path=str(ROOT / receipt["log_path"]), sha256=receipt["log_sha256"]))
+    health = value["repository_health_receipts"]
+    d.require(
+        health == historic["repository_health_receipts"] and len(health) == 1,
+        "retained_health_receipt",
+    )
+    refs.append(value["owned_statement_coverage"]["combined_reference"])
+    refs.append(value["terminal_validation"])
+    for name in (
+        OWNED + TESTS + ["scripts/adversarial_verify.py", "scripts/verdict_row_consistency_lint.py"]
+    ):
+        refs.append(d.reference(ROOT / name))
+    manifest = snapshot(refs, raw)
+    atomic_json(raw / "operand_manifest.json", manifest)
+    copied = {r["original_path"]: r for r in manifest}
+    pre.update(
+        original_execution_authority="preserved V759 design and queue",
+        mutable_vNEXT_used=False,
+        copied_operands=len(manifest),
+        original_tests_unchanged=True,
+    )
+    return dict(
+        repair=copied[str(repair)],
+        manifest=d.reference(raw / "operand_manifest.json"),
+        preconditions=pre,
+        original_primary_sha256=ORIGINAL_PIN,
+        retained_health_receipt=health[0],
+        repair_evidence_refs=[copied[str(repair)]],
+    )
+
+
+def reconstruct(state: Json) -> Json:
+    """Replay the original algorithm against copied bytes through a custody-only resolver."""
+    manifest = d.load(state["manifest"])
+    copied = {r["original_path"]: r for r in manifest}
+    for name, digest in (PINS | AUTHORITY).items():
+        d.require(copied[str(ROOT / name)]["sha256"] == "sha256:" + digest, "snapshot_authority")
+    d.require(copied[str(ORIGINAL)]["sha256"] == ORIGINAL_PIN, "snapshot_original_primary")
+    for ref in manifest:
+        d.require(sha256_file(Path(ref["path"])) == ref["sha256"], "snapshot_hash")
+    loader = d.load
+
+    def resolve(ref: Json) -> Json:
+        bound = copied[str(ROOT / ref["path"])]
+        d.require(bound["sha256"] == ref["sha256"], "snapshot_binding")
+        return bound
+
+    def bindings(refs: list[Json], reason: str) -> None:
+        for ref in refs:
+            resolve(ref)
+
+    with (
+        patch.object(d, "load", lambda ref: loader(resolve(ref))),
+        patch.object(d.old, "load", lambda ref: loader(resolve(ref))),
+        patch.object(d.a.prior.upstream, "bindings", bindings),
+    ):
+        d.replay(Path(state["repair"]["path"]))
+    original_value = loader(state["repair"])
+    require_diagnosis(original_value)
+    evidence = loader(resolve(original_value["raw_shard_hashes"][0]))
+    d.require(
+        all(
+            Counter(r["verified_labels"]) == Counter(r["permuted_labels"]) and len(r["events"]) == 6
+            for r in evidence["development"]["batches"]
+        ),
+        "complete_label_multisets",
+    )
+    return d.reduce(evidence)
+
+
+def validate(raw: Path, state: Json) -> Json:
+    """Rerun unchanged original tests and measure every original and adapter statement."""
+    commands = validation.commands
+    inventory = raw / "original_nodeids.log"
+
+    def scoped(plan: list[tuple[str, list[str], str, float]], logs: Path) -> list[Json]:
+        receipts = commands(
+            [
+                (name, argv, scope, 900 if name == "owned_pytest" else deadline)
+                for name, argv, scope, deadline in plan
+            ],
+            logs,
+        )
+        collected = commands(
+            [
+                (
+                    "original_nodeids",
+                    [
+                        sys.executable,
+                        "-u",
+                        "-m",
+                        "pytest",
+                        "-n",
+                        "0",
+                        "-o",
+                        "addopts=",
+                        "--no-cov",
+                        "--collect-only",
+                        "-q",
+                        *d.TESTS,
+                    ],
+                    "owned",
+                    60,
+                )
+            ],
+            raw / "inventory",
+        )
+        shutil.copyfile(ROOT / collected[0]["log_path"], inventory)
+        return receipts + collected + [state["retained_health_receipt"]]
+
+    with patch.multiple(validation, OWNED=d.OWNED + OWNED, TESTS=d.TESTS + TESTS, commands=scoped):
+        result = validation.validate(raw)
+    result["original_nodeids"] = [
+        line.strip()
+        for line in inventory.read_text().splitlines()
+        if line.startswith(d.TESTS[0] + "::")
+    ]
+    cov = Coverage(data_file=result["coverage"]["combined_reference"]["path"], config_file=False)
+    cov.load()
+    statements = []
+    for name in d.OWNED:
+        _, lines, excluded, missing, _ = cov.analysis2(str(ROOT / name))
+        statements.extend(
+            dict(path=name, line=line, executed=line not in missing, excluded=line in excluded)
+            for line in lines
+        )
+    result["original_statement_rows"] = statements
+    result["passed"] = (
+        result["passed"]
+        and len(statements) == 315
+        and all(r["executed"] and not r["excluded"] for r in statements)
+        and len(result["original_nodeids"]) == 27
+    )
+    atomic_json(raw / "qualification_validation.json", result)
+    return result
+
+
+def terminal(candidate: Path, raw: Path) -> Json:
+    """Use the existing finite supervisor and unchanged scanners on prospective bytes."""
+    with patch.object(validation, "CLI", CLI):
+        return validation.terminal(candidate, raw)
+
+
+def replay(path: Path) -> Json:
+    """Recompute scientific rows so repaired outer hashes cannot authorize false claims."""
+    value = json.loads(path.read_bytes())
+    d.require(
+        value["experiment_id"] == 8879 and value["task_id"] == "exp8879-diagnosis-qualification",
+        "qualification_identity",
+    )
+    d.require(value["acceptance_gates"] == d.GATES, "acceptance_drift")
+    for ref in value["raw_shard_hashes"] + value["code_config_hashes"]:
+        d.require(sha256_file(Path(ref["path"])) == ref["sha256"], "qualification_operand")
+    state = d.load(value["raw_shard_hashes"][0])
+    expected = reconstruct(state) if state else d.empty(value["rows"][0]["missing_reason"])
+    if value["verdict_class"] != "null":
+        expected["diagnosis_ready_score"] = 0
+    for key, observed in expected.items():
+        d.require(value[key] == observed, "qualification_reduction:" + key)
+    d.require(value["original_primary_sha256"] == ORIGINAL_PIN, "original_primary_drift")
+    for receipt in value["validation_receipts"]:
+        d.require(
+            sha256_file(ROOT / receipt["log_path"]) == receipt["log_sha256"], "validation_log"
+        )
+    return dict(passed=True, replay_passed=True, primary_sha256=sha256_file(path))
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Publish only a new qualification; private destinations do not change the method."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", default="20261106")
+    parser.add_argument(
+        "--output", "--private-output", type=Path, default=ROOT / "results" / (NAME + ".json")
+    )
+    parser.add_argument("--raw-dir", type=Path)
+    parser.add_argument("--repair", type=Path, default=REPAIR)
+    parser.add_argument("--replay", type=Path)
+    args = parser.parse_args(argv)
+    if args.replay:
+        try:
+            print(json.dumps(replay(args.replay)), flush=True)
+            return 0
+        except (OSError, ValueError, KeyError, RuntimeError) as error:
+            print(f"replay_rejected:{error}", flush=True)
+            return 1
+    if args.date != "20261106":
+        print("date_rejected: expected 20261106", flush=True)
+        return 1
+    started = time.monotonic_ns()
+    output = args.output.absolute()
+    raw = (
+        args.raw_dir or output.parent / "raw" / NAME / "invocations" / str(time.time_ns())
+    ).absolute()
+    raw.mkdir(parents=True, exist_ok=False)
+    raw.chmod(0o700)
+    state: Json = {}
+    failures: list[Json] = []
+    verdict, admitted = "null", False
+    reduced = d.empty("external_input_unavailable")
+    progress("preconditions_before", 0, 1)
+    try:
+        state = authenticate(raw, args.repair)
+        admitted = True
+        progress("preconditions_after", 1)
+        progress("original_scientific_replay_before", 0, 30)
+        reduced = reconstruct(state)
+        progress("original_scientific_replay_after", 30)
+    except (OSError, ValueError, KeyError, RuntimeError) as error:
+        owned = admitted or str(error) in {"internal_resources", "owned_reproduction"}
+        verdict = "disqualified" if owned else "blocked"
+        reason = (
+            "missing_file"
+            if isinstance(error, FileNotFoundError)
+            else "missing_field"
+            if isinstance(error, KeyError)
+            else "observed_zero"
+            if "observed_zero" in str(error)
+            else "owned_failure"
+            if owned
+            else "rejected_producer"
+        )
+        operand = Path(getattr(error, "filename", None) or args.repair)
+        failures.append(
+            dict(
+                check="original_diagnosis_qualification",
+                upstream="exp8867-feedback-information-diagnosis",
+                artifact_field="diagnosis_ready_score",
+                expected=1,
+                observed=str(error),
+                path=str(operand),
+                hash=sha256_file(operand) if operand.is_file() else None,
+                status=reason,
+            )
+        )
+        reduced = d.empty(reason)
+    atomic_json(raw / "qualification_state.json", state)
+    researched = time.monotonic_ns()
+    progress("validation_before", 0, 1)
+    health = state.get("retained_health_receipt")
+    if health is None:
+        health = json.loads(ORIGINAL.read_bytes())["repository_health_receipts"][0]
+    checked = validate(raw, dict(state, retained_health_receipt=health))
+    progress("validation_after", 1)
+    if not checked["passed"]:
+        verdict = "disqualified"
+    if verdict != "null":
+        reduced["diagnosis_ready_score"] = 0
+    ended = time.monotonic_ns()
+    spans = [
+        dict(
+            phase="authenticate_copy_replay",
+            started_monotonic_ns=started,
+            ended_monotonic_ns=researched,
+            duration_s=(researched - started) / 1e9,
+        ),
+        dict(
+            phase="owned_validation",
+            started_monotonic_ns=researched,
+            ended_monotonic_ns=ended,
+            duration_s=(ended - researched) / 1e9,
+        ),
+    ]
+    substrate = "aggregation_from_upstream_artifacts" if admitted else "blocked_no_run"
+    receipt = build_current_work_receipt(
+        run_id=raw.name,
+        owner_pid=os.getpid(),
+        events=[],
+        inference_substrate=substrate,
+        inference_substrate_class="no_model_load",
+        execution_venue="host",
+        inference_substrate_details=dict(
+            backend="original deterministic JAX CPU replay; no new fit or selection"
+        ),
+        started_monotonic_ns=started,
+        ended_monotonic_ns=ended,
+        phase_spans=spans,
+        small_ebm_training=dict(
+            performed=admitted, numerical_training_calls=reduced["numerical_training_calls"]
+        ),
+    )
+    value = dict(
+        reduced,
+        experiment_id=8879,
+        task_id="exp8879-diagnosis-qualification",
+        milestone="2026.11.760",
+        run_date=args.date,
+        honest_verdict="complete_" + verdict + "_original_diagnosis_qualification",
+        verdict_class=verdict,
+        inference_substrate=substrate,
+        inference_substrate_class="no_model_load",
+        execution_venue="host",
+        MODEL_SPECS=[],
+        model_invocation_counts=receipt["invocation_counts"],
+        verifier_is_oracle=True,
+        exposure_scope="constructed exact oracle labels; one topology; no natural-language generalization",
+        independent_generalization_score=0,
+        duration_s=(ended - started) / 1e9,
+        phase_spans=spans,
+        preconditions_checked=state.get("preconditions", {}),
+        random_seed=8867,
+        reproducibility_checksum=d.canonical_hash([ORIGINAL_PIN, PINS, AUTHORITY, d.GATES]),
+        source_artifact_hashes=state.get("repair_evidence_refs", []),
+        code_config_hashes=[
+            d.reference(ROOT / name)
+            for name in OWNED
+            + TESTS
+            + list(PINS)
+            + ["scripts/adversarial_verify.py", "scripts/verdict_row_consistency_lint.py"]
+        ],
+        raw_shard_hashes=[d.reference(raw / "qualification_state.json")]
+        + ([state["manifest"]] if state else []),
+        cited_upstream_artifacts=state.get("repair_evidence_refs", []),
+        gate_check_summary=failures,
+        acceptance_gates=d.GATES,
+        required_checks_passed=checked["passed"] and verdict == "null",
+        validation_receipts=checked["receipts"],
+        owned_statement_coverage=checked["coverage"],
+        original_primary_sha256=ORIGINAL_PIN,
+        repair_evidence_refs=state.get("repair_evidence_refs", []),
+        original_nodeids=checked["original_nodeids"],
+        original_statement_rows=checked["original_statement_rows"],
+        retained_health_receipt=health,
+        repository_health_receipts=[
+            r for r in checked["receipts"] if r["scope"] == "repository_health"
+        ]
+        + [health],
+        current_work_receipt=receipt,
+        diagnosis_rows=reduced["matched_control_rows"] + reduced["exposure_difference_rows"],
+        topology_cardinality=reduced["effective_information"].get("distinct_query_templates", 0),
+        producer_invocation=dict(
+            executable=sys.executable,
+            argv=sys.argv if argv is None else [CLI, *argv],
+            working_directory=str(Path.cwd()),
+            JAX_PLATFORMS=os.environ.get("JAX_PLATFORMS"),
+        ),
+        methodology_note="Original controls and all scheduled rows qualify methods regardless of null benefit. Repeated topology cannot establish independent generalization. No milestone activation.",
+    )
+    value["field_principles"] = {
+        key: "Bind original diagnosis evidence to this qualification; readiness is separate from benefit."
+        for key in value
+    }
+    value["field_principles"].update(
+        original_primary_sha256="Original disqualified primary bytes and verdict remain historical evidence.",
+        numerical_training_calls="Original fixed development/control SGD calls recomputed during scientific replay; no new fit or selection.",
+        independent_count="24 original stream clusters; six development streams and repeated topology cannot inflate independent structural n.",
+        owned_statement_coverage="Actual combined unit/child SQLite must cover all 315 original statements plus every adapter statement with zero exclusions.",
+        retained_health_receipt="Preserve the original failed full-suite attempt separately from owned validation.",
+        diagnosis_ready_score="Complete original controls, terminal scanners and cold replay qualify methods even for null benefit.",
+    )
+    candidate = raw / "candidate.json"
+    atomic_json(candidate, value)
+    progress("terminal_before", 0, 3)
+    final = terminal(candidate, raw)
+    progress("terminal_after", 3)
+    value["validation_receipts"].extend(final["receipts"])
+    finished = time.monotonic_ns()
+    spans.append(
+        dict(
+            phase="terminal_scanners_cold_replay",
+            started_monotonic_ns=ended,
+            ended_monotonic_ns=finished,
+            duration_s=(finished - ended) / 1e9,
+        )
+    )
+    value["duration_s"] = (finished - started) / 1e9
+    receipt.update(ended_monotonic_ns=finished, duration_s=value["duration_s"], phase_spans=spans)
+    if not final["passed"] or value["duration_s"] > BUDGET:
+        value.update(
+            verdict_class="disqualified",
+            honest_verdict="complete_disqualified_terminal_validation",
+            required_checks_passed=False,
+            diagnosis_ready_score=0,
+        )
+    atomic_json(raw / "terminal_validation.json", final)
+    value["terminal_validation"] = d.reference(raw / "terminal_validation.json")
+    value["field_principles"]["terminal_validation"] = (
+        "Unchanged scanners and outside-checkout cold replay retain executed logs."
+    )
+    value = normalize_artifact_for_template_write(value)
+    publish_primary(output, value, lambda path: dict(passed=json.loads(path.read_bytes()) == value))
+    for path in raw.rglob("*"):
+        if path.is_file():
+            path.chmod(0o400)
+    progress("published", value["completed_count"], value["censored_count"])
+    return 0

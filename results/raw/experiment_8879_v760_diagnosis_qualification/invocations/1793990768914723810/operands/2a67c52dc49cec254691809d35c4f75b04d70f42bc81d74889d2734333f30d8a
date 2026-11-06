@@ -1,0 +1,393 @@
+"""REQ-REPORT-8879 / SCENARIO-REPORT-8879-CONTRACT: qualify original evidence."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+from typing import Any
+
+import pytest
+
+from carnot.reporting import diagnosis_qualification_8879 as q
+from carnot.reporting.current_work_receipt import atomic_json
+
+
+def test_snapshot_custody(tmp_path: Path) -> None:
+    """REQ-REPORT-8879: copied operands survive disappearance and reject changed bytes."""
+    source = tmp_path / "input.json"
+    atomic_json(source, {"label": "original"})
+    refs = q.snapshot([q.d.reference(source)] * 2, tmp_path / "raw")
+    assert len(refs) == 1 and Path(refs[0]["path"]).read_bytes() == source.read_bytes()
+    source.write_text("changed")
+    with pytest.raises(ValueError, match="operand_hash"):
+        q.snapshot([dict(path=str(source), sha256=refs[0]["sha256"])], tmp_path / "bad")
+    source.unlink()
+    assert q.d.load(refs[0]) == {"label": "original"}
+
+
+@pytest.mark.parametrize("change", ["identity", "zero", "gate", "multiset", "topology"])
+def test_reduction_rejects(tmp_path: Path, change: str) -> None:
+    """REQ-REPORT-8879: exact producers and controls precede administrative readiness."""
+    value = dict(
+        experiment_id=8867,
+        task_id="exp8867-feedback-information-diagnosis",
+        milestone="2026.11.759",
+        verdict_class="null",
+        diagnosis_ready_score=1,
+        required_checks_passed=True,
+        acceptance_gates=q.d.GATES,
+    )
+    if change == "identity":
+        value["experiment_id"] = 0
+    elif change == "zero":
+        value["diagnosis_ready_score"] = 0
+    elif change == "gate":
+        value["acceptance_gates"] = {}
+    else:
+        value["rows"] = []
+    with pytest.raises((ValueError, KeyError)):
+        q.require_diagnosis(value)
+
+
+@pytest.mark.parametrize(
+    "failure", ["", "missing", "field", "rejected", "zero", "owned", "terminal", "budget"]
+)
+def test_main_census(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str) -> None:
+    """REQ-REPORT-8879: terminal receipts retain scheduled failures and the original primary."""
+    data = dict(q.d.empty("fixture"), diagnosis_ready_score=1)
+    source = tmp_path / "repair.json"
+    atomic_json(source, {})
+    manifest = tmp_path / "manifest.json"
+    atomic_json(manifest, [])
+    health = dict(name="global_python_health", scope="repository_health", passed=False)
+    state = dict(
+        repair=q.d.reference(source),
+        manifest=q.d.reference(manifest),
+        preconditions={},
+        original_primary_sha256=q.ORIGINAL_PIN,
+        retained_health_receipt=health,
+        repair_evidence_refs=[],
+    )
+
+    def authenticate(raw: Path, path: Path) -> dict[str, Any]:
+        if failure in {"missing", "field", "rejected", "zero"}:
+            raise {
+                "missing": FileNotFoundError("absent"),
+                "field": KeyError("authority"),
+                "rejected": ValueError("rejected_producer"),
+                "zero": PermissionError("observed_zero"),
+            }[failure]
+        return deepcopy(state)
+
+    monkeypatch.setattr(q, "authenticate", authenticate)
+    monkeypatch.setattr(q, "reconstruct", lambda _: deepcopy(data))
+    monkeypatch.setattr(
+        q,
+        "validate",
+        lambda *args: dict(
+            passed=failure != "owned",
+            receipts=[],
+            coverage={},
+            original_nodeids=["original"],
+            original_statement_rows=[dict(executed=True)],
+        ),
+    )
+    monkeypatch.setattr(
+        q, "terminal", lambda *args: dict(passed=failure != "terminal", receipts=[])
+    )
+    if failure == "budget":
+        monkeypatch.setattr(q, "BUDGET", -1)
+    output = tmp_path / (q.NAME + ".json")
+    assert q.main(["--private-output", str(output), "--repair", str(source)]) == 0
+    result = json.loads(output.read_bytes())
+    expected = (
+        "null"
+        if not failure
+        else "blocked"
+        if failure in {"missing", "field", "rejected", "zero"}
+        else "disqualified"
+    )
+    assert result["verdict_class"] == expected
+    assert result["diagnosis_ready_score"] == int(not failure)
+    assert result["intended_count"] == 28800
+    assert result["original_primary_sha256"] == q.ORIGINAL_PIN
+    assert result["independent_generalization_score"] == 0
+    assert set(result) <= set(result["field_principles"]) | {
+        "field_principles",
+        "producer_normalizer_receipts",
+    }
+    assert q.main(["--date", "wrong"]) == 1
+    assert q.main(["--replay", str(tmp_path / "absent")]) == 1
+    monkeypatch.setattr(q, "replay", lambda _: dict(passed=True))
+    assert q.main(["--replay", str(output)]) == 0
+
+
+def test_cli_errors(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-8879-CONTRACT: real CLI bootstraps without PYTHONPATH."""
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    for args in [["--date", "wrong"], ["--replay", str(tmp_path / "absent")]]:
+        result = subprocess.run(
+            [sys.executable, "-u", str(q.ROOT / q.CLI), *args],
+            env=env,
+            cwd="/tmp",
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        assert result.returncode == 1 and "rejected" in result.stdout
+
+
+@pytest.fixture
+def original_value() -> dict[str, Any]:
+    """Keep the production census shape while testing custody with small operands."""
+    return dict(
+        experiment_id=8867,
+        task_id="exp8867-feedback-information-diagnosis",
+        milestone="2026.11.759",
+        verdict_class="null",
+        diagnosis_ready_score=1,
+        required_checks_passed=True,
+        acceptance_gates=q.d.GATES,
+        completed_count=28800,
+        intended_count=28800,
+        rows=[{}] * 28800,
+        effective_information=dict(distinct_query_templates=1),
+    )
+
+
+@pytest.mark.parametrize("fallback", [False, True])
+def test_authenticate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, original_value: dict[str, Any], fallback: bool
+) -> None:
+    """REQ-REPORT-8879: authenticate actual source, health and raw bytes; reproduce absent repair."""
+    root = tmp_path / "repository"
+    root.mkdir()
+    original = root / "original.json"
+    healthlog = root / "health.log"
+    healthlog.write_text("historical failed global health\n")
+    health = dict(
+        name="global_python_health",
+        scope="repository_health",
+        passed=False,
+        log_path=str(healthlog),
+        log_sha256=q.sha256_file(healthlog),
+    )
+    atomic_json(original, dict(verdict_class="disqualified", repository_health_receipts=[health]))
+    code = root / "original.py"
+    code.write_text("original = True\n")
+    value = dict(
+        original_value,
+        source_artifact_hashes=[],
+        code_config_hashes=[],
+        raw_shard_hashes=[],
+        validation_receipts=[health],
+        repository_health_receipts=[health],
+        owned_statement_coverage=dict(combined_reference=q.d.reference(code)),
+        terminal_validation=q.d.reference(code),
+    )
+    repair = root / "repair.json"
+    if not fallback:
+        atomic_json(repair, value)
+    monkeypatch.setattr(q, "ORIGINAL", original)
+    monkeypatch.setattr(q, "ORIGINAL_PIN", q.sha256_file(original))
+    monkeypatch.setattr(q, "ROOT", root)
+    monkeypatch.setattr(q, "PINS", {code.name: q.sha256_file(code).split(":")[1]})
+    monkeypatch.setattr(q, "AUTHORITY", {})
+    monkeypatch.setattr(q, "OWNED", [])
+    monkeypatch.setattr(q, "TESTS", [])
+    for name in ["adversarial_verify.py", "verdict_row_consistency_lint.py"]:
+        (root / "scripts").mkdir(exist_ok=True)
+        (root / "scripts" / name).write_text("pass\n")
+    monkeypatch.setattr(q.d, "preflight", lambda *args: ({}, {}, []))
+
+    def reproduce(plan: list[Any], logs: Path) -> list[Any]:
+        args = plan[0][1]
+        atomic_json(Path(args[args.index("--private-output") + 1]), value)
+        return [dict(passed=True)]
+
+    monkeypatch.setattr(q.validation, "commands", reproduce)
+    state = q.authenticate(tmp_path / "raw", repair)
+    assert state["retained_health_receipt"] == health
+    assert state["preconditions"]["mutable_vNEXT_used"] is False
+    assert q.d.load(state["repair"])["diagnosis_ready_score"] == 1
+    assert q.d.load(state["manifest"])
+
+
+def test_reconstruct_copied_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, original_value: dict[str, Any]
+) -> None:
+    """REQ-REPORT-8879: resolve copied operands and reject a rehashed changed label multiset."""
+    evidence = tmp_path / "evidence.json"
+    atomic_json(
+        evidence,
+        dict(
+            development=dict(
+                batches=[
+                    dict(
+                        verified_labels=["a"] * 6, permuted_labels=["a"] * 6, events=list(range(6))
+                    )
+                ]
+            )
+        ),
+    )
+    repair = tmp_path / "repair.json"
+    atomic_json(repair, dict(original_value, raw_shard_hashes=[q.d.reference(evidence)]))
+    refs = q.snapshot([q.d.reference(evidence), q.d.reference(repair)], tmp_path / "raw")
+    monkeypatch.setattr(q, "PINS", {})
+    monkeypatch.setattr(q, "AUTHORITY", {})
+    monkeypatch.setattr(q, "ORIGINAL", repair)
+    monkeypatch.setattr(q, "ORIGINAL_PIN", q.sha256_file(repair))
+    manifest = tmp_path / "manifest.json"
+    atomic_json(manifest, refs)
+    state = dict(manifest=q.d.reference(manifest), repair=refs[1])
+
+    def original_replay(path: Path) -> dict[str, Any]:
+        ref = json.loads(path.read_bytes())["raw_shard_hashes"][0]
+        assert q.d.load(ref) == q.d.old.load(ref)
+        q.d.a.prior.upstream.bindings([ref], "copied")
+        return dict(passed=True)
+
+    monkeypatch.setattr(q.d, "replay", original_replay)
+    monkeypatch.setattr(q.d, "reduce", lambda _: dict(diagnosis_ready_score=1))
+    evidence.unlink()
+    repair.unlink()
+    assert q.reconstruct(state) == dict(diagnosis_ready_score=1)
+    changed = q.d.load(refs[0])
+    changed["development"]["batches"][0]["permuted_labels"][0] = "b"
+    atomic_json(Path(refs[0]["path"]), changed)
+    refs[0]["sha256"] = q.sha256_file(Path(refs[0]["path"]))
+    updated = q.d.load(refs[1])
+    updated["raw_shard_hashes"][0]["sha256"] = refs[0]["sha256"]
+    atomic_json(Path(refs[1]["path"]), updated)
+    refs[1]["sha256"] = q.sha256_file(Path(refs[1]["path"]))
+    atomic_json(manifest, refs)
+    state.update(manifest=q.d.reference(manifest), repair=refs[1])
+    monkeypatch.setattr(q, "ORIGINAL_PIN", refs[1]["sha256"])
+    with pytest.raises(ValueError, match="complete_label_multisets"):
+        q.reconstruct(state)
+
+
+def test_replay_tampering_and_terminal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """SCENARIO-REPORT-8879-CONTRACT: cold blocked replay binds reductions, gates and logs."""
+    state = tmp_path / "state.json"
+    atomic_json(state, {})
+    log = tmp_path / "check.log"
+    log.write_text("actual validation\n")
+    candidate = tmp_path / "candidate.json"
+    value = dict(
+        q.d.empty("missing_file"),
+        experiment_id=8879,
+        task_id="exp8879-diagnosis-qualification",
+        acceptance_gates=q.d.GATES,
+        verdict_class="blocked",
+        raw_shard_hashes=[q.d.reference(state)],
+        original_primary_sha256=q.ORIGINAL_PIN,
+        code_config_hashes=[],
+        validation_receipts=[dict(log_path=str(log), log_sha256=q.sha256_file(log))],
+    )
+    atomic_json(candidate, value)
+    assert q.replay(candidate)["passed"]
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    child = subprocess.run(
+        [sys.executable, "-u", str(q.ROOT / q.CLI), "--replay", str(candidate)],
+        cwd="/tmp",
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert child.returncode == 0, child.stdout + child.stderr
+    value["diagnosis_ready_score"] = 1
+    atomic_json(candidate, value)
+    with pytest.raises(ValueError, match="qualification_reduction"):
+        q.replay(candidate)
+    value["diagnosis_ready_score"] = 0
+    value["acceptance_gates"] = {}
+    atomic_json(candidate, value)
+    with pytest.raises(ValueError, match="acceptance_drift"):
+        q.replay(candidate)
+    value["acceptance_gates"] = q.d.GATES
+    atomic_json(candidate, value)
+    log.write_text("changed\n")
+    with pytest.raises(ValueError, match="validation_log"):
+        q.replay(candidate)
+    monkeypatch.setattr(
+        q.validation, "terminal", lambda *args: dict(passed=q.validation.CLI == q.CLI)
+    )
+    assert q.terminal(candidate, tmp_path)["passed"]
+
+
+def test_validation_measures_original_statements(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-REPORT-8879: actual validation inventory must contain 27 nodes and 315 statements."""
+    log = tmp_path / "collected.log"
+    log.write_text("\n".join(q.d.TESTS[0] + "::test_" + str(i) for i in range(27)))
+    health = dict(name="global_python_health", scope="repository_health", passed=False)
+
+    def commands(plan: list[Any], logs: Path) -> list[Any]:
+        if plan[0][0] == "original_nodeids":
+            return [dict(passed=True, log_path=str(log))]
+        assert plan[0][3] == 900
+        assert any(entry[0] == "global_python_health" for entry in plan)
+        return [dict(passed=True, scope="owned")]
+
+    def validate(raw: Path) -> dict[str, Any]:
+        assert q.validation.OWNED == q.d.OWNED + q.OWNED
+        receipts = q.validation.commands(
+            [
+                ("owned_pytest", [], "owned", 300),
+                ("global_python_health", [], "repository_health", 180),
+            ],
+            raw,
+        )
+        assert receipts[-1] == health
+        return dict(
+            passed=True,
+            receipts=receipts,
+            coverage=dict(combined_reference=dict(path=str(tmp_path / ".coverage"))),
+        )
+
+    class MeasuredCoverage:
+        def __init__(self, **kwargs: Any) -> None:
+            assert kwargs["config_file"] is False
+
+        def load(self) -> None:
+            pass
+
+        def analysis2(self, name: str) -> tuple[Any, ...]:
+            return name, list(range(105)), [], [], ""
+
+    monkeypatch.setattr(q.validation, "commands", commands)
+    monkeypatch.setattr(q.validation, "validate", validate)
+    monkeypatch.setattr(q, "Coverage", MeasuredCoverage)
+    value = q.validate(tmp_path, dict(retained_health_receipt=health))
+    assert value["passed"] and len(value["original_statement_rows"]) == 315
+    assert len(value["original_nodeids"]) == 27
+
+
+def test_successful_replay_reduces_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """REQ-REPORT-8879: qualification replay invokes reconstruction before granting readiness."""
+    state = tmp_path / "state.json"
+    atomic_json(state, dict(owned=True))
+    value = dict(
+        experiment_id=8879,
+        task_id="exp8879-diagnosis-qualification",
+        acceptance_gates=q.d.GATES,
+        verdict_class="null",
+        diagnosis_ready_score=1,
+        original_primary_sha256=q.ORIGINAL_PIN,
+        raw_shard_hashes=[q.d.reference(state)],
+        code_config_hashes=[],
+        validation_receipts=[],
+    )
+    candidate = tmp_path / "candidate.json"
+    atomic_json(candidate, value)
+    monkeypatch.setattr(
+        q, "reconstruct", lambda work: dict(diagnosis_ready_score=int(work["owned"]))
+    )
+    assert q.replay(candidate)["passed"]
