@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.758",
+  "generated_at": "2026-11-06T07:44:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 107.0,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure continuous linear-energy learning with isolated template and delay effec",
+      "duration_minutes": 29.93,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure certificate availability and served risk under split calibration",
+      "duration_minutes": 12.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit linear future benefit and joint retention from sealed causal rows",
+      "duration_minutes": 11.45,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Freeze independent rule selection and certification at equal label cost",
+      "duration_minutes": 10.55,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure complete linear adaptation cost with equal causal and durability work",
+      "duration_minutes": 10.12,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.758 completed 12 experiments (1 compute-bound, 11 synthesis-only) in 107.0 wall-time minutes (107 minutes / 1.8 hours, averaging 9 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). All 5 slowest experiments were synthesis-only ('Measure continuous linear-energy learning with isolated template and delay effec' at 29.93 minutes / 30min, 'Measure certificate availability and served risk under split calibration' at 12.6 minutes / 13min, 'Audit linear future benefit and joint retention from sealed causal rows' at 11.45 minutes / 11min, 'Freeze independent rule selection and certification at equal label cost' at 10.55 minutes / 11min, and 'Measure complete linear adaptation cost with equal causal and durability work' at 10.12 minutes / 10min), meaning the 1 compute-bound task finished below 10.12 minutes (10min; no data available this milestone for its exact task name or duration). Locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner was not applicable (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 49C) is expected behavior across the 11 synthesis-only tasks.",
+  "bottlenecks_identified": [
+    "No compute-bound experiment appeared in the top-5 slowest list (the 1 compute-bound experiment out of 12 completed experiments finished below the 10.12-minute / 10min fifth-slowest threshold; no data available this milestone for its exact name or duration), and gpu_idle_on_compute_bound_tasks is false.",
+    "Wall time across the 107.0-minute (107 minutes / 1.8 hours, 9 minutes average per experiment) milestone was concentrated in the 5 slowest synthesis-only tasks: 'Measure continuous linear-energy learning with isolated template and delay effec' (29.93 minutes / 30min), 'Measure certificate availability and served risk under split calibration' (12.6 minutes / 13min), 'Audit linear future benefit and joint retention from sealed causal rows' (11.45 minutes / 11min), 'Freeze independent rule selection and certification at equal label cost' (10.55 minutes / 11min), and 'Measure complete linear adaptation cost with equal causal and durability work' (10.12 minutes / 10min).",
+    "The live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 12 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse linear-energy template/delay, split-calibration, sealed causal-row, rule-selection/certification, and linear-adaptation fixtures across the 5 slowest synthesis-only experiments ('Measure continuous linear-energy learning with isolated template and delay effec' at 29.93 minutes / 30min, 'Measure certificate availability and served risk under split calibration' at 12.6 minutes / 13min, 'Audit linear future benefit and joint retention from sealed causal rows' at 11.45 minutes / 11min, 'Freeze independent rule selection and certification at equal label cost' at 10.55 minutes / 11min, and 'Measure complete linear adaptation cost with equal causal and durability work' at 10.12 minutes / 10min) to reduce the 9-minute per-experiment average.",
+    "Parallelize independent verification and subprocess validation passes within the 11 synthesis-only experiments while keeping DualGPURunner unengaged unless a compute-bound task loads 2+ models in parallel.",
+    "Record explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Free the idle 4MB memory allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 49C) as recommended by the GPU Monitor Report."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share pre-computed linear-energy, split-calibration, sealed causal-row, and certification fixtures across the 5 slowest synthesis-only tasks (29.93 minutes / 30min, 12.6 minutes / 13min, 11.45 minutes / 11min, 10.55 minutes / 11min, and 10.12 minutes / 10min).",
+    "Parallelize independent validation steps inside the 11 synthesis-only tasks to lower the 9-minute per-experiment average across the 107.0-minute (107 minutes / 1.8 hours) milestone.",
+    "Persist direct per-experiment timing metadata in artifacts to eliminate disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log) and release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, Temp 49C)."
+  ],
+  "estimated_time_savings_pct": 28,
+  "meta_reflection": "Milestone 2026.11.758 completed 12 experiments (1 compute-bound, 11 synthesis-only) in 107.0 minutes (107 minutes / 1.8 hours, averaging 9 minutes per experiment), with gpu_idle_on_compute_bound_tasks locked at false and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, Temp 49C) expected for the 11 synthesis-only workloads. Because all 5 slowest tasks were synthesis-only (29.93 minutes / 30min, 12.6 minutes / 13min, 11.45 minutes / 11min, 10.55 minutes / 11min, and 10.12 minutes / 10min) and the 1 compute-bound task completed in under 10.12 minutes (10min), deduplicating fixture setup and validation passes in synthesis tasks is the highest-leverage operational improvement for the next milestone."
+}
