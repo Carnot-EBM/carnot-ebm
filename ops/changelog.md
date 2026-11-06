@@ -23205,3 +23205,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-06: Separate label information from structural template activation (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_validation; results/experiment_8867_v759_feedback_information_diagnosis.json
 - 2026-11-06: Seal fixed evidence groups and equal-cost conditional certificates (⚠️ Research Finding) — honest_verdict=complete_null_conditional_risk_methods; results/experiment_8868_v759_conditional_risk_methods.json
 - 2026-11-06: Measure certificate robustness under fixed-group mixture shifts (⚠️ Research Finding) — honest_verdict=complete_null_conditional_risk_evaluation; results/experiment_8870_v759_conditional_risk_evaluation.json
+- 2026-11-06: Qualify a direct small-request path inside the exact witness evaluator (⚠️ Research Finding) — honest_verdict=complete_circular_positive_size_aware_verifier; results/experiment_8871_v759_size_aware_verifier.json
