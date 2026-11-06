@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-11-06 UTC — Fix Exp8867 health reuse and cold replay
+
+- Authenticate and reuse the original global-health receipt during owned
+  repairs, preserving its failure while rerunning required checks.
+- Resolve replay log paths from the repository root; add missing/changed-log
+  and outside-directory regressions without changing original assertions or
+  `scripts/research_conductor.py`.
+- Pass 27 diagnosis tests, 37 private E2E tests, 121 related tests and the full
+  private E2E-018 CLI. Fresh unit/child coverage is 315/315 statements with zero
+  exclusions; scoped Ruff, strict mypy, spec tracing, scanners and cold replay
+  pass. Private diagnosis retains all 28,800 units and its valid null result.
+- Preserve historical global-health and existing reconciliation debt; no
+  whole-repository pass is claimed. Evidence:
+  `/var/tmp/carnot-8867-repair-ij2ttux5/repair-summary.json`.
+
 ## 2026-11-06 UTC — Operational retrospective for milestone 2026.11.758
 
 - Updated `results/operational_retro_2026_11_758.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.758`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 12 completed experiments (1 compute-bound, 11 synthesis-only) across 107.0 wall-time minutes (107 minutes / 1.8 hours, averaging 9 minutes per experiment).

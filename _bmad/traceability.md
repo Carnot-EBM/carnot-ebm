@@ -1,5 +1,24 @@
 # Carnot — Traceability Matrix
 
+## Exp8867 retained-health and replay repair — 2026-11-06 UTC
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8867 | `feedback_information_runner_8867.validate` authenticates retained health logs and preserves the original receipt while rerunning owned checks | Existing reuse assertions plus relative-path, changed-log, missing-log and empty-receipt regressions |
+| SCENARIO-REPORT-8867-CONTRACT | `feedback_information_8867.replay` resolves receipt logs from the repository root | New outside-directory regression rejects changed log bytes; real cold CLI replay passes |
+| REQ-CONDUCTOR-FIXGATE-1 | Existing implementation work, original assertions and conductor bytes remain intact | Original test-function ASTs and conductor SHA-256 match their repair-start snapshots; all ten repair-gate tests pass |
+
+All 27 diagnosis tests, 37 private E2E-018/021 tests and 121 related tests pass.
+The full private E2E-018 CLI passes 91 affected and 106 consumer tests, twelve
+mutations, terminal scanners and cold replay. Fresh unit/child coverage reaches
+315/315 owned statements without exclusions; scoped Ruff, strict mypy and spec
+tracing pass. The private diagnosis retains all 28,800 units and publishes a
+valid null after scanners and outside-checkout replay pass. Historical global
+health remains a failed timeout receipt. Global reconciliation retains the
+existing 2026-10-11 architecture date and 1,142 missing spec references; the
+whole repository suite was not rerun. Evidence:
+`/var/tmp/carnot-8867-repair-ij2ttux5/repair-summary.json`.
+
 ## Exp8818 calibration separation repair — 2026-11-05 UTC
 
 | Requirement / scenario | Implementation | Verification |

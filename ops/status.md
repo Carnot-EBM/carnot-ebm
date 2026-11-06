@@ -1,5 +1,25 @@
 # Carnot — Operational Status
 
+## 2026-11-06 UTC — Exp8867 retained-health and replay repair
+
+Owned validation now reuses the original global-health receipt only after its
+log hash passes. Relative log paths resolve from the repository root during
+validation and cold replay. Missing or changed retained logs fail validation;
+the original failed health result remains separate from owned readiness.
+
+All 27 diagnosis tests, 37 private E2E-018/021 tests and 121 related tests pass.
+Fresh unit/child SQLite covers 315/315 owned statements with zero exclusions.
+Scoped Ruff, formatting, strict mypy and spec tracing pass. The full private
+E2E-018 CLI also passes 91 affected and 106 consumer tests, twelve mutations,
+terminal scanners and cold replay. The private diagnosis publishes a valid
+null with all 28,800 units after both unchanged scanners and cold replay pass.
+Original test assertions and `scripts/research_conductor.py` are preserved.
+
+The whole repository suite was not rerun. Historical global health retains its
+timeout, and reconciliation still reports the existing 2026-10-11 architecture
+date and 1,142 missing spec references. Receipts:
+`/var/tmp/carnot-8867-repair-ij2ttux5/repair-summary.json` and `final-run/`.
+
 ## 2026-11-04 America/New_York — V756 research plan staged
 
 The next plan contains exactly thirteen tasks, Exp8827–Exp8839, across four

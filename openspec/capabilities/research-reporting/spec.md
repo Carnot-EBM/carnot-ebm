@@ -107525,6 +107525,61 @@ Require actual unit and child statement coverage at100 percent, no exclusions,
 private E2E-018/021, Ruff, strict mypy and positional spec coverage. Global
 health is recorded separately. No board probes or milestone activation occur.
 
+### REQ-REPORT-8867: Separate released labels from template exposure
+
+Authenticate original Exp8854/8856/8860 bytes, source/config and raw states,
+then reconstruct all 24 historical streams without fitting or seed selection.
+Count normalized query templates separately from unused marker branches and
+renamed entities. Retain first uses, admissions, release delays, recurring uses,
+label distributions and repeated observations. Historical attribution is
+descriptive and does not establish a causal mechanism.
+
+On six separately scheduled development streams, compare true and permuted
+labels with identical verified template schedules, release times and optimizer
+steps. Permute only complete available release batches after predictions seal;
+preserve each batch's label multiset. Frozen query-only admission receives only
+query syntax, never whole-query decisions, labels or witness answers. Verified
+learned arms retain feedback validation. Include separable-signal and zero-signal
+controls, report their measured sensitivity and all nulls. Readiness requires
+complete authenticated diagnosis and valid controls, never favorable benefit.
+Specify release-matched Exp8869 arms or an explicit unsupported-mechanism reason.
+
+#### SCENARIO-REPORT-8867-CONTRACT
+
+Tests reject changed original producer/raw bytes, rehashed reductions, altered
+release assignments and invalid verified feedback. Renaming and disconnected
+marker changes leave query topology unchanged. Query-only admission runs with
+whole-query decision and witness APIs forbidden. Every scheduled historical and
+development unit remains visible, including failures and censoring. Use private
+checkpoints, immutable raw/source/log hashes, current-work receipt, experiment
+template normalization and primary publication. Cold CLI replay outside the
+checkout without PYTHONPATH recomputes evidence and resolves relative validation
+logs from the repository root. Retain a hash-checked prior global-health attempt
+separately rather than repeating the full suite during an owned repair.
+Resolve retained health-log paths from the repository root, preserve the
+original failure and receipt, and reject missing or changed log bytes before
+delegating validation. Without a matching retained health receipt, execute
+the existing bounded health command; owned checks always run.
+Require 100 percent owned unit
+and child statement coverage with zero exclusions, scoped Ruff, strict mypy,
+positional spec coverage, private E2E-018/021 and unchanged artifact scanners.
+Record global health separately. No historical artifact/store, shared validator,
+exclusion manifest, conductor or roadmap activation changes. Conductor owns
+ops/status, changelog and BMAD reconciliation.
+
+Verification (20261106, Exp8867 repair): the runner authenticates and retains
+the original failed health receipt while rerunning owned checks. Replay resolves
+repository-relative logs independently of the working directory and still
+rejects changed bytes. All 27 diagnosis tests, 37 private E2E-018/021 tests,
+121 related tests, and the full private E2E-018 CLI pass. Fresh unit/child
+coverage reaches 315/315 owned statements with zero exclusions; scoped Ruff,
+strict mypy and positional spec tracing pass. The private diagnosis publishes
+a valid null with all 28,800 units retained after both unchanged scanners and
+outside-checkout cold replay pass. The conductor and original test assertions
+remain unchanged. Global health retains its historical timeout; global
+reconciliation still reports the existing architecture-date and 1,142-reference
+debt. Receipts: `/var/tmp/carnot-8867-repair-ij2ttux5/repair-summary.json`.
+
 ### REQ-REPORT-8866: Bind twelve V759 tasks without inventing absent authority
 
 The producer shall reuse the qualified V758 parser, original mutation controls,
