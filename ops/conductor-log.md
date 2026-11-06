@@ -21443,3 +21443,4 @@ code |
 | 2026-11-06 05:21 UTC | Measure complete installed verifier costs across e | OK | 90 passed, 1 warning in 47.01s |
 | 2026-11-06 06:02 UTC | Measure complete linear adaptation cost with equal | OK | 96 passed, 1 warning in 91.48s (0:01:31) |
 | 2026-11-06 06:06 UTC | Measure source-faithful Qwen extraction through th | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8853-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-11-06 06:37 UTC | Map installed verification and linear learning cos | OK | 85 passed, 1 warning in 149.49s (0:02:29) |
