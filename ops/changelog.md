@@ -23204,3 +23204,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-06: Bind twelve tasks and ingest conditional-risk and feedback-control methods (⚠️ Blocked) — honest_verdict=complete_blocked_v759_branch_contract; results/experiment_8866_v759_branch_contract.json
 - 2026-11-06: Separate label information from structural template activation (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_validation; results/experiment_8867_v759_feedback_information_diagnosis.json
 - 2026-11-06: Seal fixed evidence groups and equal-cost conditional certificates (⚠️ Research Finding) — honest_verdict=complete_null_conditional_risk_methods; results/experiment_8868_v759_conditional_risk_methods.json
+- 2026-11-06: Measure certificate robustness under fixed-group mixture shifts (⚠️ Research Finding) — honest_verdict=complete_null_conditional_risk_evaluation; results/experiment_8870_v759_conditional_risk_evaluation.json
