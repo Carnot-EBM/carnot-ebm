@@ -55357,3 +55357,92 @@ both protocols, with zero measured split-protocol gain. This is not a
 zero-coverage result. Exp8861 passes the complete-mixture speed condition but
 fails the small-input guard: its size-16 latency-regression upper bound is
 0.30179 against 0.05. The next studies must change those specific mechanisms.
+
+## 2026-11-06 — V760 planning scan (recorded before experiment design)
+
+This scan checks 2025–2026 primary sources against V759's terminal artifacts.
+It distinguishes promising methods from locally demonstrated results. The
+completed archive currently ends at V758; V759's primaries and conductor log
+supply the latest evidence. Revisited sources below are not claimed as newly
+discovered papers.
+
+### Findings to carry into experiment design
+
+| Source and date | Finding | Carnot use and boundary |
+|---|---|---|
+| [Retrieval-Warmed Energy-Based Reasoning](https://arxiv.org/abs/2606.26476), June 25, 2026 | Aligned/shuffled and constant/random controls separate information alignment from bias and initialization. Its deployable pipeline still fails a component gate. | Hold template admission, released-label multiset and optimizer work equal; vary label alignment. Use actual query topology diversity, not entity renaming. This borrows the diagnostic principle, not the diffusion model or reported gains. |
+| [Chance-Constrained Inference](https://arxiv.org/html/2602.01637v1), February 2, 2026 | Sequential feasibility decisions require bounds valid across repeated looks; confidence thresholds alone do not certify accepted risk. | Test finite-look, alpha-spending exact binomial bounds against a fixed-budget certificate. Count all paid labels, refusals and unsolved cases. Restrict validity to frozen policies and independent stationary within-group draws. |
+| [Universal Online Convex Optimization With Delayed Feedback](https://arxiv.org/abs/2610.28058), October 20, 2026 | Delay analysis distinguishes cumulative delay from maximum simultaneously missing feedback. | Record both quantities in continuous small-energy-head learning. No convex regret theorem is claimed for template additions or the complete Carnot pipeline. |
+| [Capacity-Constrained Online Convex Optimization](https://arxiv.org/abs/2606.11711), June 10, 2026 | Tracking capacity can lose feedback and bias observed updates. | Preserve pending-event counts, tail drains and missing labels. Defer a new scheduling algorithm until label-specific benefit is established. |
+| [SURE-RAG](https://arxiv.org/abs/2605.03534), May 5 / July 24 revision, 2026 | Evidence sufficiency is a set-level question; controlled sufficiency and natural hallucination detection have different outcomes. | Challenge missing hops, conflicts and source-to-record loss separately from exact record execution. A constructed challenge cannot establish natural-text generalization. |
+| [Anechoic](https://arxiv.org/abs/2610.13368), October 9, 2026 | An Onsager correction targets synchronous-spin echo on dense Max-Cut hardware. | Preserve the distinction between a sampling kernel and Carnot's host parsing, exact joins, storage and dispatch. Alveo V80 results do not establish KV260 support or complete-service speed. |
+
+### Other requested research areas
+
+- **EBMs and reasoning:** [EBT](https://arxiv.org/abs/2507.02092), July 2025,
+  and [ARM–EBM](https://arxiv.org/abs/2512.15605), December 2025 / May 2026
+  revision, remain conceptual foundations. [Structured latent trajectories](https://arxiv.org/abs/2603.28248)
+  reports an accuracy loss despite energy minimization. Lower learned energy
+  must not substitute for independently checked correctness.
+- **Neural constraint satisfaction:** [AS2](https://arxiv.org/abs/2603.18436)
+  and [neural large-neighborhood search](https://arxiv.org/abs/2603.20801),
+  March 2026, motivate separating learned heuristics from exact certification.
+  Neither warrants reopening retired puzzle-gallery research.
+- **Ising in ML:** [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752),
+  May 2026, separates parameter learning from efficient sampling. A small
+  trained head alone does not prove an efficient sampling or hardware path.
+- **KANs:** [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026, motivates
+  locality-aware retention checks. Defer another spline/anchoring variant:
+  current evidence first needs a clean correct-label learning contrast.
+- **Energy-guided and constrained generation:** [NFA-LM](https://arxiv.org/abs/2609.40185v2),
+  September / October 2026, concerns approximate constrained sampling under
+  explicit assumptions. Syntax-valid output does not establish source fidelity;
+  its guarantees do not automatically apply to the mandated Qwen GGUF.
+- **Hardware sampling:** [Hybrid FPGA decomposition](https://arxiv.org/abs/2602.15985),
+  February 2026, reinforces measuring host and transfer overhead. A new
+  bitstream or purchase is premature without a compatible measured workload.
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and constraint work. An
+  [EBT manuscript](https://openreview.net/pdf/f9139bb41c8b7a03e09be518a71426bcbd061a3f.pdf)
+  was readable; its text says double-blind review. The linked
+  [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned browser
+  verification, so no current acceptance claim is made from that page.
+- **Semantic Scholar:** explicitly attempted citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20).
+  Both were inaccessible through browsing. Citation discovery is incomplete;
+  this scan does not assert that any candidate cites either paper.
+- **Hugging Face papers:** checked verification work including
+  [SURE-RAG](https://huggingface.co/papers/2605.03534),
+  [CiteCheck](https://huggingface.co/papers/2605.27700) and
+  [SIRIN](https://huggingface.co/papers/2608.00033). SIRIN's
+  [author repository](https://github.com/sb-ai-lab/SIRIN) is a future interface
+  comparison; adding its detector dependencies is not needed for this plan.
+- **GitHub trending:** opened weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly) pages. The returned
+  listings did not establish a relevant new EBM/KAN trend. SIRIN was found
+  through its paper, not asserted to be trending.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Torx, Thermalizers and Z1](https://extropic.ai/writing/from-one-to-one-billion).
+  The summer announcement describes software and a simulator API, with planned
+  Z1 early-access systems in 2027. These are vendor statements, not local
+  TSU access, measured Carnot efficiency or a purchase recommendation.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint reasoning layer beneath language models. The retrieved
+  page supplied no reproducible new training method or benchmark protocol.
+
+### Local evidence that changes the next question
+
+V759's design ends during Phase 1 and lacks its machine contract. Preserve that
+failure; the next design must be complete and independently checked before handoff.
+Exp8867's primary remains disqualified. The November 6 retained-health/log-path
+repair in ops/status.md supplies a specific qualification path, not permission
+to relabel the old artifact. Its unqualified diagnosis found one normalized
+query template, so no structural-generalization conclusion is admissible.
+Exp8870 qualifies useful constructed certificates but records grouped/pooled
+parity and zero robustness advantage. Exp8874 qualifies complete measurements
+but fails the speed-benefit conjunction. These motivate new information controls,
+label-cost measurement and cost attribution, rather than another unchanged run.

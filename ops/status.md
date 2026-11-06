@@ -18936,3 +18936,20 @@ The source scan was recorded before design. Planned OpenSpec requirements,
 BMAD traceability and architecture boundaries are aligned. Initial full-contract
 and gate checks pass; remaining validation is in progress. This planning change
 runs no experiment and does not activate the milestone.
+
+## 2026-11-06 — V760 research plan staged
+
+Exactly thirteen tasks, Exp8878–Exp8890, are planned across four phases in
+`research-roadmap-next.yaml` and the complete V760 `research-roadmap-vNEXT.md`.
+The original truncated V759 design and its active queue are preserved in dated
+change-proposal files. Its failed contract and disqualified diagnosis primary
+remain unchanged. A specific November6 repair qualifies the new learning path.
+
+The plan targets matched correct-label information on distinct query graphs,
+sequential certification label cost, source/view fidelity boundaries, complete
+request attribution and durable adaptation costs. The optional Qwen canary
+requires changed authenticated CUDA evidence. ARC remains suspended. Research
+sources were appended before design; planned specs and traceability are aligned.
+
+Planning validation is pending. No V760 experiment, activation, push, deployment
+or publication has occurred. The current roadmap and conductor are unchanged.

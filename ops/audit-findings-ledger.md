@@ -290,3 +290,4 @@ of truth, not this line.)
 | 2026-11-01 | qa_layer_authenticity_audit | adversarial_verify.py::_bool_leaf_values | SILENT_NON_FIRING | OPEN | |
 | 2026-11-02 | experiment_claim_audit | experiment_8715_v747_verifier_completeness.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-11-05 | qa_layer_authenticity_audit | adversarial_verify.py::_variant_denominators | SILENT_NON_FIRING | OPEN | |
+| 2026-11-06 | experiment_claim_audit | experiment_8871_v759_size_aware_verifier.json | CLAIM_OVERSTATED | OPEN | |

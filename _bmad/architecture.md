@@ -893,3 +893,24 @@ Only changed authenticated CUDA evidence releases the bounded Qwen3.8 canary.
 The November 5 operator suspension removes ARC tasks. Independent CPU branches
 retain their own input gates. Hardware mapping and capstone readers run without
 a global scientific gate. This section describes planned work only.
+
+## Planned V760 information and cost boundaries — 2026-11-06
+
+V760 stages thirteen tasks, Exp8878–Exp8890, in four phases. Fresh qualification
+of the shipped diagnosis repair precedes genuinely distinct query structures
+and equal-admission, equal-label-multiset learning controls. The existing linear
+energy head and causal store remain; sealed predictions precede delayed updates.
+Untouched retention and an independent audit separate correct-label value from
+generic query-template activation. Generator weights remain frozen.
+
+Independent finite-look risk certification tests label cost using explicit
+family error allocation. A source/view challenge distinguishes exact visible
+entailment from fidelity to complete source evidence. Complete-request clocks
+must qualify their observer overhead before contributing hardware fractions;
+new adaptation costs include durable commits, restart and tail drain.
+
+Only authenticated changed CUDA evidence releases the bounded Qwen3.8 canary.
+ARC tasks remain suspended. Board mapping retains KV260, PolarFire and GateMate
+operation limits, and capstone readers retain missing branch evidence. These
+are planned studies, not deployed behavior or scientific findings. The original
+truncated V759 design and complete active queue are preserved separately.

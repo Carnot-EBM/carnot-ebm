@@ -4612,3 +4612,25 @@ contract and reconciliation (8853/8865). All entries remain planned.
 | REQ-REPORT-8863; SCENARIO-REPORT-8863-CONTRACT | exp8863-qwen-source-canary | `results/experiment_8863_v758_qwen_source_canary.json` | Planned |
 | REQ-REPORT-8864; SCENARIO-REPORT-8864-CONTRACT | exp8864-hardware-budget | `results/experiment_8864_v758_hardware_budget.json` | Planned |
 | REQ-REPORT-8865; SCENARIO-REPORT-8865-CONTRACT | exp8865-capstone | `results/experiment_8865_v758_capstone.json` | Planned |
+
+## Planned V760 research milestone — 2026-11-06
+
+FR-06/FR-11:8879/8881/8884/8886/8888. FR-12:8880/8883/8885/8887.
+FR-05/FR-08/NFR-01:8882/8888/8889. FR-09/FR-10:8878/8890.
+All entries are planned; no V760 experiment has executed.
+
+| Requirement / scenario | Task | Deliverable | State |
+|---|---|---|---|
+| REQ-REPORT-8878; SCENARIO-REPORT-8878-CONTRACT | exp8878-branch-contract | `results/experiment_8878_v760_branch_contract.json` | Planned |
+| REQ-REPORT-8879; SCENARIO-REPORT-8879-CONTRACT | exp8879-diagnosis-qualification | `results/experiment_8879_v760_diagnosis_qualification.json` | Planned |
+| REQ-REPORT-8880; SCENARIO-REPORT-8880-CONTRACT | exp8880-sequential-certificate-methods | `results/experiment_8880_v760_sequential_certificate_methods.json` | Planned |
+| REQ-REPORT-8881; SCENARIO-REPORT-8881-CONTRACT | exp8881-topology-memory-methods | `results/experiment_8881_v760_topology_memory_methods.json` | Planned |
+| REQ-REPORT-8882; SCENARIO-REPORT-8882-CONTRACT | exp8882-request-cost-attribution | `results/experiment_8882_v760_request_cost_attribution.json` | Planned |
+| REQ-REPORT-8883; SCENARIO-REPORT-8883-CONTRACT | exp8883-evidence-loss-boundary | `results/experiment_8883_v760_evidence_loss_boundary.json` | Planned |
+| REQ-REPORT-8884; SCENARIO-REPORT-8884-CONTRACT | exp8884-topology-causal-streams | `results/experiment_8884_v760_topology_causal_streams.json` | Planned |
+| REQ-REPORT-8885; SCENARIO-REPORT-8885-CONTRACT | exp8885-sequential-label-cost | `results/experiment_8885_v760_sequential_label_cost.json` | Planned |
+| REQ-REPORT-8886; SCENARIO-REPORT-8886-CONTRACT | exp8886-label-benefit-audit | `results/experiment_8886_v760_label_benefit_audit.json` | Planned |
+| REQ-REPORT-8887; SCENARIO-REPORT-8887-CONTRACT | exp8887-qwen-source-canary | `results/experiment_8887_v760_qwen_source_canary.json` | Planned |
+| REQ-REPORT-8888; SCENARIO-REPORT-8888-CONTRACT | exp8888-matched-adaptation-cost | `results/experiment_8888_v760_matched_adaptation_cost.json` | Planned |
+| REQ-REPORT-8889; SCENARIO-REPORT-8889-CONTRACT | exp8889-hardware-operation-map | `results/experiment_8889_v760_hardware_operation_map.json` | Planned |
+| REQ-REPORT-8890; SCENARIO-REPORT-8890-CONTRACT | exp8890-capstone | `results/experiment_8890_v760_capstone.json` | Planned |

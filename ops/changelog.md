@@ -23216,3 +23216,16 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-06: Measure complete size-aware verification costs without small-request regressions (⚠️ Research Finding) — honest_verdict=complete_null_size_aware_complete_cost; results/experiment_8874_v759_size_aware_complete_cost.json
 - 2026-11-06: Map new label and lookup savings to supported hardware operations (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_budget; results/experiment_8876_v759_hardware_operation_budget.json
 - 2026-11-06: Reconcile twelve outcomes and decide label risk and deployment continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v759_capstone; results/experiment_8877_v759_capstone.json
+
+## 2026-11-06 — Plan milestone 2026.11.760
+
+- Record the 2025–2026 primary-source scan and secondary-source access limits
+  before experiment design, including matched-information and sequential-risk
+  methods.
+- Preserve original V759 design and queue; stage exactly thirteen matching
+  V760 tasks, Exp8878–Exp8890, across four phases with a full machine contract.
+- Scope repaired original diagnosis, distinct-topology continuous learning,
+  finite-look certificates, evidence-loss controls, complete costs and hardware
+  operation mapping. Keep bounded Qwen behind changed runtime evidence.
+- Add planned requirements, traceability and architecture/ops boundaries.
+  Planning validation is pending; no experiment execution or activation occurs.

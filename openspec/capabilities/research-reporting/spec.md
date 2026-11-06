@@ -107850,3 +107850,230 @@ Run the full Python suite once within a fixed deadline; record unrelated health
 separately. Keep checkpoints private until checked publication. No activation,
 model call, shared-validator change, exclusion edit, conductor edit or push occurs.
 The conductor owns ops/status.md, ops/changelog.md and BMAD reconciliation.
+
+## Planned V760 research contract — 2026-11-06
+
+Status: Planned only. The thirteen tasks are defined in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. No execution or scientific result is claimed.
+
+### REQ-REPORT-8878: Bind the complete V760 contract and ingest new sequential-risk methods
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8878_v760_branch_contract.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8878-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8879: Qualify the repaired original feedback diagnosis under immutable V759 authority
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8879_v760_diagnosis_qualification.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8879-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8880: Freeze finite-look risk certification with explicit label accounting
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8880_v760_sequential_certificate_methods.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8880-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8881: Qualify matched-label learning on genuinely distinct query structures
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8881_v760_topology_memory_methods.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8881-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8882: Locate complete-request cost after the size-aware speed null
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8882_v760_request_cost_attribution.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8882-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8883: Separate source truth from record sufficiency under missing evidence
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8883_v760_evidence_loss_boundary.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8883-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8884: Measure continuous energy learning with matched feedback and topology diversity
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8884_v760_topology_causal_streams.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8884-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8885: Measure sequential certificate cost at matched coverage and risk
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8885_v760_sequential_label_cost.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8885-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8886: Audit label-specific future benefit and untouched retention
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8886_v760_label_benefit_audit.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8886-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8887: Measure bounded Qwen extraction against paired source-evidence controls
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8887_v760_qwen_source_canary.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8887-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8888: Measure complete cost of query-only and verified delayed adaptation
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8888_v760_matched_adaptation_cost.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8888-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8889: Map measured certificate and adaptation work to supported hardware
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8889_v760_hardware_operation_map.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8889-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.
+
+### REQ-REPORT-8890: Reconcile thirteen outcomes and decide information risk and cost continuations
+
+The experiment shall follow the complete frozen V760 task contract and produce
+`results/experiment_8890_v760_capstone.json`. Its owned work shall retain causal/input
+provenance, explicit substrate, per-unit rows and terminal verdict semantics.
+Readiness and scientific benefit shall remain separate; upstream fields shall
+match the declared gates exactly. Historical primaries remain unchanged.
+
+#### SCENARIO-REPORT-8890-CONTRACT
+
+Before implementation, add tests for this task's frozen method and acceptance
+gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
+real CLI replay. Require actual unit/child statements at100 percent without
+exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
+terminal scanners. Source/view, oracle and complete-cost boundaries shall be
+preserved. Status: planned; tests and implementation are not yet executed.

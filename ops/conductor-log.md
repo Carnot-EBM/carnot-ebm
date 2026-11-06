@@ -21461,3 +21461,5 @@ code |
 | 2026-11-06 14:30 UTC | Measure bounded Qwen source fidelity after authent | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8866-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-06 14:56 UTC | Map new label and lookup savings to supported hard | OK | 85 passed, 1 warning in 44.14s |
 | 2026-11-06 15:34 UTC | Reconcile twelve outcomes and decide label risk an | OK | 86 passed, 1 warning in 93.90s (0:01:33) |
+| 2026-11-06 17:12 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-06 17:17 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

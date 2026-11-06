@@ -3,44 +3,44 @@
 
 # qa_layer_authenticity_audit_report — 2026-11-06
 
-Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 0 |
+| `CLEAN` | 1 |
 | `MINOR_RISK` | 0 |
-| `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 7 |
+| `REAL_BUG` | 1 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_metric_items_from_top_or_pass_rates` — json "matched_control_at_1": { "principle": "Measure control success on the same candidate pool.", "value": 0.0 }
-- `adversarial_verify.py::check_degenerate_separation` — This fragment produces zero DEGENERATE_SEPARATION flags despite containing both numeric signatures: ```json { "experiment": 9000, "schema": "carnot.arc_selector.v1", "honest_verdict": "complete: ARC-GEN selector transfers to unseen generators", "cross_generator_delta": 1.0, "vote_at_1": 0.0, "oracle_at_k": 1.0, "set_encoder_at_1": 1.0 } ``` This convention-compliant annotated version independently
-- `adversarial_verify.py::_is_control_arm_key` — Literal project-used control label: `no_adaptation`, recorded in `results/experiment_4326_adaptive_guided_generation_scaleup.json` as equivalent to unguided. ```json { "condition_accuracy": { "carnot_adaptive": 0.6, "no_adaptation": 0.3, "unguided": 0.3 } } ``` This constructed fragment uses that existing label. The actual caller produces no flags despite two distinct controls having identical val
-- `adversarial_verify.py::_is_placebo_or_replicate_key` — json { "condition_accuracy": { "baseline_deduplicated_corpus": 0.37, "baseline_non_deduplicated_corpus": 0.37 } } ``` These describe different preprocessing conditions. Both receive the duplicate-control exemption, silently suppressing the expected degenerate-control flag.
-- `adversarial_verify.py::_documented_identical_controls` — json { "honest_verdict": "Identical controls are expected because the placebo applies zero perturbation." } ``` This explicit declaration returns false. So does: ```json {"identical_baselines_expected": true}
-- `adversarial_verify.py::_arm_numeric_value` — json {"accuracy": {"principle": "Measured held-out control accuracy.", "value": 0.25}} ``` This valid annotated arm entry should yield `0.25`; it yields `None`. Another plausible omitted metric spelling: ```json {"pass_at_1": 0.25} ``` This also yields `None`.
-- `adversarial_verify.py::check_degenerate_controls` — The actual control name self_reward_smc, used in Exp 4315 and Exp 4338, is unrecognized. This plausible duplicate pair produces zero flags: ```json { "condition_accuracy": { "self_reward_smc": 0.3, "unguided": 0.3 } } ``` Valid principle-annotated arm values also produce zero flags through the full verifier: ```json { "condition_accuracy": { "rfg": { "principle": "Measure control accuracy on held-
+- `adversarial_verify.py::_is_declared_honest_null` — Actual artifact: results/experiment_3464_kona_trained_energy_hybrid_solve_rate_v4.json ```json { "honest_verdict": "complete: trained_energy_no_lift_over_untrained_kona_hybrid" } ``` Observed helper result: False, despite explicitly declaring no lift.
+- `adversarial_verify.py::_has_control_treatment_qualifier` — baseline_auroc` — an actual field in `results/experiment_90_results.json`; the helper returns false despite its explicit baseline-arm qualifier.
+- `adversarial_verify.py::_passing_positive_control_key` — json {"positive_control_valid": true} ``` Present at the top level of `results/experiment_3655_facts_row_remeasurement_real_nli_v5.json`; the helper returns None. ```json {"positive_control_confirmed": true} ``` Present at the top level of `results/experiment_4177_decisive_headroom_controlled_moat_test.json`; the helper also returns None.
+- `adversarial_verify.py::_delta_key_covers_pair` — The duplicated `heldout_auroc = heldout_kl_divergence = 0.913142` above escapes critical classification when accompanied by `heldout_auroc_delta = 0.0` and the descriptor markers.
+- `adversarial_verify.py::_declared_null_delta_descriptor` — The copied pair `"constraint_energy": 0.137913` and `"constraint_residual_norm": 0.137913` when accompanied by unrelated `"train_loss_delta": 0.0`, as shown above.
+- `adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor` — null_delta_methodology_note: {"principle": "Document the validated null.", "value": "Distinct measured arms produced equal first-win rates."}` This permitted representation of an otherwise recognized ARC null is silently refused. An equivalently wrapped `positive_control_passed` containing `"value": true` is also refused.
+- `adversarial_verify.py::check_tautology` — nrgpt_grad_norm_with_verifier = ce_grad_norm = 9.762872695922852` under `honest_verdict = "complete: verifier_router_no_value_added"`: duplicated independent measurements pass with zero flags.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_metric_items_from_top_or_pass_rates` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_degenerate_separation` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_control_arm_key` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_placebo_or_replicate_key` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_documented_identical_controls` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_arm_numeric_value` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_degenerate_controls` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_declared_honest_null` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_control_treatment_qualifier` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_passing_positive_control_key` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_delta_key_covers_pair` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_declared_null_delta_descriptor` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor` — **REAL_BUG**
+- `adversarial_verify.py::check_tautology` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_metric_items_from_top_or_pass_rates
+## adversarial_verify.py::_is_declared_honest_null
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -48,55 +48,59 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-The name `_metric_items_from_top_or_pass_rates` describes collecting requested numeric metrics from top-level fields or `pass_rates`; there is no docstring.
+`True if the artifact's honest_verdict declares a no-value/no-lever null result.`
 
 ## FINDINGS
+1. **A/B — Existing null declaration missed.** `_HONEST_NULL_VERDICT_TOKENS` represents declared null outcomes but omits no-lift terminology. The actual experiment 3464 verdict reproduced below returns False. The implementation recognizes fewer declarations than its docstring claims.
 
-1. **A/F — valid annotated metrics silently disappear.** `if isinstance(pass_rates, dict) and _is_finite_number(pass_rates.get(key)):` rejects principle-wrapped numeric leaves. The counterexample loses its zero-valued baseline, disabling the downstream degeneracy flag. The verifier’s existing top-level normalization does not unwrap these nested leaves.
+2. **Field extraction searches metadata as outcome.** `v = str(d.get("honest_verdict", "")).lower()` stringifies the entire field. A wrapped dictionary’s explanatory principle can therefore override its positive outcome value. Lists likewise become searchable representations; None returns False. Wrapped null strings happen to match, so wrapping does not universally cause false negatives.
 
-2. **Field assumptions:** `pass_rates = d.get("pass_rates")` assumes an unwrapped metric container. `value = d.get(key)` assumes a bare numeric value; `pass_rates.get(key)` and `float(pass_rates[key])` likewise require bare nested numbers. Top-level wrappers are handled upstream during normal verification, but direct calls lack that protection. Lists and None are excluded safely; they are not automatically meaningful scalar measurements.
+3. **Substring and context blindness disable validation.** `return any(tok in v for tok in _HONEST_NULL_VERDICT_TOKENS)` checks neither boundaries nor negation. Negated labels and diagnostic references return True. The inspected caller then skips the applicable tautology comparison, silently suppressing a critical flag.
 
-3. **C — demonstrated coverage gap.** Deleting `continue` in memory leaves all 84 focused regression tests green. Those tests do not enforce precedence or duplicate handling when the same metric exists at both levels. This establishes survival in the focused tests, not the entire suite.
+4. **C — Individual tokens lack effective regression protection.** All eight focused control/treatment-null tests passed after each of seven independent token deletions in memory. Furthermore, no_value_added is completely subsumed by no_value: deleting the longer token cannot change this helper’s output. Full-suite mutation survival was not established.
 
-4. **Other requested classes:** No free-text matching, negation scanning, threshold comparisons, hardcoded marker lists, absolute paths, writes, or timing measurements appear in this helper. No additional defect established in those classes.
+5. **4/D/E/F/G — No additional defect established.** This helper contains no numeric thresholds, paths, writes, or measurements. Unrecognized text returns False; the inspected caller retains tautology checking in that case. The focused tests inspected read historical artifacts without overwriting them.
 
 ## COUNTEREXAMPLE
+```json
+{
+  "honest_verdict": {
+    "principle": "Report honest_null only when the treatment adds no value.",
+    "value": "complete: statistically significant gain over baseline"
+  },
+  "metric_baseline": 0.9131,
+  "metric_with_verifier": 0.9131
+}
+```
+
+Observed: the helper returns True and the caller emits no tautology flag. The annotation incorrectly grants the null exemption despite the positive outcome declaration.
+
+Replacing the wrapped field with either string below also returns True and suppresses the flag:
+
+```text
+complete: not_an_honest_null; significant gain over baseline
+success: no_value_error_fixed; significant gain over baseline
+```
+
+## MISSED INPUT
+Actual artifact: results/experiment_3464_kona_trained_energy_hybrid_solve_rate_v4.json
 
 ```json
 {
-  "honest_verdict": "complete: arcgen_cross_generator_generalizes",
-  "cross_generator_delta": 0.96,
-  "oracle_at_k": 0.82,
-  "pass_rates": {
-    "matched_control_at_1": {
-      "principle": "Measure control success on the same candidate pool.",
-      "value": 0.0
-    },
-    "set_encoder_at_1": 0.96
-  }
+  "honest_verdict": "complete: trained_energy_no_lift_over_untrained_kona_hybrid"
 }
 ```
 
-For `keys=("matched_control_at_1",)`, extraction returns `[]`. The downstream `DEGENERATE_SEPARATION` flag disappears; replacing the wrapped baseline with bare `0.0` restores it.
-
-## MISSED INPUT
-
-```json
-"matched_control_at_1": {
-  "principle": "Measure control success on the same candidate pool.",
-  "value": 0.0
-}
-```
+Observed helper result: False, despite explicitly declaring no lift.
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+NEEDS_REDESIGN
 
 ## RATIONALE
-Reproduction confirms that adding a permitted annotation alone disables the degeneracy check. Full-suite mutation testing was not run; the 84 focused tests passed.
-Risk: valid artifact formatting can silently conceal a baseline that should trigger review.
+Searching arbitrary serialized prose cannot reliably distinguish an affirmative outcome declaration from annotation, negation, or diagnostic context. Both erroneous exemptions and missed honest-null declarations were reproduced. Full-suite and end-to-end checks were not run; demonstrated risks include suppressed critical flags and denied exemptions for honest null results.
 
 
-## adversarial_verify.py::check_degenerate_separation
+## adversarial_verify.py::_has_control_treatment_qualifier
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -106,104 +110,238 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-Detect synthetic selection wins caused by degenerate candidate pools, including perfect set-encoder selection against a saturated oracle.
+`True if the metric key carries a control/treatment ablation-arm qualifier.`
 
 ## FINDINGS
 
-1. **A/F — Recognizer failure silently disables detection.**  
-   `marker in verdict for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")` gates every metric check. The ARC-GEN fragment below contains both documented numeric signatures but produces no flag because its text matches none of these spellings. The early `return` reports neither rejection nor an unchecked state; this check’s output is indistinguishable from a genuine pass. Reproduced through the normal verifier.
+1. **A/B — Ordinary arm prefixes are missed.** `return any(q in kl for q in _CONTROL_TREATMENT_QUALIFIERS)` uses a repository tuple whose entries all require a preceding underscore. The concept is control/treatment arm qualification, but baseline, control, and treatment prefixes at the beginning of a key are omitted. The honest-null fragment below produces a critical tautology flag.
 
-2. **B — The hardcoded names underspecify their concepts.**
+2. **Substring collisions silently bypass detection.** `q in kl` imposes no ending boundary. A component named “controller” or a metric described as “controlled” satisfies the control alternative without identifying an experimental arm. Reproduced: the component-loss fragment below generates no tautology flag; replacing the component name with “regulator” restores the critical flag.
 
-   - `("honest_verdict", "experiment", "schema")` represents evidence of experiment applicability. It omits title, where actual project artifacts also describe their experiment.
-   - `("arcgen", "cross_generator", "cross_family", "generaliz")` represents synthetic selection and transfer evaluation. It omits the ordinary hyphenated ARC-GEN spelling demonstrated below.
-   - `DEGENERATE_DELTA_KEYS` represents selector-minus-vote transfer deltas. Its inspected definition omits actual project fields online_cross_family_delta and static_cross_family_delta.
-   - `DEGENERATE_BASELINE_KEYS` represents vote/control baseline rates. Its inspected definition omits the actual project field vote_family_mean_at_1.
-   - The fixed lookup `"set_encoder_at_1"` excludes actual project selector fields static_set_encoder_at_1 and router_set_encoder_at_1.
-
-   These are concrete naming gaps. They do not establish that every historical artifact using those names was numerically degenerate.
-
-3. **1 — Nested principle annotations survive preprocessing and disable numeric detection.**  
-   The reads `_metric_items_from_top_or_pass_rates(d, DEGENERATE_DELTA_KEYS)`, `_metric_items_from_top_or_pass_rates(d, DEGENERATE_BASELINE_KEYS)`, `_metric_from_top_or_pass_rates(d, "oracle_at_k")`, and `_metric_from_top_or_pass_rates(d, "set_encoder_at_1")` delegate extraction to helpers that accept bare finite numbers. Those helpers discard annotated numeric leaves inside the nested rates container. The annotated fragment below therefore produces no flag, even through the normal verifier.
-
-   The direct metadata read `str(d.get(key, "")).lower()` stringifies dictionaries, lists, and None instead of extracting their meaning. However, the normal caller already unwraps top-level annotations, and substring matching can still find text inside dictionary representations. Claiming the earlier blanket dictionary-representation failure here would be false. The demonstrated surviving bug is nested numeric annotations; lists and None are also silently omitted by numeric extraction.
-
-4. **2/3 — Substring recognition is blind to negation and context.**  
-   `marker in verdict` treats mentioning a topic as establishing applicability. Both honest calibration fragments below receive a critical flag: one explicitly denies evaluating generalization; the other contains the matching stem inside an unrelated statistical-method description. The numerical condition still has to match, but once it does, the text gate cannot distinguish a transfer claim from a calibration fixture or an explicit denial.
-
-5. **4/5 — Threshold boundaries are inclusive, but the documentation overstates exactness and required conditions.**  
-   `value >= DEGENERATE_DELTA_THRESHOLD` and `value <= DEGENERATE_BASELINE_THRESHOLD` correctly include their thresholds; the inspected specification requires inclusion. No off-by-one defect was found there.
-
-   However, “reaches oracle@K exactly” differs from `math.isclose(oracle_at_k, 1.0, rel_tol=0.0, abs_tol=1e-12)`: nearby values also qualify. Also, the claim `Detect synthetic selection wins where vote cannot win and oracle saturates.` is narrower than the first detection branch: `(near_perfect_delta and trivial_baseline)` requires no oracle measurement or saturation. That broader branch is explicitly exercised by an existing test, so this is a documentation discrepancy rather than evidence that the branch was accidental.
-
-6. **C — Individual recognizers and equality boundaries lack independent regression protection.**  
-   Five focused tests passed. In-memory mutation checks then independently removed each of `arcgen`, `cross_generator`, `cross_family`, and `generaliz`; every removal left all five tests passing. Changing either numeric comparison to exclude equality also left them passing.
-
-   Conversely, removing either delta key, either baseline key, or the saturated-selector signature caused failures. The suite protects those components, but its overlapping positive fixtures do not independently protect any individual text marker. These conclusions concern the five focused tests, not an unrun full suite.
-
-7. **D/E/G — No corresponding defect in the supplied function.**  
-   It contains no absolute filesystem target, disk write, or duration/counter measurement. Its mutation is `flags.append`. The focused tests read historical artifacts; the audit’s verifier reproductions used temporary files.
+3. **C — Individual alternatives are unprotected by the focused tests.** Removing each of the nine qualifier alternatives individually left all eight control/treatment-null test functions passing. The baseline-reference alternative is also logically redundant: its baseline and reference substrings already match shorter alternatives, so deleting it cannot affect this predicate.
 
 ## COUNTEREXAMPLE
 
-This honest calibration fragment produces one critical DEGENERATE_SEPARATION flag:
+Honest null falsely quarantined:
 
 ```json
 {
-  "experiment": 9000,
-  "schema": "carnot.selector_calibration.v1",
-  "honest_verdict": "complete: calibration_sanity_check; generalization not evaluated",
-  "oracle_at_k": 1.0,
-  "pass_rates": {
-    "set_encoder_at_1": 1.0,
-    "vote_at_1": 0.5
-  }
+  "honest_verdict": "complete: honest_null_no_value_added",
+  "baseline_auroc": 0.5319444444444444,
+  "final_auroc": 0.5319444444444444
 }
 ```
 
-Replacing its verdict with `"complete: generalized least-squares calibration sanity check"` also produces the flag. Both were reproduced through the normal verifier.
+Suspicious coincidence silently exempted because “controller” matches the control alternative:
+
+```json
+{
+  "honest_verdict": "complete: controller_no_value_added_honest_null",
+  "pid_controller_loss": 0.9131,
+  "kl_divergence": 0.9131
+}
+```
 
 ## MISSED INPUT
 
-This fragment produces zero DEGENERATE_SEPARATION flags despite containing both numeric signatures:
+`baseline_auroc` — an actual field in `results/experiment_90_results.json`; the helper returns false despite its explicit baseline-arm qualifier.
 
+## RECOMMENDATION
+
+WIDEN_PATTERN_TO_CONCEPT
+
+## RATIONALE
+
+Recognize complete qualifier tokens at the beginning, middle, and end of metric keys; JSON keys require no principle-value unwrapping, and this helper contains no numeric thresholds, paths, writes, or measurements.  
+Not checked: full-suite mutation coverage.  
+Risk: unrelated measurements can silently escape detection, while honest nulls can be quarantined.
+
+
+## adversarial_verify.py::_passing_positive_control_key
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Return a top-level passing positive-control key if the artifact declares one.`
+
+## FINDINGS
+1. **A/B — Real positive-control declarations are silently missed.** `kl == "positive_control_passed" or kl.endswith("_control_passed")` substitutes a naming pattern for the concept of a passing positive control. Real artifacts declare successful controls using validity and confirmation booleans; both examples below return no match.
+
+2. **1 — Wrapped booleans are rejected.** `for key, value in d.items():` reads raw values, and `value is True` requires a bare boolean. A permitted principle-wrapped true value reaches `return None`. Runtime verification showed that wrapping an otherwise accepted positive control changes the downstream tautology finding from warning to critical, exposing honest work to quarantine. Lists and None also produce no match; neither inherently proves success.
+
+3. **2/3/5 — The suffix accepts the wrong control category.** `kl.endswith("_control_passed")` accepts a passing negative control even when the positive control explicitly failed. Runtime verification showed this downgrades a critical tautology finding to warning. The suffix has an ending boundary; the defect is semantic overbreadth, rather than an accidental match inside a longer word.
+
+4. **C — The exact-name branch is decorative.** `kl == "positive_control_passed"` is entirely covered by `kl.endswith("_control_passed")`. Removing the equality branch in memory left all eight focused control/null tests passing. No behavioral test can distinguish these equivalent predicates.
+
+5. **F — Unknown and absent declarations collapse together.** `return None` does not distinguish an unsupported declaration from an absent or failed control. The examined caller denies an exemption on this result, so this particular default causes false quarantine rather than disabling fabrication detection. No numeric thresholds, free-text scans, absolute paths, writes, or measurements occur in the supplied function; classes 4/D/E/G reveal no additional defect.
+
+## COUNTEREXAMPLE
 ```json
 {
-  "experiment": 9000,
-  "schema": "carnot.arc_selector.v1",
-  "honest_verdict": "complete: ARC-GEN selector transfers to unseen generators",
-  "cross_generator_delta": 1.0,
-  "vote_at_1": 0.0,
-  "oracle_at_k": 1.0,
-  "set_encoder_at_1": 1.0
+  "honest_verdict": "complete: integration_unchanged_both_levers_null",
+  "live_first_win_rate_integrated": 0.04,
+  "live_first_win_rate_pre_integration": 0.04,
+  "live_first_win_rate_delta_vs_pre_integration": 0.0,
+  "null_delta_methodology_note": "No change; shuffled-label negative control remained at chance.",
+  "positive_control_passed": false,
+  "negative_control_passed": true
 }
 ```
 
-This convention-compliant annotated version independently produces zero such flags:
+The helper returns `"negative_control_passed"` despite the failed positive control. Verified downstream: adding that negative-control field changes the tautology finding from critical to warning.
+
+## MISSED INPUT
+```json
+{"positive_control_valid": true}
+```
+
+Present at the top level of `results/experiment_3655_facts_row_remeasurement_real_nli_v5.json`; the helper returns None.
+
+```json
+{"positive_control_confirmed": true}
+```
+
+Present at the top level of `results/experiment_4177_decisive_headroom_controlled_moat_test.json`; the helper also returns None.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Unwrap annotated booleans and explicitly recognize affirmative positive-control evidence; the current predicate simultaneously excludes legitimate declarations and admits negative controls. Eight focused tests passed before and after the redundant-branch mutation, while targeted runtime probes reproduced both severity changes.
+
+Full-suite and end-to-end checks were not run; confirmed risks include false quarantine and weakened fabrication detection.
+
+
+## adversarial_verify.py::_delta_key_covers_pair
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`True when a zero-delta field names the metric family shared by both arms.`
+
+## FINDINGS
+1. **A/B — unrelated metrics receive a fabrication exemption.** `return any(tok in left_lower and tok in right_lower for tok in tokens)` accepts a shared evaluation-split qualifier as proof of a shared metric family. The first artifact below reproducibly downgrades duplicated AUROC and KL divergence from critical to warning. `_DELTA_COVERAGE_STOP_TOKENS` represents non-distinctive naming words, but omits evaluation-split and aggregation qualifiers.
+
+2. **Substring collisions affect both matching paths.** `if stem and stem in left_lower and stem in right_lower:` and `tok in left_lower and tok in right_lower` impose no identifier boundaries. The second example below accepts a rate delta for two calibrated metrics because the rate stem occurs inside the calibration adjective.
+
+3. **Short metric identifiers disappear.** `if len(tok) >= 3 and tok not in _DELTA_COVERAGE_STOP_TOKENS` discards legitimate two-character metric names, including F1 and KL. When the complete stem includes an additional qualifier absent from the arm names, neither path recognizes the shared metric. The third example reproducibly leaves an honest equality critical. This is a flawed cutoff, not an off-by-one error.
+
+4. **C — focused tests tolerate deleted safeguards.** All eight existing control/treatment-null test functions passed unchanged after deleting the full-stem matching branch in memory. They also passed after emptying `_DELTA_COVERAGE_STOP_TOKENS`. These mutations demonstrate missing independent coverage; they do not establish that the entire repository suite would pass.
+
+5. **Other requested classes:** this function contains no dictionary-field reads, free-text verdict scans, filesystem paths, writes, or measurements. Its arguments are metric-key strings, so wrapped artifact values are outside this helper’s interface. `return False` rejects coverage rather than authorizing an exemption; it is not the class-F permissive default.
+
+## COUNTEREXAMPLE
+Fabrication-gate false negative, reproduced through the caller:
 
 ```json
 {
-  "honest_verdict": "complete: arcgen_cross_generator_generalizes",
-  "pass_rates": {
-    "cross_generator_delta": {
-      "principle": "Report selector lift over vote.",
-      "value": 1.0
-    },
-    "vote_at_1": {
-      "principle": "Report measured vote baseline.",
-      "value": 0.0
-    },
-    "oracle_at_k": {
-      "principle": "Report candidate pool oracle ceiling.",
-      "value": 1.0
-    },
-    "set_encoder_at_1": {
-      "principle": "Report measured selector rate.",
-      "value": 1.0
-    }
-  }
+  "honest_verdict": "complete: comparison recorded",
+  "heldout_auroc": 0.913142,
+  "heldout_kl_divergence": 0.913142,
+  "heldout_auroc_delta": 0.0,
+  "positive_control_passed": true,
+  "null_delta_methodology_note": "Paired ablation on the same held-out examples; positive control passed."
 }
 ```
+
+The predicate returns `True`; the tautology check emits only a warning. The shared word “heldout” supplies the exemption despite the different metric families.
+
+Additional reproduced predicate errors:
+
+```python
+_delta_key_covers_pair(
+    "rate_delta", "calibrated_auroc", "calibrated_kl_divergence"
+)  # True: unrelated rate delta accepted.
+
+_delta_key_covers_pair(
+    "heldout_f1_delta", "f1_baseline", "f1_treatment"
+)  # False: shared F1 family rejected.
+```
+
+## MISSED INPUT
+The duplicated `heldout_auroc = heldout_kl_divergence = 0.913142` above escapes critical classification when accompanied by `heldout_auroc_delta = 0.0` and the descriptor markers.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Require a shared, specific metric identifier; arbitrary shared words cannot establish metric identity. Identifier boundaries alone leave the shared-qualifier bypass intact. Full-suite mutation coverage was not checked; the reproduced bypass permits suspicious copied metrics to escape critical quarantine.
+
+
+## adversarial_verify.py::_is_heldout_firstwin_null_delta_pair
+
+**Verdict:** `CLEAN`
+
+## VERDICT
+CLEAN
+
+## CLAIM
+Recognize the retargeted A4 first-win baseline-versus-integrated metric pair.
+
+## FINDINGS
+none found
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+Exact set equality recognizes the two specified names in either order, ignoring case, without substring matching. There are no field reads, numeric thresholds, writes, or measurements to audit. Callers and tests were not supplied, so caller input handling and mutation coverage remain unverified.
+
+
+## adversarial_verify.py::_declared_null_delta_descriptor
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+`Recognize explicit honest-null evidence for an equal metric pair.`
+
+## FINDINGS
+
+1. **A/Q2/Q5 — unrelated delta suppresses a real fabrication signal.** `_delta_key_covers_pair(key, left, right)` accepts the COUNTEREXAMPLE’s unrelated training-loss delta because its training token occurs inside the word “constraint.” Executed through the public artifact verifier, the copied constraint measurements receive WARN; removing only the unrelated delta restores CRITICAL. This violates the claimed requirement for a `covering zero delta`. Matching whole tokens alone is also insufficient: the repository helper accepts a shared validation-context token across different metric families.
+
+2. **Q1 — bare-field assumptions exist, with an upstream mitigation.** `note = d.get("null_delta_methodology_note")` followed by `if not isinstance(note, str) or not note.strip():` rejects a principle-wrapped note. Likewise, `d.get("first_win_delta_vs_baseline")` and `_is_explicit_zero(value)` reject wrapped zero values; `_passing_positive_control_key(d)` rejects wrapped control booleans. Each rejection was reproduced through direct calls. **The main artifact verifier normalizes these wrappers first**, so these examples do not establish a wrapper-induced quarantine bug in that path. Lists and None provide no evidence and fail closed.
+
+3. **Q3/Q5 — note presence substitutes for affirmative evidence.** `if not isinstance(note, str) or not note.strip():` checks only that text exists. A note explicitly admitting shared cached outputs and a measurement bug still earns the descriptor when the other markers pass. This is broader than recognizing explicit honest-null evidence. There is no forbidden-phrase scanner in this body; the weakness is content-blind acceptance.
+
+4. **C — the incident regression does not independently protect the special branch.** Deleting the branch containing `_is_heldout_firstwin_null_delta_pair(left, right)` in memory left the existing validated-firstwin regression passing. The subsequent `for key, value in d.items():` loop recognizes the same delta. Full-suite mutation survival was not established.
+
+5. **B/Q4/D/E/F/G — no additional demonstrated defect.** `(left, right)` excludes the operands; it is not an incomplete vocabulary list. No omitted required field-name alias was established. This body contains no direct numeric threshold, absolute filesystem target, write, or duration measurement. Its terminal `return None` denies the exemption and preserves the caller’s CRITICAL classification; it does not silently approve an unknown case.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "honest_verdict": "success: constrained_sampler_improves",
+  "constraint_energy": 0.137913,
+  "constraint_residual_norm": 0.137913,
+  "train_loss_delta": 0.0,
+  "null_delta_methodology_note": "Training loss did not change; the positive control passed. Constraint energy and residual norm are independently measured.",
+  "positive_control_passed": true
+}
+```
+
+For the pair `constraint_energy` and `constraint_residual_norm`, the public verifier emits WARN instead of CRITICAL. The zero training-loss delta does not explain equality between those independent measurements.
+
+## MISSED INPUT
+
+The copied pair `"constraint_energy": 0.137913` and `"constraint_residual_norm": 0.137913` when accompanied by unrelated `"train_loss_delta": 0.0`, as shown above.
 
 ## RECOMMENDATION
 
@@ -211,193 +349,64 @@ NEEDS_REDESIGN
 
 ## RATIONALE
 
-The guard silently skips detectable degeneracy based on spelling and annotation placement, while unrelated or negated text can activate a critical accusation. Determine applicability explicitly, normalize supported metric annotations, and test each recognizer and equality boundary independently.
-
-Not checked: the full suite or corpus-wide impact; the total number of affected artifacts remains unknown.
+Require delta evidence to identify both compared metrics; a shared substring or context word cannot establish that relationship. Focused execution reproduced the bypass through the public verifier and confirmed that the special-branch deletion survives its incident regression. The full suite and end-to-end checks were not run; broader interactions remain unverified.
 
 
-## adversarial_verify.py::_is_control_arm_key
+## adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor
 
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-“True when an arm name describes a baseline/control condition.”
-
-## FINDINGS
-
-1. **Silent omission (A/B/F).** `CONTROL_ARM_MARKERS` approximates the concept of baseline/control conditions but omits the no-adaptation label explicitly used in Experiment 4326’s control-construction metadata. Using that label as an arm key returns False; the caller silently excludes it, allowing identical control values to escape detection.
-
-2. **Substring false positive.** `marker in kl` matches fragments inside longer words. The derandomized treatment in COUNTEREXAMPLE is classified as a control because its name contains random. The caller consequently emits a critical duplicate-controls flag for a treatment/baseline tie.
-
-3. **Context blindness.** `return any(marker in kl for marker in CONTROL_ARM_MARKERS)` establishes only substring presence. It cannot distinguish an arm’s experimental role from a description of its algorithm. The demonstrated treatment misclassification is broader than the docstring’s baseline/control claim.
-
-4. **Undetected marker deletions (C).** Removing each of these markers independently left all four focused regression-test functions passing: baseline, control, no_guidance, no-guidance, random, self_guidance, self-guidance, unconditioned. Removing entrgi, rfg, or unguided caused failures. These results establish gaps in the focused tests, not the entire repository suite.
-
-5. **Other requested classes.** There are no dictionary-field reads, numeric thresholds, paths, writes, or measurements in this helper. `kl = key.lower()` requires a string, but the inspected caller checks that type first; wrapped artifact values are not dictionary keys. No field-unwrapping, off-by-one, absolute-write-target, tracked-state-write, or premature-measurement defect is established here.
-
-## COUNTEREXAMPLE
-
-```json
-{
-  "condition_accuracy": {
-    "carnot_derandomized": 0.6,
-    "unguided": 0.6
-  }
-}
-```
-
-Assume the first arm is the Carnot treatment using a derandomized policy. The helper returns true for both names; the actual caller emits DEGENERATE_CONTROLS at critical severity despite there being only one control.
-
-## MISSED INPUT
-
-Literal project-used control label: `no_adaptation`, recorded in `results/experiment_4326_adaptive_guided_generation_scaleup.json` as equivalent to unguided.
-
-```json
-{
-  "condition_accuracy": {
-    "carnot_adaptive": 0.6,
-    "no_adaptation": 0.3,
-    "unguided": 0.3
-  }
-}
-```
-
-This constructed fragment uses that existing label. The actual caller produces no flags despite two distinct controls having identical values.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Recognize experimental roles through explicit metadata or a documented naming grammar with boundaries; unrestricted substring matching both misses controls and invents them. Adding the omitted label alone leaves the demonstrated false positive intact.
-
-Not checked: the full suite or end-to-end workflows; silent control omissions and false critical flags remain reproducible.
-
-
-## adversarial_verify.py::_is_placebo_or_replicate_key
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`True for intentionally duplicated placebo/replicate controls.`
-
-## FINDINGS
-
-1. **A / substring boundaries / claim mismatch:** `return any(marker in kl for marker in PLACEBO_OR_REPLICATE_MARKERS)` silently exempts distinct corpus-deduplication baselines because the configured duplicate marker occurs inside deduplicated. The MISSED INPUT produced zero degenerate-control flags in a read-only reproduction. A preprocessing condition is not evidence of intentionally duplicated controls.
-
-2. **Negation blindness:** The same expression accepts names explicitly denying placebo or replication status. The COUNTEREXAMPLE returned true for both keys and suppressed the caller’s degenerate-control flag.
-
-3. **Pattern list narrower than its concept:** `PLACEBO_OR_REPLICATE_MARKERS` represents intentionally duplicated controls, but its configured spellings omit technical repeats named with repeat. Probes confirmed that numbered control repeats return false and produce a degenerate-control flag when their intentionally reused values coincide.
-
-4. **Untested exemption / redundant marker:** All four functions in the focused regression test file passed both normally and with this helper replaced in memory by an always-false predicate. Its placebo fixture never reaches this helper because only one arm qualifies as a control. Separately, the configured replicate marker is redundant because replica already matches every occurrence of it.
-
-5. **Other requested classes:** There are no dictionary-field reads, numerical thresholds, paths, writes, or measurements in this function. `key.lower()` receives caller-validated string keys, so wrapped artifact values are not a demonstrated defect here. An unmatched name returns false, which retains the caller’s check; that default does not disable it.
-
-## COUNTEREXAMPLE
-
-```json
-{
-  "condition_accuracy": {
-    "non_placebo_control_a": 0.37,
-    "non_placebo_control_b": 0.37
-  }
-}
-```
-
-Both names explicitly deny placebo status. Both are classified as intentional duplicates, and the degenerate-control check emits no flag.
-
-## MISSED INPUT
-
-```json
-{
-  "condition_accuracy": {
-    "baseline_deduplicated_corpus": 0.37,
-    "baseline_non_deduplicated_corpus": 0.37
-  }
-}
-```
-
-These describe different preprocessing conditions. Both receive the duplicate-control exemption, silently suppressing the expected degenerate-control flag.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-A substring in an arm name cannot establish intentional duplication; require explicit evidence of that intent and test exemptions independently. Read-only reproductions confirmed both bypasses and the ineffective focused regression coverage. Full-suite, lint, spec-coverage, and E2E checks were not run; the demonstrated exemption bypass remains unfixed.
-
-
-## adversarial_verify.py::_documented_identical_controls
-
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `REAL_BUG`
 
 ## VERDICT
 
-SILENT_NON_FIRING
+REAL_BUG
 
 ## CLAIM
 
-`True when the artifact explicitly says identical controls are expected.`
+“Recognize validated ARC generation/exploration no-lift first-win nulls.”
 
 ## FINDINGS
 
-1. **A / Field extraction: supported declarations silently disappear.** `for key, value in d.items():` reads only top-level values. `isinstance(value, bool)` and `isinstance(value, str)` exclude principle-wrapped declarations and declarations inside lists. Both wrapped booleans and wrapped strings return false without inspection. None is safely ignored.
+1. **A / Field extraction: supported annotations silently disable recognition.** `note = d.get("null_delta_methodology_note")` followed by `if not isinstance(note, str) or not note.strip():` rejects an annotated string. `if d.get("positive_control_passed") is not True:` rejects an annotated true boolean. Verified against the real Exp4726 artifact: wrapping either field alone changes its caller’s output from warnings to critical tautology flags. `_real_field_has_true(d, "arms_non_degenerate")` already handles annotated booleans. Lists and None are rejected; there is no demonstrated requirement to accept those as valid notes or passing controls.
 
-2. **B / Vocabulary is narrower than the claim.** `"deliberately identical" in vl or "intentionally identical" in vl` substitutes two phrases for the concept of an explicit expectation; the literal declaration in MISSED INPUT matches neither. The role alternatives `"control"`, `"arm"`, and `"placebo"` omit baselines and reference conditions. Requiring `"identical" in kl` also excludes equivalent declarations using equality terminology.
+2. **String boundaries / B: the metric-name recognizer is broader than its concept.** `if "first_win" not in left_lower or "first_win" not in right_lower:` recognizes a substring, not a first-win measurement token. The first-window example below receives this exemption and downgrades an unrelated metric coincidence to a warning. Conversely, the sole spelling excludes hyphenated first-win labels; no separate name list or regex appears here.
 
-3. **Substring boundaries are absent throughout.** `"intentionally identical" in vl` matches an unintentional-duplication report. `"arm" in kl` and `"arm" in vl` match warm-up terminology. The control tests also match controller terminology, and placebo tests accept descriptions of placebo-free runs. `"identical" in kl` even matches a declaration of nonidentical controls.
+3. **Context / docstring mismatch: a methodology note can explicitly deny validation.** `if not isinstance(note, str) or not note.strip():` checks only that text exists. With the two boolean declarations true, the helper accepts the explicit invalidation below and its caller downgrades the coincidence. The claim of recognizing validated nulls is therefore stronger than the implementation: contradictory declarations and prose are accepted without reconciliation. There is no forbidden-phrase scanner here, so the specific negated-forbidden-phrase bug is inapplicable.
 
-4. **Negation and context are ignored.** The string branch accepts a sentence denying that controls were deliberately identical. It also requires only that the identity phrase and a role substring occur somewhere in the same value; it never establishes that the identity assertion concerns the controls.
+4. **C: the first-win guard lacks a discriminating focused test.** Deleting `if "first_win" not in left_lower or "first_win" not in right_lower:` in memory leaves all five existing carveout-hardening tests passing; the original also passes all five. Those tests do not establish that unrelated metric names are refused. This demonstrates a surviving mutation in that focused suite, not the entire repository suite.
 
-5. **The boolean branch confuses observations with expectations.** `value is True` plus matching key fragments accepts a field reporting that identical controls were unexpected or detected. Neither assertion documents an expected equality. This makes the implementation broader than its docstring in a dangerous direction.
-
-6. **C / The existing exemption regression is ineffective.** I executed the repository’s documented-placebo regression with this helper replaced by a constant-false function; it still passed. Its fixture leaves only one recognized control, so the caller never needs the exemption. Removing every successful branch therefore survives that regression; full-suite mutation survival is unestablished.
-
-7. **4 / D–G:** There are no numeric thresholds, absolute paths, writes, or measurements in this function. The terminal `return False` denies the exemption; in the inspected caller it preserves scrutiny rather than approving an unknown input. No additional defect in those classes is established here.
+5. **Boundary / D–G checks:** no numeric thresholds, absolute paths, writes, or measurements occur in this helper. Its `return None` paths refuse the exemption; the caller can then issue a critical tautology flag, so they do not constitute a default approval bypass. The inspected focused tests read historical artifacts without overwriting them. `left.lower()` and `right.lower()` assume the declared string argument types; ordinary metric-key callers satisfy that contract.
 
 ## COUNTEREXAMPLE
 
+An honest ARC null using the supported annotation convention:
+
 ```json
 {
-  "honest_verdict": "Control outputs were unintentionally identical; this is a harness failure.",
-  "condition_accuracy": {
-    "unguided": 0.5,
-    "rfg": 0.5
-  }
+  "experiment": "experiment_4726_online_action_learning_driver_valid_test",
+  "schema": "carnot.exp4726.online_action_learning_driver_valid_test",
+  "honest_verdict": "complete: online_action_learning_no_first_win_lift_residual_online_signal_genuinely_too_sparse",
+  "arms_non_degenerate": true,
+  "positive_control_passed": true,
+  "null_delta_methodology_note": {
+    "principle": "Explain why equal measured arms are a valid null.",
+    "value": "Distinct arm action distributions and positive-gradient updates were verified; neither online arm improved first-win rate."
+  },
+  "frozen_first_win": 0.04,
+  "online_warm_first_win": 0.04
 }
 ```
 
-Actual: the helper returns true, and its caller emits zero duplicate-control flags. Expected: false, preserving the warning.
+Actual: the helper returns `None`, and the caller emits a critical tautology flag. Unwrapping only the note restores the warning.
 
-Other concrete helper misclassifications:
+Boundary counterexample: with the note unwrapped, replace the two metric fields with `frozen_first_window_action_entropy` and `online_scratch_first_window_action_entropy`, both `0.137942857`. Verified: the helper accepts these first-window measurements and the caller emits only a warning.
 
-| Input fragment | Actual | Expected |
-|---|---:|---:|
-| `{"identical_control_arms_expected": {"principle": "Zero perturbation leaves outputs unchanged.", "value": true}}` | false | true |
-| `{"honest_verdict": "Controls were not intentionally identical; matching scores are unexplained."}` | true | false |
-| `{"honest_verdict": "Warm-up schedules were intentionally identical across runs."}` | true | false |
-| `{"note": "Controller configurations were deliberately identical across runs."}` | true | false |
-| `{"note": "Placebo-free runs were deliberately identical."}` | true | false |
-| `{"nonidentical_controls": true}` | true | false |
-| `{"identical_control_arms_unexpected": true}` | true | false |
+Context counterexample: with the original first-win metrics, use this bare note: `"The positive control passed, but the first-win null is NOT validated: both arms used the same cached predictions."` Verified: it still receives the exemption.
 
 ## MISSED INPUT
 
-```json
-{
-  "honest_verdict": "Identical controls are expected because the placebo applies zero perturbation."
-}
-```
+`null_delta_methodology_note: {"principle": "Document the validated null.", "value": "Distinct measured arms produced equal first-win rates."}`
 
-This explicit declaration returns false. So does:
-
-```json
-{"identical_baselines_expected": true}
-```
+This permitted representation of an otherwise recognized ARC null is silently refused. An equivalently wrapped `positive_control_passed` containing `"value": true` is also refused.
 
 ## RECOMMENDATION
 
@@ -405,70 +414,10 @@ NEEDS_REDESIGN
 
 ## RATIONALE
 
-Recognition must unwrap supported fields and distinguish affirmative expectations from negations, observations, and incidental substrings. Skipped: full-suite mutation and end-to-end checks; isolated execution confirmed the core failures and ineffective regression. Risk: this helper can cause honest controls to be flagged while suppressing warnings about unexpected duplicate controls.
+Verified probes demonstrate both false quarantine from valid annotations and an unjustified exemption from substring matching. Unwrap supported fields, recognize metric tokens precisely, and add tests that independently reject unrelated metrics and contradictory validation evidence. The full suite and end-to-end checks were not run; the demonstrated classification defects remain unresolved.
 
 
-## adversarial_verify.py::_arm_numeric_value
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-“Extract the accuracy-like value from a flat or nested arm entry.”
-
-## FINDINGS
-1. **A / field extraction / F:** `metric = value.get(metric_key)` followed by `if _is_finite_number(metric):` rejects a principle-wrapped numeric metric without unwrapping it. Wrapping the entire arm also fails. Both reach `return None`; the caller silently excludes those controls from comparison. Confirmed by execution, including the verifier’s normalization step.
-2. **B / narrower than the claim:** `CONDITION_ARM_METRIC_KEYS` enumerates specific spellings rather than recognizing every accuracy-like metric. The first-attempt pass-rate spelling shown below is omitted and silently returns `None`. This narrows the docstring’s claim.
-3. **C / missing independent coverage:** All four focused regression tests pass after an in-memory mutation removes six metric aliases and retains only the accuracy alias. Those six recognition paths have no deletion-sensitive assertion in that test file.
-
-## COUNTEREXAMPLE
-```json
-{
-  "arms": {
-    "rfg": {
-      "accuracy": {
-        "principle": "Measured held-out control accuracy.",
-        "value": 0.25
-      }
-    },
-    "unguided": {
-      "accuracy": {
-        "principle": "Measured held-out control accuracy.",
-        "value": 0.25
-      }
-    }
-  }
-}
-```
-
-Both extractions return `None`, and the duplicate-control check emits no flag. Replacing each wrapped accuracy with bare `0.25` produces the flag.
-
-## MISSED INPUT
-```json
-{"accuracy": {"principle": "Measured held-out control accuracy.", "value": 0.25}}
-```
-
-This valid annotated arm entry should yield `0.25`; it yields `None`.
-
-Another plausible omitted metric spelling:
-```json
-{"pass_at_1": 0.25}
-```
-
-This also yields `None`.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-Unwrap annotated arm entries and metric values before numeric recognition, with regression tests proving equivalence to bare measurements. This helper contains no free-text matching, threshold comparisons, filesystem writes, or measurement timing.
-
-Full-suite mutation testing was not run; the demonstrated risk is silent bypass of duplicate-control detection.
-
-
-## adversarial_verify.py::check_degenerate_controls
+## adversarial_verify.py::check_tautology
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -478,108 +427,63 @@ SILENT_NON_FIRING
 
 ## CLAIM
 
-“Detect condition-arm maps where distinct controls are bit-identical.”
+`Detect distinct metrics agreeing to TAUTOLOGY_DIGITS sig figs.` while excluding legitimate structural coincidences.
 
 ## FINDINGS
 
-1. **A/B/F — A real control name is silently excluded.** `_is_control_arm_key(arm_key)` rejects self_reward_smc, an actual control-arm name in Exp 4315 and Exp 4338. Equal values for that arm and unguided produce no flag because `if len(controls) < 2:` skips the comparison. The control-name vocabulary is narrower than the controls the docstring describes.
+1. **A/F — An unrelated null declaration disables detection.** The condition combining `_is_declared_honest_null(d)` with `(_has_control_treatment_qualifier(k1) or _has_control_treatment_qualifier(k2))` never establishes that the fields measure the same outcome. One qualifier and a self-declared null suppress duplicated, independent gradient norms without even a warning. The primary counterexample produced **zero flags through the live verifier**. The premise `a fabrication never self-labels a null` is an unsupported trust assumption.
 
-2. **Field extraction — Nested principle wrappers disable detection.** `arm_map = d.get(map_key)` assumes a directly inspectable dictionary; lists and None are silently skipped. The full verifier unwraps top-level annotations, so a wrapped top-level map works through that caller. However, `_arm_numeric_value(value)` does not unwrap annotated arm values or annotated metrics inside arm entries: both reach `if numeric_value is None:` and disappear from the comparison. Confirmed through the full verifier.
+2. **Substring matching and negation blindness survive inside the helpers.** The null recognizer accepts a null marker even when the verdict explicitly rejects that hypothesis. The qualifier recognizer also matches the control marker inside controller field names. Both cases reached the unconditional `continue` and suppressed detection.
 
-3. **Negation blindness — Denying intentional identity activates the exemption.** `documented_identical = _documented_identical_controls(d)` accepts the negated verdict shown below. Consequently, `if documented_identical or all(` suppresses a duplicate group that otherwise triggers. The inspected helper searches for positive substrings without interpreting their negation; a negated boolean field name can activate the same exemption.
+3. **The chance exemption contradicts its stated restriction.** The comment says `Skip two SCORE metrics both pinned at the 0.5 chance floor.` Actual logic uses `_is_chance_floor_score(k1) or _is_chance_floor_score(k2)`. Consequently, one AUROC field exempts an unrelated gradient norm at the same value. Requiring both fields to qualify is necessary.
 
-4. **Exemption scope — One documented placebo group exempts unrelated controls.** The single artifact-wide `documented_identical` value suppresses every duplicate group. Documentation that only placebo controls are intentionally identical also exempts an unexplained equality between independently exercised rfg and unguided controls. The exemption has no association with the particular arms being compared.
+4. **Two independent baseline measurements are treated as one structural identity.** `_is_structural_nonmeasurement(k1, v1, d)` and its counterpart establish each field’s classification separately; they never establish a relationship between the fields. Two different loss functions’ identical baseline gradient norms receive only `severity="warn"`. This is broader than the comment’s justification, `the same baseline reported twice`.
 
-5. **Substring boundaries — Arm names can trigger the wrong classification or exemption.** The helpers behind `_is_control_arm_key(arm_key)` and `_is_placebo_or_replicate_key(arm_key)` use unrestricted substring matching. The counterexamples below demonstrate treatment names being classified as random controls and explicitly unreplicated controls receiving the replicate exemption.
+5. **The legitimate-pair helper exempts metrics merely mentioning replication.** `_legitimate_pair(k1, k2)` returns true when either name contains a replication marker, without checking whether one reproduces the other. A replication-error measurement and an unrelated loss therefore escape comparison entirely. The reproduced fragment below produced zero flags.
 
-6. **B/F — The recognition tables substitute selected spellings for broader concepts.** `CONDITION_ARM_MAP_KEYS` represents condition-to-result maps but omits the corpus spelling accuracy_by_arm. The numeric helper’s metric table represents accuracy-like measurements but omits exact_match. The control table omits self_reward_smc; the duplicate-name table omits sham-control terminology. These omissions require explicit schema handling or documentation, rather than treating an unrecognized declaration as indistinguishable from a checked pass.
+6. **B — The null vocabulary is narrower than its concept.** The helper represents declarations that treatment added no benefit, but omits existing project wording expressing no lift or no gain. An unchanged control/treatment loss comparison receives a critical flag with the corpus-derived no-lift verdict below, yet receives no flag after substituting recognized null wording. That is a wording-dependent false positive.
 
-7. **Metric identity is discarded before comparison.** `_arm_numeric_value(value)` returns only a number, and `float(numeric_value).hex()` groups it without preserving which metric supplied it. An accuracy from one arm and a solve rate from another can therefore generate a critical duplicate-controls flag. Also, equal aggregate accuracies alone cannot establish that independently executed controls were no-ops: different per-task outcomes can produce identical totals.
+7. **C — Some named patterns are decorative, and the focused tests miss the chance restriction.** The longer no-value-added marker is subsumed by the shorter no-value marker; the baseline-reference qualifier is subsumed by other qualifiers. Removing both markers in memory **and** changing the chance condition from OR to AND left all **142 focused tests passing**. The deleted markers cannot have independent behavioral coverage, and these tests do not enforce the two-score restriction.
 
-8. **C — The focused tests leave important behavior unprotected.** All four tests passed. They also passed after disabling either exemption helper, deleting every placebo marker individually, deleting the per_condition_accuracy map recognizer, or changing the duplicate minimum from two to three. Every nested metric recognizer except accuracy and every control marker except entrgi, rfg, and unguided survived individual deletion. The documented-placebo test is vacuous for its exemption: its placebo arm names are never recognized as controls.
+Field extraction was checked: the supplied body has no direct artifact-field `d.get` call, and the live caller normalizes wrapped scalar fields before invoking it. Wrapped gradient measurements correctly produced a critical flag. No additional numeric boundary defect was established; dictionary membership and the explicit count suffix test are not free-text substring bugs.
 
-9. **Boundary and side-effect checks:** `if len(controls) < 2:` and `if len(duplicate_controls) < 2:` correctly admit exactly two controls; the tests fail to protect that boundary. The supplied function has no absolute filesystem target, artifact write, or duration measurement. Its mutation of the supplied flags list is intentional.
+D/E/G: the supplied function contains no absolute write target, persistent artifact write, or measurement computed before work. Its return value is not a recognizer default; the demonstrated silent failures occur through exemptions that emit no flag.
 
 ## COUNTEREXAMPLE
 
-False negative caused solely by negation blindness:
-
 ```json
 {
-  "honest_verdict": "Controls were not intentionally identical; all were independently exercised.",
-  "condition_accuracy": {
-    "rfg": 0.3,
-    "unguided": 0.3
-  }
+  "honest_verdict": "complete: verifier_router_no_value_added",
+  "nrgpt_grad_norm_with_verifier": 9.762872695922852,
+  "ce_grad_norm": 9.762872695922852
 }
 ```
 
-Observed: zero DEGENERATE_CONTROLS flags. Removing the verdict produces one.
+**Observed:** zero flags. These are two distinct loss-function gradient norms; the verdict does not establish an arithmetic relationship between them. Removing the null declaration restores a critical flag.
 
-Additional independently reproduced fragments:
+Additional verified cases:
 
-```json
-{
-  "condition_accuracy": {
-    "unreplicated_control_a": 0.3,
-    "unreplicated_control_b": 0.3
-  }
-}
-```
+- Replace the verdict with `"success: no_value_added hypothesis rejected; verifier improves held-out AUROC"`: still zero flags.
+- `{"heldout_auroc": 0.5, "ce_grad_norm": 0.5}`: zero flags despite the second field being a gradient measurement.
+- `{"replication_error": 0.123456789, "mean_loss": 0.123456789}`: zero flags.
+- Equal `nrgpt_grad_norm_baseline` and `ce_grad_norm_baseline` at `9.762872695922852`: warning only.
+- An `"honest_null"` verdict with equal `pid_controller_tracking_error` and `ce_grad_norm`: zero flags because controller matches the control qualifier.
 
-Observed: zero flags because the names accidentally activate the replicate exemption.
+The vocabulary false positive:
 
 ```json
 {
-  "condition_accuracy": {
-    "nonrandom_energy_guidance": 0.3,
-    "nonrandom_gradient_guidance": 0.3
-  }
+  "honest_verdict": "complete: trained_energy_no_lift_over_untrained_kona_hybrid",
+  "loss_control": 0.913127481234,
+  "loss_treatment": 0.913127481234
 }
 ```
 
-Observed: one critical flag; both treatment names match the random-control substring.
-
-```json
-{
-  "arms": {
-    "rfg": {"accuracy": 0.3},
-    "unguided": {"solve_rate": 0.3}
-  }
-}
-```
-
-Observed: one critical flag comparing different metrics.
+**Observed:** critical TAUTOLOGY. Substituting `"complete_honest_null"` produces zero flags. The no-lift verdict wording exists in `results/experiment_3464_kona_trained_energy_hybrid_solve_rate_v4.json`; the loss fragment above is constructed.
 
 ## MISSED INPUT
 
-The actual control name self_reward_smc, used in Exp 4315 and Exp 4338, is unrecognized. This plausible duplicate pair produces zero flags:
-
-```json
-{
-  "condition_accuracy": {
-    "self_reward_smc": 0.3,
-    "unguided": 0.3
-  }
-}
-```
-
-Valid principle-annotated arm values also produce zero flags through the full verifier:
-
-```json
-{
-  "condition_accuracy": {
-    "rfg": {
-      "principle": "Measure control accuracy on held-out tasks.",
-      "value": 0.3
-    },
-    "unguided": {
-      "principle": "Measure control accuracy on held-out tasks.",
-      "value": 0.3
-    }
-  }
-}
-```
+`nrgpt_grad_norm_with_verifier = ce_grad_norm = 9.762872695922852` under `honest_verdict = "complete: verifier_router_no_value_added"`: duplicated independent measurements pass with zero flags.
 
 ## RECOMMENDATION
 
@@ -587,5 +491,5 @@ NEEDS_REDESIGN
 
 ## RATIONALE
 
-The checker silently discards legitimate representations and lets negated or unrelated documentation disable detection across an artifact. Recognition failures need explicit handling, exemptions need arm-specific scope, and comparisons need matching metric identities. Only the four focused tests and isolated probes were run; no source changed, and full-suite, lint, spec-coverage, and E2E checks remain unverified.
+The exemptions trust names and self-description without establishing that the measurements are structurally related. Live-path reproductions demonstrate bypasses while all 142 focused tests remain green, including the described in-memory mutations. Full-suite and exhaustive branch-mutation checks were not run; the current exemptions still let duplicated measurements clear the gate.
 
