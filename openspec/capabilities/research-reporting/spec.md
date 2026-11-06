@@ -107471,3 +107471,28 @@ retain every scheduled unit and enforce its frozen gates. Missing external input
 shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
+
+
+### REQ-REPORT-8864 implementation contract (20261106)
+
+Admit installed_cost_ready_score from Exp8861 and whole_cost_ready_score from
+Exp8862 independently using pinned producer bytes and original raw/source
+authorities. Preserve censored requests and all durable windows. Never replace
+a missing branch with historical costs. Map index construction, lookup, binding
+joins, feature gathering, linear energy, gradients, serialization and fsync
+separately. Counts do not establish timing fractions. Keep complete installed
+parent clocks and installation accounting separate from inner request clocks.
+Retain KV260 k_max<=5 and ssh kria access, PolarFire CPU dispatch and GateMate
+0xffffffff with no physical retries. NPU and TSU remain unqualified. Compare
+preserved paper authorities without inferring compatibility from Ising form.
+FR-11 CPU counters, batched small heads and template kernels require measured
+precision, transfer and durable boundaries before 100x or native10x claims.
+
+#### SCENARIO-REPORT-8864-CONTRACT implementation checks
+
+Either admitted branch survives the other's absence. Both absent produce an
+exact blocked diagnostic; failed owned checks disqualify readiness. Cold CLI
+replay outside the checkout rejects rehashed changes and retains source pins.
+Require actual unit and child statement coverage at100 percent, no exclusions,
+private E2E-018/021, Ruff, strict mypy and positional spec coverage. Global
+health is recorded separately. No board probes or milestone activation occur.

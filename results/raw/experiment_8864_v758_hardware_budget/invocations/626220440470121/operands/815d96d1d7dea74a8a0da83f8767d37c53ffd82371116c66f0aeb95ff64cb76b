@@ -1,0 +1,72 @@
+..........F                                                              [100%]
+=================================== FAILURES ===================================
+__________________ test_failed_resources_and_production_route __________________
+
+tmp_path = PosixPath('/tmp/exp8829-owned-i2f75imj/collection-21363452eb8645c994f8dcaadc825858/0/tmp/test_failed_resources_and_prod0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f569bbcc860>
+
+    def test_failed_resources_and_production_route(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8829-CONTRACT: real publication works with failed qualification and empty science."""
+        for split in m.COUNTS:
+            monkeypatch.setitem(m.COUNTS, split, 1)
+        pre = r.preconditions(tmp_path / "pre")
+        pre["resources"]["passed"] = False
+        monkeypatch.setattr(r, "preconditions", lambda raw: pre)
+        monkeypatch.setattr(r.repaired, "validate", lambda *args: r.unqualified())
+        monkeypatch.setattr(r, "validate", lambda *args: r.unqualified())
+        monkeypatch.setattr(r.checker, "terminal", lambda *args: dict(passed=True))
+>       assert r.main(["--output", str(tmp_path / (m.NAME + ".json"))]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_selective_methods_8829.py:304: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/selective_methods_runner_8829.py:687: in main
+    shutil.copyfile(receipt[suffix + "_path"], target)
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:262: in copyfile
+    with open(dst, 'wb') as fdst:
+         ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/tmp/exp8829-owned-i2f75imj/collection-21363452eb8645c994f8dcaadc825858/0/tmp/test_failed_resources_and_prod0/raw/experiment_8829_v756_selective_methods/invocations/1793860987194408957/repository_health.stdout')
+mode = 'wb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_builtin_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_BUILTIN_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/exp8829-owned-i2f75imj/collection-21363452eb8645c994f8dcaadc825858/0/tmp/test_failed_resources_and_prod0/raw/experiment_8829_v756_selective_methods/invocations/1793860987194408957/repository_health.stdout'
+
+python/carnot/testing/tracked_results_guard.py:148: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8829] phase=start_no_model_load_before_resource_checks completed=0 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_selective_methods_8829.py::test_failed_resources_and_production_route
+1 failed, 10 passed, 1 warning in 101.25s (0:01:41)
