@@ -107609,3 +107609,52 @@ only after unit/child statement coverage reaches 100 percent without exclusions,
 private E2E-018/021, scoped Ruff, strict mypy, positional spec tracing and both
 unchanged artifact scanners. Record global suite health separately. No roadmap
 activation, shared validator edit, exclusion edit, model load or training occurs.
+
+### REQ-REPORT-8868: Seal fixed evidence groups and equal-cost conditional certificates
+
+Before labels, freeze query-only chain, fork, cycle and disconnected groups,
+each with 1,024 worlds. Relevant facts use queried predicates and their graph
+structures must be disjoint from development and exposed cohorts; unused
+marker graphs do not count. Preserve signed facts and unknown/conflict abstention.
+Keep the seven existing policies and five development-only energy-head seeds.
+Freeze 40 independent stratified replacement replicates, with 240 selection
+and 480 certification draws per group, shared by both protocols (2,880 labels).
+Select once using selection labels; never replace a refused rule.
+
+Each terminal group uses an exact one-sided binomial bound at alpha .01/56.
+For pooled certification, combine group risk bounds using the known balanced
+population weights times each rule's exact input-only census acceptance rate,
+normalized over accepted mass. A stratified sample is never treated as one
+binomial sample. Group certification serves only groups whose bounds pass .05;
+empty groups refuse. The guarantee is per replicate across 2x7x4 bounds, not
+simultaneous across all 40 independent repetitions. Freeze balanced and four
+.7/.1/.1/.1 mixtures. Only prevalence changes. Open census labels after
+certification. A separate evidence-corruption stress has no validity claim.
+
+#### SCENARIO-REPORT-8868-CONTRACT
+
+Tests precede implementation and check query-only membership, relevant graph
+separation, exact binomial integer boundaries, independent repeated draws,
+selection/certification isolation, acceptance-mass weighting, a pooled-risk
+counterexample, identical-arm nulls and corruption outside the guarantee.
+Readiness requires valid controls, complete operands and bounded work, never
+benefit. Authenticate original Exp8857/8859 producers, bound source/config/raw
+bytes and preserved original design. Retain private ordered checkpoints, failed
+and censored units, invocation/source hashes, actual numerical training counts,
+current-work receipt and atomic checked publication. Rehashed semantic changes
+must fail cold CLI replay outside the checkout without PYTHONPATH.
+Require 100 percent owned unit/child statement coverage without exclusions,
+Ruff, strict mypy, positional spec tracing, private E2E-018/021 and unchanged
+artifact scanners. Record the single bounded full Python health attempt apart
+from owned checks. No native changes, shared validator/exclusion/conductor
+edits, push or milestone activation. The conductor owns ops/status, changelog
+and BMAD reconciliation for this task.
+
+Implementation (20261106): `conditional_risk_methods_8868.py` and
+`conditional_risk_runner_8868.py` implement the frozen stratified construction
+and direct private/cold-replay CLI. Ten requirement-linked tests pass with
+458/458 owned unit/child statements covered and zero exclusions. The single
+full Python health command timed out after 180 seconds during worker startup;
+its original failed receipt is retained separately from owned qualification.
+The producer retains final E2E, lint/type/spec and scanner receipts before
+publishing readiness. No favorable result is required to release these methods.
