@@ -23229,3 +23229,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   operation mapping. Keep bounded Qwen behind changed runtime evidence.
 - Add planned requirements, traceability and architecture/ops boundaries.
   Planning validation is pending; no experiment execution or activation occurs.
+- 2026-11-06: Bind the complete V760 contract and ingest new sequential-risk methods (⚠️ Research Finding) — honest_verdict=complete_null_v760_branch_contract; results/experiment_8878_v760_branch_contract.json
