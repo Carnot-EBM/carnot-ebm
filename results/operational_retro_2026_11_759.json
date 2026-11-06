@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.759",
+  "generated_at": "2026-11-06T15:42:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 45.1,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Separate label information from structural template activation",
+      "duration_minutes": 12.82,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure complete size-aware verification costs without small-request regressions",
+      "duration_minutes": 12.19,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure certificate robustness under fixed-group mixture shifts",
+      "duration_minutes": 7.47,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Seal fixed evidence groups and equal-cost conditional certificates",
+      "duration_minutes": 5.36,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile twelve outcomes and decide label risk and deployment continuations",
+      "duration_minutes": 4.62,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.759 completed 8 experiments (1 compute-bound, 7 synthesis-only) in 45.1 wall-time minutes (45 minutes / 0.8 hours, averaging 6 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). All 5 slowest experiments were synthesis-only ('Separate label information from structural template activation' at 12.82 minutes / 13min, 'Measure complete size-aware verification costs without small-request regressions' at 12.19 minutes / 12min, 'Measure certificate robustness under fixed-group mixture shifts' at 7.47 minutes / 7min, 'Seal fixed evidence groups and equal-cost conditional certificates' at 5.36 minutes / 5min, and 'Reconcile twelve outcomes and decide label risk and deployment continuations' at 4.62 minutes / 5min), meaning the 1 compute-bound task finished below 4.62 minutes (5min; no data available this milestone for its exact task name or duration). Locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner was not applicable (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 50C) is expected behavior across the 7 synthesis-only tasks.",
+  "bottlenecks_identified": [
+    "No compute-bound experiment appeared in the top-5 slowest list (the 1 compute-bound experiment out of 8 completed experiments finished below the 4.62-minute / 5min fifth-slowest threshold; no data available this milestone for its exact name or duration), and gpu_idle_on_compute_bound_tasks is false.",
+    "Wall time across the 45.1-minute (45 minutes / 0.8 hours, 6 minutes average per experiment) milestone was concentrated in the 5 slowest synthesis-only tasks: 'Separate label information from structural template activation' (12.82 minutes / 13min), 'Measure complete size-aware verification costs without small-request regressions' (12.19 minutes / 12min), 'Measure certificate robustness under fixed-group mixture shifts' (7.47 minutes / 7min), 'Seal fixed evidence groups and equal-cost conditional certificates' (5.36 minutes / 5min), and 'Reconcile twelve outcomes and decide label risk and deployment continuations' (4.62 minutes / 5min).",
+    "The live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 8 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse structural-template activation, size-aware verification cost, fixed-group mixture-shift, conditional-certificate, and twelve-outcome reconciliation fixtures across the 5 slowest synthesis-only experiments ('Separate label information from structural template activation' at 12.82 minutes / 13min, 'Measure complete size-aware verification costs without small-request regressions' at 12.19 minutes / 12min, 'Measure certificate robustness under fixed-group mixture shifts' at 7.47 minutes / 7min, 'Seal fixed evidence groups and equal-cost conditional certificates' at 5.36 minutes / 5min, and 'Reconcile twelve outcomes and decide label risk and deployment continuations' at 4.62 minutes / 5min) to reduce the 6-minute per-experiment average.",
+    "Parallelize independent verification and subprocess validation passes within the 7 synthesis-only experiments while keeping DualGPURunner unengaged unless a compute-bound task loads 2+ models in parallel.",
+    "Record explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Free the idle 4MB memory allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 50C) as recommended by the GPU Monitor Report."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share pre-computed structural-template, size-aware verification, fixed-group mixture-shift, and conditional-certificate fixtures across the 5 slowest synthesis-only tasks (12.82 minutes / 13min, 12.19 minutes / 12min, 7.47 minutes / 7min, 5.36 minutes / 5min, and 4.62 minutes / 5min).",
+    "Parallelize independent validation steps inside the 7 synthesis-only tasks to lower the 6-minute per-experiment average across the 45.1-minute (45 minutes / 0.8 hours) milestone.",
+    "Persist direct per-experiment timing metadata in artifacts to eliminate disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log) and release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, Temp 50C)."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.759 completed 8 experiments (1 compute-bound, 7 synthesis-only) in 45.1 minutes (45 minutes / 0.8 hours, averaging 6 minutes per experiment), with gpu_idle_on_compute_bound_tasks locked at false and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, Temp 50C) expected for the 7 synthesis-only workloads. Because all 5 slowest tasks were synthesis-only (12.82 minutes / 13min, 12.19 minutes / 12min, 7.47 minutes / 7min, 5.36 minutes / 5min, and 4.62 minutes / 5min) and the 1 compute-bound task completed in under 4.62 minutes (5min), deduplicating fixture setup and validation passes in synthesis tasks is the highest-leverage operational improvement for the next milestone."
+}

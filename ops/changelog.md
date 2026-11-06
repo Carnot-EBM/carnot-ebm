@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-06 UTC — Operational retrospective for milestone 2026.11.759
+
+- Updated `results/operational_retro_2026_11_759.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.759`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 8 completed experiments (1 compute-bound, 7 synthesis-only) across 45.1 wall-time minutes (45 minutes / 0.8 hours, averaging 6 minutes per experiment).
+- The five slowest experiments were all synthesis-only (`compute_bound: false`): `Separate label information from structural template activation` (12.82 minutes / 13min), `Measure complete size-aware verification costs without small-request regressions` (12.19 minutes / 12min), `Measure certificate robustness under fixed-group mixture shifts` (7.47 minutes / 7min), `Seal fixed evidence groups and equal-cost conditional certificates` (5.36 minutes / 5min), and `Reconcile twelve outcomes and decide label risk and deployment continuations` (4.62 minutes / 5min); the 1 compute-bound experiment finished below 4.62 minutes (5min; no data available this milestone for its exact task name or duration).
+- GPU monitor report (`2026-11-06T15:42:16.564732+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 4/24576MB (0%), 0% utilization, and Temp 50C; locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% GPU utilization across the 7 synthesis-only experiments is expected behavior.
+- Suggested improvements: cache and reuse structural-template, size-aware verification, fixed-group mixture-shift, conditional-certificate, and twelve-outcome reconciliation fixtures across the 5 slowest synthesis-only tasks (12.82 minutes / 13min, 12.19 minutes / 12min, 7.47 minutes / 7min, 5.36 minutes / 5min, and 4.62 minutes / 5min), parallelize independent verification checks in synthesis-only tasks, persist direct per-experiment timing metadata to eliminate `retro_timing_fallback` when live git-log has 0 commits, and free the idle 4MB GPU 0 allocation.
+
 ## 2026-11-06 UTC — Fix Exp8867 health reuse and cold replay
 
 - Authenticate and reuse the original global-health receipt during owned
