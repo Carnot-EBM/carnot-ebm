@@ -107124,6 +107124,28 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Execution contract, 2026-11-06: authenticate both historical producer byte pins,
+their raw operands, method authorities, seven policies and six cutoffs. Recompute
+historical firing, served risk and coverage from the retained scores and draws.
+No fitting or new score generation is allowed. Enumerate all 42 population rules;
+empty accepted sets have null risk. Census results are exposed diagnostic bounds.
+Compute exact accepted-sample requirements for zero and nonzero errors. Retain
+integer boundary checks and independent numerical checks of binomial power sums.
+Keep the original alpha=.01/(7*3*6) distinct from matched simultaneous
+alpha=.01/(2*7*6) at 720 labels and split alpha=.01/(2*7) at 480 certification
+labels plus 240 charged selection labels. Per-rule power conditions on independent
+selection of that fixed rule; it does not measure selection success. Emit split
+feasibility only for a population-feasible registered non-oracle rule with power
+at least .8. Preserve all five learned seeds and two deterministic controls.
+Report discrimination, support, multiplicity and remaining selection uncertainty.
+Publish immutable invocation operands, measured clocks, executed source hashes,
+unit/child coverage and private replay checks. Missing external evidence blocks;
+failed owned controls disqualify readiness. Do not activate the milestone.
+
+Implementation added 2026-11-06: `selective_ceiling_8855.py`, its runner, direct
+experiment CLI and `test_selective_ceiling_8855.py` implement this contract.
+The producer artifact retains the executed validation and readiness receipts.
+
 ### REQ-REPORT-8856: Measure continuous linear-energy learning with isolated template and delay effects
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
