@@ -21440,3 +21440,4 @@ code |
 | 2026-11-06 03:20 UTC | Expose the qualified indexed witness evaluator thr | OK | 134 passed, 1 warning in 69.88s (0:01:09) |
 | 2026-11-06 04:02 UTC | Measure certificate availability and served risk u | OK | 88 passed, 1 warning in 18.38s |
 | 2026-11-06 04:40 UTC | Audit linear future benefit and joint retention fr | OK | 111 passed, 1 warning in 129.56s (0:02:09) |
+| 2026-11-06 05:21 UTC | Measure complete installed verifier costs across e | OK | 90 passed, 1 warning in 47.01s |
