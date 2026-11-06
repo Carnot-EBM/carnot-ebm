@@ -108059,6 +108059,21 @@ label learning. The conductor owns ops/status, changelog and BMAD updates.
 
 ### REQ-REPORT-8882: Locate complete-request cost after the size-aware speed null
 
+Freeze ten retained ordinary worlds at each size8/16/17/64/256/1024 before
+profiling, with four variants, three arms, cold/resident boundaries and three
+repeats. Pair instrumentation on/off in a seeded random order. Authenticate
+the original exp8871 wheel and exp8874 authority, source/config and raw bytes;
+missing external evidence blocks, while failed owned controls disqualify.
+Research-only wrappers shall partition parse/validation, preparation, exact
+joins and response encoding with exclusive nested clocks. Preserve complete
+parent clocks, startup/import, operation caps, witnesses, censors and residuals.
+Negative residuals or missing clocks forbid attribution. Require closure within
+5 percent and a paired whole-world99-percent overhead upper bound at most5
+percent in every size/mode/arm stratum; observer-dominated requests yield a null
+without subtracting observer estimates. Installation, warmup and timeout costs
+remain visible. No dispatch tuning, new optimization, hardware benchmark,
+Rust10x or independent-generalization claim is permitted.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8882_v760_request_cost_attribution.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108072,7 +108087,11 @@ gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
 real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
-preserved. Status: planned; tests and implementation are not yet executed.
+preserved. Tests shall cover exclusive nested clocks and exception cleanup,
+the frozen retained subset, full paired denominators, observer nulls, negative
+residual rejection, installed on/off semantic and operation parity, original
+input rejection, private actual CLI replay and rehashed semantic tampering.
+The conductor owns ops/status, changelog and BMAD reconciliation.
 
 ### REQ-REPORT-8883: Separate source truth from record sufficiency under missing evidence
 

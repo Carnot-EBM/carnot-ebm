@@ -1,0 +1,244 @@
+{
+  "receipt": {
+    "boundary": "cold",
+    "command": [
+      "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+      "-I",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/request_cost_worker_8882.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8882_v760_request_cost_attribution/invocations/1793998669686044427/always_joint.py"
+    ],
+    "cwd": "/tmp/exp8882-installed-pmph7djw",
+    "ended_monotonic_ns": 679362150479888,
+    "installed_imports": [
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_core.py",
+        "sha256": "sha256:8c2d1bdf3e6d0be689b02a8d92180a6ff1d1e7743e4eb091a316931bd2fdcdd7"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_meter.py",
+        "sha256": "sha256:ae3e39e8c666030ecb8d3f3895d3910613f59e8190792eb235600d9dd25f54f8"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/indexed_witness.py",
+        "sha256": "sha256:2514808008dbe53b24c7343d9d79c09c307a0e3781111060d3997d880dfe207a"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/size_aware_witness.py",
+        "sha256": "sha256:9b4b5077d552ca6edae7a1da2d7869e1468d0ad8dd6d96cd818bd05ad6bed30f"
+      }
+    ],
+    "missing_reason": null,
+    "name": "cold-later_ordinary_64_005_support-scan-0",
+    "passed": true,
+    "python": "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+    "pythonpath_present": false,
+    "request_count": 1,
+    "resident_overhead_per_observation_s": 0.0,
+    "started_monotonic_ns": 679362073521862,
+    "stderr": "[exp8882-worker] completed=1 pending=0 cluster=later/ordinary/64/005\n",
+    "wall_time_s": 0.076958026
+  },
+  "rows": [
+    {
+      "arm": "scan",
+      "boundary": "cold",
+      "budget_exhausted": false,
+      "cluster_id": "later/ordinary/64/005",
+      "complete_wall_time_s": 0.076958026,
+      "component_intervals": [
+        {
+          "component": "parse_validate",
+          "end_ns": 679362139664535,
+          "start_ns": 679362139650238
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679362139862537,
+          "start_ns": 679362139671358
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679362139868348,
+          "start_ns": 679362139866965
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679362140052193,
+          "start_ns": 679362139868348
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679362140054247,
+          "start_ns": 679362140052193
+        },
+        {
+          "component": "preparation",
+          "end_ns": 679362140157040,
+          "start_ns": 679362140054247
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679362140487310,
+          "start_ns": 679362140157040
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679362140501397,
+          "start_ns": 679362140490206
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679362140534429,
+          "start_ns": 679362140528658
+        }
+      ],
+      "components_ns": {
+        "exact_joins": 333707,
+        "parse_validate": 389321,
+        "preparation": 102793,
+        "response_encode": 16962
+      },
+      "cpu_time_s": 0.001496978,
+      "decision": "support",
+      "denominator": 1,
+      "ended_monotonic_ns": 679362140556120,
+      "instrumented": true,
+      "metric": 1,
+      "missing_reason": null,
+      "noop_clock_ns": [
+        140,
+        270,
+        110,
+        70,
+        80,
+        60,
+        60,
+        70,
+        50,
+        60,
+        51,
+        70,
+        60,
+        50,
+        50,
+        50,
+        50,
+        80,
+        50,
+        70,
+        50,
+        50,
+        60,
+        50,
+        50,
+        60,
+        60,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        50,
+        60,
+        50,
+        50,
+        50,
+        51,
+        60,
+        60,
+        50,
+        51,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        60,
+        50,
+        50,
+        50,
+        51,
+        50,
+        60,
+        50,
+        50,
+        50,
+        50,
+        50,
+        60,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        61,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        60,
+        50,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "operation_counts": {
+        "candidate_bindings": 63,
+        "fact_comparisons": 252,
+        "join_attempts": 0,
+        "lookup_attempts": 568,
+        "other_comparisons": 790,
+        "other_iterations": 1746,
+        "query_visits": 128,
+        "record_visits": 70,
+        "request_dispatch": 1,
+        "request_disposal": 3066,
+        "request_parse_bytes": 3003,
+        "request_serialization": 63
+      },
+      "population": "ordinary",
+      "primitive_limit": 200000,
+      "primitive_operations": 9750,
+      "repeat": 0,
+      "request_elapsed_ns": 1515486,
+      "response_bytes": 63,
+      "seed": 7608882,
+      "size": 64,
+      "started_monotonic_ns": 679362137858453,
+      "startup_import_ns": 53197159.0,
+      "status": "completed",
+      "truth": "support",
+      "unit_id": "later/ordinary/64/005/support",
+      "wall_time_s": 0.001499206,
+      "witness": {
+        "?x": "5095d237aeaf62b4a"
+      }
+    }
+  ]
+}
