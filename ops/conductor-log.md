@@ -21453,3 +21453,4 @@ code |
 | 2026-11-06 11:45 UTC | Separate label information from structural templat | OK | 108 passed, 1 warning in 178.79s (0:02:58) |
 | 2026-11-06 12:19 UTC | Seal fixed evidence groups and equal-cost conditio | OK | 91 passed, 1 warning in 23.48s |
 | 2026-11-06 12:24 UTC | Qualify query-only admission and release-matched e | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8867-feedback-information-diagnosis.diagnosis_ready_score (actual=0 == expected=1) |
+| 2026-11-06 13:03 UTC | Measure certificate robustness under fixed-group m | OK | 89 passed, 1 warning in 88.44s (0:01:28) |
