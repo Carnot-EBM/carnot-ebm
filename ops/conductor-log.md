@@ -21457,3 +21457,4 @@ code |
 | 2026-11-06 13:39 UTC | Qualify a direct small-request path inside the exa | OK | 123 passed, 1 warning in 46.12s |
 | 2026-11-06 13:41 UTC | Measure continuous learning with equal template ex | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8869-matched-memory-methods) |
 | 2026-11-06 13:41 UTC | Audit correct-label value and retention against qu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8872-matched-causal-streams) |
+| 2026-11-06 14:25 UTC | Measure complete size-aware verification costs wit | OK | 93 passed, 1 warning in 46.43s |
