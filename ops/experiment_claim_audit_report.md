@@ -11,10 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
-| NO_CLAIM | 4 |
+| CLAIM_SUPPORTED | 6 |
+| NO_CLAIM | 2 |
 
-## experiment_8845_v757_indexed_witness.json
+## experiment_8858_v758_installed_indexed_verifier.json
 
 **CLAIM_SUPPORTED**
 
@@ -22,29 +22,31 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The opt-in indexed witness implementation preserves the reference evaluator’s decisions on the exposed encoded cases and passes scoped semantic and lifetime checks.
+The installed wheel passes installation and ownership checks and preserves reference semantics and operation counts on the constructed request roster.
 
 ## WHAT WOULD REFUTE IT
-A completed same-input pair with different decisions, an accepted invalid witness, or a failed index lifetime check would refute semantic readiness. Agreement between separately executed implementations is not guaranteed merely because they use the same facts.
+An outside-checkout import failure, any installed/reference semantic or operation-count mismatch, or acceptance of stale or cross-query state would refute this qualification claim.
 
 ## WAS THAT CHECKED
-Yes, as reported in the parity, adversarial, and lifetime checks; the displayed comparisons agree and the aggregate reports no failures or censoring. The unchanged joint evaluator is a serious comparator. Its tie supports the stated equivalence claim; it establishes no added value.
+Yes. Installed import checks, semantic and operation parity rows, and ownership checks report passes. Packaging or state-handling failures could have occurred even though the verifier defines correctness.
 
-The oracle defines encoded correctness, but the headline claims implementation parity, not verifier benefit. Exposed inputs are acknowledged, and no generalization or cost improvement is asserted.
+Oracle agreement establishes execution parity here; the artifact asserts no comparative verifier benefit. The failed repository-wide test receipt is explicitly scoped to global health and does not contradict the narrower qualification result.
 
 ## EVIDENCE
-- `methodology`: `Opt-in exact predicate index versus unchanged always-joint; all original V756 inputs; exhaustive small-domain and adversarial semantic controls. Readiness alone, no cost benefit claim.`
-- `indexed_decision`: `support`; `reference_decision`: `support`; `passed`: `true`.
-- `completed_count`: `7200`; `failed_count`: `0`; `censored_count`: `0`; `excluded_count`: `0`.
-- `source_mutation_isolated`, `immutable_table`, `stale_reuse_rejected`, `cross_query_rejected`: each reports `passed`: `true`.
-- `verifier_is_oracle`: `true`; `independent_generalization_score`: `0`.
+
+- `methodology`: `Build a private wheel; compare its outside-checkout public calls against all 3600 original requests and 14 pinned adversaries. No model, training, or timing benefit measurement.`
+- `exact_installed_parity`: `true`; `installed_index_ready_score`: `1`.
+- `installed_outside_checkout_no_pythonpath`; `semantic_parity_rows`; `operation_parity_rows`; `passed`: `true`.
+- `stale_reuse_rejected`; `cross_query_rejected`; `passed`: `true`.
+- `completed_count`: `3614`; `failed_count`: `0`; `verifier_is_oracle`: `true`.
+- `repository_health`; `scope`: `global_health_only`; `passed`: `false`.
 
 ## RECOMMENDATION
 KEEP
 
-No rerun or independent inspection of elided rows; support remains limited to reported semantic readiness.
+Execution was not independently checked, and elided rows were not inspected. These results support installation qualification only.
 
-## experiment_8846_v757_future_benefit_audit.json
+## experiment_8859_v758_split_certificate_evaluation.json
 
 **CLAIM_SUPPORTED**
 
@@ -52,30 +54,30 @@ No rerun or independent inspection of elided rows; support remains limited to re
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The categorical combined method fails the audit’s overall future-benefit gates, and the simpler linear head is preferred.
+This evaluation did not demonstrate a split-certification benefit over simultaneous certification under the prespecified gates.
 
 ## WHAT WOULD REFUTE IT
-Categorical combined passing all benefit gates: sufficient improvement over frozen and calibration-only arms, superiority to shuffled feedback, noninferiority to linear within the 0.005 Brier margin, and acceptable retention.
+A split-minus-simultaneous coverage gain with a 99% lower bound above 0.05, with useful rules achieving coverage at least 0.3 and census risk at most 0.05, would contradict the reported null.
 
 ## WAS THAT CHECKED
-Yes. The paired intervals include those comparators across 24 streams, alongside retention checks. Linear wins: categorical-minus-linear Brier is positive throughout its interval. The shuffled comparison crosses zero.
+Yes. The protocol separates fitting, selection, certification, and subsequent independent evaluation. It compares equal calibration-label budgets across 60 paired replicates. The reported coverage contrast and both confidence bounds are zero: the simultaneous comparator ties.
 
-Categorical does improve over frozen and calibration-only arms, so the supported null concerns the full acceptance criteria—not absence of every benefit. Oracle-defined correctness does not invalidate this null; no positive verifier-value or generalization claim is asserted.
+Shown refusals contribute zero coverage, while empty risk denominators remain null. The oracle defines correctness, but the headline claims neither verifier value nor generalization. Zero certificate failures therefore need not establish safety to support this limited null.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_future_benefit_audit`; `verdict_class`: `null`.
-- `categorical_combined_minus_linear_combined`: `lower`: `0.04901471759739543`; `upper`: `0.13321966450168252`.
-- `categorical_noninferiority_margin`: `0.005`.
-- `categorical_combined_minus_categorical_shuffled_combined`: `lower`: `-0.0742778821541686`; `upper`: `0.008794601228550662`.
-- `categorical_combined_minus_categorical_calibration_only`: `upper`: `-0.03341303625977893`.
-- `retention_pass_score`: `0`; `causal_benefit_score`: `0`.
+- `honest_verdict`: `complete_null_split_certificate_evaluation`; `verdict_class`: `null`.
+- `primary_contrast`: `estimate`: `0.0`; `lower_99`: `0.0`; `upper_99`: `0.0`; `independent_replicates`: `60`.
+- `split_protocol_benefit_score`: `0`; `method_superiority_score`: `0`; `independent_generalization_score`: `0`.
+- `refusal_reason`: `no_valid_certificate`; `certificate_issued`: `false`; `served_risk`: `null`.
+- `conditional_failure_intervals`: `denominator`: `0`; `estimate`: `null`.
+- `verifier_is_oracle`: `true`.
 
 ## RECOMMENDATION
 KEEP
 
-Not independently checked: elided rows or upstream execution. The conclusion is limited to the reported audit gates.
+Review limited to supplied text; elided rows were not independently checked. This null establishes no universal safety guarantee.
 
-## experiment_8847_v757_indexed_cost.json
+## experiment_8860_v758_linear_benefit_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -83,37 +85,33 @@ Not independently checked: elided rows or upstream execution. The conclusion is 
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-On the exposed encoded evaluation worlds, indexed_witness reduces counted paid operations by at least 20% versus always_joint while preserving completed decisions and measured quality.
+The combined linear method did not establish causal benefit under the audit’s registered criteria.
 
 ## WHAT WOULD REFUTE IT
-An evaluation operation-reduction lower bound below 0.2, disagreement between completed decisions, or an upper bound above 0.01 for coverage loss or false-accept increase would defeat acceptance. Stress quality regression would also defeat it.
-
-Oracle-defined correctness cannot establish independent semantic value, but operation savings against another evaluator can fail independently of correctness.
+All registered causal-benefit gates passing, including a simultaneous upper bound below zero for combined-minus-shuffled loss, alongside the required future gain, addition-specific gain, integrity and retention checks.
 
 ## WAS THAT CHECKED
-Yes. The evaluation gates report a reduction lower bound of approximately 0.830, decision parity, and zero bounds for both quality losses. The frozen always_joint exact evaluator supplies a substantive comparator. Index construction is charged.
+Yes, through the reported paired contrasts and gate scores. The shuffled comparison’s interval crosses zero, preventing a positive causal verdict despite other gains.
 
-Failure was possible: indexing increases paid operations at every reported stress size, and those cases receive zero benefit scores. They do not contradict the specified evaluation benefit because stress acceptance requires quality preservation.
+The cheapest serious rival, additions-only, is present: combined shows no demonstrated improvement over it. This supports the restrained verdict.
 
-The artifact explicitly disclaims generalization. No visible row-validity or wrong-key issue contradicts the headline. Review is limited to the supplied text; elided rows were not independently inspected.
+The verifier defines correctness, but the headline claims no verifier-added value. Prediction-before-feedback checks are reported, and independent generalization receives zero. The false validation receipt concerns repository health; it is not an outcome-validity flag. No wrong-key error is demonstrated.
 
 ## EVIDENCE
-- `indexed_cost_benefit_score`: `1`
-- `paid_operation_reduction`: `lower`: `0.8298495977674142`; `threshold`: `0.2`
-- `completed_decision_parity`: `passed`: `true`
-- `coverage_loss` and `semantic_false_accept_increase`: `upper`: `0.0`
-- `always_joint`; `indexed_witness`
-- `index_build_rows`: `Charge actual index construction for every indexed request, including exhausted requests.`
-- `stress_results`: reduction estimates `-0.003558718861210064`, `-0.016973741476860482`, `-0.02430269946907959`; `indexed_cost_benefit_score`: `0`
-- `verifier_is_oracle`: `true`
-- `exposure_scope`: `exposed V756 encoded worlds and constructed stress; no language or hidden-game generalization`
+- `honest_verdict`: `complete_null_linear_benefit_audit`; `verdict_class`: `null`.
+- `causal_benefit_score`: `0`; `true_label_specificity_score`: `0`; `independent_generalization_score`: `0`.
+- `future_gain_score`: `1`; `addition_benefit_score`: `1`; `retention_pass_score`: `1`.
+- `linear_combined_minus_linear_shuffled_combined`: `lower`: `-0.05751561162773932`; `upper`: `0.004353599730100326`.
+- `linear_combined_minus_linear_additions_only`: `estimate`: `0.0002922020206789777`; `lower`: `-0.0155661859704758`; `upper`: `0.01786551296739734`.
+- `verifier_is_oracle`: `true`; `prediction_before_feedback`: `true`.
+- `scope`: `repository_health`; `passed`: `false`; `timed_out`: `true`.
 
 ## RECOMMENDATION
 KEEP
 
-Not rerun. Support covers execution cost on this exposed corpus; independent semantic value remains unestablished.
+Uninspected: elided rows and aggregation code; this verdict is limited to the supplied artifact.
 
-## experiment_8848_v757_memory_size_cost.json
+## experiment_8861_v758_installed_index_cost.json
 
 **CLAIM_SUPPORTED**
 
@@ -121,29 +119,63 @@ Not rerun. Support covers execution cost on this exposed corpus; independent sem
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-This is a complete cost measurement across memory occupancies on fixed constructed workloads, without a claim of demonstrated benefit.
+Indexed verification did not establish the declared installed-cost benefit over always_joint.
 
 ## WHAT WOULD REFUTE IT
-A scheduled window omitted from the denominator, an invalid window counted as ready, or reported costs inconsistent with the stated timing boundary would contradict the cost-accounting claim.
+Passing every benefit gate, including a size-16 latency-regression upper bound at most 5%, while establishing mixture speedup and preserving quality, would contradict the reported null.
 
 ## WAS THAT CHECKED
-Yes, at the reported accounting level: all 60 scheduled windows completed, none were failed, excluded, or censored, and the paired comparisons report no missing pairs. Elapsed time could vary independently of occupancy; the cost result was not predetermined by correctness.
+Yes. The paired comparison against always_joint provides a substantive baseline, and measured elapsed costs allow either arm to lose. The cold mixture speed-ratio lower bound exceeds one, but the size-16 regression upper bound is approximately 30.18%, failing the 5% requirement. That establishes failure to demonstrate the required benefit, not proof of a 30.18% regression.
 
-The oracle and workload overlap do not support verifier value or generalization, but neither is claimed. Elided rows and calculation code were not independently checked; these costs cannot establish utility.
+Oracle-defined correctness does not predetermine elapsed cost. No model generalization benefit is claimed. Censored requests remain in denominators, with no exclusions reported.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_null_memory_size_cost`
-- `methodology_note`: `Fixed constructed five-predicate workloads on the unchanged V754 store. Ten paired blocks; no benefit claim. Preparation costs remain separate.`
-- `intended_count`: `60`; `completed_count`: `60`
-- `failed_count`: `0`; `excluded_count`: `0`; `censored_count`: `0`
+- `honest_verdict`: `complete_null_installed_index_cost`; `verdict_class`: `null`; `installed_cost_benefit_score`: `0`.
+- `size16_latency_regression`: `threshold`: `0.05`; `upper`: `0.3017865229990757`.
+- `size16_latency_regression_upper_at_most_five_percent`: `false`.
+- Under `cold`, `mixture`, `speed_ratio`: `lower`: `1.063403991993194`.
+- `always_joint`; `indexed_witness`; `Paired random arm order within each independently constructed world.`
+- `All censors remain in denominators.`; `excluded_count`: `0`.
+
+## RECOMMENDATION
+KEEP
+
+No rerun or external inspection; conclusions are limited to the supplied artifact.
+
+## experiment_8862_v758_linear_durable_cost.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The paired durable-cost run completed and measured service costs, without establishing scientific benefit from learning.
+
+## WHAT WOULD REFUTE IT
+A failed required window, missing paired measurement, or incomplete preparation accepted as complete would contradict this limited claim. The null must not be interpreted as proof that all arms have equal costs.
+
+## WAS THAT CHECKED
+Yes. The artifact reports all 60 intended windows completed, no failures or censoring, and no missing pairs in the six cost comparisons.
+
+The comparisons could produce different outcomes: the combined arm’s timing interval excludes zero at occupancy 0 but crosses zero at occupancy 32. Frozen and calibration-only arms provide serious controls. These results support cost measurement, without establishing a learning benefit. Oracle-defined correctness and repeated prepared structures do not invalidate that limited conclusion.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_linear_durable_cost`
+- `completed_count`: `60`; `intended_count`: `60`; `failed_count`: `0`; `censored_count`: `0`
 - `paired_blocks`: `10`; `missing_pairs`: `0`
-- `complete_windows`: `passed`: `true`; `principle`: `Every scheduled window remains in the denominator.`
+- `linear_combined`, occupancy `0`: `lower_ns`: `-5244562150.563442`; `upper_ns`: `-3326911059.0365577`
+- `linear_combined`, occupancy `32`: `lower_ns`: `-3005945763.149974`; `upper_ns`: `1775536773.3499737`
+- `independent_generalization_score`: `0`
+- `Bind actual complete work to retained operands; cost readiness does not establish scientific benefit.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8849_qwen_witness_canary.json
+Elided rows were not individually checked; row-level validity remains unconfirmed beyond the supplied summaries.
+
+## experiment_8863_qwen_source_canary.json
 
 **NO_CLAIM**
 
@@ -154,75 +186,50 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked prerequisite-check receipt, with no claim about extraction performance or added value.
+No extraction-performance claim is asserted. This artifact records a prerequisite failure, so there is no substantive result to falsify.
 
 ## WAS THAT CHECKED
-No extraction evaluation occurred. Prerequisite gates were checked; runtime readiness failed, blocking execution before the experiment.
+No extraction performance was checked. The prerequisite checks appear in `gates_evaluated`; runtime readiness failed, blocking execution.
 
 ## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `runtime_repair_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `blocked_at_layer`: `conductor_pre_gate`
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `runtime_repair_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8850_arc_outcome_transfer.json
+## experiment_8864_v758_hardware_budget.json
 
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-gate receipt making no comparative or transfer-performance claim.
-
-## WAS THAT CHECKED
-The prerequisite gate was checked: availability scored 0 against the required 1, blocking execution. Transfer performance was not evaluated; no transfer conclusion follows.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `artifact_field`: `arc_new_outcomes_available_score`; `expected`: `1`; `actual`: `0`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8851_v757_hardware_operation_budget.json
-
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The available evidence establishes no measured complete supported physical workload benefit, so hardware acquisition is deferred.
 
 ## WHAT WOULD REFUTE IT
-There is no comparative performance claim to falsify. A compatible board workload completing faster than the CPU baseline, including host, transfer, programming, readout and durable costs, would overturn the stated reason for deferring acquisition.
+A compatible board workload showing correct results and lower complete latency than the same CPU workload, including host, transfer, startup and durable costs.
 
 ## WAS THAT CHECKED
-No physical comparison was performed. This artifact inventories upstream CPU evidence and explicitly withholds acceleration qualification. It reports an evidence gap, rather than an experimentally demonstrated absence of hardware benefit.
+Yes, within the evidence audit: board-operation rows record compatibility and measured timing, and the physical-acceleration gate fails. The visible rows supply no contradicting measurement. This supports the limited evidence claim.
+
+No new physical comparison was performed; actual hardware benefit remains unknown.
 
 ## EVIDENCE
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `honest_verdict`: `complete_null_hardware_operation_budget`
+
+- `honest_verdict`: `complete_null_hardware_budget`
 - `reason`: `no measured complete supported physical workload benefit`
+- `physical_acceleration`: `passed`: `false`
 - `fabric_supported`: `false`
 - `measured_board_time_s`: `null`
+- `end_to_end_gain_bound`: `null`
 - `physical_probes_performed`: `0`
-- `research_100x`: `operation-specific future target; no measured gain`
+- `count_scope`: `CPU inventory only; absent counts and component times are unknown`
 
 ## RECOMMENDATION
 KEEP
 
-Physical performance was not tested; whether hardware could provide a benefit remains unresolved.
-
-## experiment_8852_v757_capstone.json
+## experiment_8865_v758_capstone.json
 
 **NO_CLAIM**
 
@@ -233,22 +240,23 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no positive scientific headline to falsify. The narrower accounting assertion would fail if a scheduled slot lacked primary or skip custody, or rejected evidence contributed to admitted scientific totals.
+No comparative scientific claim is asserted. The administrative accounting assertion would fail if a scheduled slot lacked primary or skip custody; scientific benefit would require a separate, falsifiable comparison.
 
 ## WAS THAT CHECKED
-Yes, as reported: the accounting gate passes, rejected producers are marked scientifically inadmissible, and administrative completion preserves disqualified and null outcomes. The overall verdict remains blocked. The linear continuation recommendation and historical paper readiness do not assert current scientific success.
-
-Elided rows and upstream calculations were not independently checked; they limit confirmation of the accounting totals.
+Yes for administrative accounting: its gate passes. The natural-generalization gate fails, and the capstone retains a blocked verdict with activation and publication disabled. Historical paper readiness is explicitly scoped to the historical FoVer paper. Recorded circular branch outcomes are not promoted into a positive capstone verdict.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_incomplete_v757_design_authority`
+
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
+- `honest_verdict`: `complete_blocked_v758_capstone`
 - `complete_accounting`: `passed`: `true`
-- `cluster_id`: `administrative_task_slots`
-- `disposition`: `rejected_producer`; `science_admitted`: `false`
-- `independent_generalization_score`: `0`
-- `historical_publication_scope`: `historical FoVer paper only`
+- `natural_generalization_count`: `0`
+- `activation_authorized`: `false`
 - `publication_authorized`: `false`
+- `historical_publication_scope`: `historical FoVer paper only`
+- `capstone_next_decision`: `Keep independent branches separate; do not activate or publish externally`
 
 ## RECOMMENDATION
 KEEP
+
+Elided upstream rows were not assessed; this verdict covers only the capstone’s claim scope.

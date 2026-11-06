@@ -21445,3 +21445,5 @@ code |
 | 2026-11-06 06:06 UTC | Measure source-faithful Qwen extraction through th | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8853-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-06 06:37 UTC | Map installed verification and linear learning cos | OK | 85 passed, 1 warning in 149.49s (0:02:29) |
 | 2026-11-06 07:36 UTC | Reconcile thirteen outcomes and decide learning ve | OK | 95 passed, 1 warning in 206.52s (0:03:26) |
+| 2026-11-06 09:20 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-06 09:25 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

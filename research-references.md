@@ -55257,3 +55257,103 @@ Exp8847 reports 85.16 percent fewer paid operations and an 8.93x request timing
 ratio on constructed worlds; the 16-fact stress case has no operation benefit.
 Exp8848 qualifies complete occupancy costs without component attribution.
 These are constructed or CPU results, not new natural-text generalization.
+
+## V759 planning scan — 2026-11-06
+
+Recorded before the V759 experiment design. This scan uses primary abstracts,
+version histories and selected full texts. External results are hypotheses and
+methods to test locally. They do not reopen retired Carnot claims.
+
+### Findings and experimental implications
+
+- [Conditional Validity for Adaptive Modality Acquisition](https://arxiv.org/abs/2608.15520v3),
+  August 16, revised October 25, 2026. The current title supersedes the older
+  search-index title, “Guaranteed Adaptive Modality Acquisition.” It separates
+  fixed terminal groups from groups chosen using calibration outcomes. Test
+  certificates within predeclared, serving-visible evidence groups, then change
+  only their mixture weights. Keep within-group shift outside the guarantee.
+  This is a constructed relational adaptation, not a reproduction of its
+  multimodal benchmark or a claim about true natural-language labels.
+- [VIGIL](https://arxiv.org/abs/2610.04287), October 3, 2026. Its fixed-generator
+  loop adapts a calibrator and selector using delayed feedback. Approved replay
+  updates sometimes hurt untouched data. This supports separate future-loss and
+  retention tests. Carnot also needs an information control: label-free template
+  admission and release-matched shuffled labels must separate structural feature
+  activation from correct-label learning. That control is our proposed test,
+  not a result reported by VIGIL.
+- [Delayed-to-immediate online learning reduction](https://arxiv.org/abs/2602.02634),
+  February 2, 2026. Retain causal release schedules and measure delayed drift
+  separately from fitting loss. No convex regret guarantee is transferred to
+  template insertion or Carnot's constructed streams.
+- [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828), November 16,
+  2025; the source lists AAAI 2026 acceptance. Local spline support does not
+  ensure retention in all domains. Keep the qualified linear head and explicit
+  retention checks while testing what information drives improvement. A new KAN
+  head would not resolve the observed feedback-control ambiguity.
+- [Dynamic Powergrid Optimization with FPGA-based Neuromorphic Higher-order
+  Ising Machines](https://arxiv.org/abs/2610.40522), October 29, 2026. The paper
+  reports a PUBO workload on a Versal VP1802. Carry the distinction between
+  mapping size, update cost and complete solution time into the operation map.
+  Carnot's KV260 cannot inherit higher-order support or the paper's speedups.
+- [NFA-constrained language generation](https://arxiv.org/abs/2609.40185v2),
+  September 30, revised October 6, 2026. Distributional guarantees depend on
+  automaton and surrogate-model assumptions. Syntax-constrained generation does
+  not certify source fidelity. Retain source-span evaluation for any bounded
+  Qwen extraction; do not restart retired finite-ID or grammar-reprompt lanes.
+
+### Required topic coverage
+
+| Topic | Primary work checked | Local use or decision |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), May 2026 revision; [Distributional EBM](https://arxiv.org/abs/2605.18871), May 2026 | Preserve cheap learned scoring versus executable-oracle distinctions; test feature and label shortcuts. |
+| Neural constraints | [PAL](https://arxiv.org/abs/2503.19466), March 2025; [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025 | Formal feasibility concerns encoded inputs, not their extraction. Keep exact witness semantics. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models](https://arxiv.org/abs/2607.00170), June 30, 2026 | Sampled neural inference and exact three-class normalization have different hardware requirements. |
+| Hallucination detection | [HalluGuard](https://arxiv.org/abs/2601.18753), January 2026; [Chance-Constrained Inference](https://arxiv.org/abs/2602.01637), February 2026; conditional-validity paper above | Distinguish confidence, certificate availability, group risk and source fidelity. No NTK dependency is added. |
+| KAN | Forgetting paper above; [KAC](https://arxiv.org/abs/2503.21076), March 2025 | Retention remains an empirical requirement. Defer architectural replacement. |
+| Guided generation | NFA-LM above; [Constrained Flow Matching](https://arxiv.org/abs/2607.04513), July 2026 | Continuous-flow guarantees do not transfer to GGUF text generation. |
+| Hardware sampling | Higher-order FPGA paper above; Extropic below | Keep mapping, host traffic, durability and device evidence separate. |
+| Continual learning | VIGIL and delayed-feedback reduction above | Measure correct-label value after matching template exposure and release times. |
+
+### Requested secondary sources
+
+- OpenReview searches covered ICLR, ICML and NeurIPS EBM/reasoning work.
+  [On the Emergence of Reasoning](https://openreview.net/pdf?id=bYkfHTcR1v)
+  was retrievable in search; the PDF identifies itself as under review at
+  ICLR 2026. It motivates internal energy diagnostics, not a proved verifier.
+  The [associative-memory workshop submission](https://openreview.net/pdf/327173a724792b4d528dd4eea7d5ce9862850167.pdf)
+  is also explicitly under review. Neither supplies grounds to reopen Carnot's
+  retired energy-as-generator claim. No acceptance is inferred.
+- Semantic Scholar's citation endpoints for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  were inaccessible through the browser. Citation discovery is incomplete;
+  no unverified citing-paper relationship is asserted.
+- [Hugging Face verification papers](https://huggingface.co/papers?q=verification)
+  was readable, but included old papers. Use primary dates rather than the
+  discovery page's display date.
+- [GitHub Python Trending](https://github.com/trending/python?since=monthly)
+  and [Rust Trending](https://github.com/trending/rust?since=monthly) were checked.
+  The retrieved views did not establish a new relevant ranked repository.
+  No repository is described as newly trending on that evidence.
+- [Extropic writing](https://extropic.ai/writing) exposed navigation; the
+  [October 1 recursive-intelligence update](https://extropic.ai/writing/baby-thermo-rsi/)
+  and [September 4 Z1T article](https://extropic.ai/writing/z1t) were readable.
+  The [summer stack update](https://extropic.ai/writing/from-one-to-one-billion)
+  describes Torx, Thermalizers and early-access simulation. Vendor estimates
+  and remote simulators are not local TSU access or measured Carnot speedups.
+- [Kona 1.0](https://logicalintelligence.com/kona) describes a constraint layer
+  beneath language models. The retrieved page supplied no new reproducible
+  implementation or benchmark protocol. Retain the architecture analogy only.
+
+### Local findings that constrain the next plan
+
+V758 completed twelve producers and one gated skip. The archive currently ends
+at V757; V758 evidence comes from its primaries, capstone and conductor log.
+Exp8860 reports combined-minus-frozen Brier -0.15539, but combined-minus-shuffled
+has a simultaneous interval [-0.05752, 0.00435]. Additions-only is essentially
+as effective as combined. Correct-label specificity is not established.
+Exp8859 does issue certificates: learned-policy mean coverage is 0.50361 for
+both protocols, with zero measured split-protocol gain. This is not a
+zero-coverage result. Exp8861 passes the complete-mixture speed condition but
+fails the small-input guard: its size-16 latency-regression upper bound is
+0.30179 against 0.05. The next studies must change those specific mechanisms.

@@ -9,27 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| CANNOT_DETERMINE | 4 |
+| CHECKABLE | 3 |
+| CANNOT_DETERMINE | 5 |
 
-## experiment_8845_v757_indexed_witness.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The indexed witness evaluator preserves reference decisions across the full roster and passes semantic-readiness gates.
-
-## WHAT IS MISSING
-The remainder of "parity_rows": the supplied artifact ends mid-row, while "completed_count" reports 7200 and "acceptance_gates" reports success.
-
-## THE CHECK A READER CANNOT DO
-Does every intended unit have matching "indexed_decision" and "reference_decision"?
-No rerun performed; truncation prevents checking the full roster.
-
-## experiment_8846_v757_future_benefit_audit.json
+## experiment_8858_v758_installed_indexed_verifier.json
 
 **CANNOT_DETERMINE**
 
@@ -37,17 +20,39 @@ No rerun performed; truncation prevents checking the full roster.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The audit reports a completed null future-benefit result in `"honest_verdict": "complete_null_future_benefit_audit"`.
+The installed verifier matched all 3,614 constructed requests and met all acceptance gates.
 
 ## WHAT IS MISSING
-Per-stream, per-arm Brier metrics for all 24 streams are not visible. `"per_stream_results"` is named in `"field_principles"`, but the artifact truncates inside `"influence_rows"` at `"estimate_without_s`, before those results can be inspected.
+The supplied artifact cuts off after 240 entries in "operation_parity_rows"; the remaining 3,374 request results supporting "completed_count": 3614 and "installed_index_ready_score": 1 are missing.
 
 ## THE CHECK A READER CANNOT DO
-What were the Brier scores of `categorical_combined` and `categorical_frozen` on each of the 24 streams?
+Did all 3,614 requests pass exact installed parity?
 
-The unprovided remainder cannot be checked; it may contain the needed rows.
+Not rerun; full-roster parity remains unverified.
 
-## experiment_8847_v757_indexed_cost.json
+## experiment_8859_v758_split_certificate_evaluation.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+
+Visible rows label learned_energy useful, with zero errors and 50.56% decisive coverage, but the headline verdict is not visible.
+
+## WHAT IS MISSING
+
+The final verdict and gate results: "acceptance_gates" and per-unit "census_risk_rows" are present, but the artifact cuts off mid-field at "metr".
+
+## THE CHECK A READER CANNOT DO
+
+Did the final verdict report that all acceptance gates were met, or that a particular check blocked acceptance?
+
+The omitted remainder was not checked; it may contain the missing verdict and diagnostics.
+
+## experiment_8860_v758_linear_benefit_audit.json
 
 **CANNOT_DETERMINE**
 
@@ -55,17 +60,35 @@ The unprovided remainder cannot be checked; it may contain the needed rows.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The evaluation met gates for at least 20% paid-operation reduction, completed-decision parity, and coverage loss and semantic false-accept increase each bounded by 1%.
+“addition_benefit_score”: 1 reports addition benefit, while “causal_benefit_score”: 0 reports no causal benefit.
 
 ## WHAT IS MISSING
-Matched per-unit paid-operation counts, decisions, coverage outcomes, and semantic false-accept outcomes for the compared arms. “acceptance_gates” records “passed”: true; visible “complete_request_rows” provide identifiers, timings, and completion status. The artifact ends mid-row, preventing assessment of whether the remaining rows supply the missing metrics.
+The artifact cuts off inside “delay_subgroups”. Visible “causal_integrity_rows” provides integrity flags per “cluster_id”, but no performance metrics; visible “delay_subgroups” provides pooled “brier” and “nll”. Paired per-cluster performance rows and the final verdict are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Do matched per-unit measurements reproduce the operation-reduction and quality gates marked as passed?
+Is the reported addition benefit spread across stream clusters or driven by a few outliers?
 
-The truncated remainder could not be checked.
+The missing remainder was not checked; it could contain the required evidence.
 
-## experiment_8848_v757_memory_size_cost.json
+## experiment_8861_v758_installed_index_cost.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+“benefit_gates” asserts improved mixture speed without coverage loss or increased false accepts, while reporting failure of the size-16 latency gate.
+
+## WHAT IS MISSING
+Paired per-unit measurements supporting those comparisons are unavailable in the supplied excerpt: “censoring_rows” shows censored size-1024 observations, and the artifact ends mid-record. The recorded “upper” of 0.3017865229990757 exceeds “threshold” 0.05, so that gate has a diagnostic.
+
+## THE CHECK A READER CANNOT DO
+Do paired timings across all sizes support “mixture_speed_lower_above_one”?
+
+Only the supplied excerpt was assessed; the truncated remainder may contain the required rows.
+
+## experiment_8862_v758_linear_durable_cost.json
 
 **CHECKABLE**
 
@@ -73,7 +96,7 @@ The truncated remainder could not be checked.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact reports completed cost measurements for 60 windows across ten paired blocks, with per-unit costs and paired differences, and explicitly makes no benefit claim.
+The linear durable-cost experiment completed all 60 units and reports a null result, with per-unit movement measurements and per-block cost differences recorded.
 
 ## WHAT IS MISSING
 nothing
@@ -81,9 +104,9 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-Execution was not rerun or independently verified; this assessment covers the supplied record only.
+Referenced files and execution were not checked; this verdict covers only the supplied text.
 
-## experiment_8849_qwen_witness_canary.json
+## experiment_8863_qwen_source_canary.json
 
 **CHECKABLE**
 
@@ -91,7 +114,7 @@ Execution was not rerun or independently verified; this assessment covers the su
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Source-span extraction was blocked because `runtime_repair_ready_score` was 0, while the gate required 1.
+The experiment was blocked because `exp8853-branch-contract.runtime_repair_ready_score` was 0 while the gate required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -99,23 +122,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8850_arc_outcome_transfer.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The audit was blocked because `arc_new_outcomes_available_score` was 0, while the gate required 1, as recorded in `gate_check_summary` and `gates_evaluated`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8851_v757_hardware_operation_budget.json
+## experiment_8864_v758_hardware_budget.json
 
 **CHECKABLE**
 
@@ -131,9 +138,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-Assessment uses only the supplied excerpt; no experiment was re-run, and physical acceleration remains unmeasured.
-
-## experiment_8852_v757_capstone.json
+## experiment_8865_v758_capstone.json
 
 **CANNOT_DETERMINE**
 
@@ -141,10 +146,12 @@ Assessment uses only the supplied excerpt; no experiment was re-run, and physica
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion reports complete accounting and owned validation passed, while natural generalization failed and activation was not authorized.
+The visible portion reports administrative and method readiness while withholding activation and natural-generalization approval.
 
 ## WHAT IS MISSING
-The artifact’s remainder: it cuts off inside "branch_conclusions" → "reduction" → "draw_ids", so the complete conclusions and any supporting per-unit metrics are unavailable.
+The artifact cuts off inside experiment 8857’s "draw_ids". The overall conclusion and any subsequent evidence are unavailable; visible "stream_ids" and "scores" contain no per-stream outcome metrics.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact include per-unit metrics supporting its comparative claims, if any? The truncated remainder cannot be checked and may contain that evidence.
+Does the complete artifact make a comparative claim supported by per-unit metrics?
+
+Unchecked: the truncated remainder; its contents could change this verdict.
