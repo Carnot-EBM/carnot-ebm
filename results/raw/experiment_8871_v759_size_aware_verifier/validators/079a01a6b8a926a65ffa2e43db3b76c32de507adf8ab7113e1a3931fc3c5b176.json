@@ -1,0 +1,101 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8871_v759_size_aware_verifier.json",
+  "primary_sha256": "sha256:079a01a6b8a926a65ffa2e43db3b76c32de507adf8ab7113e1a3931fc3c5b176",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          ".venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/terminal_candidate.json"
+        ],
+        "command": ".venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/terminal_candidate.json",
+        "deadline_s": 120,
+        "duration_s": 2.18391019,
+        "ended_monotonic_ns": 652328437105029,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/adversarial.stdout",
+        "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 652326253194839,
+        "started_wall_ns": 1793971829041014039,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/adversarial.stdout",
+        "stdout_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          ".venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/terminal_candidate.json"
+        ],
+        "command": ".venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/terminal_candidate.json",
+        "deadline_s": 120,
+        "duration_s": 0.215680471,
+        "ended_monotonic_ns": 652328684542541,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/row_consistency.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "row_consistency",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 652328468862070,
+        "started_wall_ns": 1793971831256680940,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/row_consistency.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/row_consistency.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,runpy,sys; os.chdir(sys.argv.pop(1)); sys.argv[0]=sys.argv.pop(1); runpy.run_path(sys.argv[0],run_name='__main__')",
+          "/tmp/exp8831-cold-b5b1tz8d",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8871_v759_size_aware_verifier.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/terminal_candidate.json"
+        ],
+        "command": "env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,runpy,sys; os.chdir(sys.argv.pop(1)); sys.argv[0]=sys.argv.pop(1); runpy.run_path(sys.argv[0],run_name='\"'\"'__main__'\"'\"')' /tmp/exp8831-cold-b5b1tz8d /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8871_v759_size_aware_verifier.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/terminal_candidate.json",
+        "deadline_s": 600,
+        "duration_s": 14.199276758,
+        "ended_monotonic_ns": 652342921359263,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/cold_replay.stdout",
+        "log_sha256": "sha256:53027c4182c3340c165d6bfb1443784718570a9d934512b172056e70a0901dcd",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 652328722082505,
+        "started_wall_ns": 1793971831509901625,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8871_v759_size_aware_verifier/invocations/1793971261810406584/terminal_checks/cold_replay.stdout",
+        "stdout_sha256": "sha256:53027c4182c3340c165d6bfb1443784718570a9d934512b172056e70a0901dcd",
+        "timed_out": false
+      }
+    ]
+  }
+}

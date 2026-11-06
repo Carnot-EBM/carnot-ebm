@@ -107707,3 +107707,39 @@ full Python health command timed out after 180 seconds during worker startup;
 its original failed receipt is retained separately from owned qualification.
 The producer retains final E2E, lint/type/spec and scanner receipts before
 publishing readiness. No favorable result is required to release these methods.
+
+### REQ-REPORT-8871: Qualify an installed size-aware exact witness entry
+
+Freeze the opt-in `carnot.verify.size_aware_witness.verify_size_aware_witness`
+entry at at most16 facts for immutable direct candidates and above16 for the
+qualified index. Preserve the existing indexed entry, algorithm authorities and
+operation accounting. Bind the original shared solver code to a private candidate
+factory; never mutate its module globals. Reuse full strict validation before
+budget dispatch, request ownership, signed conflicts, duplicate-preserving joins,
+counterevidence enumeration, serialization and prepaid disposal. No cache crosses
+requests. Exhaustion clears every partial decision and witness.
+
+Authenticate original Exp8858 and Exp8861 producer bytes and every referenced
+operand before owned execution. Freeze30 independent worlds at each of8,16,17,
+64,256,1024 facts, four queries each, plus40 wide-join worlds. Separate pilot
+worlds do not enter reported denominators. Retain failures and censors. Release
+size_dispatch_ready_score only after exact unlimited parity, ownership and
+private-wheel public-entry checks. Readiness establishes exact constructed oracle
+correctness; no speed, natural-language generalization or Rust claim follows.
+
+#### SCENARIO-REPORT-8871-CONTRACT
+
+Write failing tests first for sizes0/1/15/16/17/64, duplicates, contradictory
+signs, repeated variables, alternative bindings, absent premises, wide joins,
+strict malformed inputs, zero and exact-edge caps and immutable request lifetime.
+Compare complete canonical witness multisets with indexed and independent scan
+references. Build a private wheel and execute the public module outside the
+checkout without PYTHONPATH, reporting/script imports or third-party dependencies.
+Keep private checkpoints until unchanged prospective scanners and cold CLI replay
+pass. Bind actual unit/child statement coverage at100 percent without exclusions,
+scoped Ruff, strict mypy, positional spec tracing and private E2E-018/021 checks.
+Retain one bounded full-suite health attempt separately. Reuse experiment_template,
+current_work_receipt and primary_publication; preserve source and log hashes.
+Missing external authority blocks; failed owned controls disqualify. The conductor
+owns ops/status, changelog and BMAD reconciliation. Do not activate, push, or edit
+shared validators, the exclusion manifest or research_conductor.py.
