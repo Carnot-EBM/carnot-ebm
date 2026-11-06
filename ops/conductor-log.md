@@ -21459,3 +21459,4 @@ code |
 | 2026-11-06 13:41 UTC | Audit correct-label value and retention against qu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8872-matched-causal-streams) |
 | 2026-11-06 14:25 UTC | Measure complete size-aware verification costs wit | OK | 93 passed, 1 warning in 46.43s |
 | 2026-11-06 14:30 UTC | Measure bounded Qwen source fidelity after authent | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8866-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-11-06 14:56 UTC | Map new label and lookup savings to supported hard | OK | 85 passed, 1 warning in 44.14s |
