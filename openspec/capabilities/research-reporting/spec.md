@@ -107248,6 +107248,21 @@ retain every scheduled unit and enforce its frozen gates. Missing external input
 shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
+Execution contract extended 2026-11-06: `carnot.verify.indexed_witness.verify_indexed_witness`
+shall accept explicit signed facts and query records, validate the complete schema
+before any budgeted work, and reject invalid operation limits. It shall retain
+Exp8845 decisions, witnesses, duplicate multiplicity and every paid operation on
+the complete original roster. An immutable per-request index shall reject expired
+or foreign owners and remain isolated under nested and concurrent requests.
+The installed dependency closure shall contain no reporting or artifact loaders.
+Existing verifier exports and default dispatch shall remain compatible. A private
+wheel installation shall execute outside the checkout without PYTHONPATH, research
+data or roadmap files. Full owned unit/child statement coverage with zero exclusions,
+private historical E2E consumers, strict types, lint, spec checks and semantic cold
+replay are readiness gates. Exact structured-record qualification grants no timing
+or natural-language truth claim. Historical producer bytes and method authorities
+shall remain unchanged. Ops and traceability reconciliation are conductor-owned.
+
 ### REQ-REPORT-8859: Measure certificate availability and served risk under split calibration
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.

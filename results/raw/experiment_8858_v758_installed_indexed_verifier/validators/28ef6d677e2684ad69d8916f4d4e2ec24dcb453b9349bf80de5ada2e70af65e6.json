@@ -1,0 +1,101 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8858_v758_installed_indexed_verifier.json",
+  "primary_sha256": "sha256:28ef6d677e2684ad69d8916f4d4e2ec24dcb453b9349bf80de5ada2e70af65e6",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          ".venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/terminal_candidate.json"
+        ],
+        "command": ".venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/terminal_candidate.json",
+        "deadline_s": 120,
+        "duration_s": 2.740901176,
+        "ended_monotonic_ns": 615251651824964,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/adversarial.stdout",
+        "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 615248910923788,
+        "started_wall_ns": 1793934751698742567,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/adversarial.stdout",
+        "stdout_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          ".venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/terminal_candidate.json"
+        ],
+        "command": ".venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/terminal_candidate.json",
+        "deadline_s": 120,
+        "duration_s": 0.317090958,
+        "ended_monotonic_ns": 615251992922821,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/row_consistency.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "row_consistency",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 615251675831863,
+        "started_wall_ns": 1793934754463650782,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/row_consistency.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/row_consistency.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,runpy,sys; os.chdir(sys.argv.pop(1)); sys.argv[0]=sys.argv.pop(1); runpy.run_path(sys.argv[0],run_name='__main__')",
+          "/tmp/exp8831-cold-2q5tgf9k",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8858_v758_installed_indexed_verifier.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/terminal_candidate.json"
+        ],
+        "command": "env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,runpy,sys; os.chdir(sys.argv.pop(1)); sys.argv[0]=sys.argv.pop(1); runpy.run_path(sys.argv[0],run_name='\"'\"'__main__'\"'\"')' /tmp/exp8831-cold-2q5tgf9k /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8858_v758_installed_indexed_verifier.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/terminal_candidate.json",
+        "deadline_s": 600,
+        "duration_s": 8.581092297,
+        "ended_monotonic_ns": 615260610286345,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/cold_replay.stdout",
+        "log_sha256": "sha256:d2282f99821024d0ae61f970d5e6351dbf2e334fa113a467581a098ff62b4ed9",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 615252029194048,
+        "started_wall_ns": 1793934754817012988,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8858_v758_installed_indexed_verifier/invocations/1793934424400929154/terminal_checks/cold_replay.stdout",
+        "stdout_sha256": "sha256:d2282f99821024d0ae61f970d5e6351dbf2e334fa113a467581a098ff62b4ed9",
+        "timed_out": false
+      }
+    ]
+  }
+}
