@@ -107385,7 +107385,9 @@ ops and traceability reconciliation; this experiment does not activate a roadmap
 
 ### REQ-REPORT-8862: Measure complete linear adaptation cost with equal causal and durability work
 
-**Status:** Planned for 2026.11.758; no implementation or result is claimed.
+**Status:** Implemented for 2026.11.758; execution and qualification receipts are
+owned by `experiment_8862_v758_linear_durable_cost.json`. No learning or speed
+benefit is implied by complete cost readiness.
 The experiment shall follow the complete frozen task contract in
 `openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml`.
 It shall publish `results/experiment_8862_v758_linear_durable_cost.json` with source-bound per-unit evidence,
@@ -107398,6 +107400,29 @@ retain every scheduled unit and enforce its frozen gates. Missing external input
 shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
+
+The cost census freezes ten independent 48-query blocks, occupancies zero and32,
+and linear frozen, calibration-only and combined arms:60 complete windows.
+Paired queries, heads, seeds and delay8 match across arms. Occupied checkpoints
+come from32 actual verified admissions with separate preparation clocks. Each
+window includes two real children, restart at24, sealed pending predictions,
+acknowledgements, complete feedback drain and exact file/directory fsync.
+Parent clocks include imports through child exit; serialization and all update,
+template and parameter-movement operands remain inspectable. Numerical batches
+are separate microbenchmarks and cannot imply whole-service component shares.
+Report p50/p95, paired block differences and preparation amortization at1/10/100
+windows. Pilot projection plus validation stays below4200 seconds without
+dropping scheduled cells. Cost readiness is independent of learning benefit;
+no demonstrated speed improvement yields a terminal null cost study.
+Authenticate Exp8854 linear_methods_ready_score1 and both historical producers,
+including raw operands and original method authorities. Historical append-only
+spec references resolve to exact preserved Git bytes, never mutable vNEXT.
+Missing external operands block; failed owned execution or validation disqualifies.
+Require tests written before implementation,100 percent new unit/child statement
+coverage with zero exclusions, private E2E-018/021, foreign-directory replay
+without PYTHONPATH, scoped Ruff, strict mypy, positional spec tracing and the
+unchanged adversarial/strict-row validators. Retain actual logs and source hashes;
+repository-wide health is separate. Ops/BMAD reconciliation is conductor-owned.
 
 ### REQ-REPORT-8863: Measure source-faithful Qwen extraction through the installed witness path
 

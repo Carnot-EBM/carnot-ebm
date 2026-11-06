@@ -1,0 +1,71 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8862_v758_linear_durable_cost.json",
+  "primary_sha256": "sha256:6fd5d69c40f4fc3884ef5c3cce6ee0de5f98778b969b9850bfd9df89c03d2931",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8862_v758_linear_durable_cost/terminal_candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8862_v758_linear_durable_cost/terminal_candidate.json",
+          "--json"
+        ],
+        "duration_s": 28.600712914951146,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8862_v758_linear_durable_cost/invocations/1793943545984680684/terminal/00_adversarial.log",
+        "log_sha256": "sha256:6695f7db6174b8821d045adfa1a0ec08a8f183c0fe8a087644c3f7944b180418",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8862_v758_linear_durable_cost/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8862,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_linear_durable_cost\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8862_v758_linear_durable_cost/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8862_v758_linear_durable_cost/terminal_candidate.json"
+        ],
+        "duration_s": 0.4995079638902098,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8862_v758_linear_durable_cost/invocations/1793943545984680684/terminal/01_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "env -u PYTHONPATH sh -c 'cd /tmp && exec \"$@\"' replay /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8862_v758_linear_durable_cost.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8862_v758_linear_durable_cost/terminal_candidate.json",
+        "command_argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "sh",
+          "-c",
+          "cd /tmp && exec \"$@\"",
+          "replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8862_v758_linear_durable_cost.py",
+          "--replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8862_v758_linear_durable_cost/terminal_candidate.json"
+        ],
+        "duration_s": 4.889950633049011,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8862_v758_linear_durable_cost/invocations/1793943545984680684/terminal/02_cold_replay.log",
+        "log_sha256": "sha256:796ae540013f63221ec95b6701cd65bfcb3147973d88baa79b741486d480ed4e",
+        "name": "cold_replay",
+        "output_tail": "[exp8862] phase=imports_before completed=0 pending=1\n[exp8862] phase=imports_after completed=1 pending=0\n{\"passed\": true, \"replay_passed\": true, \"windows\": 60}\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      }
+    ]
+  }
+}
