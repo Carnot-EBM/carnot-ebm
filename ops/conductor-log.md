@@ -21454,3 +21454,6 @@ code |
 | 2026-11-06 12:19 UTC | Seal fixed evidence groups and equal-cost conditio | OK | 91 passed, 1 warning in 23.48s |
 | 2026-11-06 12:24 UTC | Qualify query-only admission and release-matched e | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8867-feedback-information-diagnosis.diagnosis_ready_score (actual=0 == expected=1) |
 | 2026-11-06 13:03 UTC | Measure certificate robustness under fixed-group m | OK | 89 passed, 1 warning in 88.44s (0:01:28) |
+| 2026-11-06 13:39 UTC | Qualify a direct small-request path inside the exa | OK | 123 passed, 1 warning in 46.12s |
+| 2026-11-06 13:41 UTC | Measure continuous learning with equal template ex | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8869-matched-memory-methods) |
+| 2026-11-06 13:41 UTC | Audit correct-label value and retention against qu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8872-matched-causal-streams) |
