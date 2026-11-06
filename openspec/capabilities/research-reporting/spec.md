@@ -107279,6 +107279,26 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Evaluation extension, 2026-11-06: Authenticate Exp8857 bytes, all bound operands,
+its ready score and original protocol hash. Preserve its seven policies, five
+fresh fitting seeds, 60 replicates, 720 calibration draws, 240/480 split, exact
+alpha allocation and 240 independent evaluation draws. Exclude previously
+constructed worlds. Seal scores, selection and certificates before later label
+releases. Failed fits and replacement draws retain their registered denominators.
+Refusals serve zero answers. Emit immutable draw decisions, selected rules,
+certificate events, served risk and census risk. Report exact two-sided 99-percent
+binomial intervals per policy/protocol for firing and false certification, with
+conditional failure denominated only by issued certificates; empty ratios are null.
+Use the task's 10000 paired replicate bootstrap draws at 99 percent, explicitly
+recording this evaluation setting separately from the original methods hash.
+Benefit requires a lower coverage-gain bound above .05 and population risk at
+most .05 for every claimed useful rule with coverage at least .30. A complete
+null measurement remains ready. Sixty replicates do not establish a universal
+one-percent failure guarantee. Private CLI and outside-checkout cold replay must
+reject changed operands and rehashed semantic tampering. Require current unit
+and child statement coverage of 100 percent without exclusions. Shared validators,
+historical primaries, roadmap activation and exclusion decisions remain unchanged.
+
 ### REQ-REPORT-8860: Audit linear future benefit and joint retention from sealed causal rows
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
