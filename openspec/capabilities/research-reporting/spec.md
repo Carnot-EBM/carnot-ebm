@@ -107354,6 +107354,35 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+The registered cost study freezes 30 separately constructed worlds at each of
+16,64,256,1024 facts, four matched requests per world and eight predicates per
+request. Support, explicit negative evidence, missing evidence, broken bindings
+and conflicts have construction labels sealed before clocks start. Another40
+1024-fact worlds test wide joins. Censored requests remain in all denominators.
+The deployment mixture has equal weight per regular size; adversarial worlds
+form a separate declared population. All quality checks include both populations.
+Both algorithms use one wrapper around the authenticated installed wheel.
+The historical always-joint enumerator retains its found binding as its witness;
+its decision rules and operation instrumentation remain unchanged.
+Cold parent clocks include input serialization, process startup, validation,
+request-local construction, four responses, disposal and exit. Separate resident
+parent clocks cover each full corpus, with per-world inner clocks also retained.
+There is no warmup or reused index. Installation is recorded separately and paid
+in full for each arm's declared120-world deployment, allocated equally per world.
+Freeze paired arm order per world. Retain every request, parent clock and source
+hash. Use paired whole-world bootstrap intervals with a simultaneous99-percent
+family across all size and mixture endpoints. Speed benefit requires a mixture
+ratio lower bound above1, size16 latency regression upper bound at most0.05,
+exact completed decision/witness parity, no censoring coverage loss and no
+semantic false-accept increase. Readiness requires full validated evidence;
+a null benefit does not prevent readiness. Both arms use Python, so the study
+makes no native10x or natural-language correctness claim. Missing authorities
+block; failed owned checks disqualify. Private subsets never grant readiness.
+Replay authenticates operands, reconstructs reductions and reruns installed
+decisions. Bind actual unit/child statement coverage without exclusions, lint,
+strict types, spec checks and private E2E-018/021 evidence. The conductor owns
+ops and traceability reconciliation; this experiment does not activate a roadmap.
+
 ### REQ-REPORT-8862: Measure complete linear adaptation cost with equal causal and durability work
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
