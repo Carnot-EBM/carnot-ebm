@@ -21472,3 +21472,4 @@ code |
 | 2026-11-06 21:21 UTC | Locate complete-request cost after the size-aware  | OK | 94 passed, 1 warning in 84.52s (0:01:24) |
 | 2026-11-06 22:09 UTC | Separate source truth from record sufficiency unde | OK | 92 passed, 1 warning in 92.11s (0:01:32) |
 | 2026-11-06 23:07 UTC | Measure continuous energy learning with matched fe | OK | 97 passed, 1 warning in 159.21s (0:02:39) |
+| 2026-11-06 23:39 UTC | Measure sequential certificate cost at matched cov | OK | 89 passed, 1 warning in 26.75s |
