@@ -23176,3 +23176,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-06: Measure certificate availability and served risk under split calibration (⚠️ Research Finding) — honest_verdict=complete_null_split_certificate_evaluation; results/experiment_8859_v758_split_certificate_evaluation.json
 - 2026-11-06: Audit linear future benefit and joint retention from sealed causal rows (⚠️ Research Finding) — honest_verdict=complete_null_linear_benefit_audit; results/experiment_8860_v758_linear_benefit_audit.json
 - 2026-11-06: Measure complete installed verifier costs across evidence sizes (⚠️ Research Finding) — honest_verdict=complete_null_installed_index_cost; results/experiment_8861_v758_installed_index_cost.json
+- 2026-11-06: Measure complete linear adaptation cost with equal causal and durability work (⚠️ Research Finding) — honest_verdict=complete_null_linear_durable_cost; results/experiment_8862_v758_linear_durable_cost.json
