@@ -107200,6 +107200,39 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Execution contract for REQ-REPORT-8857 and SCENARIO-REPORT-8857-CONTRACT,
+2026-11-06: authenticate Exp8855's byte pin and split feasibility1, all bound
+operands and preserved method authorities. Freeze4096 new graph invariants,
+disjoint from previous population, exposure and fitting worlds, before drawing.
+Reuse the seven policies, six cutoffs and240-step fitting recipe. Freeze60
+independent replicate streams with720 replacement calibration draws and240
+independent evaluation draws; retain duplicate draw identities and support counts.
+Simultaneous uses720 labels with alpha=.01/(2*7*6). Split selects on the first240
+using empirical risk<=.05 and maximum accepted count, breaking ties by higher
+cutoff, then certifies exactly that rule on the remaining480 at alpha=.01/(2*7).
+No replacement rule or certification-label reuse is permitted. Empty sets refuse;
+refusal serves zero coverage and null risk. Seal all selections before certification,
+all certificates before evaluation labels, and evaluation before census access.
+The sole primary contrast averages split-minus-simultaneous evaluation coverage
+over all seven policies within each replicate, then uses a fixed paired replicate
+bootstrap99-percent interval; benefit requires lower bound>.05. Risk<=.05 and
+useful coverage>=.30 remain frozen. Report all840 policy/protocol/replicate rows.
+Exhaustive small Bernoulli controls, independence, empty/all-abstain, boundaries,
+duplicates and rehashed tamper rejection qualify readiness independently of benefit.
+Retain measured phases, source bytes, immutable operands, actual100-percent owned
+unit/child statement coverage with zero exclusions, scoped lint/types/spec checks,
+private E2E-018/021, outside-checkout CLI replay and unchanged terminal scanners.
+External absence blocks, failed owned controls disqualify, unfinished own work
+retains every scheduled row. No roadmap activation or shared validator changes.
+Ops and traceability reconciliation are conductor-owned for this execution.
+
+Implementation added 2026-11-06: `split_certificate_methods_8857.py`,
+`split_certificate_runner_8857.py`, the direct experiment CLI and
+`test_split_certificate_methods_8857.py` implement the independent split,
+full roster, stage seals and semantic replay. The producer artifact records
+the actual execution outcome and executed checks; this note does not activate
+the milestone or assert protocol benefit.
+
 ### REQ-REPORT-8858: Expose the qualified indexed witness evaluator through an opt-in installed path
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
