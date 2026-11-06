@@ -1,0 +1,112 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8760_v750_arc_horizon_sensitivity.json",
+  "primary_sha256": "sha256:bae0676342b3f95be81e168a7dd56448d436bbb62e96aaf29390b6ba3e3c5903",
+  "report": {
+    "actual_findings": {
+      "flagged_count": 0,
+      "reports": [
+        {
+          "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/terminal_candidate.json",
+          "exp_id": 8760,
+          "flag_count": 0,
+          "flags": [],
+          "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+          "honest_verdict": "complete_null_arc_horizon_sensitivity",
+          "loaded": true,
+          "max_severity": -1,
+          "title": ""
+        }
+      ]
+    },
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8760_v750_arc_horizon_sensitivity.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8760_v750_arc_horizon_sensitivity.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/terminal_candidate.json",
+        "deadline_s": 240,
+        "duration_s": 3.421398893,
+        "ended_monotonic_ns": 371834710489099,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/cold_replay.stdout",
+        "log_sha256": "sha256:f8fe03cb113c29e35f01c36e280a81440e292a6e93af6fc64af72ab2d8d31a85",
+        "name": "cold_replay",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 371831289090206,
+        "started_wall_ns": 1793691334076908514,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/cold_replay.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/cold_replay.stdout",
+        "stdout_sha256": "sha256:f8fe03cb113c29e35f01c36e280a81440e292a6e93af6fc64af72ab2d8d31a85",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/terminal_candidate.json",
+        "deadline_s": 240,
+        "duration_s": 7.225677829,
+        "ended_monotonic_ns": 371841937687604,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/adversarial.stdout",
+        "log_sha256": "sha256:d4b7304eb633af6a1ceb17ca2b75a066ca7243e8185caf799e6831c06948bd9d",
+        "name": "adversarial",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 371834712009775,
+        "started_wall_ns": 1793691337499828344,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/adversarial.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/adversarial.stdout",
+        "stdout_sha256": "sha256:d4b7304eb633af6a1ceb17ca2b75a066ca7243e8185caf799e6831c06948bd9d",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/terminal_candidate.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/terminal_candidate.json",
+        "deadline_s": 240,
+        "duration_s": 0.0647246,
+        "ended_monotonic_ns": 371842004031805,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/strict_rows.stdout",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "normal_exit": true,
+        "passed": true,
+        "scope": "owned",
+        "started_monotonic_ns": 371841939307205,
+        "started_wall_ns": 1793691344727125664,
+        "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/strict_rows.stderr",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8760_v750_arc_horizon_sensitivity/invocations/1793690645486397327/terminal/strict_rows.stdout",
+        "stdout_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "timed_out": false
+      }
+    ]
+  }
+}

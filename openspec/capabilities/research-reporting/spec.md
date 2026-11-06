@@ -107816,3 +107816,37 @@ private E2E-018/021, real outside-checkout cold replay without PYTHONPATH, and
 unchanged adversarial/strict-row scanners before atomic primary publication.
 Run global Python health once and record its outcome separately. The conductor
 owns ops/status.md, ops/changelog.md and _bmad/traceability.md reconciliation.
+
+### REQ-REPORT-8877: Reconcile the twelve V759 outcomes from original evidence
+
+The capstone shall retain Exp8866 through Exp8877 in their original order.
+Reuse the qualified historical custody reader, current-work receipt, experiment
+normalizer and atomic publisher. Pin the original Exp8866 execution authority;
+mutable vNEXT cannot repair its absent independent table, full JSON or marker.
+Preserve that terminal block, V758 nulls, quarantines and original assertions.
+Identify conductor skips through task identity, original receipt hashes and
+sealed log lines. External absence is terminal blocked. Owned failures disqualify.
+Keep accounting readiness separate from contract qualification and science.
+
+Independently reconstruct conditional-risk and installed-cost summaries from
+raw rows. Keep independent streams, worlds and calibration replicates separate
+from seeds, candidates and repeats. Every consuming conclusion shall preserve
+verdict_class, verifier_is_oracle, producer hash and measured scope. Exact joins
+are execution evidence only. Fixed-group certificates do not cover corruption
+or natural text. Python costs establish neither native10x nor physical speed.
+Authenticate prior verdict bytes and changed mechanisms; retirement remains
+limited to an exact repeated scope with specific evidence needed to reopen.
+Keep G1-G4 in their historical FoVer scope and retain unmet publication gates.
+
+#### SCENARIO-REPORT-8877-CONTRACT
+
+Tests shall precede implementation and cover all twelve identities, missing
+authority, terminal skips, rejected producers, separate oracle flags, null
+benefit, rehashed semantic tampering and changed raw bytes. Require actual
+unit/child statement coverage of new code at100 percent without exclusions,
+Ruff check/format, strict mypy, positional spec tracing, private E2E-018/021,
+foreign-directory CLI replay without PYTHONPATH and unchanged terminal scanners.
+Run the full Python suite once within a fixed deadline; record unrelated health
+separately. Keep checkpoints private until checked publication. No activation,
+model call, shared-validator change, exclusion edit, conductor edit or push occurs.
+The conductor owns ops/status.md, ops/changelog.md and BMAD reconciliation.

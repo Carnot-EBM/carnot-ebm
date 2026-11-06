@@ -1,0 +1,90 @@
+{
+  "arms": [
+    "local_record",
+    "evidence_set",
+    "joint_symbolic",
+    "fixed_evidence",
+    "agreement_only",
+    "learned_energy"
+  ],
+  "budget": {
+    "equal_paid_checks": true,
+    "exact_oracle": "separate reference costs; excluded from paid comparators",
+    "exhaustion": "escalate and retain scheduled denominator",
+    "limit_per_unit": 200000,
+    "paid_primitive": "Python line dispatch inside unchanged solvers, including checks and aggregation"
+  },
+  "calibration_selection_rule": "per arm and seed: maximize useful coverage among safe thresholds; ties lowest threshold; no qualifying threshold => no_candidate before evaluation",
+  "comparator_selection": "Exp8818 strongest of local_record/evidence_set/joint_symbolic by calibration correct decisive coverage at safe threshold; ties listed order; freeze before evaluation",
+  "estimands": {
+    "exp8818": {
+      "comparator": "strongest prespecified budgeted comparator",
+      "correct_decisive_coverage_gain_lower": 0.05,
+      "denominators": {
+        "correct_decisive_coverage": "all scheduled units",
+        "semantic_false_accept_rate": "truth != support"
+      },
+      "semantic_false_accept_noninferiority_upper": 0.01
+    },
+    "exp8819": {
+      "comparator": "fixed_evidence at its own frozen safe threshold",
+      "coverage_lower": 0.3,
+      "denominators": {
+        "brier": "all scheduled candidates",
+        "decisive_coverage": "all scheduled candidates",
+        "insufficient_to_decision_rate": "insufficient-truth candidates",
+        "wrong_decision_rate": "non-escalations"
+      },
+      "endpoints": [
+        "unconditional_brier",
+        "wrong_decision_rate",
+        "decisive_coverage",
+        "insufficient_to_decision_rate"
+      ],
+      "risk_upper": 0.05,
+      "useful_coverage_gain_lower": 0.05
+    }
+  },
+  "evaluation_selection_forbidden": true,
+  "insufficient_target": "escalate for every candidate, including insufficient",
+  "label_custody": {
+    "calibration": "release only calibration labels after fit parameters seal",
+    "canary": "disjoint private labels; no fitting or threshold selection",
+    "evaluation": "private until complete prediction rows seal",
+    "fit": "release only fit labels"
+  },
+  "matched_coverage": "calibration freeze hash-ordered thinning per arm/seed to smallest safe-arm coverage; replay same hash cutoff on evaluation; report achieved coverage and risk",
+  "multiplicity_families": {
+    "exp8818": {
+      "confidence": 0.975,
+      "endpoints": 2
+    },
+    "exp8819": {
+      "confidence": 0.9875,
+      "endpoints": 4
+    }
+  },
+  "resampling": {
+    "draws": 2000,
+    "interpretation": "empirical constructed-population intervals; no distribution-free certification",
+    "nesting": "average seeds within each world before paired world resampling",
+    "seed": 7558816,
+    "unit": "whole world"
+  },
+  "seeds": [
+    7558818,
+    7558819,
+    7558820,
+    7558821,
+    7558822
+  ],
+  "threshold_menu": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95
+  ],
+  "v754_outcomes": "unchanged nulls; zero false-accept headroom is not useful coverage"
+}

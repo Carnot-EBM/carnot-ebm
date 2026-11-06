@@ -1,0 +1,135 @@
+"""REQ-REPORT-8864: hardware mapping preserves complete costs and censored work."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+
+from carnot.reporting import hardware_budget_8864 as m
+
+
+def validation():
+    """Private fixtures cannot certify production readiness."""
+    return dict(passed=False, coverage=dict(complete=False), receipts=[])
+
+
+@pytest.fixture(scope="module")
+def work(tmp_path_factory):
+    """SCENARIO-REPORT-8864-CONTRACT: authenticate actual upstream operands."""
+    return m.collect(tmp_path_factory.mktemp("hardware8864") / "raw")
+
+
+def test_independent_branches():
+    """REQ-REPORT-8864: keep censored units and the actual linear head."""
+    for branch, (name, _, field, _) in m.engine.PRODUCERS.items():
+        value = json.loads((m.ROOT / name).read_bytes())
+        assert m.admission(value, branch) is None
+        reduced = m.reduce({branch: value})
+        assert reduced["complete_cost_refs"]
+        assert all(r["measured_board_time_s"] is None for r in reduced["board_operation_rows"])
+        assert {r["arm"] for r in reduced["board_operation_rows"]} >= {
+            "index_build",
+            "predicate_lookup",
+            "binding_joins",
+            "feature_gathering",
+            "linear_energy",
+            "gradients",
+            "serialization",
+            "fsync",
+        }
+        assert {r["operation_status"] for r in reduced["board_operation_rows"]} <= {
+            "supported",
+            "new-kernel-required",
+            "host-only",
+        }
+        assert reduced["end_to_end_gain_bound"] is None
+        if branch == "witness":
+            assert len(reduced["complete_cost_refs"]) == len(value["rows"])
+            assert any(r["status"] == "censored" for r in reduced["complete_cost_refs"])
+            assert reduced["installed_parent_cost_refs"] == value["cold_process_rows"]
+        else:
+            assert len(reduced["complete_cost_refs"]) == 60
+            assert reduced["linear_head"]["parameter_scalars"] == 21
+        value[field] = None
+        assert m.admission(value, branch) == "missing_field"
+        value[field] = 0
+        assert m.admission(value, branch) == "observed_zero"
+        value[field] = 1
+        value["required_checks_passed"] = False
+        assert m.admission(value, branch) == "rejected_producer"
+
+
+def test_build_replay_and_classes(work, tmp_path, monkeypatch):
+    """SCENARIO-REPORT-8864-CONTRACT: zero, one and two branches have honest verdicts."""
+    assert set(work["evidence"]) == {"whole", "witness"}, work["failures"]
+    value = m.build(work, validation())
+    assert value["experiment_id"] == 8864
+    assert value["run_date"] == "20261106"
+    assert value["verdict_class"] == "disqualified"
+    assert value["hardware_budget_ready_score"] == 0
+    assert value["censored_count"] == 818
+    assert value["completed_count"] + value["censored_count"] == value["intended_count"]
+    assert value["physical_evidence_state"]["GateMate"]["retry_allowed"] is False
+    assert value["acquisition_priority"]["recommend_acquisition"] is False
+    path = tmp_path / (m.NAME + ".json")
+    m.atomic_json(path, value)
+    command = [sys.executable, "-u", str(m.ROOT / m.CLI), "--replay", str(path)]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=120)
+    assert result.returncode == 0, result.stdout + result.stderr
+    value["board_operation_rows"][0]["measured_board_time_s"] = 0.001
+    value["reproducibility_checksum"] = m.canonical_hash(value["board_operation_rows"])
+    m.atomic_json(path, value)
+    result = subprocess.run(command, capture_output=True, text=True, timeout=120)
+    assert result.returncode == 1
+    assert "reduction_drift" in result.stdout
+    monkeypatch.setattr(m.engine, "verify_validation", lambda _: None)
+    valid = dict(passed=True, coverage=dict(complete=True), receipts=[])
+    assert m.build(work, valid)["verdict_class"] == "null"
+    one = deepcopy(work)
+    one["evidence"].pop("whole")
+    one["failures"].append(dict(check="producer_admission", upstream="whole"))
+    assert m.build(one, valid)["hardware_budget_ready_score"] == 1
+    one["evidence"] = {}
+    assert m.build(one, valid)["verdict_class"] == "blocked"
+    assert m.build(one, valid)["inference_substrate_class"] == "blocked_no_run"
+    one["internal_failure"] = True
+    assert m.build(one, valid)["verdict_class"] == "disqualified"
+    one["internal_failure"] = False
+    one["checks"]["free_disk_bytes"] = 0
+    assert m.build(one, valid)["verdict_class"] == "disqualified"
+
+
+def test_cli(tmp_path):
+    """SCENARIO-REPORT-8864-CONTRACT: cold replay works without checkout imports."""
+    output = tmp_path / (m.NAME + ".json")
+    env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+    for args, expected in [
+        (["--private-output", str(output), "--date", "20261106"], 0),
+        (["--cold-replay", str(output)], 0),
+        (["--replay", str(tmp_path / "missing")], 1),
+        (["--date", "20261105"], 2),
+    ]:
+        result = subprocess.run(
+            [sys.executable, "-u", str(m.ROOT / m.CLI), *args],
+            env=env,
+            cwd="/tmp",
+            capture_output=True,
+            text=True,
+            timeout=180,
+        )
+        assert result.returncode == expected, result.stdout + result.stderr
+
+
+def test_production_validation_route(work, tmp_path, monkeypatch):
+    """REQ-REPORT-8864: normal execution cannot bypass owned qualification."""
+    from carnot.reporting import hardware_budget_validation_8864 as checks
+
+    monkeypatch.setattr(checks, "qualify", lambda _: validation())
+    monkeypatch.setattr(checks, "terminal", lambda p, _: dict(passed=True))
+    monkeypatch.setattr(m, "collect", lambda _: work)
+    monkeypatch.setattr(m, "DEFAULT_OUTPUT", tmp_path / (m.NAME + ".json"))
+    assert m.main([]) == 0

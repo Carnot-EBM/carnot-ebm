@@ -1,0 +1,192 @@
+FEFFF                                                                    [100%]
+==================================== ERRORS ====================================
+________________ ERROR at teardown of test_terminal_accounting _________________
+Memory leak: +518MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +518MB
+---------------------------- Captured stdout setup -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=13
+[exp8839] phase=preconditions_before completed=0 pending=0
+[exp8839] phase=preconditions_after completed=0 pending=0
+[exp8866] phase=slot_before completed=0 pending=13
+[exp8866] phase=operand_authentication completed=0 pending=296
+[exp8866] phase=operand_authentication completed=0 pending=296
+[exp8866] phase=slot_after completed=1 pending=12
+[exp8866] phase=slot_before completed=1 pending=12
+[exp8866] phase=slot_after completed=2 pending=11
+[exp8866] phase=slot_before completed=2 pending=11
+[exp8866] phase=operand_authentication completed=0 pending=807
+[exp8866] phase=operand_authentication completed=0 pending=807
+[exp8866] phase=slot_after completed=3 pending=10
+[exp8866] phase=slot_before completed=3 pending=10
+[exp8866] phase=slot_after completed=4 pending=9
+[exp8866] phase=slot_before completed=4 pending=9
+[exp8866] phase=operand_authentication completed=0 pending=894
+[exp8866] phase=operand_authentication completed=0 pending=894
+[exp8866] phase=slot_after completed=5 pending=8
+[exp8866] phase=slot_before completed=5 pending=8
+[exp8866] phase=operand_authentication completed=0 pending=1150
+[exp8866] phase=operand_authentication completed=0 pending=1150
+[exp8866] phase=slot_after completed=6 pending=7
+[exp8866] phase=slot_before completed=6 pending=7
+[exp8866] phase=slot_after completed=7 pending=6
+[exp8866] phase=slot_before completed=7 pending=6
+[exp8866] phase=slot_after completed=8 pending=5
+[exp8866] phase=slot_before completed=8 pending=5
+[exp8866] phase=operand_authentication completed=0 pending=9235
+[exp8866] phase=operand_authentication completed=5000 pending=4235
+[exp8866] phase=operand_authentication completed=0 pending=9235
+[exp8866] phase=operand_authentication completed=5000 pending=4235
+[exp8866] phase=slot_after completed=9 pending=4
+[exp8866] phase=slot_before completed=9 pending=4
+[exp8866] phase=slot_after completed=10 pending=3
+[exp8866] phase=slot_before completed=10 pending=3
+[exp8866] phase=operand_authentication completed=0 pending=9092
+[exp8866] phase=operand_authentication completed=5000 pending=4092
+[exp8866] phase=operand_authentication completed=0 pending=9092
+[exp8866] phase=operand_authentication completed=5000 pending=4092
+[exp8866] phase=slot_after completed=11 pending=2
+[exp8866] phase=custody_after completed=12 pending=1
+=================================== FAILURES ===================================
+___________________________ test_terminal_accounting ___________________________
+
+frozen = {'code': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v759_capstone.py', 'sha256': '...must qualify this producer', 'threshold': 100}}, 'activation_authorized': False, 'actual_llm_call_count': 0, ...}, ...}
+
+    def test_terminal_accounting(frozen):
+        """REQ-REPORT-8877: absence and rejected science still occupy their exact slots."""
+>       value = c.build(frozen, validation())
+                ^^^^^^^
+E       AttributeError: module 'carnot.reporting.v759_capstone' has no attribute 'build'
+
+tests/python/test_v759_capstone_8877.py:27: AttributeError
+---------------------------- Captured stdout setup -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=13
+[exp8839] phase=preconditions_before completed=0 pending=0
+[exp8839] phase=preconditions_after completed=0 pending=0
+[exp8866] phase=slot_before completed=0 pending=13
+[exp8866] phase=operand_authentication completed=0 pending=296
+[exp8866] phase=operand_authentication completed=0 pending=296
+[exp8866] phase=slot_after completed=1 pending=12
+[exp8866] phase=slot_before completed=1 pending=12
+[exp8866] phase=slot_after completed=2 pending=11
+[exp8866] phase=slot_before completed=2 pending=11
+[exp8866] phase=operand_authentication completed=0 pending=807
+[exp8866] phase=operand_authentication completed=0 pending=807
+[exp8866] phase=slot_after completed=3 pending=10
+[exp8866] phase=slot_before completed=3 pending=10
+[exp8866] phase=slot_after completed=4 pending=9
+[exp8866] phase=slot_before completed=4 pending=9
+[exp8866] phase=operand_authentication completed=0 pending=894
+[exp8866] phase=operand_authentication completed=0 pending=894
+[exp8866] phase=slot_after completed=5 pending=8
+[exp8866] phase=slot_before completed=5 pending=8
+[exp8866] phase=operand_authentication completed=0 pending=1150
+[exp8866] phase=operand_authentication completed=0 pending=1150
+[exp8866] phase=slot_after completed=6 pending=7
+[exp8866] phase=slot_before completed=6 pending=7
+[exp8866] phase=slot_after completed=7 pending=6
+[exp8866] phase=slot_before completed=7 pending=6
+[exp8866] phase=slot_after completed=8 pending=5
+[exp8866] phase=slot_before completed=8 pending=5
+[exp8866] phase=operand_authentication completed=0 pending=9235
+[exp8866] phase=operand_authentication completed=5000 pending=4235
+[exp8866] phase=operand_authentication completed=0 pending=9235
+[exp8866] phase=operand_authentication completed=5000 pending=4235
+[exp8866] phase=slot_after completed=9 pending=4
+[exp8866] phase=slot_before completed=9 pending=4
+[exp8866] phase=slot_after completed=10 pending=3
+[exp8866] phase=slot_before completed=10 pending=3
+[exp8866] phase=operand_authentication completed=0 pending=9092
+[exp8866] phase=operand_authentication completed=5000 pending=4092
+[exp8866] phase=operand_authentication completed=0 pending=9092
+[exp8866] phase=operand_authentication completed=5000 pending=4092
+[exp8866] phase=slot_after completed=11 pending=2
+[exp8866] phase=custody_after completed=12 pending=1
+____________________________ test_replay_and_tamper ____________________________
+
+frozen = {'code': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v759_capstone.py', 'sha256': '...must qualify this producer', 'threshold': 100}}, 'activation_authorized': False, 'actual_llm_call_count': 0, ...}, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T150205-2744881-b86f545e/test_replay_and_tamper0')
+
+    def test_replay_and_tamper(frozen, tmp_path):
+        """SCENARIO-REPORT-8877-CONTRACT: rehashing a false headline never creates evidence."""
+        path = tmp_path / "candidate.json"
+>       value = c.build(frozen, validation())
+                ^^^^^^^
+E       AttributeError: module 'carnot.reporting.v759_capstone' has no attribute 'build'
+
+tests/python/test_v759_capstone_8877.py:51: AttributeError
+___________________________ test_reduction_controls ____________________________
+
+frozen = {'code': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v759_capstone.py', 'sha256': '...must qualify this producer', 'threshold': 100}}, 'activation_authorized': False, 'actual_llm_call_count': 0, ...}, ...}
+
+    def test_reduction_controls(frozen):
+        """REQ-REPORT-8877: reduction rejects altered rows and preserves declared classes."""
+        for n in (8868, 8870, 8871, 8874):
+            task = next(t for t in frozen["contract"]["tasks"] if t["id"].startswith(f"exp{n}-"))
+            value = json.loads((c.ROOT / task["deliverable"]).read_bytes())
+>           result = c.reduce(value)
+                     ^^^^^^^^^^^^^^^
+
+tests/python/test_v759_capstone_8877.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'MODEL_SPECS': [], 'acceptance_gates': {'certified_group_risk_max': 0.05, 'coverage_lower_99': 0.3, 'pooled_utility_r...licate': 3, 'violation': False}, {'replicate': 4, 'violation': False}, {'replicate': 5, 'violation': False}, ...], ...}
+
+    def reduce(value: Json) -> Json:
+        """Rebuild endpoints from raw rows and keep each statistical unit in its own scope."""
+        n, rows = value["experiment_id"], value.get("rows", [])
+        result: Json = previous.reduce(dict(experiment_id=n, rows=rows))
+        estimands: Json = {}
+        worlds, replicates = set(), set()
+        if n == 8868:
+            trace = json.loads(Path(value["draw_manifest"]["path"]).read_bytes())
+            replicates = {f"8868/rep/{r['replicate']}" for r in trace["replicates"]}
+        if n == 8870:
+            from carnot.reporting.conditional_risk_evaluation_8870 import summarize
+    
+            raw = json.loads(Path(value["measurement_manifest"]["path"]).read_bytes())
+            if raw["rows"] != rows:
+                raise ValueError("certificate_rows_drift")
+            primary = [r for r in rows if r["validity_guarantee"]]
+            estimands = summarize(primary, value["group_count_rows"])
+            replicates = {f"8868/rep/{r['replicate']}" for r in primary}
+        if n in {8871, 8874}:
+            work = json.loads(Path(value["work_reference"]["path"]).read_bytes())
+            if work["rows"] != rows:
+                raise ValueError("cost_rows_drift")
+            worlds = {f"8871/{r['cluster_id']}" for r in rows}
+            if n == 8874:
+                from carnot.reporting.size_aware_complete_cost_8874 import reduce as cost
+    
+                estimands = cost(rows, value["installation_accounting"]["installation_s"])
+        for key, observed in estimands.items():
+            if key in value and value[key] != observed:
+>               raise ValueError("registered_estimand_drift:" + key)
+E               ValueError: registered_estimand_drift:mixture_rows
+
+python/carnot/reporting/v759_capstone.py:71: ValueError
+___________________________________ test_cli ___________________________________
+
+frozen = {'code': [{'path': '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v759_capstone.py', 'sha256': '...must qualify this producer', 'threshold': 100}}, 'activation_authorized': False, 'actual_llm_call_count': 0, ...}, ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T150205-2744881-b86f545e/test_cli0')
+
+    def test_cli(frozen, tmp_path):
+        """REQ-REPORT-8877: actual CLI replay works without checkout path injection."""
+>       from carnot.reporting.v759_capstone import main
+E       ImportError: cannot import name 'main' from 'carnot.reporting.v759_capstone' (/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v759_capstone.py)
+
+tests/python/test_v759_capstone_8877.py:79: ImportError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v759_capstone_8877.py::test_terminal_accounting - At...
+FAILED tests/python/test_v759_capstone_8877.py::test_replay_and_tamper - Attr...
+FAILED tests/python/test_v759_capstone_8877.py::test_reduction_controls - Val...
+FAILED tests/python/test_v759_capstone_8877.py::test_cli - ImportError: canno...
+ERROR tests/python/test_v759_capstone_8877.py::test_terminal_accounting - Fai...
+4 failed, 1 warning, 1 error in 36.28s
