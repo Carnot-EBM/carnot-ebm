@@ -107998,6 +107998,36 @@ Ops, changelog and BMAD reconciliation remain conductor-owned.
 
 ### REQ-REPORT-8881: Qualify matched-label learning on genuinely distinct query structures
 
+Frozen implementation contract (20261106): compare frozen_verified, matched_true,
+matched_permuted and frozen_query_only on 24 paired streams. Each has 48 online
+queries and 48 retention queries at checkpoints 0/24/48. Cycle eight connected,
+non-isomorphic directed query graphs of 3–7 terms. Development, online and
+retention graph sets are disjoint; online templates recur within and across
+streams. Canonicalization ignores names, term order and unused fact decorations.
+Retain six original count features plus bias, linear normalized energies, SGD
+lr=.1, threshold=.5 and pending/template caps32. Fit seeds11/23/37/47/59 only on
+development worlds at a fixed240 updates. Assign one seed per paired stream.
+Labels balance support/refute/insufficient within each split. Preserve the six
+existing error types. Minimum delays are8 for half the streams and4/8/12 for
+half; each six-event batch releases at its latest due time after predictions
+seal. Permute that batch exactly, including unchanged targets. Verified arms
+share admission timing; query-only admission reads syntax after prediction.
+Checkpoint state and acknowledgements commit atomically, restart exactly, and
+drain every tail. Keep immutable raw predictions, transitions, fits and labels.
+Qualify two development streams, separable and zero-signal controls, original
+causal-store tests and syntax-only sentinel traps before held-out execution.
+Freeze future window25–48. Use10000 paired-stream bootstrap draws and a
+Bonferroni simultaneous99-percent family over all reported intervals. Benefit
+requires true-minus-permuted Brier upper<0, true-minus-frozen_verified upper<=-.01,
+and retention Brier/error upper increases<=.01 at every checkpoint. Report
+true-minus-query_only separately. Exact constructed truth remains oracle evidence.
+Authenticate the qualified Exp8879 producer, original raw operands and V760
+execution authority. Missing external inputs block; owned control failures
+disqualify. Private pilots and validation must project below4200 seconds within
+the4800-second hard cap. Publish only after validation and cold reconstruction;
+rehashed semantic tampering must fail. No milestone activation or model loads.
+Ops/status, changelog and BMAD reconciliation belong to the conductor.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8881_v760_topology_memory_methods.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108012,6 +108042,20 @@ real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Implementation record (20261106, supersedes the planning status above):
+`topology_memory_methods_8881.py`, its retained-evidence runner and the dated
+CLI implement the frozen four-arm comparison. Tests were written first and
+reference this requirement and scenario. They execute all24 private streams,
+check graph and syntax-only boundaries, retain original restart checks and
+reject rehashed causal transitions. Atomic mutable checkpoints use private
+`/tmp` storage; final or interrupted states are copied into retained raw
+evidence. The terminal primary owns the measured unit/child coverage, scoped
+lint/types/spec receipts, private E2E-018/021 and unchanged scanners. Cold replay
+reconstructs fitted heads, controls, every prediction and every transition.
+One bounded whole-suite health run is recorded separately, including its
+failures and timeout. Method readiness cannot turn query-only utility into
+label learning. The conductor owns ops/status, changelog and BMAD updates.
 
 ### REQ-REPORT-8882: Locate complete-request cost after the size-aware speed null
 
