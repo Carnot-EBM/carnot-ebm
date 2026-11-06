@@ -107781,3 +107781,38 @@ the4800-second cap; print flushed progress at every phase and bounded child wait
 Record one full Python suite attempt as separate global health. The conductor
 owns ops/status/changelog/BMAD reconciliation. Do not activate, push, retune,
 edit shared validators or the exclusion manifest, or modify research_conductor.py.
+
+### REQ-REPORT-8876: Map V759 operation changes without inferring hardware acceleration
+
+The audit shall authenticate each producer independently against original bytes,
+source/config hashes and raw operands. Preserve Exp8864 and Exp8862 as historical
+complete-cost authorities. Exp8874 supplies installed scan, indexed and size-aware
+costs, including censored work and repeated observations. Missing Exp8872 streams
+or Exp8873 label audits remain terminal blocked and cannot suppress installed costs.
+An absent original execution authority cannot be replaced with mutable vNEXT.
+
+Tier1 integer checks map to CPU, Tier2 normalized templates to CPU/RAM with a
+possible future FPGA index, and small linear updates to batchable GPU/native
+arithmetic. No join, categorical normalization or durable acknowledgement is an
+Ising sampling call. Retain actual sampling calls, including zero. Absent label,
+template, update and fsync measurements are unknown rather than zero. Keep
+speed bounds null without measured disjoint time fractions and transfer costs.
+KV260 stays within k_max<=5 and SSH via kria; PolarFire is Linux CPU dispatch;
+GateMate retains the 0xffffffff physical block until a dated physical change
+and correct GM1Ax IDCODE. No hardware probe, purchase or activation is authorized.
+The October higher-order Versal PUBO paper and Extropic Torx/Thermalizers/Z1T
+remain operation comparisons and future leads, not measured local acceleration.
+
+#### SCENARIO-REPORT-8876-CONTRACT
+
+Tests shall precede implementation and cover missing, rejected, observed-zero
+and valid-null branches separately, retaining installed work when learning is
+blocked. Recompute operation totals from retained per-request rows, without
+counting repeats as independent worlds. Private publication remains disqualified;
+failed owned controls disqualify. Authenticate replay and reject rehashed result
+or original-byte tampering. Validate all new unit/child statements at100 percent
+with zero exclusions, Ruff check/format, strict mypy, positional spec tracing,
+private E2E-018/021, real outside-checkout cold replay without PYTHONPATH, and
+unchanged adversarial/strict-row scanners before atomic primary publication.
+Run global Python health once and record its outcome separately. The conductor
+owns ops/status.md, ops/changelog.md and _bmad/traceability.md reconciliation.
