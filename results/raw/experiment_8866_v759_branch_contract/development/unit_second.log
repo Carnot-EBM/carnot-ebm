@@ -1,0 +1,245 @@
+..FF.FF........                                                          [100%]
+=================================== FAILURES ===================================
+__________________________ test_build_and_cold_replay __________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_build_and_cold_replay0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7faa575ece90>
+
+    def test_build_and_cold_replay(tmp_path, monkeypatch):
+        """REQ-REPORT-8866: optional absence stays independent of complete CPU authority."""
+>       work = c.freeze(tree(tmp_path / "source"), tmp_path / "raw", "20261106")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v759_branch_contract_8866.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v759_branch_contract.py:368: in freeze
+    historical = history(raw)
+                 ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_build_and_cold_replay0/raw')
+
+    def history(raw: Path) -> Json:
+        """Seal consumed original operands; capstone summaries retain their original verdicts."""
+        refs, failures, verdicts = [], [], {}
+        for name, pin in PINS.items():
+            path = ROOT / name
+            if reference(path)["sha256"] != "sha256:" + pin:
+                failures.append(
+                    failure(
+                        path,
+                        "preserved_v758",
+                        "sha256",
+                        pin,
+                        "missing_file" if not path.is_file() else "rejected_producer",
+                    )
+                )
+                continue
+            refs.append(seal(path, raw))
+            if name == ARCHIVE:
+                continue
+            value = json.loads(path.read_bytes())
+            verdicts[name] = value["verdict_class"]
+            operands = value["code_config_hashes"] + (
+                value["raw_shard_hashes"]
+                if name == PRIOR
+>               else [r["primary_reference"] for r in value["rows"]]
+                      ^^^^^^^^^^^^^^^^^^^^^^
+            )
+E           KeyError: 'primary_reference'
+
+python/carnot/reporting/v759_branch_contract.py:223: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=12
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+[exp8866] phase=historical_operands completed=41 pending=81
+[exp8866] phase=historical_operands completed=61 pending=61
+[exp8866] phase=historical_operands completed=81 pending=41
+[exp8866] phase=historical_operands completed=101 pending=21
+[exp8866] phase=historical_operands completed=121 pending=1
+____________________ test_blocked_publication_and_raw_drift ____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_blocked_publication_and_r0')
+
+    def test_blocked_publication_and_raw_drift(tmp_path):
+        """REQ-REPORT-8866: incomplete external authority is terminal blocked with zero benefit."""
+>       work = c.freeze(tree(tmp_path / "source", False), tmp_path / "raw", "20261106")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v759_branch_contract_8866.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v759_branch_contract.py:368: in freeze
+    historical = history(raw)
+                 ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_blocked_publication_and_r0/raw')
+
+    def history(raw: Path) -> Json:
+        """Seal consumed original operands; capstone summaries retain their original verdicts."""
+        refs, failures, verdicts = [], [], {}
+        for name, pin in PINS.items():
+            path = ROOT / name
+            if reference(path)["sha256"] != "sha256:" + pin:
+                failures.append(
+                    failure(
+                        path,
+                        "preserved_v758",
+                        "sha256",
+                        pin,
+                        "missing_file" if not path.is_file() else "rejected_producer",
+                    )
+                )
+                continue
+            refs.append(seal(path, raw))
+            if name == ARCHIVE:
+                continue
+            value = json.loads(path.read_bytes())
+            verdicts[name] = value["verdict_class"]
+            operands = value["code_config_hashes"] + (
+                value["raw_shard_hashes"]
+                if name == PRIOR
+>               else [r["primary_reference"] for r in value["rows"]]
+                      ^^^^^^^^^^^^^^^^^^^^^^
+            )
+E           KeyError: 'primary_reference'
+
+python/carnot/reporting/v759_branch_contract.py:223: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=12
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+[exp8866] phase=historical_operands completed=41 pending=81
+[exp8866] phase=historical_operands completed=61 pending=61
+[exp8866] phase=historical_operands completed=81 pending=41
+[exp8866] phase=historical_operands completed=101 pending=21
+[exp8866] phase=historical_operands completed=121 pending=1
+__________________ test_history_and_sealed_authority_failures __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_history_and_sealed_author0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7faa55e4e960>
+
+    def test_history_and_sealed_authority_failures(tmp_path, monkeypatch):
+        """REQ-REPORT-8866: external operand absence and rehashed authority are rejected."""
+        root = tree(tmp_path / "root")
+>       work = c.freeze(root, tmp_path / "raw", "20261106")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v759_branch_contract_8866.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v759_branch_contract.py:368: in freeze
+    historical = history(raw)
+                 ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_history_and_sealed_author0/raw')
+
+    def history(raw: Path) -> Json:
+        """Seal consumed original operands; capstone summaries retain their original verdicts."""
+        refs, failures, verdicts = [], [], {}
+        for name, pin in PINS.items():
+            path = ROOT / name
+            if reference(path)["sha256"] != "sha256:" + pin:
+                failures.append(
+                    failure(
+                        path,
+                        "preserved_v758",
+                        "sha256",
+                        pin,
+                        "missing_file" if not path.is_file() else "rejected_producer",
+                    )
+                )
+                continue
+            refs.append(seal(path, raw))
+            if name == ARCHIVE:
+                continue
+            value = json.loads(path.read_bytes())
+            verdicts[name] = value["verdict_class"]
+            operands = value["code_config_hashes"] + (
+                value["raw_shard_hashes"]
+                if name == PRIOR
+>               else [r["primary_reference"] for r in value["rows"]]
+                      ^^^^^^^^^^^^^^^^^^^^^^
+            )
+E           KeyError: 'primary_reference'
+
+python/carnot/reporting/v759_branch_contract.py:223: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=12
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+[exp8866] phase=historical_operands completed=41 pending=81
+[exp8866] phase=historical_operands completed=61 pending=61
+[exp8866] phase=historical_operands completed=81 pending=41
+[exp8866] phase=historical_operands completed=101 pending=21
+[exp8866] phase=historical_operands completed=121 pending=1
+__________________ test_absent_design_and_runtime_self_report __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_absent_design_and_runtime0')
+
+    def test_absent_design_and_runtime_self_report(tmp_path):
+        """REQ-REPORT-8866: external absence retains twelve censored observations."""
+>       work = c.freeze(tmp_path / "absent", tmp_path / "raw", "20261106")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v759_branch_contract_8866.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v759_branch_contract.py:368: in freeze
+    historical = history(raw)
+                 ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102602-2566547-e03c8bed/test_absent_design_and_runtime0/raw')
+
+    def history(raw: Path) -> Json:
+        """Seal consumed original operands; capstone summaries retain their original verdicts."""
+        refs, failures, verdicts = [], [], {}
+        for name, pin in PINS.items():
+            path = ROOT / name
+            if reference(path)["sha256"] != "sha256:" + pin:
+                failures.append(
+                    failure(
+                        path,
+                        "preserved_v758",
+                        "sha256",
+                        pin,
+                        "missing_file" if not path.is_file() else "rejected_producer",
+                    )
+                )
+                continue
+            refs.append(seal(path, raw))
+            if name == ARCHIVE:
+                continue
+            value = json.loads(path.read_bytes())
+            verdicts[name] = value["verdict_class"]
+            operands = value["code_config_hashes"] + (
+                value["raw_shard_hashes"]
+                if name == PRIOR
+>               else [r["primary_reference"] for r in value["rows"]]
+                      ^^^^^^^^^^^^^^^^^^^^^^
+            )
+E           KeyError: 'primary_reference'
+
+python/carnot/reporting/v759_branch_contract.py:223: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=12
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+[exp8866] phase=historical_operands completed=41 pending=81
+[exp8866] phase=historical_operands completed=61 pending=61
+[exp8866] phase=historical_operands completed=81 pending=41
+[exp8866] phase=historical_operands completed=101 pending=21
+[exp8866] phase=historical_operands completed=121 pending=1
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v759_branch_contract_8866.py::test_build_and_cold_replay
+FAILED tests/python/test_v759_branch_contract_8866.py::test_blocked_publication_and_raw_drift
+FAILED tests/python/test_v759_branch_contract_8866.py::test_history_and_sealed_authority_failures
+FAILED tests/python/test_v759_branch_contract_8866.py::test_absent_design_and_runtime_self_report
+4 failed, 11 passed, 1 warning in 9.96s

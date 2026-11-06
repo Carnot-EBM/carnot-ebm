@@ -1,0 +1,72 @@
+.....F.........                                                          [100%]
+=================================== FAILURES ===================================
+__________________ test_history_and_sealed_authority_failures __________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102720-2567344-f4c7b7e6/test_history_and_sealed_author0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd1aa9dd160>
+
+    def test_history_and_sealed_authority_failures(tmp_path, monkeypatch):
+        """REQ-REPORT-8866: external operand absence and rehashed authority are rejected."""
+        root = tree(tmp_path / "root")
+        work = c.freeze(root, tmp_path / "raw", "20261106")
+        work["contract"]["ready"] = False
+        c.atomic_json(
+            Path(work["raw_reference"]["path"]), {k: v for k, v in work.items() if k != "raw_reference"}
+        )
+        work["raw_reference"] = c.reference(Path(work["raw_reference"]["path"]))
+        value = c.build(work, validation(False))
+        path = tmp_path / "candidate.json"
+        c.atomic_json(path, value)
+        assert not c.replay(path)["passed"]
+        monkeypatch.setattr(c, "PINS", {"absent.json": "0" * 64, c.ARCHIVE: "0" * 64})
+        assert not c.history(tmp_path / "missing")["authenticated"]
+        monkeypatch.setattr(
+            c, "PINS", {c.PRIOR: "772046dd8cd218673e9882e232faf9fd5bda0de7ad257f7493564e7591b99c87"}
+        )
+        original = c.reference
+        monkeypatch.setattr(
+            c,
+            "reference",
+            lambda p: (
+                dict(original(p), sha256="forged") if p.name == "sealed_work.json" else original(p)
+            ),
+        )
+>       assert not c.history(tmp_path / "changed")["authenticated"]
+E       assert not True
+
+tests/python/test_v759_branch_contract_8866.py:148: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=12
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+[exp8866] phase=historical_operands completed=41 pending=81
+[exp8866] phase=historical_operands completed=61 pending=61
+[exp8866] phase=historical_operands completed=81 pending=41
+[exp8866] phase=historical_operands completed=101 pending=21
+[exp8866] phase=historical_operands completed=121 pending=1
+[exp8866] phase=historical_operands completed=1 pending=35
+[exp8866] phase=historical_operands completed=21 pending=15
+[exp8866] phase=authority_control_missing_last_task completed=1 pending=6
+[exp8866] phase=authority_control_truncation completed=2 pending=5
+[exp8866] phase=authority_control_prompt completed=3 pending=4
+[exp8866] phase=authority_control_gate completed=4 pending=3
+[exp8866] phase=authority_control_model completed=5 pending=2
+[exp8866] phase=authority_control_closing_marker completed=6 pending=1
+[exp8866] phase=authority_control_table completed=7 pending=0
+[exp8866] phase=preconditions_after completed=12 pending=0
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+[exp8866] phase=historical_operands completed=41 pending=81
+[exp8866] phase=historical_operands completed=61 pending=61
+[exp8866] phase=historical_operands completed=81 pending=41
+[exp8866] phase=historical_operands completed=101 pending=21
+[exp8866] phase=historical_operands completed=121 pending=1
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v759_branch_contract_8866.py::test_history_and_sealed_authority_failures
+1 failed, 14 passed, 1 warning in 21.92s

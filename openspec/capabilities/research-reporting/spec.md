@@ -107524,3 +107524,33 @@ replay outside the checkout rejects rehashed changes and retains source pins.
 Require actual unit and child statement coverage at100 percent, no exclusions,
 private E2E-018/021, Ruff, strict mypy and positional spec coverage. Global
 health is recorded separately. No board probes or milestone activation occur.
+
+### REQ-REPORT-8866: Bind twelve V759 tasks without inventing absent authority
+
+The producer shall reuse the qualified V758 parser, original mutation controls,
+causal runtime reader, current-work receipt and atomic primary publisher.
+Bind Exp8866 through Exp8877 in order against complete independent design JSON,
+visible table, canonical digest and closing marker, and the staged or activated
+queue. Missing external design bytes are terminal blocked; queue objects cannot
+manufacture a design. Retain all twelve scheduled rows even when censored.
+Authenticate preserved V758 primary, original source/config and consumed raw
+operands. Preserve prior verdicts and the November 5 ARC suspension.
+Ingest all six supplied V759 source-map entries, separating adopted methods
+from deferred guarantees and architectures. Check every same-roadmap gate's
+producer and exact declared field. Independent CPU roots cannot depend on this
+administrative receipt or its optional CUDA branch. Runtime readiness requires
+new dated causal library/environment changes, current validator custody, the
+exact mandated GGUF and actual context/copy/offload evidence, without probes.
+
+#### SCENARIO-REPORT-8866-CONTRACT
+
+Complete matching authority passes; private final-task loss, truncation, prompt,
+model, gate, closing-marker and table mutations fail. Missing design/table/JSON
+or upstream operands produce precise blocked diagnostics. Failed owned checks
+disqualify readiness. Supplied unchanged or incomplete runtime evidence scores
+zero without blocking CPU roots. Cold CLI replay outside the checkout without
+PYTHONPATH reconstructs sealed evidence and rejects rehashed changes. Publish
+only after unit/child statement coverage reaches 100 percent without exclusions,
+private E2E-018/021, scoped Ruff, strict mypy, positional spec tracing and both
+unchanged artifact scanners. Record global suite health separately. No roadmap
+activation, shared validator edit, exclusion edit, model load or training occurs.

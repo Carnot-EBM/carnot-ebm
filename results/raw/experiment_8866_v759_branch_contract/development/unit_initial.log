@@ -1,0 +1,93 @@
+..FF.                                                                    [100%]
+=================================== FAILURES ===================================
+__________________________ test_build_and_cold_replay __________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102450-2565612-429c4383/test_build_and_cold_replay0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f5d366b9040>
+
+    def test_build_and_cold_replay(tmp_path, monkeypatch):
+        """REQ-REPORT-8866: optional absence stays independent of complete CPU authority."""
+>       work = c.freeze(tree(tmp_path / "source"), tmp_path / "raw", "20261106")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v759_branch_contract_8866.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v759_branch_contract.py:361: in freeze
+    historical = history(raw)
+                 ^^^^^^^^^^^^
+python/carnot/reporting/v759_branch_contract.py:231: in history
+    refs.append(seal(operand, raw))
+                ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v758_branch_contract.py:185: in seal
+    if target.exists() and target.read_bytes() != source.read_bytes():
+       ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:860: in exists
+    self.stat(follow_symlinks=follow_symlinks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102450-2565612-429c4383/test_build_and_cold_replay0/raw/inputs/b5...a7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-bae0676342b3f95be81e168a7dd56448d436bbb62e96aaf29390b6ba3e3c5903.json')
+
+    def stat(self, *, follow_symlinks=True):
+        """
+        Return the result of the stat() system call on this path, like
+        os.stat() does.
+        """
+>       return os.stat(self, follow_symlinks=follow_symlinks)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 36] File name too long: '/var/tmp/pytest-carnot-ianblenke/20261106T102450-2565612-429c4383/test_build_and_cold_replay0/raw/inputs/b5c540cba9e6b424aa7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-b5c540cba9e6b424aa7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-b5c540cba9e6b424aa7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-bae0676342b3f95be81e168a7dd56448d436bbb62e96aaf29390b6ba3e3c5903.json'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:840: OSError
+----------------------------- Captured stdout call -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=12
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+____________________ test_blocked_publication_and_raw_drift ____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102450-2565612-429c4383/test_blocked_publication_and_r0')
+
+    def test_blocked_publication_and_raw_drift(tmp_path):
+        """REQ-REPORT-8866: incomplete external authority is terminal blocked with zero benefit."""
+>       work = c.freeze(tree(tmp_path / "source", False), tmp_path / "raw", "20261106")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v759_branch_contract_8866.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v759_branch_contract.py:361: in freeze
+    historical = history(raw)
+                 ^^^^^^^^^^^^
+python/carnot/reporting/v759_branch_contract.py:231: in history
+    refs.append(seal(operand, raw))
+                ^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v758_branch_contract.py:185: in seal
+    if target.exists() and target.read_bytes() != source.read_bytes():
+       ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:860: in exists
+    self.stat(follow_symlinks=follow_symlinks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261106T102450-2565612-429c4383/test_blocked_publication_and_r0/raw/input...a7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-bae0676342b3f95be81e168a7dd56448d436bbb62e96aaf29390b6ba3e3c5903.json')
+
+    def stat(self, *, follow_symlinks=True):
+        """
+        Return the result of the stat() system call on this path, like
+        os.stat() does.
+        """
+>       return os.stat(self, follow_symlinks=follow_symlinks)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: [Errno 36] File name too long: '/var/tmp/pytest-carnot-ianblenke/20261106T102450-2565612-429c4383/test_blocked_publication_and_r0/raw/inputs/b5c540cba9e6b424aa7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-b5c540cba9e6b424aa7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-b5c540cba9e6b424aa7daebc3f406c5522caf2f0fc55aa51980002b7fd394e2e-bae0676342b3f95be81e168a7dd56448d436bbb62e96aaf29390b6ba3e3c5903.json'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:840: OSError
+----------------------------- Captured stdout call -----------------------------
+[exp8866] phase=preconditions_before completed=0 pending=12
+[exp8866] phase=historical_operands completed=1 pending=121
+[exp8866] phase=historical_operands completed=21 pending=101
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v759_branch_contract_8866.py::test_build_and_cold_replay
+FAILED tests/python/test_v759_branch_contract_8866.py::test_blocked_publication_and_raw_drift
+2 failed, 3 passed, 1 warning in 4.29s
