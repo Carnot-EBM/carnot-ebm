@@ -107315,6 +107315,29 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Execution contract extended 2026-11-06: authenticate Exp8856's original byte
+identity, Exp8854's frozen protocol and original method authorities. Reconstruct
+all 27648 scheduled rows, pre-feedback predictions, delayed prefix releases,
+template witnesses, restart24 and untouched retention0/24/48 without fitting.
+Use 10000 paired whole-stream bootstrap draws across 24 independent streams.
+The complete six-contrast future family uses simultaneous 99-percent intervals:
+combined minus frozen, calibration-only, shuffled and additions-only; calibration
+minus frozen; additions minus frozen. Seeds remain paired nuisance variables.
+Immediate feedback describes delay cost only and cannot enter acceptance.
+Combined must improve frozen by .01, calibration-only by .005 and shuffled by
+a strictly positive lower improvement bound. Its own baseline retention must
+bound both Brier and decisive-error increases by .01 at24 and48, with a separate
+simultaneous four-endpoint family. Causal benefit requires all these gates and
+reconstructed integrity. Addition contribution and retention remain separate.
+A retention failure yields a terminal null joint result while audit readiness
+remains independent of benefit. Constructed exact-label success is circular_positive.
+Bind immutable raw operands, executed sources, validation logs and actual100-percent
+owned statement coverage without exclusions. Private CLI and outside-checkout
+replay reject changed operands and rehashed reductions. Missing external inputs
+block; owned failures disqualify; unfinished work preserves the full roster.
+No method selection, generator training, roadmap activation or shared validator
+change is permitted. Ops and BMAD reconciliation belong to the conductor.
+
 ### REQ-REPORT-8861: Measure complete installed verifier costs across evidence sizes
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
