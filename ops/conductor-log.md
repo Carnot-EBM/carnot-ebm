@@ -21437,3 +21437,4 @@ code |
 | 2026-11-06 01:12 UTC | Separate finite-population discrimination from cer | OK | 88 passed, 1 warning in 37.19s |
 | 2026-11-06 02:08 UTC | Measure continuous linear-energy learning with iso | OK | 95 passed, 1 warning in 97.24s (0:01:37) |
 | 2026-11-06 02:48 UTC | Freeze independent rule selection and certificatio | OK | 91 passed, 1 warning in 18.10s |
+| 2026-11-06 03:20 UTC | Expose the qualified indexed witness evaluator thr | OK | 134 passed, 1 warning in 69.88s (0:01:09) |
