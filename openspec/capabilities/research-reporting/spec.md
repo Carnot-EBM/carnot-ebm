@@ -107610,6 +107610,55 @@ private E2E-018/021, scoped Ruff, strict mypy, positional spec tracing and both
 unchanged artifact scanners. Record global suite health separately. No roadmap
 activation, shared validator edit, exclusion edit, model load or training occurs.
 
+### REQ-REPORT-8870: Evaluate conditional certificates under frozen group mixtures
+
+Authenticate the original ready Exp8868 producer and every source, configuration,
+model parameter, group assignment and raw operand, plus preserved Exp8859
+authority. Execute the same 40 sealed replicate pairs, seven policies, cutoffs
+and five mixtures without fitting new heads. Persist selection before opening
+certification labels and certificates before opening census labels. Recompute
+all census decisions, including refused groups, from frozen scores. Keep exact
+accepted/error counts and use accepted-mass weighting for every mixture risk.
+Retain selected-rule population risks even when certification refuses service.
+
+Report availability, violations of any of the 56 calibration bounds per
+replicate, worst served-group risk, balanced and shifted coverage and risk.
+Corruption changes the within-group joint distribution of evidence and outcomes,
+breaking exchangeability with the uncorrupted certification draws; it has no
+guarantee and cannot contribute to primary contrasts. Seeds and mixture weights
+do not increase independent n=40. Freeze 36 primary quantities: three arm
+families, two protocols and five coverage mixtures, plus paired balanced
+coverage gain and paired worst-mixture excess-risk reduction for each family.
+Average the five learned seeds within each replicate. Use bounded Hoeffding
+intervals with Bonferroni family error .01 (coverage range [0,1], contrast
+range [-1,1]); these are conservative simultaneous 99-percent intervals,
+conditional on the fixed population, fits and independent draw streams.
+
+The predeclared learned-energy family has conditional utility only if its
+coverage lower bound is at least .30 in every mixture and every certified
+served group has census risk at most .05. Robustness advantage additionally
+requires a strictly positive lower bound for paired worst-mixture excess-risk
+reduction. If pooled also qualifies, report parity, never superiority. Baseline
+families retain their separate gates. Complete authenticated rows release
+conditional_rows_ready_score independently of either benefit score. Low
+coverage is a terminal null. Missing external authority blocks; owned failures
+disqualify. Preserve all failed and censored scheduled units.
+
+#### SCENARIO-REPORT-8870-CONTRACT
+
+Write failing tests before implementation. Exercise weighted-risk counterexamples,
+empty/refused groups, identical-arm parity, corruption, source and semantic
+tampering, ordered label releases and private/cold CLI replay outside the
+checkout without PYTHONPATH. Reuse experiment_template, current_work_receipt,
+primary_publication and existing private validation custody. Require 100 percent
+new unit/child statements with zero exclusions, Ruff check/format, strict mypy,
+positional spec checks, private E2E-018/021 and unchanged adversarial/strict-row
+scanners. Record one bounded full Python health run separately. Keep checkpoints
+private until terminal validation, bind executed sources and logs, use measured
+duration, zero current training/model calls and no generalization claim. Do not
+activate a milestone, change shared validators/exclusions/conductor, or push.
+The conductor owns ops/status, changelog and BMAD reconciliation.
+
 ### REQ-REPORT-8868: Seal fixed evidence groups and equal-cost conditional certificates
 
 Before labels, freeze query-only chain, fork, cycle and disconnected groups,
