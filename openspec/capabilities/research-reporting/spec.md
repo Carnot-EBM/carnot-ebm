@@ -107162,6 +107162,28 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Implementation contract (2026-11-06, REQ-REPORT-8856): authenticate the exact
+Exp8854 primary, original method authorities, raw operands and complete frozen
+protocol. Refit the five admitted linear heads in process. Execute all six arms
+on24 paired streams, preserving6912 online and20736 retention slots even when
+execution is blocked or unfinished. CPU numerical training loads no generator.
+Only independently verified, delay-eligible feedback may change weights or add
+templates. Keep frozen components unchanged, prefix-only shuffle, caps32,
+atomic fsynced state/ack commits, restart24 and complete feedback-tail drain.
+
+SCENARIO-REPORT-8856-CONTRACT additionally requires sealed predictions, applied
+and rejected feedback, admission witnesses, future reuse, parameter movement,
+read-only retention0/24/48, Brier/NLL and typed decisive errors. Bind wall clocks,
+source bytes and immutable per-stream operands. Delay and interval summaries
+reduce from the full roster. Immediate feedback is explanatory only. Readiness
+requires complete causal integrity and actual100-percent owned unit/child
+statement coverage without exclusions, private E2E-018/021, scoped lint/types/
+spec checks, unchanged terminal scanners and outside-checkout cold replay with
+no PYTHONPATH. Measure one separate repository-health run. No gain gate belongs
+to this producer; Exp8860 owns acceptance. External absence blocks, owned control
+failure disqualifies, and a deadline preserves unfinished slots. Ops and
+traceability reconciliation belong to the conductor; no milestone activation.
+
 ### REQ-REPORT-8857: Freeze independent rule selection and certification at equal label cost
 
 **Status:** Planned for 2026.11.758; no implementation or result is claimed.
