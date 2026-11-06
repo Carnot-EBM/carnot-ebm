@@ -107743,3 +107743,41 @@ current_work_receipt and primary_publication; preserve source and log hashes.
 Missing external authority blocks; failed owned controls disqualify. The conductor
 owns ops/status, changelog and BMAD reconciliation. Do not activate, push, or edit
 shared validators, the exclusion manifest or research_conductor.py.
+
+### REQ-REPORT-8874: Measure complete installed size-aware request costs
+
+Authenticate the original ready Exp8871 and Exp8861 producers, source/config,
+raw operands and preserved method authorities before execution. Install the
+preserved Exp8871 wheel outside the checkout. Freeze fresh180 ordinary worlds
+(30 each at8,16,17,64,256,1024 facts) and40 wide-join stress worlds, four queries
+each. Randomize scan, indexed and size-aware order within each world with sealed
+seed7598874. Execute three observations per request at cap200000 for cold process
+and resident complete-request boundaries. Repeats never increase independent n.
+Keep all scheduled failures and censors, parent and child clocks, installed
+identities, primitive counts, and separately charged package installation costs.
+
+Freeze160 simultaneous endpoints: two boundaries, two comparisons with scan,
+eight populations (six sizes, equal1/6 ordinary mixture, separate stress64), and
+five quantities (speed, latency regression, operations, coverage loss, false
+accept increase). Use whole-world paired bootstrap with family error.01 and
+10000 draws. Average observations within requests before clustering. Benefit
+requires resident mixture speed lower>1, exact completed parity, no false-accept
+increase or coverage loss, and latency regression upper<=.05 at both8 and16.
+Report size17 as boundary stress without tuning. Report cold benefit separately.
+Readiness is independent of benefit; a failed guard yields terminal null and
+leaves the opt-in verifier unchanged. No Python result meets the PRD Rust10x gate.
+
+#### SCENARIO-REPORT-8874-CONTRACT
+
+Tests written first shall reject missing, altered, zero and foreign authority,
+duplicate or missing observations, changed clocks, rehashed decisions, and
+small-request regressions despite faster mixtures. Exercise installed private
+CLI publication and outside-checkout replay without PYTHONPATH. Bind actual
+unit/child statement coverage at100 percent with zero exclusions, Ruff, strict
+mypy, positional spec tracing, private original E2E-018/021 and unchanged
+prospective adversarial/strict row scanners. Keep checkpoints private until
+terminal validation. Pilot measurement plus validation below4200 seconds within
+the4800-second cap; print flushed progress at every phase and bounded child wait.
+Record one full Python suite attempt as separate global health. The conductor
+owns ops/status/changelog/BMAD reconciliation. Do not activate, push, retune,
+edit shared validators or the exclusion manifest, or modify research_conductor.py.

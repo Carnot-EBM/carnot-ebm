@@ -824,3 +824,17 @@ Gemini 4 Argon’s Standard evaluation suffered API failures: its best-scoring c
 
 Live Kaggle standings and the full discussion index were inaccessible; discussion checks were limited to indexed threads.
 
+## 2026-11-06 14:12 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen placed first (**27.9%, $25,000**), Lord Han Solo second (**23.8%, $7,500**), and Lohit Siriki third (**22.5%, $5,000**). All three open-sourced their solutions. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734), [indexed announcement](https://site.twstalker.com/arcprize).
+
+- **September 29 — GPT-6.1 Sol:** Official ARC-AGI-3 Semi-Private results show **96.4% with Provider Adapter** and **52.7% with Standard**, using each harness’s best reasoning configuration. [Official results](https://arcprize.org/results/openai-gpt-6-1-sol).
+
+- **September 28 — Claude Sonnet 5.5:** Official Semi-Private results show **72.4% with Provider Adapter** and **24.3% with Standard**, both at xhigh reasoning. [Official results](https://arcprize.org/results/anthropic-claude-sonnet-5-5).
+
+- **October 15–17 — Additional verified results:** Muse Spark Open scored **0.4%**, and DeepSeek V4.1 Flash 1017 scored **5.8%**, on Semi-Private using Provider Adapter. [Muse results](https://arcprize.org/results/meta-muse-spark-open), [DeepSeek results](https://arcprize.org/results/deepseek-v4-1-flash-1017).
+
+- **Scoring clarification:** Greg Kamradt confirmed that no-op game actions, including clicks that leave the board unchanged, consume action budget and count toward efficiency scoring; the scored server matches offline competition mode. [Host confirmation](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/718638).
+
+Live Kaggle standings and the full discussion index remained inaccessible; discussion coverage used indexed threads.
+
