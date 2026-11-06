@@ -21434,3 +21434,4 @@ code |
 | 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_generation_coverage_up age-week 4: OPEN 28 days:  |
 | 2026-11-06 00:11 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_variant_denominators age-week 0: OPEN 1 days: SILENT_NON |
 | 2026-11-06 00:29 UTC | Qualify matched linear-energy ablations and freeze | OK | 100 passed, 1 warning in 273.82s (0:04:33) |
+| 2026-11-06 01:12 UTC | Separate finite-population discrimination from cer | OK | 88 passed, 1 warning in 37.19s |
