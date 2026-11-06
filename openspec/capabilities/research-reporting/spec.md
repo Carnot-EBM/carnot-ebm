@@ -108148,6 +108148,31 @@ paired-boundary readiness gate passes. No milestone activation is performed.
 
 ### REQ-REPORT-8884: Measure continuous energy learning with matched feedback and topology diversity
 
+Frozen execution contract (20261106): authenticate the original qualified Exp8881
+bytes, original source/config/raw operands and V760 execution authority. Execute
+its exact 24 paired streams, four arms, 48 online queries and 48 untouched
+retention queries at checkpoints 0/24/48, retaining all 18432 scheduled rows.
+Reuse its five fixed development fits, six count features plus bias, SGD .1,
+six-event releases, exact batch label permutations and admission schedules.
+Seal typed decisions, confidence, probabilities, query/source digests and the
+durable predecessor before labels open. Retain every atomic state-plus-ack
+transaction, actual gradients, parameter movement, inserted templates and uses.
+Measure actual transaction and fsync costs. Report configured and actual
+cumulative delay separately from maximum simultaneous pending feedback, exact
+primitive/whole-query label calls and the complete tail. No convex regret bound
+is asserted. Restart only from the exact authenticated durable state and acks.
+All checkpoints remain private until terminal validation. Readiness requires
+complete execution, original controls and validation; preliminary effects are
+descriptive, with independent benefit testing reserved for Exp8886. A measured
+null is terminal and cannot select a larger run or replacement seeds. Missing
+external authority blocks; failed owned controls disqualify. Retain failures and
+censored denominators. Use ExperimentTemplate, current-work receipts and atomic
+primary publication. Require 100 percent new unit/child statements without
+exclusions, private original E2E-018/021, strict types, scoped Ruff/spec checks,
+unchanged terminal scanners and outside-checkout replay without PYTHONPATH.
+Run repository health once and report it separately. The conductor owns ops
+and BMAD reconciliation; no milestone activation or external publication.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8884_v760_topology_causal_streams.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108162,6 +108187,21 @@ real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Implementation record (20261106, supersedes the planning status above):
+`topology_causal_streams_8884.py`, its terminal runner and the dated CLI implement
+the exact Exp8881 protocol. Tests were written first and exercise durable typed
+seals, both delay regimes, every scheduled stream, original producer gates,
+terminal failures, private CLI and numerical cold reconstruction. Rehashed
+row, receipt, acceptance and causal-history changes are rejected. Every atomic
+state commit retains measured file/directory fsync costs and a full snapshot;
+mutable stores remain in private scratch and retained raw evidence is sealed
+read-only at publication. Retention labels never train the head. The terminal
+primary records measured new statement coverage, exact validation receipts,
+untouched private E2E-018/021, scanners and outside-checkout cold replay.
+One bounded whole-suite run and development validation failures are retained
+separately from final qualification. Effect estimates remain descriptive and
+Exp8886 owns benefit testing. The conductor owns ops and BMAD reconciliation.
 
 ### REQ-REPORT-8885: Measure sequential certificate cost at matched coverage and risk
 
