@@ -107472,6 +107472,34 @@ shall produce blocked. Failed owned controls shall disqualify readiness. A valid
 null result shall remain terminal. The full task and its named producer fields
 shall match the visible design and YAML queue before execution.
 
+Implementation contract (20261106): authenticate the complete V758 objects and
+visible table against the preserved task digest. Freeze producer bytes, original
+method authorities, raw rows and scheduler receipts before reduction. Account
+for all thirteen ordered slots, including missing inputs and the validated
+capstone itself. Preserve each upstream verdict class and V757 disqualification.
+External absence is blocked; failed owned checks disqualify readiness. Reduce
+learning, certificate utility and complete CPU costs independently. Deduplicate
+streams, population worlds and paid draws without pooling request counts.
+Compute historical FoVer G1-G4 with the unchanged publication script. Exact
+repeated verdicts alone can recommend retiring their declared scope. Every
+branch names one next decision and the evidence needed to reopen it. Private
+CLI replay outside the checkout rejects changed or rehashed summaries. Require
+100 percent newly owned statements with zero exclusions, private E2E-018/021,
+scoped Ruff, strict mypy and positional spec tracing. Keep global health
+separate. Ops and BMAD updates belong to the conductor reconciliation step.
+
+Verification (20261106, Exp8865): fourteen scoped tests and private E2E-018/021
+pass. Unit and child execution cover all 280 new statements with zero exclusions.
+Scoped Ruff check/format, strict mypy and positional spec tracing pass. The
+capstone accounts for eleven qualified primaries, one Qwen scheduler skip and
+its own validated slot. Learning integrity, future gain, addition benefit and
+retention remain separate from the failed true-label specificity endpoint.
+Split-protocol utility and installed speed benefit remain null. The unchanged
+historical FoVer G1-G4 computation passes in its existing publication scope.
+The full Python suite health run reached its 180-second deadline during
+collection; it does not establish a global pass. No activation, external
+publication, model upload, board probe or ARC scheduling is authorized here.
+
 
 ### REQ-REPORT-8864 implementation contract (20261106)
 
