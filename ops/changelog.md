@@ -23169,3 +23169,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   experiment execution or external publication occurs.
 - 2026-11-05: Bind the complete V758 contract and admit changed external evidence (⚠️ Research Finding) — honest_verdict=complete_null_v758_branch_contract; results/experiment_8853_v758_branch_contract.json
 - 2026-11-06: Qualify matched linear-energy ablations and freeze causal stream methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_linear_methods; results/experiment_8854_v758_linear_ablation_methods.json
+- 2026-11-06: Separate finite-population discrimination from certificate sample requirements (⚠️ Research Finding) — honest_verdict=complete_circular_positive_selective_ceiling; results/experiment_8855_v758_selective_ceiling.json
