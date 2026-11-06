@@ -108095,6 +108095,25 @@ The conductor owns ops/status, changelog and BMAD reconciliation.
 
 ### REQ-REPORT-8883: Separate source truth from record sufficiency under missing evidence
 
+Execution contract (2026-11-06): freeze120 new constructed worlds,30 in each
+V759 query-topology group, before labels or predictions. Each world retains a
+consistent original and a declared conflicting-source counterpart. Five views
+are complete, necessary-hop removal, irrelevant removal, conflict insertion,
+and conflict omission from the conflicting counterpart. The last view and the
+complete view have identical records but different source truth. Retain exact
+source/view hashes and transformations; never expose source truth to serving.
+Reuse all five frozen learned heads and replicate0 grouped V759 cutoffs without
+refitting or reselection. Compare learned, learned followed by installed exact
+view verification, and installed exact alone. Independently label both sources
+and visible records with the existing relational oracle. Report acceptance
+against source truth separately from view-semantic errors, coverage and
+abstention; average seeds within each world and cluster intervals by120 worlds.
+Frozen population certificates do not transfer to the changed distributions.
+Readiness requires complete paired rows, irrelevant-removal invariance and exact
+missing-hop abstention. Source fidelity stays zero regardless of measured errors.
+Keep all scheduled failed/censored slots and authenticate original V759 producers,
+retained operands, installed wheel, V760 design and execution authority.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8883_v760_evidence_loss_boundary.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108103,12 +108122,29 @@ match the declared gates exactly. Historical primaries remain unchanged.
 
 #### SCENARIO-REPORT-8883-CONTRACT
 
+Tests shall reject changed source/view transformations, hidden-truth serving
+inputs, changed frozen rules, incomplete paired rows, failed controls, missing,
+foreign and observed-zero authorities, and rehashed aggregate tampering. Real
+outside-checkout CLI execution and cold replay must use no PYTHONPATH. Measure
+all newly owned unit/child statements with zero exclusions. The conductor owns
+ops/status, changelog and BMAD reconciliation for this execution.
+
 Before implementation, add tests for this task's frozen method and acceptance
 gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
 real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Execution record (2026-11-06), superseding the planned status above: implemented
+in `python/carnot/reporting/evidence_loss_boundary_8883.py` and
+`python/carnot/reporting/evidence_loss_runner_8883.py`, with the requested
+experiment CLI and a visible-record-only installed worker. The11 tests in
+`tests/python/test_evidence_loss_boundary_8883.py` exercise paired truth,
+controls, original-input gates, installed execution, publication and rehashed
+replay rejection. Terminal coverage and check receipts are bound by the primary.
+The120 worlds retain9000 rows; source fidelity remains zero even when the
+paired-boundary readiness gate passes. No milestone activation is performed.
 
 ### REQ-REPORT-8884: Measure continuous energy learning with matched feedback and topology diversity
 
