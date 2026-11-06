@@ -107947,6 +107947,28 @@ conductor owns ops/status, changelog and BMAD reconciliation.
 
 ### REQ-REPORT-8880: Freeze finite-look risk certification with explicit label accounting
 
+Implementation contract (20261106): freeze 4096 new worlds, 1024 for each
+existing query topology, excluding relevant historical and fit structures.
+Reuse the seven original policy arms and retained learned heads. Freeze forty
+independent replacement-draw replicates. Both protocols select the same group
+cutoffs using only 240 selection draws per group. Independent certification
+streams share cumulative candidate looks 120,240,480,960. The fixed comparator
+uses 960. Exact one-sided binomial upper bounds use alpha=.01/(2*7*4*4)
+at sequential looks and .01/(2*7*4) for fixed certification. Their finite union
+has probability at most .01 per replicate. Empty accepted samples refuse.
+Stop only at the first upper bound <=.05, otherwise refuse after960; there is
+no early rejection, census peeking or threshold reselection. Every paid draw,
+including repeats and rejected candidates, counts. Retain standalone policy
+costs, shared-policy unions and actual joint research labels separately from
+counterfactual fixed-arm costs. Seal selection before certification labels.
+Retain raw operands, original producer pins, source hashes and phase order;
+cold replay must recompute results and reject rehashed semantic tampering.
+Pilot controls include exact zero-error floors, all-error/empty boundaries,
+repeated-look refusal, selection isolation, identical arms and unsafe constants.
+Readiness releases methods regardless of scientific benefit. No model loads,
+fresh training, natural-language generalization or milestone activation occur.
+The conductor owns ops/status, changelog and BMAD reconciliation.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8880_v760_sequential_certificate_methods.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -107961,6 +107983,18 @@ real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Implementation record (20261106, supersedes the planning status above):
+`sequential_certificate_methods_8880.py`, its retained-evidence runner and the
+direct dated CLI implement this finite family and the complete paid-draw
+ledger. `test_sequential_certificate_methods_8880.py` exercises exact inversion,
+first-valid stopping, terminal refusals, separation, selection isolation,
+identical/unsafe constants, external gates and rehashed stage/primary tampering.
+The terminal primary retains the measured unit/child coverage, original private
+E2E-018/021, lint/types/spec receipts, scanners and foreign-directory replay.
+Repository-wide test failures remain separate health evidence. Method readiness
+does not claim label savings; the independent evaluation belongs to Exp8885.
+Ops, changelog and BMAD reconciliation remain conductor-owned.
 
 ### REQ-REPORT-8881: Qualify matched-label learning on genuinely distinct query structures
 
