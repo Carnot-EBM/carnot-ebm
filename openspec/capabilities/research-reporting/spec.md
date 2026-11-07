@@ -109163,6 +109163,33 @@ The experiment shall emit `results/experiment_8909_v762_guarded_causal_streams.j
 
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
+Execution contract extension (20261107, before implementation): bind Exp8905 to
+original SHA256 `acbd0cd68c70e51811c36897180a2dc302341f9fa8fa2f381c3c6e642ab16779`,
+both integer readiness gates, all original operand bytes, its future manifest,
+fixed anchors and unchanged candidate store. Evaluation uses the registered eight
+online and eight retention topology families. Check group identifiers and world
+seeds against development pilots and anchors before constructing any worlds.
+The 18432-row census includes all four arms and all retention checkpoints even
+when external gates block or owned work fails. A crash retains sealed outcomes,
+pending feedback, candidate decisions and failed attempts without replacement.
+Read-only retention checks compare durable state bytes before and after scoring.
+Cold replay reconstructs every attempted stream and rejects rehashed changes to
+predictions, split assignments, permutations, promotions, cursors or work counts.
+Independent stream count is at most24; no effect threshold grants readiness.
+Tests shall exercise missing/zero/foreign producers, operand drift, overlapping
+manifests, delayed sealing, matched work, failed atomic writes, restart equality,
+unpromoted candidates, recovery and private outside-checkout CLI rejection.
+
+Implementation record (20261107): `guarded_causal_streams_8909.py` and
+`guarded_causal_runner_8909.py` reuse the unchanged Exp8905 store, frozen initial
+heads and future recipes. `test_guarded_causal_streams_8909.py` traces these
+controls, including recovery between durable state and progress writes. The
+dated CLI owns terminal execution and validation receipts; only its checked
+primary artifact can declare readiness. Independent intervals and the benefit
+conjunction remain owned by Exp8911. Repository-wide test health is reported
+separately from scoped qualification. Operational reconciliation is delegated
+to the conductor under the task's final instruction.
+
 ### REQ-REPORT-8910: Measure all-policy label savings from impossible-future refusal
 
 Require Exp8906 finite_budget_ready_score=1 and import its frozen protocol and proof receipt. Use fresh40 paired calibration replicates over the frozen4096-world population, the same seven policies/four groups and independent selection240 plus looks120/240/480/960. Retain with-replacement draws and seeds; keep the full population census evaluator-only.
