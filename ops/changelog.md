@@ -23267,3 +23267,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-07: Freeze sequential certification with a shared final test (⚠️ Research Finding) — honest_verdict=complete_circular_positive_shared_terminal_methods; results/experiment_8893_v761_shared_terminal_methods.json
 - 2026-11-07: Qualify buffered phase clocks before attributing request costs (⚠️ Research Finding) — honest_verdict=complete_circular_positive_buffered_clock_methods; results/experiment_8894_v761_buffered_clock_methods.json
 - 2026-11-07: Measure continuous small-energy learning with signed relational features (⚠️ Research Finding) — honest_verdict=complete_null_signed_causal_streams; results/experiment_8895_v761_signed_causal_streams.json
+- 2026-11-07: Measure label savings under pathwise coverage inclusion (⚠️ Research Finding) — honest_verdict=complete_circular_positive_shared_terminal_evaluation; results/experiment_8896_v761_shared_terminal_evaluation.json
