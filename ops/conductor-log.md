@@ -21474,3 +21474,27 @@ code |
 | 2026-11-06 23:07 UTC | Measure continuous energy learning with matched fe | OK | 97 passed, 1 warning in 159.21s (0:02:39) |
 | 2026-11-06 23:39 UTC | Measure sequential certificate cost at matched cov | OK | 89 passed, 1 warning in 26.75s |
 | 2026-11-07 00:16 UTC | Audit label-specific future benefit and untouched  | OK | 108 passed, 1 warning in 78.91s (0:01:18) |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7028_v616_active_contract_preflight.json age-week 9: OPEN 63 days: CL |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | eval_run_consumer_field_lint.py age-week 9: OPEN 63 days: SILENT_NON_FIRING on e |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_declares_deterministic_non_live age-week 8: OP |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 8: OPEN 5 |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::duration_floor_for_artifact age-week 8: OPEN 56 days: SIL |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 7: OPEN 49 days: REAL_ |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_match_declared_substrate age-week 7: OPEN 49 days: SILEN |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_field_name age-week 7: OPEN 49 days: SILENT_NON_FI |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 6: OPEN 4 |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_draws_selection_conclusion age-week 6: OPEN 42 days: SIL |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_engine_selection_candidate_diversity age-week 6: OP |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_world_model_trust_degeneracy age-week 6: OPEN 42 da |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_arc_outer_loop_calibration_solve age-week 6: OPEN 42  |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_arc_outer_loop_solve age-week 6: OPEN 42 days: SILE |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_verify_artifact_impl age-week 6: OPEN 42 days: SILENT_NO |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::verify_artifact age-week 6: OPEN 42 days: SILENT_NON_FIRI |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::sweep_milestone_range age-week 6: OPEN 42 days: SILENT_NO |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_live_model age-week 6: OPEN 42 days: SILENT_NON_F |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::backfill_stamps age-week 6: OPEN 42 days: SILENT_NON_FIRI |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::main age-week 6: OPEN 42 days: SILENT_NON_FIRING on adver |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_positive_control_failed_or_unchecked age-week 6: OPEN 42 |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_cheap_learned_value_marker age-week 3: OPEN 21 days: REA |
+| 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8871_v759_size_aware_verifier.json age-week 0: OPEN 1 days: CLAIM_OVE |
+| 2026-11-07 00:21 UTC | Measure bounded Qwen extraction against paired sou | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8878-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
