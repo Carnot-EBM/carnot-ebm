@@ -108261,6 +108261,28 @@ Ops, changelog and BMAD reconciliation remain conductor-owned.
 
 ### REQ-REPORT-8886: Audit label-specific future benefit and untouched retention
 
+Frozen independent reduction contract (20261106): authenticate the original
+Exp8881 and Exp8884 primary bytes, their source/config/raw operands and preserved
+V760 authority. Reconstruct probabilities, Brier loss and typed errors from
+sealed predictions and recorded serving checkpoints, without fitting or model
+loads. Join each release and admission to its durable predecessor; reject early
+labels, changed batch multisets, unmatched admissions and retention leakage.
+Reduce within each of24 paired streams before10000 bootstrap draws using seed
+7608881 and the unchanged nine-interval Bonferroni simultaneous99-percent family.
+Keep the Exp8881 future window25–48, true-minus-permuted upper<0,
+true-minus-frozen_verified upper<=-.01 and retention true-minus-frozen Brier/error
+upper<=.01 at0/24/48. Report true-minus-query_only and template uses separately.
+Audit readiness and label benefit are separate integer scores. A complete
+negative is null; successful exact-label evidence is circular_positive with
+independent_generalization_score=0. Missing external operands block, owned
+failures disqualify, and all scheduled failures remain in the census. Retain
+immutable evidence, actual invocation, unit/child coverage without exclusions,
+original private E2E-018/021 and unchanged scanner receipts. Cold replay from
+outside checkout without PYTHONPATH must reject rehashed semantic changes.
+Keep private-output and replay CLI options, a fixed4800-second cap and a pilot
+projection below4200 seconds. Retire an unchanged matched-label mechanism after
+another failed joint benefit gate. The conductor owns ops and BMAD updates.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8886_v760_label_benefit_audit.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108268,6 +108290,11 @@ Readiness and scientific benefit shall remain separate; upstream fields shall
 match the declared gates exactly. Historical primaries remain unchanged.
 
 #### SCENARIO-REPORT-8886-CONTRACT
+
+Tests shall first fail on the missing independent reducer. Cover all24 original
+streams without optimizer calls, exact frozen intervals, joint boundary cases,
+generic template utility, missing/zero/foreign inputs, malformed release and
+admission histories, retention leakage, private CLI and cold replay tampering.
 
 Before implementation, add tests for this task's frozen method and acceptance
 gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
