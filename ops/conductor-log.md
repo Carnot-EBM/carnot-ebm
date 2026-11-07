@@ -21515,3 +21515,4 @@ code |
 | 2026-11-07 12:21 UTC | Audit feature-specific future benefit and untouche | OK | 113 passed, 1 warning in 145.36s (0:02:25) |
 | 2026-11-07 12:56 UTC | Measure complete request attribution with qualifie | OK | 93 passed, 1 warning in 71.06s (0:01:11) |
 | 2026-11-07 13:03 UTC | Test bounded Qwen extraction with separate source  | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8891-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-11-07 14:12 UTC | Measure complete durable cost of signed-feature on | OK | 97 passed, 1 warning in 116.39s (0:01:56) |

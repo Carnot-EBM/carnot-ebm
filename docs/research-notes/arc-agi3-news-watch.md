@@ -838,3 +838,11 @@ Live Kaggle standings and the full discussion index were inaccessible; discussio
 
 Live Kaggle standings and the full discussion index remained inaccessible; discussion coverage used indexed threads.
 
+## 2026-11-07 14:11 UTC -- NEW
+
+- **November 7 — Public leaderboard:** Yi-Chia Chen @ Fields Model leads with **75.56**, followed by **Tufa Labs (70.24)** and **NVARC3 (60.95)**. [Dated leaderboard mirror](https://arc.markbarney.net/arc-leaderboards)
+
+- **November 3 — Participation totals:** Greg Kamradt reported **18,500 entrants and 67,000 submissions** for ARC-AGI-3. [Announcement](https://x.com/GregKamradt/status/2117407059364958226), [indexed copy](https://digg.com/ai/xhwdv721)
+
+Live Kaggle standings and full discussions remained unreadable; the mirrored public standings are provisional.
+
