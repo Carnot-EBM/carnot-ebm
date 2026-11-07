@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.761",
+  "generated_at": "2026-11-07T16:14:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 101.9,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete durable cost of signed-feature online learning",
+      "duration_minutes": 31.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit feature-specific future benefit and untouched retention",
+      "duration_minutes": 17.21,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure continuous small-energy learning with signed relational features",
+      "duration_minutes": 15.73,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify signed evidence features for causal calibrated energy learning",
+      "duration_minutes": 9.95,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes and decide feature risk and cost continuations",
+      "duration_minutes": 8.69,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.761 completed 12 experiments (1 compute-bound, 11 synthesis-only) in 101.9 wall-time minutes (102 minutes / 1.7 hours, averaging 8 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). All 5 slowest experiments were synthesis-only ('Measure complete durable cost of signed-feature online learning' at 31.06 minutes / 31min, 'Audit feature-specific future benefit and untouched retention' at 17.21 minutes / 17min, 'Measure continuous small-energy learning with signed relational features' at 15.73 minutes / 16min, 'Qualify signed evidence features for causal calibrated energy learning' at 9.95 minutes / 10min, and 'Reconcile thirteen outcomes and decide feature risk and cost continuations' at 8.69 minutes / 9min), meaning the 1 compute-bound task finished below 8.69 minutes (9min; no data available this milestone for its exact task name or duration). Locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner was not applicable (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 47C) is expected behavior across the 11 synthesis-only tasks.",
+  "bottlenecks_identified": [
+    "No compute-bound experiment appeared in the top-5 slowest list (the 1 compute-bound experiment out of 12 completed experiments finished below the 8.69-minute / 9min fifth-slowest threshold; no data available this milestone for its exact name or duration), and gpu_idle_on_compute_bound_tasks is false.",
+    "Wall time across the 101.9-minute (102 minutes / 1.7 hours, 8 minutes average per experiment) milestone was concentrated in the 5 slowest synthesis-only tasks: 'Measure complete durable cost of signed-feature online learning' (31.06 minutes / 31min), 'Audit feature-specific future benefit and untouched retention' (17.21 minutes / 17min), 'Measure continuous small-energy learning with signed relational features' (15.73 minutes / 16min), 'Qualify signed evidence features for causal calibrated energy learning' (9.95 minutes / 10min), and 'Reconcile thirteen outcomes and decide feature risk and cost continuations' (8.69 minutes / 9min).",
+    "The live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 12 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse signed-feature online-learning durable-cost, feature-specific future-benefit/untouched-retention, signed-relational small-energy learning, causal calibrated signed-evidence qualification, and thirteen-outcome reconciliation fixtures across the 5 slowest synthesis-only experiments ('Measure complete durable cost of signed-feature online learning' at 31.06 minutes / 31min, 'Audit feature-specific future benefit and untouched retention' at 17.21 minutes / 17min, 'Measure continuous small-energy learning with signed relational features' at 15.73 minutes / 16min, 'Qualify signed evidence features for causal calibrated energy learning' at 9.95 minutes / 10min, and 'Reconcile thirteen outcomes and decide feature risk and cost continuations' at 8.69 minutes / 9min) to reduce the 8-minute per-experiment average.",
+    "Parallelize independent verification and subprocess validation passes within the 11 synthesis-only experiments while keeping DualGPURunner unengaged unless a compute-bound task loads 2+ models in parallel.",
+    "Record explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Free the idle 4MB memory allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 47C) as recommended by the GPU Monitor Report."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share pre-computed signed-feature durable-cost, feature-specific retention, signed-relational small-energy learning, causal calibrated signed-evidence, and thirteen-outcome reconciliation fixtures across the 5 slowest synthesis-only tasks (31.06 minutes / 31min, 17.21 minutes / 17min, 15.73 minutes / 16min, 9.95 minutes / 10min, and 8.69 minutes / 9min).",
+    "Parallelize independent validation steps inside the 11 synthesis-only tasks to lower the 8-minute per-experiment average across the 101.9-minute (102 minutes / 1.7 hours) milestone.",
+    "Persist direct per-experiment timing metadata in artifacts to eliminate disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log) and release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, Temp 47C)."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.761 completed 12 experiments (1 compute-bound, 11 synthesis-only) in 101.9 minutes (102 minutes / 1.7 hours, averaging 8 minutes per experiment), with gpu_idle_on_compute_bound_tasks locked at false and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, Temp 47C) expected for the 11 synthesis-only workloads. Because all 5 slowest tasks were synthesis-only (31.06 minutes / 31min, 17.21 minutes / 17min, 15.73 minutes / 16min, 9.95 minutes / 10min, and 8.69 minutes / 9min) and the 1 compute-bound task completed in under 8.69 minutes (9min), deduplicating fixture setup and validation passes in synthesis tasks is the highest-leverage operational improvement for the next milestone."
+}
