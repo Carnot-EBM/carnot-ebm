@@ -23301,3 +23301,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-07: Prove safe refusal before an impossible final certificate (⚠️ Research Finding) — honest_verdict=complete_null_finite_budget_methods; results/experiment_8906_v762_finite_budget_methods.json
 - 2026-11-07: Qualify retained observer bytes across later spec edits (⚠️ Research Finding) — honest_verdict=complete_null_observer_custody; results/experiment_8907_v762_observer_custody.json
 - 2026-11-07: Audit paired natural-text annotation criteria and source custody (⚠️ Research Finding) — honest_verdict=complete_null_natural_criterion_audit; results/experiment_8908_v762_natural_criterion_audit.json
+- 2026-11-07: Measure guarded updates on sealed paired causal streams (⚠️ Research Finding) — honest_verdict=complete_null_guarded_causal_streams; results/experiment_8909_v762_guarded_causal_streams.json
