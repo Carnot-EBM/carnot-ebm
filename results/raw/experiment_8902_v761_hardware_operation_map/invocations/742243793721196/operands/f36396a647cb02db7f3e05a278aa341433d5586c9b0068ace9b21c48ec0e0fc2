@@ -1,0 +1,219 @@
+{
+  "access_order": [
+    "protocol",
+    "pilot",
+    "population",
+    "draws",
+    "fit",
+    "scores",
+    "selection_labels",
+    "selection",
+    "certification_labels",
+    "certificates",
+    "census_labels",
+    "census",
+    "corruption"
+  ],
+  "alpha_allocation": {
+    "groups": 4,
+    "per_terminal_bound": 0.00017857142857142857,
+    "policies": 7,
+    "protocols": 2,
+    "scope": "per independent replicate",
+    "total": 0.01
+  },
+  "certification_per_group": 480,
+  "corruption": "append opposite sign of first fact; refit/reselection forbidden; no validity guarantee",
+  "cutoffs": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95
+  ],
+  "exact_sample_requirements": {
+    "certification_per_group": 480,
+    "zero_error_minimum": 169
+  },
+  "expected_row_counts": {
+    "certificate_choices": 560,
+    "independent_replicates": 40,
+    "paid_labels": 115200,
+    "population": 4096,
+    "rows": 3360,
+    "terminal_bounds": 2240
+  },
+  "fitting": {
+    "seeds": [
+      11,
+      23,
+      37,
+      47,
+      59
+    ],
+    "steps": 240
+  },
+  "groups": {
+    "chain": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "cycle": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "disconnected": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "fork": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ]
+  },
+  "labels_per_replicate": 2880,
+  "measurement_deadline_s": 1800,
+  "mixture_weights": {
+    "balanced": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "heavy_chain": [
+      0.7,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "heavy_cycle": [
+      0.1,
+      0.1,
+      0.7,
+      0.1
+    ],
+    "heavy_disconnected": [
+      0.1,
+      0.1,
+      0.1,
+      0.7
+    ],
+    "heavy_fork": [
+      0.1,
+      0.7,
+      0.1,
+      0.1
+    ]
+  },
+  "policy_menu": [
+    [
+      "agreement_only",
+      0
+    ],
+    [
+      "fixed_evidence",
+      0
+    ],
+    [
+      "learned_energy",
+      11
+    ],
+    [
+      "learned_energy",
+      23
+    ],
+    [
+      "learned_energy",
+      37
+    ],
+    [
+      "learned_energy",
+      47
+    ],
+    [
+      "learned_energy",
+      59
+    ]
+  ],
+  "population_per_group": 1024,
+  "replicates": 40,
+  "risk_bound_construction": "independent group Clopper-Pearson upper bounds; pooled weights proportional to known mixture weight times exact input-only acceptance rate; no pooled binomial",
+  "risk_target": 0.05,
+  "runtime_budget_s": 4200,
+  "seed": 7598868,
+  "selection_per_group": 240,
+  "selection_rule": "maximum accepted count with empirical risk<=.05; ties higher cutoff; pooled shared cutoff or one cutoff per group; certify once; empty refuses"
+}

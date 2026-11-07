@@ -1,0 +1,242 @@
+{
+  "receipt": {
+    "boundary": "cold",
+    "command": [
+      "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+      "-I",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/request_cost_worker_8882.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8882_v760_request_cost_attribution/invocations/1793998669686044427/always_joint.py"
+    ],
+    "cwd": "/tmp/exp8882-installed-pmph7djw",
+    "ended_monotonic_ns": 679471481094437,
+    "installed_imports": [
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_core.py",
+        "sha256": "sha256:8c2d1bdf3e6d0be689b02a8d92180a6ff1d1e7743e4eb091a316931bd2fdcdd7"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_meter.py",
+        "sha256": "sha256:ae3e39e8c666030ecb8d3f3895d3910613f59e8190792eb235600d9dd25f54f8"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/indexed_witness.py",
+        "sha256": "sha256:2514808008dbe53b24c7343d9d79c09c307a0e3781111060d3997d880dfe207a"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/size_aware_witness.py",
+        "sha256": "sha256:9b4b5077d552ca6edae7a1da2d7869e1468d0ad8dd6d96cd818bd05ad6bed30f"
+      }
+    ],
+    "missing_reason": null,
+    "name": "cold-later_ordinary_1024_004_conflict-scan-2",
+    "passed": true,
+    "python": "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+    "pythonpath_present": false,
+    "request_count": 1,
+    "resident_overhead_per_observation_s": 0.0,
+    "started_monotonic_ns": 679471422160844,
+    "stderr": "[exp8882-worker] completed=1 pending=0 cluster=later/ordinary/1024/004\n",
+    "wall_time_s": 0.058933593
+  },
+  "rows": [
+    {
+      "arm": "scan",
+      "boundary": "cold",
+      "budget_exhausted": false,
+      "cluster_id": "later/ordinary/1024/004",
+      "complete_wall_time_s": 0.058933593,
+      "component_intervals": [
+        {
+          "component": "parse_validate",
+          "end_ns": 679471467547264,
+          "start_ns": 679471467411639
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679471469785878,
+          "start_ns": 679471467553055
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679471469791118,
+          "start_ns": 679471469789866
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679471472074547,
+          "start_ns": 679471469791118
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679471472076380,
+          "start_ns": 679471472074547
+        },
+        {
+          "component": "preparation",
+          "end_ns": 679471472525544,
+          "start_ns": 679471472076380
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679471472539179,
+          "start_ns": 679471472525544
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679471472551272,
+          "start_ns": 679471472541754
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679471472590716,
+          "start_ns": 679471472586829
+        }
+      ],
+      "components_ns": {
+        "exact_joins": 16720,
+        "parse_validate": 4651877,
+        "preparation": 449164,
+        "response_encode": 13405
+      },
+      "cpu_time_s": 0.012829503,
+      "decision": "insufficient",
+      "denominator": 1,
+      "ended_monotonic_ns": 679471472608179,
+      "instrumented": true,
+      "metric": 0,
+      "missing_reason": null,
+      "noop_clock_ns": [
+        110,
+        310,
+        70,
+        50,
+        50,
+        40,
+        50,
+        41,
+        40,
+        40,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        30,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        40,
+        30,
+        40,
+        41,
+        40,
+        30,
+        40,
+        30,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        40,
+        40,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        30,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40
+      ],
+      "operation_counts": {
+        "candidate_bindings": 0,
+        "fact_comparisons": 1,
+        "join_attempts": 0,
+        "lookup_attempts": 1024,
+        "other_comparisons": 12310,
+        "other_iterations": 14353,
+        "query_visits": 0,
+        "record_visits": 1028,
+        "request_dispatch": 1,
+        "request_disposal": 47208,
+        "request_parse_bytes": 47163,
+        "request_serialization": 45
+      },
+      "population": "ordinary",
+      "primitive_limit": 200000,
+      "primitive_operations": 123133,
+      "repeat": 2,
+      "request_elapsed_ns": 12891201,
+      "response_bytes": 45,
+      "seed": 7608882,
+      "size": 1024,
+      "started_monotonic_ns": 679471458793984,
+      "startup_import_ns": 29280141.0,
+      "status": "completed",
+      "truth": "insufficient",
+      "unit_id": "later/ordinary/1024/004/conflict",
+      "wall_time_s": 0.012878668,
+      "witness": null
+    }
+  ]
+}

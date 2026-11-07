@@ -108891,6 +108891,21 @@ The experiment shall emit `results/experiment_8902_v761_hardware_operation_map.j
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
 
+
+The map SHALL independently authenticate Exp8896 certificate rows, Exp8899
+buffered attribution and Exp8901 signed adaptation, including retained operands
+and original execution authority. Failed or missing branches stay unknown;
+scheduled failed/censored rows remain visible. Exp8899 readiness0 forbids
+numerical fractions or Amdahl ceilings. Any qualified ceiling includes host,
+durability and transfer remainder and is an analytical best-case limit only.
+Signed atom comparisons, pairwise local binding intersections, 27-coordinate
+small-head updates, exact certificate bounds, parsing and durable storage SHALL
+be distinct operations. Zero deterministic-path sampling cannot justify an
+Ising speed claim. KV260 stays quadratic k_max<=5, PolarFire Linux CPU dispatch
+stays separate from fabric, and GateMate retains its0xffffffff physical block.
+Purchases remain deferred without a measured compatible bottleneck. No unchanged
+physical probes, flashing, milestone activation or external publication occur.
+
 #### SCENARIO-REPORT-8902-CONTRACT
 
 Before implementation, add failing controls for the registered method, absent or
