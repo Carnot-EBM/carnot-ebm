@@ -108328,6 +108328,19 @@ provenance, explicit substrate, per-unit rows and terminal verdict semantics.
 Readiness and scientific benefit shall remain separate; upstream fields shall
 match the declared gates exactly. Historical primaries remain unchanged.
 
+Freeze twelve cost-only RNG streams outside the science and development rosters.
+Randomize all four Exp8881 arms within each paired stream. Start empty private
+stores and retain actual topology keys, occupancy and every durable commit.
+Measure parent startup through response, exit and final feedback drain, including
+one process restart after query24. Compare exact state and subsequent decisions
+with a separately executed uninterrupted control. Query-only must acquire zero
+whole-query labels; verified arms must pay for label acquisition and source-label
+checking. Retain setup separately with identical amortization across arms.
+Use whole-stream paired99-percent intervals; absent admitted quality evidence,
+report cost only. Readiness requires complete work and restart parity, never
+scientific benefit. Freeze source hashes, execution authority, delays and methods
+before timing. Preserve failed/censored scheduled cells and all original bytes.
+
 #### SCENARIO-REPORT-8888-CONTRACT
 
 Before implementation, add tests for this task's frozen method and acceptance
@@ -108335,7 +108348,14 @@ gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
 real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
-preserved. Status: planned; tests and implementation are not yet executed.
+preserved. Status: implementation and tests are present; the dated producer retains
+its measured acceptance receipts with the terminal artifact.
+
+Exp8888 tests shall also reject rehashed changes to costs, label counts, durable
+barriers, actual occupancy, tail drain and restart state. A fresh outside-checkout
+CLI shall reproduce semantic controls without PYTHONPATH. Missing external
+operands block; failed owned controls disqualify. Retain measured unit/child
+statement coverage with zero exclusions and the unchanged validator logs.
 
 ### REQ-REPORT-8889: Map measured certificate and adaptation work to supported hardware
 
