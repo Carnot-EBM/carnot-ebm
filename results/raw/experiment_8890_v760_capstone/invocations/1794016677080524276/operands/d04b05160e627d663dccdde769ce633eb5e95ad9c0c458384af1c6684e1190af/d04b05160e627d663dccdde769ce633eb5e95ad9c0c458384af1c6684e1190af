@@ -1,0 +1,103 @@
+{
+  "access_order": [
+    "population",
+    "draws",
+    "fit",
+    "scores",
+    "selection_labels",
+    "selection",
+    "certification_labels",
+    "certificates",
+    "evaluation_labels",
+    "evaluation",
+    "census_labels",
+    "census"
+  ],
+  "benefit_lower_bound": 0.05,
+  "bootstrap": {
+    "draws": 10000,
+    "quantiles": [
+      0.005,
+      0.995
+    ],
+    "seed": 7588858
+  },
+  "calibration": 720,
+  "certification": 480,
+  "cutoff_rule": "maximum accepted selection count with empirical error<=.05; ties higher cutoff; empty refuses; certify once, no replacement",
+  "cutoffs": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95
+  ],
+  "evaluation": 240,
+  "expected_row_counts": {
+    "calibration_draws": 43200,
+    "certificates": 840,
+    "evaluation_draws": 14400,
+    "rows": 840,
+    "selected_rules": 420
+  },
+  "familywise_allocation": {
+    "alphas": {
+      "simultaneous": 0.00011904761904761905,
+      "split": 0.0007142857142857143
+    },
+    "policies": 7,
+    "protocols": 2,
+    "total": 0.01
+  },
+  "fitting": {
+    "seeds": [
+      11,
+      23,
+      37,
+      47,
+      59
+    ],
+    "steps": 240,
+    "unchanged": true
+  },
+  "original_method_protocol_hash": "sha256:8f569d7b5f5da65937793f90d38900cfd6993a4874af71eb1194982654a2889f",
+  "policy_menu": [
+    [
+      "agreement_only",
+      0
+    ],
+    [
+      "fixed_evidence",
+      0
+    ],
+    [
+      "learned_energy",
+      11
+    ],
+    [
+      "learned_energy",
+      23
+    ],
+    [
+      "learned_energy",
+      37
+    ],
+    [
+      "learned_energy",
+      47
+    ],
+    [
+      "learned_energy",
+      59
+    ]
+  ],
+  "population": 4096,
+  "primary_contrast": "paired evaluation coverage split minus simultaneous; mean of all seven policies per replicate; refused serves zero",
+  "replicates": 60,
+  "risk_target": 0.05,
+  "seed": 7588857,
+  "selection": 240,
+  "simultaneous_rule": "maximum accepted count among exact certified cutoffs; ties higher cutoff",
+  "useful_coverage": 0.3
+}

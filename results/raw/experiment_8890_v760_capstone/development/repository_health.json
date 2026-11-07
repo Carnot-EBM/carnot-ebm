@@ -1,0 +1,22 @@
+{
+  "name": "global_python_suite",
+  "scope": "repository_health",
+  "passed": false,
+  "exit_code": 124,
+  "command": [
+    ".venv/bin/pytest",
+    "tests/python",
+    "-q"
+  ],
+  "supervisor": [
+    "timeout",
+    "--signal=TERM",
+    "--kill-after=15s",
+    "600s"
+  ],
+  "deadline_s": 600,
+  "reason": "bounded_run_timed_out_with_observed_failures_and_errors",
+  "complete_suite": false,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8890_v760_capstone/development/global_python_suite.log",
+  "log_sha256": "sha256:d48641e5ad116826201ee2a1380db482cffa061584d7979804620932f9718043"
+}

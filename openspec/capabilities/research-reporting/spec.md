@@ -108397,6 +108397,19 @@ receipts. Mapping readiness grants no physical acceleration or learning benefit.
 
 ### REQ-REPORT-8890: Reconcile thirteen outcomes and decide information risk and cost continuations
 
+Execution contract extension (20261107): bind the original Exp8878 authority
+snapshot and its canonical thirteen-task digest. Account for Exp8878 through
+Exp8890 in order, including authenticated scheduler skips and this capstone's
+administrative self-slot. Recompute admitted label-benefit, sequential risk and
+label-cost, source/view errors and complete CPU costs from retained unit rows.
+Keep stream, topology, calibration-replicate, world and cost-window denominators
+separate. Preserve V759 truncated authority, historical nulls, quarantines and
+G1–G4 publication scope. Missing external evidence is terminal blocked; owned
+validation failure is disqualified. Complete accounting may score one while
+science remains blocked. Natural generalization stays zero; activation stays
+false. Each continuation names its gate, observation, changed mechanism and
+exact retirement scope. The conductor owns ops and traceability reconciliation.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8890_v760_capstone.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108405,9 +108418,26 @@ match the declared gates exactly. Historical primaries remain unchanged.
 
 #### SCENARIO-REPORT-8890-CONTRACT
 
+Execution controls (20261107): reject reordered slots, invented skip lines,
+changed raw rows, changed registered estimands and self-consistently rehashed
+false headlines. Exercise missing-file, missing-field, observed-zero and
+rejected-producer gates. Run the actual CLI and cold replay outside the checkout
+without PYTHONPATH. Measure all newly owned unit and child statements with zero
+coverage exclusions. Keep repository-wide health separate from owned checks.
+
 Before implementation, add tests for this task's frozen method and acceptance
 gates, missing/rejected/observed-zero inputs, valid null, rehashed tampering and
 real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Execution verification (20261107, Exp8890): all thirteen owned tests pass.
+All214 newly owned statements are measured with zero exclusions. Private
+E2E-018/021, Ruff check/format, strict mypy and positional spec tracing pass.
+Status: implemented and tested. Internal publication requires the unchanged
+terminal scanners and cold replay. The capstone self-slot is administrative;
+external Qwen absence remains blocked. Historical FoVer G1–G4 retain their
+original scope. The bounded full Python suite showed failures and timed out;
+its separate health receipt does not qualify scientific benefit. Ops and
+traceability reconciliation remain conductor-owned.

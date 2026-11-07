@@ -1,0 +1,242 @@
+{
+  "receipt": {
+    "boundary": "cold",
+    "command": [
+      "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+      "-I",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/request_cost_worker_8882.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8882_v760_request_cost_attribution/invocations/1793998669686044427/always_joint.py"
+    ],
+    "cwd": "/tmp/exp8882-installed-pmph7djw",
+    "ended_monotonic_ns": 679416034714768,
+    "installed_imports": [
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_core.py",
+        "sha256": "sha256:8c2d1bdf3e6d0be689b02a8d92180a6ff1d1e7743e4eb091a316931bd2fdcdd7"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_meter.py",
+        "sha256": "sha256:ae3e39e8c666030ecb8d3f3895d3910613f59e8190792eb235600d9dd25f54f8"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/indexed_witness.py",
+        "sha256": "sha256:2514808008dbe53b24c7343d9d79c09c307a0e3781111060d3997d880dfe207a"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/size_aware_witness.py",
+        "sha256": "sha256:9b4b5077d552ca6edae7a1da2d7869e1468d0ad8dd6d96cd818bd05ad6bed30f"
+      }
+    ],
+    "missing_reason": null,
+    "name": "cold-later_ordinary_256_005_refute-scan-0",
+    "passed": true,
+    "python": "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+    "pythonpath_present": false,
+    "request_count": 1,
+    "resident_overhead_per_observation_s": 0.0,
+    "started_monotonic_ns": 679415965634869,
+    "stderr": "[exp8882-worker] completed=1 pending=0 cluster=later/ordinary/256/005\n",
+    "wall_time_s": 0.069079899
+  },
+  "rows": [
+    {
+      "arm": "scan",
+      "boundary": "cold",
+      "budget_exhausted": false,
+      "cluster_id": "later/ordinary/256/005",
+      "complete_wall_time_s": 0.069079899,
+      "component_intervals": [
+        {
+          "component": "parse_validate",
+          "end_ns": 679416024122895,
+          "start_ns": 679416024100173
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679416024630930,
+          "start_ns": 679416024128135
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679416024635228,
+          "start_ns": 679416024634226
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679416025136880,
+          "start_ns": 679416024635228
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679416025138342,
+          "start_ns": 679416025136880
+        },
+        {
+          "component": "preparation",
+          "end_ns": 679416025431503,
+          "start_ns": 679416025138342
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679416026486805,
+          "start_ns": 679416025431503
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679416026497876,
+          "start_ns": 679416026489240
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679416026520989,
+          "start_ns": 679416026517332
+        }
+      ],
+      "components_ns": {
+        "exact_joins": 1057766,
+        "parse_validate": 1027169,
+        "preparation": 293161,
+        "response_encode": 12293
+      },
+      "cpu_time_s": 0.004212619,
+      "decision": "refute",
+      "denominator": 1,
+      "ended_monotonic_ns": 679416026537220,
+      "instrumented": true,
+      "metric": 1,
+      "missing_reason": null,
+      "noop_clock_ns": [
+        160,
+        230,
+        80,
+        50,
+        40,
+        40,
+        40,
+        30,
+        30,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        50,
+        40,
+        40,
+        40,
+        30,
+        40,
+        31,
+        40,
+        60,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        40,
+        40,
+        40,
+        30,
+        40,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        40,
+        30,
+        40,
+        40,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        40,
+        40,
+        40,
+        31,
+        40,
+        30,
+        40,
+        30,
+        40,
+        41,
+        40,
+        40,
+        30,
+        40,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        30,
+        40,
+        30,
+        40,
+        30,
+        41,
+        30,
+        40,
+        40,
+        40,
+        30,
+        41,
+        30,
+        40
+      ],
+      "operation_counts": {
+        "candidate_bindings": 259,
+        "fact_comparisons": 1034,
+        "join_attempts": 0,
+        "lookup_attempts": 2328,
+        "other_comparisons": 3094,
+        "other_iterations": 6968,
+        "query_visits": 520,
+        "record_visits": 262,
+        "request_dispatch": 1,
+        "request_disposal": 11839,
+        "request_parse_bytes": 11800,
+        "request_serialization": 39
+      },
+      "population": "ordinary",
+      "primitive_limit": 200000,
+      "primitive_operations": 38144,
+      "repeat": 0,
+      "request_elapsed_ns": 4233802,
+      "response_bytes": 39,
+      "seed": 7608882,
+      "size": 256,
+      "started_monotonic_ns": 679416021507263,
+      "startup_import_ns": 44744855.0,
+      "status": "completed",
+      "truth": "refute",
+      "unit_id": "later/ordinary/256/005/refute",
+      "wall_time_s": 0.004222,
+      "witness": null
+    }
+  ]
+}

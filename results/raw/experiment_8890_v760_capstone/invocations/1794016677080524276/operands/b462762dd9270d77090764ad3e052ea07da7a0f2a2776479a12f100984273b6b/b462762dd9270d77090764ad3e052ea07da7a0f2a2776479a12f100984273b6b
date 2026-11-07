@@ -1,0 +1,244 @@
+{
+  "receipt": {
+    "boundary": "cold",
+    "command": [
+      "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+      "-I",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/request_cost_worker_8882.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8882_v760_request_cost_attribution/invocations/1793998669686044427/always_joint.py"
+    ],
+    "cwd": "/tmp/exp8882-installed-pmph7djw",
+    "ended_monotonic_ns": 679311378124633,
+    "installed_imports": [
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_core.py",
+        "sha256": "sha256:8c2d1bdf3e6d0be689b02a8d92180a6ff1d1e7743e4eb091a316931bd2fdcdd7"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_meter.py",
+        "sha256": "sha256:ae3e39e8c666030ecb8d3f3895d3910613f59e8190792eb235600d9dd25f54f8"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/indexed_witness.py",
+        "sha256": "sha256:2514808008dbe53b24c7343d9d79c09c307a0e3781111060d3997d880dfe207a"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/size_aware_witness.py",
+        "sha256": "sha256:9b4b5077d552ca6edae7a1da2d7869e1468d0ad8dd6d96cd818bd05ad6bed30f"
+      }
+    ],
+    "missing_reason": null,
+    "name": "cold-later_ordinary_17_006_support-scan-0",
+    "passed": true,
+    "python": "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+    "pythonpath_present": false,
+    "request_count": 1,
+    "resident_overhead_per_observation_s": 0.0,
+    "started_monotonic_ns": 679311314308419,
+    "stderr": "[exp8882-worker] completed=1 pending=0 cluster=later/ordinary/17/006\n",
+    "wall_time_s": 0.063816214
+  },
+  "rows": [
+    {
+      "arm": "scan",
+      "boundary": "cold",
+      "budget_exhausted": false,
+      "cluster_id": "later/ordinary/17/006",
+      "complete_wall_time_s": 0.063816214,
+      "component_intervals": [
+        {
+          "component": "parse_validate",
+          "end_ns": 679311368714399,
+          "start_ns": 679311368704270
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679311368784341,
+          "start_ns": 679311368720942
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679311368790342,
+          "start_ns": 679311368789090
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679311368841428,
+          "start_ns": 679311368790342
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679311368843442,
+          "start_ns": 679311368841428
+        },
+        {
+          "component": "preparation",
+          "end_ns": 679311368882585,
+          "start_ns": 679311368843442
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679311368978105,
+          "start_ns": 679311368882585
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679311368991770,
+          "start_ns": 679311368980780
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679311369025323,
+          "start_ns": 679311369020224
+        }
+      ],
+      "components_ns": {
+        "exact_joins": 98786,
+        "parse_validate": 124614,
+        "preparation": 39143,
+        "response_encode": 16089
+      },
+      "cpu_time_s": 0.000498015,
+      "decision": "support",
+      "denominator": 1,
+      "ended_monotonic_ns": 679311369046333,
+      "instrumented": true,
+      "metric": 1,
+      "missing_reason": null,
+      "noop_clock_ns": [
+        130,
+        280,
+        110,
+        60,
+        60,
+        60,
+        50,
+        50,
+        50,
+        60,
+        50,
+        60,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        51,
+        60,
+        50,
+        60,
+        51,
+        50,
+        60,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        60,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        60,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        61,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        60,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        51,
+        50,
+        50,
+        50,
+        60,
+        60,
+        50,
+        50,
+        50,
+        50
+      ],
+      "operation_counts": {
+        "candidate_bindings": 16,
+        "fact_comparisons": 64,
+        "join_attempts": 0,
+        "lookup_attempts": 145,
+        "other_comparisons": 226,
+        "other_iterations": 477,
+        "query_visits": 34,
+        "record_visits": 23,
+        "request_dispatch": 1,
+        "request_disposal": 951,
+        "request_parse_bytes": 888,
+        "request_serialization": 63
+      },
+      "population": "ordinary",
+      "primitive_limit": 200000,
+      "primitive_operations": 2888,
+      "repeat": 0,
+      "request_elapsed_ns": 516770,
+      "response_bytes": 63,
+      "seed": 7608882,
+      "size": 17,
+      "started_monotonic_ns": 679311367393819,
+      "startup_import_ns": 41683035.0,
+      "status": "completed",
+      "truth": "support",
+      "unit_id": "later/ordinary/17/006/support",
+      "wall_time_s": 0.000502153,
+      "witness": {
+        "?x": "84440b962915e9b1a"
+      }
+    }
+  ]
+}
