@@ -23237,3 +23237,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-06: Separate source truth from record sufficiency under missing evidence (⚠️ Research Finding) — honest_verdict=complete_circular_positive_evidence_loss_boundary; results/experiment_8883_v760_evidence_loss_boundary.json
 - 2026-11-06: Measure continuous energy learning with matched feedback and topology diversity (⚠️ Research Finding) — honest_verdict=complete_null_topology_causal_streams; results/experiment_8884_v760_topology_causal_streams.json
 - 2026-11-06: Measure sequential certificate cost at matched coverage and risk (⚠️ Research Finding) — honest_verdict=complete_null_sequential_label_cost; results/experiment_8885_v760_sequential_label_cost.json
+- 2026-11-07: Audit label-specific future benefit and untouched retention (⚠️ Research Finding) — honest_verdict=complete_null_label_benefit_audit; results/experiment_8886_v760_label_benefit_audit.json
