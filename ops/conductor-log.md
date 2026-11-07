@@ -21518,3 +21518,7 @@ code |
 | 2026-11-07 14:12 UTC | Measure complete durable cost of signed-feature on | OK | 97 passed, 1 warning in 116.39s (0:01:56) |
 | 2026-11-07 14:57 UTC | Map signed-feature and certificate work to actual  | OK | 89 passed, 1 warning in 114.63s (0:01:54) |
 | 2026-11-07 16:03 UTC | Reconcile thirteen outcomes and decide feature ris | OK | 97 passed, 1 warning in 221.41s (0:03:41) |
+| 2026-11-07 17:46 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-07 17:51 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |
+| 2026-11-07 18:34 UTC | Plan milestone 2026.11.762 | OK | 13 tasks proposed |
+| 2026-11-07 18:50 UTC | Milestone 2026.11.762 activated | OK | 13 tasks queued |

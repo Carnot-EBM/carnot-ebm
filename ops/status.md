@@ -18976,3 +18976,21 @@ The dated source scan preceded design. Planned requirements and traceability
 are aligned. Schema, complete-contract, gate-field and prior-failure checks pass;
 remaining planning validation is in progress. No research execution or activation
 has occurred in this planning task.
+
+## V762 staged planning — 2026-11-07
+
+V761 completed; V762 is staged, not activated. Exactly13 tasks, Exp8904–Exp8916,
+span four phases in research-roadmap-next.yaml and the rewritten vNEXT design.
+Signed features carry label information and pass retention, but V761's frozen
+baseline benefit gate failed. V762 tests candidate promotion before deployment.
+Shared certificate label savings remain unproved; safe impossibility refusal is
+the changed method. Request cost measurement first requires original observer
+custody qualification. RAGTruth++ supplies a reachable natural annotation audit,
+not independent truth. The bounded Qwen canary remains gated on changed CUDA
+evidence and24 complete eligible sources. ARC remains suspended.
+
+Research references were updated before design. Prior design/queue snapshots
+are preserved as research-roadmap-v761-*-20261107 files. New REQ-REPORT-8904–8916
+and traceability entries are explicitly planned. Active queue, conductor and
+exclusion manifest remain unchanged; no experiment was run by this planning work.
+Validation receipts and limits follow in the V762 design/changelog.

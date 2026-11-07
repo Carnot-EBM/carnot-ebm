@@ -4658,3 +4658,26 @@ All entries below are planned. No implementation or experiment execution is clai
 The design and YAML bind13 identical full task objects. Every producer declares
 its gate fields; runtime absence does not block independent CPU branches.
 Planning-validation results are recorded in the design footer and changelog.
+
+## V762 staged research plan — 2026-11-07
+
+All entries below are planned. No implementation or experiment execution is claimed.
+
+FR-06/FR-11:8905/8909/8911/8914. FR-12:8906/8908/8910/8913.
+FR-05/FR-08/NFR-01:8907/8912/8914/8915. FR-09/FR-10:8904/8916.
+
+| Requirement / scenario | Task | Deliverable | State |
+|---|---|---|---|
+| REQ-REPORT-8904 / SCENARIO-REPORT-8904-CONTRACT | `exp8904-branch-contract` | `results/experiment_8904_v762_branch_contract.json` | Planned |
+| REQ-REPORT-8905 / SCENARIO-REPORT-8905-CONTRACT | `exp8905-guarded-update-methods` | `results/experiment_8905_v762_guarded_update_methods.json` | Planned |
+| REQ-REPORT-8906 / SCENARIO-REPORT-8906-CONTRACT | `exp8906-finite-budget-methods` | `results/experiment_8906_v762_finite_budget_methods.json` | Planned |
+| REQ-REPORT-8907 / SCENARIO-REPORT-8907-CONTRACT | `exp8907-observer-custody` | `results/experiment_8907_v762_observer_custody.json` | Planned |
+| REQ-REPORT-8908 / SCENARIO-REPORT-8908-CONTRACT | `exp8908-natural-criterion-audit` | `results/experiment_8908_v762_natural_criterion_audit.json` | Planned |
+| REQ-REPORT-8909 / SCENARIO-REPORT-8909-CONTRACT | `exp8909-guarded-causal-streams` | `results/experiment_8909_v762_guarded_causal_streams.json` | Planned |
+| REQ-REPORT-8910 / SCENARIO-REPORT-8910-CONTRACT | `exp8910-finite-budget-evaluation` | `results/experiment_8910_v762_finite_budget_evaluation.json` | Planned |
+| REQ-REPORT-8911 / SCENARIO-REPORT-8911-CONTRACT | `exp8911-guarded-benefit-audit` | `results/experiment_8911_v762_guarded_benefit_audit.json` | Planned |
+| REQ-REPORT-8912 / SCENARIO-REPORT-8912-CONTRACT | `exp8912-complete-request-cost` | `results/experiment_8912_v762_complete_request_cost.json` | Planned |
+| REQ-REPORT-8913 / SCENARIO-REPORT-8913-CONTRACT | `exp8913-qwen-natural-canary` | `results/experiment_8913_v762_qwen_natural_canary.json` | Planned |
+| REQ-REPORT-8914 / SCENARIO-REPORT-8914-CONTRACT | `exp8914-guarded-durable-cost` | `results/experiment_8914_v762_guarded_durable_cost.json` | Planned |
+| REQ-REPORT-8915 / SCENARIO-REPORT-8915-CONTRACT | `exp8915-hardware-operation-budget` | `results/experiment_8915_v762_hardware_operation_budget.json` | Planned |
+| REQ-REPORT-8916 / SCENARIO-REPORT-8916-CONTRACT | `exp8916-capstone` | `results/experiment_8916_v762_capstone.json` | Planned |

@@ -23281,3 +23281,18 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-07: Measure complete durable cost of signed-feature online learning (⚠️ Research Finding) — honest_verdict=complete_null_signed_adaptation_cost; results/experiment_8901_v761_signed_adaptation_cost.json
 - 2026-11-07: Map signed-feature and certificate work to actual hardware capabilities (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_map; results/experiment_8902_v761_hardware_operation_map.json
 - 2026-11-07: Reconcile thirteen outcomes and decide feature risk and cost continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v761_capstone; results/experiment_8903_v761_capstone.json
+
+## 2026-11-07 — Stage research milestone 2026.11.762
+
+- Added the dated literature scan before designing experiments, including
+  candidate promotion, sequential feasibility and the reachable RAGTruth++ release.
+- Created research-roadmap-next.yaml and rewrote research-roadmap-vNEXT.md with
+  exactly13 matching full task objects, Exp8904–Exp8916, across four phases.
+- Preserved the completed V761 design and queue; kept the active queue, conductor
+  and exclusion manifest unchanged. Reconciled planned specs, traceability,
+  architecture and status without marking experiments implemented.
+- New science tests guarded updates and all-policy finite-budget refusal. Natural
+  criterion auditing precedes a bounded mandated Qwen canary. Observer custody
+  qualification precedes unchanged full request measurements.
+- Every prompt includes numbered progress/bounded-write requirements, exact gate
+  fields, verdict classes, per-unit rows and complete rerun-retirement metadata.

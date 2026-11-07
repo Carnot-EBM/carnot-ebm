@@ -55546,3 +55546,115 @@ source differences. Missing source coverage must remain explicit.
 ARC work remains suspended by the November 5 operator directive. Qwen remains
 `unsloth/Qwen3.8-27B-GGUF`; a small fixed-token run uses bounded-generation
 classification. New hardware purchases and unchanged CUDA probes are deferred.
+
+## V762 planning scan — 2026-11-07 America/New_York
+
+This scan precedes the V762 experiment design. The completed YAML archive ends
+at V760. V761's primary artifacts and conductor receipts provide newer evidence.
+Paper results below are external findings, not Carnot measurements.
+
+### Methods worth testing
+
+- [Experience-Driven Continual Learning of Terrain Traversability](https://arxiv.org/html/2609.39755v1),
+  September 30, 2026, section III-D: separate training and validation buffers;
+  deploy a candidate only after recent-loss and historical-retention checks.
+  **Local inference:** test a small signed-energy candidate before committing
+  its weights. Use only released past feedback for the gate. Keep a separate,
+  untouched retention set for the research endpoint. A reused operational gate
+  is training information, not an independent certificate. This adapts an update
+  policy; it does not reproduce the robot model or train the Qwen generator.
+- [Sequential Certification of Partially Identified Product Targets](https://arxiv.org/html/2611.07567v1),
+  November 5, 2026: distinguish feasible certification from unobservable target
+  information and charge pilot observations. Its theorem concerns independent
+  Bernoulli factors and a scalar product target. **Local inference:** investigate
+  finite-budget impossibility stopping for Carnot's existing binomial certificate
+  cells. Prove the local stopping rule separately; do not import this theorem.
+- [Sequential Certification of Threshold Decisions](https://arxiv.org/abs/2609.01968),
+  September 2, 2026: simultaneous monitoring and information in the relevant
+  decision population matter. Retain Carnot's exact finite-look allocation and
+  common final test. Early refusal must not silently remove a policy that could
+  still pass one of its remaining registered tests.
+- [RAGTruth++ author report](https://blueguardrails.com/en/blog/ragtruth-plus-plus-enhanced-hallucination-detection-benchmark),
+  November 20, 2025, and its [author release](https://huggingface.co/datasets/blue-guardrails/ragtruth-plus-plus):
+  revised span labels cover 408 prompt-response pairs. Annotators saw original
+  labels and automated suggestions. Audit this dependence and label revision;
+  do not call the revised labels blind independent truth. The release has two
+  distinct CSV schemas; its dataset viewer reports a schema cast error. Read
+  messages and spans separately. The card permits benchmarking but the retrieved
+  view has no explicit license field. Establish evaluation and redistribution
+  rights separately. This is a concrete source audit, not a new factual scorer.
+- [SURE-RAG v2](https://arxiv.org/abs/2605.03534), May 5 / July 24, 2026:
+  evidence sufficiency and natural hallucination detection have different
+  performance boundaries. Preserve record decisions, typed-source coverage and
+  natural-source semantics as different outputs. Source-relative span labels
+  do not certify complete extraction or open-world factual truth.
+- [FPGA–ASIC Co-Design](https://arxiv.org/abs/2602.15985), February 17 /
+  September 4, 2026: orchestration can dominate a fast Ising core. Keep full
+  parent-process costs and compatible-operation limits. First resolve historical
+  input identity: V761 attribution did not collect usable clocks after a changed
+  spec hash. That result is not evidence that buffered timing overhead is high.
+
+### Required topic scan and deferred methods
+
+| Topic | Primary source checked | Decision |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), December 2025 / May 2026 | Retain small energy policies. Neither paper establishes correctness merely from low learned energy. |
+| Neural constraint satisfaction | [Constraint Learning Tutorial](https://arxiv.org/abs/2610.35505), October 26, 2026 | Smaller, sparse models can reduce embedded optimization cost. No new solver dependency is justified by the present three-way head. |
+| Ising applications in ML | [Neural Ising Machines](https://arxiv.org/abs/2602.00302), January 30, 2026 | Learned compact update rules remain a sampler lead. Do not add MCMC to an exactly normalized three-class decision. |
+| Hallucination mitigation | SURE-RAG and RAGTruth++ above | Audit criterion dependence before a natural-text canary. |
+| KAN | [KAN-CL](https://arxiv.org/abs/2605.12306), May 12, 2026; [AAAI forgetting study](https://ojs.aaai.org/index.php/AAAI/article/view/33986), April 11, 2025 | Keep explicit retention controls. V761 passed its retention gates, so a new spline architecture is not the first response to its failed future-benefit test. |
+| Energy-guided generation | [Specification-Guided Generation v2](https://arxiv.org/abs/2610.41511), October 30 / November 2, 2026; [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 27, 2026 | Formal feasibility and reward guidance do not establish faithful source interpretation. Defer decoder integration and retired text-reranking mechanisms. |
+| Hardware sampling | FPGA–ASIC co-design above; Extropic below | Separate public simulator access from local physical hardware evidence. |
+| Continual/online learning | Guarded adaptation above | Test prospective candidate admission with explicit data partitioning, durable state and all rejected-update costs. |
+
+### Secondary channels and retrieval limits
+
+- **OpenReview:** searched NeurIPS/ICML/ICLR EBM submissions. The retrieved
+  [EBT manuscript](https://openreview.net/pdf?id=ZBj3Qp1bYg) says ICLR 2026;
+  the forum page returned browser verification. [NRGPT's ICLR manuscript](https://openreview.net/pdf?id=B3Muyi2zgo)
+  provides a distinct causal energy formulation. Neither calls for foundation
+  model pretraining in this milestone. Submission status is not inferred from
+  search snippets when the primary manuscript does not state it.
+- **Semantic Scholar:** direct Graph API citation requests returned HTTP429 for
+  EBT and ten citing papers for ARM–EBM. Coverage is partial. Checked primary
+  [d-OPD](https://arxiv.org/abs/2609.35362), September 28, 2026, and
+  [Distributional EBMs](https://arxiv.org/abs/2605.18871), May 15, 2026.
+  Block-diffusion distillation changes the generator; distributional external
+  scorers overlap the retired Phase D family. Both remain deferred. Citation
+  endpoints: [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20),
+  [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+- **Hugging Face papers:** checked the [verification index](https://huggingface.co/papers?q=verification).
+  It mixes old and recent work; primary publication dates govern the scan.
+  The RAGTruth++ author files provide a more concrete next source than another
+  inaccessible assisted-label release.
+- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Retrieved views did
+  not establish a relevant new EBM/constraint/KAN ranking. No ranking or new
+  dependency is claimed.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [October 1 research-agent update](https://extropic.ai/writing/baby-thermo-rsi/),
+  and [Torx/Thermalizers/Z1](https://extropic.ai/writing/from-one-to-one-billion).
+  The latter displays both a 2025 label and a Summer 2026 announcement. These
+  vendor descriptions do not establish Carnot device access or service speed.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint layer beneath language models. The retrieved page
+  supplies no reproducible new architecture or evaluation protocol.
+
+### Evidence that constrains the next design
+
+Exp8898's signed true-minus-frozen future Brier mean is -0.0209269, but its
+simultaneous upper bound is +0.0062266 against the required -0.01. True labels
+beat permuted labels, and signed features beat old features. All registered
+signed retention gates pass. Thus neither “no information” nor “retention
+failure” describes V761. Test a changed update policy; do not rerun its unchanged
+stream or lower the acceptance threshold. Exp8896 establishes standalone label
+savings but no all-policy union savings. Exp8899 stops on historical spec-byte
+drift before valid timings. Preserve both the successful observer qualification
+and the failed attribution primary. ARC remains suspended; the mandated Qwen
+can run only after a new authenticated CUDA repair receipt.
+
+The Hugging Face dataset API was also checked on 2026-11-07: RAGTruth++
+revision `afaec19e64122b4a58718dc31bcd555c97460233`, last modified
+2025-11-21T10:23:52Z, contains `README.md`, `messages.csv` and
+`hallucination_spans.csv`. This pins a reachable release; original-label joins,
+annotation crosswalks and evaluation rights still require a provenance audit.

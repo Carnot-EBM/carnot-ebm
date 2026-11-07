@@ -930,3 +930,19 @@ qualify before complete-cost attribution. Hardware mappings retain actual board
 limits and unknown fractions. Optional bounded Qwen generation needs new causal
 CUDA evidence. ARC remains suspended. This is planned work only; no runtime
 behavior, learning gain, source fidelity or physical speedup is newly established.
+
+## V762 proposed research boundary — 2026-11-07
+
+Planned, not implemented: keep the signed small energy head and introduce
+separate candidate/committed states, bounded released-feedback training, an
+operational held-out promotion guard and immutable development anchors. Untouched
+research retention never enters those guards. A development gate precedes the
+fresh24-stream scientific run; durable service costs remain independently useful.
+
+Retain the seven-policy common-final certificate and qualify only a refusal that
+cannot remove any future pass under the remaining finite budget. Audit RAGTruth++
+original/revised annotation dependence before an optional24-call mandated Qwen
+canary. Authenticate original observer operands from retained execution bundles
+before the frozen request benchmark. No new sampler, ARC work, hardware probe,
+conductor change or generator training is proposed. Full design and exact13-task
+contract: `openspec/change-proposals/research-roadmap-vNEXT.md`.

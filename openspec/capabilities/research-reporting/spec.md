@@ -108945,3 +108945,221 @@ Exp8903 CLI, with traced custody, semantic-tamper and cold-reader tests. Measure
 acceptance is recorded in the immutable invocation's validation receipts and
 statement-coverage report; repository health is a separate receipt. This
 reconciliation grants no scientific benefit, publication or activation.
+
+## V762 planned research requirements — 2026-11-07
+
+These requirements are planned; no implementation or experimental result is claimed.
+
+### REQ-REPORT-8904: Qualify V762 authority and changed runtime admission
+
+Compare visible table, embedded full JSON and staged-or-activated YAML for exactly Exp8904-Exp8916 in order, all prompt bytes, routes, gates, prior failures and deliverables. Retain immutable execution snapshots. Planning queue absence after activation is not a missing dependency when the matching active snapshot exists.
+
+Reuse existing contract machinery. Scope formatting repair to the originally named owned file and newly owned files; preserve prior failure receipts and source bytes. Test title, order, prompt, gate-field, prior-field and artifact-path mutations plus successful cold import; never weaken the validator to get a pass.
+
+Record how terrain-traversability candidate promotion, sequential feasibility and RAGTruth++ annotation dependence become falsifiable methods; identify paper assumptions that do not transfer. Keep literature ingestion administrative.
+
+Inspect only a supplied ops/cuda-runtime-repair-receipt.json with the existing authenticated reader and causal-change rules. Absent, stale, malformed or unrelated evidence yields runtime_repair_ready_score=0 with exact diagnostics, while a valid CPU contract can still have contract_ready_score=1. No nvidia-smi, CUDA load, GPU allocation or unchanged repair probe is authorized here.
+
+The experiment shall emit `results/experiment_8904_v762_branch_contract.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8904-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8905: Freeze candidate promotion for the signed energy head
+
+Freeze four paired arms: frozen_verified, ordinary_true, guarded_true, guarded_permuted. Every arm admits the same independently exact-verified templates and pays identical feature, candidate-fit and guard-scoring work. Frozen runs shadow work without deploying; ordinary deploys each eligible candidate unconditionally. Only guarded_permuted permutes update and guard labels within predeclared released-feedback blocks; exact template admission still uses true labels for every arm.
+
+Assign whole query groups by a fixed label-independent SHA256 bucket: three of four buckets train, one gates. Never train on guard examples. Use the most recent eight released guard groups, minimum four. At feedback counts16/24/32/40/48, fit from deployed weights on at most32 released training groups using unchanged per-example optimizer steps. Guarded promotion requires recent mean Brier improvement >=0.001 and anchor Brier degradation <=0.005 with no anchor error increase. Fix16 anchor groups from development data before evaluation. Repeated guard use is an operational heuristic, not an independent risk certificate.
+
+Implement atomic candidate-to-committed promotion and persist both state versions, split assignments, replay cursor and schema. Preserve predict-before-feedback, delayed label release, rejection without state change and restart equivalence. Keep evaluation retention data inaccessible to training, operational gates and template admission.
+
+Before implementation add failing controls for leakage, source order, group split consistency, no eligible guard, rejected update, permutation isolation, atomic promotion and durable restart. Do not add a sampler or train generator weights.
+
+Run eight development-only paired48-query streams with48 retention queries and checkpoints0/24/48, disjoint from future streams. Freeze thresholds before pilot. Set guarded_methods_ready_score=1 only for valid controls and execution. Set candidate_ready_score=1 only if at least one promotion occurs, development guarded-minus-frozen future Brier mean<=-0.01 and each retention Brier/error mean increase<=0.01. A valid failing pilot is null with candidate_ready_score=0; do not tune or launch the fresh science stream anyway. Freeze fresh24-stream seeds and 18432 expected rows (24*4*(48+3*48)).
+
+The experiment shall emit `results/experiment_8905_v762_guarded_update_methods.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8905-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8906: Prove safe refusal before an impossible final certificate
+
+Freeze seven policies, four groups, independent240-draw selection, candidate looks120/240/480/960, risk<=0.05 and existing exact binomial bounds. Keep early alpha=0.005/(7*4*3), final alpha=0.005/(7*4); fixed and sequential comparators share the identical final test. Total family allocation stays0.01.
+
+At each failed look enumerate all remaining registered looks. For each, give the current cell the most favorable attainable continuation: every remaining draw accepted and no additional errors. Refuse permanently only if even that optimistic sufficient statistic fails every remaining test. An error lower bound alone is insufficient. Prove exact-bound monotonicity or exhaustive finite-state equivalence, and test early pass, final-only pass, zero accepted, budget edge and numerical rounding.
+
+Use exhaustive small-budget binary paths and randomized full-size sufficient states to prove decisions unchanged relative to the common-final protocol; include a deliberate unsafe stopping rule as a failing control. No previous certificate can be revoked. Freeze a fail-closed numerical convention shared by all arms.
+
+Freeze three arms: fixed final, early acceptance only, early acceptance plus impossible-future refusal. A group stops fetching labels only when every policy has passed or safely refused. Pay selection and every unique candidate label once in shared-union costs, while retaining per-policy standalone counts. Freeze fresh40 calibration replicates and a4096-world census; methods qualification must not depend on observed savings.
+
+The experiment shall emit `results/experiment_8906_v762_finite_budget_methods.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8906-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8907: Qualify retained observer bytes across later spec edits
+
+Locate original Exp8894 primary, execution snapshot, retained spec/code/config/test operands and validation receipts. Resolve authority from its content-addressed execution bundle, not a mutable checkout path. Missing original operands are blocked; do not synthesize old bytes or rewrite historical receipts.
+
+Reuse the existing retained-evidence and namespace mechanisms at the observer consumer boundary. Compare the retained implementation with the prospective current implementation and require algorithm-equivalence controls. Apply only the smallest consumer-side change; do not edit shared validators, normalize away hashes or grandfather unrelated sources.
+
+Test a pristine cold replay; later unrelated spec append; original retained spec mutation; observer-code mutation; rehashed semantically altered clocks; missing operand; and invalid producer. The unrelated current append may leave historical qualification intact, but all changes to the actual historical operand must fail.
+
+Preserve the original observer algorithm, one repetition and frozen future24-world roster. Qualify custody and replay only; do not claim overhead improvement or run the full cost benchmark here. Publish a retained_evidence_ready_score usable by the cost consumer.
+
+The experiment shall emit `results/experiment_8907_v762_observer_custody.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8907-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8908: Audit paired natural-text annotation criteria and source custody
+
+Fetch author revision afaec19e64122b4a58718dc31bcd555c97460233 from blue-guardrails/ragtruth-plus-plus with bounded requests; read messages.csv and hallucination_spans.csv independently because the combined viewer has a schema error. Record retrieval receipts, source URLs, hashes, terms and evaluation permission separately from redistribution. No LLM or GPU work.
+
+Join the released cases to pinned original RAGTruth records using stable provenance and exact text checks. Reject ambiguous joins. Retain full source prompt, generated response, offsets, original spans and revised spans. Distinguish the408 sampled cases from the original test population; never call assisted revisions independent blind truth.
+
+Freeze an annotation crosswalk before metric reduction. Treat EvidentConflict/SubtleConflict and EvidentBaselessInfo/SubtleBaselessInfo as distinct evidence-failure labels; report IncorrectRefusal separately rather than treating refusal as a false factual statement. Test Unicode offsets, duplicated cases, changed text, missing contexts, schema separation and unsupported label mappings.
+
+Emit per-case span counts, paired label-disagreement rates and denominators over all valid joins. Keep missing and excluded cases in the intended408 ledger. Freeze an ID-hash ordered24-case canary from records with complete source/response, sound joins and explicit local-evaluation authority; stratify only by source task, not disagreement or model outcome. If fewer than24 are eligible, keep the audit result but set natural_canary_ready_score=0.
+
+Publish corpus_audit_ready_score=1 for a complete auditable coverage/rights decision even if the optional canary is unavailable. Keep source payloads local under existing dataset policy; the public manifest need only carry permitted identifiers and hashes. No generated-text reranking, model training or semantic-truth claim.
+
+The experiment shall emit `results/experiment_8908_v762_natural_criterion_audit.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8908-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8909: Measure guarded updates on sealed paired causal streams
+
+Require Exp8905 guarded_methods_ready_score=1 and candidate_ready_score=1 from authentic primary bytes. Import that task's future manifest and implementation, created earlier in this roadmap. Assert zero overlap with its pilots and anchors before unsealing24 paired48-query streams.
+
+Run frozen_verified, ordinary_true, guarded_true and guarded_permuted on exactly matched feature/template exposure, train/guard assignments, numerical optimizer work and delayed label timing. Seal each prediction before labels are released. Shared exact template admission is intentionally identical; the comparison isolates neural update deployment.
+
+Evaluate48 untouched retention queries read-only at checkpoints0/24/48. Never use them for training, guard admission, template writes or candidate selection. Store18432 scheduled rows plus candidate and promotion decisions, state hashes and feedback cursors. Eight online/eight retention topology families remain the finite scope; fresh seeds are not unseen-topology evidence.
+
+Validate schedule alignment, whole-group permutations, atomic commits, zero future-label access and restart replay. Preserve no-promotion outcomes and all failures/censoring. Readiness is complete trustworthy measurement, not benefit. Leave independent intervals and the conjunction to Exp8911.
+
+The experiment shall emit `results/experiment_8909_v762_guarded_causal_streams.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8909-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8910: Measure all-policy label savings from impossible-future refusal
+
+Require Exp8906 finite_budget_ready_score=1 and import its frozen protocol and proof receipt. Use fresh40 paired calibration replicates over the frozen4096-world population, the same seven policies/four groups and independent selection240 plus looks120/240/480/960. Retain with-replacement draws and seeds; keep the full population census evaluator-only.
+
+Run fixed-final, early-acceptance and early-acceptance-plus-refusal on identical draw streams. The deployed refusal arm must stop fetching group labels when every policy is resolved; benchmark/evaluator counterfactual labels go in a separate ledger and never count as service savings. Charge selection, unique labels and all policy evaluations, not just accepted decisions.
+
+Publish per-replicate/per-group/per-policy stopping reasons, accepted/error sufficient stats, bounds, label unions, policy costs, census served risk and exact decision comparisons. Require zero pathwise inclusion or decision-equality violations between the two sequential arms. Family error<=0.01 is justified by unchanged registered tests;40 replicates cannot prove a rare-event probability bound empirically.
+
+Predeclare one primary paired contrast: all-policy union labels saved by refusal versus early acceptance only. Benefit requires its99-percent lower confidence bound>0, no coverage loss, valid controls and all observed served census risks<=0.05. Use existing paired-replicate interval machinery. Retain standalone gains separately and report full-wall costs descriptively. A valid zero saving is null; do not change policies, looks or risk after seeing results.
+
+The experiment shall emit `results/experiment_8910_v762_finite_budget_evaluation.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8910-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8911: Audit future Brier benefit and retention for guarded updates
+
+Require Exp8909 causal_rows_ready_score=1; independently verify imported row hashes,18432 schedule, paired24 stream clusters and frozen protocol from Exp8905. Do not refit heads or access unrecorded oracle state.
+
+Use nine prespecified one-sided simultaneous99-percent bounds: future guarded_true minus frozen_verified Brier<=-0.01; guarded_true minus guarded_permuted Brier<0; guarded_true minus ordinary_true Brier<0; and retention Brier/error guarded_true minus frozen_verified<=0.01 at each of0/24/48. Reuse existing paired stream bootstrap with fixed seeds and Bonferroni0.01/9 upper tails. Report paired means and all bounds, not selected significant contrasts.
+
+Declare guarded_benefit_score=1 only if every bound and validity control passes. Audit readiness may be1 for an honest null. Report promotion/rejection frequencies, calibration and error as diagnostics without adding unadjusted success criteria. Do not claim new topology generalization or count query rows as independent streams.
+
+Test swapped arms, dropped failures, duplicated clusters, leaked retention, all-null rows, forged denominators and an unchanged frozen control. Keep all actual negative and zero results. Recommend retirement on the same failed scientific conjunction without weakening thresholds.
+
+The experiment shall emit `results/experiment_8911_v762_guarded_benefit_audit.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8911-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8912: Measure complete request costs with qualified retained clocks
+
+Require Exp8907 retained_evidence_ready_score=1 and import the original qualified observer through its validated retained bundle. Preserve original24-world future roster, one repetition, memory sizes, seeds, request forms and schedule from Exp8894/8899. Do not use a new easier benchmark to clear an overhead gate.
+
+Pair uninstrumented and instrumented end-to-end requests in balanced frozen order. Include process/startup, imports, precision checks, memory reads, observation, energy normalization, exact witness evaluation, serialization and residual parent work. Measure nonoverlapping child spans and explicit unknown gaps with monotonic clocks.
+
+Preserve raw parent/child clocks for every cell and both comparator arms. Require the registered overhead<=5 percent criterion, nonnegative residuals and interval closure with the original tolerances. Repetitions are not independent worlds. A custody pass followed by failed overhead is an honest null measurement, not permission to subtract the observer artificially.
+
+Set complete_cost_rows_ready_score=1 for complete authentic measured rows, and cost_attribution_ready_score=1 only when overhead, resolution and partition controls qualify. Hardware fractions must consume the latter. Do not optimize an implementation selected from unqualified clocks.
+
+The experiment shall emit `results/experiment_8912_v762_complete_request_cost.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8912-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8913: Measure bounded Qwen evidence decisions under paired annotation criteria
+
+Require Exp8904 runtime_repair_ready_score=1 and Exp8908 natural_canary_ready_score=1. Authenticate receipt, manifest and actual GGUF file hashes before load. MODEL_SPECS must include unsloth/Qwen3.8-27B-GGUF Q4_K_M. Use the existing cache resolver and actual GGUF path, existing GPU lease and verified GPU offload. No AutoTokenizer lookup on a GGUF-only repo, simulated fallback or small-model headline.
+
+Declare model_bounded_generation with the10-second floor. Freeze24 inputs, one call each, at most256 new tokens each (6144 maximum total). Require the complete source and response to fit actual context; no truncation or replacement after tokenization. Failures remain scheduled rows. Use one fixed prompt requesting supported/unsupported/abstain plus source/response quotations; no repair retries, grammar experiments or answer reranking.
+
+Capture raw prompts/completions, input/output token counts, stop reasons, invalid JSON, missing quotations, latency and GPU receipts. Exact quotation lookup checks cited evidence presence only, not entailment. Keep record syntax, source coverage and semantic-criterion agreement separate; the model cannot certify its own source completeness.
+
+Apply the frozen Exp8908 annotation crosswalk to the same captured outputs twice. Report per-case original-criterion versus revised-criterion confusion/abstention, score disagreement and invalid-output coverage. IncorrectRefusal remains a separate category. All24 cases remain in denominators; cluster uncertainty by case, never token or span. No broad accuracy, risk guarantee or independent natural-truth headline follows from this small assisted-label canary.
+
+Use flushed child supervision throughout load/generation and never pad runtime. A complete unhelpful run is null; external prerequisite absence is blocked with exact fields. Keep independent_generalization_score=0 and explicitly label any successful criterion-specific result with its annotation dependence.
+
+The experiment shall emit `results/experiment_8913_v762_qwen_natural_canary.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8913-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8914: Measure complete durable candidate and promotion costs
+
+Require only Exp8905 guarded_methods_ready_score=1, not candidate_ready_score or guarded_benefit_score. Freeze12 fresh paired48-feedback streams across its four arms,48 service cells. Charge identical template admissions, observations, training examples and numerical steps, while allowing measured promotion and durable-state differences.
+
+Measure full wall time, p50/p95 per-request and per-feedback latency, bytes written, peak resident memory, guard-scoring and rejected-candidate work. Preserve48 individual durable feedback commits and a forced cold process restart at24. Persist candidate, committed head, split assignments, cursor and rejection decisions; verify post-restart predictions against an uninterrupted control.
+
+Use real fsync and original safety semantics; no mocked timing or relaxed durability for the fast arm. Report all scheduled failures and cost rows including cells with zero promotions. Keep inclusive timers labeled inclusive; do not sum them into a fictitious partition.
+
+Publish adaptation_cost_ready_score for complete correct durable service. Any speed-quality recommendation must separately require Exp8911 guarded_benefit_score=1 and matched total-service intervals; absence of scientific benefit does not erase valid cost data. Test torn writes, missing candidate state, stale cursor and replayed feedback.
+
+The experiment shall emit `results/experiment_8914_v762_guarded_durable_cost.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8914-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8915: Map qualified service work to existing hardware limits
+
+Read available Exp8912 and Exp8914 original artifacts, and Exp8911 benefit if present. Account for missing, rejected, skipped and observed-zero prerequisites by exact path/field. Do not gate this audit on positive science; a valid map of unavailable evidence is useful and may have a terminal blocked class.
+
+Separate typed-source parsing, relational joins/witness search, memory lookup, signed features, three-class normalization, candidate gradients, guard scoring, atomic persistence and sampling. Only use Exp8912 component fractions when cost_attribution_ready_score=1. Keep Exp8914 inclusive timers nonadditive and keep whole-service costs as the denominator.
+
+Map only supported operations: KV260 quadratic Ising with k_max<=5; PolarFire Linux dispatch is CPU, not fabric; GateMate remains physically blocked at JTAG0xffffffff. GPUs need the external changed receipt and actual workload; Extropic hardware access remains unavailable. No new device probe, flashing, purchase or vendor-performance substitution.
+
+Report Amdahl ceilings for a hypothetical100x compatible-kernel speedup only when compatible fraction f is measured: 1/((1-f)+f/100). Otherwise report unknown, not zero or100x service benefit. Include transfer, host and durability costs. Preserve PRD NFR-01 whole-service10x as an unproved target; explain the next external or measured condition needed to test it.
+
+The experiment shall emit `results/experiment_8915_v762_hardware_operation_budget.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8915-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8916: Reconcile thirteen outcomes and decide guarded-learning continuations
+
+Bind the original Exp8904 execution snapshot and exact Exp8904-Exp8916 contract. Account for every primary, disqualified producer, authenticated conductor pre-gate skip and this capstone self-slot. Missing scientific primaries are not success; retain exact producer field checks and raw custody.
+
+Independently recheck guarded future/retention bounds, operational-versus-research data separation, all-policy label union costs and terminal decision equality, corpus annotation dependence, Qwen actual invocation evidence, complete request/durable costs and hardware-compatible fractions. Never pool streams, calibration replicates, corpus cases and cost cells into one independent n.
+
+Keep readiness separate from science. reconciliation_ready_score=1 requires complete13-slot accounting, validation and cold replay; external skipped science is blocked, not partial. A complete valid scientific null remains null. Preserve original prior verdicts and the required retire_if_same_verdict mechanics; do not edit the exclusion manifest or activate the next queue.
+
+Run scripts/publication_gate.py --json and report G1-G4 with exact historical/current scope. Do not publish externally or convert constructed oracle positives into independent generalization. Emit an unconditional continuation table: changed mechanism needed after a failed pilot or benefit conjunction, certificate result including shared and standalone costs, natural-source remaining limits, and measured hardware prerequisites. Reconcile planned versus implemented documentation without inventing archive entries.
+
+The experiment shall emit `results/experiment_8916_v762_capstone.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8916-CONTRACT
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
