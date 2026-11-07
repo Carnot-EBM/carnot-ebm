@@ -1,0 +1,72 @@
+..F                                                                      [100%]
+=================================== FAILURES ===================================
+______________________ test_cli_blocked_replay_and_tamper ______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261107T085844-3263010-e54bec3a/test_cli_blocked_replay_and_ta0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f94eabbd7c0>
+
+    def test_cli_blocked_replay_and_tamper(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-8895-CONTRACT: blocked private publication and rehashed tampering are checked."""
+        from carnot.reporting import signed_causal_runner_8895 as r
+    
+        output = tmp_path / (m.NAME + ".json")
+>       assert r.main(["--date", "20261107", "--private-output", str(output), "--sources", str(tmp_path)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_signed_causal_streams_8895.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/signed_causal_runner_8895.py:123: in main
+    cwd=os.getcwd(), pid=os.getpid(), executed_sources=[reference(m.ROOT / n) for n in m.OWNED])
+                                                        ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/v746_retained_evidence.py:34: in reference
+    return dict(path=str(path.absolute()), sha256=sha256_file(path))
+                                                  ^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:52: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8895_v761_signed_causal_streams.py')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8895_v761_signed_causal_streams.py'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_signed_causal_streams_8895.py::test_cli_blocked_replay_and_tamper
+1 failed, 2 passed, 1 warning in 30.34s

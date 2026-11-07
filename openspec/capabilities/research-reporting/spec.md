@@ -108632,6 +108632,24 @@ reconciliation remain conductor-owned. No milestone activation is authorized.
 
 Seal predictions before delayed labels. Run the eight frozen feature/control arms on24 paired streams. Preserve actual numerical updates, atomic template admissions, restart equality, full pending drains and read-only retention.
 
+Execution registration 20261107: authenticate Exp8892 readiness1 and its exact
+protocol, fitted heads, sources and raw operands. Reuse its unopened24 streams,
+five head seeds, eight arms,48 online queries and48 retention queries at0/24/48.
+No refitting or outcome selection is allowed. Seal full parameters and templates
+before labels. Retain durable transactions, due-time batch releases, label
+multisets, real gradients, admissions, pending counts and cumulative delays.
+Run a private paired uninterrupted/restarted pilot at24 and require exact state
+and acknowledgment equality. Preserve constant and zero-signal controls.
+Count paired streams once. Record every scheduled unfinished or failed slot.
+Publish causal_rows_ready_score1 only after causal rows and owned checks pass.
+A valid trajectory has terminal null verdict; Exp8898 owns feature-benefit tests.
+Claims concern only this finite constructed family with oracle labels. Generator
+weights remain frozen. Private CLI output, foreign-directory replay and immutable
+raw operands shall use the existing publication and current-work receipt helpers.
+Measure100 percent added unit/child statements without exclusions. Retain private
+E2E-018/021, Ruff, strict mypy, positional spec and unchanged scanner receipts.
+Repository health is separate. Ops and traceability reconciliation are conductor-owned.
+
 The experiment shall emit `results/experiment_8895_v761_signed_causal_streams.json` under the complete V761 contract.
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
@@ -108643,6 +108661,11 @@ malformed inputs, observed-zero gates, valid null results and rehashed tampering
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
 Status: planned; experiment implementation and execution remain pending.
+
+Implementation 20261107: the scoped signed adapter, runner, dated CLI and traced
+tests are present. Terminal invocation receipts retain exact owned validation,
+causal reconstruction and repository-health outcomes. Ops and traceability
+updates remain conductor-owned. No milestone or external publication changes.
 
 ### REQ-REPORT-8896: Measure label savings under pathwise coverage inclusion
 
