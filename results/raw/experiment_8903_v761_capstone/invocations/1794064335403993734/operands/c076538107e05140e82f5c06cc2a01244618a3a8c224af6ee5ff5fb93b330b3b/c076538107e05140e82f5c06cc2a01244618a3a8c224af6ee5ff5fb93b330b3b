@@ -1,0 +1,178 @@
+{
+  "access_order": [
+    "protocol",
+    "pilot",
+    "population",
+    "draws",
+    "fit",
+    "scores",
+    "selection_labels",
+    "selection",
+    "certification_labels",
+    "certificates"
+  ],
+  "alpha_allocation": {
+    "fixed_total": 0.005,
+    "per_bound": {
+      "fixed": 0.00017857142857142857,
+      "sequential": 4.464285714285714e-05
+    },
+    "scope": "per replicate, conditional on selection and fixed population",
+    "sequential_total": 0.005,
+    "total": 0.01
+  },
+  "bound_proof": "Condition on the frozen population, policies and independent selection labels. Each group uses iid uniform replacement candidates; acceptance is input-only and fixed. Conditional on the accepted count, errors are binomial at its fixed group risk. Each exact upper bound undercovers with probability at most its allocated alpha, including random accepted counts; n=0 refuses with upper=1. A union bound over 7*4*4 sequential events costs .005 and 7*4 fixed events costs .005. Stopping at the first valid bound selects a subset of this finite family, so unsafe certification probability is at most .01 per replicate. Dependence across looks, policies and protocols requires no extra independence. This is not a guarantee across forty replicates or arbitrary looks. No lower-bound early rejection is used.",
+  "cutoffs": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95
+  ],
+  "exact_sample_requirements": {
+    "fixed": 169,
+    "sequential": 196
+  },
+  "fixed_budget": 960,
+  "groups": {
+    "chain": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "cycle": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "disconnected": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "fork": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ]
+  },
+  "label_cost_definition": "Standalone cell pays 240 selection plus all candidate draws through its terminal look, including repeats and unaccepted draws. Standalone policy sums four cells. Shared sequential union pays selection once per group plus the largest terminal look among seven policies. Fixed shared union pays four*(240+960). Actual joint research acquisition shares selection and the full fixed stream, paying 4800 labels per replicate, not the sum of standalone costs. Oracle census and pilot labels are separate research overhead; retained historical fit labels are not current labels.",
+  "look_schedule": [
+    120,
+    240,
+    480,
+    960
+  ],
+  "measurement_deadline_s": 1800,
+  "motivation": {
+    "scope": "Sequential feasibility motivation only; the proof here is a finite union bound.",
+    "url": "https://arxiv.org/abs/2602.01637"
+  },
+  "policy_menu": [
+    [
+      "agreement_only",
+      0
+    ],
+    [
+      "fixed_evidence",
+      0
+    ],
+    [
+      "learned_energy",
+      11
+    ],
+    [
+      "learned_energy",
+      23
+    ],
+    [
+      "learned_energy",
+      37
+    ],
+    [
+      "learned_energy",
+      47
+    ],
+    [
+      "learned_energy",
+      59
+    ]
+  ],
+  "population_per_group": 1024,
+  "replicates": 40,
+  "risk_target": 0.05,
+  "runtime_budget_s": 4200,
+  "scientific_benefit_claim": false,
+  "seed": 7608880,
+  "selection_per_group": 240,
+  "selection_rule": "Group cutoffs maximize accepted selection draws at empirical risk<=.05; ties higher cutoff. Both protocols share the same rule; empty refuses after full budget."
+}

@@ -1,0 +1,282 @@
+"""REQ-REPORT-8883: measure record sufficiency separately from source completeness.
+
+The hidden source labels score extraction errors after serving. Identical visible
+records can come from different sources, so exact execution cannot certify extraction.
+"""
+
+from copy import deepcopy
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+
+from carnot.reporting import conditional_risk_methods_8868 as base
+from carnot.reporting import consensus_energy_8806 as energy
+from carnot.reporting import selective_methods_8829 as oracle
+from carnot.reporting.current_work_receipt import canonical_hash
+from carnot.reporting.v748_collection_contract import namespace
+
+Json = dict[str, Any]
+__all__ = ["base"]
+ROOT = Path(__file__).resolve().parents[3]
+NAME, TASK = "experiment_8883_v760_evidence_loss_boundary", "exp8883-evidence-loss-boundary"
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = [
+    "python/carnot/reporting/evidence_loss_boundary_8883.py",
+    "python/carnot/reporting/evidence_loss_runner_8883.py",
+    "scripts/experiments/evidence_loss_worker_8883.py",
+    CLI,
+]
+TESTS = ["tests/python/test_evidence_loss_boundary_8883.py"]
+SEED, SEEDS = 7608883, [11, 23, 37, 47, 59]
+VIEWS = ["complete", "missing_hop", "irrelevant_removal", "insert_conflict", "omit_conflict"]
+ARMS = ["learned", "learned_exact_view", "exact_view"]
+METRICS = ["wrong_source_acceptance", "view_semantic_error", "decisive_coverage", "abstention"]
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Flush actual counts so supervising processes can distinguish work from a stall."""
+    print(f"[exp8883] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def protocol() -> Json:
+    """Freeze the paired construction and imported rule index before viewing outcomes."""
+    return dict(
+        seed=SEED,
+        worlds_per_group=30,
+        views=VIEWS,
+        arms=ARMS,
+        seeds=SEEDS,
+        cutoff_source=dict(replicate=0, protocol="grouped", arm="learned_energy"),
+        bootstrap_draws=2000,
+        confidence=0.99,
+        independent_count=120,
+        uncertainty="paired whole-world bootstrap after averaging five fixed heads",
+        certificates_transfer=False,
+        numerical_training_calls=0,
+        source_counterpart="omit_conflict uses the originally conflicting counterpart; all other views use the consistent source",
+        runtime_budget_s=4200,
+        hard_cap_s=4800,
+    )
+
+
+def freeze(exposed: set[str], *, count: int = 30) -> list[Json]:
+    """Generate new evidence graphs without consulting labels, heads, cutoffs or clocks."""
+    generator = namespace(base, "boundary8883_freeze")
+    generator.SEED = SEED
+    cohort = generator.freeze(exposed, count=count, fit_count=0)
+    worlds = []
+    for w in cohort["worlds"]:
+        query = [
+            [f"?v{a}" if a < 2 else f"n{a}", f"r{k}", f"?v{b}" if b < 2 else f"n{b}"]
+            for k, (a, b) in enumerate(base.GROUPS[w["group"]])
+        ]
+        facts = [
+            [f"n{a}", f"r{k}", f"n{b}", True] for k, (a, b) in enumerate(base.GROUPS[w["group"]])
+        ]
+        facts += [[f"n{a}", "r0", f"n{b}", True] for a, b in w["edges"]]
+        facts.append(["noise_a", "unused", "noise_b", True])
+        source: Json = dict(facts=facts, query=query)
+        hop = next(i for i, q in enumerate(query) if all(not t.startswith("?") for t in q))
+        contradiction = [*facts[hop][:3], False]
+        conflicting = deepcopy(source)
+        conflicting["facts"].append(contradiction)
+        wid = w["world_id"].replace("v759/8868/population", "v760/8883")
+        pairs = []
+        for view in VIEWS:
+            full = conflicting if view == "omit_conflict" else source
+            visible = deepcopy(source)
+            removed, added = [], []
+            if view in ("missing_hop", "irrelevant_removal"):
+                index = hop if view == "missing_hop" else len(facts) - 1
+                removed = [dict(index=index, fact=visible["facts"].pop(index))]
+            if view == "insert_conflict":
+                visible["facts"].append(contradiction)
+                added = [dict(index=len(facts), fact=contradiction)]
+            if view == "omit_conflict":
+                removed = [dict(index=len(facts), fact=contradiction)]
+            pairs.append(
+                dict(
+                    unit_id=wid + "/" + view,
+                    cluster_id=wid,
+                    group=w["group"],
+                    view=view,
+                    source=full,
+                    input=visible,
+                    source_sha256=canonical_hash(full),
+                    view_sha256=canonical_hash(visible),
+                    transformation=dict(removed=removed, added=added),
+                )
+            )
+        worlds.append(dict(cluster_id=wid, group=w["group"], edges=w["edges"], pairs=pairs))
+    return worlds
+
+
+def truth(payload: Json) -> str:
+    """Independent completion enumeration and relational evaluation must agree on each label."""
+    return oracle.truth(payload)
+
+
+def rules(certificates: Json) -> list[Json]:
+    """The first predeclared grouped replicate supplies unchanged cutoffs for all five heads."""
+    return [
+        c
+        for c in certificates["choices"]
+        if c["replicate"] == 0 and c["protocol"] == "grouped" and c["arm"] == "learned_energy"
+    ]
+
+
+def evaluate(worlds: list[Json], fitted: Json, choices: list[Json], exact: Any = None) -> Json:
+    """Serving sees visible records and frozen parameters; hidden labels are opened afterward."""
+    if exact is None:
+        from carnot.verify.size_aware_witness import verify_size_aware_witness
+
+        exact = verify_size_aware_witness
+    if [p["seed"] for p in fitted["parameters"]] != SEEDS or [c["seed"] for c in choices] != SEEDS:
+        raise ValueError("frozen_policy_roster")
+    pairs = [p for w in worlds for p in w["pairs"]]
+    features = [energy.signals(p["input"]) for p in pairs]
+    predictions = {
+        p["seed"]: energy.probabilities(features, p["models"]).tolist()
+        for p in fitted["parameters"]
+    }
+    decisions = [exact(p["input"], cap=200000) for p in pairs]
+    if any(d["budget_exhausted"] for d in decisions):
+        raise ValueError("owned_exact_budget_exhausted")
+    rows, labels = [], []
+    for i, (pair, decision) in enumerate(zip(pairs, decisions, strict=True)):
+        visible, source = truth(pair["input"]), truth(pair["source"])
+        if decision["decision"] != visible:
+            raise ValueError("owned_exact_oracle_disagreement")
+        labels.append(dict(unit_id=pair["unit_id"], source=source, visible=visible))
+        expected = ["accept", "reject", "escalate"][energy.target("support", visible)]
+        for choice in choices:
+            cutoff = choice["cutoffs"][pair["group"]]
+            learned = (
+                "escalate"
+                if cutoff is None
+                else energy.decide(predictions[choice["seed"]][i], cutoff)
+            )
+            guarded = learned if learned == expected else "escalate"
+            for arm, action in zip(ARMS, [learned, guarded, expected], strict=True):
+                wrong = action == "accept" and source != "support"
+                rows.append(
+                    dict(
+                        unit_id=pair["unit_id"],
+                        cluster_id=pair["cluster_id"],
+                        group=pair["group"],
+                        view=pair["view"],
+                        arm=arm,
+                        seed=choice["seed"],
+                        action=action,
+                        cutoff=cutoff,
+                        candidate="support",
+                        full_source_truth=source,
+                        visible_view_truth=visible,
+                        wrong_source_acceptance=int(wrong),
+                        view_semantic_error=int(action != "escalate" and action != expected),
+                        decisive_coverage=int(action != "escalate"),
+                        abstention=int(action == "escalate"),
+                        metric=int(wrong),
+                        denominator=1,
+                        status="completed",
+                        missing_reason=None,
+                    )
+                )
+        if (i + 1) % 30 == 0:
+            progress("scored_views", i + 1, len(pairs) - i - 1)
+    return dict(rows=rows, truth_rows=labels, controls=controls(rows))
+
+
+def scheduled(worlds: list[Json], reason: str, status: str) -> list[Json]:
+    """Every missing or failed execution retains its original paired denominator."""
+    return [
+        dict(
+            unit_id=p["unit_id"],
+            cluster_id=p["cluster_id"],
+            group=p["group"],
+            view=p["view"],
+            arm=arm,
+            seed=seed,
+            metric=None,
+            denominator=1,
+            status=status,
+            missing_reason=reason,
+        )
+        for w in worlds
+        for p in w["pairs"]
+        for seed in SEEDS
+        for arm in ARMS
+    ]
+
+
+def controls(rows: list[Json]) -> Json:
+    """Full paired rosters, irrelevant removal and necessary-hop abstention gate readiness."""
+    worlds = sorted({r["cluster_id"] for r in rows})
+    lookup = {(r["cluster_id"], r["view"], r["arm"], r["seed"]): r for r in rows}
+    complete = bool(worlds) and len(lookup) == len(rows) == len(worlds) * 75
+    complete &= all(r["status"] == "completed" for r in rows)
+    invariant = complete and all(
+        lookup[w, "complete", a, s]["action"] == lookup[w, "irrelevant_removal", a, s]["action"]
+        for w in worlds
+        for a in ARMS
+        for s in SEEDS
+    )
+    abstains = complete and all(
+        lookup[w, "missing_hop", a, s]["action"] == "escalate"
+        for w in worlds
+        for a in ARMS[1:]
+        for s in SEEDS
+    )
+    return dict(
+        complete_paired_rows=complete,
+        irrelevant_removal_invariance=invariant,
+        missing_hop_exact_abstention=abstains,
+        passed=bool(complete and invariant and abstains),
+    )
+
+
+def summarize(rows: list[Json]) -> Json:
+    """Resample whole worlds with shared draws across arms and views; seeds never increase n."""
+    completed = [r for r in rows if r["status"] == "completed"]
+    worlds = sorted({r["cluster_id"] for r in completed})
+    intervals, summaries = [], []
+    if worlds:
+        draws = np.random.default_rng(SEED).integers(0, len(worlds), size=(2000, len(worlds)))
+        for arm in ARMS:
+            for view in VIEWS:
+                local = [r for r in completed if r["arm"] == arm and r["view"] == view]
+                for metric in METRICS:
+                    values = np.asarray(
+                        [sum(r[metric] for r in local if r["cluster_id"] == w) / 5 for w in worlds]
+                    )
+                    interval = dict(
+                        arm=arm,
+                        view=view,
+                        metric=metric,
+                        estimate=float(values.mean()),
+                        lower_99=float(np.quantile(values[draws].mean(axis=1), 0.005)),
+                        upper_99=float(np.quantile(values[draws].mean(axis=1), 0.995)),
+                        independent_count=len(worlds),
+                        denominator=len(local),
+                        method="paired whole-world percentile bootstrap; pointwise, exploratory",
+                    )
+                    intervals.append(interval)
+                summaries.append(
+                    dict(
+                        arm=arm,
+                        view=view,
+                        denominator=len(local),
+                        **{k: sum(r[k] for r in local) / len(local) for k in METRICS},
+                    )
+                )
+    return dict(
+        paired_intervals=intervals,
+        arm_view_summaries=summaries,
+        omission_controls=controls(rows),
+        undetectable_omissions=[
+            "An omitted contradictory signed fact leaves the same visible records as a consistent source.",
+            "An omitted irrelevant fact cannot be detected from the remaining records.",
+            "A missing necessary hop establishes visible insufficiency, not whether a source hop was omitted.",
+        ],
+    )

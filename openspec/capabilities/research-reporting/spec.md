@@ -108916,6 +108916,18 @@ Status: planned; experiment implementation and execution remain pending.
 
 ### REQ-REPORT-8903: Reconcile thirteen outcomes and decide feature risk and cost continuations
 
+The capstone shall bind the original Exp8891 execution snapshot and account for
+exactly Exp8891–Exp8903 in order. A rejected primary remains an accounted,
+disqualified producer; a hash-bound conductor skip accounts for the optional
+Qwen slot without inventing inference. Readiness requires all thirteen slots,
+owned validation and replay, while externally blocked science stays blocked.
+Independent reductions shall check signed-feature conjunctions, standalone and
+shared-terminal label costs, final-prefix inclusion, census risk, source-record
+boundaries and complete CPU costs. Keep paired streams, topologies, calibration
+replicates, worlds and service windows separate. Recommendations name observed
+gates and changed mechanisms without editing the exclusion manifest. Retain
+all original failures, censoring, raw operands and executed-source hashes.
+
 Account for thirteen slots including authenticated skips and the capstone self-slot. Preserve all verdict classes and independent denominators. Separate G1-G4 historical publication scope. External absence is blocked; no activation, publication or manifest edit follows.
 
 The experiment shall emit `results/experiment_8903_v761_capstone.json` under the complete V761 contract.
@@ -108928,4 +108940,8 @@ Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
-Status: planned; experiment implementation and execution remain pending.
+Status: implemented in `v761_capstone.py`, `v761_capstone_reduction.py` and the
+Exp8903 CLI, with traced custody, semantic-tamper and cold-reader tests. Measured
+acceptance is recorded in the immutable invocation's validation receipts and
+statement-coverage report; repository health is a separate receipt. This
+reconciliation grants no scientific benefit, publication or activation.

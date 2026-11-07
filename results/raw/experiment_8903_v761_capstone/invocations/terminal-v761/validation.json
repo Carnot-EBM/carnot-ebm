@@ -1,0 +1,378 @@
+{
+  "coverage": {
+    "complete": true,
+    "data_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/.coverage",
+      "sha256": "sha256:39b178079f2d259b392adb6f14197ec1acafa19ee2c35e53e1f571ef4c9ffbfd"
+    },
+    "files": [
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "python/carnot/reporting/v761_capstone.py",
+        "statements": 150
+      },
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "python/carnot/reporting/v761_capstone_reduction.py",
+        "statements": 81
+      },
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "scripts/experiments/experiment_8903_v761_capstone.py",
+        "statements": 6
+      }
+    ],
+    "percent": 100,
+    "report_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/coverage.json",
+      "sha256": "sha256:0c01515ac324fce3304f5b97ee26319658d43e653ab2129b345fe2a75ae87a51"
+    }
+  },
+  "current_work_receipt": {
+    "MODEL_SPECS": [],
+    "current_invocation_events": [],
+    "current_owner_pid": 3466806,
+    "current_run_id": "terminal-v761",
+    "duration_s": 521.515020515,
+    "ended_monotonic_ns": 746634495189085,
+    "event_count": 0,
+    "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "execution_venue": "host",
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "inference_substrate_class": "no_model_load",
+    "inference_substrate_details": {
+      "owned_science_calls": 0
+    },
+    "invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "model_invoked": false,
+    "phase_spans": [
+      {
+        "end_s": 521.515020515,
+        "phase": "custody_and_validation",
+        "start_s": 0
+      }
+    ],
+    "receipt_sidecars": [],
+    "small_ebm_training": {
+      "performed": false
+    },
+    "started_monotonic_ns": 746112980168570
+  },
+  "global_test_debt": {
+    "actual_exit": 124,
+    "argv": [
+      ".venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "deadline_s": 600,
+    "exit_code": 124,
+    "expected_exit": 0,
+    "failure_markers_observed": true,
+    "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/development/global_python_suite.log",
+    "log_sha256": "sha256:5c0e2fa624accd1b6bfb5a5311098d87a52227eaa72db6088142dc05803546cd",
+    "name": "global_python_suite",
+    "normal_exit": false,
+    "passed": false,
+    "reason": "bounded_full_suite_reported_failures_then_timed_out",
+    "scope": "repository_health",
+    "timed_out": true
+  },
+  "historical_publication_gates": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/coverage.ini",
+        "--data-file",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/.coverage",
+        "--parallel-mode",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_v761_capstone_8903.py",
+        "-s"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --rcfile /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/coverage.ini --data-file /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/.coverage --parallel-mode -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_v761_capstone_8903.py -s",
+      "deadline_s": 1200,
+      "duration_s": 320.055956769,
+      "ended_monotonic_ns": 746540344325109,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/owned_tests.stdout",
+      "log_sha256": "sha256:f846217cdf01f542801291bb4dc91720c85cab543640f2a4f291f237c6228720",
+      "name": "owned_tests",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 746220288368340,
+      "started_wall_ns": 1794065723076187179,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/owned_tests.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/owned_tests.stdout",
+      "stdout_sha256": "sha256:f846217cdf01f542801291bb4dc91720c85cab543640f2a4f291f237c6228720",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_restricted_decision_audit_8210.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_experiment_7891_v685_authority_lifecycle.py tests/python/test_restricted_decision_audit_8210.py",
+      "deadline_s": 600,
+      "duration_s": 87.645008443,
+      "ended_monotonic_ns": 746628060745846,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/private_e2e018_021.stdout",
+      "log_sha256": "sha256:bf87162913b428283ca47e59da6eedca07ace21ff71a0bb7ee5e04679d7a14d6",
+      "name": "private_e2e018_021",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 746540415737403,
+      "started_wall_ns": 1794066043203556673,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/private_e2e018_021.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/private_e2e018_021.stdout",
+      "stdout_sha256": "sha256:bf87162913b428283ca47e59da6eedca07ace21ff71a0bb7ee5e04679d7a14d6",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v761_capstone.py",
+        "python/carnot/reporting/v761_capstone_reduction.py",
+        "scripts/experiments/experiment_8903_v761_capstone.py",
+        "tests/python/test_v761_capstone_8903.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/v761_capstone.py python/carnot/reporting/v761_capstone_reduction.py scripts/experiments/experiment_8903_v761_capstone.py tests/python/test_v761_capstone_8903.py",
+      "deadline_s": 120,
+      "duration_s": 0.017060563,
+      "ended_monotonic_ns": 746628471575900,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/ruff_check.stdout",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 746628454515337,
+      "started_wall_ns": 1794066131242334477,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/ruff_check.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/ruff_check.stdout",
+      "stdout_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v761_capstone.py",
+        "python/carnot/reporting/v761_capstone_reduction.py",
+        "scripts/experiments/experiment_8903_v761_capstone.py",
+        "tests/python/test_v761_capstone_8903.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/v761_capstone.py python/carnot/reporting/v761_capstone_reduction.py scripts/experiments/experiment_8903_v761_capstone.py tests/python/test_v761_capstone_8903.py",
+      "deadline_s": 120,
+      "duration_s": 0.016762843,
+      "ended_monotonic_ns": 746629475623147,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/ruff_format.stdout",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 746629458860304,
+      "started_wall_ns": 1794066132246679233,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/ruff_format.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/ruff_format.stdout",
+      "stdout_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/v761_capstone.py",
+        "python/carnot/reporting/v761_capstone_reduction.py",
+        "scripts/experiments/experiment_8903_v761_capstone.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict python/carnot/reporting/v761_capstone.py python/carnot/reporting/v761_capstone_reduction.py scripts/experiments/experiment_8903_v761_capstone.py",
+      "deadline_s": 120,
+      "duration_s": 1.474314756,
+      "ended_monotonic_ns": 746631935527544,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/mypy.stdout",
+      "log_sha256": "sha256:d89f63ff3e19bd51debb85dbf6eee903950859b9a145e2cab7835efcd1725ab9",
+      "name": "mypy",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 746630461212788,
+      "started_wall_ns": 1794066133249032078,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/mypy.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/mypy.stdout",
+      "stdout_sha256": "sha256:d89f63ff3e19bd51debb85dbf6eee903950859b9a145e2cab7835efcd1725ab9",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_v761_capstone_8903.py"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_v761_capstone_8903.py",
+      "deadline_s": 120,
+      "duration_s": 0.034883568,
+      "ended_monotonic_ns": 746632499705395,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/spec_coverage.stdout",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 746632464821827,
+      "started_wall_ns": 1794066135252640886,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/spec_coverage.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/spec_coverage.stdout",
+      "stdout_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "timed_out": false
+    },
+    {
+      "name": "owned_statement_coverage",
+      "passed": true,
+      "reference": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/coverage.json",
+        "sha256": "sha256:0c01515ac324fce3304f5b97ee26319658d43e653ab2129b345fe2a75ae87a51"
+      }
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/publication_gate.py --json",
+      "deadline_s": 120,
+      "duration_s": 0.166820941,
+      "ended_monotonic_ns": 746633659988693,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/historical_publication_gates.stdout",
+      "log_sha256": "sha256:e1b5f037271823dc0bcb132094749a1a0ce08f27d22c7f17573e052379a2a725",
+      "name": "historical_publication_gates",
+      "normal_exit": true,
+      "passed": true,
+      "scope": "owned",
+      "started_monotonic_ns": 746633493167752,
+      "started_wall_ns": 1794066136280986481,
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/historical_publication_gates.stderr",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/checks/historical_publication_gates.stdout",
+      "stdout_sha256": "sha256:e1b5f037271823dc0bcb132094749a1a0ce08f27d22c7f17573e052379a2a725",
+      "timed_out": false
+    }
+  ],
+  "repository_health": {
+    "actual_exit": 124,
+    "argv": [
+      ".venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "deadline_s": 600,
+    "exit_code": 124,
+    "expected_exit": 0,
+    "failure_markers_observed": true,
+    "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/development/global_python_suite.log",
+    "log_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/invocations/terminal-v761/repository_health/5c0e2fa624accd1b6bfb5a5311098d87a52227eaa72db6088142dc05803546cd/global_python_suite.log",
+      "sha256": "sha256:5c0e2fa624accd1b6bfb5a5311098d87a52227eaa72db6088142dc05803546cd",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8903_v761_capstone/development/global_python_suite.log"
+    },
+    "log_sha256": "sha256:5c0e2fa624accd1b6bfb5a5311098d87a52227eaa72db6088142dc05803546cd",
+    "name": "global_python_suite",
+    "normal_exit": false,
+    "passed": false,
+    "reason": "bounded_full_suite_reported_failures_then_timed_out",
+    "scope": "repository_health",
+    "timed_out": true
+  }
+}
