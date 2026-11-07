@@ -21526,3 +21526,4 @@ code |
 | 2026-11-07 20:17 UTC | Freeze candidate promotion for the signed energy h | OK | 97 passed, 1 warning in 45.12s |
 | 2026-11-07 21:03 UTC | Prove safe refusal before an impossible final cert | OK | 93 passed, 1 warning in 43.98s |
 | 2026-11-07 21:52 UTC | Qualify retained observer bytes across later spec  | OK | 97 passed, 1 warning in 91.52s (0:01:31) |
+| 2026-11-07 22:27 UTC | Audit paired natural-text annotation criteria and  | OK | 109 passed, 1 warning in 24.96s |
