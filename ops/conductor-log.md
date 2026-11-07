@@ -21499,3 +21499,4 @@ code |
 | 2026-11-07 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8871_v759_size_aware_verifier.json age-week 0: OPEN 1 days: CLAIM_OVE |
 | 2026-11-07 00:21 UTC | Measure bounded Qwen extraction against paired sou | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8878-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-07 01:08 UTC | Measure complete cost of query-only and verified d | OK | 94 passed, 1 warning in 81.12s (0:01:21) |
+| 2026-11-07 01:40 UTC | Map measured certificate and adaptation work to su | OK | 86 passed, 1 warning in 105.76s (0:01:45) |
