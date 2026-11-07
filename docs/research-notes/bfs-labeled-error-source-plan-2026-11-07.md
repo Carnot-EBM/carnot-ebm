@@ -32,3 +32,7 @@ Why: the step 1 audit (`label-provenance-audit-step1-2026-11-07.md`) found zero 
 ## Open decision for the operator
 
 Run the pilot through the conductor (needs a roadmap task) or by hand on GPU 0 from the outer loop. GPU 0 belongs to the conductor under the 2026-06-27 allocation, and the outer loop owns GPU 1, which is detached. The conductor route fits the allocation. I have not queued anything.
+
+## Addendum 2026-11-07: decision recorded (append-only)
+
+The operator answered "Yes" to the conductor route. The pilot is queued as a priority entry in `ops/known-issues.md` (in HEAD via conductor commit `ba944dec5e`). The planner has not drafted the task yet. Nothing has run. The open decision above is closed.
