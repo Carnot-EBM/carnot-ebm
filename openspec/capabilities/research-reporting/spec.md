@@ -108774,11 +108774,28 @@ and terminal verdict_class. Readiness shall remain separate from scientific bene
 
 #### SCENARIO-REPORT-8898-CONTRACT
 
+The audit SHALL authenticate both original V761 producers and their retained
+operands, then reconstruct both feature arms without optimizer calls. Preserve
+all36864 scheduled rows,24 paired streams, checkpoints0/24/48 and eight online
+topology strata. Old-feature controls SHALL have their own conjunction.
+Retain all27 development-frozen estimands. The additional direct signed-minus-old
+matched_true future Brier attribution interval SHALL split the error allocation
+of the signed-minus-old query-only diagnostic slot equally with that diagnostic;
+the other26 allocations remain unchanged. Thus family error remains0.01 without
+relaxing any benefit or retention margin. Report every operand and the split.
+Private success, external absence, failed owned controls, duplicate units,
+schema/work/release drift and rehashed headline tampering SHALL be tested.
+Constant/zero-signal controls SHALL be recomputed from retained predictions,
+without rerunning training. A null retires only the tested signed-local-v1 scope
+and recommends one changed development intervention tied to a failing gate.
+
 Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
-Status: planned; experiment implementation and execution remain pending.
+Status: implemented; all36864 operands reconstruct without training and32 scoped
+tests pass. The final artifact owns terminal coverage and E2E receipts. Ops and
+traceability reconciliation remains conductor-owned.
 
 ### REQ-REPORT-8899: Measure complete request attribution with qualified buffered clocks
 
