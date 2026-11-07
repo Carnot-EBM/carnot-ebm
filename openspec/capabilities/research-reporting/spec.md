@@ -108716,17 +108716,53 @@ ops and traceability reconciliation remain conductor-owned.
 
 Expose opt-in separate record decision, typed-source coverage and source semantics. Validate caller-owned complete typed-source ledgers. Hashes or quoted spans alone shall not establish natural-text completeness. Preserve exact record decisions and existing defaults.
 
+The opt-in callable shall use the existing size-aware exact witness unchanged.
+It shall return `record_decision`, `source_coverage_status` and
+`source_semantics_status` separately. Both source statuses default to `unknown`.
+A complete ledger contains unique stable record IDs, signed facts and a SHA256
+of supplied typed-source bytes. The bytes encode the complete ledger records.
+Reject missing or duplicate IDs, changed signs, foreign records, source hash
+drift and ledger/source disagreement. Equal ID-to-fact maps establish `complete`
+coverage of that supplied typed source only. A proper subset is `incomplete`;
+malformed provenance is `invalid`. None changes the record decision or proves
+natural-language semantics. Record order and entity names shall not affect claims.
+
+Freeze120 new worlds before scoring, with five paired views per world: complete,
+missing hop, irrelevant removal, inserted conflict and omitted conflict. Compare
+the unchanged view-only path with valid, absent and corrupted ledgers on identical
+visible records. Full-source labels remain evaluator-only. Retain all scheduled
+units, source/view/ledger hashes and per-world errors. Require exact decision
+parity, zero unsupported source claims and rejection of every malformed control.
+Exercise the actual callable installed privately outside the checkout. Success
+is `circular_positive`, with independent generalization fixed at zero. Set
+`source_boundary_ready_score` only after provenance and semantic parity qualify.
+No default API, release, validator or exclusion-manifest change is authorized.
+
 The experiment shall emit `results/experiment_8897_v761_source_bound_decisions.json` under the complete V761 contract.
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
 
 #### SCENARIO-REPORT-8897-CONTRACT
 
+Tests shall cover supported but source-incomplete views separately from logically
+insufficient views, identical views with opposite full-source labels, empty and
+malformed ledgers, exhausted exact budgets, order/rename invariance, external
+absence and observed-zero/rejected authorities. Cold replay shall reject changed
+raw bytes and rehashed false aggregates. Measure100 percent of new unit/child
+statements with zero exclusions. Ops and traceability reconciliation is conductor-owned.
+
 Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
 Status: planned; experiment implementation and execution remain pending.
+
+Implementation 20261107: the opt-in callable, paired-world module and dated CLI
+are implemented. All26 scoped tests pass. The private pilot completes120 worlds
+and7800 rows with zero unsupported claims. It passes unchanged artifact scanners
+and outside-checkout cold replay. Terminal validation receipts retain measured
+unit/child coverage, strict checks and private E2E outcomes. Source semantics
+remain unknown. Ops and traceability reconciliation remains conductor-owned.
 
 ### REQ-REPORT-8898: Audit feature-specific future benefit and untouched retention
 
