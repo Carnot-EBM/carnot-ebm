@@ -914,3 +914,19 @@ ARC tasks remain suspended. Board mapping retains KV260, PolarFire and GateMate
 operation limits, and capstone readers retain missing branch evidence. These
 are planned studies, not deployed behavior or scientific findings. The original
 truncated V759 design and complete active queue are preserved separately.
+
+## Planned V761 feature and evidence boundaries — 2026-11-06
+
+The staged thirteen-task plan retains the causal template store, linear energy
+head and exact witness evaluator. Two development-frozen relational features
+retain explicit refutation and local binding overlap. Eight matched causal arms
+separate feature information, correct labels and template admission. Prediction
+sealing, delayed feedback, atomic acknowledgment and untouched retention remain.
+
+Independent risk work adds shared final certificate tests to early stopping.
+An opt-in wrapper separates record decisions, caller-owned typed-source coverage
+and unknown natural-text semantics. Buffered non-overlapping phase clocks must
+qualify before complete-cost attribution. Hardware mappings retain actual board
+limits and unknown fractions. Optional bounded Qwen generation needs new causal
+CUDA evidence. ARC remains suspended. This is planned work only; no runtime
+behavior, learning gain, source fidelity or physical speedup is newly established.

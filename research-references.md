@@ -55446,3 +55446,103 @@ Exp8870 qualifies useful constructed certificates but records grouped/pooled
 parity and zero robustness advantage. Exp8874 qualifies complete measurements
 but fails the speed-benefit conjunction. These motivate new information controls,
 label-cost measurement and cost attribution, rather than another unchanged run.
+
+## V761 planning scan — 2026-11-06 America/New_York
+
+Recorded before designing milestone 2026.11.761. The completed archive ends at
+V759; V760's twelve primaries and one conductor gate skip supply current results.
+External papers supply methods to test. They do not establish Carnot benefits.
+
+### Promising methods and explicit limits
+
+| Primary source | Finding checked | Use in the next research question |
+|---|---|---|
+| [SURE-RAG v2](https://arxiv.org/html/2605.03534v2), May 5 / July 24, 2026 | Evidence sufficiency depends on the set of claims and evidence. Its controlled benchmark and natural hallucination transfer differ. | Test explicit signed evidence and local binding features before changing the small energy head. Preserve separate source-fidelity and record-sufficiency outputs. This is a constructed adaptation, not a reproduction of its neural verifier. |
+| [Memoir](https://arxiv.org/html/2607.20792v1), July 22, 2026 | Coupled memory writes underperform matched read-only pondering on its procedural recall task. | Keep prediction-before-release, frozen controls, equal work and untouched retention. More memory activity is not evidence of learning. No generator weights change. |
+| [Sequential Certification of Threshold Decisions](https://arxiv.org/html/2609.01968v1), September 2, 2026 | Finite monitoring schedules require simultaneous coverage. Decision-relevant support can remain insufficient despite a stable fit. | Use a shared final certificate test to make sequential versus fixed coverage inclusion checkable for every draw. Retain exact binomial bounds; do not import the paper's asymptotic logistic guarantee. |
+| [Specification-Guided Generation](https://arxiv.org/html/2610.41511v1), October 30, 2026 | Symbolic feasibility can restrict generation beyond grammar validity. The formal specification is supplied separately. | Keep formal-input validity separate from faithful extraction. Test a source-bound typed-record boundary. Defer decoder integration: it does not resolve missing source evidence or the retired grammar-reprompt mechanism. |
+| [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), July 19, 2026 | Matched density and relabeling reveal that solver hardness and model behavior can diverge. | Match feature work, query structures and label exposure. Use name/order transformations and label-free controls; solver difficulty is not an independent learning metric. |
+| [FPGA–ASIC co-design v2](https://arxiv.org/abs/2602.15985), February 17 / September 4, 2026 | Digital orchestration can dominate a fast physical Ising core. | Qualify low-overhead timing before assigning cost to hardware. Include host work, transfer and durable state. Published chip results do not establish support on Carnot's boards. |
+
+The shared-final-test construction is a new local proposal inspired by sequential
+certification, not a theorem claimed by the cited paper. Its proof and finite
+controls must qualify before measurement. V760 already saved 2,574 labels on
+average for the learned-policy standalone comparison. Its coverage interval was
+too wide for the joint gate, and shared-union label savings were zero. Do not
+misdescribe that result as zero standalone savings or zero certificate coverage.
+
+### Required topic coverage and deferred ideas
+
+- **EBM verification/reasoning:** checked [EBT](https://arxiv.org/abs/2507.02092)
+  (July 2025) and [ARM–EBM](https://arxiv.org/abs/2512.15605) (December 2025,
+  May 2026 revision). These motivate energy models; energy decrease alone does
+  not establish correct source reasoning.
+- **Neural constraint satisfaction:** checked [T-SKM-Net](https://arxiv.org/abs/2512.10461)
+  (December 2025) and [FSNet](https://arxiv.org/abs/2506.00362) (May 2025).
+  Encoded feasibility guarantees cannot certify a missing natural-language premise.
+- **Ising applications in ML:** [Neural Ising Machines](https://arxiv.org/abs/2602.00302)
+  (January 2026) learns compact update rules; [Thermodynamic learning](https://arxiv.org/abs/2609.04732)
+  (September 2026) studies learning in an Ising system. Keep them as sampler
+  research leads. A three-class exact normalizer does not need an MCMC sampler.
+- **Hallucination detection:** SURE-RAG supplies the immediate feature and
+  source-boundary ideas. Natural-text performance remains unestablished locally.
+- **KAN:** [KAN-CL](https://arxiv.org/abs/2605.12306) (May 2026) and
+  [Catastrophic Forgetting in KANs](https://arxiv.org/abs/2511.12828) (November
+  2025) support explicit retention tests. Defer another spline or anchoring
+  variant until the current feature ambiguity is measured.
+- **Guided generation:** checked Specification-Guided Generation and
+  [Primal-Dual Guided Decoding](https://arxiv.org/abs/2605.09749) (May 2026).
+  The latter targets discrete diffusion. Its bounds do not transfer to Qwen GGUF.
+- **Hardware sampling:** FPGA–ASIC co-design and Extropic updates below keep
+  complete costs and operation compatibility central.
+- **Continual learning:** Memoir and [capacity-constrained delayed learning](https://arxiv.org/abs/2606.11711)
+  (June 2026) motivate causal reads, pending-label accounting and tail drains.
+  Their results do not prove benefits for Carnot's mutable template library.
+
+### Requested secondary channels
+
+- **OpenReview:** searched NeurIPS/ICML/ICLR EBM work. A retrieved
+  [EBT final manuscript](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  identifies itself as an ICLR 2026 conference paper. The older
+  [reasoning submission](https://openreview.net/pdf?id=bYkfHTcR1v) still says
+  under review; no acceptance is inferred for it.
+- **Semantic Scholar:** browser citation requests failed. A direct API request
+  for [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  returned twenty entries and a next-page cursor. The ARM–EBM endpoint returned
+  HTTP 429. Coverage is partial, not an exhaustive citing-paper survey.
+  Verified EBT citation leads include Memoir, Solver-Hard Is Not Model-Hard,
+  [Certified Access](https://arxiv.org/abs/2610.39073) (October 29), and
+  [Energy-Based Policy Orchestration](https://arxiv.org/abs/2611.02546) (November 2).
+  Certified Access uses a designed analytic memory testbed. EPO selects
+  policy-specific goals in robotics. Neither is evidence for a text verifier;
+  defer both architectures while retaining their mechanism-specific evaluations.
+- **Hugging Face:** checked [verification papers](https://huggingface.co/papers?q=verification)
+  as a discovery index. Primary paper dates and versions control the findings.
+- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). These retrieved views
+  did not establish a relevant new ranked EBM/KAN repository. No trending or
+  dependency claim follows from the paper code links.
+- **Extropic:** checked [Writing](https://extropic.ai/writing), the
+  [October 1 research-agent update](https://extropic.ai/writing/baby-thermo-rsi/),
+  and [Torx, Thermalizers and Z1](https://extropic.ai/writing/from-one-to-one-billion).
+  The latter is labeled Summer 2026 despite a separate 2025 page label. Treat it
+  as a vendor announcement with date ambiguity. Simulator access and vendor
+  efficiency estimates are not physical TSU measurements on Carnot.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The page describes a constraint layer beneath language models. It supplied no
+  new reproducible method or benchmark protocol for this plan.
+
+### Local decisions before design
+
+Exp8886 establishes a true-versus-permuted Brier upper bound of -0.0031523,
+but true-versus-frozen upper is -0.0066648 against the required -0.01. Interim
+retention error upper is 0.0246918 against 0.01. Retire the unchanged feature
+mechanism; keep the same benefit and retention thresholds for a changed feature
+study. Exp8882's resident instrumentation added roughly 33–47 percent at small
+sizes, with failed clock closure. A coarser buffered observer must qualify before
+cost attribution. Exp8883 demonstrates that identical visible records can hide
+source differences. Missing source coverage must remain explicit.
+
+ARC work remains suspended by the November 5 operator directive. Qwen remains
+`unsloth/Qwen3.8-27B-GGUF`; a small fixed-token run uses bounded-generation
+classification. New hardware purchases and unchanged CUDA probes are deferred.

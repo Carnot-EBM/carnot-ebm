@@ -23248,3 +23248,17 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-07: Measure complete cost of query-only and verified delayed adaptation (⚠️ Research Finding) — honest_verdict=complete_null_matched_adaptation_cost; results/experiment_8888_v760_matched_adaptation_cost.json
 - 2026-11-07: Map measured certificate and adaptation work to supported hardware (⚠️ Research Finding) — honest_verdict=complete_null_hardware_operation_map; results/experiment_8889_v760_hardware_operation_map.json
 - 2026-11-07: Reconcile thirteen outcomes and decide information risk and cost continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v760_capstone; results/experiment_8890_v760_capstone.json
+
+## 2026-11-06 America/New_York — Plan milestone 2026.11.761
+
+- Record a 2025–2026 source scan before design, including partial EBT citation
+  discovery and the ARM–EBM rate limit. Separate vendor claims from local evidence.
+- Preserve V760 design and queue. Stage thirteen matching full task objects,
+  Exp8891–Exp8903, across four phases in the design and next-roadmap YAML.
+- Test changed signed features with the original learning/retention thresholds,
+  shared-final certificate inclusion, source/record separation and buffered clocks.
+- Measure complete durable feature costs; gate optional Qwen generation on new
+  runtime evidence. Preserve ARC suspension and hardware operation limits.
+- Add planned OpenSpec requirements, BMAD traceability and architecture boundaries.
+  Contract/schema, gate-field, exclusion and prior-failure checks pass. Remaining
+  planning validation is in progress; no experiment, activation or push occurred.

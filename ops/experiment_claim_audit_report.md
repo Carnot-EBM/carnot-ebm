@@ -12,142 +12,76 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 3 |
-| CLAIM_OVERSTATED | 1 |
 | NO_CLAIM | 4 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_8868_v759_conditional_risk_methods.json
+## experiment_8883_v760_evidence_loss_boundary.json
 
-**CLAIM_SUPPORTED**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The scoped conditional-risk evaluation reports an exact paired coverage tie and checked methods readiness, without claiming superiority or independent generalization.
-
-## WHAT WOULD REFUTE IT
-A nonzero paired coverage difference would contradict the reported exact tie. Failed separation, failed controls, or an incorrectly constructed certificate would undermine methods readiness.
-
-Any future added-value claim would need to beat a simple query-only acceptance rule using the same exact certification without the trained energy head.
-
-## WAS THAT CHECKED
-Yes, at the reported-summary level: 40 independent replicates report zero paired differences, controls passed, and no certificate failures were recorded. Selection precedes independent certification, with the population census evaluated afterward, giving discrepancies a chance to appear.
-
-The oracle defines correctness, but the artifact claims neither verifier benefit nor independent generalization. The displayed stress rows with false validity flags cannot establish guarantees; no universal guarantee is claimed.
-
-The elided rows prevent checking comparator identities and aggregation filters directly. That limits auditability without contradicting this descriptive null.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_null_conditional_risk_methods`
-- `verdict_class`: `null`
-- `paired_coverage_difference`: `0.0`
-- `independent_replicates`: `40`
-- `certificate_failure_count`: `0`
-- `benefit_required`: `false`
-- `methodology_note`: `Familywise .01 applies per replicate. Readiness is valid methods, not benefit. Oracle labels cannot establish independent generalization.`
-- `verifier_is_oracle`: `true`
-- `independent_generalization_score`: `0`
-- `validity_guarantee`: `false`
-- `scope`: `descriptive finite census; no superiority or universal guarantee claim`
-
-## RECOMMENDATION
-KEEP
-
-Unchecked: elided comparator rows and aggregation filters; support remains limited to the stated descriptive null.
-
-## experiment_8869_matched_memory_methods.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this artifact records a blocked prerequisite gate and makes no comparative or performance claim.
-
-## WAS THAT CHECKED
-The prerequisite gate was checked and failed: diagnosis_ready_score was 0 against required 1. Method performance was not tested; interpreting this receipt as successful qualification would be unsupported.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `diagnosis_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `passed`: `false`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8870_v759_conditional_risk_evaluation.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Learned-energy policies meet the conditional utility gates, but grouping demonstrates no robustness advantage over pooling in these constructed oracle-labeled worlds.
-
-## WHAT WOULD REFUTE IT
-A grouped-versus-pooled excess-risk reduction with simultaneous 99% lower bound above zero, while grouped utility passes, would overturn the comparative null. Coverage below the required floor or a served-group risk above 0.05 would contradict the utility claim.
-
-## WAS THAT CHECKED
-Yes, through paired replicate comparisons and policy-specific utility summaries. The displayed paired reductions are zero; both learned-energy protocols pass utility. Pooling the same learned scores is the cheapest serious rival, and it ties.
-
-Selection precedes certification labels, and certification precedes census labels, allowing coverage and safety failures to appear. Oracle correctness supports conditional measurement; no independent generalization or added verifier value is claimed. Rows flagged outside the validity guarantee establish observed outcomes only, not guaranteed safety.
-
-## EVIDENCE
-- `honest_verdict`: `complete_null_conditional_risk_evaluation`
-- `learned_energy`: `comparison`: `parity`; `robustness_advantage`: `0`
-- `utility_by_protocol`: `grouped`: `1`; `pooled`: `1`
-- `paired_replicate_rows`: `worst_mixture_excess_reduction`: `0.0`; `balanced_coverage_gain`: `0.0`
-- `methodology`: `Reexecute all40 sealed paired calibration replicates on authenticated fixed scores and groups; selection before certification labels, certificates before census labels; compute exact accepted/error masses for five fixed mixtures. Bonferroni bounded Hoeffding intervals over36 fixed quantities. Seeds average within replicate. Separate corruption changes within-group evidence/outcome distribution and...(418 chars)`
-- `independent_generalization_score`: `0`
-- `exposure_scope`: `constructed signed relational worlds; exact oracle labels; no natural-language or oracle-distinct generalization`
-
-## RECOMMENDATION
-KEEP
-
-No rerun or inspection of elided rows; the reported null does not establish equivalence.
-
-## experiment_8871_v759_size_aware_verifier.json
-
-**CLAIM_OVERSTATED**
+> Audit-integrity guard: quoted evidence [', and '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
 
 ## VERDICT
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-The size-aware verifier earns a positive verdict from qualification against its own exact-oracle task.
+The positive evidence-loss-boundary verdict implies that exact-view verification demonstrates added value beyond the frozen learned heads.
 
 ## WHAT WOULD REFUTE IT
-A decision or witness-multiset disagreement would refute correctness. For added value, the existing indexed verifier achieving equal correctness and completion at equal or lower complete cost would defeat the positive interpretation.
+Verifier errors against independently defined correctness would challenge its claimed benefit. The cheap exact_view-only solver matching learned_exact_view on errors and decisive coverage across paired views would defeat any claimed benefit from adding the learned component.
 
 ## WAS THAT CHECKED
-Correctness parity was checked: displayed boundary and witness-multiset checks pass. Added value was not established: the verifier defines correctness, and the methodology explicitly has no benefit gate. These checks support implementation qualification, but cannot justify a positive value verdict.
+No independent test of verifier value is established: the trusted pre-pass identifies the verifier as the correctness oracle. Agreement supports execution-grounded behavior, but makes the value claim circular.
+
+Omission controls report passing. The exact_view baseline is present, and all three arms tie on the displayed complete-view case; the elided comparisons prevent concluding a global tie or advantage. Generalization and source-fidelity scores are explicitly zero, so neither warrants an additional accusation.
 
 ## EVIDENCE
-
-- `honest_verdict`: `complete_circular_positive_size_aware_verifier`
-- `verdict_class`: `circular_positive`
-- `verifier_is_oracle`: `true`
-- `size_dispatch_ready_score`: `1`
-- `semantic_parity_rows`: `check`: `exact_witness_multiset`, `passed`: `true`
-- `exposure_scope`: `constructed signed-record exact oracle; no natural language, speed or Rust claim`
+- `honest_verdict`: `complete_circular_positive_evidence_loss_boundary`
+- `visible_view_truth`: `Independent entailment from the exact visible record set.`
+- `omission_controls`: `missing_hop_exact_abstention`: `true`; `irrelevant_removal_invariance`: `true`
+- The displayed `complete` rows for `learned`, `learned_exact_view`, and `exact_view` each have `view_semantic_error`: `0`, `wrong_source_acceptance`: `0`, and `decisive_coverage`: `1`.
+- `independent_generalization_score`: `0`; `source_fidelity_established_score`: `0`
 
 ## RECOMMENDATION
 NARROW_CLAIM
 
-Not checked: elided rows or referenced files. Risk: the positive verdict can promote execution parity into unsupported evidence of value.
+Not checked: elided rows or reruns. Risk: the positive verdict promotes circular oracle agreement into evidence of added value.
 
-## experiment_8874_v759_size_aware_complete_cost.json
+## experiment_8884_v760_topology_causal_streams.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative benefit claim is asserted. Its operational readiness assertion would fail if required rows were missing, predictions used feedback before sealing, or required controls failed.
+
+## WAS THAT CHECKED
+Operational checks are reported through completion counts, prediction seals, release ordinals and passing controls. Comparative effects are explicitly descriptive; independent benefit testing belongs to Exp8886. Oracle status therefore does not create a circular value claim here.
+
+## EVIDENCE
+`honest_verdict`: `complete_null_topology_causal_streams`
+
+`verdict_class`: `null`
+
+`independent_benefit_score`: `0`
+
+`independent_generalization_score`: `0`
+
+`Complete causal evidence and original validation release independent audit; no scientific benefit claim.`
+
+`Frozen Exp8881 paired bootstrap estimates are descriptive; Exp8886 independently tests benefit.`
+
+## RECOMMENDATION
+KEEP
+
+Elided rows and Exp8886 were not checked; this artifact does not establish independent benefit.
+
+## experiment_8885_v760_sequential_label_cost.json
 
 **CLAIM_SUPPORTED**
 
@@ -155,30 +89,63 @@ Not checked: elided rows or referenced files. Risk: the positive verdict can pro
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Size-aware dispatch did not demonstrate complete-cost benefit under the declared mixture and guard requirements.
+This run did not establish sequential label-cost savings under the prespecified coverage and safety gates.
 
 ## WHAT WOULD REFUTE IT
-A resident mixture speed-ratio lower bound above 1, alongside size-8 and size-16 latency-regression upper bounds at most 5%, exact completed parity, no coverage loss, and no increased false acceptance, would overturn this reported null.
+A learned-family savings lower bound above zero, with coverage-difference lower bounds at least −0.01 in every original mixture and served-group census risks at most 0.05, would contradict the reported gated null.
 
 ## WAS THAT CHECKED
-Yes. Both boundaries report failed mixture-speed gates. The visible cold mixture interval crosses 1, and its size-8 regression upper bound exceeds 5%.
+Yes: paired costs, coverage contrasts, simultaneous intervals and census risks address those gates. The serious comparator—fixed-budget certification of the same policy—is present.
 
-Timing is independently measured; oracle-defined correctness does not predetermine speed. No model generalization benefit is claimed. The existing indexed implementation is a serious baseline and is present alongside scan. Censored observations are explicitly identified and stress is reported separately. These findings support failure to establish benefit, not proof that every workload receives no speedup.
+The displayed shared-union costs tie. Learned standalone savings are recorded, but positive point savings alone do not establish the joint acceptance criteria. Oracle-defined correctness supports this scoped measurement; the artifact claims neither verifier value nor independent generalization. Certificate refusals remain paid observations rather than being excluded as invalid.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_size_aware_complete_cost`.
-- `benefit_gates`: both `cold` and `resident` report `mixture_speed_lower_above_one`: `false`.
-- `paired_intervals` → `cold` → `size_aware` → `mixture` → `speed_ratio`: `lower`: `0.9863942115219428`; `upper`: `1.0291241675870688`.
-- `cold` → `size_aware` → `8` → `latency_regression`: `upper`: `0.05056101728964857`.
-- `cold_speed_claim`: `false`; `independent_generalization_score`: `0`; `inference_substrate`: `no_model_load`.
-- `arm`: `indexed`, `size_aware`, `scan`; `censored_count`: `960`; `status`: `censored`; `stress_separate`: `true`.
+
+- `honest_verdict`: `complete_null_sequential_label_cost`; `verdict_class`: `null`; `label_savings_score`: `0`.
+- `shared_union_costs`: `fixed_total_labels`: `4800`; `sequential_total_labels`: `4800`.
+- `standalone_costs`: `arm`: `learned_energy`; `fixed`: `4800`; `sequential`: `2160`.
+- `agreement_only/balanced/coverage_difference`: `estimate`: `0.0`; `lower_99`: `-0.6493770700631948`.
+- `verifier_is_oracle`: `true`; `independent_generalization_score`: `0`.
+- `methodology_note`: `Constructed oracle truth establishes no independent generalization.`
 
 ## RECOMMENDATION
 KEEP
 
-Not rerun; elided rows limit independent checks of aggregation and row inclusion.
+Not checked: elided rows or execution. This supports a run-specific failure to establish savings, not universal absence of savings.
 
-## experiment_8875_qwen_source_canary.json
+## experiment_8886_v760_label_benefit_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The audited matched-label mechanism did not meet the prespecified joint requirements for label benefit and retention on constructed signed-record streams.
+
+## WHAT WOULD REFUTE IT
+All eight joint gates passing: the simultaneous upper bounds meet the required Brier improvements against frozen and permuted comparators, and retention Brier and error increases stay within 0.01 at every checkpoint.
+
+## WAS THAT CHECKED
+Yes. The joint gate rows report all eight checks across 24 paired streams. Two fail: the online Brier upper bound against the frozen comparator is −0.006665 versus a required −0.01, and the checkpoint-24 retention error upper bound is 0.024692 versus an allowed 0.01.
+
+The frozen comparator is a serious baseline; the conclusion does not rely solely on beating permuted labels. Oracle-defined correctness supports this scoped measurement without establishing verifier value. The artifact claims no independent generalization. Visible rows contain the metric fields and complete statuses; no exclusions are reported.
+
+## EVIDENCE
+
+- `honest_verdict`: `complete_null_label_benefit_audit`; `verdict_class`: `null`; `label_benefit_score`: `0`.
+- `matched_true_minus_frozen_verified`, `online`, `brier`: `upper`: `-0.006664814992460993`; `threshold`: `-0.01`; `passed`: `false`.
+- `matched_true_minus_frozen_verified`, `retention`, `checkpoint`: `24`, `error`: `upper`: `0.02469184027777752`; `threshold`: `0.01`; `passed`: `false`.
+- `independent_count`: `24`; `independent_generalization_score`: `0`; `verifier_is_oracle`: `true`.
+- `exposure_scope`: `Constructed signed-record truth only; no natural-language generalization or generator training.`
+- `excluded_count`: `0`; `status`: `complete`; `missing_reason`: `null`.
+
+## RECOMMENDATION
+KEEP
+
+Elided rows and source code were not checked. Failure to pass the joint gates does not prove zero benefit.
+
+## experiment_8887_qwen_source_canary.json
 
 **NO_CLAIM**
 
@@ -189,24 +156,54 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No source-fidelity conclusion is asserted. This artifact records a blocked prerequisite check, so there is no experimental claim to falsify.
+Not applicable: this artifact records a blocked prerequisite check and asserts no extraction-performance or comparative result.
 
 ## WAS THAT CHECKED
-Source fidelity was not checked; execution stopped at `conductor_pre_gate`. The prerequisite failure is explicitly recorded: the readiness score was 0 against a required 1. Fidelity remains undetermined.
+The prerequisite gates were checked; runtime readiness failed. The intended extraction comparison did not run, so its possible refutation remains untested.
 
 ## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `runtime_repair_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `blocked_at_layer`: `conductor_pre_gate`
+`honest_verdict`: `blocked_gate_check_failed`; `status`: `blocked`; `failed_field`: `runtime_repair_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8876_v759_hardware_operation_budget.json
+No rerun performed; extraction performance remains untested.
+
+## experiment_8888_v760_matched_adaptation_cost.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The completed four-arm CPU cost comparison detects no statistically resolved cost difference, without claiming quality improvement or speed benefit.
+
+## WHAT WOULD REFUTE IT
+Any reported familywise-adjusted paired interval excluding zero would contradict the cost null. Incomplete paid work or a restart-state mismatch would contradict the separate readiness assertion.
+
+## WAS THAT CHECKED
+Yes. All six paired cost intervals across 12 streams cross zero, including comparisons against the serious frozen baselines. Completion counts and restart receipts also report success.
+
+The oracle defines correctness, but the claim concerns measured cost rather than verifier value. No generalization benefit is asserted. The null therefore survives these checks; it does not establish equal costs.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_matched_adaptation_cost`
+- `adaptation_cost_ready_score`: `Complete paid work and exact restart parity; never scientific benefit.`
+- `scope`: `complete CPU cost only; no admitted scientific quality evidence`
+- `speed_claim`: `false`
+- `control_arm`: `frozen_verified`; `treatment_arm`: `matched_true`; `lower_ns`: `-1217350045.0124445`; `upper_ns`: `386200776.3457779`
+- `control_arm`: `matched_true`; `treatment_arm`: `matched_permuted`; `lower_ns`: `-698042565.9393728`; `upper_ns`: `1189377194.272706`
+- `paired_streams`: `12`; `missing_pairs`: `0`
+- `intended_count`: `48`; `completed_count`: `48`; `excluded_count`: `0`; `failed_count`: `0`
+- `exact_state`: `true`; `process_ids_paid`: `true`
+
+## RECOMMENDATION
+KEEP
+
+Elided rows were not independently checked; non-detection must not be presented as cost equivalence.
+
+## experiment_8889_v760_hardware_operation_map.json
 
 **NO_CLAIM**
 
@@ -217,26 +214,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no asserted hardware advantage to falsify. A compatible device workload beating the best installed CPU arm on complete end-to-end latency would contradict the stated absence of measured benefit if such evidence appeared here.
+Equal or slower complete board runtime than existing CPU/native batching, at matched correctness, would refute an acceleration claim. This artifact makes no such claim; it records an operation map and withholds acceleration qualification.
 
 ## WAS THAT CHECKED
-No physical comparison was performed. This artifact inventories upstream CPU evidence, records missing learning inputs, and leaves hardware qualification blocked. Its audit pass does not assert acceleration, verifier value, or generalization. The displayed unsupported board rows are explicitly CPU inventory.
+No acceleration comparison was performed. The artifact reports zero physical probes and null board timings and gain bounds. Its audit completion does not assert a measured performance benefit.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_blocked_hardware_operation_budget`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `reason`: `no measured complete supported physical workload benefit`
-- `count_scope`: `CPU inventory only; absent counts and component times are unknown`
-- `measured_board_time_s`: `null`
+- `honest_verdict`: `complete_null_hardware_operation_map`
+- `principle`: `Valid mapping evidence does not establish acceleration`
 - `physical_probes_performed`: `0`
-- `research_100x`: `unknown end-to-end gain; first measure a disjoint compatible time fraction, then kernel parity, transfers and full durable latency`
+- `measured_board_time_s`: `null`
+- `end_to_end_gain_bound`: `null`
+- `inference_substrate`: `aggregation_from_upstream_artifacts`
 
 ## RECOMMENDATION
 KEEP
 
-Review limited to supplied text; elided rows were not checked. Physical acceleration remains unmeasured.
+Review limited to the supplied artifact; hardware performance remains untested.
 
-## experiment_8877_v759_capstone.json
+## experiment_8890_v760_capstone.json
 
 **NO_CLAIM**
 
@@ -247,22 +243,20 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative scientific claim to falsify. An unaccounted scheduled slot or rejected evidence counted as scientific support would contradict the narrower administrative accounting.
+There is no comparative scientific claim to falsify. Its administrative accounting would be contradicted by an unaccounted scheduled slot or rejected evidence contributing to admitted scientific results.
 
 ## WAS THAT CHECKED
-Yes, administrative admission and dependency checks are shown: the disqualified producer is rejected, missing dependencies fail their gates, and natural generalization remains unestablished. Historical publication readiness is explicitly scoped to the historical paper. Elided rows prevent independently checking all twelve slots; no comparative benefit should be inferred.
+Yes, partially: the displayed gate checks preserve runtime and producer-admission failures, and the rejected canary has scientific admission disabled. Elided rows prevent independently checking all thirteen slots. This artifact does not establish comparative benefit or generalization.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_blocked_v759_capstone`
+- `honest_verdict`: `complete_blocked_v760_capstone`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `Administrative custody and method ingestion only; no new scientific benefit, natural-text or hidden-game generalization.`
-- `disposition`: `rejected_producer`; `science_admitted`: `false`
-- `missing_reason`: `missing_file`; `observed`: `null`; `passed`: `false`
+- `exposure_scope`: `Administrative custody and method ingestion only; no new scientific benefit, natural-text or hidden-game generalization.`
+- `science_admitted`: `false`
 - `natural_generalization_count`: `0`
 - `historical_publication_scope`: `historical FoVer paper only`
 - `publication_authorized`: `false`
-- `Original bytes bind each scoped conclusion; accounting completion does not establish science or authorize deployment.`
 
 ## RECOMMENDATION
 KEEP

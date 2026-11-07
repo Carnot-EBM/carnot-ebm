@@ -4634,3 +4634,27 @@ All entries are planned; no V760 experiment has executed.
 | REQ-REPORT-8888; SCENARIO-REPORT-8888-CONTRACT | exp8888-matched-adaptation-cost | `results/experiment_8888_v760_matched_adaptation_cost.json` | Planned |
 | REQ-REPORT-8889; SCENARIO-REPORT-8889-CONTRACT | exp8889-hardware-operation-map | `results/experiment_8889_v760_hardware_operation_map.json` | Planned |
 | REQ-REPORT-8890; SCENARIO-REPORT-8890-CONTRACT | exp8890-capstone | `results/experiment_8890_v760_capstone.json` | Planned |
+
+## V761 staged research plan — 2026-11-06
+
+All entries below are planned. No implementation or experiment execution is claimed.
+
+| Requirement / scenario | Planned task and deliverable | Verification contract |
+|---|---|---|
+| REQ-REPORT-8891 / SCENARIO-REPORT-8891-CONTRACT | `exp8891-branch-contract`; `results/experiment_8891_v761_branch_contract.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8892 / SCENARIO-REPORT-8892-CONTRACT | `exp8892-signed-feature-methods`; `results/experiment_8892_v761_signed_feature_methods.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8893 / SCENARIO-REPORT-8893-CONTRACT | `exp8893-shared-terminal-methods`; `results/experiment_8893_v761_shared_terminal_methods.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8894 / SCENARIO-REPORT-8894-CONTRACT | `exp8894-buffered-clock-methods`; `results/experiment_8894_v761_buffered_clock_methods.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8895 / SCENARIO-REPORT-8895-CONTRACT | `exp8895-signed-causal-streams`; `results/experiment_8895_v761_signed_causal_streams.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8896 / SCENARIO-REPORT-8896-CONTRACT | `exp8896-shared-terminal-evaluation`; `results/experiment_8896_v761_shared_terminal_evaluation.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8897 / SCENARIO-REPORT-8897-CONTRACT | `exp8897-source-bound-decisions`; `results/experiment_8897_v761_source_bound_decisions.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8898 / SCENARIO-REPORT-8898-CONTRACT | `exp8898-signed-benefit-audit`; `results/experiment_8898_v761_signed_benefit_audit.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8899 / SCENARIO-REPORT-8899-CONTRACT | `exp8899-buffered-cost-attribution`; `results/experiment_8899_v761_buffered_cost_attribution.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8900 / SCENARIO-REPORT-8900-CONTRACT | `exp8900-qwen-source-boundary`; `results/experiment_8900_v761_qwen_source_boundary.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8901 / SCENARIO-REPORT-8901-CONTRACT | `exp8901-signed-adaptation-cost`; `results/experiment_8901_v761_signed_adaptation_cost.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8902 / SCENARIO-REPORT-8902-CONTRACT | `exp8902-hardware-operation-map`; `results/experiment_8902_v761_hardware_operation_map.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+| REQ-REPORT-8903 / SCENARIO-REPORT-8903-CONTRACT | `exp8903-capstone`; `results/experiment_8903_v761_capstone.json` | Frozen method controls, unit/child coverage, scoped lint/types/spec tracing, private E2E-018/021 and cold replay |
+
+The design and YAML bind13 identical full task objects. Every producer declares
+its gate fields; runtime absence does not block independent CPU branches.
+Planning-validation results are recorded in the design footer and changelog.

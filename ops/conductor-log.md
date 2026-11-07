@@ -21501,3 +21501,5 @@ code |
 | 2026-11-07 01:08 UTC | Measure complete cost of query-only and verified d | OK | 94 passed, 1 warning in 81.12s (0:01:21) |
 | 2026-11-07 01:40 UTC | Map measured certificate and adaptation work to su | OK | 86 passed, 1 warning in 105.76s (0:01:45) |
 | 2026-11-07 02:47 UTC | Reconcile thirteen outcomes and decide information | OK | 94 passed, 1 warning in 400.29s (0:06:40) |
+| 2026-11-07 04:20 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-07 04:25 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

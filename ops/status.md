@@ -18953,3 +18953,26 @@ sources were appended before design; planned specs and traceability are aligned.
 
 Planning validation is pending. No V760 experiment, activation, push, deployment
 or publication has occurred. The current roadmap and conductor are unchanged.
+
+## 2026-11-06 America/New_York — V761 research plan staged
+
+The next plan is2026.11.761: exactly thirteen tasks, Exp8891–Exp8903, across
+four phases. The visible task table and embedded full task objects match
+research-roadmap-next.yaml. Complete V760 design and queue bytes are preserved
+in dated change-proposal archives. The active roadmap and conductor stay intact.
+
+V760's correct-label contrast did not meet the full benefit/retention conjunction.
+Its learned-policy certificate saved standalone labels, while coverage uncertainty
+and zero shared-union savings limited the claim. Timing observer overhead blocked
+component attribution. Source-loss controls proved a record/source boundary.
+
+V761 changes those mechanisms: signed relational features, a common final risk
+test, an opt-in source-coverage boundary and buffered timing. Complete durable
+costs remain independent of favorable learning. The optional mandated-Qwen
+bounded canary requires new authenticated runtime evidence. ARC stays suspended;
+no unchanged hardware probe or purchase is planned.
+
+The dated source scan preceded design. Planned requirements and traceability
+are aligned. Schema, complete-contract, gate-field and prior-failure checks pass;
+remaining planning validation is in progress. No research execution or activation
+has occurred in this planning task.

@@ -108441,3 +108441,215 @@ external Qwen absence remains blocked. Historical FoVer G1–G4 retain their
 original scope. The bounded full Python suite showed failures and timed out;
 its separate health receipt does not qualify scientific benefit. Ops and
 traceability reconciliation remain conductor-owned.
+
+## V761 planned research contracts — 2026-11-06
+
+These requirements describe staged work, not implemented behavior or measured benefit.
+
+### REQ-REPORT-8891: Bind thirteen tasks and ingest feature and sequential-certificate methods
+
+Bind thirteen complete task objects, a visible table, canonical digest and closing marker. Preserve independent V760 authority. Admit supplied causal CUDA evidence separately from administrative readiness.
+
+The experiment shall emit `results/experiment_8891_v761_branch_contract.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8891-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8892: Qualify signed evidence features for causal calibrated energy learning
+
+Freeze explicit-refutation fraction and local binding-overlap features on development data. Preserve old checkpoints and a masked old-feature control. Match released labels, template exposure and optimizer work. Keep original benefit and retention thresholds.
+
+The experiment shall emit `results/experiment_8892_v761_signed_feature_methods.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8892-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8893: Freeze sequential certification with a shared final test
+
+Use shared candidate prefixes and an identical final certificate test. Prove fixed certification implies sequential certification. Allocate at most0.01 family error across distinct early and final events. Exact accepted-error bounds refuse empty support.
+
+The experiment shall emit `results/experiment_8893_v761_shared_terminal_methods.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8893-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8894: Qualify buffered phase clocks before attributing request costs
+
+Buffer monotonic phase endpoints without hot-path serialization. Partition child phases without nesting. Keep parent elapsed and unclassified work separate. Freeze a resolution-based repetition count from private development pilots.
+
+The experiment shall emit `results/experiment_8894_v761_buffered_clock_methods.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8894-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8895: Measure continuous small-energy learning with signed relational features
+
+Seal predictions before delayed labels. Run the eight frozen feature/control arms on24 paired streams. Preserve actual numerical updates, atomic template admissions, restart equality, full pending drains and read-only retention.
+
+The experiment shall emit `results/experiment_8895_v761_signed_causal_streams.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8895-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8896: Measure label savings under pathwise coverage inclusion
+
+Check shared-final-test inclusion for every measured cell. Require standalone label-saving lower99-percent bound>0 and served-group census risk<=0.05 for benefit. Keep shared-union savings distinct. No post-outcome threshold changes are allowed.
+
+The experiment shall emit `results/experiment_8896_v761_shared_terminal_evaluation.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8896-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8897: Qualify separate source coverage and exact record decisions
+
+Expose opt-in separate record decision, typed-source coverage and source semantics. Validate caller-owned complete typed-source ledgers. Hashes or quoted spans alone shall not establish natural-text completeness. Preserve exact record decisions and existing defaults.
+
+The experiment shall emit `results/experiment_8897_v761_source_bound_decisions.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8897-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8898: Audit feature-specific future benefit and untouched retention
+
+Independently reduce causal rows. Retain true/permuted upper<0, true/frozen upper<=-0.01 and retention upper<=0.01. Attribute feature benefit only with a new/old future-loss upper<0. Correct multiplicity across all registered contrasts.
+
+The experiment shall emit `results/experiment_8898_v761_signed_benefit_audit.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8898-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8899: Measure complete request attribution with qualified buffered clocks
+
+Measure paired instrumented and uninstrumented complete requests. Admit component fractions only after simultaneous99-percent overhead upper<=0.05 in every cell and valid clock closure. Preserve separately qualified parent costs and unknown components.
+
+The experiment shall emit `results/experiment_8899_v761_buffered_cost_attribution.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8899-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8900: Test bounded Qwen extraction with separate source and record claims
+
+Require changed authenticated CUDA evidence and the source boundary. Use unsloth/Qwen3.8-27B-GGUF with model_bounded_generation,32 calls and4096-token maximum. Preserve raw completions and every failure; no runtime padding or small-model headline.
+
+The experiment shall emit `results/experiment_8900_v761_qwen_source_boundary.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8900-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8901: Measure complete durable cost of signed-feature online learning
+
+Measure all durable deployment work for old/new features and four causal arms. Include feedback, writes, fsync, restart and tail drain. Method readiness suffices for measurement; qualified benefit is necessary for useful-efficiency claims.
+
+The experiment shall emit `results/experiment_8901_v761_signed_adaptation_cost.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8901-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8902: Map signed-feature and certificate work to actual hardware capabilities
+
+Map only measured operations to actual board capabilities. Use numeric compatible fractions only after qualified attribution. Keep zero sampling, unsupported work and missing physical evidence explicit. Do not repeat unchanged probes.
+
+The experiment shall emit `results/experiment_8902_v761_hardware_operation_map.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8902-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
+
+### REQ-REPORT-8903: Reconcile thirteen outcomes and decide feature risk and cost continuations
+
+Account for thirteen slots including authenticated skips and the capstone self-slot. Preserve all verdict classes and independent denominators. Separate G1-G4 historical publication scope. External absence is blocked; no activation, publication or manifest edit follows.
+
+The experiment shall emit `results/experiment_8903_v761_capstone.json` under the complete V761 contract.
+It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
+and terminal verdict_class. Readiness shall remain separate from scientific benefit.
+
+#### SCENARIO-REPORT-8903-CONTRACT
+
+Before implementation, add failing controls for the registered method, absent or
+malformed inputs, observed-zero gates, valid null results and rehashed tampering.
+Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
+cold CLI replay. Measure all owned unit/child statements without exclusions.
+Status: planned; experiment implementation and execution remain pending.
