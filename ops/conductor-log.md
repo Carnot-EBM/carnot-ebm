@@ -21524,3 +21524,4 @@ code |
 | 2026-11-07 18:50 UTC | Milestone 2026.11.762 activated | OK | 13 tasks queued |
 | 2026-11-07 19:21 UTC | Qualify V762 authority and changed runtime admissi | OK | 103 passed, 1 warning in 27.45s |
 | 2026-11-07 20:17 UTC | Freeze candidate promotion for the signed energy h | OK | 97 passed, 1 warning in 45.12s |
+| 2026-11-07 21:03 UTC | Prove safe refusal before an impossible final cert | OK | 93 passed, 1 warning in 43.98s |
