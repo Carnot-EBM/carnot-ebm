@@ -108848,6 +108848,17 @@ Status: planned; experiment implementation and execution remain pending.
 
 Measure all durable deployment work for old/new features and four causal arms. Include feedback, writes, fsync, restart and tail drain. Method readiness suffices for measurement; qualified benefit is necessary for useful-efficiency claims.
 
+Freeze twelve fresh 48-query streams, each crossed with old and signed features
+and all four causal arms (96 scheduled cells; independent n=12). Preserve the
+scientific six-label release schedule and query-24 restart. Each feedback event
+must receive its own durable state-plus-acknowledgment commit. Old deployment
+computes the six shared coordinates without evaluating either extra feature;
+its frozen masked head and checkpoint schema remain compatible. Compare signed
+minus old whole-parent costs using four simultaneous paired 99-percent Student-t
+intervals. Retain exact operands, per-cell operations, storage barriers, tail
+drains and uninterrupted/restarted state and semantic equality. Do not infer
+component fractions, physical device costs or useful acceleration from readiness.
+
 The experiment shall emit `results/experiment_8901_v761_signed_adaptation_cost.json` under the complete V761 contract.
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
@@ -108858,7 +108869,19 @@ Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
+Tests must also reject batched acknowledgments, changed first-six features,
+missing paired cells, altered retained operands and rehashed cost summaries.
+Optional quality evidence cannot block measurement and cannot authorize a speed
+headline when label benefit is zero or absent. Every scheduled failure remains
+in the denominator. Private CLI outputs remain outside the checkout.
 Status: planned; experiment implementation and execution remain pending.
+
+2026-11-07 implementation record: `signed_adaptation_cost_8901.py`,
+`signed_adaptation_runner_8901.py`, the named experiment CLI and
+`test_signed_adaptation_cost_8901.py` implement this contract. The experiment's
+terminal artifact retains the measured unit/child coverage, exact-node checks,
+private E2E-018/021, unchanged scanner receipts and cold replay. Its readiness
+field is the execution qualification; it makes no scientific benefit claim.
 
 ### REQ-REPORT-8902: Map signed-feature and certificate work to actual hardware capabilities
 
