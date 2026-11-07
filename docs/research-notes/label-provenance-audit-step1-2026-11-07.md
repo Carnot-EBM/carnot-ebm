@@ -48,3 +48,29 @@ FAIL. Zero independently labeled errors are confirmed. The 114 error traces of e
 3. Step 2 (cost-monotonicity audit) should include a trace-length control for the same reason.
 
 Rule check: no weight update to the mandated generator. ARC stays suspended. No external publication.
+
+## Addendum 2026-11-07: sibling experiments (append-only)
+
+Status: code and verdict-string read only. Nothing was re-run. No artifact was edited.
+
+Question: do exp4392, exp4393, exp4396, exp4403 and exp4407 share the exp4381 label defect?
+
+Finding: all five read `data/step_level_prm_training.jsonl`. Per the findings above, that file gives first error = 0 on all 114 error traces.
+
+| Experiment | Recorded verdict | Real-split target | Effect |
+|---|---|---|---|
+| exp4392 | success: synthetic localizer beats ensemble baseline | `trace.first_error_index` from the same loader | Real-split F1 measures trace length. Synthetic-injection part not checked. |
+| exp4393 | complete: A1 win quarantined as artifact-confounded | position-only baseline built from counts of `first_error_index` | Baseline predicts 0. The quarantine was for a template confound, not this one. |
+| exp4396 | complete: clean saturated null | same loader | Null is uninformative. |
+| exp4403 | complete: clean powered null, position-only not beaten | own label builder sets `first_error_index=0` for every incorrect row | Index is 0 by construction. The reference-replacement check tests the same outcome label. Null is uninformative. |
+| exp4407 | complete: clean null, position-bound or saturated | `predict(trace) == trace.first_error_index` | Null is uninformative. |
+
+Consequences:
+
+1. Real-split localization results in this family measure trace length, not localization skill.
+2. The nulls in exp4396, exp4403 and exp4407 are not evidence that the method fails (FALSE_NEGATIVE_RISK rule).
+3. exp4392 and exp4393 synthetic-injection parts use their own injected labels. Not audited here.
+
+Not checked: artifact counts (`n_traces`, `n_errors`) against 114 and 6,548. Whether any of the five reports a nonzero positive control. The loader behaviour on each code path. Re-running any experiment.
+
+Step 6 answer (check or prose): prose and a corrigendum entry for now. A check would be a lint that rejects a localization artifact whose real-split `first_error_index` is constant. Not built. It needs the label-provenance question settled first, or it fires on legitimate work.

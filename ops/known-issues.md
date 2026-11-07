@@ -27830,3 +27830,7 @@ Task for the planner. Reserve one slot. Scope is the pilot only.
 7. Artifact fields: `inference_substrate: live_llm_inference`, `verifier_is_oracle: true`, `random_seed`, `reproducibility_checksum`, `model_specs`, `n_questions`, `n_errors`, `preconditions_checked`. `honest_verdict` starts with a terminal prefix.
 
 Not in scope: the 200-error run, the positive control over k, any detector, any localization claim. Those follow after the pilot error rate is known. ARC stays suspended. No external publication.
+
+### CORRIGENDUM 2026-11-07 (outer loop): outcome-label defect reaches exp4381 and five siblings
+
+exp4381, exp4392, exp4393, exp4396, exp4403 and exp4407 score first-error localization against labels that are outcome labels copied to every prefix. First error is step 0 in all 114 error traces. Real-split localization F1 in these artifacts measures trace length. The nulls in exp4381, exp4396, exp4403 and exp4407 are uninformative and are not findings (FALSE_NEGATIVE_RISK). The exp4392 win is also suspect on the real split. Artifacts are unchanged. Detail: docs/research-notes/label-provenance-audit-step1-2026-11-07.md, section Addendum
