@@ -23270,3 +23270,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-07: Measure label savings under pathwise coverage inclusion (⚠️ Research Finding) — honest_verdict=complete_circular_positive_shared_terminal_evaluation; results/experiment_8896_v761_shared_terminal_evaluation.json
 - 2026-11-07: Qualify separate source coverage and exact record decisions (⚠️ Research Finding) — honest_verdict=complete_circular_positive_source_bound_decisions; results/experiment_8897_v761_source_bound_decisions.json
 - 2026-11-07: Audit feature-specific future benefit and untouched retention (⚠️ Research Finding) — honest_verdict=complete_null_signed_benefit_audit; results/experiment_8898_v761_signed_benefit_audit.json
+- 2026-11-07: Measure complete request attribution with qualified buffered clocks (⚠️ Blocked) — honest_verdict=complete_blocked_buffered_cost_attribution; results/experiment_8899_v761_buffered_cost_attribution.json
