@@ -17,6 +17,18 @@ Discipline). Numbers here trace to primary artifacts, not prose.
 
 ## 0. THE NORTH STAR (operator directive 2026-06-08): solve ARC-AGI-3, accurately and efficiently
 
+> **RE-ANCHORED 2026-11-07 (append-only; the text below stays as history).**
+> Operator directive: "re-anchor the north-star away from ARC and lift the suspension".
+> **The current north star is the oracle-distinct verifier:** a learned or energy
+> verifier that beats a matched control, with CI95 excluding 0, where no cheap
+> executable oracle exists. Until that win lands, the moat stays "execution-grounded,
+> circular" and the DiffusionGemma gate stays STILL-PENDING (see the Execution moat
+> paragraph below). The calibrated-decision floor and the independent-label work
+> (BFS pilot, `docs/research-notes/bfs-labeled-error-source-plan-2026-11-07.md`) serve it.
+> ARC-AGI-3 work continues as an opportunistic slot, not the destination. Earlier ARC
+> framing below is history. Label audit that motivated this:
+> `docs/research-notes/label-provenance-audit-step1-2026-11-07.md`.
+
 > **"Solving ARC-AGI-3 is our new north star, as accurately and efficiently as
 > possible."** — operator, 2026-06-08.
 

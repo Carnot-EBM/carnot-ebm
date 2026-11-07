@@ -4078,6 +4078,13 @@ CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precede
 > does not block activation. The rule text stays unchanged per never-prune. The operator
 > lifts this banner by directive.
 
+> **SUSPENSION LIFTED 2026-11-07 (append-only; the banner above stays as history).**
+> Operator directive: "re-anchor the north-star away from ARC and lift the suspension".
+> The planner again reserves at least one ARC task slot per milestone under this rule.
+> ARC is no longer the north star. See `ops/north-star.md` section 0. ARC work is
+> opportunistic and must not displace the north-star work or the reserved slots.
+> The lint stays warn-only.
+
 **Origin:** follow-up to the 2026-07-17 retirement of the public-game-solving standing floor (above).
 With all 25 public survey games fully cleared (183/183 levels), the operator was asked what should fill
 the reserved ARC slot going forward and chose: **"Redirect to generalization research"** — testing and
@@ -4243,6 +4250,13 @@ concrete task queue) · `scripts/arc_levelup_guarantee_lint.py` (mechanical enfo
 > `scripts/arc_levelup_guarantee_lint.py` is warn-only for this floor, so zero ARC tasks
 > does not block activation. The rule text stays unchanged per never-prune. The operator
 > lifts this banner by directive.
+
+> **SUSPENSION LIFTED 2026-11-07 (append-only; the banner above stays as history).**
+> Operator directive: "re-anchor the north-star away from ARC and lift the suspension".
+> The planner again reserves at least one ARC task slot per milestone under this rule.
+> ARC is no longer the north star. See `ops/north-star.md` section 0. ARC work is
+> opportunistic and must not displace the north-star work or the reserved slots.
+> The lint stays warn-only.
 
 **Origin:** 2026-08-21 operator directive, verbatim:
 
