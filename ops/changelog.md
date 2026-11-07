@@ -23264,3 +23264,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   planning validation is in progress; no experiment, activation or push occurred.
 - 2026-11-07: Bind thirteen tasks and ingest feature and sequential-certificate methods (⚠️ Research Finding) — honest_verdict=complete_disqualified_v761_branch_contract; results/experiment_8891_v761_branch_contract.json
 - 2026-11-07: Qualify signed evidence features for causal calibrated energy learning (⚠️ Research Finding) — honest_verdict=complete_null_signed_feature_methods; results/experiment_8892_v761_signed_feature_methods.json
+- 2026-11-07: Freeze sequential certification with a shared final test (⚠️ Research Finding) — honest_verdict=complete_circular_positive_shared_terminal_methods; results/experiment_8893_v761_shared_terminal_methods.json
