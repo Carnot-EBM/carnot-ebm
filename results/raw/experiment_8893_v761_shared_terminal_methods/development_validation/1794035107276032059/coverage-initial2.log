@@ -1,0 +1,23 @@
+validation before
+[exp8205] phase=before_subprocess_collect_once completed=0 pending=1
+[exp8205] phase=waiting_collect_once completed=0 pending=1
+[exp8816] phase=child_collect_once_elapsed_30s completed=0 pending=1
+[exp8205] phase=waiting_collect_once completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_once completed=1 pending=0
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/shared_terminal_runner_8893.py", line 80, in validate
+    contract = authority.authority(m.ROOT)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/sequential_certificate_runner_8880.py", line 62, in validate
+    return dict(checker.validate(raw, private))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/selective_methods_runner_8829.py", line 47, in validate
+    return dict(validator.validate(raw, private))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/evidence_evaluation_runner_8779.py", line 72, in validate
+    plan, collection = collect(private, raw, suites, e.TESTS, child)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/collection_contract.py", line 43, in collect
+    raise ValueError("single_exact_collection_failed")
+ValueError: single_exact_collection_failed

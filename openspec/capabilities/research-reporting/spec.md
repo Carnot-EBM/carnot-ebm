@@ -108547,11 +108547,43 @@ and terminal verdict_class. Readiness shall remain separate from scientific bene
 
 #### SCENARIO-REPORT-8893-CONTRACT
 
+Registration 2026-11-07: keep seven frozen policies, four groups, 240 independent
+selection draws per group, and candidate prefixes 120,240,480,960. Freeze 4096
+new worlds and forty independent paired replicates. Reuse historical fitted
+heads; do not train the new learning branch or select from census labels.
+Spend early alpha .005/(7*4*3) at the first three looks. Spend final alpha
+.005/(7*4) once on the final event shared by both protocols. Their identical
+960-draw prefix, cutoff, accepted errors and exact one-sided binomial test
+must imply fixed certification entails sequential certification on every path.
+The frozen accepted set then proves coverage inclusion without a confidence
+interval. This logical proof is separate from the conditional statistical risk
+guarantee under independent stationary within-group draws. The distinct-event
+union bound totals .01 per replicate, not across forty replicates.
+Test integer count transitions, empty support, all errors, zero errors, each
+look boundary and unsafe policies. Changed final alpha or prefix must fail.
+Keep a descriptive fixed-only alpha .01/(7*4) sensitivity outside the registered
+comparison and its joint guarantee. Charge every selection and candidate draw,
+including repeats and rejected candidates. Freeze separate standalone learned
+and all-policy union ledgers. Unfinished policies consume the full union prefix.
+Use bootstrap-free 99-percent bounded paired label intervals with forty
+independent replicate averages. Retain exact census coverage and conditional
+risk. Methods readiness does not require demonstrated savings.
+Retain immutable operands, measured runtime pilots, executed-source hashes and
+validation logs. Use ExperimentTemplate, current_work_receipt and checked local
+primary publication. Private output and cold replay must run outside the
+checkout without PYTHONPATH. Rehashed scientific tampering must fail replay.
+External absence blocks; owned failures disqualify and preserve scheduled rows.
+
 Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
 Status: planned; experiment implementation and execution remain pending.
+
+Status update 2026-11-07: the shared-terminal module, dated CLI and traced
+tests are implemented. Exp8893 retains measured outcomes and qualification
+receipts. Ops and BMAD reconciliation remain conductor-owned. No milestone is
+activated and no external publication is authorized.
 
 ### REQ-REPORT-8894: Qualify buffered phase clocks before attributing request costs
 

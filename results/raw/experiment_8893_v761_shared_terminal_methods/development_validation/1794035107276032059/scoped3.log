@@ -1,0 +1,46 @@
+...F....                                                                 [100%]
+=================================== FAILURES ===================================
+___________________ test_external_gates_and_private_cold_cli ___________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261107T065605-3206761-c362dca8/test_external_gates_and_privat0')
+
+    def test_external_gates_and_private_cold_cli(tmp_path):
+        """SCENARIO-REPORT-8893-CONTRACT: external absence blocks and rehashed changes fail."""
+        assert r.preconditions(tmp_path / "raw", tmp_path)["diagnostics"][0]["check"] == "missing_file"
+        name, (_, field) = next(iter(r.UPSTREAM.items()))
+        for value, check in [
+            ({}, "missing_field"),
+            ({field: 0}, "observed_zero"),
+            ({field: 1}, "rejected_producer"),
+        ]:
+            atomic_json(tmp_path / (name + ".json"), value)
+            assert r.preconditions(tmp_path / "raw", tmp_path)["diagnostics"][0]["check"] == check
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        output = tmp_path / (m.NAME + ".json")
+    
+        def child(options):
+            return subprocess.run(
+                command + options, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=120
+            )
+    
+        run = child(["--private-output", str(output), "--sources", str(tmp_path / "absent")])
+        assert run.returncode == 0, run.stdout + run.stderr
+        value = json.loads(output.read_bytes())
+        assert value["verdict_class"] == "blocked" and value["shared_terminal_ready_score"] == 0
+>       assert child(["--cold-replay", str(output)]).returncode == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...code=1, stdout='[exp8893] phase=start_no_model_load completed=0 pending=0\nreplay_rejected: operand_hash\n', stderr='').returncode
+E        +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...code=1, stdout='[exp8893] phase=start_no_model_load completed=0 pending=0\nreplay_rejected: operand_hash\n', stderr='') = <function test_external_gates_and_private_cold_cli.<locals>.child at 0x7f40cbba6d40>(['--cold-replay', '/var/tmp/pytest-carnot-ianblenke/20261107T065605-3206761-c362dca8/test_external_gates_and_privat0/experiment_8893_v761_shared_terminal_methods.json'])
+
+tests/python/test_shared_terminal_methods_8893.py:144: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_shared_terminal_methods_8893.py::test_external_gates_and_private_cold_cli
+1 failed, 7 passed, 1 warning in 11.99s
