@@ -21473,3 +21473,4 @@ code |
 | 2026-11-06 22:09 UTC | Separate source truth from record sufficiency unde | OK | 92 passed, 1 warning in 92.11s (0:01:32) |
 | 2026-11-06 23:07 UTC | Measure continuous energy learning with matched fe | OK | 97 passed, 1 warning in 159.21s (0:02:39) |
 | 2026-11-06 23:39 UTC | Measure sequential certificate cost at matched cov | OK | 89 passed, 1 warning in 26.75s |
+| 2026-11-07 00:16 UTC | Audit label-specific future benefit and untouched  | OK | 108 passed, 1 warning in 78.91s (0:01:18) |
