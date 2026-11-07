@@ -108801,11 +108801,26 @@ traceability reconciliation remains conductor-owned.
 
 Measure paired instrumented and uninstrumented complete requests. Admit component fractions only after simultaneous99-percent overhead upper<=0.05 in every cell and valid clock closure. Preserve separately qualified parent costs and unknown components.
 
+Authenticate the original Exp8894 bytes, retained operands and source/configuration
+hashes before using its observer. Reject changed original evidence, including a
+changed referenced specification; report the exact path and expected hash.
+Use its frozen144 worlds,24 per size, fixed repetitions and random ABBA/BAAB
+order. Retain all3456 scheduled blocks, including blocked and censored blocks.
+Keep full parent clocks separate from resident child clocks. Aggregate repeats
+within each whole world before the registered36 simultaneous99-percent bounds.
+Only a fully qualified observer permits removable fractions. Unknown parent
+work and unclassified child work cannot become a supported hardware kernel.
+
 The experiment shall emit `results/experiment_8899_v761_buffered_cost_attribution.json` under the complete V761 contract.
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
 
 #### SCENARIO-REPORT-8899-CONTRACT
+
+Private controls SHALL test observed-zero observer gates, absent/malformed
+original evidence, failed owned checks, valid null measurements, duplicate
+blocks, negative closure and rehashed headline tampering. Replay SHALL rebuild
+the artifact from immutable operands and reject any reduction drift.
 
 Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.

@@ -27814,3 +27814,19 @@ What is true: the input file `data/step_level_prm_training.jsonl` labels every p
 Effect: the null verdict ("not actionable") is uninformative. It is not evidence that localization fails. Do not cite it either way. Treat it as a degenerate-label case under FALSE_NEGATIVE_RISK. exp4392, exp4393, exp4396, exp4403 and exp4407 read the same file and need the same check. Not yet checked.
 
 Check or prose (error lifecycle step 6): prose now. A cheap check is possible: warn when every error trace has first-error index 0. Not built. It would fire on any outcome-labeled corpus, which is the point, but the loader has other callers. Decision left open.
+
+### 2026-11-07 (MANDATORY-NEXT-MILESTONE): BFS-labeled error source, 50-question pilot
+
+Operator approved the conductor route on 2026-11-07 ("Yes"). Full design: `docs/research-notes/bfs-labeled-error-source-plan-2026-11-07.md`. Reason: the label-provenance audit (`docs/research-notes/label-provenance-audit-step1-2026-11-07.md`) found zero independently labeled errors, and step 4 of the consensus plan needs at least 200.
+
+Task for the planner. Reserve one slot. Scope is the pilot only.
+
+1. PRECONDITIONS (check first): the `unsloth/Qwen3.8-27B-GGUF` file is cached. `llama_cpp.llama_supports_gpu_offload()` prints True. GPU 0 is free. GPU 1 is detached, so do not use it. On any failure write `blocked_<resource>`.
+2. Build 50 random graphs on CPU: mean degree 3, 50 to 60 nodes, two-letter labels. Ask "name a node exactly 2 hops from X". Give each graph its own seed.
+3. Run the mandated generator with no weight update, reasoning off. Print one flushed progress line per 10 questions.
+4. Label each answer with breadth-first search. The label comes from code, not from a Carnot verifier.
+5. Record per answer: seed, k, answer, label, generator settings, wall time.
+6. Gate: error rate at least 20%. If lower, the verdict is `complete: pilot_error_rate_below_gate`, and the next step raises k or graph size. Do not run the full set in this task.
+7. Artifact fields: `inference_substrate: live_llm_inference`, `verifier_is_oracle: true`, `random_seed`, `reproducibility_checksum`, `model_specs`, `n_questions`, `n_errors`, `preconditions_checked`. `honest_verdict` starts with a terminal prefix.
+
+Not in scope: the 200-error run, the positive control over k, any detector, any localization claim. Those follow after the pilot error rate is known. ARC stays suspended. No external publication.
