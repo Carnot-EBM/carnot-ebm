@@ -27801,3 +27801,16 @@ conductor's checkpoint-commit path, which is documented elsewhere
 (`incident_checkpoint_commit_bypasses_claims_and_hooks` memory) as skipping all hooks. If
 this recurs specifically from a checkpoint commit, the guard needs to move into that code
 path directly, not just pre-commit.
+
+## 2026-11-07 Corrigendum: exp4381 localization result rests on outcome labels
+
+Origin: step 1 label-provenance audit
+(`docs/research-notes/label-provenance-audit-step1-2026-11-07.md`, commit 7a20cb9bb8).
+
+What was believed: exp4381 measured step localization on 114 error traces and found the detector not actionable (F1 0.096).
+
+What is true: the input file `data/step_level_prm_training.jsonl` labels every prefix with its parent's final-answer flag. The first error is step 0 in all 114 traces. 11 traces have one step, and exact-match count is 11. The F1 of 0.096 equals the share of one-step traces. The result measures trace length, not localization skill. This is an outer-loop inference from the counts. The experiment was not re-run.
+
+Effect: the null verdict ("not actionable") is uninformative. It is not evidence that localization fails. Do not cite it either way. Treat it as a degenerate-label case under FALSE_NEGATIVE_RISK. exp4392, exp4393, exp4396, exp4403 and exp4407 read the same file and need the same check. Not yet checked.
+
+Check or prose (error lifecycle step 6): prose now. A cheap check is possible: warn when every error trace has first-error index 0. Not built. It would fire on any outcome-labeled corpus, which is the point, but the loader has other callers. Decision left open.
