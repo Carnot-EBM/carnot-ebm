@@ -23298,3 +23298,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   fields, verdict classes, per-unit rows and complete rerun-retirement metadata.
 - 2026-11-07: Qualify V762 authority and changed runtime admission (⚠️ Research Finding) — honest_verdict=complete_null_v762_branch_contract; results/experiment_8904_v762_branch_contract.json
 - 2026-11-07: Freeze candidate promotion for the signed energy head (⚠️ Research Finding) — honest_verdict=complete_null_guarded_update_methods; results/experiment_8905_v762_guarded_update_methods.json
+- 2026-11-07: Prove safe refusal before an impossible final certificate (⚠️ Research Finding) — honest_verdict=complete_null_finite_budget_methods; results/experiment_8906_v762_finite_budget_methods.json
