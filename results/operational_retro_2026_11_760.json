@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.760",
+  "generated_at": "2026-11-07T02:57:20Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 101.5,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete cost of query-only and verified delayed adaptation",
+      "duration_minutes": 16.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify the repaired original feedback diagnosis under immutable V759 authority",
+      "duration_minutes": 14.91,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure continuous energy learning with matched feedback and topology diversity",
+      "duration_minutes": 14.88,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reconcile thirteen outcomes and decide information risk and cost continuations",
+      "duration_minutes": 12.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit label-specific future benefit and untouched retention",
+      "duration_minutes": 11.87,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.760 completed 12 experiments (1 compute-bound, 11 synthesis-only) in 101.5 wall-time minutes (102 minutes / 1.7 hours, averaging 8 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). All 5 slowest experiments were synthesis-only ('Measure complete cost of query-only and verified delayed adaptation' at 16.9 minutes / 17min, 'Qualify the repaired original feedback diagnosis under immutable V759 authority' at 14.91 minutes / 15min, 'Measure continuous energy learning with matched feedback and topology diversity' at 14.88 minutes / 15min, 'Reconcile thirteen outcomes and decide information risk and cost continuations' at 12.12 minutes / 12min, and 'Audit label-specific future benefit and untouched retention' at 11.87 minutes / 12min), meaning the 1 compute-bound task finished below 11.87 minutes (12min; no data available this milestone for its exact task name or duration). Locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner was not applicable (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 50C) is expected behavior across the 11 synthesis-only tasks.",
+  "bottlenecks_identified": [
+    "No compute-bound experiment appeared in the top-5 slowest list (the 1 compute-bound experiment out of 12 completed experiments finished below the 11.87-minute / 12min fifth-slowest threshold; no data available this milestone for its exact name or duration), and gpu_idle_on_compute_bound_tasks is false.",
+    "Wall time across the 101.5-minute (102 minutes / 1.7 hours, 8 minutes average per experiment) milestone was concentrated in the 5 slowest synthesis-only tasks: 'Measure complete cost of query-only and verified delayed adaptation' (16.9 minutes / 17min), 'Qualify the repaired original feedback diagnosis under immutable V759 authority' (14.91 minutes / 15min), 'Measure continuous energy learning with matched feedback and topology diversity' (14.88 minutes / 15min), 'Reconcile thirteen outcomes and decide information risk and cost continuations' (12.12 minutes / 12min), and 'Audit label-specific future benefit and untouched retention' (11.87 minutes / 12min).",
+    "The live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 12 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse delayed-adaptation cost, V759 feedback-diagnosis qualification, matched-feedback/topology-diversity energy-learning, thirteen-outcome reconciliation, and label-specific future-benefit/untouched-retention fixtures across the 5 slowest synthesis-only experiments ('Measure complete cost of query-only and verified delayed adaptation' at 16.9 minutes / 17min, 'Qualify the repaired original feedback diagnosis under immutable V759 authority' at 14.91 minutes / 15min, 'Measure continuous energy learning with matched feedback and topology diversity' at 14.88 minutes / 15min, 'Reconcile thirteen outcomes and decide information risk and cost continuations' at 12.12 minutes / 12min, and 'Audit label-specific future benefit and untouched retention' at 11.87 minutes / 12min) to reduce the 8-minute per-experiment average.",
+    "Parallelize independent verification and subprocess validation passes within the 11 synthesis-only experiments while keeping DualGPURunner unengaged unless a compute-bound task loads 2+ models in parallel.",
+    "Record explicit per-experiment start and end timestamps in result artifacts so milestone timing does not fall back to disk-mtime reconstruction (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Free the idle 4MB memory allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 50C) as recommended by the GPU Monitor Report."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share pre-computed delayed-adaptation, V759 feedback-diagnosis, matched-feedback/topology-diversity, thirteen-outcome reconciliation, and label-specific retention fixtures across the 5 slowest synthesis-only tasks (16.9 minutes / 17min, 14.91 minutes / 15min, 14.88 minutes / 15min, 12.12 minutes / 12min, and 11.87 minutes / 12min).",
+    "Parallelize independent validation steps inside the 11 synthesis-only tasks to lower the 8-minute per-experiment average across the 101.5-minute (102 minutes / 1.7 hours) milestone.",
+    "Persist direct per-experiment timing metadata in artifacts to eliminate disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log) and release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, Temp 50C)."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.760 completed 12 experiments (1 compute-bound, 11 synthesis-only) in 101.5 minutes (102 minutes / 1.7 hours, averaging 8 minutes per experiment), with gpu_idle_on_compute_bound_tasks locked at false and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB, Temp 50C) expected for the 11 synthesis-only workloads. Because all 5 slowest tasks were synthesis-only (16.9 minutes / 17min, 14.91 minutes / 15min, 14.88 minutes / 15min, 12.12 minutes / 12min, and 11.87 minutes / 12min) and the 1 compute-bound task completed in under 11.87 minutes (12min), deduplicating fixture setup and validation passes in synthesis tasks is the highest-leverage operational improvement for the next milestone."
+}
