@@ -1,0 +1,83 @@
+...F..F..                                                                [100%]
+=================================== FAILURES ===================================
+________________________ test_reduce_null_and_failures _________________________
+
+    def test_reduce_null_and_failures():
+        """REQ-REPORT-8894: pilot overhead is diagnostic and whole clusters supply n."""
+        rows = synthetic_rows()
+        reduced = m.reduce(rows)
+        assert reduced["semantic_identity"] and reduced["finite_nonnegative_closure"]
+        assert len(reduced["pilot_overhead_rows"]) == 36
+        assert all(
+            x["independent_count"] == 4 and x["upper"] <= 0.05 for x in reduced["pilot_overhead_rows"]
+        )
+        assert all(x["upper"] > 0.05 for x in m.reduce(synthetic_rows(0.2))["pilot_overhead_rows"])
+        bad = deepcopy(rows)
+        bad[0]["semantics"] = ["changed"]
+        bad[1]["closure_valid"] = False
+        assert not m.reduce(bad)["semantic_identity"]
+        assert not m.reduce(bad)["finite_nonnegative_closure"]
+        bad[0]["elapsed_ns"] = 0
+>       assert not m.reduce(bad)["pilot_overhead_rows"][0]["accepted"]
+E       assert not True
+
+tests/python/test_buffered_clock_methods_8894.py:144: AssertionError
+________________________ test_private_cli_and_tampering ________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261107T074835-3228035-6cdf081f/test_private_cli_and_tampering0')
+
+    def test_private_cli_and_tampering(tmp_path):
+        """SCENARIO-REPORT-8894-CONTRACT: actual private CLI and cold replay leave the checkout."""
+        output = tmp_path / (m.NAME + ".json")
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        child = subprocess.run(
+            command
+            + [
+                "--date",
+                "20261107",
+                "--private-output",
+                "--private-world-limit",
+                "1",
+                "--output",
+                str(output),
+            ],
+            cwd=tmp_path,
+            env=env,
+            text=True,
+            capture_output=True,
+            timeout=180,
+        )
+>       assert child.returncode == 0, child.stdout + child.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8894_v761_buffered_clock_methods.py", line 14, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/buffered_clock_runner_8894.py", line 566, in main
+E             template = ExperimentTemplate(8894,'Buffered clock methods',str(output),seed=m.SEED)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py", line 767, in __init__
+E             self._output_path: Path = resolve_experiment_artifact_path(
+E                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_artifacts.py", line 144, in resolve_experiment_artifact_path
+E             rel_or_abs = _relative_artifact_path(
+E                          ^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_artifacts.py", line 113, in _relative_artifact_path
+E             raise ArtifactPathError(f"absolute artifact path is outside allowed roots: {resolved}")
+E         carnot.experiment_artifacts.ArtifactPathError: absolute artifact path is outside allowed roots: /var/tmp/pytest-carnot-ianblenke/20261107T074835-3228035-6cdf081f/test_private_cli_and_tampering0/experiment_8894_v761_buffered_clock_methods.json
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...e/20261107T074835-3228035-6cdf081f/test_private_cli_and_tampering0/experiment_8894_v761_buffered_clock_methods.json\n').returncode
+
+tests/python/test_buffered_clock_methods_8894.py:214: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_buffered_clock_methods_8894.py::test_reduce_null_and_failures
+FAILED tests/python/test_buffered_clock_methods_8894.py::test_private_cli_and_tampering
+2 failed, 7 passed, 1 warning in 23.14s

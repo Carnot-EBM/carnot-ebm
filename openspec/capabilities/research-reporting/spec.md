@@ -108601,6 +108601,33 @@ Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
 Status: planned; experiment implementation and execution remain pending.
 
+Method extension 2026-11-07: use an opt-in preallocated monotonic endpoint buffer.
+Each endpoint changes the active phase. Decode/validation, construction, lookup,
+serialization and unclassified remainder form one contiguous child partition.
+Reject overlap, endpoint loss, time regression and uncovered serialization.
+Retain the buffer cursor's endpoint count separately from exported endpoints.
+Reject deletion of any endpoint, including an ordinary phase transition.
+Keep signed closure residuals. Parent elapsed includes startup, installation and
+transport separately; no unrelated clock is subtracted from child phase totals.
+Use real development-world clocks in randomized ABBA or BAAB blocks. Freeze one
+repetition count from clock resolution alone, at most1024 and below60 seconds
+per block. Injected clocks test reduction only. Preserve every censored request.
+Freeze24 future clusters per size8/16/17/64/256/1024, all three existing arms,
+cold and resident boundaries. Repetitions do not increase independent counts.
+Register a simultaneous99-percent overhead upper bound at most0.05 in all36
+cells for Exp8899. Do not execute future worlds or select an optimization here.
+The observer readiness score uses development controls, semantic identity,
+real finite child closure, clock precision and the frozen protocol only.
+Pilot overhead intervals are diagnostics, not future measurement acceptance.
+Retain source bytes, raw endpoints, resolution samples, installed import hashes,
+validation logs and unit/child coverage. Private replay rejects rehashed changes
+to operands, partitions, schedules and aggregate fields. Keep the old failure.
+
+Implementation update 2026-11-07: the buffered observer, dated CLI, development
+protocol and traced controls are implemented. The terminal artifact records the
+qualification outcome. Exp8899 owns future measurement acceptance. Ops and BMAD
+reconciliation remain conductor-owned. No milestone activation is authorized.
+
 ### REQ-REPORT-8895: Measure continuous small-energy learning with signed relational features
 
 Seal predictions before delayed labels. Run the eight frozen feature/control arms on24 paired streams. Preserve actual numerical updates, atomic template admissions, restart equality, full pending drains and read-only retention.

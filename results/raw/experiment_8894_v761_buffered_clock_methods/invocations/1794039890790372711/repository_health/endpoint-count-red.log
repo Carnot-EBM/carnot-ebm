@@ -1,0 +1,23 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________________ test_partition_controls ____________________________
+
+    def test_partition_controls():
+        """SCENARIO-REPORT-8894-CONTRACT: reject each old clock failure explicitly."""
+        for missing in range(len(endpoints())):
+            dropped = endpoints()
+            del dropped[missing]
+>           assert not m.partition(dropped,0,70,endpoint_count=8)['valid']
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: partition() got an unexpected keyword argument 'endpoint_count'
+
+tests/python/test_buffered_clock_methods_8894.py:40: TypeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_buffered_clock_methods_8894.py::test_partition_controls
+1 failed, 1 warning in 3.25s

@@ -1,0 +1,283 @@
+......F.....                                                             [100%]
+=================================== FAILURES ===================================
+________________________ test_private_cli_and_tampering ________________________
+
+tmp_path = PosixPath('/tmp/collection-9edc7ce694bb4dc9af6a2b2c41211d8d/0/tmp/test_private_cli_and_tampering0')
+
+    def test_private_cli_and_tampering(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8894-CONTRACT: actual private CLI and cold replay leave the checkout."""
+        output = tmp_path / (m.NAME + ".json")
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        child = subprocess.run(
+            command
+            + [
+                "--date",
+                "20261107",
+                "--private-output",
+                "--private-world-limit",
+                "1",
+                "--output",
+                str(output),
+            ],
+            cwd=tmp_path,
+            env=env,
+            text=True,
+            capture_output=True,
+            timeout=180,
+        )
+>       assert child.returncode == 0, child.stdout + child.stderr
+E       AssertionError: [exp8894] phase=before_preconditions completed=0 pending=0
+E         [exp8894] phase=after_preconditions completed=0 pending=0
+E         [exp8894] phase=before_venv completed=0 pending=0
+E         [exp8205] phase=before_subprocess_venv completed=0 pending=1
+E         [exp8205] phase=after_subprocess_venv completed=1 pending=0
+E         Using CPython 3.12.13 interpreter at: .venv/bin/python
+E         Creating virtual environment at: /tmp/exp8894-installed-o5xgx2wp/venv
+E         Activate with: source /tmp/exp8894-installed-o5xgx2wp/venv/bin/activate
+E         [exp8894] phase=after_venv completed=0 pending=0
+E         [exp8894] phase=before_install completed=0 pending=0
+E         [exp8205] phase=before_subprocess_install completed=0 pending=1
+E         Using Python 3.12.13 environment at: /tmp/exp8894-installed-o5xgx2wp/venv
+E         Resolved 1 package in 3ms
+E         Prepared 1 package in 81ms
+E         warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+E                  If the cache and target directories are on different filesystems, hardlinking may not be supported.
+E                  If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+E         Installed 1 package in 146ms
+E          + carnot-ebm==0.1.0b1 (from file:///tmp/collection-9edc7ce694bb4dc9af6a2b2c41211d8d/0/tmp/test_private_cli_and_tampering0/raw/experiment_8894_v761_buffered_clock_methods/invocations/1794038574760288131/measured/carnot_ebm-0.1.0b1-py3-none-any.whl)
+E         [exp8205] phase=after_subprocess_install completed=1 pending=0
+E         [exp8894] phase=after_install completed=0 pending=0
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=before_development_block completed=0 pending=24
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=1 pending=23
+E         [exp8894] phase=before_development_block completed=1 pending=23
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=2 pending=22
+E         [exp8894] phase=before_development_block completed=2 pending=22
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=3 pending=21
+E         [exp8894] phase=before_development_block completed=3 pending=21
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=4 pending=20
+E         [exp8894] phase=before_development_block completed=4 pending=20
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=5 pending=19
+E         [exp8894] phase=before_development_block completed=5 pending=19
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=6 pending=18
+E         [exp8894] phase=before_development_block completed=6 pending=18
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=7 pending=17
+E         [exp8894] phase=before_development_block completed=7 pending=17
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=8 pending=16
+E         [exp8894] phase=before_development_block completed=8 pending=16
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=9 pending=15
+E         [exp8894] phase=before_development_block completed=9 pending=15
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=10 pending=14
+E         [exp8894] phase=before_development_block completed=10 pending=14
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=11 pending=13
+E         [exp8894] phase=before_development_block completed=11 pending=13
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=12 pending=12
+E         [exp8894] phase=before_development_block completed=12 pending=12
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=13 pending=11
+E         [exp8894] phase=before_development_block completed=13 pending=11
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=14 pending=10
+E         [exp8894] phase=before_development_block completed=14 pending=10
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=15 pending=9
+E         [exp8894] phase=before_development_block completed=15 pending=9
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-scan-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-scan-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=16 pending=8
+E         [exp8894] phase=before_development_block completed=16 pending=8
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=17 pending=7
+E         [exp8894] phase=before_development_block completed=17 pending=7
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=18 pending=6
+E         [exp8894] phase=before_development_block completed=18 pending=6
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=19 pending=5
+E         [exp8894] phase=before_development_block completed=19 pending=5
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-indexed-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=20 pending=4
+E         [exp8894] phase=before_development_block completed=20 pending=4
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=21 pending=3
+E         [exp8894] phase=before_development_block completed=21 pending=3
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=22 pending=2
+E         [exp8894] phase=before_development_block completed=22 pending=2
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=23 pending=1
+E         [exp8894] phase=before_development_block completed=23 pending=1
+E         [exp8894] phase=before_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=0 pending=0
+E         [exp8894-worker] phase=before_warmup completed=0 pending=4
+E         [exp8894-worker] phase=before_block completed=0 pending=4
+E         [exp8894-worker] phase=after_block completed=4 pending=0
+E         [exp8894] phase=after_cold-development8894_later_ordinary_8_000_support-size_aware-0 completed=4 pending=0
+E         [exp8894] phase=after_development_block completed=24 pending=0
+E         [exp8894] phase=before_disposal completed=0 pending=0
+E         [exp8894] phase=after_disposal completed=0 pending=0
+E         [exp8894] phase=before_owned_validation completed=0 pending=0
+E         [exp8894] phase=after_owned_validation completed=0 pending=0
+E         [exp8894] phase=before_terminal_publication completed=0 pending=0
+E         [exp8894] phase=before_adversarial completed=0 pending=0
+E         [exp8205] phase=before_subprocess_adversarial completed=0 pending=1
+E         [exp8205] phase=waiting_adversarial completed=0 pending=1
+E         [exp8816] phase=child_adversarial_elapsed_30s completed=0 pending=1
+E         Scanned 1 artifact(s); 0 flagged.
+E         
+E         [exp8205] phase=after_subprocess_adversarial completed=1 pending=0
+E         [exp8894] phase=after_adversarial completed=0 pending=0
+E         [exp8894] phase=before_row_consistency completed=0 pending=0
+E         [exp8205] phase=before_subprocess_row_consistency completed=0 pending=1
+E         
+E         verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+E           No row/verdict contradictions among the artifacts that could be checked.
+E         [exp8205] phase=after_subprocess_row_consistency completed=1 pending=0
+E         [exp8894] phase=after_row_consistency completed=0 pending=0
+E         [exp8894] phase=before_outside_checkout_replay completed=0 pending=0
+E         [exp8205] phase=before_subprocess_cold_replay completed=0 pending=1
+E         [exp8894] phase=replay_rejected completed=0 pending=0
+E         [exp8205] phase=after_subprocess_cold_replay completed=1 pending=0
+E         [exp8894] phase=after_outside_checkout_replay completed=0 pending=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8894_v761_buffered_clock_methods.py", line 14, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/buffered_clock_runner_8894.py", line 710, in main
+E             publication = publish_primary(output, value, lambda candidate: terminal(candidate, raw))
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py", line 73, in publish_primary
+E             raise ValueError("candidate_rejected")
+E         ValueError: candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...cation.py", line 73, in publish_primary\n    raise ValueError("candidate_rejected")\nValueError: candidate_rejected\n').returncode
+
+tests/python/test_buffered_clock_methods_8894.py:226: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_buffered_clock_methods_8894.py::test_private_cli_and_tampering
+1 failed, 11 passed, 1 warning in 206.13s (0:03:26)

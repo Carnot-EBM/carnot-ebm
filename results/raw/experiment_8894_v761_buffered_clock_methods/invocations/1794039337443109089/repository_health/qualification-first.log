@@ -1,0 +1,20 @@
+[exp8894] phase=before_measured_qualification completed=0 pending=0
+[exp8205] phase=before_subprocess_collect_once completed=0 pending=1
+[exp8205] phase=waiting_collect_once completed=0 pending=1
+[exp8816] phase=child_collect_once_elapsed_30s completed=0 pending=1
+[exp8205] phase=waiting_collect_once completed=0 pending=1
+[exp8205] phase=after_subprocess_collect_once completed=1 pending=0
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/buffered_clock_runner_8894.py", line 387, in validate
+    return dict(runner.validate(raw, private))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/size_aware_complete_runner_8874.py", line 457, in validate
+    return dict(validator.validate(raw, private))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/evidence_evaluation_runner_8779.py", line 72, in validate
+    plan, collection = collect(private, raw, suites, e.TESTS, child)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/collection_contract.py", line 43, in collect
+    raise ValueError("single_exact_collection_failed")
+ValueError: single_exact_collection_failed
