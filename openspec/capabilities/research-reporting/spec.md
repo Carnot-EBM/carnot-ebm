@@ -108671,6 +108671,23 @@ updates remain conductor-owned. No milestone or external publication changes.
 
 Check shared-final-test inclusion for every measured cell. Require standalone label-saving lower99-percent bound>0 and served-group census risk<=0.05 for benefit. Keep shared-union savings distinct. No post-outcome threshold changes are allowed.
 
+Freeze the Exp8893 population, seven policies, forty paired draw replicates,
+four groups, five mixtures and exact alpha allocation. Reexecute selection and
+certification from authenticated retained operands before opening census truth.
+Retain each scheduled bound, visited look, stopping certificate and paired
+inclusion premise. An altered common final event or one inclusion violation
+disqualifies the owned method. Charge240 selection labels per group and every
+scanned candidate, including repeats. Average five learned seeds within each
+replicate; simultaneous99-percent bounded paired intervals use40 independent
+replicates and the frozen23-contrast family. Keep the theoretical .01 family
+error per replicate separate from empirical violations and risk checks.
+
+Publish certificate_rows_ready_score independently of standalone_label_benefit_score
+and shared_union_benefit_score. Valid null measurement is terminal. Preserve
+immutable raw inputs, original producer assertions, execution authority, actual
+compute receipts and cold reconstruction. Private outputs cannot qualify
+production readiness. Ops and BMAD reconciliation remain conductor-owned.
+
 The experiment shall emit `results/experiment_8896_v761_shared_terminal_evaluation.json` under the complete V761 contract.
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
@@ -108682,6 +108699,18 @@ malformed inputs, observed-zero gates, valid null results and rehashed tampering
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
 Status: planned; experiment implementation and execution remain pending.
+
+Tests shall reject changed final alpha or prefixes, fixed-only certification,
+unsafe census benefit, missing/zero/rejected producer gates, altered raw bytes,
+phase-order drift and rehashed aggregate changes. A control with one unfinished
+policy per group shall retain standalone savings and zero shared-union savings.
+
+Implementation 20261107: the scoped evaluation module, authenticated runner and
+dated CLI reuse the frozen shared-terminal method and paired interval reducer.
+Eight traced tests pass with100 percent owned unit/child statement coverage and
+zero exclusions. Strict typing, Ruff and scoped spec coverage pass. Terminal
+invocation receipts retain actual measurement, private E2E and validator outcomes;
+ops and traceability reconciliation remain conductor-owned.
 
 ### REQ-REPORT-8897: Qualify separate source coverage and exact record decisions
 
