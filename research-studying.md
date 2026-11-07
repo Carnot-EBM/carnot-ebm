@@ -6752,3 +6752,26 @@ matched coverage/cost controls and matched-feature objective diagnostics.
 [Method map](docs/research-notes/v755-methods.md) records source dates, failed
 sweep requests and untested transfer assumptions. This is administrative method
 ingestion; no new scientific benefit or natural/hidden-game generalization.
+## V761 methods ingested — 2026-11-07, Exp8891
+
+The dated November 6 V761 scan is mapped in
+`openspec/change-proposals/research-methods-v761-20261107.json`. Four primary
+papers have retained source bytes under the Exp8891 raw directory. These are
+method inputs, with no inherited Carnot result or natural-text benefit claim.
+
+- SURE-RAG v2 motivates signed evidence and binding controls for Exp8892/8895,
+  with separate record sufficiency and source fidelity in Exp8897.
+- Memoir motivates matched read-only work, prediction before feedback, and
+  untouched retention in Exp8895/8898. Its procedural recall result has a
+  different scope from Carnot's mutable template library.
+- Sequential Certification motivates finite monitoring with explicit repeated
+  look correction in Exp8893/8896. Its asymptotic logistic bands do not prove
+  the local shared-final certificate; that construction needs its own proof.
+- Specification-Guided Generation motivates the distinction between formal
+  record validity and source semantics in Exp8897 and optional Exp8900.
+  No decoder integration or mandated generator training is selected.
+
+All eight requested topics and six secondary channels retain scan provenance.
+Semantic Scholar coverage remains partial: EBT returned twenty entries and a
+cursor; ARM–EBM returned HTTP 429. Vendor claims and GitHub discovery supply
+no physical hardware or ranking result. KAN and Ising variants stay deferred.

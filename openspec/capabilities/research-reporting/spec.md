@@ -108450,17 +108450,43 @@ These requirements describe staged work, not implemented behavior or measured be
 
 Bind thirteen complete task objects, a visible table, canonical digest and closing marker. Preserve independent V760 authority. Admit supplied causal CUDA evidence separately from administrative readiness.
 
+Qualify Exp8891 through Exp8903 with the existing full-object contract reader.
+Compare staged authority before activation and the actual active queue afterward;
+normalize only conductor placeholder encoding. Retain original V760 source and raw
+operand hashes without replacing its historical queue. Seven private corruptions
+must reject truncation, the last task, prompt, gate, model, marker and visible table.
+Ingest the dated V761 scan as eight topic rows and six secondary-channel rows,
+including retained primary bytes for SURE-RAG v2, Memoir, Sequential Certification
+and Specification-Guided Generation. Access failures remain explicit. CPU science
+roots cannot depend on contract_ready_score. Optional missing CUDA repair evidence
+sets runtime_repair_ready_score to zero without blocking administrative readiness.
+
 The experiment shall emit `results/experiment_8891_v761_branch_contract.json` under the complete V761 contract.
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
 
 #### SCENARIO-REPORT-8891-CONTRACT
 
+Private fixtures shall exercise staged and activated authority, all seven mutations,
+missing inputs, historical operand drift, source hash rejection, recorded absences,
+valid administrative null results, failed owned checks and rehashed replay drift.
+The real CLI shall use private output, terminal validators and cold replay outside
+the checkout without PYTHONPATH. Require 100 percent new unit/child statements and
+zero exclusions; record the single full-suite repository health run separately.
+
 Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
 Status: planned; experiment implementation and execution remain pending.
+
+Implementation (20261107): `v761_branch_contract.py` and the Exp8891 CLI reuse
+qualified full-object comparison, current-work receipts and private publication.
+Ten new tests cover authority lifecycle, corruption, historical and source drift,
+blocked inputs, failed owned controls and rehashed replay. Terminal qualification,
+measured statement coverage and repository health are retained per invocation
+under `results/raw/experiment_8891_v761_branch_contract/`. The primary result
+records the final administrative readiness; it makes no scientific benefit claim.
 
 ### REQ-REPORT-8892: Qualify signed evidence features for causal calibrated energy learning
 
