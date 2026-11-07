@@ -1,0 +1,244 @@
+{
+  "receipt": {
+    "boundary": "cold",
+    "command": [
+      "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+      "-I",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/request_cost_worker_8882.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8882_v760_request_cost_attribution/invocations/1793998669686044427/always_joint.py"
+    ],
+    "cwd": "/tmp/exp8882-installed-pmph7djw",
+    "ended_monotonic_ns": 679395522711685,
+    "installed_imports": [
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_core.py",
+        "sha256": "sha256:8c2d1bdf3e6d0be689b02a8d92180a6ff1d1e7743e4eb091a316931bd2fdcdd7"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_meter.py",
+        "sha256": "sha256:ae3e39e8c666030ecb8d3f3895d3910613f59e8190792eb235600d9dd25f54f8"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/indexed_witness.py",
+        "sha256": "sha256:2514808008dbe53b24c7343d9d79c09c307a0e3781111060d3997d880dfe207a"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/size_aware_witness.py",
+        "sha256": "sha256:9b4b5077d552ca6edae7a1da2d7869e1468d0ad8dd6d96cd818bd05ad6bed30f"
+      }
+    ],
+    "missing_reason": null,
+    "name": "cold-later_ordinary_256_001_support-scan-2",
+    "passed": true,
+    "python": "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+    "pythonpath_present": false,
+    "request_count": 1,
+    "resident_overhead_per_observation_s": 0.0,
+    "started_monotonic_ns": 679395448868540,
+    "stderr": "[exp8882-worker] completed=1 pending=0 cluster=later/ordinary/256/001\n",
+    "wall_time_s": 0.073843145
+  },
+  "rows": [
+    {
+      "arm": "scan",
+      "boundary": "cold",
+      "budget_exhausted": false,
+      "cluster_id": "later/ordinary/256/001",
+      "complete_wall_time_s": 0.073843145,
+      "component_intervals": [
+        {
+          "component": "parse_validate",
+          "end_ns": 679395511945545,
+          "start_ns": 679395511921730
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679395512478265,
+          "start_ns": 679395511951216
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679395512482974,
+          "start_ns": 679395512481832
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679395512988073,
+          "start_ns": 679395512482974
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679395512989756,
+          "start_ns": 679395512988073
+        },
+        {
+          "component": "preparation",
+          "end_ns": 679395513296432,
+          "start_ns": 679395512989756
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679395514301520,
+          "start_ns": 679395513296432
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679395514312490,
+          "start_ns": 679395514303974
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679395514338760,
+          "start_ns": 679395514334782
+        }
+      ],
+      "components_ns": {
+        "exact_joins": 1007913,
+        "parse_validate": 1055963,
+        "preparation": 306676,
+        "response_encode": 12494
+      },
+      "cpu_time_s": 0.004254922,
+      "decision": "support",
+      "denominator": 1,
+      "ended_monotonic_ns": 679395514355110,
+      "instrumented": true,
+      "metric": 1,
+      "missing_reason": null,
+      "noop_clock_ns": [
+        120,
+        320,
+        90,
+        50,
+        40,
+        50,
+        50,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        30,
+        40,
+        41,
+        40,
+        40,
+        40,
+        30,
+        31,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        30,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        50,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        51,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        31,
+        40,
+        40,
+        40,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30
+      ],
+      "operation_counts": {
+        "candidate_bindings": 255,
+        "fact_comparisons": 1020,
+        "join_attempts": 0,
+        "lookup_attempts": 2296,
+        "other_comparisons": 3094,
+        "other_iterations": 6930,
+        "query_visits": 512,
+        "record_visits": 262,
+        "request_dispatch": 1,
+        "request_disposal": 11862,
+        "request_parse_bytes": 11799,
+        "request_serialization": 63
+      },
+      "population": "ordinary",
+      "primitive_limit": 200000,
+      "primitive_operations": 38094,
+      "repeat": 2,
+      "request_elapsed_ns": 4274688,
+      "response_bytes": 63,
+      "seed": 7608882,
+      "size": 256,
+      "started_monotonic_ns": 679395509254341,
+      "startup_import_ns": 49396281.0,
+      "status": "completed",
+      "truth": "support",
+      "unit_id": "later/ordinary/256/001/support",
+      "wall_time_s": 0.004263077,
+      "witness": {
+        "?x": "0797308022bf06afa"
+      }
+    }
+  ]
+}

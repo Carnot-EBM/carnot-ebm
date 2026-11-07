@@ -1,0 +1,244 @@
+{
+  "receipt": {
+    "boundary": "cold",
+    "command": [
+      "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+      "-I",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/request_cost_worker_8882.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8882_v760_request_cost_attribution/invocations/1793998669686044427/always_joint.py"
+    ],
+    "cwd": "/tmp/exp8882-installed-pmph7djw",
+    "ended_monotonic_ns": 679405820582985,
+    "installed_imports": [
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_core.py",
+        "sha256": "sha256:8c2d1bdf3e6d0be689b02a8d92180a6ff1d1e7743e4eb091a316931bd2fdcdd7"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/_indexed_witness_meter.py",
+        "sha256": "sha256:ae3e39e8c666030ecb8d3f3895d3910613f59e8190792eb235600d9dd25f54f8"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/indexed_witness.py",
+        "sha256": "sha256:2514808008dbe53b24c7343d9d79c09c307a0e3781111060d3997d880dfe207a"
+      },
+      {
+        "path": "/tmp/exp8882-installed-pmph7djw/venv/lib/python3.12/site-packages/carnot/verify/size_aware_witness.py",
+        "sha256": "sha256:9b4b5077d552ca6edae7a1da2d7869e1468d0ad8dd6d96cd818bd05ad6bed30f"
+      }
+    ],
+    "missing_reason": null,
+    "name": "cold-later_ordinary_256_003_support-scan-1",
+    "passed": true,
+    "python": "/tmp/exp8882-installed-pmph7djw/venv/bin/python",
+    "pythonpath_present": false,
+    "request_count": 1,
+    "resident_overhead_per_observation_s": 0.0,
+    "started_monotonic_ns": 679405748385450,
+    "stderr": "[exp8882-worker] completed=1 pending=0 cluster=later/ordinary/256/003\n",
+    "wall_time_s": 0.072197535
+  },
+  "rows": [
+    {
+      "arm": "scan",
+      "boundary": "cold",
+      "budget_exhausted": false,
+      "cluster_id": "later/ordinary/256/003",
+      "complete_wall_time_s": 0.072197535,
+      "component_intervals": [
+        {
+          "component": "parse_validate",
+          "end_ns": 679405810226274,
+          "start_ns": 679405810203090
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679405810743215,
+          "start_ns": 679405810231654
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679405810747603,
+          "start_ns": 679405810746541
+        },
+        {
+          "component": "parse_validate",
+          "end_ns": 679405811248774,
+          "start_ns": 679405810747603
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679405811250357,
+          "start_ns": 679405811248774
+        },
+        {
+          "component": "preparation",
+          "end_ns": 679405811548287,
+          "start_ns": 679405811250357
+        },
+        {
+          "component": "exact_joins",
+          "end_ns": 679405812549818,
+          "start_ns": 679405811548287
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679405812561019,
+          "start_ns": 679405812552322
+        },
+        {
+          "component": "response_encode",
+          "end_ns": 679405812586877,
+          "start_ns": 679405812582930
+        }
+      ],
+      "components_ns": {
+        "exact_joins": 1004176,
+        "parse_validate": 1035916,
+        "preparation": 297930,
+        "response_encode": 12644
+      },
+      "cpu_time_s": 0.00412695,
+      "decision": "support",
+      "denominator": 1,
+      "ended_monotonic_ns": 679405812604069,
+      "instrumented": true,
+      "metric": 1,
+      "missing_reason": null,
+      "noop_clock_ns": [
+        90,
+        271,
+        71,
+        50,
+        40,
+        40,
+        40,
+        30,
+        40,
+        40,
+        40,
+        51,
+        40,
+        30,
+        40,
+        40,
+        30,
+        40,
+        30,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        50,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        30,
+        41,
+        30,
+        40,
+        40,
+        30,
+        40,
+        31,
+        30,
+        40,
+        30,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        40,
+        31,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        30,
+        40,
+        40,
+        41,
+        40,
+        40,
+        40,
+        30,
+        40,
+        31,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        40,
+        30,
+        41,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ],
+      "operation_counts": {
+        "candidate_bindings": 255,
+        "fact_comparisons": 1020,
+        "join_attempts": 0,
+        "lookup_attempts": 2296,
+        "other_comparisons": 3094,
+        "other_iterations": 6930,
+        "query_visits": 512,
+        "record_visits": 262,
+        "request_dispatch": 1,
+        "request_disposal": 11862,
+        "request_parse_bytes": 11799,
+        "request_serialization": 63
+      },
+      "population": "ordinary",
+      "primitive_limit": 200000,
+      "primitive_operations": 38094,
+      "repeat": 1,
+      "request_elapsed_ns": 4147018,
+      "response_bytes": 63,
+      "seed": 7608882,
+      "size": 256,
+      "started_monotonic_ns": 679405807658221,
+      "startup_import_ns": 48068077.0,
+      "status": "completed",
+      "truth": "support",
+      "unit_id": "later/ordinary/256/003/support",
+      "wall_time_s": 0.004135166,
+      "witness": {
+        "?x": "6436ec2dcbf43979a"
+      }
+    }
+  ]
+}

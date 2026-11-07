@@ -108359,6 +108359,22 @@ statement coverage with zero exclusions and the unchanged validator logs.
 
 ### REQ-REPORT-8889: Map measured certificate and adaptation work to supported hardware
 
+The operation map shall independently authenticate Exp8882, Exp8885 and Exp8888,
+including retained raw operands, source hashes and the original V760 authority.
+An observed-zero attribution gate retains measured rows as unqualified timing.
+Missing branches shall produce blocked rows without suppressing other branches.
+Parsing, exact joins, label checks, small-head arithmetic, template lookup,
+serialization/fsync and actual sampling calls shall remain separate operations.
+KV260 supports quadratic Ising k_max<=5 via ssh kria only. PolarFire remains
+Linux CPU dispatch. GateMate retains 0xffffffff until dated physical change
+and valid GM1Ax IDCODE0x20000001. This task performs no physical probes.
+Only qualified disjoint component fractions can produce Amdahl bounds. Missing
+fractions, transfers and device time remain null. Label savings imply no energy
+or time savings. Acquisition rankings are future workload hypotheses only.
+Replay shall reject rehashed derived fields and changed retained operands.
+Implementation and traced tests are present. The dated terminal artifact retains
+the actual validation receipts and coverage, separately from repository health.
+
 The experiment shall follow the complete frozen V760 task contract and produce
 `results/experiment_8889_v760_hardware_operation_map.json`. Its owned work shall retain causal/input
 provenance, explicit substrate, per-unit rows and terminal verdict semantics.
@@ -108373,6 +108389,11 @@ real CLI replay. Require actual unit/child statements at100 percent without
 exclusions, scoped lint/types/spec tracing, private E2E-018/021 and unchanged
 terminal scanners. Source/view, oracle and complete-cost boundaries shall be
 preserved. Status: planned; tests and implementation are not yet executed.
+
+Implementation status (20261107, Exp8889): five scoped tests pass, including
+private CLI publication, foreign-directory replay and rehashed tamper rejection.
+The terminal artifact records measured coverage and the remaining validation
+receipts. Mapping readiness grants no physical acceleration or learning benefit.
 
 ### REQ-REPORT-8890: Reconcile thirteen outcomes and decide information risk and cost continuations
 
