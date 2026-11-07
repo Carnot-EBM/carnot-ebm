@@ -23269,3 +23269,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-07: Measure continuous small-energy learning with signed relational features (⚠️ Research Finding) — honest_verdict=complete_null_signed_causal_streams; results/experiment_8895_v761_signed_causal_streams.json
 - 2026-11-07: Measure label savings under pathwise coverage inclusion (⚠️ Research Finding) — honest_verdict=complete_circular_positive_shared_terminal_evaluation; results/experiment_8896_v761_shared_terminal_evaluation.json
 - 2026-11-07: Qualify separate source coverage and exact record decisions (⚠️ Research Finding) — honest_verdict=complete_circular_positive_source_bound_decisions; results/experiment_8897_v761_source_bound_decisions.json
+- 2026-11-07: Audit feature-specific future benefit and untouched retention (⚠️ Research Finding) — honest_verdict=complete_null_signed_benefit_audit; results/experiment_8898_v761_signed_benefit_audit.json
