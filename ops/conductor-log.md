@@ -21510,3 +21510,4 @@ code |
 | 2026-11-07 07:35 UTC | Freeze sequential certification with a shared fina | OK | 90 passed, 1 warning in 28.32s |
 | 2026-11-07 08:50 UTC | Qualify buffered phase clocks before attributing r | OK | 93 passed, 1 warning in 115.26s (0:01:55) |
 | 2026-11-07 09:44 UTC | Measure continuous small-energy learning with sign | OK | 95 passed, 1 warning in 98.70s (0:01:38) |
+| 2026-11-07 10:31 UTC | Measure label savings under pathwise coverage incl | OK | 89 passed, 1 warning in 32.97s |
