@@ -108492,6 +108492,31 @@ records the final administrative readiness; it makes no scientific benefit claim
 
 Freeze explicit-refutation fraction and local binding-overlap features on development data. Preserve old checkpoints and a masked old-feature control. Match released labels, template exposure and optimizer work. Keep original benefit and retention thresholds.
 
+Implementation contract (20261107): freeze exactly two extra coordinates before
+successor evaluation: fraction of atoms with matching explicit negative evidence,
+and minimum Jaccard overlap of positive candidate tuples on the shared variables
+of every repeated-variable atom pair. Empty pair sets yield one; missing candidate
+sets yield zero. Conflicting signs remain visible in the existing conflict count.
+Canonical atom ordering and a complete fact-comparison ledger must make work and
+renaming/order invariance observable. No whole-query decision enters observation.
+The opt-in eight-coordinate linear schema refuses legacy or mismatched checkpoints;
+legacy stores and defaults stay unchanged. Development-only scaling, SGD .1,
+240 fit updates, threshold .5, capacity32 and the existing delay schedule are fixed.
+
+Freeze old masked and signed arms with all four original controls,24 fresh paired
+streams,48 online and48 untouched retention queries, eight families in each split,
+and exactly two development pilots. Do not execute successor evaluation here.
+Retain the nine original99-percent gates per arm and nine feature contrasts in a
+single27-interval multiplicity family, including benefit<=-.01 and retention<=.01.
+Retain development collisions, fit Brier, actual updates, dummy masking work,
+schema and leaked-label rejection controls. A diagnostic null may qualify methods.
+Authenticate original8881/8886 assertions, hashes and operands and current V761
+execution authority without requiring unrelated branch runtime repairs. Missing
+external evidence blocks; failed owned controls disqualify. Preserve every pilot
+slot on failure and keep all24 evaluation streams unopened. Bind actual unit/child
+coverage with zero exclusions, private E2E-018/021, lint/types/spec receipts,
+unchanged scanners and foreign-directory cold replay to immutable raw evidence.
+
 The experiment shall emit `results/experiment_8892_v761_signed_feature_methods.json` under the complete V761 contract.
 It shall retain raw unit rows, exact producer fields, source hashes, actual substrate
 and terminal verdict_class. Readiness shall remain separate from scientific benefit.
@@ -108502,7 +108527,15 @@ Before implementation, add failing controls for the registered method, absent or
 malformed inputs, observed-zero gates, valid null results and rehashed tampering.
 Run scoped unit/lint/type/spec checks and applicable private E2E-018/021 with
 cold CLI replay. Measure all owned unit/child statements without exclusions.
-Status: planned; experiment implementation and execution remain pending.
+Implementation (20261107): `signed_memory_8892.py` provides an opt-in schema on
+the original durable store. `signed_feature_methods_8892.py`, its runner and
+the dated CLI freeze two features, eight controls and24 unopened successor
+streams. Tests cover observation edges, naming/order invariance, schema refusal,
+causal release, leaked-label controls, retained interrupted pilots and rehashed
+tampering. The terminal artifact and immutable invocation raw directory record
+measured coverage, exact validation receipts, original input custody and the
+development-only verdict. Whole-suite health is recorded separately. Operational
+status, changelog and traceability reconciliation belong to the conductor.
 
 ### REQ-REPORT-8893: Freeze sequential certification with a shared final test
 
