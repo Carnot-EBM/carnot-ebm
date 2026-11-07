@@ -1,0 +1,251 @@
+"""REQ-REPORT-8907: preserve immutable observer operands across checkout edits."""
+
+from copy import deepcopy
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+import pytest
+
+from carnot.reporting import observer_custody_8907 as m
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+
+
+def test_original_replay_and_equivalence():
+    """SCENARIO-REPORT-8907-CONTRACT: replay original summaries without new clocks."""
+    result = m.qualify(execute=False)
+    assert result["passed"]
+    assert result["repetition_count"] == 1
+    assert result["future_world_count"] == 144
+    assert all(r["passed"] for r in result["observer_equivalence_rows"])
+    assert result["original_receipt_hashes"]
+
+
+def test_current_spec_append_is_irrelevant(tmp_path, monkeypatch):
+    """REQ-REPORT-8907: only retained spec bytes are historical authority."""
+    monkeypatch.setattr(m, "CURRENT_SPEC", tmp_path / "spec.md")
+    m.CURRENT_SPEC.write_text("unrelated later requirement\n")
+    assert m.qualify(execute=False)["passed"]
+
+
+@pytest.mark.parametrize("kind", ["spec", "code", "clock", "missing", "producer"])
+def test_retained_mutations(tmp_path, monkeypatch, kind):
+    """REQ-REPORT-8907: rehashed false bytes cannot replace a sealed operand."""
+    bundle = m.load(m.BUNDLE)
+    slot = next(s for s in bundle["slots"] if s["experiment_id"] == 8894)
+    if kind == "producer":
+        ref = slot["snapshots"][0]
+    else:
+        ref = next(
+            r
+            for r in slot["snapshots"]
+            if (
+                r["path"].endswith("/spec.md")
+                if kind == "spec"
+                else r["path"].endswith("/buffered_clock_methods_8894.py")
+                if kind == "code"
+                else "/cold-" in r["path"]
+            )
+        )
+    changed = tmp_path / Path(ref["path"]).name
+    if kind != "missing":
+        content = Path(ref["path"]).read_bytes()
+        if kind in {"producer", "clock"}:
+            value = m.load(ref)
+            if kind == "producer":
+                value["experiment_id"] = 8899
+            else:
+                value["rows"][0]["end_ns"] += 1
+                value["reproducibility_checksum"] = canonical_hash(value)
+            atomic_json(changed, value)
+        else:
+            changed.write_bytes(content + b"\n# mutation\n")
+    original = m.retained_path
+
+    def resolve(operand, index):
+        return changed if operand["sha256"] == ref["sha256"] else original(operand, index)
+
+    monkeypatch.setattr(m, "retained_path", resolve)
+    with pytest.raises((OSError, ValueError)):
+        m.qualify(execute=False)
+
+
+def test_current_code_mutation(tmp_path, monkeypatch):
+    """REQ-REPORT-8907: custody does not grandfather changed observer algorithms."""
+    original = m.sha256_file
+    monkeypatch.setattr(
+        m,
+        "sha256_file",
+        lambda p: "sha256:changed" if p == m.ROOT / m.OBSERVER else original(p),
+    )
+    with pytest.raises(ValueError, match="equivalence"):
+        m.qualify(execute=False)
+
+
+def test_bundle_anchor(tmp_path):
+    """REQ-REPORT-8907: a newly rehashed manifest cannot authorize new membership."""
+    path = tmp_path / "bundle.json"
+    atomic_json(path, {})
+    with pytest.raises(ValueError):
+        m.qualify(m.reference(path), execute=False)
+
+
+def test_private_cli_and_rehashed_rejection(tmp_path):
+    """SCENARIO-REPORT-8907-CONTRACT: actual child executes outside checkout."""
+    output = tmp_path / (m.NAME + ".json")
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+    child = subprocess.run(
+        command + ["--private-output", str(output)],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=180,
+    )
+    assert child.returncode == 0, child.stdout + child.stderr
+    value = m.load(m.reference(output))
+    assert value["retained_evidence_ready_score"] == 0
+    assert value["completed_count"] == 6
+    assert value["cold_replay_receipt"]["fresh_installed_control_executed"]
+    assert any("/fresh_control/retained_workers/" in r["path"] for r in value["raw_shard_hashes"])
+    child = subprocess.run(
+        command + ["--cold-replay", str(output)],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=180,
+    )
+    assert child.returncode == 0, child.stdout + child.stderr
+    bad = deepcopy(value)
+    bad["retained_evidence_ready_score"] = 1
+    bad["reproducibility_checksum"] = canonical_hash(
+        {k: v for k, v in bad.items() if k != "reproducibility_checksum"}
+    )
+    atomic_json(output, bad)
+    assert not m.replay(output)["passed"]
+
+
+@pytest.mark.parametrize("kind", ["missing_field", "observed_zero", "rejected_producer"])
+def test_producer_gate_diagnostics(kind):
+    """REQ-REPORT-8907: preserve zero, absent fields and invalid producer distinctions."""
+    value = dict(
+        observer_ready_score=1,
+        experiment_id=8894,
+        task_id="exp8894-buffered-clock-methods",
+        required_checks_passed=True,
+        verdict_class="circular_positive",
+    )
+    if kind == "missing_field":
+        value.pop("observer_ready_score")
+    elif kind == "observed_zero":
+        value["observer_ready_score"] = 0
+    else:
+        value["experiment_id"] = 8899
+    with pytest.raises(ValueError, match=kind):
+        m.producer_gate(value, m.PIN)
+
+
+def test_owned_controls(tmp_path):
+    """REQ-REPORT-8907: retain successful append and failed historical mutation attacks."""
+    controls = m.controls(tmp_path / "controls")
+    assert len(controls) == 6 and all(r["passed"] for r in controls)
+    assert controls[0]["rejected"] is False
+    assert all(r["rejected"] for r in controls[1:])
+
+
+def test_main_failure_routes_and_parser(tmp_path, monkeypatch):
+    """REQ-REPORT-8907: external absence blocks while failed owned work disqualifies."""
+    from types import SimpleNamespace
+    from carnot.reporting import observer_custody_runner_8907 as runtime
+    from carnot.reporting.selective_runner_8816 import unqualified
+
+    for argv in [["--date", "20261108"], ["--private-output", str(m.ROOT / "bad.json")]]:
+        with pytest.raises(SystemExit) as exc:
+            runtime.main(argv)
+        assert exc.value.code == 2
+    assert runtime.main(["--cold-replay", str(tmp_path / "absent.json")]) == 1
+    monkeypatch.setattr(
+        runtime, "namespace", lambda *a: SimpleNamespace(validate=lambda *a: unqualified())
+    )
+    assert not runtime.validate(tmp_path, tmp_path)["coverage"]["complete"]
+    monkeypatch.setattr(runtime, "terminal", lambda *a: dict(passed=True))
+    for error, verdict in [
+        (FileNotFoundError("operand"), "blocked"),
+        (
+            m.CustodyError(
+                dict(
+                    check="missing_file",
+                    path="/missing/retained",
+                    expected=m.PIN,
+                    observed=None,
+                    upstream="exp8894-buffered-clock-methods",
+                    artifact_field="retained_operand.sha256",
+                    hash=None,
+                )
+            ),
+            "blocked",
+        ),
+        (ValueError("owned_replay:control"), "disqualified"),
+    ]:
+
+        def failed(**kwargs):
+            raise error
+
+        monkeypatch.setattr(m, "qualify", failed)
+        output = tmp_path / verdict / (m.NAME + ".json")
+        assert runtime.main(["--output", str(output)]) == 0
+        value = m.load(m.reference(output))
+        assert value["verdict_class"] == verdict
+        assert value["retained_evidence_ready_score"] == 0
+        assert value["gate_check_summary"]
+        assert m.replay(output)["passed"]
+
+
+def test_qualified_build_and_validation_replay(tmp_path, monkeypatch):
+    """REQ-REPORT-8907: only measured validation can qualify complete retained controls."""
+    from types import SimpleNamespace
+    from carnot.reporting import observer_custody_runner_8907 as runtime
+    from carnot.reporting.selective_runner_8816 import unqualified
+
+    validation = unqualified()
+    validation.update(
+        receipts=[dict(passed=True)],
+        union=dict(passed=True),
+        coverage=dict(complete=True, percent=100, files=[]),
+    )
+    result = dict(passed=True)
+    monkeypatch.setattr(m, "qualify", lambda **kwargs: result)
+    monkeypatch.setattr(
+        m,
+        "controls",
+        lambda p: [
+            dict(
+                unit_id=k,
+                cluster_id="control",
+                arm="mutation",
+                seed=m.SEED,
+                metric=1,
+                denominator=1,
+                status="completed",
+                missing_reason=None,
+                passed=True,
+                rejected=k != m.CASES[0],
+                expected_rejected=k != m.CASES[0],
+            )
+            for k in m.CASES
+        ],
+    )
+    monkeypatch.setattr(runtime, "validate", lambda *a: validation)
+    monkeypatch.setattr(runtime, "terminal", lambda *a: dict(passed=True))
+    monkeypatch.setattr(
+        runtime, "namespace", lambda *a: SimpleNamespace(validation_evidence=lambda v: True)
+    )
+    output = tmp_path / (m.NAME + ".json")
+    assert runtime.main(["--output", str(output)]) == 0
+    value = m.load(m.reference(output))
+    assert value["verdict_class"] == "null" and value["retained_evidence_ready_score"] == 1
+    assert m.replay(output)["passed"]

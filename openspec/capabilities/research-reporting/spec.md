@@ -109066,6 +109066,17 @@ Before implementation, add failing controls for the specified method, absent or 
 
 ### REQ-REPORT-8907: Qualify retained observer bytes across later spec edits
 
+Consumer implementation contract (2026-11-07): authenticate the V761 capstone's
+sealed execution work manifest and original Exp8894 primary before resolving any
+operand. Resolve each original `(path, sha256)` through its content-addressed
+retained bytes, including the original spec. Compare every imported observer
+implementation operand with current bytes before isolated namespace execution.
+Run the unchanged observer replay and its fresh installed one-world control;
+retain original validation assertions and the unexecuted future roster. Current
+spec append is irrelevant to historical custody. Missing retained bytes block;
+failed owned equivalence, mutation or replay controls disqualify. No cost
+benchmark or observer overhead benefit is part of this qualification.
+
 Locate original Exp8894 primary, execution snapshot, retained spec/code/config/test operands and validation receipts. Resolve authority from its content-addressed execution bundle, not a mutable checkout path. Missing original operands are blocked; do not synthesize old bytes or rewrite historical receipts.
 
 Reuse the existing retained-evidence and namespace mechanisms at the observer consumer boundary. Compare the retained implementation with the prospective current implementation and require algorithm-equivalence controls. Apply only the smallest consumer-side change; do not edit shared validators, normalize away hashes or grandfather unrelated sources.
@@ -109077,6 +109088,14 @@ Preserve the original observer algorithm, one repetition and frozen future24-wor
 The experiment shall emit `results/experiment_8907_v762_observer_custody.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
 
 #### SCENARIO-REPORT-8907-CONTRACT
+
+Tests shall first fail for the new consumer. Cover pristine retained replay,
+unrelated current spec append, retained spec mutation, current and retained
+observer mutation, rehashed false clocks, missing operand, invalid primary,
+missing readiness field and observed-zero readiness. Fresh CLI replay shall run
+outside the checkout without PYTHONPATH. Owned statement coverage includes the
+CLI child, with zero exclusions. Retained evidence readiness is integer one only
+after original replay, algorithm equivalence and current owned validation pass.
 
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
