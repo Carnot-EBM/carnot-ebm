@@ -109117,6 +109117,36 @@ The experiment shall emit `results/experiment_8908_v762_natural_criterion_audit.
 
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
+Implementation contract, 2026-11-07: parse the two CSV headers separately. Require
+one user and one assistant per thread, unique message/span/original IDs, an exact
+original response ID, matching generator metadata, test split and byte-identical
+prompt/response. Validate half-open Python Unicode character offsets against text
+in both criteria. Keep invalid pairs as excluded slots, and absent slots as missing,
+in a fixed408-slot ledger. Duplicate identities exclude every affected pair.
+Freeze the five distinct categories before reduction. The released spelling
+`Subtle Introduction Of Baseless Info` explicitly maps to `SubtleBaselessInfo`;
+all other unregistered labels fail closed. Refusal is a separate category.
+Report binary evidence-failure, five-category presence and exact-span disagreement
+with the same valid-pair denominator. Never infer entailment from exact spans.
+
+Select up to12 pairs per QA/Summary task by hash of revision and original response
+ID, then fill any shortage from remaining eligible IDs in the same hash order.
+Publish exactly24 or an empty canary. Selection never reads annotations. The
+pinned dataset card's explicit benchmarking permission authorizes local evaluation;
+an absent redistribution license remains unresolved. Retain payloads outside the
+checkout with private directory permissions. Bind manifest, original bytes,
+crosswalk, private full-pair file, upstream assertions and executed source hashes.
+Cold replay must reject rehashed aggregate, source, rights, canary and log tampering.
+An authenticated complete rights/coverage audit is ready even with no eligible
+canary. Missing external operands block; failed owned validation disqualifies.
+
+Implementation status, 2026-11-07: implemented in
+`natural_criterion_audit_8908.py`, `natural_criterion_runner_8908.py` and the
+named experiment CLI. The28 traced tests pass. Unit and child coverage measures
+337/337 statements with zero exclusions. Private E2E-018/021 checks pass.
+The named result records actual execution and the separate repository-health
+timeout. Ops and traceability reconciliation remain conductor-owned.
+
 ### REQ-REPORT-8909: Measure guarded updates on sealed paired causal streams
 
 Require Exp8905 guarded_methods_ready_score=1 and candidate_ready_score=1 from authentic primary bytes. Import that task's future manifest and implementation, created earlier in this roadmap. Assert zero overlap with its pilots and anchors before unsealing24 paired48-query streams.
