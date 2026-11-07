@@ -108964,6 +108964,21 @@ The experiment shall emit `results/experiment_8904_v762_branch_contract.json` un
 
 #### SCENARIO-REPORT-8904-CONTRACT
 
+Execution qualification: retain the V761 disqualified primary, original owned
+source bytes and failed formatting logs before repairing that one source file.
+Authenticate imported historical operands without recursively importing prior
+scientific claims. Compare all thirteen full task objects against a fixed digest;
+reject title, order, prompt, gate-field, prior-field and deliverable-path changes.
+Keep activated authority valid when its planning queue has been consumed.
+Read optional repair evidence only through the existing authenticated causal
+reader, with current-date and exact-model custody checks. Missing, malformed,
+stale or unrelated receipts keep runtime readiness zero independently of CPU
+readiness. Test valid supplied evidence without opening a device. Retain actual
+unit/child SQLite statement coverage with no exclusions, private CLI replay,
+unchanged terminal scanners and per-source hashes. Literature rows describe
+falsifiable local methods and assumptions that do not transfer; no scientific
+benefit or independent natural-text generalization follows from ingestion.
+
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
 ### REQ-REPORT-8905: Freeze candidate promotion for the signed energy head
