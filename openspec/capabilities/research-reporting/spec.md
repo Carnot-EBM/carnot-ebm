@@ -108997,7 +108997,26 @@ The experiment shall emit `results/experiment_8905_v762_guarded_update_methods.j
 
 #### SCENARIO-REPORT-8905-CONTRACT
 
+Freeze split IDs before labels: SHA256(group_id) modulo4, bucket0 guards.
+Persist schema, candidate and committed version counters, group split assignments,
+released blocks, sealed pending predictions, acknowledgments and replay cursor.
+A failed promotion write preserves memory and disk; rejecting a candidate never
+changes deployed parameters. Groups cannot cross train, guard, anchor or retention
+boundaries. Released block permutations preserve their label multiset and affect
+only guarded_permuted fitting and guard scoring, never template admission.
+Development future Brier uses ordinals25–48 and retention checks0/24/48.
+Freeze eight pilot seeds and24 unopened evaluation seeds before measurement.
+Cold replay reconstructs pilot predictions, releases, promotions and reductions;
+rehashing false rows or readiness cannot make altered evidence pass.
+
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+Implementation record (20261107): `guarded_memory_8905.py` adds the opt-in
+`signed-candidate-committed-v1` state. The methods runner retains eight development
+pilots and the unopened24-stream manifest. Sixteen owned tests pass; all450 owned
+statements are covered with zero exclusions. The terminal Exp8905 artifact owns
+method readiness and development feasibility. Ops and traceability reconciliation
+remain conductor-owned.
 
 ### REQ-REPORT-8906: Prove safe refusal before an impossible final certificate
 
