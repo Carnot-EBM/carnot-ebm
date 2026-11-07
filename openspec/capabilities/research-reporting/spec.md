@@ -109020,6 +109020,23 @@ remain conductor-owned.
 
 ### REQ-REPORT-8906: Prove safe refusal before an impossible final certificate
 
+Implementation contract (20261107): compare the exact binomial CDF at risk1/20
+using integer arithmetic and rational alpha1/16800 or1/5600. This comparison
+defines all three arms; floating bounds are explanatory values only. Invalid
+counts or nonfinite bound output fail closed as an owned failure. For fixed
+errors, adding accepted correct draws decreases the upper bound. For fixed
+accepted count, adding errors increases it. At each failed registered look,
+retain optimistic statistics and decisions for every later registered look.
+An earlier certificate remains issued even if later statistics fail.
+
+Qualification retains all binary and ternary paths through eight draws,
+finite-state monotonicity checks, seeded full-budget sufficient states and an
+unsafe empirical-risk refusal counterexample. The methods artifact freezes
+forty fresh draw streams and the original4096-world census reference without
+opening their labels or making a savings claim. Repeated world draws remain
+paid requests; policies share each request ordinal once. Missing original
+producer or imported operands blocks; failed owned checks disqualify.
+
 Freeze seven policies, four groups, independent240-draw selection, candidate looks120/240/480/960, risk<=0.05 and existing exact binomial bounds. Keep early alpha=0.005/(7*4*3), final alpha=0.005/(7*4); fixed and sequential comparators share the identical final test. Total family allocation stays0.01.
 
 At each failed look enumerate all remaining registered looks. For each, give the current cell the most favorable attainable continuation: every remaining draw accepted and no additional errors. Refuse permanently only if even that optimistic sufficient statistic fails every remaining test. An error lower bound alone is insufficient. Prove exact-bound monotonicity or exhaustive finite-state equivalence, and test early pass, final-only pass, zero accepted, budget edge and numerical rounding.
@@ -109031,6 +109048,19 @@ Freeze three arms: fixed final, early acceptance only, early acceptance plus imp
 The experiment shall emit `results/experiment_8906_v762_finite_budget_methods.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
 
 #### SCENARIO-REPORT-8906-CONTRACT
+
+Add tests before implementation for early pass, final-only pass, no accepts,
+the final budget edge, exact numerical thresholds, malformed states, immutable
+certificates, all-policy group resolution, absent and altered producers, cold
+CLI replay and rehashed semantic tampering. Measure every added statement,
+including executed child CLI statements, with no coverage exclusions.
+
+Implementation record (20261107): `finite_budget_methods_8906.py` implements
+the exact refusal test and proof controls. `finite_budget_runner_8906.py`
+authenticates original producer bytes and owns terminal qualification. The
+terminal artifact records measured coverage, private E2E and cold replay results.
+This methods task opens no new calibration or census labels. Ops and traceability
+reconciliation remain conductor-owned under the task's final instruction.
 
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
