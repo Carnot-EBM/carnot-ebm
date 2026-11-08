@@ -1,5 +1,18 @@
 # Carnot — Operational Status
 
+## Next research milestone staged — 2026-11-08
+
+V764 is planned, not activated: fourteen tasks, Exp8930–Exp8943, in four phases.
+The paired design and queue are `openspec/change-proposals/research-roadmap-vNEXT.md`
+and `research-roadmap-next.yaml`. Prior V763 design/queue bytes are archived.
+
+The plan advances independent graph-error calibration, compatible delayed
+feedback replay, and complete durable-service cost measurement. It preserves
+V763's 43/50 live Qwen final-answer errors as source evidence, its null learning
+result, disqualified label-demand methods and failed timing-observer limit.
+No new scientific benefit is claimed. ARC remains suspended; GPU0 is the only
+planned LLM device. Existing active queue and conductor code remain unchanged.
+
 ## 2026-11-08 UTC — Exp8929 validation boundary repair
 
 **Last Updated:** 2026-11-08 (Exp8929 repair only)

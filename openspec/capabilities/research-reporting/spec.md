@@ -109753,3 +109753,137 @@ authenticated and retained, never promoted to owned success. The standalone
 E2E-018 CLI also passes 91 affected and 106 consumer tests, twelve mutations,
 terminal validators and outside-checkout replay. Global reconciliation retains
 1,142 unrelated missing spec references and the 2026-10-11 architecture date.
+
+## V764 planned evidence contract — 2026-11-08
+
+Status: planned only; no V764 implementation or scientific result is claimed.
+The staged design binds exactly fourteen tasks, Exp8930–Exp8943.
+All implementations require tests first, owned statement coverage, scoped lint/types,
+spec tracing, applicable E2E-018/021 and immutable terminal evidence.
+Closed verdict classes, independent denominators and exact upstream fields apply.
+
+### REQ-REPORT-8930: Bind fourteen tasks and preserve V763 evidence
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8930_v764_branch_contract.json`.
+SCENARIO-REPORT-8930-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8931: Freeze graph splits and bounded collection with detector-safe signals
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8931_v764_graph_source_methods.json`.
+SCENARIO-REPORT-8931-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8932: Separate semantic errors from parsing failures in the live pilot
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8932_v764_pilot_label_audit.json`.
+SCENARIO-REPORT-8932-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8933: Freeze compatible feedback replay for continuous energy learning
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8933_v764_compatible_replay_methods.json`.
+SCENARIO-REPORT-8933-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8934: Measure paired graph depth sensitivity with mandated Qwen
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8934_v764_depth_control.json`.
+SCENARIO-REPORT-8934-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8935: Collect fresh independently labeled Qwen answers in shard A
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8935_v764_graph_corpus_a.json`.
+SCENARIO-REPORT-8935-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8936: Collect fresh independently labeled Qwen answers in shard B
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8936_v764_graph_corpus_b.json`.
+SCENARIO-REPORT-8936-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8937: Freeze a small energy selector and strong calibration controls
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8937_v764_calibration_methods.json`.
+SCENARIO-REPORT-8937-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8938: Authenticate graph-disjoint labels before detector fitting
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8938_v764_graph_corpus_admission.json`.
+SCENARIO-REPORT-8938-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8939: Test calibrated energy decisions on unseen live-model errors
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8939_v764_graph_calibrated_decisions.json`.
+SCENARIO-REPORT-8939-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8940: Measure future predictions after compatible delayed replay
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8940_v764_compatible_replay_streams.json`.
+SCENARIO-REPORT-8940-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8941: Audit future replay benefit and untouched retention
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8941_v764_compatible_replay_benefit.json`.
+SCENARIO-REPORT-8941-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8942: Measure complete replay service cost and hardware limits
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8942_v764_replay_complete_cost.json`.
+SCENARIO-REPORT-8942-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.
+
+### REQ-REPORT-8943: Reconcile fourteen outcomes and exact continuation boundaries
+
+The experiment shall execute the frozen V764 task contract and produce
+`results/experiment_8943_v764_capstone.json`.
+SCENARIO-REPORT-8943-CONTRACT shall test valid evidence, changed-byte rejection,
+missing prerequisites, exact rows/denominators and outside-checkout replay.
+No oracle or historical compute may masquerade as a new learned result.
+Implementation status: Planned; execution owns detailed acceptance tests.

@@ -55755,3 +55755,99 @@ component fractions do not. Exp8914: strict row lint rejects administrative
 control-receipt fields as degenerate comparisons; its costs remain disqualified.
 Repair producer representation with all receipt bytes preserved; do not weaken
 the shared lint. ARC remains suspended. No new purchase or board probe is needed.
+
+## V764 planning source review — 2026-11-08
+
+Recorded before designing the V764 experiments. Dates below are primary-source
+submission dates. These are external findings, not Carnot measurements.
+
+### Findings that can change the next experiments
+
+- [ImplicitHop](https://arxiv.org/abs/2610.41169), October 30, 2026:
+  controlled graph reasoning varies composition depth. Carnot's Exp8918 now
+  supplies a local rate: 43 errors in 50 completed Qwen answers, Wilson 95%
+  interval 0.7381–0.9305. Follow with a separate paired depth control and fresh
+  graph-seed splits before a bounded collection. These remain final-answer
+  labels, with no step-localization claim. The graph oracle must stay outside
+  the evaluated detector's input and execution path.
+- [Beyond Binary Detection: Type-Aware Hallucination Analysis and Hierarchical
+  Detection in Financial Question Answering](https://arxiv.org/abs/2611.02258),
+  November 1, 2026: type-specific evaluation exposes failures hidden by pooled
+  accuracy, and answer length can confound detection. Transfer the diagnostic
+  discipline: distinguish malformed outputs, absent nodes and valid nodes at
+  the wrong distance. Keep a length/format-only comparator. Do not import the
+  financial benchmark's scores or its generated labels.
+- [Rethinking Transfer in Continual Learning: A Replay-Based
+  Realisation](https://arxiv.org/abs/2607.15587), July 17, 2026: useful replay
+  depends on compatible past examples and available forward-transfer headroom.
+  Test a local adaptation of signature-selected replay against uniform replay
+  at equal buffer, label and gradient budgets. This changes which released
+  feedback drives the small energy head, rather than repeating the failed
+  fast/slow optimizer. It is not a reproduction of the paper's full TSR method.
+- [Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning](https://arxiv.org/abs/2605.18871), May 15, 2026: separates learned
+  scoring from deterministic penalties and reports a model-identity shortcut.
+  Use separate oracle and detector channels, calibration baselines, and
+  disjoint graph families. No adapter ensemble or extra generator is justified
+  for the first independent-label calibration pilot.
+
+### Required topic scan
+
+| Topic | Primary source checked | Consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT, ICLR 2026 manuscript](https://openreview.net/pdf?id=ZBj3Qp1bYg); [Energy-Based Policy Orchestration](https://arxiv.org/abs/2611.02546), November 2, 2026 | EPO's modular energies suggest separate decision scopes. Robotics results do not establish text-verifier accuracy. |
+| Neural constraints | [Convex-SKM-Net](https://arxiv.org/abs/2610.38197), October 28, 2026 | Residual/subgradient correction requires explicit constraints; it does not repair missing natural-language truth. Defer a new constraint layer. |
+| Ising applications | [A computational phase transition for learning-to-sample from Ising models](https://arxiv.org/abs/2605.24752), May 23, 2026 | Parameter learning and efficient sampling are distinct. A small normalized decision head needs no new MCMC engine. |
+| Hallucinations | Type-aware analysis above; [HalluScoring 2026](https://arxiv.org/abs/2609.38355), September 29, 2026 | Keep shift and error-type diagnostics separate from pooled calibration. |
+| KAN | [KAN-CL](https://arxiv.org/abs/2605.12306), May 12, 2026 | Local knot anchoring targets retention. Existing retention bounds already pass; do not add a KAN branch before fixing forward benefit. |
+| Guided generation | [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 27, 2026; [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), July 10, 2025 | External reward and vision-layer methods are not independent correctness labels. Keep the error-source generator unassisted. |
+| Hardware sampling | [FPGA–ASIC co-design v2](https://arxiv.org/abs/2602.15985), September 4 revision, accepted ICCAD 2026 | Charge orchestration and transfer. Complete parent-clock costs remain useful even when component observers fail. |
+| Continuous learning | Transfer-selective replay above; [Replay in the Silent Degrees of Freedom](https://arxiv.org/abs/2609.31630), 2026 | Prefer a bounded replay change in the existing head; new sparse hidden architectures add an untested confound. |
+
+### Secondary channels and discovery limits
+
+- **OpenReview:** checked the EBT ICLR 2026 manuscript above and the
+  [CRV verification manuscript](https://openreview.net/pdf/91870c1fe75134b7dc25ff28dc74b4434d060b51.pdf).
+  CRV's cross-domain table reports limited transfer. Do not transfer its
+  reported step-verification scores to Carnot's final-answer corpus.
+- **Semantic Scholar:** both citation API requests succeeded on this review,
+  returning ten citing records each for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  EPO and Distributional EBMs were followed to their arXiv abstracts. Other
+  leads include MERITED, Certified Access, d-OPD and Graph Energy Matching.
+  This is a bounded citation sample, not an exhaustive literature review.
+- **Hugging Face:** [EBT's paper page](https://huggingface.co/papers/2507.02092)
+  was accessible. The type-aware detection paper's HF URL was unavailable;
+  its arXiv page was checked instead. Feed placement is not quality evidence.
+- **GitHub:** [weekly Python trending](https://github.com/trending/python?since=weekly)
+  returned navigation without a usable relevant repository ranking. The KAN
+  search surfaced author repositories [KAC](https://github.com/Ethanhuhuhu/KAC)
+  and [KAN training](https://github.com/DerKevinRiehl/neurips26_kan_training)
+  as discovery leads, not newly verified dependencies or trending claims.
+- **Extropic:** [Writing](https://extropic.ai/writing) returned only its shell.
+  [Hardware](https://extropic.ai/hardware) now advertises Z1 Stick and Card
+  early access in 2027; [Software](https://extropic.ai/software) describes Torx
+  and THRML. These are vendor statements. No local TSU access is established.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  still describes an energy-based constraint decision layer. No reproducible
+  new architecture, weights or local evaluation protocol was established.
+
+### Local evidence that limits adoption
+
+Exp8925 retires the fixed interpolated optimizer/guard/delay schedule: future
+Brier upper bounds are -0.00065057 versus frozen, +0.0115587 versus permuted
+labels, and +0.0339537 versus ordinary guarded updates. All three miss their
+registered benefit thresholds. Preserve its retention success and exact null.
+Exp8921's observer exceeds the 5% overhead ceiling. Do not derive component
+fractions from it or rerun its unchanged timing technique. Exp8920 is
+disqualified; its gated evaluation did not run. These branches need separate
+repairs, not automatic carry-forward. GPU 0 has new authenticated generation
+evidence from Exp8918; GPU 1 remains detached. ARC remains suspended.
+
+The historical scan also found Exp5829 and Exp5857 signature-compatible replay.
+Both report `verifier_is_oracle=true`; Exp5857 qualifies replay in an exact
+structural learner. Reuse its label-blind selector and collision/permutation
+controls where applicable. This precedent does not establish future Brier
+benefit in the current signed head. V764 therefore tests transfer to that head
+under equal gradient budgets; it does not claim signature replay is new.

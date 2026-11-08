@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-11-08 UTC — Stage V764 research plan
+
+- Record the current arXiv and secondary-source review in research references
+  before task design, including independent error typing and compatible replay.
+- Preserve V763 design/queue bytes and stage fourteen matching tasks,
+  Exp8930–Exp8943, with exact gates, prior-failure changes, bounded progress
+  steps, current Qwen model declarations and explicit compute classes.
+- Add planned OpenSpec, architecture and traceability bindings. The proposal
+  makes no execution claim and leaves the active queue and conductor intact.
+
 ## 2026-11-08 UTC — Operational retrospective for milestone 2026.11.763
 
 - Updated `results/operational_retro_2026_11_763.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.763`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 11 completed experiments (2 compute-bound, 9 synthesis-only) across 108.2 wall-time minutes (108 minutes / 1.8 hours, averaging 10 minutes per experiment).

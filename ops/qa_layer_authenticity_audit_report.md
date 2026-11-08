@@ -3,46 +3,44 @@
 
 # qa_layer_authenticity_audit_report — 2026-11-08
 
-Scanned 9 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 9 of 20 unit(s); rotation advances by 9 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 1 |
-| `MINOR_RISK` | 0 |
+| `CLEAN` | 0 |
+| `MINOR_RISK` | 1 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 8 |
+| `SILENT_NON_FIRING` | 7 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_substrate_declares_deterministic_non_live` — deterministic_cached_replay_no_live_llm` — present in results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json; returns False. `deterministic_local_sota_gguf_tokenizer_exact_oracle_replay_no_llm_generation` — recorded in results/experiment_6350_v547_bounded_terminal_handoff.json; returns False.
-- `adversarial_verify.py::_classify_current_task_inference_claim` — Execution receipts contradict a claimed precondition-only stop, but classification remains blocked and duration verification emits no flags: ```json { "honest_verdict": "complete: blocked_cuda_out_of_memory_after_first_batch", "inference_substrate": "live_llm_inference", "model_invoked": true, "generation_calls_completed": 1, "live_inference_duration_s": 0.5, "duration_s": 0.6 }
-- `adversarial_verify.py::_is_precondition_check_only_blocked` — json {"inference_substrate": "precondition_check_only"} ``` This is the literal declaration the docstring promises is independently sufficient. A principle-wrapped version also returns False because neither form is inspected. The declaration occurs in results/experiment_5006_moat_second_corpus.json; executing the helper on that artifact returned False.
-- `adversarial_verify.py::_is_verifier_scoring_only` — Actual checked-in artifact: `results/experiment_2850_fover_dual_condition_integrity_v4.json`. Its fields include: ```json { "schema": "carnot.fover_dual_condition_integrity_v4", "live_model_invoked": false, "duration_s": 2.4823875427246094 } ``` Its methodology explicitly records dataset-only verifier scoring without local LLM invocation. This function returns false.
-- `adversarial_verify.py::_cheap_learned_value_marker` — json {"model_specs": {"architecture": "convolutional neural network"}} ``` ```json {"model_specs": {"architecture": "torch.nn.Linear(32, 1)"}} ``` Both return `None` despite describing architectures within the function’s claimed scope.
-- `adversarial_verify.py::_has_cheap_learned_value_methodology` — "reproducibility_checksum": {"principle": "Record the reproducibility checksum", "value": null}` With otherwise populated model specifications and seed, this missing checksum is accepted as auditable evidence.
-- `adversarial_verify.py::_cheap_learned_value_floor_descriptor` — json { "honest_verdict": "complete: cached constraints checked; no CNN or value_head was used", "duration_s": 0.02 } ``` With the remaining valid fields from the counterexample, this receives no duration flag despite explicitly denying the method needed for the cheaper floor.
-- `adversarial_verify.py::_is_aggregation_only` — Existing artifact: `results/experiment_2698_capstone_v256.json` ```json { "schema_version": "capstone-v1" } ``` The full artifact explicitly records synthesis of three upstream artifacts. The helper returns false, and the verifier emits METHODOLOGY_MISSING.
+- `adversarial_verify.py::_is_deterministic_verifier` — deterministic_cached_validator_frontier` Actual top-level declaration in `results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json`. That artifact records cached/exact certificate verification and explicitly sets `live_llm_evidence_used` to false. This predicate returns False.
+- `adversarial_verify.py::_descriptor_key_present` — field_provenance.offline_reproduced` in `results/experiment_6154_arc_task_aware_energy_generalization.json` contains the annotation `"false; reproduction is not used to claim a solve."` Passing that metadata block alone incorrectly recognizes offline_reproduced as real evidence. The metadata exclusion misses an existing project convention.
+- `adversarial_verify.py::offline_arc_methodology_descriptor` — inference_substrate="live_llm_inference"` with `schema="carnot.cross_corpus_verifier_matrix.v2"`, retained offline-reproduction fields, and omitted `model_specs`: the missing-model warning is silently suppressed.
+- `adversarial_verify.py::_validated_substrate_class_floor` — "inference_substrate_class": "model_load_no_generation"` together with `"generation_invoked": true` and `"generation_calls_completed": 48`.
+- `adversarial_verify.py::duration_floor_for_artifact` — inference_substrate="submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay"` with `duration_s=0.001`. This substrate occurs in `results/experiment_6195_arc_task_aware_prospective_fresh_transition.json` and `results/experiment_6209_arc_loo_task_aware_shadow.json`. The selector recognizes it as deterministic replay first, so a future sub-0.01-second claim escapes its dedicated AR
+- `adversarial_verify.py::check_execution_venue` — "execution_venue": null` — a plausible serialization of an unset venue variable.
+- `adversarial_verify.py::_artifact_run_date` — "run_date": 20260907` — a compact calendar date serialized as a JSON integer, including inside a principle annotation.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_substrate_declares_deterministic_non_live` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_classify_current_task_inference_claim` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_precondition_check_only_blocked` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_verifier_scoring_only` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_cheap_learned_value_marker` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_has_cheap_learned_value_methodology` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_cheap_learned_value_floor_descriptor` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_aggregation_only` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_deterministic_verifier` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_descriptor_key_present` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::offline_arc_methodology_descriptor` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_validated_substrate_class_floor` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::duration_floor_for_artifact` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::check_execution_venue` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_artifact_run_date` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_substrate_declares_deterministic_non_live
+## adversarial_verify.py::_is_deterministic_verifier
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -50,66 +48,68 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-Recognize declared deterministic, non-live work “without a name allowlist.”
+Recognize artifacts performing deterministic replay or reconciliation over checked-in evidence while making `NO live LLM call of their own`.
 
 ## FINDINGS
 
-1. **A — Existing honest declarations go unrecognized.** `return not any(marker in token for marker in live_markers)` rejects the cached-replay declaration in MISSED INPUT because its explicit denial contains `live_llm`. Confirmed downstream consequence: an honest one-second replay referencing upstream model IDs receives a critical 60-second duration violation.
+1. **A — Genuine verification goes unrecognized.** The checkout contains the real substrate declaration identified under MISSED INPUT. This predicate returns False for it despite its artifact documenting cached, exact verification without live inference. Exact membership plus two spelling fragments does not cover the claimed concept.
 
-2. **B/F — The live-work denylist is narrower than its concept.** `live_markers = ("live_llm", "live_model", "llama_cpp", "gguf")` represents live model execution but omits vLLM generation, among other implementations. Deterministic decoding still runs a model. The live-generation counterexample below returns True, receives a 0.0001-second floor, and produces no duration flag: absence of a recognized marker becomes affirmative non-live classification.
+2. **B / 5 — The fallback does not establish deterministic verification.** `return any(tok in sub for tok in ("replay", "reconciliation"))` checks neither determinism, checked-in evidence, nor absence of live calls. Real project artifacts combine live inference with metamorphic replay. The docstring’s assertion that this “never masks a real” live-model claim is unsupported by this implementation. In-memory reproduction confirmed that this classification suppresses a caller’s missing-methodology warning; a separate duration safeguard still applies the 60-second floor when recognizable model markers exist.
 
-3. **2/3/5 — Backend names and file formats are mistaken for execution.** `marker in token` has neither token boundaries nor operation context. Offline receipt auditing, tokenizer replay, and file validation can legitimately mention these markers. The second existing declaration in MISSED INPUT is rejected solely because it contains `gguf`, despite explicitly describing replay without generation.
+3. **2 / 3 — Substrings and negation produce false exemptions.** `tok in sub` matches inside longer words and ignores surrounding meaning. The examples below qualify even when replay is impossible or explicitly denied. Adding word boundaries alone would leave the negation and mixed-workload bugs intact.
 
-4. **3 — Negated determinism becomes positive evidence.** `if "deterministic" not in token.split("_"):` checks word membership, not affirmation. The negated declaration below returns True. Splitting prevents ordinary longer-word matches, but does not handle negation.
+4. **B — Recognition is also too narrow.** `("replay", "reconciliation")` stands in for deterministic replay or ledger reconciliation, but omits the ordinary verb reconcile and differently capitalized declarations. `if sub in DETERMINISTIC_VERIFIER_SUBSTRATES:` additionally rejects canonical declarations carrying explanatory suffixes unless the fallback happens to rescue them. Concrete failures appear below.
 
-5. **C — All four exclusions lack effective coverage in the focused regression suite.** All 15 provenance regression tests passed unchanged; deleting each of `live_llm`, `live_model`, `llama_cpp`, and `gguf` independently still passed all 15. Removing the deterministic-word guard failed two tests. The suite exercises the positive gate while leaving every exclusion individually deletable.
+5. **1 — Field handling depends on the helper; malformed lists can qualify.** The only extraction here is `sub = _inference_substrate_text(d)`. The checkout’s helper correctly unwraps principle-annotated scalar declarations and handles None, so alleging the original wrapped-dict bug would be false. However, it stringifies lists, allowing a list containing a negated replay description to receive this exemption.
 
-6. **1/4/D/E/G — No additional defect established.** This helper performs no dictionary-field reads, numeric comparisons, filesystem writes, absolute-path construction, or measurement. Its inspected caller supplies unwrapped text; direct dictionary/list/None rejection therefore does not establish a field-extraction bug. There is no terminal no-check return here; finding 2 is an unsafe affirmative default.
+6. **C — Overlapping recognition hides branch coverage.** In the checkout, one canonical sentinel already contains the replay token. Its exact-membership recognition is redundant within this predicate: removing that recognition leaves the fallback returning True. Output assertions cannot distinguish which branch recognized it. Suite-wide mutation survival was not tested.
+
+7. **4 / D / E / F / G — No corresponding defect demonstrated here.** The supplied function contains no numeric comparisons, absolute paths, writes, or measurements. Unrecognized inputs return False; this snippet does not itself establish that False means permission to skip verification.
 
 ## COUNTEREXAMPLE
 
-Honest replay falsely subjected to the live-model floor:
-
 ```json
 {
-  "inference_substrate": "deterministic_cached_replay_no_live_llm",
-  "duration_s": 1.0,
-  "model_specs": {"name": "unsloth/Qwen3.6-35B-A3B-GGUF"}
+  "inference_substrate": "live_llm_inference_with_metamorphic_replay",
+  "duration_s": 120.0,
+  "model_specs": {
+    "model": "unsloth/Qwen3.6-35B-A3B-GGUF"
+  }
 }
 ```
 
-Confirmed result: helper returns False; duration check emits a critical DURATION_TOO_SHORT.
+The predicate returns True despite declared live inference. In the checkout, the methodology caller consequently emits no missing-seed or missing-checksum warning. The same fragment using the canonical live-inference declaration emits that warning.
 
-Live generation incorrectly granted the deterministic floor:
+Additional reproduced failures:
+
+| Declaration | Actual result | Problem |
+|---|---:|---|
+| `live_llm_inference -- unreplayable online run` | True | Matches inside “unreplayable.” |
+| `live_llm_inference -- no replay; reconciliation not performed` | True | Ignores explicit negation. |
+| `Cached GAP4 Replay And Ledger Reconciliation` | False | Case-sensitive omission. |
+| `deterministic_verifier -- reads checked-in evidence; no live LLM` | False | Annotation defeats exact membership. |
+| `cached_gap4_ledger_reconcile_no_llm` | False | Omits “reconcile.” |
+
+This malformed declaration also returns True:
 
 ```json
-{
-  "inference_substrate": "deterministic_vllm_greedy_generation",
-  "duration_s": 1.0,
-  "model_specs": {"name": "unsloth/Qwen3.6-35B-A3B-GGUF"}
-}
+{"inference_substrate": ["live_llm_inference", "replay disabled"]}
 ```
-
-Confirmed result: helper returns True; duration floor is 0.0001 seconds; no duration flag.
-
-Additional negation probe: `non_deterministic_cpu_sampling` returns True.
 
 ## MISSED INPUT
 
-`deterministic_cached_replay_no_live_llm` — present in results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json; returns False.
+`deterministic_cached_validator_frontier`
 
-`deterministic_local_sota_gguf_tokenizer_exact_oracle_replay_no_llm_generation` — recorded in results/experiment_6350_v547_bounded_terminal_handoff.json; returns False.
+Actual top-level declaration in `results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json`. That artifact records cached/exact certificate verification and explicitly sets `live_llm_evidence_used` to false. This predicate returns False.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Require affirmative non-live provenance and distinguish execution from negated, historical, or tokenizer-only backend references; word boundaries alone cannot repair these semantics. Otherwise, honest replay receives fabrication flags while live deterministic generation escapes its applicable duration floor.
-
-Not checked: full-suite mutation survival or end-to-end runs; verification used direct probes and 15 focused tests, with no tracked-state writes.
+A mention of replay cannot establish an exemption requiring deterministic work without live inference; declaration validation and attributable invocation evidence must govern that decision. Only in-memory reproductions were run; the full suite and suite-wide mutation testing were not run. Risk: live workloads can receive methodology exemptions intended for cached verification.
 
 
-## adversarial_verify.py::_classify_current_task_inference_claim
+## adversarial_verify.py::_descriptor_key_present
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -117,67 +117,225 @@ Not checked: full-suite mutation survival or end-to-end runs; verification used 
 SILENT_NON_FIRING
 
 ## CLAIM
-`Classify live inference from attributable current-task provenance.`
+Return true when a real artifact field exists outside metadata; `prose-only mentions must not count as methodology evidence.`
 
 ## FINDINGS
-1. **A — Blocked status suppresses contradictory execution evidence.** `if _is_precondition_check_only_blocked(d):` immediately assigns `state = CLAIM_STATE_BLOCKED`, even when `live_evidence` contains completed generation and measured inference. The missed input below reproduced this: classification was blocked, and the duration checker emitted no flags. A blocked declaration must be reconciled with execution receipts before granting an exemption.
+1. **A/B/5 — Metadata is silently accepted as evidence.** `if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:` implements “outside metadata” using three excluded names. It omits field_provenance, the annotation container explicitly recommended by CLAUDE.md and present in actual artifacts. Recursion enters that container and counts explanatory field names as real methodology. The implementation is broader than its claim, and the caller accepts the resulting descriptor.
 
-2. **Compatible evidence becomes a false contradiction.** In the live-substrate branch, `if negative_evidence:` treats any negative invocation field as disproof of the entire workload. An embedding-only run can truthfully report successful inference and zero generation calls. The counterexample below produced `CLAIM_STATE_CONTRADICTORY` and a critical provenance flag despite its mutually consistent claims.
+2. **1/4 — Wrapped null bypasses the null rejection.** `if key == wanted and nested is not None:` tests the annotation envelope rather than its value. A bare null returns false; the same null inside a principle/value wrapper returns true immediately. Dict/list traversal handles their structural types, but the presence decision ignores the wrapped value.
 
-3. **Unattributed evidence erases attributable evidence.** `elif any(row["scope"] == "nested_unattributed" for row in live_evidence):` assigns ambiguity whenever even one positive receipt lacks attribution, regardless of other receipts proving current-task invocation. Adding a nested duplicate to an otherwise clear top-level invocation changed classification from live to ambiguous. The duration floor survived, but the downstream live-claim predicate became false, excluding the artifact from duration-based backfill stamping.
+3. **C — Four independent deletions survive the regression tests.** All 81 tests in tests/python/test_adversarial_verify_guards.py passed after independently removing the metadata exclusion, null rejection, dictionary recursion, or list recursion. Those tests do not enforce these behaviors. This establishes a gap in that regression file, not mutation survival across the entire suite.
 
-Field extraction: `substrate["declared_value"]`, `substrate["kind"]`, `substrate["source"]`, and `row["scope"]` read helper-produced records; no wrapper defect was demonstrated in these accesses. There are no free-text substring searches, numeric thresholds, absolute paths, writes, or measurement computations in the supplied function. Its enum membership set has no demonstrated omission. The default explicitly reports ambiguity rather than returning permission to skip.
+No free-text substring or negation matching, numeric thresholds, absolute paths, writes, or measurements occur in this function. Its terminal `return False` correctly represents absence; it is not the floor-recognizer default described in F.
 
 ## COUNTEREXAMPLE
-Honest embedding-only work, incorrectly classified as contradictory:
-
 ```json
 {
-  "honest_verdict": "complete: embedding_extraction_completed",
-  "inference_substrate": "live_llm_embedding_extraction",
-  "model_loaded": true,
-  "inference_invoked": true,
-  "generation_invoked": false,
-  "generation_call_count": 0,
-  "duration_s": 120.0
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "llm_call_count": 4,
+  "reproducibility_checksum": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "field_provenance": {
+    "reproduction_gate": {
+      "principle": "Only a completed offline replay supplies a gate."
+    }
+  }
 }
 ```
 
+With wanted set to `"reproduction_gate"`, the helper returns true despite the absence of a real gate. In the repository caller, this fragment suppresses METHODOLOGY_MISSING for missing random_seed and duration_s; removing field_provenance restores that warning. Both outcomes were reproduced.
+
 ## MISSED INPUT
-Execution receipts contradict a claimed precondition-only stop, but classification remains blocked and duration verification emits no flags:
+`field_provenance.offline_reproduced` in `results/experiment_6154_arc_task_aware_energy_generalization.json` contains the annotation `"false; reproduction is not used to claim a solve."`
+
+Passing that metadata block alone incorrectly recognizes offline_reproduced as real evidence. The metadata exclusion misses an existing project convention.
+
+## RECOMMENDATION
+WIDEN_PATTERN_TO_CONCEPT
+
+## RATIONALE
+Exclude documented annotation containers and unwrap field values before applying the null test. Full-suite mutation and end-to-end checks were not run; the reproduced risk is silently accepting annotations or missing values as methodology evidence.
+
+
+## adversarial_verify.py::offline_arc_methodology_descriptor
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+
+SILENT_NON_FIRING
+
+## CLAIM
+
+Recognize offline ARC methodology backed by “a stable reproducibility checksum,” while ensuring “a live_llm_inference artifact cannot use these fields to avoid naming the model it claims to have run.”
+
+## FINDINGS
+
+1. **A — Explicit live inference can receive the offline exemption.** The gate `_is_verifier_scoring_only(d) or _is_aggregation_only(d)` trusts helpers whose legacy schema fallbacks still match when the artifact explicitly declares live inference. Confirmed against the repository: a live cross-corpus verifier artifact received this descriptor and emitted no missing-model warning. Removing its legacy schema restored that warning. The docstring’s anti-bypass promise is false.
+
+2. **Field extraction — An empty wrapped checksum passes.** The line `if not evidence_fields or not d.get("reproducibility_checksum"):` checks the outer object’s truthiness. An annotation containing a null or empty value passes, as does a nonempty list containing null. Bare null fails; wrapping the same null changes the decision. This accepts absent checksum data as the promised stable checksum.
+
+3. **Evidence presence substitutes for evidence validity.** `_descriptor_key_present(d, key)` accepts recognized fields whose values are false, empty containers, or annotations containing null. Confirmed: a negative offline-reproduction flag alone, accompanied by a checksum, produces the descriptor. An explicit admission that reproduction failed becomes positive methodology evidence.
+
+4. **B — The name list omits an existing checkpoint spelling.** `OFFLINE_ARC_METHOD_DESCRIPTOR_KEYS` represents solver/reproduction/checkpoint methodology. It omits checkpoint_path, a real verifier checkpoint field in results/experiment_4581_levelup_selfplay.json and results/experiment_4593_levelup_selfplay.json. A verifier-scoring artifact identifying its checkpoint exclusively through that spelling returns no descriptor despite supplying a checksum.
+
+5. **C — Essential rules lack independent regression protection.** In-memory mutation confirmed that all 81 tests in tests/python/test_adversarial_verify_guards.py pass after removing every descriptor-key recognizer except solver_module. Separately deleting the substrate gate, or deleting the checksum condition, also leaves all 81 tests passing. The existing live-inference regression supplies no offline evidence, so it cannot expose the exemption bypass.
+
+6. **Remaining classes:** The supplied function contains no free-text substring matching, numerical thresholds, absolute paths, writes, or timing measurements. No additional boundary, text-negation, D, E, or G defect was found here. Its `return None` represents an unavailable exemption; that return alone does not establish a class-F bypass.
+
+## COUNTEREXAMPLE
 
 ```json
 {
-  "honest_verdict": "complete: blocked_cuda_out_of_memory_after_first_batch",
+  "schema": "carnot.cross_corpus_verifier_matrix.v2",
   "inference_substrate": "live_llm_inference",
-  "model_invoked": true,
-  "generation_calls_completed": 1,
-  "live_inference_duration_s": 0.5,
-  "duration_s": 0.6
+  "honest_verdict": "complete: live_cross_corpus_verifier_matrix",
+  "duration_s": 120.0,
+  "random_seed": 4587,
+  "offline_reproduced": false,
+  "reproducibility_checksum": {
+    "principle": "Hash run inputs for reproducibility.",
+    "value": null
+  }
 }
 ```
+
+Confirmed: the function returns an offline descriptor, and the methodology check emits no warning despite the declared live run having no model specification.
+
+## MISSED INPUT
+
+`inference_substrate="live_llm_inference"` with `schema="carnot.cross_corpus_verifier_matrix.v2"`, retained offline-reproduction fields, and omitted `model_specs`: the missing-model warning is silently suppressed.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+An explicit live claim must veto this exemption, and descriptor recognition must validate the underlying checksum and methodology values. The current implementation grants exemptions using contradictory declarations and empty evidence.
+
+No source or research artifacts were changed; full repository and end-to-end suites were not run. The demonstrated risk is silent acceptance of a live run with no model identification.
+
+
+## adversarial_verify.py::_validated_substrate_class_floor
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+Return an authoritative class floor when the declaration is valid and its `invocation evidence agrees`, preserving the older floor for contradictory declarations.
+
+## FINDINGS
+
+1. **A/B/5 — Generation can masquerade as load-only work.** The checks `if substrate_class in _NO_MODEL_SUBSTRATE_CLASSES and live_evidence:` and `if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:` distinguish model activity from its absence, but never distinguish loading from generation. A load-without-generation declaration accompanied by explicit completed generation calls receives the 2-second floor. Reproduced: both downstream checkers emit zero flags; removing the class restores the 60-second floor. The implementation is narrower than its claim that `invocation evidence agrees`.
+
+2. **3/5 — Honest absence of generation becomes a false contradiction.** `if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:` rejects an honest embedding run reporting a loaded model and zero generation calls. No generation is compatible with load-without-generation work. Reproduced: this helper returns None, and downstream checks emit two critical contradiction flags.
+
+3. **C — Two guards lack independent effect.** Deleting `if substrate_class == SUBSTRATE_CLASS_BLOCKED_NO_RUN:` and its return leaves the later None-floor guard covering that class. Deleting `if floor is None:` and its return changes nothing because the only current None floor belongs to the already-returned blocked class. Each deletion independently left all 30 existing boundary fixtures unchanged. Neither guard has independent mutation protection under the current table.
+
+4. **1 — No demonstrated extraction bug.** `substrate_class = d.get(SUBSTRATE_CLASS_FIELD)` requires a bare string, explicitly documented here. `if not isinstance(substrate_class, str) or substrate_class not in SUBSTRATE_CLASSES:` safely rejects dictionaries, lists, and None. The full verifier unwraps principle annotations before this call.
+
+5. **2/4/B/D/E/F/G — No additional demonstrated defect.** Membership checks use exact enum membership; there are no free-text substring matches, numeric threshold comparisons, absolute paths, writes, or measurement operations in this helper. No omitted enum member was demonstrated. Its `return None` paths invoke the caller’s fallback rather than directly approving an unchecked artifact.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "run_date": "20261108",
+  "honest_verdict": "complete_null_live_generation_canary",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_load_no_generation",
+  "duration_s": 3.0,
+  "model_loaded": true,
+  "generation_invoked": true,
+  "generation_calls_completed": 48
+}
+```
+
+False negative: selects a 2-second floor and produces no class or duration flags despite explicit generation evidence contradicting the class.
+
+## MISSED INPUT
+
+`"inference_substrate_class": "model_load_no_generation"` together with `"generation_invoked": true` and `"generation_calls_completed": 48`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Reconcile evidence by operation and provenance before assigning exemptions: absence of generation does not negate embedding inference, and unattributed receipts do not invalidate attributable receipts. All 15 existing focused test functions passed under direct invocation; all eight whole-branch deletion mutations caused failures, so no decorative decision branch was demonstrated, but the mixed-evidence cases remain uncovered.
-
-Full-suite and end-to-end checks were not run; confirmed risks include missed fabrication evidence and false critical flags.
+Validation must distinguish evidence of loading, inference, and generation before making a class authoritative. All 24 focused tests passed despite the reproduced failures, and both guard deletions survived the 30-fixture boundary panel. Full-suite mutation testing and corpus-wide impact were not checked; demonstrated risks include accepting implausible generation and critically flagging honest embedding work.
 
 
-## adversarial_verify.py::_strip_verdict_terminal_prefix
+## adversarial_verify.py::duration_floor_for_artifact
 
-**Verdict:** `CLEAN`
+**Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
-CLEAN
+SILENT_NON_FIRING
 
 ## CLAIM
-Strip one leading terminal-prefix marker and following whitespace so downstream checks recognize the verdict content consistently.
+`Return the duration floor selected from the artifact substrate.`
 
 ## FINDINGS
-none found
+
+1. **A/F — A blocked verdict suppresses contradictory execution evidence.** `if _is_precondition_check_only_blocked(d):` returns `None` before provenance classification. The counterexample below records completed generation calls but receives no floor; the repository’s duration and substrate-class checks emit no flags. A blocked label can therefore exempt work that demonstrably ran.
+
+2. **2/3 — Context-blind recognition overrides a calibrated floor.** `if _is_deterministic_verifier(d) or claim["reason"] == "deterministic_substrate_claim":` precedes `if _is_arc_live_agent_no_llm(d):`. The inspected helper recognizes replay anywhere in the substrate text, including a negated explanatory note. Both the real frozen-policy-replay substrate and an ARC declaration with such a note receive a 0.0001-second floor instead of their 0.01-second ARC floor—a hundredfold weakening.
+
+3. **B — The embedding recognizer omits an existing synonymous declaration.** Inside `if requires_live_floor:`, `_is_llm_embedding_extraction(d)` preserves the calibrated extraction floor only for its recognized names. The repository already recognizes the hidden-state-extraction declaration shown below as live work, but the embedding recognizer omits it. A plausible 35.28-second extraction consequently receives the 60-second generation floor and a critical duration flag instead of the 2-second extraction floor.
+
+4. **C — Four later branches are decorative.** The later occurrences of `_is_llm_embedding_extraction(d)`, `_is_local_sota_gguf_small_n(d)`, `_is_native_gguf_backend_bisect(d)`, and `_is_live_llm_inference(d)` are preempted by the earlier live-claim dispatch. Deleting all four in memory left all 48 tests across five focused test modules passing. This establishes survival in that subset; full-suite survival was not tested.
+
+5. **Remaining requested checks:** This body reads classifier-produced dictionaries rather than raw artifact fields; no direct wrapper-extraction defect is established here. Its state membership tests use enum values, and it contains no numerical threshold comparison, absolute filesystem target, write operation, or measurement computation. Unknown substrates reach the terminal `return None`, but the inspected caller emits an explicit warning, so that particular default is not a silent pass.
+
+## COUNTEREXAMPLE
+
+```json
+{
+  "run_date": "2026-11-08",
+  "honest_verdict": "complete: blocked_after_live_attempt",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "blocked_no_run",
+  "model_invoked": true,
+  "generation_calls_completed": 48,
+  "duration_s": 0.0001
+}
+```
+
+Observed: no floor, no duration flag, and no substrate-class contradiction flag.
+
+Additional reproduced inputs:
+
+- `{"inference_substrate":"offline_arcade_live_agent_runtime_self_discovery_no_llm; no replay was performed","duration_s":0.001}` receives the weakened 0.0001-second floor.
+- `{"inference_substrate":"live_llm_hidden_state_extraction","model_invoked":true,"duration_s":35.28}` receives the 60-second floor and a critical duration flag.
+
+## MISSED INPUT
+
+`inference_substrate="submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay"` with `duration_s=0.001`.
+
+This substrate occurs in `results/experiment_6195_arc_task_aware_prospective_fresh_transition.json` and `results/experiment_6209_arc_loo_task_aware_shadow.json`. The selector recognizes it as deterministic replay first, so a future sub-0.01-second claim escapes its dedicated ARC floor.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Execution evidence must be checked before granting a blocked exemption, and calibrated substrate selection must prevent broader recognizers from overriding specific workloads. Direct probes reproduced both missed implausible durations and a false quarantine of plausible extraction work.
+
+Full-suite mutation testing was not run, and the corpus sweep was stopped; these reproduced bypasses remain unresolved.
+
+
+## adversarial_verify.py::check_substrate_declaration_shape
+
+**Verdict:** `MINOR_RISK`
+
+## VERDICT
+MINOR_RISK
+
+## CLAIM
+Warn when `inference_substrate` is a dict with no `value` key.
+
+## FINDINGS
+1. **C — Unprotected exception:** Removing `and "value" not in value` leaves all 12 existing substrate-class test functions passing, as verified by an isolated in-memory mutation. The mutant incorrectly warns on a valid principle-wrapped declaration passed directly to this function. Existing tests exercise the malformed dict and plain string cases but do not assert that this function accepts a valid wrapper; upstream normalization masks the mutation in integration tests.
 
 ## COUNTEREXAMPLE
 none constructed
@@ -186,15 +344,13 @@ none constructed
 none found
 
 ## RECOMMENDATION
-KEEP
+ADD_TEST_CASE
 
 ## RATIONALE
-The configured prefixes match the documented markers and include separators; `lowered.startswith(prefix)` anchors recognition, and slicing removes exactly the matched prefix. The caller unwraps annotated verdicts; this helper has no field reads, numeric thresholds, writes, measurements, or check-disabling sentinel, and 81 isolated assertions passed.
-
-Not checked: full-suite mutation testing or end-to-end checks; independently deletable rules and defects elsewhere remain unverified.
+The supplied implementation matches its stated contract; no current misclassification was demonstrated. Add a direct test asserting that a valid principle-wrapped declaration produces no flags. Full-suite mutation testing was not run, so survival beyond the 12 tested functions remains unverified.
 
 
-## adversarial_verify.py::_is_precondition_check_only_blocked
+## adversarial_verify.py::check_execution_venue
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -202,49 +358,40 @@ Not checked: full-suite mutation testing or end-to-end checks; independently del
 SILENT_NON_FIRING
 
 ## CLAIM
-Recognize artifacts that stopped before compute through either an explicit `precondition_check_only` substrate declaration or a `blocked_` verdict, with optional terminal-prefix stripping.
+“Hold a declared `execution_venue` to a closed set, and give it NO floor.”
 
 ## FINDINGS
+1. **A/F — Explicit null bypasses validation.** `raw_venue = d.get(EXECUTION_VENUE_FIELD)` conflates an absent field with a present null. `if raw_venue is None:` then returns before validation. The repository’s REQ-SUBSTRATE-VENUE-1 explicitly requires non-string declarations to be critical; a declared null silently escapes that requirement. Reproduced both directly and after the verifier’s normalization.
 
-1. **A/B/5 — The explicit-substrate recognition path is missing.** The docstring promises “Recognizes two forms (either is sufficient)”, but the entire decision is `return stripped.startswith("blocked_") or stripped.startswith("blocked:")`. The function never reads `inference_substrate`. Its recognized concept is therefore narrower than its documented contract: an explicit `precondition_check_only` declaration alone always fails recognition.
+2. **Field extraction — Wrappers fail on direct calls.** `if not isinstance(raw_venue, str) or raw_venue not in EXECUTION_VENUES:` rejects every dictionary, including a valid principle annotation containing an allowed venue. However, the actual verifier unwraps annotations before calling this function, so this is **not a demonstrated production false positive**. Lists, numbers and booleans correctly receive critical flags; null alone escapes.
 
-2. **C — The substrate regression test tests the wrong branch.** The repository’s test named test_explicit_precondition_check_only_substrate_still_recognized also supplies a verdict beginning with `blocked_`. That verdict independently satisfies the return expression. All 16 focused tests pass despite the substrate recognition path being entirely absent.
+3. **Matching, context and boundaries — No additional defect found.** `raw_venue not in EXECUTION_VENUES` tests exact membership, not substrings. There is no free-text scanning, negation interpretation or numeric threshold. Omitting duration checks matches the explicit documentation.
 
-3. **C — Case normalization has no effective regression coverage in those tests.** Removing `.lower()` from `stripped = _strip_verdict_terminal_prefix(verdict).lower()` leaves all 16 focused tests passing. Removing either prefix alternative, terminal-prefix stripping, or field unwrapping causes failures, so those behaviors have effective coverage in this test file.
+4. **B — No demonstrated taxonomy omission.** `EXECUTION_VENUES` represents the dev host and named continuity boards. The repository’s set covers those documented venues; no omitted member was established.
+
+5. **C — Missing null regression.** The inspected tests exercise the absent-field return, non-string guard and membership rejection independently. No deletable validation rule was established, but they do not require rejection of an explicitly null declaration.
+
+6. **D/E/G — No applicable defect found.** This function computes no paths, writes no files and measures no work. The inspected venue integration test writes its artifact under a temporary directory.
 
 ## COUNTEREXAMPLE
-
 ```json
 {
-  "inference_substrate": "precondition_check_only",
-  "honest_verdict": "complete: preflight failed; model not cached",
-  "target_model": "Qwen/Qwen3.5-27B-GGUF",
-  "duration_s": 0.14
+  "execution_venue": null
 }
 ```
-
-The documented substrate alternative requires True; the function returns False. Executing the caller’s duration check on this fragment produces DURATION_TOO_SHORT with a 60-second floor, falsely treating an honest preflight failure as a model run.
+Expected: a critical invalid-venue flag for a present, non-string declaration. Actual: no venue flag.
 
 ## MISSED INPUT
-
-```json
-{"inference_substrate": "precondition_check_only"}
-```
-
-This is the literal declaration the docstring promises is independently sufficient. A principle-wrapped version also returns False because neither form is inspected.
-
-The declaration occurs in results/experiment_5006_moat_second_corpus.json; executing the helper on that artifact returned False.
+`"execution_venue": null` — a plausible serialization of an unset venue variable.
 
 ## RECOMMENDATION
-ADD_TOKEN
+ADD_TEST_CASE
 
 ## RATIONALE
-Restore the explicit substrate alternative and test it without a blocked verdict; verdict annotations already unwrap correctly, None becomes empty, and list verdicts remain unrecognized without evidence that lists are valid. The anchored prefixes show no demonstrated substring or negation defect, and this helper contains no numeric thresholds, absolute paths, writes, skip-producing default, or measurement computation.
-
-Only the focused tests, caller reproductions, and in-memory mutations were checked; broader tests and product E2E were not run, and honest preflight artifacts can receive false fabrication flags.
+Distinguish key absence from an explicitly invalid value, then add a regression requiring null to flag while absence remains silent. Annotation normalization already protects the production caller from the direct-call wrapper rejection. Full-suite mutation testing was not run; the reproduced null bypass remains a false negative.
 
 
-## adversarial_verify.py::_is_verifier_scoring_only
+## adversarial_verify.py::_artifact_run_date
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -252,378 +399,35 @@ Only the focused tests, caller reproductions, and in-memory mutations were check
 SILENT_NON_FIRING
 
 ## CLAIM
-Recognizes artifacts that scored verifiers against cached candidates without LLM inference, using an explicit substrate declaration or historical schema prefix.
+Return `The artifact's own run_date` in either documented compact or dashed form, or None when unreadable.
 
 ## FINDINGS
-
-1. **A/B — A real historical verifier-only artifact is missed.** The checked-in artifact identified under MISSED INPUT performs dataset-only verifier scoring without invoking an LLM, but this function returns false. `VERIFIER_SCORING_SCHEMA_PREFIXES` represents historical verifier-only workloads through selected schema spellings; it omits this actual successor to the documented experiment family.
-
-2. **Field extraction — Both schema reads assume string-compatible values.** The offending line is `schema = str(d.get("schema") or d.get("schema_version") or "")`. A principle-wrapped schema becomes a dictionary representation and fails recognition; a nonempty list likewise fails. Bare None safely permits fallback, but a truthy wrapper containing None masks a valid alternate schema. The substrate helper handles wrappers; this schema path does not. The main verifier normalizes wrappers upstream, so this failure applies to direct, unnormalized calls.
-
-3. **Boundary/context — Schema prefixes grant recognition despite contrary execution declarations.** `return any(schema.startswith(p) for p in VERIFIER_SCORING_SCHEMA_PREFIXES)` accepts longer schema names whose suffix explicitly describes live generation. A nonmatching explicit substrate merely falls through to this shortcut: declaring live inference does not prevent this function from returning true. That is broader than the claim “without invoking LLM inference”; the caller’s live-provenance duration logic separately mitigates the consequence.
-
-4. **C — Mutation coverage is undetermined.** No whole-suite mutation run established whether deleting either recognition mode or an individual prefix fails a test. The inspected explicit-substrate regressions do not establish independent coverage of the historical prefixes.
-
-5. **Other requested classes:** The supplied function contains no numeric thresholds, absolute paths, filesystem writes, or duration measurements. It does not scan verdict prose for forbidden phrases. Unrecognized inputs return false without a diagnostic, but that boolean alone does not establish that the caller disables checking.
+1. **A/F — Numeric dates silently bypass the cutover.** `if not isinstance(raw, str):` followed by `return None` discards a compact date stored as a JSON number. I reproduced the consequence in the repository caller: the numeric date produces no missing-class flag; the equivalent string produces a critical flag. An unreadable date becomes an exemption.
+2. **Field extraction — Unwrapping does not fix the type restriction.** `raw = d.get("run_date")` and `raw = raw.get("value")` correctly support annotated strings. Bare and annotated numeric dates are rejected. Lists, None, and dictionaries missing their value also become None; the parser provides no distinction between absent and malformed dates.
+3. **C — Whitespace handling lacks regression coverage.** All eight cutoff tests passed after deleting the stripping operation in `text = raw.strip()`. Removing either date-format recognizer failed two tests; removing annotation unwrapping failed one. Neither format recognizer is decorative in those tests.
+4. **Remaining classes — No additional demonstrated defect.** The format tuple covers both documented string spellings; no omitted promised string format was established. There are no substring predicates, negation checks, numeric cutoff comparisons, absolute paths, writes, or measured operations in this function. The slice widths match the documented formats.
 
 ## COUNTEREXAMPLE
-
 ```json
 {
-  "schema": {
-    "principle": "Identifies the historical verifier-scoring schema.",
-    "value": "carnot.fover_memory_leakage_v3"
-  }
+  "run_date": {
+    "principle": "Actual UTC calendar date of this experiment",
+    "value": 20260907
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts"
 }
 ```
 
-Direct invocation returns false; the identical schema written as a bare string returns true.
-
-A separate false recognition:
-
-```json
-{
-  "schema": "carnot.cross_corpus_verifier_matrix_live_generation_v1",
-  "inference_substrate": "live_llm_inference",
-  "honest_verdict": "complete: generated fresh candidates before scoring verifiers"
-}
-```
-
-This function returns true despite the explicit live-inference declaration.
+The parser returns None. The repository’s substrate-class check emits no flag despite the post-cutover date and missing class. Changing the value to `"20260907"` produces a critical missing-class flag.
 
 ## MISSED INPUT
-
-Actual checked-in artifact: `results/experiment_2850_fover_dual_condition_integrity_v4.json`.
-
-Its fields include:
-
-```json
-{
-  "schema": "carnot.fover_dual_condition_integrity_v4",
-  "live_model_invoked": false,
-  "duration_s": 2.4823875427246094
-}
-```
-
-Its methodology explicitly records dataset-only verifier scoring without local LLM invocation. This function returns false.
+`"run_date": 20260907` — a compact calendar date serialized as a JSON integer, including inside a principle annotation.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Unwrap schema fields before selecting the fallback, recognize the omitted historical workload, and prevent schema guesses from overriding explicit live-inference declarations. Targeted reproductions confirmed these classifier errors; upstream normalization and live-provenance checks limit their impact on the complete gate. Full-suite mutation and end-to-end checks were not run, so a complete fabrication-gate bypass remains unproven.
+Normalize supported date representations and distinguish absent dates from malformed dates before allowing a cutover exemption. The eight cutoff tests pass despite this reproduced bypass.
 
-
-## adversarial_verify.py::_cheap_learned_value_marker
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-“Return a cheap learned-value/CNN/linear marker from real fields.”
-
-## FINDINGS
-1. **A/B — Real architecture declarations go unrecognized.** `for marker in CHEAP_LEARNED_VALUE_MARKERS:` recognizes selected spellings rather than the claimed workload classes. Both declarations in MISSED INPUT return `None`. Verified through the repository caller: an otherwise method-bearing, honest 0.23-second cached scorer then receives the 1-second floor and a duration flag.
-
-2. **Unbounded substring matching.** Both `if marker in key_text:` and `if marker in text:` accept embedded substrings. The symbolic nonlinear-model description in COUNTEREXAMPLE selects a linear marker despite declaring no learned linear computation.
-
-3. **Negation and field values are ignored.** Dictionary-key matching executes `return marker` before examining `nested`. A matching key with a false or null value therefore counts as positive evidence. String matching likewise accepts an explicit denial of CNN/value-head execution. Verified through the caller: these inputs reduce the floor from 1 second to 0.0001 seconds and remove the duration flag.
-
-4. **Principle annotations contaminate execution evidence.** `found = _cheap_learned_value_marker(nested)` traverses both a wrapper’s explanation and its actual value. The exclusions in `OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS` omit per-field principle annotations. Wrappers and lists are traversed correctly, but explanatory text can supply the marker even when the wrapped value declares another method. That contradicts “from real fields” as evidence of actual execution.
-
-5. **C — Existing tests do not isolate the branches.** Direct execution of four existing duration test functions passed after independently removing key matching, dictionary-value recursion, list traversal, string matching, or metadata exclusions. Removing each marker individually also preserved all four passes except removal of the CNN marker, which failed one test. The longest cached-candidate marker is additionally unreachable: an earlier linear marker is always its substring. Full-suite mutation survival was not established.
-
-6. **Other requested classes:** There are no numeric thresholds, absolute paths, writes, or measurements in this helper; no off-by-one, D, E, or G defect is present. Its terminal `return None` does **not** disable the caller’s duration check here: the caller falls back to the stricter verifier floor, so F is not established.
-
-## COUNTEREXAMPLE
-An honest small CPU CNN scoring cached candidates:
-
-```json
-{
-  "inference_substrate": "verifier_ensemble_against_cached_candidates",
-  "honest_verdict": "complete: cached candidates scored",
-  "duration_s": 0.23,
-  "model_specs": {
-    "architecture": "convolutional neural network",
-    "framework": "torch",
-    "device": "cpu"
-  },
-  "random_seed": 4623,
-  "reproducibility_checksum": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-}
-```
-
-Observed: helper returns `None`; caller selects the 1-second floor and emits `DURATION_TOO_SHORT`.
-
-Independent reproductions:
-
-```text
-"nonlinear forward model using symbolic state transitions"
-→ "linear forward"
-```
-
-```json
-{"value_head_used": false}
-```
-
-Returns `"value_head"`.
-
-```json
-{
-  "scoring_method": {
-    "principle": "A CNN must be declared only when actually executed.",
-    "value": "exact constraint scoring"
-  }
-}
-```
-
-Returns `"cnn"`.
-
-```json
-{
-  "honest_verdict": "complete: cached candidates scored with exact constraints; no CNN or value head was used"
-}
-```
-
-Returns `"value head"`.
-
-## MISSED INPUT
-```json
-{"model_specs": {"architecture": "convolutional neural network"}}
-```
-
-```json
-{"model_specs": {"architecture": "torch.nn.Linear(32, 1)"}}
-```
-
-Both return `None` despite describing architectures within the function’s claimed scope.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Unrestricted mentions cannot establish which computation executed; adding tokens alone preserves the negation, annotation, and false-valued-key defects. The caller reproductions and focused mutations confirm both missed recognition and unjustified floor reductions.
-
-Full-suite, lint/spec-coverage, and unrelated E2E checks were not run; the demonstrated risks are false quarantine and weakened duration detection.
-
-
-## adversarial_verify.py::_has_cheap_learned_value_methodology
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-
-SILENT_NON_FIRING
-
-## CLAIM
-
-`True when a fast cached value-head run carries auditable methodology.`
-
-## FINDINGS
-
-1. **A / field extraction / claim mismatch:** `bool(d.get("model_specs"))` and `bool(d.get("reproducibility_checksum"))` accept nonempty annotation dictionaries even when their underlying values are null or empty. The counterexample returns True despite containing no methodology evidence. The implementation is broader than its claim.
-
-2. **Both seed reads accept missing or unusable evidence:** `(d.get("random_seed") is not None or d.get("seed") is not None)` checks only whether the outer object is None. Either annotated null passes; bare empty lists and dictionaries also pass. Accepting numeric zero is correct and should survive a fix.
-
-3. **C — individual requirements are not independently exercised by the inspected negative regressions.** The hardening_4623 and hardening_4635 tests remove all three evidence fields together. Deleting any single conjunct remains invisible to those cases because another missing field still causes rejection. Whole-suite mutation survival is unverified.
-
-## COUNTEREXAMPLE
-
-```json
-{
-  "model_specs": {
-    "principle": "Describe the cached value-head model",
-    "value": null
-  },
-  "random_seed": {
-    "principle": "Record the replay seed",
-    "value": null
-  },
-  "reproducibility_checksum": {
-    "principle": "Record the reproducibility checksum",
-    "value": null
-  }
-}
-```
-
-Observed result: True. Expected result: False. Annotation metadata alone satisfies every requirement.
-
-## MISSED INPUT
-
-`"reproducibility_checksum": {"principle": "Record the reproducibility checksum", "value": null}`
-
-With otherwise populated model specifications and seed, this missing checksum is accepted as auditable evidence.
-
-## RECOMMENDATION
-
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-
-Unwrap each field before checking its value, reject unusable seed containers, and test each requirement independently. No substring, negation, numeric-threshold, absolute-path, write, default-skip, or timing defect exists in this function; no omitted alias is substantiated.
-
-Full-suite mutation testing was not run; malformed evidence can qualify for the caller’s cheaper duration exemption.
-
-
-## adversarial_verify.py::_cheap_learned_value_floor_descriptor
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-
-SILENT_NON_FIRING
-
-## CLAIM
-
-`Return the calibrated sub-1s floor for method-bearing cheap value scoring.`
-
-## FINDINGS
-
-1. **A / 3 / 5 — Negated claims disable the intended floor.** `_cheap_learned_value_marker(d)` delegates recognition across the entire artifact. The negated verdict below qualifies despite explicitly denying the relevant methods. Verified through the real verifier: the floor drops from 1 second to 0.0001 seconds, and the artifact receives zero flags. Removing the negated clause restores the duration flag.
-
-2. **2 — Substrings incorrectly establish the scoring method.** The marker helper accepts the linear-method substring inside the nonlinear entrypoint shown below. It also interprets the CNN news-dataset name as evidence of a convolutional scoring model. Both probes receive the cheaper floor and zero flags. Neither establishes the method this function claims to require.
-
-3. **1 / 5 — Methodology presence is mistaken for replayable methodology.** `_has_cheap_learned_value_methodology(d)` accepts boolean model specifications, a boolean seed, and a boolean checksum. The malformed fields below earn the cheaper floor and produce zero verifier flags. This contradicts the stated requirement that “the methodology fields needed for replay are present.”
-
-4. **1 — Wrapped durations fail at direct callers.** `duration = d.get("duration_s")` passes the wrapper directly into `_is_finite_number(duration)`, which rejects it. A wrapped 0.02-second duration therefore produces `None`, while the equivalent bare duration produces the cheap descriptor. Main verification normalizes first, preventing this particular gate bypass; the summary caller passes raw fields and consequently reports the wrong floor.
-
-5. **B — Methodology recognition excludes supported representations.** The helper behind `_has_cheap_learned_value_methodology(d)` recognizes narrower field spellings than the general methodology check. Using the alternate model-specification casing or plural-seed representation below causes an otherwise qualifying cheap run to receive a critical duration flag. These are supported methodology representations elsewhere in the verifier, not absent methodology.
-
-6. **C — Focused tests leave independent requirements unprotected.** All four relevant regression tests still pass after individually deleting `_is_verifier_scoring_only(d)`, `_is_finite_number(duration)`, the sub-second comparison, or the missing-marker condition. Individually removing each methodology-field requirement also leaves all four green; removing the entire methodology requirement fails two tests. The substrate predicate repeats the caller’s condition, and the negative methodology fixtures remove all three fields together, allowing surviving conditions to conceal deletions. These results cover the four focused tests, not the entire suite.
-
-## COUNTEREXAMPLE
-
-False negative, verified with zero flags:
-
-```json
-{
-  "honest_verdict": "complete: cached constraints checked; no CNN or value_head was used",
-  "inference_substrate": "verifier_ensemble_against_cached_candidates",
-  "duration_s": 0.02,
-  "model_specs": {
-    "architecture": "tensor constraint verifier",
-    "framework": "torch"
-  },
-  "random_seed": 4623,
-  "reproducibility_checksum": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-}
-```
-
-Independent variants also reproduced:
-
-```json
-{"model_specs": {"scoring_entrypoint": "nonlinear_forward_pass", "framework": "torch"}}
-```
-
-```json
-{"dataset": "CNN/DailyMail cached candidates"}
-```
-
-Malformed methodology accepted for an explicitly declared cached value-head run:
-
-```json
-{"model_specs": true, "random_seed": false, "reproducibility_checksum": true}
-```
-
-Replacing the valid seed in a qualifying run with this supported representation instead produces a false-positive critical duration flag:
-
-```json
-{"random_seeds_used": [4623, 4624]}
-```
-
-The equivalent model-specification casing mismatch also reproduces:
-
-```json
-{"MODEL_SPECS": {"architecture": "linear value-head forward pass", "framework": "torch"}}
-```
-
-## MISSED INPUT
-
-```json
-{
-  "honest_verdict": "complete: cached constraints checked; no CNN or value_head was used",
-  "duration_s": 0.02
-}
-```
-
-With the remaining valid fields from the counterexample, this receives no duration flag despite explicitly denying the method needed for the cheaper floor.
-
-## RECOMMENDATION
-
-NEEDS_REDESIGN
-
-## RATIONALE
-
-The exception requires affirmative scoring-method evidence and valid methodology; unrestricted text mentions and truthy placeholders demonstrably bypass both requirements. The exclusive numeric boundary matches the docstring, these `None` returns retain the caller’s generic floor, and this function contains no absolute write target, persistent write, or prematurely computed measurement.
-
-Not checked: full-suite mutation coverage or research end-to-end runs; confirmed risks are silent duration-check bypass and false quarantine.
-
-
-## adversarial_verify.py::_is_aggregation_only
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-Recognize synthesis or aggregation over upstream artifacts that is “not itself a compute-bound experiment.”
-
-## FINDINGS
-1. **A/B — Real aggregation silently missed.** `AGGREGATION_SCHEMA_PREFIXES` represents aggregation schema families but omits an existing capstone schema identified below. The actual exp2698 artifact returns false and receives a spurious METHODOLOGY_MISSING warning. Its recorded work is synthesis of upstream artifacts.
-
-2. **Field extraction breaks on permitted wrappers.** `schema = str(d.get("schema") or d.get("schema_version") or "")` stringifies wrapped dictionaries instead of extracting their values. This affects both field reads. A truthy wrapper containing a null value also prevents fallback to a valid schema-version field. Lists become string representations without validation; bare None correctly permits fallback. The main verifier normalizes wrappers before calling checks, limiting this defect there, but direct helper calls demonstrably fail. The classifier’s kind lookup is safe under its inspected return contract.
-
-3. **Explicit live inference cannot veto the exemption.** After `_classify_inference_substrate(d)["kind"] == SUBSTRATE_KIND_AGGREGATION` fails, the schema fallback can still return true for a declared live workload. Verified through the actual verifier: the counterexample suppresses METHODOLOGY_MISSING; removing its schema restores that warning. This contradicts the claimed exclusion of compute-bound experiments.
-
-4. **Prefix matching accepts unrelated continuations.** `schema.startswith(p)` imposes no version or family boundary. The validation-schema counterexample below matches the configured version prefix and returns true despite identifying validation work. Prefix membership does not establish aggregation-only execution.
-
-5. **C — The schema rules survive deletion in focused tests.** Setting the entire `AGGREGATION_SCHEMA_PREFIXES` tuple to empty, in memory in both module import namespaces, leaves all 120 tests across four relevant test files passing. The baseline also passes 120 tests. The aggregation exemption regression fixture supplies an explicit aggregation substrate, which independently provides its exemption. This establishes a coverage hole in those tests; whole-suite mutation survival was not established.
-
-6. **Other requested classes:** No forbidden-phrase scan, numeric threshold, absolute path, write operation, or timing measurement appears in this function. Consequently, no additional negation, numeric-boundary, D, E, or G defect is established. An unmatched input returns false; that is not itself class F’s permission-to-skip behavior.
-
-## COUNTEREXAMPLE
-```json
-{
-  "schema": "carnot.milestone_capstone.v275",
-  "inference_substrate": "live_llm_inference",
-  "honest_verdict": "complete: milestone evaluation invoked the live model",
-  "duration_s": 120.0
-}
-```
-
-Actual: returns true and suppresses the missing-methodology warning despite explicitly declaring live inference.
-
-Additional boundary example: `"schema": "capstone_validation_v1"` returns true because it starts with `"capstone_v"`.
-
-Additional permitted-shape example:
-```json
-{
-  "schema": {
-    "principle": "Identify the schema used for upstream-artifact synthesis.",
-    "value": "carnot.milestone_capstone.v275"
-  }
-}
-```
-
-Actual: direct helper call returns false; the equivalent bare schema returns true.
-
-## MISSED INPUT
-Existing artifact: `results/experiment_2698_capstone_v256.json`
-
-```json
-{
-  "schema_version": "capstone-v1"
-}
-```
-
-The full artifact explicitly records synthesis of three upstream artifacts. The helper returns false, and the verifier emits METHODOLOGY_MISSING.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Normalize fields before recognition and let explicit current-task compute evidence veto the aggregation exemption; validate legacy schema families and version boundaries independently. Otherwise, live work loses methodology checks while honest synthesis receives false warnings. Full-suite mutation testing and repository-wide end-to-end checks were not run; verification used isolated probes and 120 focused tests.
+Full-suite mutation and unrelated end-to-end checks were not run; the demonstrated risk is silent exemption of a dated artifact from a required check.
 

@@ -1,5 +1,23 @@
 # Carnot — Architecture
 
+## V764 planned evidence boundary — 2026-11-08
+
+V764 stages fourteen tasks, Exp8930–Exp8943. It implements no runtime change
+during planning. Independent BFS final-answer truth stays outside the learned
+detector's two response-confidence features. Fresh graph seeds define all
+training, calibration and evaluation roles. The paired depth control can stop
+collection; the separate CPU learning branch continues independently.
+
+Continuous learning tests compatible replay of released train feedback in the
+existing signed energy head. Uniform replay and repeated-current updates use
+the same memory, label and two-gradient budgets. Operational guards never see
+untouched research retention. Complete durable-service outer clocks measure
+the changed work without the failed inline observer. Hardware component
+fractions remain unknown. ARC stays suspended; Qwen weights stay frozen.
+
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`; active V763 is unchanged.
+
 ## Planned V756 evidence and learning boundaries — 2026-11-04
 
 The thirteen-task V756 plan retains the existing causal template store, small

@@ -4721,3 +4721,24 @@ All entries below are planned, not implemented or tested experiments.
 | REQ-REPORT-8927 / SCENARIO-REPORT-8927-CONTRACT | exp8927-inline-request-cost | `results/experiment_8927_v763_inline_request_cost.json` | Planned |
 | REQ-REPORT-8928 / SCENARIO-REPORT-8928-CONTRACT | exp8928-hardware-operation-budget | `results/experiment_8928_v763_hardware_operation_budget.json` | Planned |
 | REQ-REPORT-8929 / SCENARIO-REPORT-8929-CONTRACT | exp8929-capstone | `results/experiment_8929_v763_capstone.json` | Planned |
+
+## V764 planned research traceability — 2026-11-08
+
+Planning only. Active V763 and historical results remain unchanged.
+
+| Requirement / scenario | Task | Deliverable | State |
+|---|---|---|---|
+| REQ-REPORT-8930 / SCENARIO-REPORT-8930-CONTRACT | exp8930-branch-contract | `results/experiment_8930_v764_branch_contract.json` | Planned |
+| REQ-REPORT-8931 / SCENARIO-REPORT-8931-CONTRACT | exp8931-graph-source-methods | `results/experiment_8931_v764_graph_source_methods.json` | Planned |
+| REQ-REPORT-8932 / SCENARIO-REPORT-8932-CONTRACT | exp8932-pilot-label-audit | `results/experiment_8932_v764_pilot_label_audit.json` | Planned |
+| REQ-REPORT-8933 / SCENARIO-REPORT-8933-CONTRACT | exp8933-compatible-replay-methods | `results/experiment_8933_v764_compatible_replay_methods.json` | Planned |
+| REQ-REPORT-8934 / SCENARIO-REPORT-8934-CONTRACT | exp8934-depth-control | `results/experiment_8934_v764_depth_control.json` | Planned |
+| REQ-REPORT-8935 / SCENARIO-REPORT-8935-CONTRACT | exp8935-graph-corpus-a | `results/experiment_8935_v764_graph_corpus_a.json` | Planned |
+| REQ-REPORT-8936 / SCENARIO-REPORT-8936-CONTRACT | exp8936-graph-corpus-b | `results/experiment_8936_v764_graph_corpus_b.json` | Planned |
+| REQ-REPORT-8937 / SCENARIO-REPORT-8937-CONTRACT | exp8937-calibration-methods | `results/experiment_8937_v764_calibration_methods.json` | Planned |
+| REQ-REPORT-8938 / SCENARIO-REPORT-8938-CONTRACT | exp8938-graph-corpus-admission | `results/experiment_8938_v764_graph_corpus_admission.json` | Planned |
+| REQ-REPORT-8939 / SCENARIO-REPORT-8939-CONTRACT | exp8939-graph-calibrated-decisions | `results/experiment_8939_v764_graph_calibrated_decisions.json` | Planned |
+| REQ-REPORT-8940 / SCENARIO-REPORT-8940-CONTRACT | exp8940-compatible-replay-streams | `results/experiment_8940_v764_compatible_replay_streams.json` | Planned |
+| REQ-REPORT-8941 / SCENARIO-REPORT-8941-CONTRACT | exp8941-compatible-replay-benefit | `results/experiment_8941_v764_compatible_replay_benefit.json` | Planned |
+| REQ-REPORT-8942 / SCENARIO-REPORT-8942-CONTRACT | exp8942-replay-complete-cost | `results/experiment_8942_v764_replay_complete_cost.json` | Planned |
+| REQ-REPORT-8943 / SCENARIO-REPORT-8943-CONTRACT | exp8943-capstone | `results/experiment_8943_v764_capstone.json` | Planned |
