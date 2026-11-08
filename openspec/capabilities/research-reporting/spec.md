@@ -109399,6 +109399,25 @@ owns ops/status, changelog and traceability reconciliation.
 
 ### REQ-REPORT-8916: Reconcile thirteen outcomes and decide guarded-learning continuations
 
+Implementation contract (2026-11-08): authenticate the original Exp8904 execution
+snapshot and full task digest before reduction. Each of the thirteen ordered
+slots must retain primary, rejected producer, authenticated pre-gate skip, or
+self custody. A disqualified durable-cost producer cannot qualify timing.
+Resolve changed specification paths only to retained bytes with the producer's
+original hash; preserve its assertions. Rebuild guarded bounds, label union
+ledgers and terminal equality, paired annotation dependence, whole-request
+costs and unknown hardware fractions from sealed operands. No model invocation
+can be inferred from a scheduler skip. Keep branch denominators separate.
+
+Additional SCENARIO-REPORT-8916-CONTRACT controls shall reject wrong identities,
+missing fields, Boolean gates, changed raw operands, invented skips, pooled
+denominators and rehashed semantic mutations. A valid scientific null remains
+null; external absence remains terminal blocked. Readiness requires owned
+validation, all thirteen slots and a successful cold replay before publication.
+Retain measured unit and child statement coverage with zero exclusions. Run
+one bounded full-suite health command separately. The conductor owns ops,
+changelog and traceability reconciliation; do not invent a V762 archive entry.
+
 Bind the original Exp8904 execution snapshot and exact Exp8904-Exp8916 contract. Account for every primary, disqualified producer, authenticated conductor pre-gate skip and this capstone self-slot. Missing scientific primaries are not success; retain exact producer field checks and raw custody.
 
 Independently recheck guarded future/retention bounds, operational-versus-research data separation, all-policy label union costs and terminal decision equality, corpus annotation dependence, Qwen actual invocation evidence, complete request/durable costs and hardware-compatible fractions. Never pool streams, calibration replicates, corpus cases and cost cells into one independent n.
@@ -109411,4 +109430,11 @@ The experiment shall emit `results/experiment_8916_v762_capstone.json` under the
 
 #### SCENARIO-REPORT-8916-CONTRACT
 
-Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units.
+
+Implementation (2026-11-08): `v762_capstone.py`,
+`v762_capstone_reduction.py` and the dated Exp8916 CLI retain original producer
+assertions and reconstruct branch-local endpoints. Controls live in
+`tests/python/test_v762_capstone_8916.py`. The terminal artifact and its
+hash-bound validation sidecar record execution and qualification. No archive,
+exclusion-manifest, activation or external-publication change is authorized.

@@ -1,0 +1,198 @@
+..FFFF......                                                             [100%]
+=================================== FAILURES ===================================
+_____________ test_individual_commits_and_restart[frozen_verified] _____________
+
+service_request = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261108T022724-3778525-c686145c/test_individual_commits_and_re0/service_request.json')
+arm = 'frozen_verified'
+
+    @pytest.mark.parametrize("arm", m.g.ARMS)
+    def test_individual_commits_and_restart(service_request: Path, arm: str) -> None:
+        """SCENARIO-REPORT-8914-CONTRACT: rejected candidates still pay real durable work."""
+        spec = json.loads(service_request.read_bytes())
+        spec["arm"] = arm
+        m.atomic_json(service_request, spec)
+        first = m.segment(service_request, 24)
+        last = m.segment(service_request, 48)
+        control_path = service_request.parent / "control" / "service_request.json"
+        m.atomic_json(control_path, spec)
+        control = m.segment(control_path, 48)
+        assert first["state"] == last["initial_state"]
+>       assert first["predictions"] + last["predictions"] == control["predictions"]
+E       AssertionError: assert [{'counts': [...e', ...}, ...] == [{'counts': [...e', ...}, ...]
+E         
+E         At index 0 diff: {'counts': [3, 2, 1, 1, 0, 3, 0.0, 0.25], 'primitive_checks': 3, 'work': {'fact_comparisons': 15, 'sign_record_reads': 5, 'binding_comparisons': 5, 'candidate_pair_comparisons': 6, 'atom_pairs': 1}, 'group_id': 'cost8914-300/online/0', 'ordinal': 1, 'due': 5, 'split': 'guard', 'evidence_hash': 'sha256:da0dff49dbc3a391c5c70167a20b93602bcfa41ed760c45a70f594b21314eb38', 'parameter_hash': 'sha256:4d40e104e33eadd427d7841f76ed738ce91673ceceb5b81960487dd24f38b542', 'template_hash': 'sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945', 'pre...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/python/test_guarded_durable_cost_8914.py:69: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8914] phase=segment_before completed=0 pending=24
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=segment_after completed=24 pending=24
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+______________ test_individual_commits_and_restart[ordinary_true] ______________
+
+service_request = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261108T022724-3778525-c686145c/test_individual_commits_and_re1/service_request.json')
+arm = 'ordinary_true'
+
+    @pytest.mark.parametrize("arm", m.g.ARMS)
+    def test_individual_commits_and_restart(service_request: Path, arm: str) -> None:
+        """SCENARIO-REPORT-8914-CONTRACT: rejected candidates still pay real durable work."""
+        spec = json.loads(service_request.read_bytes())
+        spec["arm"] = arm
+        m.atomic_json(service_request, spec)
+        first = m.segment(service_request, 24)
+        last = m.segment(service_request, 48)
+        control_path = service_request.parent / "control" / "service_request.json"
+        m.atomic_json(control_path, spec)
+        control = m.segment(control_path, 48)
+        assert first["state"] == last["initial_state"]
+>       assert first["predictions"] + last["predictions"] == control["predictions"]
+E       AssertionError: assert [{'counts': [...e', ...}, ...] == [{'counts': [...e', ...}, ...]
+E         
+E         At index 0 diff: {'counts': [3, 2, 1, 1, 0, 3, 0.0, 0.25], 'primitive_checks': 3, 'work': {'fact_comparisons': 15, 'sign_record_reads': 5, 'binding_comparisons': 5, 'candidate_pair_comparisons': 6, 'atom_pairs': 1}, 'group_id': 'cost8914-300/online/0', 'ordinal': 1, 'due': 5, 'split': 'guard', 'evidence_hash': 'sha256:da0dff49dbc3a391c5c70167a20b93602bcfa41ed760c45a70f594b21314eb38', 'parameter_hash': 'sha256:4d40e104e33eadd427d7841f76ed738ce91673ceceb5b81960487dd24f38b542', 'template_hash': 'sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945', 'pre...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/python/test_guarded_durable_cost_8914.py:69: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8914] phase=segment_before completed=0 pending=24
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=segment_after completed=24 pending=24
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+______________ test_individual_commits_and_restart[guarded_true] _______________
+
+service_request = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261108T022724-3778525-c686145c/test_individual_commits_and_re2/service_request.json')
+arm = 'guarded_true'
+
+        ({}, None),
+        ({"guarded_methods_ready_score": 0}, "observed_zero"),
+        ({"guarded_methods_ready_score": None}, "rejected_producer"),
+        ({"task_id": "wrong"}, "rejected_producer"),
+    ]:
+        modified = dict(value, candidate_ready_score=0, guarded_benefit_score=0, **change)
+        m.atomic_json(path, modified)
+        monkeypatch.setattr(m, "PIN", m.sha256_file(path))
+        pre = m.preconditions(tmp_path / "fixture", tmp_path)
+        assert pre["external_ready"] == (diagnostic is None)
+        if diagnostic:
+            assert pre["diagnostics"][0]["check"] == diagnostic
+>   for data, diagnostic in [
+        (b"{}", "missing_field"),
+        (b"[]", "rejected_producer"),
+        (b"{", "rejected_producer"),
+    ]:
+E   AssertionError: assert [{'counts': [...e', ...}, ...] == [{'counts': [...e', ...}, ...]
+E     
+E     At index 0 diff: {'counts': [3, 2, 1, 1, 0, 3, 0.0, 0.25], 'primitive_checks': 3, 'work': {'fact_comparisons': 15, 'sign_record_reads': 5, 'binding_comparisons': 5, 'candidate_pair_comparisons': 6, 'atom_pairs': 1}, 'group_id': 'cost8914-300/online/0', 'ordinal': 1, 'due': 5, 'split': 'guard', 'evidence_hash': 'sha256:da0dff49dbc3a391c5c70167a20b93602bcfa41ed760c45a70f594b21314eb38', 'parameter_hash': 'sha256:4d40e104e33eadd427d7841f76ed738ce91673ceceb5b81960487dd24f38b542', 'template_hash': 'sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945', 'pre...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/python/test_guarded_durable_cost_8914.py:69: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8914] phase=segment_before completed=0 pending=24
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=segment_after completed=24 pending=24
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+____________ test_individual_commits_and_restart[guarded_permuted] _____________
+
+service_request = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261108T022724-3778525-c686145c/test_individual_commits_and_re3/service_request.json')
+arm = 'guarded_permuted'
+
+        ({}, None),
+        ({"guarded_methods_ready_score": 0}, "observed_zero"),
+        ({"guarded_methods_ready_score": None}, "rejected_producer"),
+        ({"task_id": "wrong"}, "rejected_producer"),
+    ]:
+        modified = dict(value, candidate_ready_score=0, guarded_benefit_score=0, **change)
+        m.atomic_json(path, modified)
+        monkeypatch.setattr(m, "PIN", m.sha256_file(path))
+        pre = m.preconditions(tmp_path / "fixture", tmp_path)
+        assert pre["external_ready"] == (diagnostic is None)
+        if diagnostic:
+            assert pre["diagnostics"][0]["check"] == diagnostic
+>   for data, diagnostic in [
+        (b"{}", "missing_field"),
+        (b"[]", "rejected_producer"),
+        (b"{", "rejected_producer"),
+    ]:
+E   AssertionError: assert [{'counts': [...e', ...}, ...] == [{'counts': [...e', ...}, ...]
+E     
+E     At index 0 diff: {'counts': [3, 2, 1, 1, 0, 3, 0.0, 0.25], 'primitive_checks': 3, 'work': {'fact_comparisons': 15, 'sign_record_reads': 5, 'binding_comparisons': 5, 'candidate_pair_comparisons': 6, 'atom_pairs': 1}, 'group_id': 'cost8914-300/online/0', 'ordinal': 1, 'due': 5, 'split': 'guard', 'evidence_hash': 'sha256:da0dff49dbc3a391c5c70167a20b93602bcfa41ed760c45a70f594b21314eb38', 'parameter_hash': 'sha256:4d40e104e33eadd427d7841f76ed738ce91673ceceb5b81960487dd24f38b542', 'template_hash': 'sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945', 'pre...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests/python/test_guarded_durable_cost_8914.py:69: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8914] phase=segment_before completed=0 pending=24
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=segment_after completed=24 pending=24
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+[exp8914] phase=segment_before completed=0 pending=48
+[exp8914] phase=feedback_committed completed=8 pending=40
+[exp8914] phase=feedback_committed completed=16 pending=32
+[exp8914] phase=feedback_committed completed=24 pending=24
+[exp8914] phase=feedback_committed completed=32 pending=16
+[exp8914] phase=feedback_committed completed=40 pending=8
+[exp8914] phase=feedback_committed completed=48 pending=0
+[exp8914] phase=segment_after completed=48 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_guarded_durable_cost_8914.py::test_individual_commits_and_restart[frozen_verified]
+FAILED tests/python/test_guarded_durable_cost_8914.py::test_individual_commits_and_restart[ordinary_true]
+FAILED tests/python/test_guarded_durable_cost_8914.py::test_individual_commits_and_restart[guarded_true]
+FAILED tests/python/test_guarded_durable_cost_8914.py::test_individual_commits_and_restart[guarded_permuted]
+4 failed, 8 passed, 1 warning in 27.93s

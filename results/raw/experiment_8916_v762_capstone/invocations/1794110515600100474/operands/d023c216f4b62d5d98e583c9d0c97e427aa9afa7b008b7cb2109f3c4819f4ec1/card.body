@@ -1,0 +1,61 @@
+---
+task_categories:
+- token-classification
+language:
+- en
+tags:
+- hallucination
+- rag
+pretty_name: RAGTruth++
+---
+# Dataset Card for RAGTruth++
+
+This dataset is a re-annotation of a subset of the RAGTruth-benchmark that can be used to evaluate hallucination detection models.
+
+It contains 408 prompt-response-pairs and 865 spans that are marked as hallucinations.
+
+A text span is marked as a hallucination when a generated output in the response is not supported by the data in the input prompt.
+
+You can read more about the creation of the dataset on [our blog](https://www.blueguardrails.com/en/blog/ragtruth-plus-plus-enhanced-hallucination-detection-benchmark).
+
+## Structure of the dataset
+
+We provide two CSV-files.
+
+One with hallucination spans, following the following format:
+
+```json
+{
+  "start_pos": "<int>",
+  "end_pos": "<int>",
+  "span_text": "<str>",
+  "label": "<str>",
+  "reasoning": "<str>",
+  "stable_id": "<str>",
+  "message_stable_id": "<str>"  
+}
+```
+
+One with messages:
+
+```json
+{
+  "stable_id": "<str>",
+  "meta": "<str>",
+  "role": "<user|assistant>",
+  "position": "<int>",
+  "text": "<str>",
+  "message_thread_stable_id": "<str>"
+}
+```
+
+Use the `message_stable_id`-field to reference spans to messages.
+
+
+## Uses
+
+Use the dataset for benchmarking hallucination detection models.
+
+## Dataset Card Contact
+
+info@blueguardrails.com
