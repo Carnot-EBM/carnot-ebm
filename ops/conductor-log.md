@@ -21584,3 +21584,4 @@ code |
 | 2026-11-08 20:36 UTC | Freeze graph splits and bounded collection with de | OK | 101 passed, 1 warning in 21.95s |
 | 2026-11-08 21:18 UTC | Separate semantic errors from parsing failures in  | OK | 101 passed, 1 warning in 25.65s |
 | 2026-11-08 22:11 UTC | Freeze compatible feedback replay for continuous e | OK | 96 passed, 1 warning in 75.96s (0:01:15) |
+| 2026-11-08 22:57 UTC | Measure paired graph depth sensitivity with mandat | OK | 103 passed, 1 warning in 31.20s |
