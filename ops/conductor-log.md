@@ -21555,3 +21555,4 @@ code |
 | 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_4381_biprm_detector_localization_abstention.json age-week 0: OPEN 1 d |
 | 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8897_v761_source_bound_decisions.json age-week 0: OPEN 1 days: CLAIM_ |
 | 2026-11-08 01:05 UTC | Audit future Brier benefit and retention for guard | OK | 101 passed, 1 warning in 53.03s |
+| 2026-11-08 02:11 UTC | Measure complete request costs with qualified reta | OK | 96 passed, 1 warning in 68.45s (0:01:08) |
