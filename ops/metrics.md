@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-11-08 Milestone 2026.11.762 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-11-08T04:35:34Z | 2026-11-08T04:37:15Z | Wrote operational retro for milestone 2026.11.762 (`results/operational_retro_2026_11_762.json`), appended `ops/changelog.md` and `docs/research-log.md` | ~15k |
+
+---
+
 ## Session: 2026-11-07 Milestone 2026.11.761 Operational Retrospective
 
 ### Turn Log

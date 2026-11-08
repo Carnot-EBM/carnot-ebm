@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-08 UTC — Operational retrospective for milestone 2026.11.762
+
+- Updated `results/operational_retro_2026_11_762.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.762`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 12 completed synthesis-only experiments (0 compute-bound) across 93.4 wall-time minutes (93 minutes / 1.6 hours, averaging 8 minutes per experiment).
+- The five slowest experiments were all synthesis-only (`compute_bound: false`): `Measure complete durable candidate and promotion costs` (19.52 minutes / 20min), `Audit future Brier benefit and retention for guarded updates` (11.91 minutes / 12min), `Measure all-policy label savings from impossible-future refusal` (11.67 minutes / 12min), `Measure guarded updates on sealed paired causal streams` (11.05 minutes / 11min), and `Freeze candidate promotion for the signed energy head` (9.69 minutes / 10min).
+- GPU monitor report (`2026-11-08T04:35:18.946701+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 4/24576MB (0%), 0% utilization, and Temp 46C; because 0 compute-bound experiments ran, locked `gpu_idle_on_compute_bound_tasks` is `null`, `DualGPURunner` did not apply, and 0% GPU utilization across the 12 synthesis-only experiments is expected behavior.
+- Suggested improvements: cache and reuse durable candidate/promotion cost, guarded-update Brier/retention audit, impossible-future refusal label-savings, sealed paired causal stream, and signed energy head promotion fixtures across the 5 slowest synthesis-only tasks (19.52 minutes / 20min, 11.91 minutes / 12min, 11.67 minutes / 12min, 11.05 minutes / 11min, and 9.69 minutes / 10min), parallelize independent verification checks in synthesis-only tasks, persist direct per-experiment timing metadata to eliminate `retro_timing_fallback` when live git-log has 0 commits, and free the idle 4MB GPU 0 allocation.
+
 ## 2026-11-07 UTC — Operational retrospective for milestone 2026.11.761
 
 - Updated `results/operational_retro_2026_11_761.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.761`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 12 completed experiments (1 compute-bound, 11 synthesis-only) across 101.9 wall-time minutes (102 minutes / 1.7 hours, averaging 8 minutes per experiment).

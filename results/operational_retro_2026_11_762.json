@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.762",
+  "generated_at": "2026-11-08T04:35:18Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 93.4,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete durable candidate and promotion costs",
+      "duration_minutes": 19.52,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit future Brier benefit and retention for guarded updates",
+      "duration_minutes": 11.91,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure all-policy label savings from impossible-future refusal",
+      "duration_minutes": 11.67,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure guarded updates on sealed paired causal streams",
+      "duration_minutes": 11.05,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Freeze candidate promotion for the signed energy head",
+      "duration_minutes": 9.69,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.762 completed 12 synthesis-only experiments (0 compute-bound) in 93.4 wall-time minutes (93 minutes / 1.6 hours, averaging 8 minutes per experiment) reconstructed via disk-mtime fallback (0 commits in live git-log). Runtime was concentrated in five synthesis-only tasks: 'Measure complete durable candidate and promotion costs' (19.52 minutes / 20min), 'Audit future Brier benefit and retention for guarded updates' (11.91 minutes / 12min), 'Measure all-policy label savings from impossible-future refusal' (11.67 minutes / 12min), 'Measure guarded updates on sealed paired causal streams' (11.05 minutes / 11min), and 'Freeze candidate promotion for the signed energy head' (9.69 minutes / 10min). Because 0 compute-bound experiments ran, gpu_idle_on_compute_bound_tasks is null, DualGPURunner did not apply, and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 46C) reflects expected synthesis-only behavior.",
+  "bottlenecks_identified": [
+    "No compute-bound bottlenecks occurred (0 compute-bound experiments ran; all 12 completed experiments were synthesis-only).",
+    "Synthesis-only wall time was led by 'Measure complete durable candidate and promotion costs' at 19.52 minutes (20min), followed by 'Audit future Brier benefit and retention for guarded updates' at 11.91 minutes (12min), 'Measure all-policy label savings from impossible-future refusal' at 11.67 minutes (12min), 'Measure guarded updates on sealed paired causal streams' at 11.05 minutes (11min), and 'Freeze candidate promotion for the signed energy head' at 9.69 minutes (10min).",
+    "Live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback) across the 93.4-minute (93 minutes / 1.6 hours) milestone window."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse durable candidate/promotion cost fixtures, guarded-update Brier/retention audit inputs, impossible-future refusal label-savings fixtures, sealed paired causal stream artifacts, and signed energy head promotion state across the 5 slowest synthesis-only tasks (19.52 minutes / 20min, 11.91 minutes / 12min, 11.67 minutes / 12min, 11.05 minutes / 11min, and 9.69 minutes / 10min) to reduce the 8-minute per-experiment average across the 12 synthesis-only experiments.",
+    "Parallelize independent validation and verification checks inside synthesis-only tasks, starting with 'Measure complete durable candidate and promotion costs' (19.52 minutes / 20min).",
+    "Persist explicit per-experiment start and completion timestamps in conductor artifacts so milestone retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Free the residual 4MB allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 46C) when idle, while keeping DualGPURunner unengaged until compute-bound tasks with 2+ models in parallel are scheduled."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache and reuse shared evaluation and verification fixtures across the 5 slowest synthesis-only experiments (19.52 minutes / 20min, 11.91 minutes / 12min, 11.67 minutes / 12min, 11.05 minutes / 11min, and 9.69 minutes / 10min).",
+    "Persist direct per-experiment timing metadata in conductor artifacts to eliminate disk-mtime fallback (retro_timing_fallback) when live git-log finds 0 commits.",
+    "Release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, Temp 46C) per the GPU Monitor Report suggestion."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "All 12 completed experiments in milestone 2026.11.762 were synthesis-only (0 compute-bound) totaling 93.4 wall-time minutes (93 minutes / 1.6 hours, averaging 8 minutes per experiment), so gpu_idle_on_compute_bound_tasks is null and DualGPURunner was not applicable. Optimizing the 5 slowest synthesis-only experiments (19.52 minutes / 20min, 11.91 minutes / 12min, 11.67 minutes / 12min, 11.05 minutes / 11min, and 9.69 minutes / 10min) and persisting direct timing metadata are the primary operational improvements for the next milestone."
+}
