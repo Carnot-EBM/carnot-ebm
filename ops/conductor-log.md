@@ -21557,3 +21557,4 @@ code |
 | 2026-11-08 01:05 UTC | Audit future Brier benefit and retention for guard | OK | 101 passed, 1 warning in 53.03s |
 | 2026-11-08 02:11 UTC | Measure complete request costs with qualified reta | OK | 96 passed, 1 warning in 68.45s (0:01:08) |
 | 2026-11-08 02:18 UTC | Measure bounded Qwen evidence decisions under pair | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8904-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
+| 2026-11-08 03:09 UTC | Measure complete durable candidate and promotion c | OK | 100 passed, 1 warning in 60.17s (0:01:00) |
