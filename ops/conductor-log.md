@@ -21567,3 +21567,4 @@ code |
 | 2026-11-08 07:42 UTC | Bind V763 authority and the operator-directed evid | OK | 89 passed, 1 warning in 11.85s |
 | 2026-11-08 08:32 UTC | Measure the mandated fifty-question BFS-labeled er | OK | 115 passed, 1 warning in 20.06s |
 | 2026-11-08 09:25 UTC | Freeze interpolated candidate updates for continuo | OK | 95 passed, 1 warning in 49.46s |
+| 2026-11-08 10:07 UTC | Prove exact certificates with labels requested onl | OK | 91 passed, 1 warning in 32.35s |
