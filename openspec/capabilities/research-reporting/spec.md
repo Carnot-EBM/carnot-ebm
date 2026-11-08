@@ -109771,6 +109771,26 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+Acceptance extension (2026-11-08): Compare the visible table, complete embedded
+objects and staged or matching activated queue for Exp8930–Exp8943 in order.
+Bind prompts, routes, prior changes, gate fields and paths with a fixed digest.
+SCENARIO-REPORT-8930-CONTRACT rejects a missing task, reordered tasks, changed
+prompt, wrong producer gate field and changed path from an otherwise valid tree.
+Preserve the original V763 capstone, design, queue and both actual scheduler
+skip paths as immutable bytes. Literature and exact prior changes remain
+administrative receipts outside comparative rows. Readiness requires owned
+checks and 100 percent newly owned unit/child statements with zero exclusions.
+External absence is terminal blocked; failed owned checks are disqualified.
+Report zero current model/training calls and no independent scientific units.
+Cold replay outside the checkout must reject changed and rehashed claims.
+
+Implementation receipt (2026-11-08): `v764_branch_contract.py` and its direct
+CLI implement this administrative contract. Four requirement-linked tests
+exercise authority, custody, classification and replay. Scoped measurement
+covers all 195 newly owned statements with zero exclusions. Final CLI receipts
+and original producer references reside beneath the deliverable's raw directory.
+This receipt does not activate V764 or establish scientific benefit.
+
 ### REQ-REPORT-8931: Freeze graph splits and bounded collection with detector-safe signals
 
 The experiment shall execute the frozen V764 task contract and produce

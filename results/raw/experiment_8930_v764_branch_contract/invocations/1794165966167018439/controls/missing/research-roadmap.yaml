@@ -1,0 +1,2454 @@
+milestone: 2026.11.764
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+milestone_title: Independent Error Calibration, Compatible Replay, and Complete Decision
+  Costs
+tasks:
+- MODEL_SPECS: []
+  deliverable: results/experiment_8930_v764_branch_contract.json
+  estimated_wall_time_min: 35
+  gated_on: []
+  id: exp8930-branch-contract
+  inference_substrate_class: no_model_load
+  max_turns: 100
+  milestone: 2026.11.764
+  model: opus
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Use the now-qualified V763 contract path with a fresh fourteen-task
+      authority and preserved historical snapshots; validate formatting before publication.
+    experiment_id: exp8891-branch-contract
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_v761_branch_contract
+  priority: high
+  prompt: 'CONTEXT:
+
+    V763 completed thirteen slots, including two scheduler skips. The live pilot qualifies
+    an error source; it does not prove detector value. V764 is a new staged proposal,
+    not activation.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/roadmap_contract.py
+
+    - python/carnot/reporting/v763_branch_contract.py
+
+    - results/experiment_8929_v763_capstone.json
+
+    - ops/exclusion_manifest.yaml
+
+    - research-references.md
+
+
+    TASK:
+
+    Bind fourteen tasks and preserve V763 evidence. Deliver results/experiment_8930_v764_branch_contract.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8930 / SCENARIO-REPORT-8930-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Compare the visible table, embedded full task objects and staged-or-activated
+    YAML for exactly Exp8930-Exp8943 in order, including prompts, routes, priors,
+    gates and paths. Preserve the V763 design/queue archives and immutable V764 execution
+    snapshots. Accept a matching activated queue if staging has been consumed.
+
+    5. Reuse the current contract helper with explicit milestone/id/count parameters.
+    Test missing task, task order, changed prompt, wrong producer gate field and changed
+    path. Do not copy a whole historical runner. CPU science admits its own inputs;
+    contract_ready_score is not a global success gate.
+
+    6. Bind the V764 literature map and exact prior-failure changes. Preserve authoritative
+    scheduler skips at their actual paths, not invented deliverables. Do not probe
+    CUDA or boards. Report current compute as zero and upstream compute as opaque
+    producer references.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    contract_ready_score: integer 0/1; principle: exact authority and owned checks
+    only.
+
+    contract_rows, full_task_digest, execution_snapshot, source_method_rows, prior_scope_rows:
+    principle: bind all fourteen complete task objects.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8930_v764_branch_contract.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Bind fourteen tasks and preserve V763 evidence
+  track: research
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_8931_v764_graph_source_methods.json
+  estimated_wall_time_min: 65
+  gated_on: []
+  id: exp8931-graph-source-methods
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.764
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: The November 7 audit found outcome labels copied to prefixes. Build
+      fresh graph-oracle FINAL-answer labels and a detector view excluding the oracle;
+      do not repeat localization.
+    experiment_id: exp4381-biprm-detector-localization-abstention
+    retire_if_same_verdict: true
+    verdict: 'complete: clean_powered_null_bidirectional_not_actionable'
+  priority: high
+  prompt: 'CONTEXT:
+
+    Exp8918 measured 43/50 errors. The operator BFS plan calls for a depth control
+    and at least 200 independent final-answer errors. Ceiling(1.3*200/0.86)=303; use
+    320 fresh graphs in two fixed shards for balanced predeclared roles.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - docs/research-notes/bfs-labeled-error-source-plan-2026-11-07.md
+
+    - python/carnot/reporting/bfs_error_pilot_8918.py
+
+    - python/carnot/inference/bfs_pilot_runtime_8918.py
+
+    - python/carnot/inference/sota_models.py
+
+    - tests/python/test_bfs_error_pilot_8918.py
+
+
+    TASK:
+
+    Freeze graph splits and bounded collection with detector-safe signals. Deliver
+    results/experiment_8931_v764_graph_source_methods.json for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8931 / SCENARIO-REPORT-8931-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Extend the existing bounded pilot runner through a small reusable sibling,
+    preserving the pilot defaults. Implement source construction, response-signal
+    capture, shard resume and terminal publication; validate with fixture transports
+    before any GPU task. No LLM is loaded here.
+
+    5. Seal 50 control graphs with paired k=2/k=3 questions and 320 different collection
+    graphs with k=2. Use n uniformly 50-60, p=3/(n-1), random two-letter names and
+    nonempty requested distance sets. Record all graph rejections. Keep graph hashes
+    and seeds disjoint from the old pilot and across all new roles. Preassign 160
+    train, 80 calibration, 80 test graphs; each 160-graph shard contains 80/40/40
+    roles. Neither answers nor labels may affect assignment.
+
+    6. Freeze single-node parsing and BFS shortest-distance labels, checked independently
+    by adjacency-matrix reachability on small graphs. Error categories are malformed,
+    out_of_graph, valid_wrong_distance and correct. Runtime failures are censored,
+    never reasoning errors. Test distance-two walks with a shorter path, disconnected
+    graphs and ambiguous answers.
+
+    7. Freeze a detector view with only mean emitted-token negative log probability
+    and the first answer-token top1-minus-top2 log-probability margin. Define token
+    selection and finite-value checks now. Store token count and parser category for
+    nuisance controls only. Raw graph, node identity, start, BFS distance, answer
+    set, labels, file paths and split identifiers cannot enter the learned feature
+    view. Missing server log probabilities block signal readiness; never reconstruct
+    them from the true answer.
+
+    8. Implement completed-unit checkpoint reuse bound to model, settings, graph and
+    feature-schema hashes. Save raw responses before labels. Forbid regenerating completed
+    units or choosing good outputs on resume. Keep development tests and future recipes
+    separate. Freeze the paired control acceptance: all 100 answers, verified labels,
+    usable signals and empirical error(k3)>error(k2); report paired uncertainty without
+    calling this inequality statistical proof.
+
+    9. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    source_methods_ready_score: integer 0/1; principle: executable, tested collection
+    contract only.
+
+    protocol_hash, graph_manifest, split_manifest, shard_manifest, feature_schema,
+    label_controls, resume_controls: principle: precommit all 320 collection and 50
+    control graph identities. MODEL_SPECS=[]; inference_substrate=aggregation_from_upstream_artifacts
+    for method receipts.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8931_v764_graph_source_methods.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Freeze graph splits and bounded collection with detector-safe signals
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8932_v764_pilot_label_audit.json
+  estimated_wall_time_min: 25
+  gated_on: []
+  id: exp8932-pilot-label-audit
+  inference_substrate_class: no_model_load
+  max_turns: 20
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Audit independent BFS final-answer labels and raw answers instead
+      of inherited outcome-as-prefix labels; no localization evaluation.
+    experiment_id: exp4381-biprm-detector-localization-abstention
+    retire_if_same_verdict: true
+    verdict: 'complete: clean_powered_null_bidirectional_not_actionable'
+  priority: high
+  prompt: 'CONTEXT:
+
+    The 86-percent error rate is useful only if the labels and error types are understood.
+    The type-aware hallucination paper motivates a per-type audit before new collection;
+    this is not a detector benchmark.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - results/experiment_8918_v763_bfs_error_pilot.json
+
+    - python/carnot/reporting/bfs_error_pilot_8918.py
+
+    - docs/research-notes/label-provenance-audit-step1-2026-11-07.md
+
+    - research-references.md
+
+
+    TASK:
+
+    Separate semantic errors from parsing failures in the live pilot. Deliver results/experiment_8932_v764_pilot_label_audit.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8932 / SCENARIO-REPORT-8932-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Read all fifty retained raw responses, graph records and original BFS labels.
+    Recompute shortest distances independently; preserve every original value and
+    any discrepancy. Apply the predeclared four-category taxonomy without editing
+    answers or excluding malformed cases.
+
+    5. Report total and per-type counts, semantic-only error denominator, output-length
+    distribution, Wilson interval and graph-level rows. Check original model/offload
+    custody and failed/censored counts. Set pilot_labels_ready_score=1 only for 50
+    authenticated completed responses, exact label agreement and no unresolved provenance.
+    A real parsing error is data, not grounds for dropping a unit.
+
+    6. Trace the invalid FoVer prefix labels to their audit note only; never reinterpret
+    them as independent errors. Use the pilot solely for development and rate planning;
+    exclude its graphs from all V764 calibration and evaluation. No inference or parameter
+    fitting occurs here.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    pilot_labels_ready_score: integer 0/1; principle: original final-answer labels
+    authenticated independently.
+
+    error_type_rows, label_disagreements, source_receipts, semantic_error_rate: principle:
+    exact counts, no detector claim. verifier_is_oracle=true; any positive truth-validation
+    outcome is circular_positive.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8932_v764_pilot_label_audit.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Separate semantic errors from parsing failures in the live pilot
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8933_v764_compatible_replay_methods.json
+  estimated_wall_time_min: 65
+  gated_on: []
+  id: exp8933-compatible-replay-methods
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Replace fixed fast/slow interpolation with causal signature-selected
+      replay of released train feedback; compare uniform replay at equal gradient
+      and label budgets, preserving promotion safeguards and all prospective/retention
+      thresholds.
+    experiment_id: exp8925-interpolated-benefit-audit
+    retire_if_same_verdict: true
+    verdict: complete_null_interpolated_benefit_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Exp8925 retained old decisions but failed every prospective benefit contrast.
+    Change replay selection, not the failed fixed interpolation optimizer. This CPU
+    branch is independent of graph collection and satisfies FR-11.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/experiment_5857_clean_transfer_selective_replay.py
+
+    - results/experiment_5857_clean_transfer_selective_replay.json
+
+    - python/carnot/memory/guarded_memory_8905.py
+
+    - python/carnot/memory/signed_memory_8892.py
+
+    - python/carnot/reporting/guarded_update_methods_8905.py
+
+    - python/carnot/reporting/interpolated_update_methods_8919.py
+
+    - python/carnot/reporting/interpolated_benefit_audit_8925.py
+
+    - results/experiment_8925_v763_interpolated_benefit_audit.json
+
+
+    TASK:
+
+    Freeze compatible feedback replay for continuous energy learning. Deliver results/experiment_8933_v764_compatible_replay_methods.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8933 / SCENARIO-REPORT-8933-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Read the existing Exp5857 label-blind signature selector and reuse its applicable
+    selection/parity logic. Its positive was execution-grounded (verifier_is_oracle=true)
+    on a structural learner, not prospective Brier benefit in this signed head. Adapt
+    only the signature distance and bounded training buffer needed here; preserve
+    its collision/permutation controls. Implement the bounded replay mechanism in
+    the existing signed three-class normalized energy head and durable store. Keep
+    features, initial states, SGD eta=0.1, template additions, delay=8, guard thresholds
+    and promotion schedule fixed. Discard the fast/slow interpolation mechanism. No
+    Qwen weight updates.
+
+    5. Maintain a FIFO buffer of at most 32 released TRAIN-feedback records. Each
+    release takes one SGD step on that released row and one on a replay row. Select
+    the replay by minimum squared distance to the most recent visible query feature
+    vector under the frozen development scaling; ties use stable unit id. No current
+    or future label, guard row, anchor or research retention row enters selection.
+    Empty buffer repeats the released row; charge both gradients. Persist buffer,
+    selection and RNG state across restart.
+
+    6. Freeze five arms: frozen_verified, guarded_current (repeat current released
+    row twice), uniform_replay, compatible_replay, compatible_permuted. The four trainable
+    arms use identical label releases, 32-row capacity and two gradients per release;
+    only replay selection or the fixed released-label permutation differs. All promotions
+    use the unchanged guard. Templates receive the same verified information in every
+    arm, including the frozen control.
+
+    7. Use eight development streams only, then seal 24 fresh paired 48-query streams
+    with independent initial worlds, feedback histories and seeds. Retention has 48
+    untouched queries at checkpoints 0,24,48. Freeze ten familywise 99-percent one-sided
+    bounds: future Brier delta versus frozen <=-0.01; versus guarded_current, uniform_replay
+    and compatible_permuted <0; Brier and error retention deltas versus frozen <=0.01
+    at all three checkpoints. Keep 10000 whole-stream paired bootstrap draws and alpha=0.01/10.
+    No parameter search or test-label peeking.
+
+    8. Test prediction-before-release, empty buffer, deterministic tie, permuted-label
+    control, guard/train isolation, NaNs, full-capacity eviction, restart and exact
+    two-gradient accounting. Methods readiness requires valid controls and sealed
+    protocols, not a promising development effect. CPU distance scans and tiny-head
+    gradients give a bounded batchable CPU/GPU path; hardware speed remains unmeasured.
+
+    9. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    replay_methods_ready_score: integer 0/1; principle: causal implementation and
+    sealed future protocol, not benefit.
+
+    protocol_hash, stream_manifest, optimizer_equations, replay_selection_rows, gradient_ledger,
+    buffer_state_hashes, hardware_path: principle: exact equal-budget mechanism and
+    restart state. inference_substrate=verifier_ensemble_against_cached_candidates;
+    numerical_training_calls records fresh small-head updates.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8933_v764_compatible_replay_methods.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Freeze compatible feedback replay for continuous energy learning
+  track: research
+- MODEL_SPECS:
+  - format: GGUF
+    hf_id: unsloth/Qwen3.8-27B-GGUF
+    quantization: Q4_K_M
+  deliverable: results/experiment_8934_v764_depth_control.json
+  estimated_wall_time_min: 45
+  gated_on:
+  - artifact_field: source_methods_ready_score
+    op: ==
+    upstream: exp8931-graph-source-methods
+    value: 1
+  - artifact_field: pilot_labels_ready_score
+    op: ==
+    upstream: exp8932-pilot-label-audit
+    value: 1
+  id: exp8934-depth-control
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Exp8918 now supplies authenticated GPU-0 generation. Run the specified
+      new paired depth measurement through that path, not an unchanged passive runtime
+      probe.
+    experiment_id: exp8382-runtime-evidence-delta
+    retire_if_same_verdict: true
+    verdict: complete_blocked_cuda_environment_unchanged
+  priority: high
+  prompt: 'CONTEXT:
+
+    The local pilot established k=2 errors; the approved source plan also requires
+    a depth control before collection. Use a new paired cohort and retain a null if
+    errors do not increase.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/inference/bfs_pilot_runtime_8918.py
+
+    - python/carnot/reporting/bfs_error_pilot_8918.py
+
+    - docs/research-notes/bfs-labeled-error-source-plan-2026-11-07.md
+
+    - results/experiment_8931_v764_graph_source_methods.json
+
+    - results/experiment_8932_v764_pilot_label_audit.json
+
+
+    TASK:
+
+    Measure paired graph depth sensitivity with mandated Qwen. Deliver results/experiment_8934_v764_depth_control.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8934 / SCENARIO-REPORT-8934-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Use only the authenticated cached unsloth/Qwen3.8-27B-GGUF Q4_K_M and existing
+    GPU-0 lease/server path. Set CARNOT_FORCE_LIVE=1 and CUDA_VISIBLE_DEVICES=0; GPU
+    1 is detached and must not be probed. Bound preflight and load separately at 240
+    seconds. Require actual CUDA offload and model/template hashes. No install, reboot,
+    device repair or CPU fallback. Use reasoning off, temperature=0, max_tokens=16,
+    top_p=1, and logprobs=true with top_logprobs=2. Preserve the exact raw response.
+    Bound each generation at 30 seconds and all generation at 1800 seconds, censoring
+    unfinished slots. Declare model_bounded_generation (10-second floor), not full
+    generation (60 seconds); embeddings or load-only work would be model_load_no_generation
+    (2 seconds). No artificial waits. Release the lease and server on every exit.
+
+    5. Execute the sealed 50 control graphs, with k=2 and k=3 prompts on each graph
+    and balanced frozen condition order. Use separate stateless requests; never carry
+    one answer into the other prompt. All 100 answers retain raw model signals, actual
+    token counts and independent labels. Keep control graphs out of the 320-graph
+    collection.
+
+    6. Recompute error rates and paired graph-level differences, exact discordant-pair
+    counts and a 95-percent paired interval. depth_source_ready_score=1 requires all
+    100 completed, label controls passing, finite feature signals and error(k3)>error(k2).
+    This operational source check is not a statistically established depth effect.
+    If it fails, record a null and depth_source_ready_score=0, inspect label integrity
+    and ceiling effects, and stop collection. Do not increase k, change graph size
+    or generate extra units in this task.
+
+    7. Record telemetry settings and response identity controls. A backend without
+    supported log probabilities is blocked on that capability; do not fabricate confidence
+    or add a load-only rescue experiment. Keep BFS-source success circular_positive.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    depth_source_ready_score, signal_capture_ready_score: integer 0/1; principle:
+    source-control admission and actual signal availability.
+
+    paired_depth_rows, discordant_pairs, error_rate_k2, error_rate_k3, paired_interval,
+    model_receipt, resource_lease, generator_settings, feature_schema_hash: principle:
+    50 independent paired graphs, not 100 independent units. inference_substrate=live_llm_inference
+    for real calls; verifier_is_oracle=true.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8934_v764_depth_control.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Measure paired graph depth sensitivity with mandated Qwen
+  track: research
+- MODEL_SPECS:
+  - format: GGUF
+    hf_id: unsloth/Qwen3.8-27B-GGUF
+    quantization: Q4_K_M
+  deliverable: results/experiment_8935_v764_graph_corpus_a.json
+  estimated_wall_time_min: 50
+  gated_on:
+  - artifact_field: source_methods_ready_score
+    op: ==
+    upstream: exp8931-graph-source-methods
+    value: 1
+  - artifact_field: depth_source_ready_score
+    op: ==
+    upstream: exp8934-depth-control
+    value: 1
+  - artifact_field: signal_capture_ready_score
+    op: ==
+    upstream: exp8934-depth-control
+    value: 1
+  id: exp8935-graph-corpus-a
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Replace copied prefix labels with new graph-disjoint final-answer
+      oracle labels collected from the mandated live model; no localization claim.
+    experiment_id: exp4381-biprm-detector-localization-abstention
+    retire_if_same_verdict: true
+    verdict: 'complete: clean_powered_null_bidirectional_not_actionable'
+  priority: high
+  prompt: 'CONTEXT:
+
+    The rate-based source plan is split into two bounded 160-graph tasks. This task
+    owns only shard A; shards share a frozen protocol and have disjoint graph identities.
+    A sibling failure does not prevent this shard.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/inference/bfs_pilot_runtime_8918.py
+
+    - results/experiment_8931_v764_graph_source_methods.json
+
+    - results/experiment_8934_v764_depth_control.json
+
+
+    TASK:
+
+    Collect fresh independently labeled Qwen answers in shard A. Deliver results/experiment_8935_v764_graph_corpus_a.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8935 / SCENARIO-REPORT-8935-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Use only the authenticated cached unsloth/Qwen3.8-27B-GGUF Q4_K_M and existing
+    GPU-0 lease/server path. Set CARNOT_FORCE_LIVE=1 and CUDA_VISIBLE_DEVICES=0; GPU
+    1 is detached and must not be probed. Bound preflight and load separately at 240
+    seconds. Require actual CUDA offload and model/template hashes. No install, reboot,
+    device repair or CPU fallback. Use reasoning off, temperature=0, max_tokens=16,
+    top_p=1, and logprobs=true with top_logprobs=2. Preserve the exact raw response.
+    Bound each generation at 30 seconds and all generation at 1800 seconds, censoring
+    unfinished slots. Declare model_bounded_generation (10-second floor), not full
+    generation (60 seconds); embeddings or load-only work would be model_load_no_generation
+    (2 seconds). No artificial waits. Release the lease and server on every exit.
+
+    5. Execute exactly the 160 preassigned shard-A k=2 questions: 80 train, 40 calibration
+    and 40 test. Require the frozen source and feature-schema hashes. Do not adapt
+    counts to observed errors, rebalance labels, regenerate completed answers or alter
+    the sealed role assignment. Resume only exact completed-unit receipts from this
+    same task/protocol.
+
+    6. Seal raw generation and detector-safe signals before BFS labeling. Record final-answer
+    errors by type and every failed/censored slot. Labels stay in a separate sidecar;
+    the detector view contains only the two approved numerical signals. Keep test
+    labels sealed from all later fitting. Hash every shard and preserve the graph-to-question
+    mapping.
+
+    7. Set shard_ready_score=1 only when all 160 actual generations and usable signal
+    rows are authenticated, labels agree with independent controls, roles match the
+    frozen split and owned validation passes. A shortage or external resource failure
+    is terminal blocked with exact counts; incomplete owned implementation alone may
+    be partial. Report observed rates and intervals without claiming a detector win.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    shard_ready_score: integer 0/1; principle: complete usable data, not scientific
+    benefit.
+
+    shard_id, protocol_hash, answer_rows, detector_view_path, label_sidecar_path,
+    graph_manifest_hash, split_counts, error_type_counts, model_receipt, resource_lease,
+    generator_settings: principle: actual provenance and no split/label leakage. inference_substrate=live_llm_inference
+    for real runs; verifier_is_oracle=true.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8935_v764_graph_corpus_a.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect fresh independently labeled Qwen answers in shard A
+  track: research
+- MODEL_SPECS:
+  - format: GGUF
+    hf_id: unsloth/Qwen3.8-27B-GGUF
+    quantization: Q4_K_M
+  deliverable: results/experiment_8936_v764_graph_corpus_b.json
+  estimated_wall_time_min: 50
+  gated_on:
+  - artifact_field: source_methods_ready_score
+    op: ==
+    upstream: exp8931-graph-source-methods
+    value: 1
+  - artifact_field: depth_source_ready_score
+    op: ==
+    upstream: exp8934-depth-control
+    value: 1
+  - artifact_field: signal_capture_ready_score
+    op: ==
+    upstream: exp8934-depth-control
+    value: 1
+  id: exp8936-graph-corpus-b
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Replace copied prefix labels with new graph-disjoint final-answer
+      oracle labels collected from the mandated live model; no localization claim.
+    experiment_id: exp4381-biprm-detector-localization-abstention
+    retire_if_same_verdict: true
+    verdict: 'complete: clean_powered_null_bidirectional_not_actionable'
+  priority: high
+  prompt: 'CONTEXT:
+
+    The rate-based source plan is split into two bounded 160-graph tasks. This task
+    owns only shard B; shards share a frozen protocol and have disjoint graph identities.
+    A sibling failure does not prevent this shard.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/inference/bfs_pilot_runtime_8918.py
+
+    - results/experiment_8931_v764_graph_source_methods.json
+
+    - results/experiment_8934_v764_depth_control.json
+
+
+    TASK:
+
+    Collect fresh independently labeled Qwen answers in shard B. Deliver results/experiment_8936_v764_graph_corpus_b.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8936 / SCENARIO-REPORT-8936-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Use only the authenticated cached unsloth/Qwen3.8-27B-GGUF Q4_K_M and existing
+    GPU-0 lease/server path. Set CARNOT_FORCE_LIVE=1 and CUDA_VISIBLE_DEVICES=0; GPU
+    1 is detached and must not be probed. Bound preflight and load separately at 240
+    seconds. Require actual CUDA offload and model/template hashes. No install, reboot,
+    device repair or CPU fallback. Use reasoning off, temperature=0, max_tokens=16,
+    top_p=1, and logprobs=true with top_logprobs=2. Preserve the exact raw response.
+    Bound each generation at 30 seconds and all generation at 1800 seconds, censoring
+    unfinished slots. Declare model_bounded_generation (10-second floor), not full
+    generation (60 seconds); embeddings or load-only work would be model_load_no_generation
+    (2 seconds). No artificial waits. Release the lease and server on every exit.
+
+    5. Execute exactly the 160 preassigned shard-B k=2 questions: 80 train, 40 calibration
+    and 40 test. Require the frozen source and feature-schema hashes. Do not adapt
+    counts to observed errors, rebalance labels, regenerate completed answers or alter
+    the sealed role assignment. Resume only exact completed-unit receipts from this
+    same task/protocol.
+
+    6. Seal raw generation and detector-safe signals before BFS labeling. Record final-answer
+    errors by type and every failed/censored slot. Labels stay in a separate sidecar;
+    the detector view contains only the two approved numerical signals. Keep test
+    labels sealed from all later fitting. Hash every shard and preserve the graph-to-question
+    mapping.
+
+    7. Set shard_ready_score=1 only when all 160 actual generations and usable signal
+    rows are authenticated, labels agree with independent controls, roles match the
+    frozen split and owned validation passes. A shortage or external resource failure
+    is terminal blocked with exact counts; incomplete owned implementation alone may
+    be partial. Report observed rates and intervals without claiming a detector win.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    shard_ready_score: integer 0/1; principle: complete usable data, not scientific
+    benefit.
+
+    shard_id, protocol_hash, answer_rows, detector_view_path, label_sidecar_path,
+    graph_manifest_hash, split_counts, error_type_counts, model_receipt, resource_lease,
+    generator_settings: principle: actual provenance and no split/label leakage. inference_substrate=live_llm_inference
+    for real runs; verifier_is_oracle=true.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8936_v764_graph_corpus_b.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect fresh independently labeled Qwen answers in shard B
+  track: research
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_8937_v764_calibration_methods.json
+  estimated_wall_time_min: 60
+  gated_on:
+  - artifact_field: source_methods_ready_score
+    op: ==
+    upstream: exp8931-graph-source-methods
+    value: 1
+  id: exp8937-calibration-methods
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.764
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Fit and evaluate on new independently BFS-labeled live answers with
+      detector-safe response signals, rather than the prior identity-conditioned corpus;
+      retain prevalence and logistic controls.
+    experiment_id: exp8528-identity-brier-fit
+    retire_if_same_verdict: true
+    verdict: complete_null_v733_identity_brier_fit
+  priority: high
+  prompt: 'CONTEXT:
+
+    The consensus calibration pilot needs independent errors and comparisons against
+    prevalence and logistic calibration. Existing PCIB features on FoVer are not this
+    corpus. Reuse the training pattern, not its contaminated labels or fixed corpus
+    loader.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - docs/research-notes/jepa-two-model-consensus-plan-2026-11-05.md
+
+    - python/carnot/autoresearch/calibrated_decision_benchmark.py
+
+    - python/carnot/models/gibbs/__init__.py
+
+    - python/carnot/training/nce.py
+
+    - results/experiment_8931_v764_graph_source_methods.json
+
+
+    TASK:
+
+    Freeze a small energy selector and strong calibration controls. Deliver results/experiment_8937_v764_calibration_methods.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8937 / SCENARIO-REPORT-8937-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Implement a sibling benchmark adapter accepting only the two-feature detector
+    view. Use the existing GibbsModel with input_dim=2 and hidden_dims=[4], plus a
+    logistic model over the identical standardized features and a train-prevalence
+    constant. Include a token-count/format-only nuisance comparator. No graph or oracle
+    imports are permitted in the scoring subprocess; test injected label, distance
+    and path fields are rejected.
+
+    5. Freeze population-weighted binary log loss through the existing NCE/classification
+    pattern, full-batch training for 200 steps, learning rate 0.01, and seed 764037.
+    Freeze training-only feature scaling and all initial states. Do not balance classes
+    without restoring the population prior. Fit one scalar temperature for the energy
+    on calibration rows over the fixed grid [0.5,1,2,4]; select by Brier with deterministic
+    ties. Fit the logistic comparator on train only. No test rows may enter fitting,
+    selection or diagnostics.
+
+    6. Define p(error), typed accept/reject/escalate at p<=0.1, p>=0.9 and otherwise,
+    plus a separately reported diagnostic at exactly 50-percent coverage ranked by
+    confidence with a label-blind hash tie breaker. Typed decisions are not certified
+    risk guarantees. Freeze primary test Brier improvement over prevalence and logistic
+    (both >0), and accepted-error difference at 50-percent coverage versus logistic
+    (<=0). Use simultaneous one-sided 95-percent graph-bootstrap bounds with alpha=0.05/3
+    and 10000 draws.
+
+    7. Require synthetic planted-signal, shuffled-label, constant-score, missing-feature,
+    degenerate-class and rehashed-leakage controls. Fixture controls cannot support
+    a real quality claim. Set calibration_methods_ready_score=1 for correct implementation
+    and frozen methods even when no graph data arrive. No large model is loaded or
+    trained.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    calibration_methods_ready_score: integer 0/1; principle: fixed executable estimator,
+    not test benefit.
+
+    method_manifest, feature_allowlist, training_equations, hyperparameters, decision_rules,
+    control_rows, model_state_schema: principle: reproducible small-head training
+    and leak rejection. MODEL_SPECS=[]; inference_substrate=verifier_ensemble_against_cached_candidates;
+    verifier_is_oracle=false.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8937_v764_calibration_methods.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Freeze a small energy selector and strong calibration controls
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8938_v764_graph_corpus_admission.json
+  estimated_wall_time_min: 30
+  gated_on:
+  - artifact_field: shard_ready_score
+    op: ==
+    upstream: exp8935-graph-corpus-a
+    value: 1
+  - artifact_field: shard_ready_score
+    op: ==
+    upstream: exp8936-graph-corpus-b
+    value: 1
+  id: exp8938-graph-corpus-admission
+  inference_substrate_class: no_model_load
+  max_turns: 30
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Require independently recomputed final-answer truth, minimum class
+      support and graph-disjoint detector views; inherited per-prefix outcome labels
+      are inadmissible.
+    experiment_id: exp4381-biprm-detector-localization-abstention
+    retire_if_same_verdict: true
+    verdict: 'complete: clean_powered_null_bidirectional_not_actionable'
+  priority: high
+  prompt: 'CONTEXT:
+
+    A pilot gate is not a complete training set. Both source shards must join under
+    one frozen protocol before the consensus 200-error requirement is met.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - results/experiment_8931_v764_graph_source_methods.json
+
+    - results/experiment_8935_v764_graph_corpus_a.json
+
+    - results/experiment_8936_v764_graph_corpus_b.json
+
+    - python/carnot/reporting/bfs_error_pilot_8918.py
+
+
+    TASK:
+
+    Authenticate graph-disjoint labels before detector fitting. Deliver results/experiment_8938_v764_graph_corpus_admission.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8938 / SCENARIO-REPORT-8938-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Authenticate both original primary artifacts, raw generation receipts, actual
+    model hashes, feature schema, graph seeds, canonical graph hashes and label sidecars.
+    Join exactly 320 distinct graphs and the frozen 160/80/80 roles. Reject any overlap
+    with pilot/control graphs or across roles; do not silently deduplicate.
+
+    5. Recompute all BFS labels with an independent shortest-distance implementation.
+    Require at least 200 total generated errors and at least five correct and five
+    incorrect answers in EACH train/calibration/test split. These minima are pilot
+    feasibility, not adequate power for broad claims. Retain original population prevalence;
+    never oversample or invent correct answers to meet a gate.
+
+    6. Keep role-specific feature and label files separate with hashes. Publish only
+    support counts, type summaries and input references; hide test outcomes from the
+    fitting process. Verify no label-derived or graph-traversal signal is present
+    in the detector view. If support is inadequate record a valid null with corpus_ready_score=0;
+    the existing source data remain usable but this calibration attempt stops.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    corpus_ready_score: integer 0/1; principle: authenticated 320-row corpus and minimum
+    class support only.
+
+    corpus_manifest, split_counts, error_type_rows, independent_label_count, leakage_controls,
+    detector_view_hashes, label_sidecar_hashes: principle: immutable roles and exact
+    denominators. Current model invocations are zero; inference_substrate=aggregation_from_upstream_artifacts.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8938_v764_graph_corpus_admission.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Authenticate graph-disjoint labels before detector fitting
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8939_v764_graph_calibrated_decisions.json
+  estimated_wall_time_min: 50
+  gated_on:
+  - artifact_field: calibration_methods_ready_score
+    op: ==
+    upstream: exp8937-calibration-methods
+    value: 1
+  - artifact_field: corpus_ready_score
+    op: ==
+    upstream: exp8938-graph-corpus-admission
+    value: 1
+  id: exp8939-graph-calibrated-decisions
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Measure frozen energy versus logistic and prevalence on independently
+      labeled fresh graph-seed test data, preserving null outcomes and preventing
+      identity-derived features.
+    experiment_id: exp8528-identity-brier-fit
+    retire_if_same_verdict: true
+    verdict: complete_null_v733_identity_brier_fit
+  priority: high
+  prompt: 'CONTEXT:
+
+    This is the first V764 graph calibration result, not a reuse of FoVer localization.
+    It tests whether two response-confidence signals contain useful nonlinear discrimination
+    beyond a logistic baseline.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/autoresearch/calibrated_decision_benchmark.py
+
+    - results/experiment_8937_v764_calibration_methods.json
+
+    - results/experiment_8938_v764_graph_corpus_admission.json
+
+
+    TASK:
+
+    Test calibrated energy decisions on unseen live-model errors. Deliver results/experiment_8939_v764_graph_calibrated_decisions.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8939 / SCENARIO-REPORT-8939-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Execute the frozen adapter: train on 160 graphs, temperature-select on 80 calibration
+    graphs, seal states/settings, then open the 80 test labels once. Invoke no LLM
+    and no BFS in the detector subprocess. Preserve training, calibration and test
+    work counts and weight hashes.
+
+    5. Emit per-graph probability, decision, squared error, accept flag and label
+    for all energy, logistic, prevalence and nuisance arms. Recompute Brier, log loss,
+    AUROC, typed coverage and 50-percent-coverage accepted error. Report error-type
+    and length strata as diagnostics, not extra pass opportunities. Include a shuffled-label
+    fit as a negative control without retuning on its outcome.
+
+    6. Set decision_rows_ready_score=1 for complete qualified rows. Set calibrated_benefit_score=1
+    only if both simultaneous lower Brier-improvement bounds exceed zero and the simultaneous
+    upper accepted-error difference versus logistic is <=0. Otherwise report null
+    without changing thresholds or adding samples. The source is constructed and small;
+    independent_generalization_score stays zero. A learned detector is oracle-distinct
+    only if it never executes BFS or receives exact distance features; do not headline
+    a moat where the exact oracle is cheap.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    decision_rows_ready_score, calibrated_benefit_score: integer 0/1; principle: usable
+    measurement and scientific benefit are distinct.
+
+    prediction_rows, fitted_state_hashes, training_call_ledger, paired_intervals,
+    class_support, calibration_metrics, type_diagnostics, oracle_access_audit: principle:
+    all test outcomes and strong controls preserved. verifier_is_oracle=false for
+    the learned path; inference_substrate=verifier_ensemble_against_cached_candidates.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8939_v764_graph_calibrated_decisions.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Test calibrated energy decisions on unseen live-model errors
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8940_v764_compatible_replay_streams.json
+  estimated_wall_time_min: 60
+  gated_on:
+  - artifact_field: replay_methods_ready_score
+    op: ==
+    upstream: exp8933-compatible-replay-methods
+    value: 1
+  id: exp8940-compatible-replay-streams
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Replace fixed fast/slow interpolation with causal signature-selected
+      replay of released train feedback; compare uniform replay at equal gradient
+      and label budgets, preserving promotion safeguards and all prospective/retention
+      thresholds.
+    experiment_id: exp8925-interpolated-benefit-audit
+    retire_if_same_verdict: true
+    verdict: complete_null_interpolated_benefit_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    The selected-replay mechanism is ready independently of any Qwen result. Only
+    future query decisions can establish FR-11 benefit; replay loss and promotion
+    rates are diagnostics.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/interpolated_causal_streams_8922.py
+
+    - python/carnot/reporting/interpolated_causal_runner_8922.py
+
+    - python/carnot/memory/guarded_memory_8905.py
+
+    - results/experiment_8933_v764_compatible_replay_methods.json
+
+
+    TASK:
+
+    Measure future predictions after compatible delayed replay. Deliver results/experiment_8940_v764_compatible_replay_streams.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8940 / SCENARIO-REPORT-8940-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Execute all 24 sealed independent streams, five arms and 48 queries per stream.
+    Seal each prediction before releasing eight-step-delayed feedback. The buffer
+    receives only released train-role examples; evaluate retention at 0,24,48 without
+    exposing it to selection or the guard. Preserve terminal pending feedback as pending,
+    without post-stream training that contaminates future metrics.
+
+    5. Measure all buffer matches, replay source ids, label releases, template additions,
+    guard outcomes and two-gradient sequences. At query 24 perform the same exact
+    restart in every arm and compare complete state plus subsequent predictions with
+    an uninterrupted private control. Record per-query and retention rows, 23040 planned
+    comparison rows across arms; independent n is 24 streams, never row count.
+
+    6. Set replay_rows_ready_score=1 only for complete causal rows, unchanged protocol,
+    valid cold replay and all owned controls. Keep null learning effects admissible;
+    the later audit owns benefit. A missing prerequisite is blocked, not partial.
+    No full-generator inference belongs here.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    replay_rows_ready_score: integer 0/1; principle: complete causal measurement only.
+
+    prediction_rows, feedback_rows, replay_rows, retention_rows, promotion_rows, gradient_ledger,
+    state_hashes, stream_manifest, restart_rows: principle: predictions precede feedback
+    and each independent stream keeps matched arms. inference_substrate=verifier_ensemble_against_cached_candidates;
+    numerical_training_calls is measured.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8940_v764_compatible_replay_streams.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Measure future predictions after compatible delayed replay
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8941_v764_compatible_replay_benefit.json
+  estimated_wall_time_min: 40
+  gated_on:
+  - artifact_field: replay_rows_ready_score
+    op: ==
+    upstream: exp8940-compatible-replay-streams
+    value: 1
+  id: exp8941-compatible-replay-benefit
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Replace fixed fast/slow interpolation with causal signature-selected
+      replay of released train feedback; compare uniform replay at equal gradient
+      and label budgets, preserving promotion safeguards and all prospective/retention
+      thresholds.
+    experiment_id: exp8925-interpolated-benefit-audit
+    retire_if_same_verdict: true
+    verdict: complete_null_interpolated_benefit_audit
+  priority: high
+  prompt: 'CONTEXT:
+
+    The previous interpolation result was a valid null despite frequent promotions.
+    Preserve the full prospective conjunction and add the uniform-replay comparison;
+    do not accept training improvements as benefit.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/interpolated_benefit_audit_8925.py
+
+    - results/experiment_8933_v764_compatible_replay_methods.json
+
+    - results/experiment_8940_v764_compatible_replay_streams.json
+
+
+    TASK:
+
+    Audit future replay benefit and untouched retention. Deliver results/experiment_8941_v764_compatible_replay_benefit.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8941 / SCENARIO-REPORT-8941-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Reduce the frozen stream rows independently. Compute future Brier on query
+    ordinals 25-48 and all six retention contrasts; use 10000 whole-stream paired
+    bootstrap draws and the sealed alpha=0.01/10 allocation. Derive the four future
+    contrasts versus frozen, guarded_current, uniform_replay and compatible_permuted
+    from identical stream ids.
+
+    5. Set compatible_benefit_score=1 only if all ten predeclared bounds pass: frozen
+    future <=-0.01, other future bounds <0, and retention Brier/error <=0.01 at every
+    checkpoint. Recompute every aggregate from paired stream rows. Report information
+    controls and selection diversity, but do not replace failed primary metrics with
+    them.
+
+    6. Publish an exact continuation decision: if this mechanism fails the conjunction,
+    retire the fixed signature, buffer32, two-gradient, delay8, guard and query schedule.
+    Do not retire continuous learning in general or propose unchanged replay again.
+    An absent upstream is blocked; a valid null is terminal null; audit readiness
+    can still be one.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    replay_audit_ready_score, compatible_benefit_score: integer 0/1; principle: valid
+    reduction versus demonstrated future learning.
+
+    paired_stream_rows, paired_intervals, retention_bounds, multiplicity_ledger, information_controls,
+    continuation_decision: principle: all ten bounds and exact retirement scope. inference_substrate=aggregation_from_upstream_artifacts;
+    model and training calls are zero.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8941_v764_compatible_replay_benefit.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Audit future replay benefit and untouched retention
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8942_v764_replay_complete_cost.json
+  estimated_wall_time_min: 60
+  gated_on:
+  - artifact_field: replay_rows_ready_score
+    op: ==
+    upstream: exp8940-compatible-replay-streams
+    value: 1
+  id: exp8942-replay-complete-cost
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.764
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Remove intrusive component observation entirely; measure only qualified
+      parent-clock full-service windows for changed replay work, leaving acceleration
+      fractions unknown.
+    experiment_id: exp8921-inline-clock-methods
+    retire_if_same_verdict: true
+    verdict: complete_null_inline_clock_methods
+  - addressed_by: Bind this task own complete replay service measurements; do not
+      depend on missing label-demand or inline-request artifacts or infer unmeasured
+      board fractions.
+    experiment_id: exp8928-hardware-operation-budget
+    retire_if_same_verdict: true
+    verdict: complete_blocked_hardware_operation_budget
+  priority: high
+  prompt: 'CONTEXT:
+
+    Inline phase timing failed the 5-percent observer limit in Exp8921. Measure complete
+    uninstrumented service windows for the new replay mechanism; do not retry component
+    attribution or assume learning benefit.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/durable_cost_qualification_8926.py
+
+    - python/carnot/reporting/guarded_durable_cost_8914.py
+
+    - python/carnot/reporting/linear_durable_cost_8862.py
+
+    - results/experiment_8940_v764_compatible_replay_streams.json
+
+    - research-hardware-wishlist.md
+
+    - results/experiment_8928_v763_hardware_operation_budget.json
+
+
+    TASK:
+
+    Measure complete replay service cost and hardware limits. Deliver results/experiment_8942_v764_replay_complete_cost.json
+    for 2026.11.764.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8942 / SCENARIO-REPORT-8942-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before expensive work. Missing external
+    inputs are terminal blocked; failed owned controls are disqualified.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision, print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including work between tool calls. Reserve validation
+    time: target total work below 4200 seconds within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between them. Real
+    scripts belong in scripts/experiments/, tests in tests/python/, and scratch in
+    /tmp. Never write scratch files in the repository root.
+
+    4. Freeze matched whole-process windows for the four trainable arms on 24 new
+    process/world seeds, 48 predict-release-update cycles and restart at 24. Use the
+    already qualified outer monotonic clocks. Time feature work, buffer search, both
+    gradients, guard, persistence/fsync and restart together. No per-phase clocks,
+    observer subtraction or microbenchmark-to-service extrapolation. Counter collection
+    occurs outside the timed window from retained state.
+
+    5. Include cold initialization and warm lifecycle costs separately, preserving
+    exact semantics and durability. Alternate arm order across independent process
+    seeds. Record wall time, completed operations, parent/child bounds and request/update
+    denominators. Report medians, p95 descriptive values and paired process-level
+    intervals; repeats within a process do not inflate n. cost_rows_ready_score requires
+    complete rows and valid controls, not a speedup.
+
+    6. Map the changed operations to CPU, batchable GPU distance/gradient work and
+    existing hardware limits. Report sampling_call_count=0 if no sampler runs. KV260
+    remains qualified only for its existing compatible sampler with k_max<=5; PolarFire
+    evidence is Linux CPU dispatch, GateMate remains physically blocked, NPU and TSU
+    unqualified. No board probe, purchase or new runtime repair is scheduled. Without
+    qualified component timing, removable_fraction and service_100x_projection must
+    be null, not guessed.
+
+    7. Keep speed-quality deployment recommendation false unless the separately authenticated
+    Exp8941 compatible_benefit_score is one and the complete cost comparison supports
+    it. Cost measurement itself must not depend on benefit. If the quality audit is
+    absent, retain valid cost rows and name the missing quality gate rather than repeating
+    work.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and historical producer
+    bytes. Run scoped pytest with measured 100-percent owned unit/child statement
+    coverage and zero exclusions, Ruff check and format --check, strict mypy, and
+    scripts/check_spec_coverage.py with positional test paths. Run applicable private
+    E2E-018/021 CLI cases and the actual new CLI with cold replay outside the checkout
+    without PYTHONPATH. Native changes also require E2E-003/004 and cargo test/fmt/clippy.
+    Run unchanged adversarial_verify.py and verdict_row_consistency_lint.py --strict
+    on the prospective artifact. Keep raw receipts and executed-source hashes; publish
+    only after owned checks. Separate unrelated repository health. Reconcile openspec/,
+    _bmad/traceability.md, ops/status.md and ops/changelog.md. Do not activate a milestone,
+    edit shared validators or the exclusion manifest, publish externally, or credit
+    fixtures as research. ARC remains suspended; keep generator weights frozen.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    experiment_id, task_id, milestone, run_date: principle: bind this producer and
+    {date}.
+
+    honest_verdict: terminal complete_ or complete: prefix; principle: execution completion
+    is separate from scientific success. Every blocked_* outcome, including complete_blocked_*,
+    includes gate_check_summary.
+
+    verdict_class: positive | circular_positive | null | blocked | disqualified |
+    partial; principle: partial means unfinished OWN work only. External absence is
+    terminal blocked. verifier_is_oracle=true forbids positive; failed owned acceptance
+    forbids positive.
+
+    inference_substrate, inference_substrate_class, execution_venue, MODEL_SPECS,
+    model_invocation_counts, numerical_training_calls: principle: declare actual current
+    work. CPU small-head training is no_model_load, not no compute. A blocked run
+    records blocked_no_run; a load with no generation records model_load_no_generation.
+    Never pad elapsed time.
+
+    verifier_is_oracle, exposure_scope, independent_generalization_score: principle:
+    graph labels and constructed streams cannot establish natural-language generalization
+    or a verifier moat.
+
+    duration_s, phase_spans, preconditions_checked, random_seed, reproducibility_checksum:
+    principle: freeze methods and record actual time.
+
+    source_artifact_hashes, code_config_hashes, raw_shard_hashes, cited_upstream_artifacts:
+    principle: authenticate original producer identity and retained bytes. Upstream
+    compute stays in opaque producer references, not current compute counters.
+
+    rows: principle: one row per compared unit, arm and metric, with unit_id, cluster_id,
+    seed, value, numerator, denominator, status and missing_reason. Recompute every
+    comparative headline from rows. Store administrative receipts outside comparative
+    rows.
+
+    intended_count, completed_count, failed_count, censored_count, excluded_count,
+    independent_count: principle: retain every scheduled unit. Repeated costs, seeds
+    or questions on one graph do not create independent samples.
+
+    gate_check_summary: principle: for each blocked outcome record check, upstream,
+    artifact_field, expected, observed, path and hash. Distinguish missing_file, missing_field,
+    rejected_producer and observed_zero.
+
+    acceptance_gates, required_checks_passed, validation_receipts, owned_statement_coverage,
+    field_principles: principle: readiness is not benefit; explain each extra field''s
+    evidential scope.
+
+    cost_rows_ready_score: integer 0/1; principle: qualified complete costs without
+    an acceleration claim.
+
+    service_cost_rows, process_seed_rows, durability_rows, paired_cost_intervals,
+    operation_counts, hardware_compatibility_rows, sampling_call_count, removable_fraction,
+    service_100x_projection, quality_reference, deployment_recommendation: principle:
+    measure service costs; unknown component fractions remain null. inference_substrate=verifier_ensemble_against_cached_candidates;
+    small-head training calls measured, pretrained model calls zero.
+
+
+    Run command: cd {project_root} && .venv/bin/python -u scripts/experiments/experiment_8942_v764_replay_complete_cost.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Measure complete replay service cost and hardware limits
+  track: research
