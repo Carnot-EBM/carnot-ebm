@@ -109481,6 +109481,39 @@ Deliverable: `results/experiment_8918_v763_bfs_error_pilot.json`. Execution auth
 #### SCENARIO-REPORT-8918-CONTRACT
 Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
 
+Execution contract, 2026-11-08: freeze 50 distinct graph seeds, each with uniform
+50-60 nodes and independent edge probability 3/(n-1), before any generation.
+Retain resampling counts and exact edges, nodes, start, expected set and prompt
+hashes. BFS must exclude adjacent nodes even when a two-edge walk exists; hand
+graphs and independent adjacency-matrix checks must agree. Accept only one
+uppercase two-letter label with optional final punctuation and whitespace.
+Invalid, empty, ambiguous and unknown-node outputs are errors. Failed runtime
+calls and unstarted slots are censored, never reasoning errors. Freeze the actual
+GGUF chat template and reasoning-off settings before the first call. No grammar,
+repair or retries; max_tokens=16, temperature=0, 30 seconds per question.
+Use the existing GPU allocation lease for device 0 alone, authenticated actual
+offload, a 240-second preflight and 240-second load bound. A missing resource
+is terminal blocked with named operands; owned validation failure disqualifies.
+Runtime readiness requires real offloaded generation and passing owned checks;
+pilot readiness additionally requires all fifty calls completed. Ten errors
+qualify only the oracle error-source gate, class circular_positive. A complete
+pilot below ten errors is null and recommends a future size/k change without
+executing it. Preserve every scheduled slot and content-addressed raw operand.
+Cold replay must recompute graph truth, answer labels, counters and gates, reject
+rehashed semantic tampering, and work outside checkout without PYTHONPATH.
+Require 100 percent owned unit/child statements with no coverage exclusions.
+Fixtures prove plumbing only and cannot qualify runtime or pilot readiness.
+
+Implementation binding, 2026-11-08: the producer is
+`python/carnot/reporting/bfs_error_pilot_8918.py`, the owned runtime uses
+`python/carnot/inference/bfs_pilot_runtime_8918.py`, and the direct CLI is
+`scripts/experiments/experiment_8918_v763_bfs_error_pilot.py`. Controls are in
+`tests/python/test_bfs_error_pilot_8918.py`. The terminal result and its retained
+invocation receipts are the authority for execution status. Informational
+auditor flags retain their raw nonzero exits; warnings and critical flags fail
+terminal acceptance. Failed terminal acceptance publishes a disqualified result
+with all readiness gates zero. No shared validator is changed.
+
 ### REQ-REPORT-8919: Freeze interpolated candidate updates for continuous energy learning
 The existing signed-energy candidate shall gain an opt-in fast/slow interpolation update, alpha=0.25 and beta=0.5, with the existing objective and learning rate. The candidate uses the slow sequence; both sequences and update count shall persist atomically. Existing guard, template, causal split and retention boundaries shall remain fixed. Eight development streams precede twenty-four sealed evaluation streams. Methods and development feasibility shall have separate integer gates; no evaluation data shall inform them.
 Deliverable: `results/experiment_8919_v763_interpolated_update_methods.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
