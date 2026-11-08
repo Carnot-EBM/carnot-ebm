@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-11-08 UTC — Fix Exp8929 health reuse and compute provenance
+
+- Implement authenticated reuse of the original same-task Python health receipt
+  through the private validation namespace. Preserve its failed timeout while
+  rerunning owned checks; reject missing, duplicate or changed custody and
+  mismatched commands, including logs relative to the validation root.
+- Replace inline upstream compute assertions with opaque producer references,
+  preserving original model evidence and keeping current compute counters zero.
+- Add six health-custody regressions; preserve every original test function and
+  `scripts/research_conductor.py`. The standalone E2E-018 CLI passes 91 affected
+  and 106 consumer tests, twelve mutations, terminal scanners and cold replay.
+- Retain the original rejected primary and its critical report. Repair receipts
+  are in `/var/tmp/carnot-8929-repair-bfzb4a4a/`; the Exp8929 primary binds fresh
+  335/335 owned statements with zero exclusions. All 53 repair/private E2E tests,
+  scoped lint/types/spec tracing, terminal scanners and cold replay pass. Global
+  health retains its original timeout, and 1,142 unrelated spec-reference gaps
+  remain.
+
 ## 2026-11-08 UTC — Operational retrospective for milestone 2026.11.762
 
 - Updated `results/operational_retro_2026_11_762.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.762`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 12 completed synthesis-only experiments (0 compute-bound) across 93.4 wall-time minutes (93 minutes / 1.6 hours, averaging 8 minutes per experiment).

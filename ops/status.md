@@ -1,5 +1,28 @@
 # Carnot — Operational Status
 
+## 2026-11-08 UTC — Exp8929 validation boundary repair
+
+**Last Updated:** 2026-11-08 (Exp8929 repair only)
+
+The capstone keeps upstream model counters and specifications behind hash-bound
+producer references. Its private validation namespace reuses the original
+same-task Python health attempt only after authenticating the receipt, command
+and log bytes; all owned checks execute fresh. The original timeout stays failed.
+Missing, duplicate, mismatched and changed health evidence is rejected.
+
+The standalone E2E-018 CLI passes 91 affected tests, 106 consumer tests, twelve
+authority mutations, both terminal scanners and outside-checkout cold replay.
+All 53 repair and private E2E-018/021 tests pass. Fresh unit/actual-child coverage
+measures 335/335 owned statements with zero exclusions. Scoped lint, formatting,
+strict types, spec tracing, both terminal scanners and cold replay pass. The
+Exp8929 primary accounts for all thirteen slots with reconciliation readiness
+one, a blocked scientific verdict and no current model calls. Original
+test-function ASTs and conductor bytes are intact.
+
+Repository-wide health was not repeated. Global spec tracing still reports
+1,142 pre-existing missing references, and the architecture reconciliation date
+remains 2026-10-11. Evidence: `/var/tmp/carnot-8929-repair-bfzb4a4a/`.
+
 ## 2026-11-06 UTC — Exp8867 retained-health and replay repair
 
 Owned validation now reuses the original global-health receipt only after its

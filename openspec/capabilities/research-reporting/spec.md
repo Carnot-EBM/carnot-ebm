@@ -109681,4 +109681,75 @@ The unconditional capstone shall account for every one of thirteen slots, includ
 Deliverable: `results/experiment_8929_v763_capstone.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
 
 #### SCENARIO-REPORT-8929-CONTRACT
-Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: implemented; qualification is bound to the terminal primary and its retained validation receipts.
+
+Implementation contract for REQ-REPORT-8929 (20261108, before tests/code):
+Bind the original Exp8917 primary and execution snapshots, full ordered task
+objects and independent task digest. Retain all twelve upstream slots plus the
+self-slot, including failed owned controls and hash-authenticated scheduler
+skips. Resolve changed append-only sources only to bytes with their original
+hash; never overwrite producer assertions. Recompute scientific reductions
+with existing producer reducers and keep graph seeds, development/evaluation
+streams, certificate draws, source clusters and timing worlds separate.
+The fifty-question pilot must be complete before its ten-error gate can pass.
+A passing pilot recommends ceil(200/rate*1.30) future questions with a Wilson
+uncertainty range and a separately frozen graph split; execute no collection
+or detector training. Below gate recommend a future difficulty change only.
+Retain exact label-union costs and terminal equality as disqualified diagnostics
+when owned qualification failed; a scheduler skip supplies no evaluation data.
+Keep the nine-bound learning conjunction, paired annotation dependence,
+historical durable costs and failed observer overhead independent. Unchanged
+external absence is blocked. Complete thirteen-slot accounting and checked
+cold replay alone qualify reconciliation readiness, never scientific success.
+
+Additional SCENARIO-REPORT-8929-CONTRACT controls cover missing files/fields,
+Boolean gates, wrong producer identities, invented scheduler skips, changed
+raw bytes, valid zero/null outcomes, exact fifty-question and ten-error
+boundaries, rejected owned controls and rehashed semantic drift. Measure all
+new unit and actual CLI statements with no exclusions. Run scoped lint/types/
+spec checks, private E2E-018/021 and unchanged terminal validators. Run the
+whole Python health command once, separately from owned acceptance. Preserve
+raw validation receipts and executed-source hashes. The conductor owns ops,
+changelog and traceability reconciliation under the final task instruction.
+
+Implementation binding, 20261108: `v763_capstone.py` owns byte admission,
+thirteen-slot reconciliation, continuation and retirement tables, checked
+publication and cold replay. `v763_capstone_reduction.py` reuses original
+producer reducers without new inference or training. The direct dated CLI is
+`scripts/experiments/experiment_8929_v763_capstone.py`; controls are in
+`tests/python/test_v763_capstone_8929.py`. The terminal artifact and its measured
+receipts determine qualification. The evidence requirements note is
+`docs/research-notes/v763-capstone-evidence-requirements-2026-11-08.md`.
+Large per-query and durability operands remain in pinned upstream sidecars;
+paired learning rows retain whole-stream estimates and their separate n.
+Historical FoVer paper readiness grants no milestone publication authority.
+
+REQ-REPORT-8929 qualification correction (20261108): upstream model counters,
+model specifications and runtime receipts shall remain in opaque hash-bound
+producer references. They shall not be nested in current compute metadata.
+The unchanged adversarial verifier shall accept the corrected current-work
+boundary. Add a failing test for inline upstream counters before this repair.
+Retain the first rejected candidate and its critical validator report. Reuse
+only the authenticated same-task whole-suite health receipt on this correction;
+rerun owned checks and measure fresh coverage, without repeating broad health.
+
+Repair controls for SCENARIO-REPORT-8929-CONTRACT (20261108): bind the original
+same-task validation receipt by its exact hash. Reuse exactly one repository
+health receipt only when its command and log bytes still match; resolve relative
+logs from the validation root. Missing, duplicate, changed or mismatched health
+evidence must fail closed. Plans without repository health still run every owned
+check. The private validation namespace must use this authenticated reuse path.
+Branch compute provenance must be an upstream-only producer reference; retain
+all original compute assertions in the pinned producer bytes for cold replay.
+
+Repair verification (20261108): all twelve original capstone tests, six added
+health-custody cases, ten erasure-gate tests and twenty-five private E2E-018/021
+tests pass. Fresh unit/actual-child coverage measures 335/335 owned statements,
+with zero exclusions. Scoped Ruff, formatting, strict mypy and spec tracing
+pass. Both unchanged terminal scanners and cold replay pass; the complete
+thirteen-slot artifact remains scientifically blocked with reconciliation
+readiness one and no current model calls. The original failed health timeout is
+authenticated and retained, never promoted to owned success. The standalone
+E2E-018 CLI also passes 91 affected and 106 consumer tests, twelve mutations,
+terminal validators and outside-checkout replay. Global reconciliation retains
+1,142 unrelated missing spec references and the 2026-10-11 architecture date.

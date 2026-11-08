@@ -1,5 +1,25 @@
 # Carnot — Traceability Matrix
 
+## Exp8929 health reuse and compute provenance repair — 2026-11-08 UTC
+
+**Last Updated:** 2026-11-08 (Exp8929 repair only)
+
+| Requirement / scenario | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-8929 | `v763_capstone.build` retains upstream compute in opaque producer references | Original upstream-compute assertions, unchanged terminal scanners and cold replay |
+| SCENARIO-REPORT-8929-CONTRACT | `run_checks` authenticates the original health receipt, exact command and log before reuse; the private checker uses this path | Original single-health test plus six relative-path, missing, duplicate, mismatched-command and changed-byte controls |
+| REQ-CONDUCTOR-FIXGATE-1 | Preserve original implementation work, test-function ASTs and conductor bytes | Ten erasure-gate tests pass; original assertions remain unchanged |
+
+The standalone E2E-018 CLI passes 91 affected and 106 consumer tests, twelve
+authority mutations, both terminal scanners and outside-checkout cold replay.
+All 53 repair/private E2E tests pass, with 335/335 owned unit/actual-child
+statements and zero exclusions. Scoped lint, formatting, strict mypy, spec
+tracing, both terminal scanners and cold replay pass. The primary and raw
+validation receipts bind qualification. Additional repair evidence is retained in
+`/var/tmp/carnot-8929-repair-bfzb4a4a/`. Global health remains an authenticated
+failed timeout. Global reconciliation retains 1,142 unrelated missing spec
+references and the existing 2026-10-11 architecture reconciliation date.
+
 ## Exp8867 retained-health and replay repair — 2026-11-06 UTC
 
 | Requirement / scenario | Implementation | Verification |
