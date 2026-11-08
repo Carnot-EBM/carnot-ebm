@@ -23307,3 +23307,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Measure complete request costs with qualified retained clocks (⚠️ Research Finding) — honest_verdict=complete_null_complete_request_cost; results/experiment_8912_v762_complete_request_cost.json
 - 2026-11-08: Measure complete durable candidate and promotion costs (⚠️ Research Finding) — honest_verdict=complete_disqualified_guarded_durable_cost; results/experiment_8914_v762_guarded_durable_cost.json
 - 2026-11-08: Map qualified service work to existing hardware limits (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_budget; results/experiment_8915_v762_hardware_operation_budget.json
+- 2026-11-08: Reconcile thirteen outcomes and decide guarded-learning continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v762_capstone; results/experiment_8916_v762_capstone.json
