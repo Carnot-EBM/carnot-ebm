@@ -635,3 +635,25 @@ Not independently checked: complete code or causal gains. These mechanisms requi
 
 ## 2026-11-07 14:32 UTC -- checked, nothing new
 
+## 2026-11-08 14:38 UTC -- NEW
+
+**The last dance — [November 6 disclosure](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/writeups/public-lb-7-short-overview):**
+
+- **(b), general-purpose memory:** Compacts discarded turns into code, actions, outcomes and reasoning tails; preserves recent turns verbatim, Python state and winning frames. Model-written summaries returned nothing usable about one-third of the time. **POSSIBLE CARNOT LEVER:** Preserve a structured history of executable code and observed outcomes through context cuts.
+
+- **(b), general-purpose perception:** Repeats a per-turn instruction to obtain counts, coordinates and differences through Python. Authors report stronger effects than system-prompt guidance. **POSSIBLE CARNOT LEVER:** Reinforce programmatic measurement with every observation.
+
+- **(b), general-purpose compression/serving:** REAP calibration weights prefill/decode traffic **65%/35%**, retaining **320 main-model experts and 256 draft experts**. Verifying drafts from one recurrent state, then replaying accepted tokens, reportedly adds **13% KV capacity and 15% throughput**. Lowering `top_p` from **0.95→0.75** accelerated long-response decoding about **8%**.
+
+- **(b), general-purpose negative results:** Three executable world-model approaches—population evolution, maintained state programs, and simulator-plus-planner—fit recorded transitions but cleared no more levels. Asking for fewer actions reduced actions **22%**, but also reduced level completion.
+
+**Grigoriy Zatravkin & co — newly located details from its [November 4 release](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/WRITEUP.md):**
+
+- **(b), general-purpose pruning:** At 400 experts, router-usage selection measured KL divergence **0.0204**, versus **0.0481** for weight-saliency selection. In an offline comparison, including multimodal calibration traffic reduced redirected prompt routing **3.25%→1.77%**. **POSSIBLE CARNOT LEVER:** Calibrate generator compression on actual multimodal verifier-loop traffic.
+
+- **(b), general-purpose session reuse:** Checks decoded reply text and includes image identity in cache matching, falling back to the client’s complete history on mismatches. Token-only matching had allowed one game to resume another game’s session. **POSSIBLE CARNOT LEVER:** Add image-aware consistency guards when retaining candidate inference state.
+
+- **(b), general-purpose quality finding:** INT8 recurrent-state quantization measured just **1.01× the reference KL noise floor**, yet roughly tripled replies terminating inside reasoning. It was disabled in the selected submissions. **POSSIBLE CARNOT LEVER:** Evaluate serving changes through tool completion and gameplay alongside token-level drift.
+
+Not independently reproduced; classifications cover disclosed mechanisms. Complete-submission source-reading and hardcoding status remains unverified.
+

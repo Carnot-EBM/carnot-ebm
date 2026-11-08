@@ -1,0 +1,69 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8928_v763_hardware_operation_budget.json",
+  "primary_sha256": "sha256:efc2dabc7531fce61a6150657593d53f325656355669df28593be0af7d788230",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8928_v763_hardware_operation_budget/terminal_candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8928_v763_hardware_operation_budget/terminal_candidate.json",
+          "--json"
+        ],
+        "duration_s": 1.1844375419896096,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8928_v763_hardware_operation_budget/invocations/829326901057306/terminal/00_adversarial.log",
+        "log_sha256": "sha256:1461313b1424545e6fc73abdc99c7f748f3511f2e62570de05f532ac4e9d9510",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8928_v763_hardware_operation_budget/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8928,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_hardware_operation_budget\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8928_v763_hardware_operation_budget/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8928_v763_hardware_operation_budget/terminal_candidate.json"
+        ],
+        "duration_s": 0.05293304694350809,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8928_v763_hardware_operation_budget/invocations/829326901057306/terminal/01_row_consistency.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "row_consistency",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "env -u PYTHONPATH -C /tmp /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8928_v763_hardware_operation_budget.py --replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8928_v763_hardware_operation_budget/terminal_candidate.json",
+        "command_argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "-C",
+          "/tmp",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8928_v763_hardware_operation_budget.py",
+          "--replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8928_v763_hardware_operation_budget/terminal_candidate.json"
+        ],
+        "duration_s": 4.358389356988482,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8928_v763_hardware_operation_budget/invocations/829326901057306/terminal/02_cold_replay.log",
+        "log_sha256": "sha256:784521bf0eb4b908672c8d7d94b3a73627df868cacc8649f4e827a31373f4daf",
+        "name": "cold_replay",
+        "output_tail": "[exp8928] phase=imports_before\n[exp8928] phase=imports_after\n{\"passed\": true, \"checked_sha256\": \"sha256:efc2dabc7531fce61a6150657593d53f325656355669df28593be0af7d788230\"}\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      }
+    ]
+  }
+}

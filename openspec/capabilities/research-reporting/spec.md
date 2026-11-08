@@ -109657,6 +109657,25 @@ Deliverable: `results/experiment_8928_v763_hardware_operation_budget.json`. Exec
 #### SCENARIO-REPORT-8928-CONTRACT
 Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
 
+Implementation contract added 2026-11-08 before tests and code: authenticate each
+available producer and scheduler skip independently. Retain original bytes,
+assertions and operands, including rejected evidence. A zero observer gate and
+an absent request producer remain separate diagnostics. Exp8926 qualifies only
+historical guarded service clocks. Count Exp8922 gradients, fast/slow updates,
+guard scores, durable commits and label calls without assigning historical times
+to them. Disqualified policy-mask work stays diagnostic and unqualified.
+GPU 0 workload receipts do not qualify optimizer batching; GPU 1 stays detached.
+NPU and TSU need authenticated supported workloads. A complete map may have
+readiness one with null fractions and a terminal blocked scientific verdict.
+Tests shall reject forged skips, gate type changes, oracle-positive producers,
+operand drift and rehashed aggregate tampering. Only measured compatible shares
+of complete service admit the 100x-kernel formula; 10x needs f >= 10/11.
+Own unit and actual CLI statements require measured 100-percent coverage with
+zero exclusions. Run the full Python health command once and retain its outcome
+separately from owned checks. Private E2E-018/021 and unchanged strict artifact
+validators must run before terminal publication. Documentation reconciliation
+is reserved for the conductor, as directed by this invocation.
+
 ### REQ-REPORT-8929: Reconcile thirteen outcomes and decide the next evidence requirements
 The unconditional capstone shall account for every one of thirteen slots, including authenticated skips and disqualified producers, with separate branch denominators. It shall recheck pilot, nine learning bounds, label union, annotation dependence and cost qualifications, retain exact-scope retirement recommendations and emit stable G1-G4 publication gates. It shall not activate, publish or execute a larger error collection.
 Deliverable: `results/experiment_8929_v763_capstone.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.

@@ -1,0 +1,295 @@
+{
+  "access_order": [
+    "protocol",
+    "operands",
+    "selection_labels",
+    "selection",
+    "certificates",
+    "census_labels",
+    "evaluation"
+  ],
+  "arms": [
+    "fixed_final",
+    "early_acceptance",
+    "early_acceptance_refusal"
+  ],
+  "census_scope": "evaluator only; after all service decisions",
+  "family_error": "84/16800+28/5600=.01 per replicate; unchanged tests; forty replicates do not prove a rare-event bound",
+  "interval_contract": {
+    "confidence_percent": 99,
+    "coverage_difference_range": [
+      -1,
+      1
+    ],
+    "coverage_gate": "pathwise inclusion proof, not descriptive interval",
+    "family_error": 0.01,
+    "family_size": 23,
+    "label_savings_range": [
+      0,
+      3360
+    ],
+    "method": "Bonferroni bounded Hoeffding",
+    "primary_family": "learned_energy"
+  },
+  "methods": {
+    "access_order": [
+      "protocol",
+      "pilot",
+      "population",
+      "draws",
+      "fit",
+      "scores",
+      "selection_labels",
+      "selection",
+      "certification_labels",
+      "certificates",
+      "census_labels",
+      "evaluation"
+    ],
+    "alpha_allocation": {
+      "distinct_total": 0.01,
+      "early_event_count": 84,
+      "early_per_event": 5.9523809523809524e-05,
+      "exact_fraction_sum": "84/16800 + 28/5600 = 1/100",
+      "final_event_count": 28,
+      "final_per_event": 0.00017857142857142857,
+      "scope": "per replicate conditional on frozen selection",
+      "shared_final_counted_once": true,
+      "total": 0.01
+    },
+    "alpha_denominators": [
+      16800,
+      16800,
+      16800,
+      5600
+    ],
+    "arms": [
+      "fixed_final",
+      "early_acceptance",
+      "early_acceptance_refusal"
+    ],
+    "bound_proof": "Condition on frozen policies, population and independent selection. Accepted errors conditional on accepted n are binomial at the fixed group risk. Each exact one-sided bound undercovers with probability at most its alpha; n=0 refuses. Union bound over 84 early events and 28 distinct shared final events is .005+.005=.01. Stopping only selects events in this family. Shared or dependent policy tests need no independence. This is a per-replicate guarantee, not a guarantee across all forty replicates or nonstationary draws. This is a new local construction, not the cited paper theorem.",
+    "calibration_labels_opened": false,
+    "census_scope": "retain original4096 worlds; evaluator-only truth",
+    "coverage_inclusion_proof": "For every possible candidate sequence and frozen selected cutoff, let F be the common final test and E1,E2,E3 the early tests. Fixed certifies iff F. Sequential certifies iff E1 or E2 or E3 or F. Therefore F implies sequential certification, even when sequential stopped earlier. The certified frozen policy serves the same input-only accepted set, so fixed served sets are subsets of sequential served sets in every group and every nonnegative mixture. This logical inclusion requires no probabilistic assumption and says nothing about correctness of answers. Risk validity separately requires iid stationary within-group draws independent of selection and policies.",
+    "cutoffs": [
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
+      0.95
+    ],
+    "exact_sample_requirements": {
+      "early": 190,
+      "final": 169
+    },
+    "family_alpha_ledger": [
+      {
+        "alpha_denominator": 16800,
+        "events": 84,
+        "stage": "early"
+      },
+      {
+        "alpha_denominator": 5600,
+        "events": 28,
+        "stage": "shared_final"
+      }
+    ],
+    "fixed_alpha_sensitivity": {
+      "alpha": 0.00035714285714285714,
+      "descriptive_only": true,
+      "excluded_from_joint_guarantee": true
+    },
+    "fixed_budget": 960,
+    "fixed_final_test": {
+      "accepted_n_zero": "refuse",
+      "alpha": 0.00017857142857142857,
+      "candidate_draws": 960,
+      "identical_prefix": true,
+      "risk_upper_le": 0.05
+    },
+    "fresh_calibration_seed": 7628906,
+    "groups": {
+      "chain": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "cycle": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "disconnected": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "fork": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          5
+        ]
+      ]
+    },
+    "interval_contract": {
+      "confidence_percent": 99,
+      "coverage_difference_range": [
+        -1,
+        1
+      ],
+      "coverage_gate": "pathwise inclusion proof, not descriptive interval",
+      "family_error": 0.01,
+      "family_size": 23,
+      "label_savings_range": [
+        0,
+        3360
+      ],
+      "method": "Bonferroni bounded Hoeffding",
+      "primary_family": "learned_energy"
+    },
+    "label_cost_definition": "Standalone cell pays 240 selection plus all candidate draws through its terminal look, including repeats and unaccepted draws. Standalone policy sums four cells. Shared sequential union pays selection once per group plus the largest terminal look among seven policies. Fixed shared union pays four*(240+960). Actual joint research acquisition shares selection and the full fixed stream, paying 4800 labels per replicate, not the sum of standalone costs. Oracle census and pilot labels are separate research overhead; retained historical fit labels are not current labels.",
+    "look_schedule": [
+      120,
+      240,
+      480,
+      960
+    ],
+    "measurement_deadline_s": 1800,
+    "motivation": {
+      "scope": "Sequential feasibility motivation only; the proof here is a finite union bound.",
+      "url": "https://arxiv.org/abs/2602.01637"
+    },
+    "numerical_convention": "exact integer binomial CDF at risk1/20; no float tolerance; invalid bound output aborts all arms",
+    "policy_menu": [
+      [
+        "agreement_only",
+        0
+      ],
+      [
+        "fixed_evidence",
+        0
+      ],
+      [
+        "learned_energy",
+        11
+      ],
+      [
+        "learned_energy",
+        23
+      ],
+      [
+        "learned_energy",
+        37
+      ],
+      [
+        "learned_energy",
+        47
+      ],
+      [
+        "learned_energy",
+        59
+      ]
+    ],
+    "population_per_group": 1024,
+    "proof_obligations": "At fixed p, couple Bernoulli sums by adding one independent trial. P(Bin(n+1,p)<=e)<=P(Bin(n,p)<=e), while increasing e increases this CDF. Inverting the CDF gives an upper bound decreasing in n and increasing in e. At future draw L after t, every attainable state satisfies n_future<=n+L-t and e_future>=e. Thus (n+L-t,e) minimizes the exact upper bound. Rejecting every optimistic future test proves every attainable future test fails. An already issued certificate is permanent. Until safe refusal, both sequential arms visit identical prefixes; after it neither can pass. Their decisions are therefore equal on every path. Fixed final certificates remain included. Statistical error separately uses the unchanged finite family union bound; stationary iid group draws independent of selection remain required. No theorem from the motivating sequential feasibility papers is imported.",
+    "randomized_states": 4096,
+    "refusal_rule": "all remaining optimistic tests fail; every additional draw accepted with zero new errors",
+    "replicates": 40,
+    "risk_target": 0.05,
+    "runtime_budget_s": 4200,
+    "scientific_benefit_claim": false,
+    "seed": 7628906,
+    "selection_per_group": 240,
+    "selection_rule": "Group cutoffs maximize accepted selection draws at empirical risk<=.05; ties higher cutoff. Both protocols share the same rule; empty refuses after full budget.",
+    "shared_cost": "240 selection requests per group plus maximum policy stop; request ordinals shared once, replacement repeats paid",
+    "small_proof": {
+      "alpha_denominators": [
+        12,
+        12,
+        12,
+        4
+      ],
+      "looks": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "risk_denominator": 2
+    }
+  },
+  "primary_contrast": "shared_union/label_savings",
+  "risk_ceiling": 0.05,
+  "seed": 7628906,
+  "service_arm": "early_acceptance_refusal",
+  "shared_benefit": "primary lower99>0; zero decision or inclusion violations; valid controls; every served census risk<=.05"
+}
