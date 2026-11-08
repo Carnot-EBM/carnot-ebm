@@ -109450,6 +109450,30 @@ Deliverable: `results/experiment_8917_v763_branch_contract.json`. Execution auth
 #### SCENARIO-REPORT-8917-CONTRACT
 Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
 
+Implementation contract, 2026-11-08: bind the independent task digest
+`0c93ebaa0d8873bbe95ae266e47c76f0128433bc6c3dd3a4d10f9e72bbb96ab7`.
+Accept a matching activated queue when activation consumed the staged queue.
+Reject changed order, prompts, producer gate fields, routes, priors and paths.
+Preserve the V762 design and queue archives and the original thirteen capstone
+outcomes, including the scheduler skip and rejected cost producer. Authenticate
+retained producer references without replacing historical assertions.
+Record the November 7 directive as authority for Exp8918 alone: fifty k=2
+questions, reasoning off, GPU 0 only, ten errors required, no full collection.
+Map ImplicitHop to Exp8918; SPIN to Exp8919/8922/8925; exact active label
+accounting to Exp8920/8923; host orchestration to Exp8921/8927/8928.
+This producer shall perform no model load or CUDA probe. CPU branches check
+their own custody and shall not depend on contract_ready_score.
+Missing external bytes yield terminal blocked with exact diagnostics. Failed
+owned controls yield disqualified. Readiness requires 100 percent measured
+owned statements with zero exclusions and successful private CLI cold replay.
+
+Implementation addendum, 2026-11-08: the authority reader and reducer are in
+`python/carnot/reporting/v763_branch_contract.py`. The bounded CLI is
+`scripts/experiments/experiment_8917_v763_branch_contract.py`. Regression tests
+are in `tests/python/test_v763_branch_contract_8917.py`. The terminal artifact
+and its raw receipts record execution qualification. Other V763 slots remain
+planned. Ops and traceability reconciliation belongs to the conductor step.
+
 ### REQ-REPORT-8918: Measure the mandated fifty-question BFS-labeled error pilot
 The pilot shall execute exactly fifty seeded graph questions with k=2, reasoning off and the frozen mandated Qwen GGUF. Graphs shall have 50-60 nodes, mean degree three and random two-letter labels. BFS shall label shortest-distance final answers independently of Carnot detectors. Preconditions shall require the cached file, GPU offload support and free GPU 0; GPU 1 shall remain unused. No full collection, detector training, repair or localization claim is allowed. The error-source gate is ten errors among fifty completed generations; runtime failures shall be censored separately. Actual runtime readiness shall be independent of the error-rate gate.
 Deliverable: `results/experiment_8918_v763_bfs_error_pilot.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
