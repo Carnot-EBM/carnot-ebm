@@ -23329,3 +23329,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
   Planning validation is in progress. No activation, experiment, push or
   external publication occurred.
 - 2026-11-08: Bind V763 authority and the operator-directed evidence plan (⚠️ Research Finding) — honest_verdict=complete_null_v763_branch_contract; results/experiment_8917_v763_branch_contract.json
+- 2026-11-08: Measure the mandated fifty-question BFS-labeled error pilot (⚠️ Research Finding) — honest_verdict=complete_pilot_error_source_gate_passed; results/experiment_8918_v763_bfs_error_pilot.json
