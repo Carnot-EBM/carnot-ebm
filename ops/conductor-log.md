@@ -21572,3 +21572,4 @@ code |
 | 2026-11-08 11:48 UTC | Measure continuous interpolated learning on sealed | OK | 96 passed, 1 warning in 46.98s |
 | 2026-11-08 11:58 UTC | Measure shared label savings with unchanged certif | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8920-label-demand-methods.label_demand_ready_score (actual=0 == expected=1) |
 | 2026-11-08 12:45 UTC | Measure source-relative Qwen decisions after a suc | OK | 119 passed, 1 warning in 13.66s |
+| 2026-11-08 13:31 UTC | Audit prospective interpolation benefit and untouc | OK | 101 passed, 1 warning in 124.94s (0:02:04) |
