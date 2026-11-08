@@ -21559,3 +21559,4 @@ code |
 | 2026-11-08 02:18 UTC | Measure bounded Qwen evidence decisions under pair | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8904-branch-contract.runtime_repair_ready_score (actual=0 == expected=1) |
 | 2026-11-08 03:09 UTC | Measure complete durable candidate and promotion c | OK | 100 passed, 1 warning in 60.17s (0:01:00) |
 | 2026-11-08 03:43 UTC | Map qualified service work to existing hardware li | OK | 89 passed, 1 warning in 54.08s |
+| 2026-11-08 04:25 UTC | Reconcile thirteen outcomes and decide guarded-lea | OK | 96 passed, 1 warning in 112.74s (0:01:52) |
