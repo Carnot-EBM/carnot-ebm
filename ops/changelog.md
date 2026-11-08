@@ -23305,3 +23305,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Measure all-policy label savings from impossible-future refusal (⚠️ Research Finding) — honest_verdict=complete_null_finite_budget_evaluation; results/experiment_8910_v762_finite_budget_evaluation.json
 - 2026-11-08: Audit future Brier benefit and retention for guarded updates (⚠️ Research Finding) — honest_verdict=complete_null_guarded_benefit_audit; results/experiment_8911_v762_guarded_benefit_audit.json
 - 2026-11-08: Measure complete request costs with qualified retained clocks (⚠️ Research Finding) — honest_verdict=complete_null_complete_request_cost; results/experiment_8912_v762_complete_request_cost.json
+- 2026-11-08: Measure complete durable candidate and promotion costs (⚠️ Research Finding) — honest_verdict=complete_disqualified_guarded_durable_cost; results/experiment_8914_v762_guarded_durable_cost.json
