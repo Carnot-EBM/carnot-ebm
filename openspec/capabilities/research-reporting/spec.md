@@ -109581,7 +109581,32 @@ The benefit audit shall use whole-stream pairs and the frozen nine-bound family 
 Deliverable: `results/experiment_8925_v763_interpolated_benefit_audit.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
 
 #### SCENARIO-REPORT-8925-CONTRACT
-Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks.
+
+Contract extension, 20261108: pin the original Exp8922 and Exp8919 producers and
+all retained operands before cold reduction. Preserve the original producer
+assertions through private module bindings. Use the registered seed763200,
+10000 paired whole-stream draws, n=24 and alpha0.01/9 for all nine bounds.
+Retain all18432 scheduled rows, all promotion rejections and CPU operation
+counts. Reject future-label changes, release-before-prediction and research
+retention in training or guards, even after checksums are repaired. Missing
+required paired evidence blocks inference and never reduces n. Separate
+terminal scientific null from audit readiness. A repeated failure retires
+only this fixed interpolated optimizer plus guard and schedule, with continuous
+learning in general outside scope. Tests and real CLI children shall cover
+all newly owned statements with zero exclusions. Preserve raw validation and
+executed-source receipts, then publish only checked bytes; cold replay runs
+outside the checkout without PYTHONPATH. The conductor owns ops and traceability
+reconciliation.
+
+Implementation record, 20261108: `interpolated_benefit_audit_8925.py` binds the
+original sealed-stream assertions and paired reducer through private modules;
+`interpolated_benefit_runner_8925.py` reuses checked publication and owns the
+current producer identity and cold replay. The dated direct CLI and
+`tests/python/test_interpolated_benefit_audit_8925.py` cover the frozen family,
+read-only custody, adversarial mutations and terminal routes. The terminal
+artifact and its retained validation receipts are the execution authority;
+repository-wide health is separate. The conductor owns ops and traceability.
 
 ### REQ-REPORT-8926: Qualify retained durable costs with correctly typed comparison rows
 Durable-cost qualification shall preserve all Exp8914 original receipts, measured operands and the disqualified primary. Administrative process receipts shall be stored outside scientific comparison rows with content-addressed references. Real controls and denominators shall remain visible. Unchanged strict row lint and deliberately corrupt comparison tests shall pass/fail as intended. Replay shall qualify historical guarded costs only, never new optimizer costs or fresh speed-quality claims.
