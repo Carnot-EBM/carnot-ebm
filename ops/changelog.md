@@ -23334,3 +23334,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Prove exact certificates with labels requested only when needed (⚠️ Research Finding) — honest_verdict=complete_disqualified_label_demand_methods; results/experiment_8920_v763_label_demand_methods.json
 - 2026-11-08: Qualify allocation-free phase timing for complete requests (⚠️ Research Finding) — honest_verdict=complete_null_inline_clock_methods; results/experiment_8921_v763_inline_clock_methods.json
 - 2026-11-08: Measure continuous interpolated learning on sealed future streams (⚠️ Research Finding) — honest_verdict=complete_null_interpolated_causal_streams; results/experiment_8922_v763_interpolated_causal_streams.json
+- 2026-11-08: Measure source-relative Qwen decisions after a successful live pilot (⚠️ Research Finding) — honest_verdict=complete_null_paired_criterion_canary; results/experiment_8924_v763_qwen_natural_canary.json
