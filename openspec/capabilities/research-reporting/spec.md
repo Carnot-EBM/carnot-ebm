@@ -109379,6 +109379,24 @@ The experiment shall emit `results/experiment_8915_v762_hardware_operation_budge
 
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
+Exp8915 implementation contract (2026-11-08): freeze exact producer byte hashes
+for Exp8912, Exp8914 and Exp8911 before accounting. Retain rejected producer
+bytes and rows as diagnostics. A rejected cost producer cannot supply qualified
+timing. A valid null with an integer zero gate remains useful evidence.
+Authenticate referenced original bytes, including retained historical specs.
+Report whole-request clocks separately from nonadditive durable-service timers.
+Use null for every unmeasured compatible fraction, including absent sampling;
+an operation count of zero does not measure a fraction of service wall time.
+Keep host startup, transfer and atomic durability in the service denominator.
+
+Additional SCENARIO-REPORT-8915-CONTRACT controls cover Boolean gates,
+wrong producer identities, failed owned validation, missing fields/files,
+changed operand bytes, valid nulls, zero gates, unknown Amdahl inputs and
+rehashed semantic mutations. The actual private CLI runs outside the checkout
+without PYTHONPATH. Combine real unit and CLI statement traces without
+exclusions. Run one bounded repository health command separately. The conductor
+owns ops/status, changelog and traceability reconciliation.
+
 ### REQ-REPORT-8916: Reconcile thirteen outcomes and decide guarded-learning continuations
 
 Bind the original Exp8904 execution snapshot and exact Exp8904-Exp8916 contract. Account for every primary, disqualified producer, authenticated conductor pre-gate skip and this capstone self-slot. Missing scientific primaries are not success; retain exact producer field checks and raw custody.
