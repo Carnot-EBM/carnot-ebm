@@ -21554,3 +21554,4 @@ code |
 | 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_bool_leaf_values age-week 1: OPEN 7 days: SILENT_NON_FIR |
 | 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_4381_biprm_detector_localization_abstention.json age-week 0: OPEN 1 d |
 | 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8897_v761_source_bound_decisions.json age-week 0: OPEN 1 days: CLAIM_ |
+| 2026-11-08 01:05 UTC | Audit future Brier benefit and retention for guard | OK | 101 passed, 1 warning in 53.03s |
