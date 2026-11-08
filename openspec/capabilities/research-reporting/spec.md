@@ -109800,6 +109800,63 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+Contract extension, 2026-11-08: authenticate the pinned Exp8918 producer and
+the V764 task authority before work. Freeze 50 fresh control graphs with paired
+k=2/k=3 queries and 320 separate k=2 collection graphs. Use independent seeds,
+uniform n=50..60, p=3/(n-1), unique random uppercase two-letter names and nonempty
+requested distance sets. Retain every rejected graph seed, hash and reason.
+Assign 160 train, 80 calibration and 80 test graphs without response information.
+Each fixed 160-graph shard has 80/40/40 roles. No pilot graph or seed is reused.
+
+SCENARIO-REPORT-8931-CONTRACT shall compare shortest-distance BFS labels with
+independent adjacency-matrix reachability on small graphs, including triangles,
+disconnected nodes and ambiguous answers. Freeze the four completed-answer
+categories: malformed, out_of_graph, valid_wrong_distance and correct. Runtime
+failures are censored and receive no reasoning-error label.
+
+The learned feature view contains exactly mean emitted-token negative log
+probability and first answer-token top1-minus-top2 log-probability margin.
+Emitted content tokens include whitespace and punctuation; backend EOS and
+special tokens absent from content are excluded. The first non-whitespace
+content token is the answer token, including malformed text. Require exact
+content reconstruction, finite nonpositive server log probabilities, distinct
+top-two alternatives and a nonempty content token sequence of at most sixteen.
+Missing signals block signal readiness. Never infer them from BFS truth.
+Token count and parser category are nuisance controls outside learned features.
+Graphs, node identities, start, distance, answer sets, labels, paths and split
+identifiers cannot enter the feature view.
+
+The reusable sibling runner takes an already owned transport; it loads no model.
+It seals a per-unit intent before sending, saves the first raw response before
+deriving signals or labels, and checkpoints model/settings/graph/query/schema
+hashes. A completed unit must be reused exactly. An interrupted intent without
+raw bytes is censored on resume; no same-unit retry or favorable selection is
+allowed. Budgets are 1800 seconds per shard and 30 seconds per request, with
+flushed progress before/after requests and bounded-call heartbeats. Development
+fixtures and future live recipes remain separate from current research counts.
+
+Paired acceptance requires all 100 completed answers, verified labels, usable
+signals and empirical error(k3)>error(k2). Report graph-paired uncertainty from
+the 50 differences; this inequality is not statistical proof. Freeze admission
+of at least 200 independent collection errors separately from method readiness.
+Retain source bytes and executable hashes. Require tests first, measured
+100-percent new unit/actual-child statements without exclusions, Ruff, strict
+types, positional spec tracing, private E2E-018/021, foreign-directory cold
+replay and unchanged terminal validators. Missing external inputs are terminal
+blocked; failed owned controls are disqualified. This CPU method receipt has
+MODEL_SPECS=[], zero model/training calls and no independent scientific units.
+Ops, status and traceability reconciliation are conductor-owned for this run.
+
+Implementation receipt, 2026-11-08: `graph_source_8931.py` supplies the fixed
+graph protocol, response-only signals, durable bounded transport and paired
+control reduction. `graph_source_methods_8931.py` and its direct CLI retain
+original inputs and publish checked CPU methods. Fifty-four focused and
+unchanged pilot tests pass. Measured unit/actual-child coverage is 412/412 new
+statements, with zero exclusions. Ruff, strict mypy, positional spec tracing
+and all 25 private E2E-018/021 cases pass. The dated production invocation
+retains final validation and repository-health receipts before publication.
+No live model collection, detector benefit or natural-language claim follows.
+
 ### REQ-REPORT-8932: Separate semantic errors from parsing failures in the live pilot
 
 The experiment shall execute the frozen V764 task contract and produce

@@ -1,0 +1,70 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8931_v764_graph_source_methods.json",
+  "primary_sha256": "sha256:810b976a4d7883a3a600c9501982eb882d1feb658b0a54cb86afea00320f5b57",
+  "report": {
+    "passed": true,
+    "reason": "replay_passed",
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('\"'\"'PYTHONPATH'\"'\"',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=60).returncode)' /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8931_v764_graph_source_methods.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8931_v764_graph_source_methods/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('PYTHONPATH',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=60).returncode)",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8931_v764_graph_source_methods.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8931_v764_graph_source_methods/terminal_candidate.json"
+        ],
+        "duration_s": 2.0035569278988987,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8931_v764_graph_source_methods/invocations/1794168665812497507/terminal_validation/00_cold_replay_cli.log",
+        "log_sha256": "sha256:486c1522ddab97c3db04d02e62e7f77ae2c47989c243d1f67a9c6aff9d304afb",
+        "name": "cold_replay_cli",
+        "output_tail": "[exp8931] phase=graph_freeze completed=50 pending=320\n[exp8931] phase=graph_freeze completed=100 pending=270\n[exp8931] phase=graph_freeze completed=150 pending=220\n[exp8931] phase=graph_freeze completed=200 pending=170\n[exp8931] phase=graph_freeze completed=250 pending=120\n[exp8931] phase=graph_freeze completed=300 pending=70\n[exp8931] phase=graph_freeze completed=350 pending=20\n{\"passed\": true, \"replay_passed\": true, \"reason\": \"replay_passed\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8931_v764_graph_source_methods/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8931_v764_graph_source_methods/terminal_candidate.json"
+        ],
+        "duration_s": 1.3367766300216317,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8931_v764_graph_source_methods/invocations/1794168665812497507/terminal_validation/01_adversarial.log",
+        "log_sha256": "sha256:a55b838164d7377e2175d7a1859e16e6f207bf548773e774a80ecaecd9fbaec4",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8931_v764_graph_source_methods/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8931,\n      \"title\": \"Frozen graph source methods\",\n      \"honest_verdict\": \"complete_null_source_methods_ready\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8931_v764_graph_source_methods/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8931_v764_graph_source_methods/terminal_candidate.json"
+        ],
+        "duration_s": 0.03234123601578176,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8931_v764_graph_source_methods/invocations/1794168665812497507/terminal_validation/02_strict_rows.log",
+        "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ],
+    "replay_passed": true
+  }
+}
