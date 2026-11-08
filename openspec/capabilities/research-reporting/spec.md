@@ -109613,7 +109613,35 @@ Durable-cost qualification shall preserve all Exp8914 original receipts, measure
 Deliverable: `results/experiment_8926_v763_durable_cost_qualification.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
 
 #### SCENARIO-REPORT-8926-CONTRACT
-Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+The qualifier shall authenticate the original primary checksum and exact source,
+config and raw bytes, including archived bytes when a live source has changed.
+It shall retain all48 cells, four original arms,48 feedback acknowledgments per
+cell, restart at24 and whole-service wall denominators. It shall cold-reduce with
+the original producer assertions. Process commands and control receipts shall
+move to immutable content-addressed sidecars, with one receipt link per cell.
+Scientific comparison rows shall retain only typed identity and measured costs;
+missing links, changed times, missing cells, swapped arms and equal arms claimed
+to improve shall fail. Unchanged strict lint shall reject deliberately degenerate
+real comparisons. A new receipt shall label all timings historical, keep current
+training and model counts zero, and keep the speed-quality score zero because
+Exp8911 benefit is zero. Missing exact bytes block; owned gate failures disqualify.
+Unchanged original durability tests shall use the authenticated archived producer
+source in an isolated read-only filesystem view; the live source stays unchanged.
+Tests shall precede code. Actual unit/CLI coverage shall cover100 percent owned
+statements with zero exclusions. Run unchanged durability and strict-row tests,
+private E2E-018/021, scoped lint/types/spec checks and foreign-directory cold replay.
+Status: implemented; terminal execution receipts determine qualification.
+
+Implementation record, 20261108: `durable_cost_qualification_8926.py` reuses the
+original reducer and checked publication helpers. It retains exact primary,
+source/config and raw bytes, and moves only administrative commands and receipts
+to content-addressed sidecars. The direct CLI owns the current invocation and
+outside-checkout cold replay. `test_durable_cost_qualification_8926.py` covers
+row corruption, missing bytes, immutable receipt links, terminal routes and the
+isolated original-source test view. The terminal artifact retains actual coverage,
+unchanged durability/strict-row and private E2E receipts. Complete null cost
+readiness remains separate from Exp8911 benefit and from optimizer costs.
+The conductor owns ops and traceability reconciliation.
 
 ### REQ-REPORT-8927: Measure full request costs with the qualified inline observer
 Full request timing shall retain the original twenty-four independent worlds, thirty-six cells, arms, sizes and cold/resident boundaries after Exp8921 qualifies. Parent timing readiness shall remain separate from attribution. Component fractions shall require semantic identity, disjoint closure and all simultaneous 99-percent observer-overhead upper bounds <=0.05; otherwise fractions remain unqualified.
