@@ -21570,3 +21570,4 @@ code |
 | 2026-11-08 10:07 UTC | Prove exact certificates with labels requested onl | OK | 91 passed, 1 warning in 32.35s |
 | 2026-11-08 11:00 UTC | Qualify allocation-free phase timing for complete  | OK | 96 passed, 1 warning in 25.21s |
 | 2026-11-08 11:48 UTC | Measure continuous interpolated learning on sealed | OK | 96 passed, 1 warning in 46.98s |
+| 2026-11-08 11:58 UTC | Measure shared label savings with unchanged certif | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8920-label-demand-methods.label_demand_ready_score (actual=0 == expected=1) |
