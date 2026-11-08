@@ -846,3 +846,15 @@ Live Kaggle standings and the full discussion index remained inaccessible; discu
 
 Live Kaggle standings and full discussions remained unreadable; the mirrored public standings are provisional.
 
+## 2026-11-08 14:11 UTC -- NEW
+
+- **October 26 — Model eligibility:** ARC Prize cleared **Qwen3.8-Flash-Next** for competition use following licensing concerns. [Reported organizer clarification](https://arc.markbarney.net/news/2026-10-26-flash-next-cleared-for-arc-prize).
+
+- **October 1 — Milestone #2 results:** **Daniel Franzen: 27.9%, $25,000; Lord Han Solo: 23.8%, $7,500; Lohit Siriki: 22.5%, $5,000.** All three open-sourced their agents. [ARC Prize announcement](https://x.com/arcprize/status/2105737436450201734), [indexed copy](https://teapawt.net/mikeknoop).
+
+- **September 3 — Benchmark announcement:** ARC Prize reported GPT-6 Astra scoring **62.7% with its Standard harness** and **99.9% with a Provider Adapter** on Semi-Private environments. It will publish both harness conditions separately. These are benchmark evaluations, separate from Kaggle standings. [Official blog](https://arcprize.org/blog/astra).
+
+- **Kaggle deadline-policy change:** Notebook submissions must **finish scoring before the deadline**; previously, notebook execution had to finish before it. [Kaggle staff announcement](https://www.kaggle.com/discussions/product-announcements/744617).
+
+Live Kaggle/Discord threads remained inaccessible; discussion coverage relied on indexed or quoted copies.
+
