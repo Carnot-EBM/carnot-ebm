@@ -23331,3 +23331,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Bind V763 authority and the operator-directed evidence plan (⚠️ Research Finding) — honest_verdict=complete_null_v763_branch_contract; results/experiment_8917_v763_branch_contract.json
 - 2026-11-08: Measure the mandated fifty-question BFS-labeled error pilot (⚠️ Research Finding) — honest_verdict=complete_pilot_error_source_gate_passed; results/experiment_8918_v763_bfs_error_pilot.json
 - 2026-11-08: Freeze interpolated candidate updates for continuous energy learning (⚠️ Research Finding) — honest_verdict=complete_null_interpolated_update_methods; results/experiment_8919_v763_interpolated_update_methods.json
+- 2026-11-08: Prove exact certificates with labels requested only when needed (⚠️ Research Finding) — honest_verdict=complete_disqualified_label_demand_methods; results/experiment_8920_v763_label_demand_methods.json
