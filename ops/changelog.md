@@ -23377,3 +23377,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Bind fourteen tasks and preserve V763 evidence (⚠️ Research Finding) — honest_verdict=complete_null_v764_branch_contract; results/experiment_8930_v764_branch_contract.json
 - 2026-11-08: Freeze graph splits and bounded collection with detector-safe signals (⚠️ Research Finding) — honest_verdict=complete_null_source_methods_ready; results/experiment_8931_v764_graph_source_methods.json
 - 2026-11-08: Separate semantic errors from parsing failures in the live pilot (⚠️ Research Finding) — honest_verdict=complete_pilot_labels_authenticated; results/experiment_8932_v764_pilot_label_audit.json
+- 2026-11-08: Freeze compatible feedback replay for continuous energy learning (⚠️ Research Finding) — honest_verdict=complete_null_compatible_replay_methods; results/experiment_8933_v764_compatible_replay_methods.json
