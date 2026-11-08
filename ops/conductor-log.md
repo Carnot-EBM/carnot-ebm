@@ -21568,3 +21568,4 @@ code |
 | 2026-11-08 08:32 UTC | Measure the mandated fifty-question BFS-labeled er | OK | 115 passed, 1 warning in 20.06s |
 | 2026-11-08 09:25 UTC | Freeze interpolated candidate updates for continuo | OK | 95 passed, 1 warning in 49.46s |
 | 2026-11-08 10:07 UTC | Prove exact certificates with labels requested onl | OK | 91 passed, 1 warning in 32.35s |
+| 2026-11-08 11:00 UTC | Qualify allocation-free phase timing for complete  | OK | 96 passed, 1 warning in 25.21s |
