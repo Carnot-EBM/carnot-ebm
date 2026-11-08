@@ -23336,3 +23336,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Measure continuous interpolated learning on sealed future streams (⚠️ Research Finding) — honest_verdict=complete_null_interpolated_causal_streams; results/experiment_8922_v763_interpolated_causal_streams.json
 - 2026-11-08: Measure source-relative Qwen decisions after a successful live pilot (⚠️ Research Finding) — honest_verdict=complete_null_paired_criterion_canary; results/experiment_8924_v763_qwen_natural_canary.json
 - 2026-11-08: Audit prospective interpolation benefit and untouched retention (⚠️ Research Finding) — honest_verdict=complete_null_interpolated_benefit_audit; results/experiment_8925_v763_interpolated_benefit_audit.json
+- 2026-11-08: Qualify retained durable costs with correctly typed comparison rows (⚠️ Research Finding) — honest_verdict=complete_null_durable_cost_qualification; results/experiment_8926_v763_durable_cost_qualification.json
