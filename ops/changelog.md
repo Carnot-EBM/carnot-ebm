@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-08 UTC — Operational retrospective for milestone 2026.11.763
+
+- Updated `results/operational_retro_2026_11_763.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.763`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 11 completed experiments (2 compute-bound, 9 synthesis-only) across 108.2 wall-time minutes (108 minutes / 1.8 hours, averaging 10 minutes per experiment).
+- The five slowest experiments were: `Audit prospective interpolation benefit and untouched retention` (14.26 minutes / 14min, `compute_bound: false`), `Measure continuous interpolated learning on sealed future streams` (14.22 minutes / 14min, `compute_bound: false`), `Qualify retained durable costs with correctly typed comparison rows` (14.07 minutes / 14min, `compute_bound: false`), `Freeze interpolated candidate updates for continuous energy learning` (12.96 minutes / 13min, `compute_bound: false`), and `Measure the mandated fifty-question BFS-labeled error pilot` (10.87 minutes / 11min, `compute_bound: true`); the second compute-bound experiment finished below 10.87 minutes (11min; no data available this milestone for its exact task name or duration).
+- GPU monitor report (`2026-11-08T16:40:55.365003+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 4/24576MB (0%), 0% utilization, and Temp 50C; locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% GPU utilization across the 9 synthesis-only experiments is expected behavior.
+- Suggested improvements: batch or parallelize evaluation in the 10.87-minute (11min) compute-bound fifty-question BFS-labeled error pilot, cache and reuse prospective interpolation, sealed future stream, typed comparison-row durable-cost, and interpolated candidate-update fixtures across the 4 slowest synthesis-only tasks (14.26 minutes / 14min, 14.22 minutes / 14min, 14.07 minutes / 14min, and 12.96 minutes / 13min), persist direct per-experiment timing metadata to eliminate `retro_timing_fallback` when live git-log has 0 commits, and free the idle 4MB GPU 0 allocation.
+
 ## 2026-11-08 UTC — Fix Exp8929 health reuse and compute provenance
 
 - Implement authenticated reuse of the original same-task Python health receipt

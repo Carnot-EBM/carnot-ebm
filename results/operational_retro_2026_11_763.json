@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.763",
+  "generated_at": "2026-11-08T16:40:55Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 108.2,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Audit prospective interpolation benefit and untouched retention",
+      "duration_minutes": 14.26,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure continuous interpolated learning on sealed future streams",
+      "duration_minutes": 14.22,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify retained durable costs with correctly typed comparison rows",
+      "duration_minutes": 14.07,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Freeze interpolated candidate updates for continuous energy learning",
+      "duration_minutes": 12.96,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure the mandated fifty-question BFS-labeled error pilot",
+      "duration_minutes": 10.87,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.763 completed 11 experiments (2 compute-bound, 9 synthesis-only) in 108.2 wall-time minutes (108 minutes / 1.8 hours, averaging 10 minutes per experiment) reconstructed via disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log). The longest compute-bound experiment was 'Measure the mandated fifty-question BFS-labeled error pilot' at 10.87 minutes (11min, with the second compute-bound task finishing below 10.87 minutes / 11min; no data available this milestone for its exact name or duration), while four synthesis-only tasks led overall runtime: 'Audit prospective interpolation benefit and untouched retention' (14.26 minutes / 14min), 'Measure continuous interpolated learning on sealed future streams' (14.22 minutes / 14min), 'Qualify retained durable costs with correctly typed comparison rows' (14.07 minutes / 14min), and 'Freeze interpolated candidate updates for continuous energy learning' (12.96 minutes / 13min). Locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 50C) across the 9 synthesis-only tasks is expected behavior.",
+  "bottlenecks_identified": [
+    "Among the 2 compute-bound experiments (of 11 completed experiments), 'Measure the mandated fifty-question BFS-labeled error pilot' took the longest at 10.87 minutes (11min) to evaluate the fifty-question BFS-labeled error pilot, while the second compute-bound experiment completed below 10.87 minutes (11min; no data available this milestone for its exact task name or duration); locked gpu_idle_on_compute_bound_tasks is false.",
+    "Overall wall time across the 108.2-minute (108 minutes / 1.8 hours, 10 minutes average per experiment) milestone was concentrated in four synthesis-only tasks: 'Audit prospective interpolation benefit and untouched retention' at 14.26 minutes (14min), 'Measure continuous interpolated learning on sealed future streams' at 14.22 minutes (14min), 'Qualify retained durable costs with correctly typed comparison rows' at 14.07 minutes (14min), and 'Freeze interpolated candidate updates for continuous energy learning' at 12.96 minutes (13min).",
+    "Live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 11 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Batch or parallelize evaluation across the fifty-question BFS-labeled error pilot in the compute-bound task 'Measure the mandated fifty-question BFS-labeled error pilot' (10.87 minutes / 11min) while keeping DualGPURunner unengaged unless 2+ models are loaded in parallel.",
+    "Cache and reuse prospective interpolation audit fixtures, sealed future stream artifacts, typed comparison-row durable-cost inputs, and interpolated candidate-update state across the 4 slowest synthesis-only experiments (14.26 minutes / 14min, 14.22 minutes / 14min, 14.07 minutes / 14min, and 12.96 minutes / 13min) to reduce the 10-minute per-experiment average.",
+    "Persist explicit per-experiment start and completion timestamps in conductor artifacts so milestone retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Free the residual 4MB allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 50C) when idle per the GPU Monitor Report suggestion."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache and reuse shared interpolation, sealed future stream, and durable-cost comparison fixtures across the 4 slowest synthesis-only experiments (14.26 minutes / 14min, 14.22 minutes / 14min, 14.07 minutes / 14min, and 12.96 minutes / 13min).",
+    "Optimize fifty-question BFS-labeled error pilot evaluation in the 10.87-minute (11min) compute-bound task 'Measure the mandated fifty-question BFS-labeled error pilot'.",
+    "Persist direct per-experiment timing metadata in conductor artifacts to eliminate disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log) and release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, Temp 50C)."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.763 completed 11 experiments (2 compute-bound, 9 synthesis-only) in 108.2 wall-time minutes (108 minutes / 1.8 hours, averaging 10 minutes per experiment), with gpu_idle_on_compute_bound_tasks locked at false, DualGPURunner not applicable (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% GPU 0 utilization (4/24576MB, Temp 50C) expected across the 9 synthesis-only tasks. Caching shared fixtures across the 4 slowest synthesis-only tasks (14.26 minutes / 14min, 14.22 minutes / 14min, 14.07 minutes / 14min, and 12.96 minutes / 13min), streamlining the 10.87-minute (11min) compute-bound fifty-question BFS-labeled error pilot, and persisting direct timing metadata are the primary operational improvements for the next milestone."
+}
