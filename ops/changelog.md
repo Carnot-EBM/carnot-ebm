@@ -23374,3 +23374,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Qualify retained durable costs with correctly typed comparison rows (⚠️ Research Finding) — honest_verdict=complete_null_durable_cost_qualification; results/experiment_8926_v763_durable_cost_qualification.json
 - 2026-11-08: Map qualified new operations to supported hardware limits (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_budget; results/experiment_8928_v763_hardware_operation_budget.json
 - 2026-11-08: Reconcile thirteen outcomes and decide the next evidence requirements (⚠️ Blocked) — honest_verdict=complete_blocked_v763_capstone; results/experiment_8929_v763_capstone.json
+- 2026-11-08: Bind fourteen tasks and preserve V763 evidence (⚠️ Research Finding) — honest_verdict=complete_null_v764_branch_contract; results/experiment_8930_v764_branch_contract.json
