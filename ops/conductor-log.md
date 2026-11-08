@@ -21529,3 +21529,28 @@ code |
 | 2026-11-07 22:27 UTC | Audit paired natural-text annotation criteria and  | OK | 109 passed, 1 warning in 24.96s |
 | 2026-11-07 23:13 UTC | Measure guarded updates on sealed paired causal st | OK | 98 passed, 1 warning in 33.36s |
 | 2026-11-08 00:19 UTC | Measure all-policy label savings from impossible-f | OK | 90 passed, 1 warning in 52.59s |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 10: OPEN 70 days: SILENT_NON_FIRING on exclu |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 10: OPEN 70 days: SILENT_NON |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_online_training_evidence age-week 9: OPEN 6 |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_online_arm_metric_items age-week 9: OPEN 63 days: SILENT |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_byte_identical_online_arm_reason age-week 9: OPEN 63 day |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_probe_exercise_evidence age-week 9: OPEN 63 |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_but_unrun_probe_reasons age-week 9: OPEN 63 day |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nondegenerate_lever_evidence age-week 9: OPEN 63 day |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_execution_venue age-week 8: OPEN 56 days: SILENT_NO |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_artifact_run_date age-week 8: OPEN 56 days: SILENT_NON_F |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_class age-week 8: OPEN 56 days: SILENT_NO |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_strip_verdict_terminal_prefix age-week 7: OPEN 49 days:  |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_declaration_shape age-week 7: OPEN 49 day |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_methodology_present age-week 7: OPEN 49 days: REAL_ |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_value_matches age-week 6: OPEN 42 da |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_inference_substrate age-week 6: OPEN 42 days: S |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_typed_invocation_evidence age-week 6: OPEN 42 days: SILE |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verifier_scoring_only age-week 6: OPEN 42 days: REAL_ |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8409_v724_retrospective_label_criterion.json age-week 4: OPEN 28 days |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_uniform_energy_ablation_evidence age-week 3: OPEN 21 |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_lever_exercise_severity age-week 1: OPEN 7 days: REAL_BU |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_value_routing_cost_control_overclaim age-week 1: OP |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_bool_leaf_values age-week 1: OPEN 7 days: SILENT_NON_FIR |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_4381_biprm_detector_localization_abstention.json age-week 0: OPEN 1 d |
+| 2026-11-08 00:25 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8897_v761_source_bound_decisions.json age-week 0: OPEN 1 days: CLAIM_ |

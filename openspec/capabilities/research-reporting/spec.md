@@ -109214,6 +109214,26 @@ Before implementation, add failing controls for the specified method, absent or 
 
 ### REQ-REPORT-8911: Audit future Brier benefit and retention for guarded updates
 
+Execution contract extension (20261108, before implementation): authenticate
+Exp8909 original SHA256 `4ad993f42d183f5b2807a0341e7511ed82b6803b8d49885ce85deb949b7732a3`
+and Exp8905 original SHA256 `acbd0cd68c70e51811c36897180a2dc302341f9fa8fa2f381c3c6e642ab16779`.
+Verify their original operands before reading effects. Reconstruct scores only
+from recorded sealed predictions and recorded truth; never generate worlds,
+request labels, fit parameters or use development pilots as evaluation units.
+The future window is online ordinals25–48. Average each arm within each of the
+24 registered stream IDs, then use10000 paired bootstrap draws with the frozen
+Exp8905 seed and one-sided upper quantile `1 - 0.01/9`. All nine bounds, paired
+stream differences and inclusive/strict thresholds remain visible. Preserve
+18432 rows, original denominators, failures, zeros and negative effects.
+Check frozen parameter hashes, stream/arm identity, complete row roster,
+retention isolation and state/promotion joins. Failed owned controls disqualify;
+missing or rejected external inputs block with exact diagnostics. Readiness
+requires measured100-percent new unit/child statements with zero exclusions,
+private E2E-018/021, unchanged scanners and independent cold reconstruction.
+An honest scientific null may qualify the audit and recommends retirement of
+the unchanged guarded mechanism. Operational documentation reconciliation is
+delegated to the conductor under the task's final instruction.
+
 Require Exp8909 causal_rows_ready_score=1; independently verify imported row hashes,18432 schedule, paired24 stream clusters and frozen protocol from Exp8905. Do not refit heads or access unrecorded oracle state.
 
 Use nine prespecified one-sided simultaneous99-percent bounds: future guarded_true minus frozen_verified Brier<=-0.01; guarded_true minus guarded_permuted Brier<0; guarded_true minus ordinary_true Brier<0; and retention Brier/error guarded_true minus frozen_verified<=0.01 at each of0/24/48. Reuse existing paired stream bootstrap with fixed seeds and Bonferroni0.01/9 upper tails. Report paired means and all bounds, not selected significant contrasts.
@@ -109226,7 +109246,24 @@ The experiment shall emit `results/experiment_8911_v762_guarded_benefit_audit.js
 
 #### SCENARIO-REPORT-8911-CONTRACT
 
+Tests written before implementation shall reject swapped arm rows, dropped
+failed units, duplicate clusters, retained labels in training/guard groups,
+forged denominators and frozen-head mutation even after a stream checksum is
+repaired. An all-null complete census must retain nine zero bounds and a failed
+benefit conjunction. Test missing/zero/foreign producer gates, strict versus
+inclusive boundaries, original byte drift, private CLI, cold tampering rejection
+and owned validation failures without modifying shared validators.
+
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+
+Implementation record (20261108): `guarded_benefit_audit_8911.py` independently
+joins recorded predictions, labels, state hashes and the full original census.
+`guarded_benefit_runner_8911.py` and its dated CLI own terminal qualification,
+unchanged scanners and reconstruction. Tests are in
+`tests/python/test_guarded_benefit_audit_8911.py`; measured coverage and final
+execution receipts are retained by the primary artifact. The first reduction
+failed all three future bounds and passed all six retention bounds. These
+scientific results cannot be changed by operational promotion frequencies.
 
 ### REQ-REPORT-8912: Measure complete request costs with qualified retained clocks
 
