@@ -21586,3 +21586,6 @@ code |
 | 2026-11-08 22:11 UTC | Freeze compatible feedback replay for continuous e | OK | 96 passed, 1 warning in 75.96s (0:01:15) |
 | 2026-11-08 22:57 UTC | Measure paired graph depth sensitivity with mandat | OK | 103 passed, 1 warning in 31.20s |
 | 2026-11-08 23:06 UTC | Collect fresh independently labeled Qwen answers i | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp8934-depth-control.depth_source_ready_score (actual=0 == expected=1) |
+| 2026-11-08 23:51 UTC | Freeze a small energy selector and strong calibrat | OK | 90 passed, 1 warning in 36.58s |
+| 2026-11-08 23:53 UTC | Authenticate graph-disjoint labels before detector | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8935-graph-corpus-a, exp8936-graph-corpus-b) |
+| 2026-11-08 23:53 UTC | Test calibrated energy decisions on unseen live-mo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8938-graph-corpus-admission) |
