@@ -109901,10 +109901,39 @@ benefit and grants no milestone activation or publication authority.
 
 The experiment shall execute the frozen V764 task contract and produce
 `results/experiment_8933_v764_compatible_replay_methods.json`.
+The opt-in signed head shall keep the existing feature scaling, initial heads,
+SGD eta=0.1, delay8, verified templates, anchors and guard schedule. A FIFO of
+at most32 previously released TRAIN rows supplies one replay gradient after
+one current-row gradient per TRAIN release. Empty replay repeats the current
+row. Nearest squared normalized visible-feature distance selects replay;
+equal distances use stable unit id. No labels or guard/anchor/retention rows
+enter selection. Buffer, latest visible features, choices and RNG are durable.
+Five paired arms are frozen_verified, guarded_current, uniform_replay,
+compatible_replay and compatible_permuted. Only the four trainable arms pay
+two gradients per TRAIN release. Permutation is fixed within released TRAIN
+blocks; guard labels and verified template additions remain truthful.
+Eight development streams establish implementation controls, independent of
+effect size. Twenty-four fresh48-query evaluation recipes remain sealed;
+48 untouched retention queries are read only at0/24/48. Ten one-sided bounds
+use10000 whole-stream paired bootstrap draws and alpha=0.01/10: future Brier
+versus frozen<=-0.01, versus each other trainable control<0, and retention
+Brier/error deltas versus frozen<=0.01 at each checkpoint. No optimizer search,
+generator updates, evaluation labels or hardware speed claims are permitted.
 SCENARIO-REPORT-8933-CONTRACT shall test valid evidence, changed-byte rejection,
 missing prerequisites, exact rows/denominators and outside-checkout replay.
+Tests shall exercise prediction-before-release, empty replay, stable ties,
+label/signature permutation, collisions, all/none-compatible cases, duplicate
+rejection, guard/train isolation, NaNs, full FIFO eviction, restart equality
+and exact two-gradient accounting. Production readiness requires all owned
+checks, 100-percent owned unit/child statement coverage with zero exclusions,
+and sealed controls. External absence is blocked; failed owned controls are
+disqualified. Rows carry one metric per unit/arm with original denominators.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
+Implementation status (2026-11-08): The opt-in compatible replay store, methods
+module, dated CLI and contract tests are implemented. The producer's retained
+validation receipts determine readiness. Development outcomes grant no
+prospective benefit or independent generalization claim.
 
 ### REQ-REPORT-8934: Measure paired graph depth sensitivity with mandated Qwen
 
