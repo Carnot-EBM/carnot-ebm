@@ -18994,3 +18994,17 @@ are preserved as research-roadmap-v761-*-20261107 files. New REQ-REPORT-8904–8
 and traceability entries are explicitly planned. Active queue, conductor and
 exclusion manifest remain unchanged; no experiment was run by this planning work.
 Validation receipts and limits follow in the V762 design/changelog.
+## 2026-11-08 — V763 research plan staged
+
+The next milestone is 2026.11.763: exactly thirteen tasks, Exp8917–Exp8929,
+across four phases. The complete design and `research-roadmap-next.yaml` match.
+V762 design and queue bytes are preserved in dated change-proposal archives.
+
+The plan includes the mandatory November 7 fifty-question BFS-labeled Qwen
+pilot, fixed interpolated candidate updates, exact demand-driven label
+acquisition, an optional natural-source canary and qualified complete costs.
+GPU 1 remains detached; ARC remains suspended. CPU branches run independently.
+The literature scan preceded design. Requirements and traceability are planned.
+
+Planning validation is in progress. No V763 experiment or model has run, and
+the active roadmap, conductor and exclusion manifest have not been changed.

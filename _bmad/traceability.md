@@ -4681,3 +4681,23 @@ FR-05/FR-08/NFR-01:8907/8912/8914/8915. FR-09/FR-10:8904/8916.
 | REQ-REPORT-8914 / SCENARIO-REPORT-8914-CONTRACT | `exp8914-guarded-durable-cost` | `results/experiment_8914_v762_guarded_durable_cost.json` | Planned |
 | REQ-REPORT-8915 / SCENARIO-REPORT-8915-CONTRACT | `exp8915-hardware-operation-budget` | `results/experiment_8915_v762_hardware_operation_budget.json` | Planned |
 | REQ-REPORT-8916 / SCENARIO-REPORT-8916-CONTRACT | `exp8916-capstone` | `results/experiment_8916_v762_capstone.json` | Planned |
+
+## V763 planned research traceability — 2026-11-08
+
+All entries below are planned, not implemented or tested experiments.
+
+| Requirement | Planned task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-8917 / SCENARIO-REPORT-8917-CONTRACT | exp8917-branch-contract | `results/experiment_8917_v763_branch_contract.json` | Planned |
+| REQ-REPORT-8918 / SCENARIO-REPORT-8918-CONTRACT | exp8918-bfs-error-pilot | `results/experiment_8918_v763_bfs_error_pilot.json` | Planned |
+| REQ-REPORT-8919 / SCENARIO-REPORT-8919-CONTRACT | exp8919-interpolated-update-methods | `results/experiment_8919_v763_interpolated_update_methods.json` | Planned |
+| REQ-REPORT-8920 / SCENARIO-REPORT-8920-CONTRACT | exp8920-label-demand-methods | `results/experiment_8920_v763_label_demand_methods.json` | Planned |
+| REQ-REPORT-8921 / SCENARIO-REPORT-8921-CONTRACT | exp8921-inline-clock-methods | `results/experiment_8921_v763_inline_clock_methods.json` | Planned |
+| REQ-REPORT-8922 / SCENARIO-REPORT-8922-CONTRACT | exp8922-interpolated-causal-streams | `results/experiment_8922_v763_interpolated_causal_streams.json` | Planned |
+| REQ-REPORT-8923 / SCENARIO-REPORT-8923-CONTRACT | exp8923-label-demand-evaluation | `results/experiment_8923_v763_label_demand_evaluation.json` | Planned |
+| REQ-REPORT-8924 / SCENARIO-REPORT-8924-CONTRACT | exp8924-qwen-natural-canary | `results/experiment_8924_v763_qwen_natural_canary.json` | Planned |
+| REQ-REPORT-8925 / SCENARIO-REPORT-8925-CONTRACT | exp8925-interpolated-benefit-audit | `results/experiment_8925_v763_interpolated_benefit_audit.json` | Planned |
+| REQ-REPORT-8926 / SCENARIO-REPORT-8926-CONTRACT | exp8926-durable-cost-qualification | `results/experiment_8926_v763_durable_cost_qualification.json` | Planned |
+| REQ-REPORT-8927 / SCENARIO-REPORT-8927-CONTRACT | exp8927-inline-request-cost | `results/experiment_8927_v763_inline_request_cost.json` | Planned |
+| REQ-REPORT-8928 / SCENARIO-REPORT-8928-CONTRACT | exp8928-hardware-operation-budget | `results/experiment_8928_v763_hardware_operation_budget.json` | Planned |
+| REQ-REPORT-8929 / SCENARIO-REPORT-8929-CONTRACT | exp8929-capstone | `results/experiment_8929_v763_capstone.json` | Planned |

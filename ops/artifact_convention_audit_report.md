@@ -9,29 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 1 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 6 |
+| CHECKABLE | 3 |
+| CANNOT_DETERMINE | 5 |
 
-## experiment_4381_biprm_detector_localization_abstention.json
-
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-Bidirectional fusion provides no localization improvement over L2R and no useful abstention point, although the corrigendum calls the null uninformative because labels are degenerate.
-
-## WHAT IS MISSING
-Per-trace IDs, true first-error steps, predictions for each direction, correctness labels, and rejection scores. "localization_f1_by_direction", "localization_delta_ci95", and "abstention_curve.points" contain only aggregates; "corrigendum_2026_11_07" supplies no per-trace rows.
-
-## THE CHECK A READER CANNOT DO
-Which traces were retained at 75% coverage, and do their outcomes reproduce the reported retained accuracy of 0.999796?
-
-No experiment was rerun; the per-trace behavior must be trusted.
-
-## experiment_8897_v761_source_bound_decisions.json
+## experiment_8909_v762_guarded_causal_streams.json
 
 **CANNOT_DETERMINE**
 
@@ -39,17 +20,17 @@ No experiment was rerun; the per-trace behavior must be trusted.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible fragment marks all "acceptance_gates" true, but the headline research claim is unavailable.
+The visible fragment reports candidate and guarded-method readiness, but no headline experimental conclusion is visible.
 
 ## WHAT IS MISSING
-The remainder of the artifact: the supplied text ends mid-entry in "cited_upstream_artifacts", leaving any final verdict and per-unit results unseen.
+The complete artifact: the supplied text stops mid-"cluster_manifest". "arm_work_ledger" records workload counts, and "acceptance_gates" reports readiness and totals; neither supplies comparative outcome metrics.
 
 ## THE CHECK A READER CANNOT DO
-Does the artifact contain per-unit evidence supporting a comparative headline claim?
+Does the complete artifact supply per-unit outcome metrics supporting its headline claim?
 
-The missing remainder was not checked; truncation prevents a definitive classification.
+The omitted remainder could not be checked; it could change the verdict.
 
-## experiment_8898_v761_signed_benefit_audit.json
+## experiment_8910_v762_finite_budget_evaluation.json
 
 **CANNOT_DETERMINE**
 
@@ -57,35 +38,17 @@ The missing remainder was not checked; truncation prevents a definitive classifi
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The signed mechanism failed the required future-Brier improvement gate and should be retired unchanged.
+The visible excerpt names “shared_union/label_savings” as the primary contrast but contains no headline outcome.
 
 ## WHAT IS MISSING
-The supplied artifact truncates inside "paired_stream_rows" while showing only "feature_arm": "old"; signed per-stream "metric" values supporting the headline are not visible, although aggregate results appear in "joint_gate_rows".
+The artifact cuts off mid-row in “census_risk_rows”. “acceptance_gates” is present, but the final verdict and per-unit label-savings results for “shared_union” are not visible.
 
 ## THE CHECK A READER CANNOT DO
-Does the signed gate failure reflect broad results across the 24 streams or a few outliers?
+Do per-unit label-savings results support meeting the “shared_union_lower99_gt” threshold of 0?
 
-No experiment was rerun; the truncated remainder remains unchecked.
+The unseen remainder was not checked; truncation prevents a definitive classification.
 
-## experiment_8899_v761_buffered_cost_attribution.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-No overall headline claim is visible in the truncated artifact.
-
-## WHAT IS MISSING
-The remainder after the incomplete "unit_id" in "closure_residuals", including any final claim or verdict; "acceptance_gates" already identifies several failed checks.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact claim a comparative result supported by per-unit metrics?
-
-The omitted remainder could not be checked and could change this classification.
-
-## experiment_8900_qwen_source_boundary.json
+## experiment_8911_v762_guarded_benefit_audit.json
 
 **CHECKABLE**
 
@@ -93,7 +56,7 @@ The omitted remainder could not be checked and could change this classification.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `runtime_repair_ready_score` was 0 while the gate required 1.
+The completed audit did not establish guarded benefit: three online benefit checks failed, while six retention checks passed.
 
 ## WHAT IS MISSING
 nothing
@@ -101,7 +64,47 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8901_v761_signed_adaptation_cost.json
+Experiment execution was not independently checked; this verdict concerns the supplied evidence.
+
+## experiment_8912_v762_complete_request_cost.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+
+“acceptance_gates” reports all listed gates passed, but the artifact’s overall headline is not visible.
+
+## WHAT IS MISSING
+
+The JSON cuts off mid-entry in “closure_residuals”. “clock_controls” and per-unit “residuals_ns” are present, but any subsequent verdict, comparative claim, and supporting per-unit metrics are unavailable.
+
+## THE CHECK A READER CANNOT DO
+
+Does the missing remainder record a comparative claim with per-unit measurements sufficient to check it?
+
+The remainder could not be checked; it could change this assessment.
+
+## experiment_8913_qwen_natural_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Experiment 8913 was blocked because `exp8904-branch-contract.runtime_repair_ready_score` was 0, while the gate required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8914_v762_guarded_durable_cost.json
 
 **CANNOT_DETERMINE**
 
@@ -109,15 +112,33 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The excerpt asserts adaptation-cost readiness through "adaptation_cost_ready_score": 1, but no headline verdict is visible.
+The visible artifact reports adaptation cost readiness as zero and a benefit gate observing 0 against required 1.
 
 ## WHAT IS MISSING
-The artifact cuts off mid-key inside "durable_commit_rows"; its remaining claim and verdict fields are unavailable. "complete_parent_costs" supplies per-"unit_id" measurements, so those costs are not aggregate-only.
+The supplied artifact ends mid-entry in "durability_rows" at "file_fsync"; subsequent claims and metric rows cannot be inspected. "benefit_gate" supplies a diagnostic through "check": "observed_zero", "observed": 0, and "expected": 1.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted remainder report a blocked verdict and explain its cause? The truncated remainder cannot be checked.
+Does any final comparative claim have corresponding per-cell metrics?
 
-## experiment_8902_v761_hardware_operation_map.json
+The omitted remainder was not checked; it could change the classification.
+
+## experiment_8915_v762_hardware_operation_budget.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The audit passes, but physical acceleration is not established; “gate_check_summary” records failed checks with expected and observed values.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8916_v762_capstone.json
 
 **CANNOT_DETERMINE**
 
@@ -125,28 +146,10 @@ Does the omitted remainder report a blocked verdict and explain its cause? The t
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible artifact reports that the audit gate passed, physical acceleration failed, and acquisition was deferred.
+The visible portion reports contract readiness and withholds activation, but the artifact is truncated before its overall conclusion.
 
 ## WHAT IS MISSING
-The remainder of the artifact: “adaptation_durable_commits” ends mid-“duration_ns” value, leaving any subsequent claim, results, or verdict unavailable.
+The remainder of "branch_conclusions" and any subsequent conclusions or measured results: the text ends mid-entry inside "acceptance_gates.frozen_evaluation_manifest". Its "unit_id" and "world_seed" entries identify planned units, not measured outcomes.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact supply per-unit metrics supporting its headline claim? The truncated remainder could not be checked.
-
-## experiment_8903_v761_capstone.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The shared-terminal branch reports mean learned-energy label savings of 2,844 across 40 replicates, with zero estimated coverage differences.
-
-## WHAT IS MISSING
-Complete `"per_replicate_results"`: the supplied artifact stops midway through replicate 23, leaving that row incomplete and replicates 24–39 unavailable; `"paired_intervals"` reports `"independent_count": 40.
-
-## THE CHECK A READER CANNOT DO
-Do the 40 replicate observations reproduce the reported mean savings of 2,844?
-
-Unseen rows were not checked; truncation leaves the full claim unverified.
+Does the omitted portion make a comparative claim and supply per-unit metrics supporting it?

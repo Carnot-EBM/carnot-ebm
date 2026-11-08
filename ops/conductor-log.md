@@ -21560,3 +21560,5 @@ code |
 | 2026-11-08 03:09 UTC | Measure complete durable candidate and promotion c | OK | 100 passed, 1 warning in 60.17s (0:01:00) |
 | 2026-11-08 03:43 UTC | Map qualified service work to existing hardware li | OK | 89 passed, 1 warning in 54.08s |
 | 2026-11-08 04:25 UTC | Reconcile thirteen outcomes and decide guarded-lea | OK | 96 passed, 1 warning in 112.74s (0:01:52) |
+| 2026-11-08 06:03 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-08 06:08 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |

@@ -109438,3 +109438,98 @@ assertions and reconstruct branch-local endpoints. Controls live in
 `tests/python/test_v762_capstone_8916.py`. The terminal artifact and its
 hash-bound validation sidecar record execution and qualification. No archive,
 exclusion-manifest, activation or external-publication change is authorized.
+
+## V763 planned research contract — 2026-11-08
+Status: planned only. No V763 implementation, model run or experiment result is claimed.
+All tasks shall retain per-unit rows, exact producer fields, original hashes, the closed verdict_class enum and blocked gate_check_summary diagnostics. Readiness and benefit shall remain separate. Every task shall print flushed phase and long-call progress, maintain gaps below 600 seconds, and write files over about 200 lines through bounded calls. Tests precede implementation and trace to the requirements below.
+
+### REQ-REPORT-8917: Bind V763 authority and the operator-directed evidence plan
+The authority shall bind exactly thirteen ordered full task objects, Exp8917-Exp8929, in the visible design table, embedded contract and staged-or-activated queue. It shall preserve V762 bytes and record the November 7 pilot directive. CPU branches shall remain independent of administrative readiness.
+Deliverable: `results/experiment_8917_v763_branch_contract.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8917-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8918: Measure the mandated fifty-question BFS-labeled error pilot
+The pilot shall execute exactly fifty seeded graph questions with k=2, reasoning off and the frozen mandated Qwen GGUF. Graphs shall have 50-60 nodes, mean degree three and random two-letter labels. BFS shall label shortest-distance final answers independently of Carnot detectors. Preconditions shall require the cached file, GPU offload support and free GPU 0; GPU 1 shall remain unused. No full collection, detector training, repair or localization claim is allowed. The error-source gate is ten errors among fifty completed generations; runtime failures shall be censored separately. Actual runtime readiness shall be independent of the error-rate gate.
+Deliverable: `results/experiment_8918_v763_bfs_error_pilot.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8918-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8919: Freeze interpolated candidate updates for continuous energy learning
+The existing signed-energy candidate shall gain an opt-in fast/slow interpolation update, alpha=0.25 and beta=0.5, with the existing objective and learning rate. The candidate uses the slow sequence; both sequences and update count shall persist atomically. Existing guard, template, causal split and retention boundaries shall remain fixed. Eight development streams precede twenty-four sealed evaluation streams. Methods and development feasibility shall have separate integer gates; no evaluation data shall inform them.
+Deliverable: `results/experiment_8919_v763_interpolated_update_methods.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8919-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8920: Prove exact certificates with labels requested only when needed
+A label shall be requested only when at least one unresolved frozen policy accepts a candidate. All selection labels shall remain charged. All seven policies, four groups, accepted-label sequences, look counts and terminal decisions shall equal the eager reference under identical candidate order. Unknown rejected outcomes shall not become pseudo-labels. Exhaustive small paths and independent access-ledger controls shall qualify the rule before forty sealed evaluation draws open.
+Deliverable: `results/experiment_8920_v763_label_demand_methods.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8920-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8921: Qualify allocation-free phase timing for complete requests
+The optional observer shall record preallocated numeric timestamps at unchanged disjoint phase boundaries and defer receipt construction outside measured requests. Per-request overhead shall not be hidden by batching. Development qualification shall require semantic identity, original clock closure and simultaneous 99-percent overhead upper bounds no greater than five percent in all cells.
+Deliverable: `results/experiment_8921_v763_inline_clock_methods.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8921-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8922: Measure continuous interpolated learning on sealed future streams
+Continuous learning shall execute twenty-four sealed paired streams, forty-eight queries each, delay eight, four matched arms and retention at 0/24/48. Predictions shall precede feedback; research retention shall not reach updates or promotion. Cold restart shall preserve fast/slow state and pending releases. Readiness shall require complete causal rows rather than a positive learning result.
+Deliverable: `results/experiment_8922_v763_interpolated_causal_streams.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8922-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8923: Measure shared label savings with unchanged certificate decisions
+The demand and eager arms shall use forty identical paired fresh draw streams, frozen thresholds and original risk allocation. Per-draw ledgers shall separate paid selection/certification labels, evaluator census and cheap policy work. A cost benefit shall require a strictly positive 99-percent lower bound on all-policy shared-union savings, exact terminal decision equality and zero inclusion violations.
+Deliverable: `results/experiment_8923_v763_label_demand_evaluation.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8923-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8924: Measure source-relative Qwen decisions after a successful live pilot
+The bounded natural canary shall require newly validated actual Qwen execution from Exp8918, current GPU-0 availability and original Exp8908 source custody. One output of at most 128 tokens per existing manifest case shall be scored separately under original and revised annotations. Span validity shall not imply semantic truth; independent_generalization_score shall remain zero. No retries or preferred-criterion selection are allowed.
+Deliverable: `results/experiment_8924_v763_qwen_natural_canary.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8924-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8925: Audit prospective interpolation benefit and untouched retention
+The benefit audit shall use whole-stream pairs and the frozen nine-bound family at alpha 0.01. Future Brier upper bounds shall be <=-0.01 versus frozen and <0 versus both permuted labels and ordinary guarded updates. Brier/error retention increases shall be <=0.01 at 0/24/48. Missing external evidence shall be terminal blocked; complete scientific failure shall be null. No post-hoc sample or threshold changes are allowed.
+Deliverable: `results/experiment_8925_v763_interpolated_benefit_audit.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8925-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8926: Qualify retained durable costs with correctly typed comparison rows
+Durable-cost qualification shall preserve all Exp8914 original receipts, measured operands and the disqualified primary. Administrative process receipts shall be stored outside scientific comparison rows with content-addressed references. Real controls and denominators shall remain visible. Unchanged strict row lint and deliberately corrupt comparison tests shall pass/fail as intended. Replay shall qualify historical guarded costs only, never new optimizer costs or fresh speed-quality claims.
+Deliverable: `results/experiment_8926_v763_durable_cost_qualification.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8926-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8927: Measure full request costs with the qualified inline observer
+Full request timing shall retain the original twenty-four independent worlds, thirty-six cells, arms, sizes and cold/resident boundaries after Exp8921 qualifies. Parent timing readiness shall remain separate from attribution. Component fractions shall require semantic identity, disjoint closure and all simultaneous 99-percent observer-overhead upper bounds <=0.05; otherwise fractions remain unqualified.
+Deliverable: `results/experiment_8927_v763_inline_request_cost.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8927-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8928: Map qualified new operations to supported hardware limits
+Unconditional hardware accounting shall admit only qualified cost evidence and distinguish current operation counts from historical timings. KV260 quadratic Ising k_max<=5, PolarFire Linux CPU dispatch, GateMate physical block and detached GPU 1 shall remain explicit. Unknown compatible fractions shall stay null. Hypothetical Amdahl ceilings shall include host, transfer and durability; no probes, flash or purchase is authorized.
+Deliverable: `results/experiment_8928_v763_hardware_operation_budget.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8928-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.
+
+### REQ-REPORT-8929: Reconcile thirteen outcomes and decide the next evidence requirements
+The unconditional capstone shall account for every one of thirteen slots, including authenticated skips and disqualified producers, with separate branch denominators. It shall recheck pilot, nine learning bounds, label union, annotation dependence and cost qualifications, retain exact-scope retirement recommendations and emit stable G1-G4 publication gates. It shall not activate, publish or execute a larger error collection.
+Deliverable: `results/experiment_8929_v763_capstone.json`. Execution authority: complete V763 task contract in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+
+#### SCENARIO-REPORT-8929-CONTRACT
+Before implementation, add failing controls for method correctness, absent/malformed inputs, exact gate fields, valid nulls, causal or semantic tampering and cold replay. Require measured owned statement coverage, scoped lint/types/spec tracing and applicable private E2E checks. Status: planned; implementation and execution remain pending.

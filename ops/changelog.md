@@ -23315,3 +23315,16 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Measure complete durable candidate and promotion costs (⚠️ Research Finding) — honest_verdict=complete_disqualified_guarded_durable_cost; results/experiment_8914_v762_guarded_durable_cost.json
 - 2026-11-08: Map qualified service work to existing hardware limits (⚠️ Blocked) — honest_verdict=complete_blocked_hardware_operation_budget; results/experiment_8915_v762_hardware_operation_budget.json
 - 2026-11-08: Reconcile thirteen outcomes and decide guarded-learning continuations (⚠️ Blocked) — honest_verdict=complete_blocked_v762_capstone; results/experiment_8916_v762_capstone.json
+## 2026-11-08 — Plan milestone 2026.11.763
+
+- Recorded the primary-source scan before design, including ImplicitHop,
+  interpolated continual updates, active label acquisition and source limitations.
+- Preserved V762 design/queue bytes and staged thirteen matching tasks,
+  Exp8917–Exp8929, across four phases in the full design and next-roadmap YAML.
+- Included the operator-approved fifty-question BFS pilot early, with frozen
+  mandated Qwen, GPU 0 only and bounded-generation provenance.
+- Proposed changed mechanisms for learning, label costs and observer overhead;
+  preserved existing scientific thresholds, failed evidence and exact gates.
+- Added planned requirements, traceability and architecture/ops boundaries.
+  Planning validation is in progress. No activation, experiment, push or
+  external publication occurred.

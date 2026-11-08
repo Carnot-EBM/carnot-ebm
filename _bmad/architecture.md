@@ -946,3 +946,22 @@ canary. Authenticate original observer operands from retained execution bundles
 before the frozen request benchmark. No new sampler, ARC work, hardware probe,
 conductor change or generator training is proposed. Full design and exact13-task
 contract: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+## V763 planned boundary — 2026-11-08
+
+V763 proposes thirteen tasks, Exp8917–Exp8929; no new path is implemented here.
+The operator-directed fifty-question graph pilot uses frozen Qwen on GPU 0 and
+BFS final-answer labels. It does not create step labels or train a detector.
+GPU 1 is detached. An optional natural-source canary follows actual validated
+pilot inference and keeps original/revised annotation criteria separate.
+
+The continuous-learning change is an opt-in fast/slow candidate optimizer in
+the existing signed-energy memory store. It preserves delayed feedback,
+promotion guards and untouched retention. The verification-cost change requests
+labels only for the union of unresolved accepting policies while preserving
+their original certificate decisions. The timing change moves observer
+allocations outside measured requests; qualification retains the original
+overhead ceiling. Historical durable costs remain distinct from new optimizer
+operation counts. Hardware fractions require qualified complete-service clocks.
+
+The full architecture, exact gates and thirteen-task execution contract are in
+`openspec/change-proposals/research-roadmap-vNEXT.md`. ARC remains suspended.

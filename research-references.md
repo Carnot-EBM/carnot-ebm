@@ -55658,3 +55658,100 @@ revision `afaec19e64122b4a58718dc31bcd555c97460233`, last modified
 2025-11-21T10:23:52Z, contains `README.md`, `messages.csv` and
 `hallucination_spans.csv`. This pins a reachable release; original-label joins,
 annotation crosswalks and evaluation rights still require a provenance audit.
+## V763 planning scan — 2026-11-08 America/New_York
+
+Recorded before designing V763. Primary papers were checked against the latest
+local artifacts, the exclusion manifest and the November 7 operator directive.
+These are external findings and proposed transfers, not Carnot measurements.
+
+### Findings that change the next experiments
+
+- [ImplicitHop](https://arxiv.org/abs/2610.41169), October 30, 2026:
+  graph tasks expose failures in implicit composition without chain of thought.
+  The operator-approved [local pilot plan](docs/research-notes/bfs-labeled-error-source-plan-2026-11-07.md)
+  specifies exactly 50 graphs, k=2, reasoning off and BFS final-answer labels.
+  This supplies an independent labeling procedure, not independent step labels
+  or evidence of natural-language generalization. Qwen's error rate is unknown.
+  GPU 0 alone is authorized; GPU 1 is detached. The new directive explicitly
+  authorizes bounded preflight and generation, unlike the previous passive
+  runtime-receipt lane. No full 200-error collection follows automatically.
+- [From Generic to Dedicated: A Novel Optimizer for Online Continual Learning](https://arxiv.org/abs/2610.27835),
+  October 20, 2026, section 4.1 equations 7–9: SPIN maintains fast and slow
+  parameters and evaluates the gradient at their interpolation. Test this
+  candidate optimizer inside the existing small signed-energy head, with its
+  existing promotion gate. Preserve frozen, ordinary guarded and permuted-label
+  controls. The paper's image-task results and approximate curvature argument
+  do not prove benefits on delayed constraint feedback. Generator weights stay
+  frozen. [Full method](https://arxiv.org/html/2610.27835v1).
+- [Prediction-Powered Active Testing](https://arxiv.org/abs/2607.08347),
+  July 9, 2026, distinguishes cheap predictions from purchased labels and
+  corrects active selection statistically. Local inference: first test a simpler
+  exact saving—request a label only if at least one unresolved frozen policy
+  accepts that candidate. Preserve each policy's original accepted-label sequence
+  and exact certificate. This is not PPAT or its asymptotic interval method.
+  The current shared-prefix accounting charges candidates rejected by all policies.
+- [When Can Old Evaluations Certify a New Model?](https://arxiv.org/abs/2609.32267),
+  September 26, 2026: historical advice and evidence that establishes validity
+  have different roles. Keep old streams as development information only; fresh
+  certification labels and future learning outcomes need distinct sealed inputs.
+  Do not substitute historical pseudo-labels for current verification.
+- [Retromorphic Testing with Hierarchical Verification](https://arxiv.org/abs/2603.27752),
+  March 29, 2026: separate claim decisions and their source spans, with explicit
+  entailed/contradicted/baseless categories. Use the already audited RAGTruth++
+  canary to compare the same outputs against both annotation criteria. Its
+  assisted reannotations remain dependent; a canary cannot establish a new
+  natural-language accuracy headline. Do not introduce the paper's whole stack.
+
+### Required topic scan
+
+| Topic | Primary source checked | Planning consequence |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), December 2025 / May 2026 | Learned compatibility is not a correctness proof; retain exact and learned outputs separately. |
+| Neural constraint satisfaction | [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025; [PAL](https://arxiv.org/abs/2503.19466), March 2025 | Linear/algebraic feasibility guarantees do not solve natural extraction; no new solver dependency. |
+| Ising applications in ML | [Neural Ising Machines](https://arxiv.org/abs/2602.00302), January 2026 | Compact learned dynamics are a future sampler lead; exact three-class normalization needs no MCMC. |
+| Hallucination detection | RT4CHART above; [Evidence-Aligned Entity Verification](https://arxiv.org/abs/2609.08267), September 2026 | Evidence-relative decisions need source spans; annotation dependence stays explicit. |
+| KAN | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026 | Per-knot regularization addresses retention. V762 already passed retention; change candidate optimization first. |
+| Guided generation | [Energy-Based Decoding](https://arxiv.org/abs/2605.28020), May 2026 | External reward guidance overlaps retired scorer work; defer it. The operator pilot measures unassisted generation. |
+| Hardware sampling | [FPGA–ASIC co-design v2](https://arxiv.org/abs/2602.15985), February / September 2026 | Host orchestration can dominate; qualify observer overhead before deriving removable service fractions. |
+| Continuous learning | SPIN above; [Free-Energy-Gated Plasticity](https://arxiv.org/abs/2608.23000), August 2026 | Use timing-matched controls and delayed feedback; robot results do not certify this system. |
+
+### Secondary-source checks and limits
+
+- **OpenReview:** checked [EBT's ICLR 2026 manuscript](https://openreview.net/pdf?id=ZBj3Qp1bYg),
+  [NRGPT](https://openreview.net/pdf?id=B3Muyi2zgo), and
+  [TimeGate's ICML 2026 workshop manuscript](https://openreview.net/pdf?id=JDwyQ7SzwB).
+  Workshop status is not a main-conference result. None warrants foundation-model
+  training or a replacement for the already measured promotion guard.
+- **Semantic Scholar:** direct Graph API citation requests returned HTTP 429 for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and ten entries for [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Entries included d-OPD, Distributional EBMs and Graph Energy Matching.
+  This is partial citation discovery, not an exhaustive review. Generator
+  distillation, graph generation and retired external rankers are deferred.
+- **Hugging Face:** checked the [verification paper index](https://huggingface.co/papers?q=verification).
+  It includes old papers and unrelated verification domains. Primary paper dates
+  govern inclusion; no feed ranking is treated as evidence of quality.
+- **GitHub:** checked [weekly Python trending](https://github.com/trending/python?since=weekly)
+  and the [author EBT repository](https://github.com/alexiglad/EBT). The retrieved
+  trending page did not identify a new relevant EBM/constraint/KAN repository.
+  No popularity claim or dependency change follows.
+- **Extropic:** checked [Writing](https://extropic.ai/writing),
+  [Torx/Thermalizers/Z1](https://extropic.ai/writing/from-one-to-one-billion) and
+  [October 1 research update](https://extropic.ai/writing/baby-thermo-rsi/).
+  The Torx page displays a 2025 label and a Summer 2026 heading. These are vendor
+  announcements, not authenticated local TSU access or Carnot service timings.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes a constraint decision layer. The retrieved page provides no new
+  reproducible architecture or evaluation protocol for a local experiment.
+
+### Evidence boundaries carried forward
+
+Exp8911: guarded-minus-frozen future Brier mean -0.0194310, simultaneous upper
+-0.00345866, short of the required -0.01. Permuted and ordinary contrasts also
+miss their gates; retention passes. Exp8910: all three protocols cost 4,800
+shared labels per replicate. Exp8912: retained clocks execute, but measured
+observer overhead fails the 5% ceiling; total clocks remain usable while
+component fractions do not. Exp8914: strict row lint rejects administrative
+control-receipt fields as degenerate comparisons; its costs remain disqualified.
+Repair producer representation with all receipt bytes preserved; do not weaken
+the shared lint. ARC remains suspended. No new purchase or board probe is needed.
