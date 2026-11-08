@@ -109204,7 +109204,13 @@ The experiment shall emit `results/experiment_8910_v762_finite_budget_evaluation
 
 #### SCENARIO-REPORT-8910-CONTRACT
 
-Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
+The primary contrast is `shared_union/label_savings`: early acceptance label requests minus refusal label requests, paired by the forty frozen Exp8906 replicate streams. Reuse the existing conservative 23-contrast bounded Hoeffding intervals; only this contrast can establish shared benefit. Retain standalone contrasts as separate diagnostics.
+
+Deterministic oracle computations may reuse labels already returned by scheduled selection or certification requests. The label provider must return only requested identifiers. Cache hits and replacement repeats remain paid requests. A provider cache cannot change policy input, stopping decisions, or census access order.
+
+The service must fetch only the next unseen prefix until all seven group policies resolve. Comparator fetches and post-decision census labels are evaluator work. Keep request ordinals, replacement repeats, distinct world counts, selection cutoff scans, and policy input evaluations. Seal cutoffs and service stops before census labels. Bind the exact Exp8906 producer, its proof receipt hash, manifest, population, scores, and all imported operands. Cold replay must independently reconstruct decisions, ledgers, and reductions; repaired checksums cannot authorize changed claims.
+
+Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: implemented in `finite_budget_evaluation_8910.py`, `finite_budget_evaluation_runner_8910.py`, and the direct CLI. Tests: `tests/python/test_finite_budget_evaluation_8910.py`. Terminal qualification and measurements are recorded in the experiment artifact.
 
 ### REQ-REPORT-8911: Audit future Brier benefit and retention for guarded updates
 

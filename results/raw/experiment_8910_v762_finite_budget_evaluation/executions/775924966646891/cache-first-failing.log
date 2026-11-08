@@ -1,0 +1,29 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_requested_label_cache_keeps_unrequested_truth_closed ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe457fb38f0>
+
+    def test_requested_label_cache_keeps_unrequested_truth_closed(monkeypatch):
+        """REQ-REPORT-8910: cached oracle computation never opens an unrequested world."""
+        calls = []
+        def labels(units):
+            calls.append([u["unit_id"] for u in units])
+            return {u["unit_id"]: "refute" for u in units}
+        monkeypatch.setattr(m.base.old.old.p, "labels", labels)
+        cache = {"seen": "support"}
+        units = [dict(unit_id="seen"), dict(unit_id="new"), dict(unit_id="new")]
+>       assert r.requested_labels(cache, units) == {"seen": "support", "new": "refute"}
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.finite_budget_evaluation_runner_8910' has no attribute 'requested_labels'
+
+tests/python/test_finite_budget_evaluation_8910.py:377: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_finite_budget_evaluation_8910.py::test_requested_label_cache_keeps_unrequested_truth_closed
+1 failed, 1 warning in 3.46s
