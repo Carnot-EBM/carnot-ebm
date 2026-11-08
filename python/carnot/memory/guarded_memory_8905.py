@@ -54,14 +54,25 @@ def metrics(params: Json, rows: list[Json]) -> tuple[float, float]:
 class Store:
     """Keep both head versions and the replay boundary in one durable transaction."""
 
-    def __init__(self, path: Path, params: Json, arm: str, anchors: list[Json]) -> None:
+    def __init__(
+        self, path: Path, params: Json, arm: str, anchors: list[Json], *, optimizer: str = "sgd"
+    ) -> None:
+        from carnot.memory import interpolated_memory_8919 as interpolated
+
         self.path = path
-        require(arm in ARMS and len(anchors) == 16, "store_configuration")
+        self.optimizer = optimizer
+        require(optimizer in ("sgd", interpolated.SCHEMA), "optimizer_schema")
+        require(
+            arm
+            in ARMS + (("interpolated_true", "interpolated_permuted") if optimizer != "sgd" else ())
+            and len(anchors) == 16,
+            "store_configuration",
+        )
         self.state: Json = (
             json.loads(path.read_bytes())
             if path.exists()
             else dict(
-                schema=SCHEMA,
+                schema=SCHEMA if optimizer == "sgd" else interpolated.SCHEMA,
                 arm=arm,
                 anchors=deepcopy(anchors),
                 committed=deepcopy(params),
@@ -81,13 +92,19 @@ class Store:
             )
         )
         require(
-            self.state["schema"] == SCHEMA
+            self.state["schema"] == (SCHEMA if optimizer == "sgd" else interpolated.SCHEMA)
             and self.state["arm"] == arm
             and self.state["anchors"] == anchors,
             "state_schema",
         )
         for name in ("committed", "candidate"):
             signed.vector(self.state[name], [0.0] * 8)
+        if optimizer != "sgd":
+            if not path.exists():
+                self.state["optimizer"] = dict(
+                    fast=deepcopy(params), slow=deepcopy(params), update_count=0
+                )
+            interpolated.validate(self.state["optimizer"])
         if params:
             require(
                 all(
@@ -101,6 +118,13 @@ class Store:
 
     def commit(self, state: Json) -> None:
         """Publish the file before memory so a failed write cannot deploy weights."""
+        if self.optimizer != "sgd":
+            from carnot.memory import interpolated_memory_8919 as interpolated
+
+            require(state["schema"] == interpolated.SCHEMA, "optimizer_schema")
+            interpolated.validate(state["optimizer"])
+            for name in ("committed", "candidate"):
+                signed.vector(state[name], [0.0] * 8)
         atomic_json(self.path, state)
         self.state = deepcopy(state)
 
@@ -151,6 +175,14 @@ class Store:
             if state["arm"] == "guarded_permuted"
             else labels
         )
+        if state["arm"] == "interpolated_permuted":
+            targets = list(labels)
+            indices = [i for i, p in enumerate(pending) if p["split"] == "train"]
+            shuffled = random.Random(SEED + state["cursor"]).sample(
+                [labels[i] for i in indices], len(indices)
+            )
+            for i, target in zip(indices, shuffled, strict=True):
+                targets[i] = target
         state["blocks"].append(
             dict(groups=[g for g, _ in batch], labels=labels, targets=targets, tick=tick)
         )
@@ -172,7 +204,15 @@ class Store:
         candidate = deepcopy(state["committed"])
         gradients = []
         for row in training:
-            candidate, gradient = signed.update(candidate, row["counts"], row["label"])
+            if self.optimizer == "sgd":
+                candidate, gradient = signed.update(candidate, row["counts"], row["label"])
+            else:
+                from carnot.memory import interpolated_memory_8919 as interpolated
+
+                state["optimizer"], gradient = interpolated.update(
+                    state["optimizer"], row["counts"], row["label"]
+                )
+                candidate = deepcopy(state["optimizer"]["slow"])
             gradients.append(gradient)
         recent_old, recent_new = metrics(state["committed"], guards), metrics(candidate, guards)
         anchor_old = metrics(state["committed"], state["anchors"])
@@ -184,7 +224,8 @@ class Store:
             and anchor_new[1] <= anchor_old[1]
         )
         promoted = eligible and (
-            state["arm"] == "ordinary_true" or (state["arm"].startswith("guarded_") and safe)
+            state["arm"] == "ordinary_true"
+            or (state["arm"].startswith(("guarded_", "interpolated_")) and safe)
         )
         state["candidate"] = candidate
         state["candidate_version"] += 1
