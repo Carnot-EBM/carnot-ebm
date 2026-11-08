@@ -109944,6 +109944,37 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+Contract extension, 2026-11-08: authenticate the original Exp8931 and Exp8932
+bytes, their retained operands, readiness gates and V764 authority before GPU
+work. Use only the sealed fifty control graphs. Freeze twenty-five k2-first
+and twenty-five k3-first pairs before stateless generation. Keep collection
+graphs untouched. Use the mandated cached Q4_K_M on GPU 0 with reasoning off,
+temperature zero, sixteen output tokens and server top-two log probabilities.
+Bound preflight and load separately at 240 seconds, each request at thirty
+seconds and total generation at 1800 seconds. Release owned resources on exit.
+
+SCENARIO-REPORT-8934-CONTRACT adds missing and changed inputs, zero readiness,
+response identity, finite signals, independent shortest-distance labels,
+discordant-pair counts, paired 95-percent uncertainty, valid null and ceiling
+controls. Recompute every claim from all hundred scheduled answer rows and
+fifty paired graphs. Source admission needs all answers, verified labels,
+usable signals and strictly higher k3 error. This inequality is operational,
+not statistical proof. Missing log probabilities block capability; failed
+owned controls disqualify. Retain raw responses, actual usage, source hashes,
+zero-exclusion owned coverage and outside-checkout replay. Fixtures cannot
+qualify research. Ops and traceability reconciliation are conductor-owned for
+this invocation.
+
+Implementation receipt for REQ-REPORT-8934, 2026-11-08:
+`depth_control_8934.py`, `depth_runtime_8934.py`,
+`depth_control_runner_8934.py` and the named experiment CLI implement the
+contract; `tests/python/test_depth_control_8934.py` supplies the owned controls.
+The live sealed cohort completed all 100 answers on 50 graphs. Errors were
+42/50 at k2 and 39/50 at k3. The paired difference was -0.06, with normal
+95-percent interval [-0.22239701586189017, 0.10239701586189018]. Independent
+labels and finite signals passed. The depth admission rule fails; retain a
+null and stop collection. Final qualification receipts belong to the artifact.
+
 ### REQ-REPORT-8935: Collect fresh independently labeled Qwen answers in shard A
 
 The experiment shall execute the frozen V764 task contract and produce
