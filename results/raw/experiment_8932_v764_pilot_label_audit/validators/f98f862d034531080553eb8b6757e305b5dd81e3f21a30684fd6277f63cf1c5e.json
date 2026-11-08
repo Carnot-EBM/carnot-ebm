@@ -1,0 +1,70 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8932_v764_pilot_label_audit.json",
+  "primary_sha256": "sha256:f98f862d034531080553eb8b6757e305b5dd81e3f21a30684fd6277f63cf1c5e",
+  "report": {
+    "passed": true,
+    "reason": "replay_passed",
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('\"'\"'PYTHONPATH'\"'\"',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=60).returncode)' /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8932_v764_pilot_label_audit.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8932_v764_pilot_label_audit/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('PYTHONPATH',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=60).returncode)",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8932_v764_pilot_label_audit.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8932_v764_pilot_label_audit/terminal_candidate.json"
+        ],
+        "duration_s": 1.8370955960126594,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8932_v764_pilot_label_audit/invocations/1794171189284020214/terminal_validation/00_cold_replay_cli.log",
+        "log_sha256": "sha256:30c2b1cca50c4155a983d95295a1c3517e51e03097f84714907143647a8fdcbd",
+        "name": "cold_replay_cli",
+        "output_tail": "{\"passed\": true, \"replay_passed\": true, \"reason\": \"replay_passed\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8932_v764_pilot_label_audit/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8932_v764_pilot_label_audit/terminal_candidate.json"
+        ],
+        "duration_s": 0.37512074899859726,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8932_v764_pilot_label_audit/invocations/1794171189284020214/terminal_validation/01_adversarial.log",
+        "log_sha256": "sha256:cd018457ca26cd4d493e96a0b9847ed3dc874e621af25c1fe3d40f4b3e939a8b",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8932_v764_pilot_label_audit/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8932,\n      \"title\": \"Pilot label taxonomy audit\",\n      \"honest_verdict\": \"complete_pilot_labels_authenticated\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8932_v764_pilot_label_audit/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8932_v764_pilot_label_audit/terminal_candidate.json"
+        ],
+        "duration_s": 0.03751554305199534,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8932_v764_pilot_label_audit/invocations/1794171189284020214/terminal_validation/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ],
+    "replay_passed": true
+  }
+}

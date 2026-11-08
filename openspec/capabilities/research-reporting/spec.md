@@ -109866,6 +109866,37 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+REQ-REPORT-8932 audit extension (2026-11-08): authenticate the pinned Exp8918
+producer, all retained operands, original offload custody and V764 task authority
+before reduction. Retain all fifty original graphs, raw responses and label rows.
+Recompute shortest distances by independent repeated edge relaxation, never by
+the producer's BFS helper. Apply the frozen categories `malformed`, `out_of_graph`,
+`valid_wrong_distance`, `correct` without repairing responses. Report graph rows,
+all discrepancies, four type counts, completed-answer and semantic-only rates
+with explicit denominators and Wilson 95% intervals, and exact character/token
+length histograms. Semantic-only means valid in-graph answers; absent nodes and
+malformed answers remain visible in the total error rate. Runtime failures and
+censoring receive no semantic labels. Preserve original counts separately.
+Readiness requires fifty authenticated completed responses, zero disagreements,
+resolved provenance and passing owned controls. Oracle truth success is
+`circular_positive`; absent external evidence is terminal blocked and failed
+owned validation is disqualified. Current model/training counts remain zero.
+The fifty pilot graph identities are development/rate-planning evidence only
+and excluded from every V764 calibration/evaluation split. Invalid FoVer prefix
+labels point only to the existing provenance audit note and add no samples.
+SCENARIO-REPORT-8932-CONTRACT adds triangle/disconnected distance controls,
+all four categories, missing/failed/censored responses, label/set/raw drift,
+missing/changed upstream bytes, observed-zero prerequisites, failed owned checks,
+zero-exclusion measured unit/child coverage and rehashed semantic-tamper rejection
+through the real CLI outside the checkout without PYTHONPATH. Ops, changelog and
+traceability reconciliation are conductor-owned for this invocation.
+
+Implementation added (2026-11-08): `pilot_label_audit_8932.py`,
+`pilot_label_audit_runner_8932.py`, the named experiment CLI and
+`tests/python/test_pilot_label_audit_8932.py`. The terminal artifact records the
+executed checks and measured statement membership; this entry claims no detector
+benefit and grants no milestone activation or publication authority.
+
 ### REQ-REPORT-8933: Freeze compatible feedback replay for continuous energy learning
 
 The experiment shall execute the frozen V764 task contract and produce
