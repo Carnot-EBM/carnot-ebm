@@ -1,0 +1,28 @@
+..........F                                                              [100%]
+=================================== FAILURES ===================================
+_________________________ test_main_parser_and_routes __________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261108T011238-3735775-aaea65a8/test_main_parser_and_routes0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8f66cb0a70>
+
+        k in value
+        for k in [
+            "request_cost_rows",
+            "observer_overhead_rows",
+>           "phase_partition_rows",
+            ^^^^^^
+            "unknown_cost_rows",
+        ]
+    )
+E   AttributeError: module 'carnot.reporting.complete_request_cost_8912' has no attribute 'main'
+
+tests/python/test_complete_request_cost_8912.py:135: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_complete_request_cost_8912.py::test_main_parser_and_routes
+1 failed, 10 passed, 1 warning in 113.60s (0:01:53)

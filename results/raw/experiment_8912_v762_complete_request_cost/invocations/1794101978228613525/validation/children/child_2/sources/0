@@ -1,0 +1,280 @@
+"""REQ-REPORT-8912: measure the original requests after retained observer custody."""
+
+import argparse
+from pathlib import Path
+import shutil
+import sys
+from tempfile import TemporaryDirectory
+import time
+from typing import Any
+
+from carnot.reporting import buffered_cost_attribution_8899 as historical
+from carnot.reporting import observer_custody_8907 as custody
+from carnot.reporting import size_aware_verifier_8871 as authority
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+from carnot.reporting.primary_publication import publish_primary
+from carnot.reporting.v746_retained_evidence import load, reference
+from carnot.reporting.v748_collection_contract import namespace
+from scripts.experiment_template import ExperimentTemplate
+
+Json = dict[str, Any]
+ROOT, SEED, REPETITIONS = historical.ROOT, historical.SEED, 1
+NAME, TASK = "experiment_8912_v762_complete_request_cost", "exp8912-complete-request-cost"
+CLI = f"scripts/experiments/{NAME}.py"
+OWNED = ["python/carnot/reporting/complete_request_cost_8912.py", CLI]
+TESTS = ["tests/python/test_complete_request_cost_8912.py"]
+UPSTREAM = ROOT / "results/experiment_8907_v762_observer_custody.json"
+PIN = "sha256:e00dcc57a76647cc648f3c664b0319e90efd03d3ae452488b958705fff26b9b1"
+HEALTH = ROOT / "results/raw" / NAME / "final_repository_health"
+base = namespace(historical, "complete8912_attribution")
+runtime, methods = base.runtime, base.methods
+base.NAME, base.TASK, base.CLI = NAME, TASK, CLI
+methods.NAME, methods.TASK, methods.CLI = NAME, TASK, CLI
+methods.OWNED, methods.TESTS = OWNED, TESTS
+
+
+def progress(phase: str, completed: int = 0, pending: int = 0) -> None:
+    """Show actual progress without changing the fixed measurement deadline."""
+    print(f"[exp8912] phase={phase} completed={completed} pending={pending}", flush=True)
+
+
+def freeze(*, pilot: bool = False) -> list[Json]:
+    """Keep the original seeds, inputs and balanced order independent of costs."""
+    return list(historical.freeze())
+
+
+def preconditions(raw: Path) -> Json:
+    """Authenticate the repaired consumer before loading its original observer."""
+    checker = namespace(authority, "complete8912_authority")
+    checker.HISTORY = [(UPSTREAM, PIN, "retained_evidence_ready_score")]
+    pre = dict(checker.preconditions(raw))
+    pre.update(package_hash=None, owned_errors=[])
+    if pre["external_ready"]:
+        result = custody.replay(UPSTREAM)
+        if not result["passed"]:
+            error = result["error"]
+            if error.startswith("owned_"):
+                pre["owned_errors"] = [error]
+                pre["resources"]["passed"] = False
+            else:
+                pre["external_ready"] = False
+                pre["diagnostics"].append(
+                    dict(
+                        check="rejected_producer",
+                        upstream=custody.TASK,
+                        artifact_field="retained_evidence_ready_score",
+                        expected=1,
+                        observed=error,
+                        path=str(UPSTREAM),
+                        hash=PIN,
+                    )
+                )
+    return pre
+
+
+def measure(raw: Path, worlds: list[Json], package: Json, **kwargs: Any) -> Json:
+    """Execute the authenticated worker with the original single repetition."""
+    observer, _, _ = custody.open_observer()
+    return dict(observer.measure(raw, worlds, package, frozen_count=REPETITIONS))
+
+
+def reduce(rows: list[Json]) -> Json:
+    """Require real clocks on both settings; overhead failure preserves raw costs."""
+    reduced = historical.reduce(rows)
+    complete = bool(reduced["complete_cost_rows_ready_score"]) and all(
+        r["status"] == "completed"
+        and r["closure_valid"]
+        and 0 < r.get("child_elapsed_ns", 0) <= r.get("parent_elapsed_ns", 0)
+        for r in rows
+    )
+    reduced["complete_cost_rows_ready_score"] = int(complete)
+    reduced["cost_attribution_ready_score"] &= int(complete)
+    if not reduced["cost_attribution_ready_score"]:
+        reduced["dominant_removable_component"] = None
+    return reduced
+
+
+def clock_rows(work: Json) -> list[Json]:
+    """Retain startup and exit as unknown paid work, with exact raw clock references."""
+    rows = []
+    for ref in work["process_references"]:
+        result = load(ref)
+        parent, child = result["receipt"], result["rows"][0]
+        start, end = parent["started_monotonic_ns"], parent["ended_monotonic_ns"]
+        begin, stop = child["block_start_ns"], child["block_end_ns"]
+        spans = [[r["start_ns"], r["end_ns"]] for r in result["rows"]]
+        rows.append(
+            dict(
+                raw_reference=ref,
+                parent_start_ns=start,
+                parent_end_ns=end,
+                child_start_ns=begin,
+                child_end_ns=stop,
+                parent_elapsed_ns=end - start,
+                child_elapsed_ns=stop - begin,
+                startup_import_warmup_ns=begin - start,
+                exit_transport_ns=end - stop,
+                request_spans_ns=spans,
+                valid=start <= begin < stop <= end
+                and all(begin <= a < b <= stop for a, b in spans)
+                and all(a[1] <= b[0] for a, b in zip(spans, spans[1:])),
+            )
+        )
+    return rows
+
+
+def artifact(work: Json, validation: Json, date: str, work_ref: Json, validation_ref: Json) -> Json:
+    """Keep authentic full costs separate from qualified removable fractions."""
+    value = dict(base.artifact(work, validation, date, work_ref, validation_ref))
+    clocks = clock_rows(work)
+    gates = value["acceptance_gates"]
+    gates["resolution"] = bool(work["precision"].get("sufficient_ticks", False))
+    gates["parent_child_disjoint_closure"] = (
+        len(clocks) == len(work["rows"])
+        and len({r["raw_reference"]["path"] for r in clocks}) == len(clocks)
+        and all(r["valid"] for r in clocks)
+    )
+    administrative = all(gates.values())
+    value["cost_attribution_ready_score"] &= int(administrative)
+    value["complete_cost_rows_ready_score"] &= int(administrative)
+    verdict = (
+        "blocked"
+        if not work["preconditions_checked"]["external_ready"]
+        else value["verdict_class"]
+        if administrative
+        else "disqualified"
+    )
+    value.update(
+        experiment_id=8912,
+        task_id=TASK,
+        milestone="2026.11.762",
+        honest_verdict=f"complete_{verdict}_complete_request_cost",
+        verdict_class=verdict,
+        original_roster_hash=canonical_hash(freeze()),
+        request_cost_rows=work["rows"],
+        observer_overhead_rows=value["observer_overhead_intervals"],
+        phase_partition_rows=value["component_rows"],
+        unknown_cost_rows=value["unknown_costs"],
+        raw_clock_rows=clocks,
+        scientific_benefit_claim=False,
+    )
+    if not value["cost_attribution_ready_score"]:
+        value["dominant_removable_component"] = None
+    value["gate_check_summary"] += [
+        dict(
+            check="owned_gate_failure",
+            upstream=TASK,
+            artifact_field=k,
+            expected=True,
+            observed=gates[k],
+            path=work_ref["path"],
+            hash=work_ref["sha256"],
+        )
+        for k in ("resolution", "parent_child_disjoint_closure")
+        if not gates[k]
+    ]
+    value["methodology"] += (
+        " Exp8907 authenticates the original retained observer. Raw clock references retain every parent and child endpoint. Startup/import/warmup and exit/transport are explicit unknown paid intervals. Precision calibration and installation are separate paid work, never subtracted from a request. No optimization is selected."
+    )
+    value["field_principles"].update(
+        {
+            k: "Original clocks and full parent costs remain paid; row readiness does not qualify attribution or hardware benefit."
+            for k in value
+        }
+    )
+    value.pop("reproducibility_checksum")
+    value["reproducibility_checksum"] = canonical_hash(value)
+    return value
+
+
+methods.freeze, methods.reduce, methods.progress = freeze, reduce, progress
+base.reduce = reduce
+runtime.preconditions, runtime.measure, runtime.artifact = preconditions, measure, artifact
+original_prepare = runtime.prepare
+
+
+def prepare(raw: Path, limit: int | None = None) -> Json:
+    """Bind the bridge and delegated execution sources to this invocation's bytes."""
+    work = dict(original_prepare(raw, limit))
+    work["internal_errors"] += work["preconditions_checked"].get("owned_errors", [])
+    if work["preconditions_checked"]["external_ready"]:
+        work["current_work_receipt"].update(
+            inference_substrate="no_model_load", inference_substrate_class="no_model_load"
+        )
+    work["code_config_hashes"] += [
+        reference(ROOT / p)
+        for p in [
+            "python/carnot/reporting/buffered_cost_attribution_8899.py",
+            "python/carnot/reporting/buffered_clock_methods_8894.py",
+            "python/carnot/reporting/buffered_clock_runner_8894.py",
+            "python/carnot/reporting/observer_custody_8907.py",
+            "python/carnot/reporting/observer_custody_runner_8907.py",
+        ]
+    ]
+    return work
+
+
+runtime.prepare = prepare
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Publish only terminal checked bytes; private subsets never clear readiness."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", choices=["20261108"], default="20261108")
+    parser.add_argument("--output", type=Path, default=ROOT / "results" / (NAME + ".json"))
+    parser.add_argument("--private-output", action="store_true")
+    parser.add_argument("--private-world-limit", type=int)
+    parser.add_argument("--cold-replay", "--replay", dest="replay", type=Path)
+    args = parser.parse_args(argv)
+    if args.replay:
+        passed = runtime.replay(args.replay)
+        progress("replay_passed" if passed else "replay_rejected")
+        return int(not passed)
+    output = args.output.absolute()
+    if args.private_output and output.resolve().is_relative_to(ROOT):
+        parser.error("private output must be outside checkout")
+    if args.private_world_limit is not None and (
+        not args.private_output or args.private_world_limit < 1
+    ):
+        parser.error("subset requires private output and a positive count")
+    raw = output.parent / "raw" / NAME / "invocations" / str(time.time_ns())
+    template = ExperimentTemplate(
+        8912, "Complete request costs", "results/" + NAME + ".json", seed=SEED
+    )
+    progress("before_frozen_benchmark")
+    with template.phase("authenticated_complete_request_cost"):
+        work = runtime.prepare(raw, args.private_world_limit)
+    progress("after_frozen_benchmark", len(work["rows"]), 0)
+    health = HEALTH
+    if (health / "exit_code").is_file():
+        shutil.copytree(health, raw / "repository_health")
+        work["repository_health"] = dict(
+            scope="unrelated_full_python_suite",
+            exit_code=int((health / "exit_code").read_text()),
+            logs=[reference(p) for p in sorted((raw / "repository_health").iterdir())],
+        )
+    atomic_json(raw / "work.json", work)
+    progress("before_owned_validation")
+    with TemporaryDirectory(prefix="exp8912-validation-") as directory:
+        validation = (
+            runtime.unqualified()
+            if args.private_output
+            else runtime.validate(raw / "validation", Path(directory))
+        )
+    progress("after_owned_validation")
+    atomic_json(raw / "validation.json", validation)
+    value = artifact(
+        work,
+        validation,
+        args.date,
+        reference(raw / "work.json"),
+        reference(raw / "validation.json"),
+    )
+    progress("before_terminal_publication")
+    publication = publish_primary(output, value, lambda candidate: runtime.terminal(candidate, raw))
+    atomic_json(raw / "publication_receipt.json", publication)
+    for operand in raw.rglob("*"):
+        if operand.is_file():
+            operand.chmod(0o444)
+    progress("complete_" + value["verdict_class"], value["completed_count"], 0)
+    return 0

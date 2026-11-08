@@ -1,0 +1,289 @@
+"""REQ-REPORT-8912: preserve the frozen benchmark and distrust unqualified clocks."""
+
+from copy import deepcopy
+import os
+from pathlib import Path
+import subprocess
+import sys
+from types import SimpleNamespace
+
+import pytest
+
+from carnot.reporting import complete_request_cost_8912 as m
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+from test_buffered_cost_attribution_8899 import rows
+
+
+def test_frozen_contract():
+    """SCENARIO-REPORT-8912-CONTRACT: never replace the original future roster."""
+    runner, primary, evidence = m.custody.open_observer()
+    original = m.load(m.reference(primary))
+    assert m.freeze() == original["future_world_manifest"]["worlds"]
+    assert len(m.freeze()) == 144 and m.REPETITIONS == original["repetition_count"] == 1
+    assert evidence["original_primary"]["sha256"] == m.custody.PIN
+    assert runner.m.WORKER.endswith("buffered_clock_worker_8894.py")
+
+
+@pytest.mark.parametrize(
+    "kind", ["missing_file", "missing_field", "observed_zero", "rejected_producer"]
+)
+def test_external_gates(tmp_path, monkeypatch, kind):
+    """REQ-REPORT-8912: absence, zero and rejected producer bytes are distinct."""
+    path = tmp_path / "upstream.json"
+    if kind != "missing_file":
+        atomic_json(
+            path,
+            {}
+            if kind == "missing_field"
+            else dict(retained_evidence_ready_score=int(kind != "observed_zero")),
+        )
+    monkeypatch.setattr(m, "UPSTREAM", path)
+    pre = m.preconditions(tmp_path / "raw")
+    assert not pre["external_ready"]
+    assert pre["diagnostics"][0]["check"] == kind
+    assert pre["diagnostics"][0]["path"]
+
+
+def test_owned_rejection_and_measure(tmp_path, monkeypatch):
+    """REQ-REPORT-8912: failed owned controls cannot become external blocking."""
+    monkeypatch.setattr(
+        m.custody, "replay", lambda _: dict(passed=False, error="owned_replay:control")
+    )
+    pre = m.preconditions(tmp_path / "raw")
+    assert pre["external_ready"] and pre["owned_errors"]
+    calls = []
+    observer = SimpleNamespace(measure=lambda *a, **kw: calls.append(kw) or dict(rows=[]))
+    monkeypatch.setattr(m.custody, "open_observer", lambda: (observer, None, {}))
+    assert m.measure(tmp_path, [], {}, frozen_count=999) == dict(rows=[])
+    assert calls == [dict(frozen_count=1)]
+
+
+def test_complete_rows_and_honest_null():
+    """REQ-REPORT-8912: overhead failure preserves authentic complete costs only."""
+    good = m.reduce(rows())
+    assert good["complete_cost_rows_ready_score"] == good["cost_attribution_ready_score"] == 1
+    bad = m.reduce(rows(0.2))
+    assert bad["complete_cost_rows_ready_score"] == 1
+    assert bad["cost_attribution_ready_score"] == 0
+    assert bad["dominant_removable_component"] is None
+    for key, value in [
+        ("status", "censored"),
+        ("closure_valid", False),
+        ("child_elapsed_ns", 300000),
+    ]:
+        incomplete = rows()
+        next(r for r in incomplete if r["instrumented"])[key] = value
+        assert m.reduce(incomplete)["complete_cost_rows_ready_score"] == 0
+    altered = rows()
+    altered[0]["semantics"][0]["decision"] = "wrong"
+    assert not m.reduce(altered)["cost_attribution_ready_score"]
+    assert not m.reduce([])["complete_cost_rows_ready_score"]
+
+
+def test_raw_clock_gaps(tmp_path):
+    """REQ-REPORT-8912: startup, exit and child gaps stay in the parent cost."""
+    path = tmp_path / "process.json"
+    atomic_json(
+        path,
+        dict(
+            receipt=dict(started_monotonic_ns=10, ended_monotonic_ns=110),
+            rows=[dict(block_start_ns=30, block_end_ns=90, start_ns=35, end_ns=80)],
+        ),
+    )
+    work = dict(process_references=[m.reference(path)])
+    raw = m.clock_rows(work)
+    assert raw[0]["parent_start_ns"] == 10 and raw[0]["parent_end_ns"] == 110
+    assert raw[0]["startup_import_warmup_ns"] == raw[0]["exit_transport_ns"] == 20
+    assert raw[0]["parent_elapsed_ns"] == 100 and raw[0]["child_elapsed_ns"] == 60
+    assert m.clock_rows(dict(process_references=[])) == []
+
+
+def test_artifact_readiness(tmp_path, monkeypatch):
+    """REQ-REPORT-8912: completion, owned validation and attribution are separate."""
+    monkeypatch.setattr(
+        m.runtime,
+        "preconditions",
+        lambda _: dict(
+            external_ready=False, resources=dict(passed=True), diagnostics=[], references=[]
+        ),
+    )
+    work = m.runtime.prepare(tmp_path / "prepared")
+    work.update(
+        rows=rows(),
+        installed_imports_valid=True,
+        precision=dict(projected_max_block_s=1, sufficient_ticks=True),
+        internal_errors=[],
+        private_world_limit=None,
+    )
+    work["preconditions_checked"]["external_ready"] = True
+    validation = dict(
+        receipts=[dict(passed=True)],
+        union=dict(passed=True),
+        coverage=dict(complete=True),
+        raw_references=[],
+    )
+    ref = dict(path=str(tmp_path / "control.json"), sha256="sha256:control")
+    monkeypatch.setattr(
+        m,
+        "clock_rows",
+        lambda _: [
+            dict(valid=True, raw_reference=dict(path=str(i))) for i in range(len(work["rows"]))
+        ],
+    )
+    value = m.artifact(work, validation, "20261108", ref, ref)
+    assert value["experiment_id"] == 8912 and value["milestone"] == "2026.11.762"
+    assert value["complete_cost_rows_ready_score"] == value["cost_attribution_ready_score"] == 1
+    assert value["original_roster_hash"] == canonical_hash(m.freeze())
+    assert all(
+        k in value
+        for k in [
+            "request_cost_rows",
+            "observer_overhead_rows",
+            "phase_partition_rows",
+            "unknown_cost_rows",
+        ]
+    )
+    work["rows"] = rows(0.2)
+    value = m.artifact(work, validation, "20261108", ref, ref)
+    assert value["verdict_class"] == "null" and value["complete_cost_rows_ready_score"] == 1
+    assert value["cost_attribution_ready_score"] == 0
+    work["precision"]["sufficient_ticks"] = False
+    assert m.artifact(work, validation, "20261108", ref, ref)["cost_attribution_ready_score"] == 0
+    validation["receipts"][0]["passed"] = False
+    assert m.artifact(work, validation, "20261108", ref, ref)["verdict_class"] == "disqualified"
+
+
+def test_missing_raw_clocks_never_qualify(tmp_path, monkeypatch):
+    """REQ-REPORT-8912: summaries cannot replace missing authentic clock operands."""
+    monkeypatch.setattr(
+        m.runtime,
+        "preconditions",
+        lambda _: dict(
+            external_ready=False, resources=dict(passed=True), diagnostics=[], references=[]
+        ),
+    )
+    work = m.runtime.prepare(tmp_path / "prepared")
+    work.update(
+        rows=rows(),
+        installed_imports_valid=True,
+        precision=dict(projected_max_block_s=1, sufficient_ticks=True),
+        internal_errors=[],
+        private_world_limit=None,
+    )
+    work["preconditions_checked"]["external_ready"] = True
+    validation = dict(
+        receipts=[dict(passed=True)],
+        union=dict(passed=True),
+        coverage=dict(complete=True),
+        raw_references=[],
+    )
+    ref = dict(path="control", sha256="sha256:control")
+    value = m.artifact(work, validation, "20261108", ref, ref)
+    assert value["complete_cost_rows_ready_score"] == value["cost_attribution_ready_score"] == 0
+    assert value["verdict_class"] == "disqualified"
+
+
+def test_overlapping_request_clocks(tmp_path):
+    """REQ-REPORT-8912: disjoint phases cannot hide overlapping request spans."""
+    path = tmp_path / "process.json"
+    receipt = dict(started_monotonic_ns=0, ended_monotonic_ns=100)
+    child = dict(block_start_ns=10, block_end_ns=90, start_ns=20, end_ns=60)
+    atomic_json(path, dict(receipt=receipt, rows=[child, dict(child, start_ns=50, end_ns=80)]))
+    assert not m.clock_rows(dict(process_references=[m.reference(path)]))[0]["valid"]
+
+
+def test_upstream_replay_rejected(tmp_path, monkeypatch):
+    """REQ-REPORT-8912: a failed retained replay cannot authorize new measurements."""
+    monkeypatch.setattr(
+        m.custody, "replay", lambda _: dict(passed=False, error="retained_operand_drift")
+    )
+    pre = m.preconditions(tmp_path / "raw")
+    assert not pre["external_ready"] and pre["diagnostics"]
+
+
+def test_public_main_with_owned_failure(tmp_path, monkeypatch):
+    """REQ-REPORT-8912: failed owned validation is published only as disqualified."""
+    monkeypatch.setattr(
+        m.runtime,
+        "preconditions",
+        lambda _: dict(
+            external_ready=True,
+            resources=dict(passed=False),
+            diagnostics=[],
+            references=[],
+            owned_errors=["owned_control"],
+        ),
+    )
+    monkeypatch.setattr(m.runtime, "validate", lambda *a: m.runtime.unqualified())
+    monkeypatch.setattr(m.runtime, "terminal", lambda *a: dict(passed=True))
+    health = tmp_path / "health"
+    health.mkdir()
+    (health / "exit_code").write_text("1")
+    monkeypatch.setattr(m, "HEALTH", health)
+    output = tmp_path / (m.NAME + ".json")
+    assert m.main(["--output", str(output)]) == 0
+    value = m.load(m.reference(output))
+    assert value["verdict_class"] == "disqualified"
+    assert value["repository_health"]["exit_code"] == 1
+    assert value["inference_substrate"] == value["inference_substrate_class"] == "no_model_load"
+    assert value["current_work_receipt"]["inference_substrate_class"] == "no_model_load"
+
+
+def test_private_cli_and_cold_replay(tmp_path):
+    """SCENARIO-REPORT-8912-CONTRACT: actual child runs without checkout PYTHONPATH."""
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+    if env.get("COVERAGE_RCFILE"):
+        command[2:2] = ["-m", "coverage", "run"]
+    output = tmp_path / (m.NAME + ".json")
+    args = [
+        "--date",
+        "20261108",
+        "--private-output",
+        "--private-world-limit",
+        "1",
+        "--output",
+        str(output),
+    ]
+    for extra in [args, ["--cold-replay", str(output)]]:
+        child = subprocess.run(
+            command + extra, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=240
+        )
+        assert child.returncode == 0, child.stdout + child.stderr
+    value = m.load(m.reference(output))
+    assert value["completed_count"] == 24 and value["intended_count"] == 24
+    assert value["complete_cost_rows_ready_score"] == value["cost_attribution_ready_score"] == 0
+    assert len(value["raw_clock_rows"]) == 24
+    for field in [
+        "complete_cost_rows_ready_score",
+        "cost_attribution_ready_score",
+        "rows",
+        "raw_clock_rows",
+    ]:
+        bad = deepcopy(value)
+        bad[field] = [] if field.endswith("rows") else 1
+        bad["reproducibility_checksum"] = canonical_hash(
+            {k: v for k, v in bad.items() if k != "reproducibility_checksum"}
+        )
+        target = tmp_path / (field + ".json")
+        atomic_json(target, bad)
+        assert not m.runtime.replay(target, execute=False)
+    assert not m.runtime.replay(tmp_path / "missing.json", execute=False)
+
+
+def test_main_parser_and_routes(tmp_path, monkeypatch):
+    """REQ-REPORT-8912: subsets stay private and failed replay exits nonzero."""
+    for argv in [
+        ["--date", "20261107"],
+        ["--private-output"],
+        ["--private-world-limit", "1"],
+        ["--private-output", "--output", str(tmp_path / "bad.json"), "--private-world-limit", "0"],
+    ]:
+        with pytest.raises(SystemExit) as exc:
+            m.main(argv)
+        assert exc.value.code == 2
+    monkeypatch.setattr(m.runtime, "replay", lambda _: False)
+    assert m.main(["--cold-replay", str(tmp_path / "missing.json")]) == 1
+    monkeypatch.setattr(m.runtime, "replay", lambda _: True)
+    assert m.main(["--cold-replay", str(tmp_path / "ok.json")]) == 0

@@ -109281,6 +109281,30 @@ The experiment shall emit `results/experiment_8912_v762_complete_request_cost.js
 
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
+Implementation contract, 2026-11-08: authenticate the exact Exp8907 primary and
+its original retained bundle before measuring. Use the unchanged retained
+observer, installed wheel, 144 worlds (24 per each of six sizes), four balanced
+blocks, three arms, two boundaries and one repetition. Preserve all 3456 cells
+and their original raw process receipts. Keep the registered cold parent and
+resident child overhead comparisons, with simultaneous99-percent upper<=0.05.
+All hardware fractions use the complete parent denominator. Record startup and
+exit gaps and child remainder explicitly; no gap is a removable component.
+Require complete clocks for both instrumentation settings for row readiness.
+Attribution also requires original semantic identity, precision and zero-tolerance
+disjoint closure. A measured overhead failure is a terminal null. Missing or
+rejected external evidence blocks; failed owned execution or validation
+disqualifies. Cold replay must reconstruct summaries from every raw clock and
+reject rehashed aggregate or semantic changes. Tests reference this scenario;
+owned unit/child statement coverage must be100 percent without exclusions.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+Implementation: `complete_request_cost_8912.py` and its dated experiment CLI
+reuse the retained observer and original supervisor. Contract controls live in
+`tests/python/test_complete_request_cost_8912.py`. The terminal result records
+current validation, raw clock custody and the separate repository health run.
+Owned CPU qualification and failed owned controls declare `no_model_load`;
+`blocked_no_run` is reserved for rejected or absent external prerequisites.
+
 ### REQ-REPORT-8913: Measure bounded Qwen evidence decisions under paired annotation criteria
 
 Require Exp8904 runtime_repair_ready_score=1 and Exp8908 natural_canary_ready_score=1. Authenticate receipt, manifest and actual GGUF file hashes before load. MODEL_SPECS must include unsloth/Qwen3.8-27B-GGUF Q4_K_M. Use the existing cache resolver and actual GGUF path, existing GPU lease and verified GPU offload. No AutoTokenizer lookup on a GGUF-only repo, simulated fallback or small-model headline.
