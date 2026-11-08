@@ -109325,6 +109325,22 @@ Before implementation, add failing controls for the specified method, absent or 
 
 ### REQ-REPORT-8914: Measure complete durable candidate and promotion costs
 
+Execution contract extension (20261108, before implementation): authenticate
+Exp8905 original SHA256 `acbd0cd68c70e51811c36897180a2dc302341f9fa8fa2f381c3c6e642ab16779`
+and every referenced operand before opening cost worlds. Only its integer
+`guarded_methods_ready_score=1` gates execution. Freeze seed7628914 and plans
+300–311, with twelve distinct paired streams and four randomized arm orders.
+Keep the original eight-feedback block permutations and fit schedule. Commit
+each feedback separately with file and directory fsync. Restart the process
+after feedback24, preserving pending predictions and the complete candidate
+state. Compare all predictions and final state with an uninterrupted process.
+Whole-service wall time includes child startup, both segments, and restart
+checks; control execution is separately charged validation work. Candidate,
+guard, feedback, persistence and service timers overlap and remain inclusive.
+Use paired99-percent simultaneous Student-t intervals for three whole-service
+arm differences. No speed-quality recommendation is made without authenticated
+Exp8911 benefit and complete matched intervals. A zero benefit is valid evidence.
+
 Require only Exp8905 guarded_methods_ready_score=1, not candidate_ready_score or guarded_benefit_score. Freeze12 fresh paired48-feedback streams across its four arms,48 service cells. Charge identical template admissions, observations, training examples and numerical steps, while allowing measured promotion and durable-state differences.
 
 Measure full wall time, p50/p95 per-request and per-feedback latency, bytes written, peak resident memory, guard-scoring and rejected-candidate work. Preserve48 individual durable feedback commits and a forced cold process restart at24. Persist candidate, committed head, split assignments, cursor and rejection decisions; verify post-restart predictions against an uninterrupted control.
@@ -109336,6 +109352,14 @@ Publish adaptation_cost_ready_score for complete correct durable service. Any sp
 The experiment shall emit `results/experiment_8914_v762_guarded_durable_cost.json` under the complete V762 contract. It shall retain per-unit rows, exact producer fields, original operand hashes, actual substrate and terminal verdict_class. Readiness shall remain separate from scientific benefit.
 
 #### SCENARIO-REPORT-8914-CONTRACT
+
+Additional controls shall reject torn JSON, missing candidate parameters, stale
+feedback cursors and replayed feedback without changing acknowledged state.
+Tests shall also cover external gate diagnostics, zero-promotion service rows,
+failed and censored cells, exact restart parity and rehashed aggregate drift.
+Owned unit and actual child statements require100 percent coverage with zero
+exclusions. Record one bounded full-suite health run separately from owned
+qualification. The conductor owns ops and traceability reconciliation.
 
 Before implementation, add failing controls for the specified method, absent or malformed inputs, observed-zero gates, valid nulls and semantic tampering. Run owned unit/child coverage, scoped lint/format/types/spec tracing, applicable private E2E-018/021 and cold CLI replay. Preserve failed and censored scheduled units. Status: planned; implementation and execution remain pending.
 
