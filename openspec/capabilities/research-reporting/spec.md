@@ -110002,6 +110002,54 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+Contract extension, 2026-11-08: the sibling benchmark accepts exactly
+`mean_token_nll` and `first_answer_top2_margin`, rejecting extra fields even
+when their enclosing hash is recomputed. Its scoring child imports no graph,
+oracle or FoVer loader. Syntax-only `format_valid` and `token_count` form a
+separate nuisance logistic comparator; semantic parser categories are forbidden.
+Fit a GibbsModel with input_dim=2, hidden_dims=[4], SiLU and its seeded native
+initialization, a zero-initialized logistic head, and the train prevalence.
+Use population mean binary log loss (the NCE classification pattern with
+empirical class weights), full-batch SGD, 200 steps, rate 0.01, seed 764037.
+Each comparator uses train-only scaling; constant dimensions use scale one.
+Choose energy temperature by calibration Brier on [0.5,1,2,4], smallest first
+on ties. Fitting accepts train and calibration operands only; test rows never
+enter initialization, scaling, fitting, selection or fitting diagnostics.
+
+#### SCENARIO-REPORT-8937-CONTRACT
+
+Tests first shall verify planted signal, label shuffling, constant scores,
+missing features, degenerate classes, and rehashed label/distance/path leakage.
+They shall verify p(error), inclusive accept<=0.1 and reject>=0.9 decisions,
+and exactly half coverage by ascending p(error), then a label-blind SHA256 tie.
+This diagnostic accepts the most likely correct answers; typed thresholds do
+not certify risk. Freeze paired graph bootstrap, 10000 draws, Bonferroni
+one-sided alpha=0.05/3: lower Brier improvements over prevalence and logistic
+must both exceed zero; upper accepted-error difference versus logistic must
+be at most zero. Resample graph clusters jointly across arms and rerank each
+draw to retain half coverage. Repeated rows never add independent clusters.
+
+Authenticate original Exp8931 bytes and V764 authority before CPU fitting.
+Retain raw operands, initial and final states, executed sources, validation
+logs and SQLite unit/child coverage, with zero exclusions and 100 percent
+owned statements. Require scoped lint/format/strict types, positional spec
+tracing, private E2E-018/021, unchanged terminal scanners and outside-checkout
+cold replay. Fixtures qualify methods only, with independent_count=0 and no
+positive quality claim. Missing graph collection does not prevent
+calibration_methods_ready_score=1; missing required external method inputs
+is terminal blocked, and failed owned controls are disqualified. No generator
+load or update is permitted. Ops and traceability reconciliation are
+conductor-owned for this invocation.
+
+Implementation receipt, 2026-11-08: `graph_calibration_benchmark.py` implements
+the isolated feature boundary, population-weighted Gibbs/logistic training,
+temperature selection, typed decisions and graph bootstrap. The producer
+`calibration_methods_8937.py` and its direct experiment CLI retain development
+operands and reconstruct them during cold replay. Requirement-linked tests in
+`tests/python/test_calibration_methods_8937.py` cover controls, producer custody,
+terminal rejection and actual CLI replay. The primary artifact records the
+measured qualification outcome; fixture results do not imply live benefit.
+
 ### REQ-REPORT-8938: Authenticate graph-disjoint labels before detector fitting
 
 The experiment shall execute the frozen V764 task contract and produce
