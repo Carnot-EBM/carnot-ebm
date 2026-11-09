@@ -21625,3 +21625,4 @@ code |
 | 2026-11-09 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_archive_zero_reasons age-week 3: OPEN 21 days: SILENT_NO |
 | 2026-11-09 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_shape_dims age-week 3: OPEN 21 days: REAL_BUG on adversa |
 | 2026-11-09 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_8715_v747_verifier_completeness.json age-week 1: OPEN 7 days: CLAIM_O |
+| 2026-11-09 01:09 UTC | Measure future predictions after compatible delaye | OK | 93 passed, 1 warning in 49.01s |
