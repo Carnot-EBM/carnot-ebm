@@ -168,7 +168,7 @@
   },
   "finished_at": "2026-11-09T07:38:05.177326+00:00",
   "fixture_only": false,
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "gate_check_summary": [],
   "global_test_debt": {
     "affects_owned_readiness": false,
@@ -12010,5 +12010,23 @@
     }
   ],
   "verdict_class": "null",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-11-09T07:56:09Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "inference_substrate_class='retained_graph_opportunity_audit' is outside the closed enum ['aggregation', 'blocked_no_run', 'cpu_exact_solver_or_simulator', 'model_bounded_generation', 'model_full_generation', 'model_load_no_generation', 'no_model_load']. The enum is closed on purpose: a new value per artifact recreates the 1036-name drift this field replaces. Pick the nearest class and put the nuance in inference_substrate."
+    },
+    {
+      "kind": "EXECUTION_VENUE_INVALID",
+      "severity": "critical",
+      "detail": "execution_venue='host_cpu' is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate."
+    }
+  ]
 }
