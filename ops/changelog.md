@@ -23421,3 +23421,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Test paired depth sensitivity with equal answer opportunity (⚠️ Research Finding) — honest_verdict=complete_circular_positive_paired_depth_control; results/experiment_8948_v765_matched_depth_control.json
 - 2026-11-09: Collect matched-population Qwen corpus shard A (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_a; results/experiment_8949_v765_matched_corpus_a.json
 - 2026-11-09: Collect matched-population Qwen corpus shard B (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_b; results/experiment_8950_v765_matched_corpus_b.json
+- 2026-11-09: Authenticate matched graph labels and frozen calibration authority (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_admission; results/experiment_8951_v765_matched_corpus_admission.json
