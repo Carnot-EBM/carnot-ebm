@@ -23426,3 +23426,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Measure continuous gradient-informed replay on sealed future streams (⚠️ Research Finding) — honest_verdict=complete_null_gradient_causal_streams; results/experiment_8953_v765_gradient_causal_streams.json
 - 2026-11-09: Audit prospective gradient-selection benefit and joint retention (⚠️ Research Finding) — honest_verdict=complete_null_gradient_benefit_audit; results/experiment_8954_v765_gradient_benefit_audit.json
 - 2026-11-09: Measure complete gradient-selection costs and hardware limits (⚠️ Research Finding) — honest_verdict=complete_null_gradient_complete_cost; results/experiment_8955_v765_gradient_complete_cost.json
+- 2026-11-09: Reconcile thirteen outcomes and close exact unchanged scopes (⚠️ Blocked) — honest_verdict=complete_blocked_v765_capstone; results/experiment_8956_v765_capstone.json
