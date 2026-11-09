@@ -1,0 +1,62 @@
+..........E                                                              [100%]
+==================================== ERRORS ====================================
+_________________ ERROR at teardown of test_scheduler_identity _________________
+Memory leak: +602MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +602MB
+----------------------------- Captured stdout call -----------------------------
+[exp8956] phase=authentication_before completed=0 pending=12
+[exp8956] phase=slot_authenticated completed=1 pending=11
+[exp8956] phase=slot_authenticated completed=2 pending=10
+[exp8956] phase=slot_authenticated completed=3 pending=9
+[exp8956] phase=slot_authenticated completed=4 pending=8
+[exp8956] phase=slot_authenticated completed=5 pending=7
+[exp8956] phase=slot_authenticated completed=6 pending=6
+[exp8956] phase=slot_authenticated completed=7 pending=5
+[exp8956] phase=slot_authenticated completed=8 pending=4
+[exp8956] phase=slot_authenticated completed=9 pending=3
+[exp8956] phase=slot_authenticated completed=10 pending=2
+[exp8956] phase=slot_authenticated completed=11 pending=1
+[exp8956] phase=slot_authenticated completed=12 pending=0
+[exp7303-validation] before_subprocess publication_gate elapsed_s=0.000 unit=1/1
+[exp7303-validation:publication_gate] {
+[exp7303-validation:publication_gate]   "paper_ready": true,
+[exp7303-validation:publication_gate]   "gates": {
+[exp7303-validation:publication_gate]     "G1": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+[exp7303-validation:publication_gate]       "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G2": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125"
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G3": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "no retracted phrasings asserted as live claims",
+[exp7303-validation:publication_gate]       "hits": []
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G4": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+[exp7303-validation:publication_gate]       "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+[exp7303-validation:publication_gate]     }
+[exp7303-validation:publication_gate]   },
+[exp7303-validation:publication_gate]   "unmet_gates": [],
+[exp7303-validation:publication_gate]   "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count."
+[exp7303-validation:publication_gate] }
+[exp7303-validation] after_subprocess publication_gate elapsed_s=0.157 exit=0 unit=1/1
+[exp8956] phase=scientific_reductions_before completed=0 pending=5
+[exp8956] phase=scientific_reductions_after completed=5 pending=0
+[exp8956] phase=replay_authentication completed=0 pending=9
+[exp8956] phase=replay_reductions_before completed=0 pending=5
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/python/test_v765_capstone_8956.py::test_scheduler_identity - Fail...
+10 passed, 1 warning, 1 error in 307.01s (0:05:07)

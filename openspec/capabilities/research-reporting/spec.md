@@ -110640,8 +110640,30 @@ qualification. Tests and CLI controls SHALL write only to private scratch.
 
 ### REQ-REPORT-8956: Reconcile thirteen outcomes and close exact unchanged scopes
 
-The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8956_v765_capstone.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8956_v765_capstone.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation: `v765_capstone.py`, `v765_capstone_sources.py` and the direct experiment CLI; qualification and upstream quarantine are recorded in the artifact. Tests: `tests/python/test_v765_capstone_8956.py`.
 
 #### SCENARIO-REPORT-8956-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8956-capstone` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+The capstone SHALL authenticate the immutable Exp8944 full task digest and all
+twelve actual producer identities and byte hashes before reducing retained rows.
+Scheduler skips SHALL require their own identity and bound upstream gate receipt.
+Missing files, missing fields, observed zero and rejected producers SHALL remain
+distinct; an observed one SHALL never be reported as a missing field. Scientific
+nulls and inherited adversarial flags SHALL retain their original assertions.
+Source counts, held-out calibration comparisons, eleven simultaneous learning
+bounds and complete service costs SHALL be recomputed without generation,
+fitting or benchmarking. All thirteen outcomes SHALL follow contract order;
+branch denominators SHALL never be added into independent generalization.
+Complete evidence with null science SHALL be complete_null_v765_capstone;
+unavailable external evidence SHALL be complete_blocked_v765_capstone, and
+failed owned checks SHALL be disqualified. The FoVer G1-G4 gate output SHALL be
+retained with its original scope, separate from capstone readiness. Exact old
+depth/opportunity and failed gradient-selection scopes SHALL close without
+manifest edits, replacement experiments or broader hypothesis retirement.
+Private CLI publication, cold replay, rehashed primary/work tamper refusal,
+strict lint/type checks and measured 100 percent owned unit/child statements
+with zero exclusions SHALL qualify publication. Global suite debt SHALL be
+recorded separately. ARC remains suspended; natural-language verification,
+generative self-learning, 10x Rust and 100x hardware claims remain open.
