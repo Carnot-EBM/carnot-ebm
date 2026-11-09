@@ -110427,6 +110427,28 @@ The experiment SHALL follow the exact V765 task contract and produce `results/ex
 
 Given frozen branch authority and authenticated prerequisites, when `exp8949-matched-corpus-a` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
 
+The producer SHALL authenticate the original matched-source and current depth-control
+bytes before model work. Retired tasks are retained evidence, never scheduler gates.
+Collect only the frozen 160 shard A k2 queries with 80 train, 40 calibration and
+40 test graphs. Each graph has equal nonempty k2/k3 answer sets. Shard B is independent.
+Use the cached mandated Q4_K_M on GPU 0 through an owned server and resource lease.
+Preflight and load each have a 240-second bound; collection has 1800 seconds,
+30 seconds per request and zero retries. Preserve the first raw response before
+labels, including content, backend log probabilities, token usage and exact hashes.
+Resume only matching checkpoints; censored slots cannot be replenished.
+
+Independent edge relaxation SHALL agree with BFS. Keep detector confidence
+features in a separate sidecar without graph identity, truth or split fields.
+Readiness requires all 160 authenticated responses, exact roles, finite features,
+raw receipts, independent labels and passing owned checks. Class support and the
+pooled 200-error gate belong to corpus admission, never to this shard.
+No detector fitting or test-label tuning is permitted. Oracle labels forbid positive.
+Measure 100-percent new unit/child statements with zero exclusions; require scoped
+Ruff, strict mypy, positional spec tracing, private E2E-018/021, cold replay and
+rehashed-tamper refusal. Record one bounded full-suite attempt as global debt.
+Publish through primary_publication only after validation. Ops reconciliation is
+conductor-owned for this invocation.
+
 ### REQ-REPORT-8950: Collect matched-population Qwen corpus shard B
 
 The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8950_v765_matched_corpus_b.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
