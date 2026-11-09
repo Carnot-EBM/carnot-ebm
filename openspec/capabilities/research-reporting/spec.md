@@ -110159,6 +110159,38 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+Execution contract, 2026-11-09: Freeze 24 fresh process/world seeds, rotating
+the four trainable arms across 48 prediction/release cycles, with a cold process
+restart after prediction24. Keep the original delay8, two gradients per TRAIN
+release, buffer32 and guard semantics. Drain due feedback after prediction48.
+Measure cold initialization and complete warm lifecycle windows with monotonic
+outer clocks. Parent bounds include child startup, persistence and restart.
+Use no component clocks, observer subtraction or service extrapolation. Read
+operation counters from retained states after timing. Authenticate Exp8933,
+Exp8940 and the qualified Exp8926 outer-clock evidence before measurement.
+
+SCENARIO-REPORT-8942-CONTRACT shall first fail without the implementation, then
+check missing/zero/boolean/changed producers, a disjoint balanced96-cell roster,
+exact resumed state and uninterrupted predictions,48 requests and48 releases,
+file/directory durability, paired process intervals, descriptive medians/p95,
+complete null readiness, failed-control disqualification and rehashed tampering.
+Missing Exp8941 quality must preserve valid costs; its observed-zero benefit
+must forbid deployment. Sampling is zero; CPU orchestration and batchable GPU
+distance/gradient work are mapped without claiming acceleration. Preserve
+KV260 sampler k_max<=5, PolarFire Linux CPU dispatch, blocked GateMate and
+unqualified NPU/TSU. Component fractions and100x projections remain null.
+Require100-percent owned unit/child statement coverage with zero exclusions,
+scoped lint/types/spec tracing, private E2E-018/021 and actual cold CLI replay
+outside the checkout without PYTHONPATH. Ops/traceability reconciliation is
+conductor-owned for this invocation; no shared validators or native code change.
+
+Implementation receipt (2026-11-09): `replay_complete_cost_8942.py`, its runner
+and direct CLI implement the contract. Nine requirement-linked tests pass;
+combined owned unit/child coverage measures373/373 statements with zero
+exclusions. Research outcomes, private E2E controls and terminal validation
+receipts belong to the dated producer artifact. Cost readiness grants no
+learning, deployment or physical acceleration claim.
+
 ### REQ-REPORT-8943: Reconcile fourteen outcomes and exact continuation boundaries
 
 The experiment shall execute the frozen V764 task contract and produce

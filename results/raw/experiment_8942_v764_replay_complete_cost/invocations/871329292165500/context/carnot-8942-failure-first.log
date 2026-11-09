@@ -1,0 +1,188 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_failed_census_and_absent_quality _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261109T021250-248676-6bcf349b/test_failed_census_and_absent_0')
+pre = {'diagnostics': [], 'external_ready': True, 'heads': {'11': {'feature_arm': 'signed', 'feature_schema': 'signed-local-...ible_replay_benefit.json', 'sha256': 'sha256:99a9be53396e5fd3867ab0981296d6be37e8863686d1b278188c11ceb0b9b489'}]}, ...}
+cell = {'cold_bounds': [870922440030380, 870923801589698], 'commands': [{'actual_exit': 0, 'argv': ['/home/ianblenke/github.c...rnot-ianblenke/20261109T021250-248676-6bcf349b/cell89420/control/request.json --stop 48', 'deadline_s': 120, ...}, ...}
+
+    def test_failed_census_and_absent_quality(tmp_path: Path, pre: dict[str, Any], cell: dict[str, Any]) -> None:
+        """REQ-REPORT-8942: retain failed owned cells and preserve costs without quality."""
+        spec = m.roster()[0]
+        with patch.object(m, "roster", return_value=[spec]), patch.object(m, "execute", side_effect=ValueError("owned_control")):
+            with pytest.raises(ValueError): m.measure(tmp_path, pre)
+        result = m.reduce(tmp_path, "not_attempted")
+>       assert result["failed_count"] == 3 and result["censored_count"] == 285
+E       assert (0 == 3)
+
+tests/python/test_replay_complete_cost_8942.py:273: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8942] phase=authenticate_operands completed=0 pending=2093
+[exp8942] phase=authenticate_operands completed=200 pending=1893
+[exp8942] phase=authenticate_operands completed=400 pending=1693
+[exp8942] phase=authenticate_operands completed=600 pending=1493
+[exp8942] phase=authenticate_operands completed=800 pending=1293
+[exp8942] phase=authenticate_operands completed=1000 pending=1093
+[exp8942] phase=authenticate_operands completed=1200 pending=893
+[exp8942] phase=authenticate_operands completed=1400 pending=693
+[exp8942] phase=authenticate_operands completed=1600 pending=493
+[exp8942] phase=authenticate_operands completed=1800 pending=293
+[exp8942] phase=authenticate_operands completed=2000 pending=93
+[exp8942] phase=authenticate_operands completed=0 pending=2925
+[exp8942] phase=authenticate_operands completed=200 pending=2725
+[exp8942] phase=authenticate_operands completed=400 pending=2525
+[exp8942] phase=authenticate_operands completed=600 pending=2325
+[exp8942] phase=authenticate_operands completed=800 pending=2125
+[exp8942] phase=authenticate_operands completed=1000 pending=1925
+[exp8942] phase=authenticate_operands completed=1200 pending=1725
+[exp8942] phase=authenticate_operands completed=1400 pending=1525
+[exp8942] phase=authenticate_operands completed=1600 pending=1325
+[exp8942] phase=authenticate_operands completed=1800 pending=1125
+[exp8942] phase=authenticate_operands completed=2000 pending=925
+[exp8942] phase=authenticate_operands completed=2200 pending=725
+[exp8942] phase=authenticate_operands completed=2400 pending=525
+[exp8942] phase=authenticate_operands completed=2600 pending=325
+[exp8942] phase=authenticate_operands completed=2800 pending=125
+[exp8942] phase=authenticate_operands completed=0 pending=13808
+[exp8942] phase=authenticate_operands completed=200 pending=13608
+[exp8942] phase=authenticate_operands completed=400 pending=13408
+[exp8942] phase=authenticate_operands completed=600 pending=13208
+[exp8942] phase=authenticate_operands completed=800 pending=13008
+[exp8942] phase=authenticate_operands completed=1000 pending=12808
+[exp8942] phase=authenticate_operands completed=1200 pending=12608
+[exp8942] phase=authenticate_operands completed=1400 pending=12408
+[exp8942] phase=authenticate_operands completed=1600 pending=12208
+[exp8942] phase=authenticate_operands completed=1800 pending=12008
+[exp8942] phase=authenticate_operands completed=2000 pending=11808
+[exp8942] phase=authenticate_operands completed=2200 pending=11608
+[exp8942] phase=authenticate_operands completed=2400 pending=11408
+[exp8942] phase=authenticate_operands completed=2600 pending=11208
+[exp8942] phase=authenticate_operands completed=2800 pending=11008
+[exp8942] phase=authenticate_operands completed=3000 pending=10808
+[exp8942] phase=authenticate_operands completed=3200 pending=10608
+[exp8942] phase=authenticate_operands completed=3400 pending=10408
+[exp8942] phase=authenticate_operands completed=3600 pending=10208
+[exp8942] phase=authenticate_operands completed=3800 pending=10008
+[exp8942] phase=authenticate_operands completed=4000 pending=9808
+[exp8942] phase=authenticate_operands completed=4200 pending=9608
+[exp8942] phase=authenticate_operands completed=4400 pending=9408
+[exp8942] phase=authenticate_operands completed=4600 pending=9208
+[exp8942] phase=authenticate_operands completed=4800 pending=9008
+[exp8942] phase=authenticate_operands completed=5000 pending=8808
+[exp8942] phase=authenticate_operands completed=5200 pending=8608
+[exp8942] phase=authenticate_operands completed=5400 pending=8408
+[exp8942] phase=authenticate_operands completed=5600 pending=8208
+[exp8942] phase=authenticate_operands completed=5800 pending=8008
+[exp8942] phase=authenticate_operands completed=6000 pending=7808
+[exp8942] phase=authenticate_operands completed=6200 pending=7608
+[exp8942] phase=authenticate_operands completed=6400 pending=7408
+[exp8942] phase=authenticate_operands completed=6600 pending=7208
+[exp8942] phase=authenticate_operands completed=6800 pending=7008
+[exp8942] phase=authenticate_operands completed=7000 pending=6808
+[exp8942] phase=authenticate_operands completed=7200 pending=6608
+[exp8942] phase=authenticate_operands completed=7400 pending=6408
+[exp8942] phase=authenticate_operands completed=7600 pending=6208
+[exp8942] phase=authenticate_operands completed=7800 pending=6008
+[exp8942] phase=authenticate_operands completed=8000 pending=5808
+[exp8942] phase=authenticate_operands completed=8200 pending=5608
+[exp8942] phase=authenticate_operands completed=8400 pending=5408
+[exp8942] phase=authenticate_operands completed=8600 pending=5208
+[exp8942] phase=authenticate_operands completed=8800 pending=5008
+[exp8942] phase=authenticate_operands completed=9000 pending=4808
+[exp8942] phase=authenticate_operands completed=9200 pending=4608
+[exp8942] phase=authenticate_operands completed=9400 pending=4408
+[exp8942] phase=authenticate_operands completed=9600 pending=4208
+[exp8942] phase=authenticate_operands completed=9800 pending=4008
+[exp8942] phase=authenticate_operands completed=10000 pending=3808
+[exp8942] phase=authenticate_operands completed=10200 pending=3608
+[exp8942] phase=authenticate_operands completed=10400 pending=3408
+[exp8942] phase=authenticate_operands completed=10600 pending=3208
+[exp8942] phase=authenticate_operands completed=10800 pending=3008
+[exp8942] phase=authenticate_operands completed=11000 pending=2808
+[exp8942] phase=authenticate_operands completed=11200 pending=2608
+[exp8942] phase=authenticate_operands completed=11400 pending=2408
+[exp8942] phase=authenticate_operands completed=11600 pending=2208
+[exp8942] phase=authenticate_operands completed=11800 pending=2008
+[exp8942] phase=authenticate_operands completed=12000 pending=1808
+[exp8942] phase=authenticate_operands completed=12200 pending=1608
+[exp8942] phase=authenticate_operands completed=12400 pending=1408
+[exp8942] phase=authenticate_operands completed=12600 pending=1208
+[exp8942] phase=authenticate_operands completed=12800 pending=1008
+[exp8942] phase=authenticate_operands completed=13000 pending=808
+[exp8942] phase=authenticate_operands completed=13200 pending=608
+[exp8942] phase=authenticate_operands completed=13400 pending=408
+[exp8942] phase=authenticate_operands completed=13600 pending=208
+[exp8942] phase=authenticate_operands completed=13800 pending=8
+[exp8940] phase=authenticate_operands completed=0 pending=1602
+[exp8940] phase=authenticate_operands completed=100 pending=1502
+[exp8940] phase=authenticate_operands completed=200 pending=1402
+[exp8940] phase=authenticate_operands completed=300 pending=1302
+[exp8940] phase=authenticate_operands completed=400 pending=1202
+[exp8940] phase=authenticate_operands completed=500 pending=1102
+[exp8940] phase=authenticate_operands completed=600 pending=1002
+[exp8940] phase=authenticate_operands completed=700 pending=902
+[exp8940] phase=authenticate_operands completed=800 pending=802
+[exp8940] phase=authenticate_operands completed=900 pending=702
+[exp8940] phase=authenticate_operands completed=1000 pending=602
+[exp8940] phase=authenticate_operands completed=1100 pending=502
+[exp8940] phase=authenticate_operands completed=1200 pending=402
+[exp8940] phase=authenticate_operands completed=1300 pending=302
+[exp8940] phase=authenticate_operands completed=1400 pending=202
+[exp8940] phase=authenticate_operands completed=1500 pending=102
+[exp8940] phase=authenticate_operands completed=1600 pending=2
+[exp8942] phase=authenticate_operands completed=0 pending=4074
+[exp8942] phase=authenticate_operands completed=200 pending=3874
+[exp8942] phase=authenticate_operands completed=400 pending=3674
+[exp8942] phase=authenticate_operands completed=600 pending=3474
+[exp8942] phase=authenticate_operands completed=800 pending=3274
+[exp8942] phase=authenticate_operands completed=1000 pending=3074
+[exp8942] phase=authenticate_operands completed=1200 pending=2874
+[exp8942] phase=authenticate_operands completed=1400 pending=2674
+[exp8942] phase=authenticate_operands completed=1600 pending=2474
+[exp8942] phase=authenticate_operands completed=1800 pending=2274
+[exp8942] phase=authenticate_operands completed=2000 pending=2074
+[exp8942] phase=authenticate_operands completed=2200 pending=1874
+[exp8942] phase=authenticate_operands completed=2400 pending=1674
+[exp8942] phase=authenticate_operands completed=2600 pending=1474
+[exp8942] phase=authenticate_operands completed=2800 pending=1274
+[exp8942] phase=authenticate_operands completed=3000 pending=1074
+[exp8942] phase=authenticate_operands completed=3200 pending=874
+[exp8942] phase=authenticate_operands completed=3400 pending=674
+[exp8942] phase=authenticate_operands completed=3600 pending=474
+[exp8942] phase=authenticate_operands completed=3800 pending=274
+[exp8942] phase=authenticate_operands completed=4000 pending=74
+[exp8942] phase=subprocess_before completed=0 pending=1
+[exp8205] phase=before_subprocess_segment24 completed=0 pending=1
+[exp8942] phase=imports_before completed=0 pending=1
+[exp8942] phase=imports_after completed=1 pending=0
+[exp8942] phase=worker_before completed=0 pending=24
+[exp8942] phase=worker_after completed=24 pending=24
+[exp8205] phase=after_subprocess_segment24 completed=1 pending=0
+[exp8942] phase=subprocess_after completed=1 pending=0
+[exp8942] phase=subprocess_before completed=0 pending=1
+[exp8205] phase=before_subprocess_segment48 completed=0 pending=1
+[exp8942] phase=imports_before completed=0 pending=1
+[exp8942] phase=imports_after completed=1 pending=0
+[exp8942] phase=worker_before completed=0 pending=48
+[exp8942] phase=worker_after completed=48 pending=0
+[exp8205] phase=after_subprocess_segment48 completed=1 pending=0
+[exp8942] phase=subprocess_after completed=1 pending=0
+[exp8942] phase=control_before completed=0 pending=1
+[exp8205] phase=before_subprocess_control completed=0 pending=1
+[exp8942] phase=imports_before completed=0 pending=1
+[exp8942] phase=imports_after completed=1 pending=0
+[exp8942] phase=worker_before completed=0 pending=48
+[exp8942] phase=worker_after completed=48 pending=0
+[exp8205] phase=after_subprocess_control completed=1 pending=0
+[exp8942] phase=control_after completed=1 pending=0
+----------------------------- Captured stdout call -----------------------------
+[exp8942] phase=cell_before completed=0 pending=96
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_replay_complete_cost_8942.py::test_failed_census_and_absent_quality
+1 failed, 1 warning in 21.97s

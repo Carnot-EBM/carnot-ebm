@@ -1,0 +1,95 @@
+..EEFF                                                                   [100%]
+==================================== ERRORS ====================================
+_________________________ ERROR at setup of test_cell __________________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261109T020438-241912-d7c6dc54'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261109T020438-241912-d7c6dc54'), _retention_count=1, _retention_policy='failed')
+pre = {'diagnostics': [], 'external_ready': True, 'heads': {'11': {'feature_arm': 'signed', 'feature_schema': 'signed-local-...ible_replay_benefit.json', 'sha256': 'sha256:99a9be53396e5fd3867ab0981296d6be37e8863686d1b278188c11ceb0b9b489'}]}, ...}
+
+    @pytest.fixture(scope="module")
+    def cell(tmp_path_factory: pytest.TempPathFactory, pre: dict[str, Any]) -> dict[str, Any]:
+        """Run a real private restarted cell and a separate uninterrupted control."""
+        assert pre["external_ready"]
+>       return m.execute(tmp_path_factory.mktemp("cell8942"), m.roster()[0], pre["heads"])
+               ^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.replay_complete_cost_8942' has no attribute 'execute'
+
+tests/python/test_replay_complete_cost_8942.py:28: AttributeError
+_______________________ ERROR at setup of test_reduction _______________________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/var/tmp/pytest-carnot-ianblenke/20261109T020438-241912-d7c6dc54'), _trace=...th('/var/tmp/pytest-carnot-ianblenke/20261109T020438-241912-d7c6dc54'), _retention_count=1, _retention_policy='failed')
+pre = {'diagnostics': [], 'external_ready': True, 'heads': {'11': {'feature_arm': 'signed', 'feature_schema': 'signed-local-...ible_replay_benefit.json', 'sha256': 'sha256:99a9be53396e5fd3867ab0981296d6be37e8863686d1b278188c11ceb0b9b489'}]}, ...}
+
+    @pytest.fixture(scope="module")
+    def cell(tmp_path_factory: pytest.TempPathFactory, pre: dict[str, Any]) -> dict[str, Any]:
+        """Run a real private restarted cell and a separate uninterrupted control."""
+        assert pre["external_ready"]
+>       return m.execute(tmp_path_factory.mktemp("cell8942"), m.roster()[0], pre["heads"])
+               ^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.replay_complete_cost_8942' has no attribute 'execute'
+
+tests/python/test_replay_complete_cost_8942.py:28: AttributeError
+=================================== FAILURES ===================================
+________________________ test_worker_resume_and_failure ________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261109T020438-241912-d7c6dc54/test_worker_resume_and_failure0')
+pre = {'diagnostics': [], 'external_ready': True, 'heads': {'11': {'feature_arm': 'signed', 'feature_schema': 'signed-local-...ible_replay_benefit.json', 'sha256': 'sha256:99a9be53396e5fd3867ab0981296d6be37e8863686d1b278188c11ceb0b9b489'}]}, ...}
+
+    def test_worker_resume_and_failure(tmp_path: Path, pre: dict[str, Any]) -> None:
+        """REQ-REPORT-8942: execute all four authentic trainable arms without inner clocks."""
+        for spec in m.roster()[:4]:
+            request = tmp_path / spec["arm"] / "request.json"
+            atomic_json(request, dict(spec=spec, head=next(iter(pre["heads"].values()))))
+            m.worker(request, 24)
+            m.worker(request, 48)
+        with patch.object(m, "stream", return_value=dict(passed=False)):
+>           with pytest.raises(ValueError): m.execute(tmp_path / "failed", m.roster()[0], pre["heads"])
+                                            ^^^^^^^^^
+E           AttributeError: module 'carnot.reporting.replay_complete_cost_8942' has no attribute 'execute'
+
+tests/python/test_replay_complete_cost_8942.py:109: AttributeError
+----------------------------- Captured stdout call -----------------------------
+[exp8942] phase=worker_before completed=0 pending=24
+[exp8942] phase=worker_after completed=24 pending=24
+[exp8942] phase=worker_before completed=0 pending=48
+[exp8942] phase=worker_after completed=48 pending=0
+[exp8942] phase=worker_before completed=0 pending=24
+[exp8942] phase=worker_after completed=24 pending=24
+[exp8942] phase=worker_before completed=0 pending=48
+[exp8942] phase=worker_after completed=48 pending=0
+[exp8942] phase=worker_before completed=0 pending=24
+[exp8942] phase=worker_after completed=24 pending=24
+[exp8942] phase=worker_before completed=0 pending=48
+[exp8942] phase=worker_after completed=48 pending=0
+[exp8942] phase=worker_before completed=0 pending=24
+[exp8942] phase=worker_after completed=24 pending=24
+[exp8942] phase=worker_before completed=0 pending=48
+[exp8942] phase=worker_after completed=48 pending=0
+_______________________________ test_private_cli _______________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261109T020438-241912-d7c6dc54/test_private_cli0')
+
+    def test_private_cli(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8942-CONTRACT: actual CLI cold replay rejects rehashed drift."""
+        env = dict(os.environ); env.pop("PYTHONPATH", None)
+        output = tmp_path / (m.NAME + ".json")
+        argv = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        result = subprocess.run(argv + ["--private-output", str(output), "--sources", str(tmp_path / "absent")], cwd=tmp_path, env=env, capture_output=True, text=True, timeout=120)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python: can't open file '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8942_v764_replay_complete_cost.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...lenke/carnot/scripts/experiments/experiment_8942_v764_replay_complete_cost.py': [Errno 2] No such file or directory\n").returncode
+
+tests/python/test_replay_complete_cost_8942.py:118: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_replay_complete_cost_8942.py::test_worker_resume_and_failure
+FAILED tests/python/test_replay_complete_cost_8942.py::test_private_cli - Ass...
+ERROR tests/python/test_replay_complete_cost_8942.py::test_cell - AttributeEr...
+ERROR tests/python/test_replay_complete_cost_8942.py::test_reduction - Attrib...
+2 failed, 2 passed, 1 warning, 2 errors in 29.92s
