@@ -110077,6 +110077,32 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+Execution contract (2026-11-08): Authenticate the exact Exp8933 producer and its
+retained operands before opening the 24 sealed evaluation streams. Preserve its
+protocol bytes and five arms. Seal each of 48 predictions before due block
+feedback. Stop at query48 with eight pending labels per arm. Retention at0/24/48
+cannot alter state, replay selection, templates or guards. Record23040 compared
+query rows with Brier values and typed errors (46080 endpoint cells in the
+upstream protocol); row count never replaces the24 independent streams.
+
+SCENARIO-REPORT-8940-CONTRACT additionally requires exact query24 state restart
+and subsequent prediction equality against an uninterrupted private control in
+every arm. Retain predictions, releases, prior TRAIN buffer candidates and
+matches, both gradients, template additions, guard decisions and complete state
+hashes. Reconstruct causal evidence during outside-checkout cold replay.
+Missing external bytes terminate blocked; failed owned controls disqualify.
+Readiness requires complete causal rows, unchanged protocol, valid cold replay,
+100-percent owned unit/child statement coverage with zero exclusions, Ruff,
+strict mypy, positional spec coverage and private E2E-018/021. Null learning
+effects are admissible. Exp8941 owns benefit; no generator or ARC work occurs.
+
+Implementation status (2026-11-08): Implemented in
+`python/carnot/reporting/compatible_replay_streams_8940.py` and its runner.
+`tests/python/test_compatible_replay_streams_8940.py` exercises this contract.
+The artifact's measured readiness field records execution qualification.
+Administrative gradient accounting uses one total and per-arm ledger receipts.
+Matching restart-control work must not appear as two redundant headline metrics.
+
 ### REQ-REPORT-8941: Audit future replay benefit and untouched retention
 
 The experiment shall execute the frozen V764 task contract and produce

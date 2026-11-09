@@ -1,0 +1,21 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________________ test_protocol_and_census ___________________________
+
+    def test_protocol_and_census() -> None:
+        """REQ-REPORT-8940: preserve methods and all23040 paired query comparisons."""
+        assert m.protocol() == m.methods.protocol()
+        result = m.census("missing")
+>       assert "comparison_training_calls" not in result and "private_control_training_calls" not in result
+E       AssertionError: assert ('comparison_training_calls' not in {'attempt_rows': [], 'comparison_training_calls': 0, 'control_rows': [], 'feedback_rows': [], ...})
+
+tests/python/test_compatible_replay_streams_8940.py:17: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_compatible_replay_streams_8940.py::test_protocol_and_census
+1 failed, 1 warning in 3.50s
