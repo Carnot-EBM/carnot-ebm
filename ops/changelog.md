@@ -23414,3 +23414,4 @@ spec coverage, schema, exact contract, 15 gate references, 13 prior-failure
 blocks and exclusion/precondition lint pass. Scoped whitespace checks pass.
 Whole-worktree whitespace failures are confined to pre-existing unrelated audit
 reports. No experiment or model was run; protected files retain their hashes.
+- 2026-11-09: Bind thirteen tasks and preserve completed V764 authority (⚠️ Research Finding) — honest_verdict=complete_null_v765_branch_contract; results/experiment_8944_v765_branch_contract.json
