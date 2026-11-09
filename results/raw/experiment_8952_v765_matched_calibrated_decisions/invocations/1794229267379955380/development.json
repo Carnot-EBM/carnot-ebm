@@ -1,0 +1,78 @@
+{
+  "control_rows": [
+    {
+      "control": "planted_signal",
+      "passed": true
+    },
+    {
+      "brier": 0.19242938572521312,
+      "control": "shuffled_labels",
+      "passed": true
+    },
+    {
+      "brier": 0.25,
+      "control": "constant_score",
+      "passed": true,
+      "prevalence_brier": 0.1875,
+      "score_range": 0.0
+    },
+    {
+      "control": "missing_feature",
+      "passed": true
+    },
+    {
+      "control": "degenerate_class",
+      "passed": true
+    },
+    {
+      "control": "rehashed_leakage",
+      "passed": true
+    },
+    {
+      "control": "detector_import_isolation",
+      "passed": true
+    },
+    {
+      "control": "oracle_metadata_mutation",
+      "passed": true
+    }
+  ],
+  "feature_access_controls": {
+    "feature_extraction": "graph_source_8931.signals(response) only",
+    "import_isolation_passed": true,
+    "learned_features": [
+      "mean_token_nll",
+      "first_answer_top2_margin"
+    ],
+    "live_fitting": false,
+    "mutation_isolation_passed": true,
+    "mutation_rows": [
+      {
+        "features_unchanged": true,
+        "field": "label",
+        "scores_unchanged": true
+      },
+      {
+        "features_unchanged": true,
+        "field": "true_distances",
+        "scores_unchanged": true
+      },
+      {
+        "features_unchanged": true,
+        "field": "answer_set",
+        "scores_unchanged": true
+      },
+      {
+        "features_unchanged": true,
+        "field": "graph_id",
+        "scores_unchanged": true
+      }
+    ],
+    "scoring_boundary": "graph_calibration_benchmark.score(state, feature_view, syntax_view)",
+    "scoring_imports": [
+      "carnot.models.gibbs"
+    ],
+    "test_threshold_search": false
+  },
+  "numerical_training_calls": 1200
+}

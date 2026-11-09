@@ -110514,11 +110514,38 @@ traceability reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-8952: Evaluate energy decisions on unseen matched-population model errors
 
-The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8952_v765_matched_calibrated_decisions.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8952_v765_matched_calibrated_decisions.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation: `matched_calibrated_decisions_8952.py`, `matched_decisions_runner_8952.py` and the direct CLI. Tests: `tests/python/test_matched_calibrated_decisions_8952.py`; measured qualification is recorded in the artifact.
 
 #### SCENARIO-REPORT-8952-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8952-matched-calibrated-decisions` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+Execution contract, 2026-11-09: Pin Exp8946 and Exp8951 producer bytes and retained
+operands, authenticate current branch authority, and preserve historical inputs
+without rerunning retired scheduler gates. Reuse the unchanged Exp8937 protocol:
+160 train graphs,80 calibration graphs,80 unseen test graphs; two response-confidence
+features; Gibbs hidden width4,200 full-batch updates at0.01, frozen seed764037,
+and calibration-only temperature selection. Freeze and hash every model state and
+test probability before reading test truth. No Qwen load, generation or weight edit.
+
+Retain energy, same-feature logistic, prevalence and syntax/token-length controls.
+Emit typed per-graph probabilities, correctness, Brier losses, threshold decisions
+and diagnostic50-percent membership. Rank predicted correctness with the frozen
+label-blind ties, separately from accept<=0.1/reject>=0.9 error thresholds. Reuse
+10000 paired graph-cluster bootstrap draws, family alpha0.05 across three tests:
+lower Brier improvement bounds>0 versus prevalence and logistic, and upper
+accepted-error delta versus logistic<=0. AUROC, average precision and support are
+descriptive. A completed inconclusive result is null; never collect or tune again.
+
+Readiness requires complete measurements and owned checks; benefit additionally
+requires all three bounds. Oracle access isolation, shuffled development labels
+and syntax/length mutations SHALL be adversarially checked. Scope is unseen graphs
+from the restricted matched source population, never natural-language hallucination
+or first-error localization. Tests first;100-percent newly owned unit/child
+statements, zero exclusions; Ruff check/format, strict mypy, positional spec tracing,
+private E2E-018/021, cold replay and rehashed-tamper refusal. Record one bounded
+full-suite attempt separately; failed owned checks disqualify. Publish through
+primary_publication after validation. Ops and traceability are conductor-owned.
 
 ### REQ-REPORT-8953: Measure continuous gradient-informed replay on sealed future streams
 
