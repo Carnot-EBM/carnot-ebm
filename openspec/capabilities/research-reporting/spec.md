@@ -110198,4 +110198,38 @@ The experiment shall execute the frozen V764 task contract and produce
 SCENARIO-REPORT-8943-CONTRACT shall test valid evidence, changed-byte rejection,
 missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
-Implementation status: Planned; execution owns detailed acceptance tests.
+The ordered census SHALL retain Exp8930–Exp8943, original primary hashes,
+verdicts, flags, failed acceptance gates and branch-local denominators. Original
+conductor log records may establish skips at their actual paths. Shared truncated
+title retirement SHALL be named explicitly and authenticated against scheduler
+source; it is not a synthetic shard execution. Missing files or required fields
+remain broken contracts. External absence is terminal blocked, owned failures
+are disqualified, and only unfinished owned work may be partial.
+
+#### SCENARIO-REPORT-8943-CONTRACT
+
+Tests SHALL reject changed producer bytes, reordered slots, changed assertions,
+missing fields and self-consistently rehashed aggregate tampering. Preserve50
+paired depth-control graphs separately from320 planned collection graphs,
+historical pilot errors, held-out detector absence,24 learning streams and24
+separate cost worlds. Recompute depth, learning and cost claims from sealed rows
+using original reducers. Readiness1 means fourteen-slot accounting plus owned
+checks; it grants no science benefit. Every structured prior failure receives
+an exact scope recommendation and evidence needed to reopen it. Keep failed
+label-demand and inline-observer history closed unchanged. Current model and
+training calls are zero, and historical compute remains opaque references.
+
+Private CLI publication and cold replay SHALL run outside the checkout without
+PYTHONPATH. Measure100-percent owned unit/child statement coverage with zero
+exclusions, scoped lint/types/spec checks, private E2E-018/021 and unchanged
+artifact validators before atomic publication. Preserve authenticated V763
+repository-health timeout as debt; do not repeat the global suite as a capstone
+prerequisite. Paper readiness is false; no localization, ARC progress, hardware
+acceleration, milestone activation or external publication follows. Conductor
+owns ops/status/changelog/traceability reconciliation after this invocation.
+
+Implementation status: implemented by `v764_capstone_sources.py`,
+`v764_capstone.py` and the direct Exp8943 CLI. Requirement-linked unit and
+private child tests precede implementation. The dated primary retains measured
+coverage, owned validation, source hashes and terminal replay receipts;
+conductor owns the separate ops and traceability reconciliation.

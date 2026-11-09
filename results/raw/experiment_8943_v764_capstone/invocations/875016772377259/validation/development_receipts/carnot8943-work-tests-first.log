@@ -1,0 +1,89 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_rehashed_work_cannot_invent_missing_primary _______________
+
+work = {'code': [], 'ended_ns': 874912131029562, 'history_reference': {'original_path': '/home/ianblenke/github.com/ianblenke...03a670f1bfe9bd96f90826'}, 'raw': '/var/tmp/pytest-carnot-ianblenke/20261109T031919-312889-0c3554ab/capstone89430', ...}
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261109T031919-312889-0c3554ab/test_rehashed_work_cannot_inve0')
+
+    def test_rehashed_work_cannot_invent_missing_primary(work, tmp_path):
+        """SCENARIO-REPORT-8943-CONTRACT: work ledgers cannot invent administrative success."""
+        changed = deepcopy(work)
+        changed["raw"] = str(tmp_path / "forged")
+        changed["slots"][0]["reference"] = None
+        atomic_json(Path(changed["raw"]) / "work.json", changed)
+        value = m.build(changed, validation())
+        path = tmp_path / (m.NAME + ".json")
+        atomic_json(path, value)
+>       with pytest.raises(ValueError, match="missing_primary_accounting"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_v764_capstone_8943.py:202: Failed
+---------------------------- Captured stdout setup -----------------------------
+[exp8943] phase=authentication_before completed=0 pending=13
+[exp8943] phase=producer_operands_authenticated completed=1 pending=12
+[exp8943] phase=producer_operands_authenticated completed=2 pending=11
+[exp8943] phase=producer_operands_authenticated completed=3 pending=10
+[exp8943] phase=producer_operands_authenticated completed=4 pending=9
+[exp8943] phase=producer_operands_authenticated completed=5 pending=8
+[exp8943] phase=producer_operands_authenticated completed=6 pending=7
+[exp8943] phase=producer_operands_authenticated completed=8 pending=5
+[exp8943] phase=producer_operands_authenticated completed=11 pending=2
+[exp8943] phase=producer_operands_authenticated completed=12 pending=1
+[exp8943] phase=producer_operands_authenticated completed=13 pending=0
+[exp8943] phase=slot_authenticated completed=1 pending=12
+[exp8943] phase=slot_authenticated completed=2 pending=11
+[exp8943] phase=slot_authenticated completed=3 pending=10
+[exp8943] phase=slot_authenticated completed=4 pending=9
+[exp8943] phase=slot_authenticated completed=5 pending=8
+[exp8943] phase=slot_authenticated completed=6 pending=7
+[exp8943] phase=slot_authenticated completed=7 pending=6
+[exp8943] phase=slot_authenticated completed=8 pending=5
+[exp8943] phase=slot_authenticated completed=9 pending=4
+[exp8943] phase=slot_authenticated completed=10 pending=3
+[exp8943] phase=slot_authenticated completed=11 pending=2
+[exp8943] phase=slot_authenticated completed=12 pending=1
+[exp8943] phase=slot_authenticated completed=13 pending=0
+----------------------------- Captured stdout call -----------------------------
+[exp8943] phase=scientific_reductions_before completed=0 pending=3
+[exp8941] phase=bootstrap_before completed=0 pending=10
+[exp8941] phase=bootstrap_after completed=10 pending=0
+[exp8943] phase=scientific_reductions_after completed=3 pending=0
+[exp8943] phase=replay_authentication completed=0 pending=12209
+[exp8943] phase=replay_authentication completed=500 pending=11709
+[exp8943] phase=replay_authentication completed=1000 pending=11209
+[exp8943] phase=replay_authentication completed=1500 pending=10709
+[exp8943] phase=replay_authentication completed=2000 pending=10209
+[exp8943] phase=replay_authentication completed=2500 pending=9709
+[exp8943] phase=replay_authentication completed=3000 pending=9209
+[exp8943] phase=replay_authentication completed=3500 pending=8709
+[exp8943] phase=replay_authentication completed=4000 pending=8209
+[exp8943] phase=replay_authentication completed=4500 pending=7709
+[exp8943] phase=replay_authentication completed=5000 pending=7209
+[exp8943] phase=replay_authentication completed=5500 pending=6709
+[exp8943] phase=replay_authentication completed=6000 pending=6209
+[exp8943] phase=replay_authentication completed=6500 pending=5709
+[exp8943] phase=replay_authentication completed=7000 pending=5209
+[exp8943] phase=replay_authentication completed=7500 pending=4709
+[exp8943] phase=replay_authentication completed=8000 pending=4209
+[exp8943] phase=replay_authentication completed=8500 pending=3709
+[exp8943] phase=replay_authentication completed=9000 pending=3209
+[exp8943] phase=replay_authentication completed=9500 pending=2709
+[exp8943] phase=replay_authentication completed=10000 pending=2209
+[exp8943] phase=replay_authentication completed=10500 pending=1709
+[exp8943] phase=replay_authentication completed=11000 pending=1209
+[exp8943] phase=replay_authentication completed=11500 pending=709
+[exp8943] phase=replay_authentication completed=12000 pending=209
+[exp8943] phase=scientific_reductions_before completed=0 pending=3
+[exp8941] phase=bootstrap_before completed=0 pending=10
+[exp8941] phase=bootstrap_after completed=10 pending=0
+[exp8943] phase=scientific_reductions_after completed=3 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v764_capstone_8943.py::test_rehashed_work_cannot_invent_missing_primary
+1 failed, 1 warning in 21.34s

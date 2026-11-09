@@ -2242,3 +2242,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['INFERENCE_PROVENANCE_CONTRADICTION', 'SUBSTRATE_CLASS_MISMATCH'] on a non-negative verdict
 - artifact: results/experiment_8929_v763_capstone.json
+
+## experiment_8943_v764_capstone.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: paper_ready regressed to False
+- artifact: results/experiment_8943_v764_capstone.json
