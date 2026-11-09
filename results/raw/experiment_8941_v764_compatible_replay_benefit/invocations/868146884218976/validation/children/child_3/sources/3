@@ -1,0 +1,339 @@
+"""REQ-REPORT-8941 / SCENARIO-REPORT-8941-CONTRACT: paired prospective audit."""
+
+from copy import deepcopy
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+from typing import Any
+from unittest.mock import patch
+
+import numpy as np
+import pytest
+
+from carnot.reporting import compatible_replay_benefit_8941 as m
+from carnot.reporting.current_work_receipt import atomic_json, canonical_hash
+
+
+@pytest.fixture(scope="module")
+def source() -> dict[str, Any]:
+    """Use retained production bytes without counting fixtures as measurements."""
+    return json.loads((m.ROOT / "results" / (m.SOURCE + ".json")).read_bytes())
+
+
+@pytest.fixture(scope="module")
+def stream(source: dict[str, Any]) -> dict[str, Any]:
+    """Keep one sealed stream for repaired-hash negative controls."""
+    return json.loads(Path(source["stream_refs"][0]["path"]).read_bytes())
+
+
+@pytest.fixture(scope="module")
+def reduced(source: dict[str, Any]) -> dict[str, Any]:
+    """REQ-REPORT-8941: aggregation must not construct worlds or train heads."""
+    with (
+        patch.object(m.causal.methods.old, "world", side_effect=AssertionError("oracle forbidden")),
+        patch.object(
+            m.causal.methods.signed, "update", side_effect=AssertionError("fit forbidden")
+        ),
+        patch.object(m.causal, "run_stream", side_effect=AssertionError("rerun forbidden")),
+    ):
+        return m.reduce(source)
+
+
+def test_authentication(tmp_path: Path) -> None:
+    """REQ-REPORT-8941: original gates, methods and operands must authenticate."""
+    with patch.object(
+        m.causal.methods.old, "world", side_effect=AssertionError("oracle forbidden")
+    ):
+        assert m.preflight(tmp_path / "auth", m.ROOT / "results")["external_ready"]
+    for value, expected in [
+        (None, "missing_file"),
+        ({}, "missing_field"),
+        ({"replay_rows_ready_score": 0}, "observed_zero"),
+        ({"replay_rows_ready_score": True}, "rejected_producer"),
+        ({"replay_rows_ready_score": 1}, "rejected_producer"),
+    ]:
+        if value is not None:
+            atomic_json(tmp_path / (m.SOURCE + ".json"), value)
+        pre = m.preflight(tmp_path / expected, tmp_path)
+        assert not pre["external_ready"]
+        assert pre["diagnostics"][0]["check"] == expected
+        assert {
+            "check",
+            "upstream",
+            "artifact_field",
+            "expected",
+            "observed",
+            "path",
+            "hash",
+        } <= pre["diagnostics"][0].keys()
+    (tmp_path / (m.SOURCE + ".json")).write_text("{")
+    assert not m.preflight(tmp_path / "malformed", tmp_path)["external_ready"]
+    assert m.empty("missing")["censored_count"] == 23040
+
+
+def test_complete_null(reduced: dict[str, Any]) -> None:
+    """REQ-REPORT-8941: readiness must preserve a null despite frequent promotions."""
+    assert reduced["completed_count"] == len(reduced["rows"]) == 23040
+    assert reduced["independent_count"] == 24
+    assert len(reduced["paired_intervals"]) == 10
+    assert len(reduced["paired_stream_rows"]) == 240
+    assert len(reduced["retention_bounds"]) == 6
+    assert reduced["multiplicity_ledger"]["alpha_per_bound"] == 0.01 / 10
+    assert reduced["multiplicity_ledger"]["bootstrap_resamples"] == 10000
+    assert reduced["compatible_benefit_score"] == 0
+    assert all(r["passed"] for r in reduced["information_controls"])
+    assert {r["arm"] for r in reduced["selection_diversity"]} == set(m.causal.methods.ARMS[1:])
+    assert (
+        reduced["continuation_decision"]["decision"]
+        == "retire_fixed_signature_buffer32_two_gradient_delay8_guard_query_schedule"
+    )
+    assert reduced["continuation_decision"]["continuous_learning_in_general_retired"] is False
+    assert reduced["continuation_decision"]["unchanged_streams_permitted"] is False
+    assert sum(r["attempts"] for r in reduced["promotion_summary"]) == len(
+        reduced["promotion_rows"]
+    )
+    assert reduced["paired_intervals"] == m.summarize(reduced["rows"])["paired_intervals"]
+
+
+def test_bootstrap_and_boundaries(source: dict[str, Any]) -> None:
+    """REQ-REPORT-8941: independently reproduce whole-stream draws and all ten bounds."""
+    summary = m.summarize(source["rows"])
+    draws = np.random.default_rng(764200).integers(24, size=(10000, 24))
+    for interval in summary["paired_intervals"]:
+        samples = np.mean(np.asarray(interval["paired_stream_means"])[draws], axis=1)
+        assert interval["upper"] == float(np.quantile(samples, 0.999))
+    intervals = deepcopy(summary["paired_intervals"])
+    for r in intervals:
+        r["upper"] = -0.01 if r["split"] == "online" else 0.01
+    assert m.gates(intervals)["compatible_benefit_score"] == 1
+    for index in range(10):
+        bad = deepcopy(intervals)
+        bad[index]["upper"] = -0.009 if index == 0 else 0 if index < 4 else 0.011
+        assert m.gates(bad)["compatible_benefit_score"] == 0
+    assert m.gates(intervals[:-1])["compatible_benefit_score"] == 0
+    for bad in (
+        source["rows"][:-1],
+        source["rows"][:-1] + source["rows"][:1],
+        [dict(r, denominator=24) for r in source["rows"]],
+    ):
+        with pytest.raises(ValueError):
+            m.summarize(bad)
+    with pytest.raises(ValueError):
+        m.reduce(dict(source, stream_refs=source["stream_refs"][:-1]))
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "truth",
+        "release",
+        "retention",
+        "prediction",
+        "frozen",
+        "denominator",
+        "drop",
+        "seal",
+        "score",
+        "split",
+        "control",
+    ],
+)
+def test_rehashed_semantics(stream: dict[str, Any], mutation: str) -> None:
+    """SCENARIO-REPORT-8941-CONTRACT: a repaired hash cannot qualify altered evidence."""
+    bad = deepcopy(stream)
+    if mutation == "truth":
+        bad["rows"][750]["truth"] = "invalid"
+    elif mutation == "release":
+        bad["feedback_rows"][0]["release_tick"] = 0
+    elif mutation == "retention":
+        bad["states"]["compatible_replay"]["promotions"][0]["guard_groups"].append(
+            stream["plan"]["retention"][0]["unit_id"]
+        )
+    elif mutation == "prediction":
+        bad["rows"][0]["prediction"] = [1.0, 0.0, 0.0]
+    elif mutation == "frozen":
+        bad["states"]["frozen_verified"]["committed_version"] = 1
+    elif mutation == "denominator":
+        bad["rows"][0]["denominator"] = 24
+    elif mutation == "drop":
+        bad["rows"].pop()
+    elif mutation == "seal":
+        bad["rows"][240]["sealed"]["prediction"] = [1.0, 0.0, 0.0]
+    elif mutation == "score":
+        bad["rows"][0]["value"] = 0.5
+    elif mutation == "split":
+        bad["rows"][0]["split"] = "online"
+    else:
+        bad["control_rows"][0]["passed"] = False
+    bad.pop("stream_checksum")
+    bad["stream_checksum"] = canonical_hash(bad)
+    with pytest.raises((ValueError, KeyError, StopIteration)):
+        m.reconstruct(bad, stream["plan"])
+
+
+@pytest.mark.parametrize(
+    "failure", ["", "external", "resources", "reduction", "validation", "terminal"]
+)
+def test_runner_routes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, reduced: dict[str, Any], failure: str
+) -> None:
+    """REQ-REPORT-8941: owned failures disqualify and external absence blocks."""
+    from carnot.reporting import compatible_replay_benefit_runner_8941 as r
+
+    def preflight(raw: Path, sources: Path) -> dict[str, Any]:
+        atomic_json(raw / (m.SOURCE + ".json"), {})
+        return dict(
+            external_ready=failure != "external",
+            resources=dict(passed=failure != "resources"),
+            references=[],
+            diagnostics=[dict(check="fixture")] if failure == "external" else [],
+        )
+
+    def reduction(value: dict[str, Any]) -> dict[str, Any]:
+        if failure == "reduction":
+            raise ValueError("owned_reduction_failure")
+        return deepcopy(reduced)
+
+    def validation(*args: Any) -> dict[str, Any]:
+        if failure == "validation":
+            raise ValueError("owned_validation_failure")
+        return dict(
+            receipts=[dict(passed=True)],
+            union=dict(passed=True),
+            coverage=dict(
+                complete=True,
+                percent=100,
+                files=[dict(path=p, statements=1, missing=[], excluded=[]) for p in m.OWNED],
+            ),
+            raw_references=[],
+        )
+
+    monkeypatch.setattr(m, "preflight", preflight)
+    monkeypatch.setattr(m, "reduce", reduction)
+    monkeypatch.setattr(r, "validate", validation)
+    monkeypatch.setattr(r, "replay", lambda *args: dict(passed=True))
+    log = tmp_path / "terminal.log"
+    log.write_text("private terminal fixture")
+    monkeypatch.setattr(
+        r,
+        "terminal",
+        lambda *args: [
+            dict(passed=failure != "terminal", stdout_path=str(log), stderr_path=str(log))
+        ],
+    )
+    output = tmp_path / (m.NAME + ".json")
+    assert r.main(["--output", str(output)]) == 0
+    value = json.loads(output.read_bytes())
+    assert value["verdict_class"] == (
+        "blocked" if failure == "external" else "disqualified" if failure else "null"
+    )
+    assert value["replay_audit_ready_score"] == int(not failure)
+    assert value["numerical_training_calls"] == 0
+    assert value["experiment_id"] == 8941 and value["run_date"] == "20261109"
+    assert value["compatible_benefit_score"] == 0
+
+
+def test_private_cli_and_tampering(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-8941-CONTRACT: real foreign-directory CLI and blocked replay."""
+    from carnot.reporting import compatible_replay_benefit_runner_8941 as r
+
+    output = tmp_path / (m.NAME + ".json")
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+    for args in (
+        ["--private-output", str(output), "--sources", str(tmp_path)],
+        ["--cold-replay", str(output)],
+    ):
+        print("[exp8941-test] child_before", args, flush=True)
+        child = subprocess.run(command + args, cwd="/tmp", env=env, text=True, timeout=180)
+        print("[exp8941-test] child_after", child.returncode, flush=True)
+        assert child.returncode == 0
+    value = json.loads(output.read_bytes())
+    assert value["gate_check_summary"] and value["verdict_class"] == "blocked"
+    for field, replacement in [
+        ("rows", []),
+        ("replay_audit_ready_score", 1),
+        ("compatible_benefit_score", 1),
+        ("verdict_class", "positive"),
+        ("experiment_id", 1),
+        ("numerical_training_calls", 1),
+        ("acceptance_gates", {}),
+        ("MODEL_SPECS", [{}]),
+        ("producer_invocation", {}),
+    ]:
+        bad = dict(value, **{field: replacement})
+        bad.pop("reproducibility_checksum")
+        bad["reproducibility_checksum"] = canonical_hash(bad)
+        atomic_json(tmp_path / "bad.json", bad)
+        assert r.main(["--replay", str(tmp_path / "bad.json")]) == 1
+    with pytest.raises(SystemExit):
+        r.main(["--private-output", str(m.ROOT / "bad.json")])
+
+
+def test_original_replay(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """REQ-REPORT-8941: complete null replay recomputes every published aggregate."""
+    from carnot.reporting import compatible_replay_benefit_runner_8941 as r
+
+    validation = dict(
+        receipts=[dict(passed=True)],
+        union=dict(passed=True),
+        coverage=dict(
+            complete=True,
+            percent=100,
+            files=[dict(path=p, statements=1, missing=[], excluded=[]) for p in m.OWNED],
+        ),
+        raw_references=[],
+    )
+    monkeypatch.setattr(r, "validate", lambda *args: deepcopy(validation))
+    monkeypatch.setattr(r, "terminal", lambda *args: [dict(passed=True)])
+    output = tmp_path / (m.NAME + ".json")
+    assert r.main(["--output", str(output)]) == 0
+    assert r.replay(output)["passed"]
+    value = json.loads(output.read_bytes())
+    assert value["replay_audit_ready_score"] == 1 and value["verdict_class"] == "null"
+    assert all(v == 0 for v in value["model_invocation_counts"].values())
+    failed = dict(
+        value,
+        owned_errors=["owned_validation_failure"],
+        required_checks_passed=False,
+        replay_audit_ready_score=0,
+        verdict_class="disqualified",
+        honest_verdict="complete_disqualified_compatible_replay_benefit",
+    )
+    failed.pop("reproducibility_checksum")
+    failed["reproducibility_checksum"] = canonical_hash(failed)
+    atomic_json(tmp_path / "failed.json", failed)
+    assert r.replay(tmp_path / "failed.json")["passed"]
+    for field, replacement in [
+        ("completed_count", 1),
+        ("paired_intervals", []),
+        ("compatible_benefit_score", 1),
+        ("selection_diversity", []),
+        ("information_controls", []),
+        ("required_checks_passed", False),
+    ]:
+        bad = dict(value, **{field: replacement})
+        bad.pop("reproducibility_checksum")
+        bad["reproducibility_checksum"] = canonical_hash(bad)
+        atomic_json(tmp_path / "bad.json", bad)
+        with pytest.raises(ValueError):
+            r.replay(tmp_path / "bad.json")
+
+
+def test_validation_adapters(tmp_path: Path) -> None:
+    """REQ-REPORT-8941: preserve the existing private validation implementation."""
+    from carnot.reporting import compatible_replay_benefit_runner_8941 as r
+
+    with (
+        patch.object(r.validator, "validate", return_value=dict(receipts=[], raw_references=[])),
+        patch.object(r.checker, "e2e018", return_value=dict(passed=True)),
+    ):
+        assert r.validate(tmp_path, tmp_path)["receipts"] == [dict(passed=True)]
+    with patch.object(r.checker, "terminal", return_value=[]):
+        assert r.terminal(tmp_path, tmp_path) == []
+    with patch.object(r, "stream", return_value={}) as child:
+        assert r.validation_child("collect_once", [], tmp_path, deadline=60) == {}
+        assert child.call_args.kwargs["deadline"] == 180

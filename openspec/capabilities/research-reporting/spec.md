@@ -110112,6 +110112,44 @@ missing prerequisites, exact rows/denominators and outside-checkout replay.
 No oracle or historical compute may masquerade as a new learned result.
 Implementation status: Planned; execution owns detailed acceptance tests.
 
+Execution contract, 2026-11-09: Authenticate the exact Exp8933 and Exp8940
+producer bytes and all retained operands before reduction. Missing external
+evidence is terminal blocked. Failed owned controls are disqualified. Preserve
+the original producer bytes and all 23,040 scheduled query/arm rows. Each row
+retains Brier and typed error; there are 46,080 endpoint cells, not 46,080 queries.
+Rejoin seals, releases, group splits and read-only retention without generating
+worlds, labels, predictions or gradients. Current model/training calls are zero.
+
+Reduce future ordinals 25–48 within each of the same 24 streams. Use 10,000
+whole-stream paired bootstrap draws with seed764200 and alpha0.01/10. Freeze
+four future contrasts against frozen_verified, guarded_current, uniform_replay
+and compatible_permuted, plus retention Brier/error against frozen at0/24/48.
+Benefit requires all ten upper bounds: frozen future <=-0.01, other future <0,
+and all retention <=0.01. Promotion frequency and selection diversity are
+diagnostics only. A valid null can have replay_audit_ready_score=1.
+
+SCENARIO-REPORT-8941-CONTRACT shall first fail without the implementation.
+It shall cover exact bounds including equality, complete/duplicate/missing rows,
+changed bytes and rehashed score, seal, release, retention and aggregate drift.
+It shall distinguish missing_file, missing_field, rejected_producer and
+observed_zero, including boolean gate rejection. Test qualified null, owned
+failure and external block routes. Exercise actual CLI and cold replay outside
+the checkout without PYTHONPATH. Require100-percent owned unit/child statement
+coverage with zero exclusions, scoped Ruff/format, strict mypy, positional spec
+tracing, private E2E-018/021 and unchanged terminal scanners before publication.
+Retain raw receipts and executed-source hashes. Full-suite health is separate.
+On a failed conjunction retire the fixed signed signature, buffer32, two-gradient,
+delay8, guard and48-query schedule. Do not retire continuous learning in general
+or propose unchanged replay. ARC stays suspended; generator weights stay frozen.
+Ops and traceability reconciliation are conductor-owned for this invocation.
+
+Implementation update, 2026-11-09: The reducer, checked CLI and23 contract tests
+are implemented. The reduction retains all23,040 rows across24 paired streams.
+All four future bounds fail; all six retention bounds pass. Uniform replay is
+included in the same ten-bound family. This result retires the fixed mechanism
+specified above. Qualification and raw validation receipts belong to the dated
+artifact; repository-wide health remains separate from owned acceptance.
+
 ### REQ-REPORT-8942: Measure complete replay service cost and hardware limits
 
 The experiment shall execute the frozen V764 task contract and produce
