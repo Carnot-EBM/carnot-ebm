@@ -110670,7 +110670,7 @@ generative self-learning, 10x Rust and 100x hardware claims remain open.
 
 ## V766 planned research — 2026-11-09
 
-All fourteen requirements below are **Planned**, not implemented. The full
+Requirements below remain **Planned** unless their individual status says otherwise. The full
 contract in research-roadmap-vNEXT.md defines equations, roles, bounds and gates.
 The November7 ARC suspension lift applies; earlier suspension text is history.
 
@@ -110680,7 +110680,20 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8957_v766_branch_contract.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `v766_branch_contract.py`,
+`v766_branch_evidence.py` and the direct experiment CLI. Tests are in
+`tests/python/test_v766_branch_contract_8957.py`; measured qualification and the
+terminal disposition are retained in the primary artifact. Bind the exact ordered Exp8957–Exp8970
+objects, visible table and activated or staged YAML to an independent task digest.
+Keep contract readiness independent of historical science and ARC availability.
+Preserve V765 design and queue bytes. Authenticate graph evidence directly from
+Exp8946/8948/8949/8950/8951. Exp8945 remains excluded with its original illegal
+substrate, class and venue recorded as history.
+Inspect only receipt identities beyond the qualified Exp8720 frontier. Require
+30 distinct new uncensored episodes, three families, both compared arms and
+held-family support before setting arc_new_outcomes_ready_score to one.
+An unchanged ledger yields zero with an observed_zero diagnostic. Missing or
+rejected authority yields a separate exact diagnostic. Do not run games or models.
 
 #### SCENARIO-REPORT-8957-CONTRACT
 
@@ -110689,6 +110702,13 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+Tests SHALL reject full-object, table, order, gate and deliverable mutations;
+duplicate or censored ARC events cannot enlarge the independent denominator.
+Replay SHALL recompute authority, retained history and ARC support from sealed
+operands, even when altered aggregates have fresh hashes. Owned unit and child
+statement coverage SHALL be 100 percent with zero exclusions. Record one bounded
+global Python-suite run separately. Ops and traceability reconciliation for this
+invocation belongs to the conductor.
 
 ### REQ-REPORT-8958: Diagnose confidence-only errors and freeze development-only evidence
 
