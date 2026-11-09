@@ -110716,7 +110716,30 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8958_v766_confidence_diagnosis.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `confidence_diagnosis_8958.py`,
+`confidence_diagnosis_runner_8958.py` and the direct experiment CLI. The 24
+owned tests pass with 100-percent unit and child statement coverage and zero
+exclusions. Final qualification and science remain bound to the result artifact.
+
+The diagnosis SHALL authenticate the original 320 response, label and feature
+rows against pinned admission and decision producers. It SHALL reconstruct the
+original Brier, AUROC, half-coverage error and three paired bootstrap bounds.
+All historical roles SHALL remain recorded and all graphs SHALL be exposed
+development data. Sorting unique graph hashes SHALL assign 256 fit and 64 guard
+graphs without labels. Every error and out-of-graph answer SHALL remain present.
+Missing, unparseable and out-of-graph candidates SHALL use an explicit absent
+node indicator. A byte-bound developer view SHALL omit truth, distances and
+answer sets. A separate label view SHALL have mode 0600.
+
+The actual two-feature scoring boundary SHALL be inspected and byte-bound.
+Three deterministic fit resamples (seeds 71/72/73) SHALL compare confidence Gibbs,
+confidence logistic, prevalence and label-permuted heads on the development
+guard. Repeated predictions SHALL not enlarge independent graph support.
+Readiness SHALL depend on correct reduction, custody and owned qualification,
+not mechanism evidence. The unchanged confidence confirmation scope SHALL close.
+No result SHALL claim that graph context will help or establish a causal failure.
+Diagnostic fitting SHALL use cached candidates, no model loads and empty model
+specifications. Publication SHALL follow owned checks and semantic cold replay.
 
 #### SCENARIO-REPORT-8958-CONTRACT
 
@@ -110725,6 +110748,12 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+Tests SHALL cover changed raw bytes, changed labels, outcome-independent split,
+all missing-node cases, original null bounds, class support, feature overlap,
+label permutation and failed owned controls. Unit and real CLI child statements
+SHALL have measured 100-percent coverage with zero exclusions. One bounded global
+Python run SHALL record unrelated debt separately. Ops and traceability updates
+for this invocation belong to the conductor.
 
 ### REQ-REPORT-8959: Freeze relational energy models and fresh graph roles
 
