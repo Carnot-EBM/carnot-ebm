@@ -1,0 +1,109 @@
+{
+  "architecture": {
+    "activation": "tanh",
+    "aggregation": "neighbor_mean",
+    "gibbs_hidden": 8,
+    "pooling": "node_mean",
+    "rounds": 3,
+    "shared_round_weights": true,
+    "width": 8
+  },
+  "arms": [
+    "relational_energy",
+    "relational_logistic",
+    "confidence_energy",
+    "confidence_logistic",
+    "prevalence"
+  ],
+  "bootstrap_draws": 10000,
+  "bootstrap_seed": 766059,
+  "bootstrap_unit": "paired graph; resample all arms together; rerank exact half within draw",
+  "bound_alpha": 0.01,
+  "construction_seconds": 600,
+  "coverage_scope": "ranking diagnostic; no risk certificate",
+  "decisions": {
+    "accept": "p_error<=0.1",
+    "escalate": "otherwise",
+    "reject": "p_error>=0.9"
+  },
+  "detector_bounds": [
+    {
+      "control": "prevalence",
+      "criterion": "lower>0",
+      "metric": "brier_improvement"
+    },
+    {
+      "control": "confidence_logistic",
+      "criterion": "lower>0",
+      "metric": "brier_improvement"
+    },
+    {
+      "control": "relational_logistic",
+      "criterion": "lower>0",
+      "metric": "brier_improvement"
+    },
+    {
+      "control": "confidence_logistic",
+      "criterion": "upper<=0",
+      "metric": "accepted_error_delta_50"
+    },
+    {
+      "control": "relational_logistic",
+      "criterion": "upper<=0",
+      "metric": "accepted_error_delta_50"
+    }
+  ],
+  "family_alpha": 0.05,
+  "fit_count": 256,
+  "fresh_count": 1024,
+  "generator_settings": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "logprobs": true,
+    "max_tokens": 16,
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 764031,
+    "temperature": 0,
+    "top_logprobs": 2,
+    "top_p": 1
+  },
+  "guard_count": 64,
+  "learning_rate": 0.01,
+  "loss": "population_binary_log_loss",
+  "multiplicity": "Bonferroni five one-sided percentile bounds; simultaneous family alpha0.05",
+  "per_shard": {
+    "calibration": 64,
+    "online": 384,
+    "test": 64
+  },
+  "proposals_per_graph": 2000,
+  "queries_per_stream": 32,
+  "response_selection": false,
+  "scope": "anonymous graph adaptation; not KG-Guard reproduction or energy superiority",
+  "seed_reduction": "mean probabilities within arm; seeds are not examples",
+  "seeds": [
+    71,
+    72,
+    73
+  ],
+  "source_population": "V765 n uniform50..60; independent undirected edges p=3/(n-1); uniform source; nonempty equal k2/k3 cardinality",
+  "steps": 200,
+  "streams_per_shard": 12,
+  "temperature_grid": [
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "temperature_selection": "one per arm; minimize ensemble Brier on fresh calibration only; ascending ties",
+  "training_equations": {
+    "energy": "GibbsModel hidden8 SiLU; p_error=sigmoid(E/T)",
+    "initial": "h0=tanh(X W_in+b_in)",
+    "logistic": "p_error=sigmoid(w dot readout+b)",
+    "node_input": "[source_flag,answer_flag,1,degree/(n-1)]",
+    "objective": "mean(softplus(logit)-error*logit); theta <- theta-0.01*grad;200 full batches",
+    "readout": "concat(h_source,h_answer,mean_nodes(h),standardized_confidence[2],missing_answer)",
+    "round": "h(t+1)=tanh(h(t) W_self+mean_neighbors(h(t)) W_neighbor+b); t=0,1,2"
+  }
+}

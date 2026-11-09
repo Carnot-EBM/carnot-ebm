@@ -110761,7 +110761,36 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8959_v766_relational_methods.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `relational_graph_encoder.py`,
+`relational_methods_8959.py`, `relational_methods_runner_8959.py` and the direct
+experiment CLI. All37 owned tests pass with100-percent unit and child statement
+coverage and zero exclusions. Production qualification belongs to the primary artifact.
+
+The detector SHALL accept only anonymous adjacency, source and proposed-answer
+markers, constant one, degree divided by n-1, and the two genuine confidence
+signals. Missing answers SHALL have a zero answer embedding and an explicit
+indicator. Three shared-weight width-eight tanh rounds SHALL use mean neighbor
+aggregation and mean graph pooling. Source, answer and pooled embeddings SHALL
+feed independently trained relational Gibbs and logistic heads. The Gibbs head
+SHALL reuse GibbsModel with eight hidden units. Confidence Gibbs, confidence
+logistic and fit prevalence SHALL complete the five arms. Each trained arm SHALL
+use seeds71/72/73,200 full-batch population log-loss updates at rate0.01. Average
+seed probabilities; seeds never enlarge graph support. Fit only the256 historical
+fit graphs;64 historical guard graphs remain development checks. Temperature
+selection SHALL use only fresh calibration rows and the existing0.5/1/2/4 grid.
+
+Weights and source/statistical choices SHALL be saved before fresh construction
+or responses. Freeze1024 matched-cardinality k2 graphs,512 per shard:64
+calibration,64 test and384 online in twelve32-query streams. Exclude retained
+historical and proposed construction seeds, graph identities and isomorphic
+relabelings. Preserve the V765 candidate distribution and prompt. Each slot has
+2000 proposals; total construction has600 seconds. Exhaustion is a feasibility
+null with every unfilled slot retained. Graph construction truth SHALL remain
+outside detector inputs. Freeze five paired graph-bootstrap bounds,10000 draws,
+family alpha0.05 with Bonferroni one-sided alpha0.01: three Brier improvements
+over prevalence and both logistic arms must have lower>0; half-coverage error
+deltas versus both logistic arms must have upper<=0. Accept/reject/escalate
+thresholds SHALL be <=0.1/>=0.9/otherwise; ranking is diagnostic only.
 
 #### SCENARIO-REPORT-8959-CONTRACT
 
@@ -110770,6 +110799,16 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+Private controls SHALL measure nonzero encoder/head gradients, informative
+fixture learning, label-permutation sensitivity and node-renaming/edge-order
+invariance within1e-6. Exact input keys SHALL reject truth, BFS, distances,
+answer-set membership and graph/split identities. Methods readiness SHALL require
+these controls and complete custody, never real-data benefit. Unit and child
+statements SHALL have100-percent measured coverage with zero exclusions. Run
+scoped lint, format, strict types, positional spec tracing and private E2E-018/021.
+Record one bounded global Python-suite run separately. Recompute sealed models,
+rosters and protocols during replay; rehashed scientific changes SHALL fail.
+Ops and traceability reconciliation for this invocation belongs to the conductor.
 
 ### REQ-REPORT-8960: Freeze delayed online calibration on real model errors
 
