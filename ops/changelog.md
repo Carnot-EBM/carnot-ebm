@@ -23382,3 +23382,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Freeze a small energy selector and strong calibration controls (⚠️ Research Finding) — honest_verdict=complete_null_calibration_methods; results/experiment_8937_v764_calibration_methods.json
 - 2026-11-09: Measure future predictions after compatible delayed replay (⚠️ Research Finding) — honest_verdict=complete_null_compatible_replay_streams; results/experiment_8940_v764_compatible_replay_streams.json
 - 2026-11-09: Audit future replay benefit and untouched retention (⚠️ Research Finding) — honest_verdict=complete_null_compatible_replay_benefit; results/experiment_8941_v764_compatible_replay_benefit.json
+- 2026-11-09: Measure complete replay service cost and hardware limits (⚠️ Research Finding) — honest_verdict=complete_null_replay_complete_cost; results/experiment_8942_v764_replay_complete_cost.json
