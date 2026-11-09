@@ -1,0 +1,2092 @@
+milestone: 2026.11.765
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+milestone_title: Controlled Graph Errors, Gradient-Informed Replay, and Measured Decision
+  Value
+tasks:
+- MODEL_SPECS: []
+  deliverable: results/experiment_8944_v765_branch_contract.json
+  estimated_wall_time_min: 35
+  gated_on: []
+  id: exp8944-branch-contract
+  inference_substrate_class: no_model_load
+  max_turns: 100
+  milestone: 2026.11.765
+  model: opus
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Reuse qualified V764 contract logic with a new complete thirteen-task
+      authority; preserve prior bytes and validate the full table and prompt objects.
+    experiment_id: exp8891-branch-contract
+    retire_if_same_verdict: true
+    verdict: complete_disqualified_v761_branch_contract
+  priority: high
+  prompt: 'CONTEXT:
+
+    V764 completed fourteen slots but four source/calibration slots were skipped.
+    V765 is a staged proposal. A scheduler OK is not scientific benefit. Preserve
+    the original V764 design and queue, including its failed source gate.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/roadmap_contract.py
+
+    - python/carnot/reporting/v764_branch_contract.py
+
+    - results/experiment_8943_v764_capstone.json
+
+    - ops/exclusion_manifest.yaml
+
+    - research-references.md
+
+
+    TASK:
+
+    Bind thirteen tasks and preserve completed V764 authority. Deliver results/experiment_8944_v765_branch_contract.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8944 / SCENARIO-REPORT-8944-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Compare the visible table, embedded full task objects and staged-or-activated
+    YAML for exactly Exp8944-Exp8956 in order, including prompts, routes, priors,
+    gates and paths. Reuse roadmap_contract with explicit milestone, first_id and
+    count. Snapshot the matching V765 authority; accept a matching activated queue
+    if staging was consumed. Do not activate anything.
+
+    5. Test missing task, changed order/prompt/path, missing producer field, mutated
+    retained bytes and consumed staging. Historical producers use retained original
+    authority, not the mutable vNEXT document. No science branch gates on contract_ready_score.
+
+    6. Ingest the November 9 literature map as source/method/control rows. Preserve
+    the V764 primary and scheduler-skip paths exactly; do not invent missing deliverables.
+    Confirm no retired runtime requires chain. Record current model calls as zero
+    and historical calls only as opaque producer references.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    8. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - contract_ready_score: integer 0 or 1; one only when all contract controls and
+    owned checks pass.
+
+    - full_task_objects, canonical_tasks_sha256, contract_rows, gate_edge_rows, prior_scope_rows,
+    source_method_rows, preserved_v764_reference.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8944_v765_branch_contract.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Bind thirteen tasks and preserve completed V764 authority
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8945_v765_depth_opportunity_audit.json
+  estimated_wall_time_min: 40
+  gated_on: []
+  id: exp8945-depth-opportunity-audit
+  inference_substrate_class: no_model_load
+  max_turns: 30
+  milestone: 2026.11.765
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Replace an unchanged live rerun with a read-only label and answer-cardinality
+      diagnosis; quantify the 8.76 versus 14.96 opportunity imbalance before changing
+      the source.
+    experiment_id: exp8934-depth-control
+    retire_if_same_verdict: true
+    verdict: complete_null_paired_depth_control
+  priority: high
+  prompt: 'CONTEXT:
+
+    Exp8934 has 42/50 errors at k2 and 39/50 at k3. A planning read of Exp8931 found
+    mean valid-answer counts 8.76 and 14.96. The proposed confound is measurable;
+    it is not yet a causal explanation. Preserve the original failed verdict.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/graph_source_8931.py
+
+    - python/carnot/reporting/depth_control_8934.py
+
+    - results/experiment_8931_v764_graph_source_methods.json
+
+    - results/experiment_8934_v764_depth_control.json
+
+    - docs/research-notes/bfs-labeled-error-source-plan-2026-11-07.md
+
+
+    TASK:
+
+    Measure answer-set opportunity in the failed depth control. Deliver results/experiment_8945_v765_depth_opportunity_audit.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8945 / SCENARIO-REPORT-8945-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Authenticate all 50 paired raw graphs, prompts and responses. Independently
+    recompute shortest-distance answer sets with a separate all-pairs reference and
+    compare to the stored BFS labels, including disconnected nodes and shortest-path-versus-walk
+    fixtures. No model call or generation retry is allowed.
+
+    5. Emit per graph valid-set sizes, size/n chance accuracy, overlap with direct
+    neighbors, degree, actual answer category, token count and paired error. Recompute
+    the old empirical depth difference and interval. Compare answer-set opportunity
+    without treating 100 answers as 100 independent graphs.
+
+    6. Set diagnosis_ready_score=1 only when all 50 records and label checks authenticate.
+    Report opportunity_confounded_score separately as mean valid-set size at k3 greater
+    than k2. An unsupported causal explanation is null. This receipt licenses a separately
+    frozen matched-cardinality protocol, never reopening old collection.
+
+    7. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    8. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - diagnosis_ready_score: integer 0 or 1.
+
+    - opportunity_confounded_score: integer 0 or 1; descriptive structural imbalance,
+    not causal proof.
+
+    - paired_opportunity_rows, label_agreement, paired_depth_interval, historical_gate_preserved,
+    current_generation_calls: 0.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8945_v765_depth_opportunity_audit.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Measure answer-set opportunity in the failed depth control
+  track: research
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_8946_v765_matched_source_methods.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: diagnosis_ready_score
+    op: ==
+    upstream: exp8945-depth-opportunity-audit
+    value: 1
+  id: exp8946-matched-source-methods
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.765
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: New graph population conditions on equal nonzero k2/k3 answer-set
+      cardinality, removing measured opportunity imbalance while retaining the original
+      depth-rise gate and fresh controls.
+    experiment_id: exp8934-depth-control
+    retire_if_same_verdict: true
+    verdict: complete_null_paired_depth_control
+  - addressed_by: Freeze the existing qualified selector under new source authority;
+      no calibration claim or execution until current-milestone corpus admission passes.
+    experiment_id: exp8935-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    The old random-graph source confounded depth with the number of valid answers.
+    Test the same shortest-distance task on a predeclared restricted graph population
+    whose k2 and k3 valid-set sizes are equal. Do not relax the requirement that error
+    rises with depth.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/graph_source_8931.py
+
+    - python/carnot/reporting/graph_source_methods_8931.py
+
+    - python/carnot/reporting/calibration_methods_8937.py
+
+    - python/carnot/autoresearch/graph_calibration_benchmark.py
+
+    - results/experiment_8937_v764_calibration_methods.json
+
+    - results/experiment_8945_v765_depth_opportunity_audit.json
+
+
+    TASK:
+
+    Freeze equal-opportunity graph sources and unchanged calibration controls. Deliver
+    results/experiment_8946_v765_matched_source_methods.json for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8946 / SCENARIO-REPORT-8946-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Freeze 50 paired control graphs plus 320 distinct collection graphs with fresh
+    seeds, n in [50,60] and the original edge probability 3/(n-1). Accept only nonempty
+    k2/k3 answer sets of equal size. Cap proposals at 2000 per scheduled graph and
+    240 seconds total; log all rejected seeds. Graph-generation exhaustion is a terminal
+    feasibility null, not permission to change the population. Check identities against
+    all V763/V764 source graphs, including unused frozen graphs.
+
+    5. Use the same graph/start and prompt layout for paired k2/k3 questions, balanced
+    condition order and random label/edge ordering fixed before inference. Do not
+    expose cardinality in the prompt. Collection asks k2 only from this same restricted
+    population. Freeze two independent 160-graph shards, each 80 train/40 calibration/40
+    test. Do not select graphs using model responses or class labels.
+
+    6. Reuse the exact response-confidence feature allowlist (mean_token_nll and first_answer_top2_margin),
+    strict parser, label sidecars, bounded runner and first-response checkpoint custody.
+    Freeze Qwen3.8-27B Q4_K_M, GPU 0, temperature 0, reasoning off and max_tokens=16.
+    Separate missing backend features from incorrect answers; no substitute probabilities.
+
+    7. Reuse the qualified tiny Gibbs, same-feature logistic, prevalence and format/length
+    controls from Exp8937. Freeze optimizer, training budget, calibrator and decision
+    thresholds in the new protocol without reading any live collection response. Test
+    synthetic learnable, permuted-label, duplicate-graph, altered-feature and role-leak
+    fixtures. Preserve Brier superiority over prevalence/logistic and accepted-error
+    noninferiority at 50-percent coverage.
+
+    8. Set matched_source_ready_score=1 only when the complete frozen source and calibration
+    protocols and owned controls pass. No model load occurs in this task. A source-method
+    success is not live source feasibility or detector benefit.
+
+    9. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    10. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - matched_source_ready_score: integer 0 or 1.
+
+    - graph_manifest, proposal_rejection_rows, split_manifest, protocol_hash, feature_schema,
+    frozen_calibration_protocol, calibration_protocol_hash, future_generator_settings,
+    development_control_rows.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8946_v765_matched_source_methods.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Freeze equal-opportunity graph sources and unchanged calibration controls
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8947_v765_gradient_replay_methods.json
+  estimated_wall_time_min: 70
+  gated_on: []
+  id: exp8947-gradient-replay-methods
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.765
+  per_unit_rows: true
+  phase: 1
+  prior_failures:
+  - addressed_by: Replace label-blind signature distance with released-label gradient
+      alignment; retain signature as a matched-cost arm, all original benefit/retention
+      bounds and fresh streams.
+    experiment_id: exp8941-compatible-replay-benefit
+    retire_if_same_verdict: true
+    verdict: complete_null_compatible_replay_benefit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Compatible replay failed all four future-benefit bounds despite retention success.
+    Its selector compares input vectors and ignores label-dependent gradient direction.
+    Replace that proxy with actual gradient alignment, using only released TRAIN labels.
+    This is a falsifiable local adaptation of arXiv:2508.01908, not generator training.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/memory/compatible_replay_8933.py
+
+    - python/carnot/memory/signed_memory_8892.py
+
+    - python/carnot/reporting/compatible_replay_methods_8933.py
+
+    - python/carnot/reporting/guarded_update_methods_8905.py
+
+    - results/experiment_8941_v764_compatible_replay_benefit.json
+
+    - research-references.md
+
+
+    TASK:
+
+    Freeze released-label gradient selection for continuous energy learning. Deliver
+    results/experiment_8947_v765_gradient_replay_methods.json for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8947 / SCENARIO-REPORT-8947-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Keep signed-local-v1 features, SGD rate 0.1, buffer 32, eight-query label delay,
+    operational promotion guard and untouched retention fixed. Use six arms: frozen_verified,
+    guarded_current, uniform_replay, signature_replay, gradient_replay and gradient_permuted.
+    All receive identical true feedback/template information; the permuted arm corrupts
+    only released TRAIN labels with a fixed within-release-block permutation.
+
+    5. After the current TRAIN gradient produces W1, evaluate its current-row gradient
+    and each prior buffer-row gradient at W1. Choose the largest cosine alignment;
+    zero-norm scores are zero, ties use stable unit IDs, and an empty buffer repeats
+    current. Apply that replay gradient as the second SGD update. Exclude the current
+    row from the prior buffer. Labels from pending, guard or retention rows never
+    enter selection. Permuted selection uses its own permuted labels, so its chosen
+    IDs need not equal the true-label arm.
+
+    6. For fair method comparison, every trainable arm performs the same candidate-gradient
+    scan at its own W1 and discards unused candidates. Record actual evaluated and
+    applied gradients separately; charge the scan in full service cost. Preserve the
+    signature and uniform choices as comparators, without copying gradient-selected
+    IDs into them.
+
+    7. Run eight fresh development streams. Measure how often signature and gradient
+    choices disagree, their cosine distributions and promotion outcomes. Require at
+    least one nonzero gradient and a distinct selection on development before setting
+    gradient_methods_ready_score=1. This is mechanism exercise, not a benefit claim.
+    Null exercise closes this method without changing thresholds or testing fresh
+    evaluation streams.
+
+    8. Test delayed-label access, label and signature permutations, opposite-gradient
+    same-feature fixtures, all/none aligned buffers, deterministic ties, equal scans
+    and applied gradients, no retention reads and exact restart. Freeze 24 fresh evaluation
+    streams,48 online queries and 48 retention queries at checkpoints 0/24/48. Preserve
+    all ten prior effect/retention conditions and add a signature comparator:11 bounds,
+    family alpha 0.01,10000 whole-stream bootstrap draws. Candidate-minus-frozen upper<=-0.01;
+    versus current/uniform/signature/permuted upper<0; retention Brier/error upper<=0.01.
+
+    9. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    10. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - gradient_methods_ready_score: integer 0 or 1, requiring exercised method and
+    owned controls, not development benefit.
+
+    - optimizer_equations, released_label_access_rows, candidate_gradient_rows, development_rows,
+    selection_disagreement, protocol_hash, frozen_evaluation_manifest, hardware_path.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8947_v765_gradient_replay_methods.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Freeze released-label gradient selection for continuous energy learning
+  track: research
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  deliverable: results/experiment_8948_v765_matched_depth_control.json
+  estimated_wall_time_min: 60
+  gated_on:
+  - artifact_field: matched_source_ready_score
+    op: ==
+    upstream: exp8946-matched-source-methods
+    value: 1
+  id: exp8948-matched-depth-control
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.765
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Use fresh equal-cardinality graphs to remove measured answer-opportunity
+      imbalance while preserving the empirical depth-rise criterion and the failed
+      historical result.
+    experiment_id: exp8934-depth-control
+    retire_if_same_verdict: true
+    verdict: complete_null_paired_depth_control
+  priority: high
+  prompt: 'CONTEXT:
+
+    Exp8934 failed its old depth-rise gate. Exp8946 changes graph sampling by matching
+    valid-answer cardinality at k2/k3, while preserving graph size, model and decoding.
+    This is a fresh prospective control, not a reclassification of the old null.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/depth_control_runner_8934.py
+
+    - python/carnot/reporting/depth_control_8934.py
+
+    - results/experiment_8946_v765_matched_source_methods.json
+
+    - scripts/experiment_template.py
+
+
+    TASK:
+
+    Test paired depth sensitivity with equal answer opportunity. Deliver results/experiment_8948_v765_matched_depth_control.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8948 / SCENARIO-REPORT-8948-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Check the cached mandated GGUF through cached_sota_pair() and its actual model_path,
+    llama_cpp GPU-offload support, GPU 0 availability and the existing resource lease
+    before load. GPU 1 is detached. Use an owned llama.cpp server; never terminate
+    another job. Record actual offloaded layers, GGUF/server/prompt hashes, raw content,
+    token usage and logprobs. MODEL_SPECS must contain unsloth/Qwen3.8-27B-GGUF. Use
+    Q4_K_M, temperature 0, reasoning off,16 output tokens and no retries; CARNOT_FORCE_LIVE=1
+    forbids simulated fallback. Actual short generation is model_bounded_generation
+    (10s floor); a real load without generation is model_load_no_generation (2s),
+    never full generation (60s). Never pad elapsed time.
+
+    5. Run the frozen 50 paired graphs exactly once per condition,100 bounded answers
+    total; keep order balanced and stateless. Bound preflight and load to 240 seconds
+    each, generation to 1200 seconds and each request to 30 seconds. Print every 10
+    answers and supervise child heartbeats every 60 seconds. Preserve failed and censored
+    scheduled answers; do not replace them.
+
+    6. Compute final-answer truth with independent graph code after raw response capture.
+    Require all 100 answers, authenticated labels, usable response-confidence signals,
+    error_k3>error_k2 and k2 error rate>=0.20. Emit the paired graph-bootstrap 95-percent
+    interval separately; the operational rise condition is not a significance claim.
+    If either gate fails, collection stays blocked; do not change k, graph population,
+    token cap or thresholds.
+
+    7. Record signal_capture_ready_score independently from depth_source_ready_score.
+    The latter is 1 only when every source criterion and owned validation passes.
+    Equal answer counts must hold for every pair. Retain chance accuracy and malformed/out-of-graph/semantic
+    counts. This task uses an oracle to label source errors and cannot establish detector
+    advantage.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - depth_source_ready_score: integer 0 or 1; exact collection prerequisite.
+
+    - signal_capture_ready_score: integer 0 or 1.
+
+    - paired_depth_rows, error_rate_k2, error_rate_k3, paired_interval, equal_cardinality_checks,
+    model_receipt, resource_lease, inference_mode: live_gpu when generation occurs.
+
+
+    Run command: cd {project_root} && CUDA_VISIBLE_DEVICES=0 CARNOT_FORCE_LIVE=1 PYTHONPATH=python
+    .venv/bin/python -u scripts/experiments/experiment_8948_v765_matched_depth_control.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Test paired depth sensitivity with equal answer opportunity
+  track: research
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  agent_type: codex
+  deliverable: results/experiment_8949_v765_matched_corpus_a.json
+  estimated_wall_time_min: 70
+  gated_on:
+  - artifact_field: matched_source_ready_score
+    op: ==
+    upstream: exp8946-matched-source-methods
+    value: 1
+  - artifact_field: depth_source_ready_score
+    op: ==
+    upstream: exp8948-matched-depth-control
+    value: 1
+  - artifact_field: signal_capture_ready_score
+    op: ==
+    upstream: exp8948-matched-depth-control
+    value: 1
+  id: exp8949-matched-corpus-a
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.765
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Replace the failed old source chain with current-milestone equal-cardinality
+      methods and a fresh depth gate; distinct shard identities, first-response custody
+      and 160 predeclared graphs prevent silent carryover.
+    experiment_id: exp8935-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    V764 collection was stopped by a failed depth control. Only the new qualified
+    matched-population source may release this shard. Each shard has its own scheduler
+    identity and does not require the other shard to succeed.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/graph_source_8931.py
+
+    - python/carnot/reporting/depth_control_runner_8934.py
+
+    - results/experiment_8946_v765_matched_source_methods.json
+
+    - results/experiment_8948_v765_matched_depth_control.json
+
+
+    TASK:
+
+    Collect matched-population Qwen corpus shard A. Deliver results/experiment_8949_v765_matched_corpus_a.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8949 / SCENARIO-REPORT-8949-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Check the cached mandated GGUF through cached_sota_pair() and its actual model_path,
+    llama_cpp GPU-offload support, GPU 0 availability and the existing resource lease
+    before load. GPU 1 is detached. Use an owned llama.cpp server; never terminate
+    another job. Record actual offloaded layers, GGUF/server/prompt hashes, raw content,
+    token usage and logprobs. MODEL_SPECS must contain unsloth/Qwen3.8-27B-GGUF. Use
+    Q4_K_M, temperature 0, reasoning off,16 output tokens and no retries; CARNOT_FORCE_LIVE=1
+    forbids simulated fallback. Actual short generation is model_bounded_generation
+    (10s floor); a real load without generation is model_load_no_generation (2s),
+    never full generation (60s). Never pad elapsed time.
+
+    5. Execute only frozen shard A:160 new graphs, k2,80 train/40 calibration/40 test.
+    All graphs belong to the equal-cardinality source population, although collection
+    asks k2 only. Bound preflight/load to 240 seconds each, generation to 1800 seconds
+    and requests to 30 seconds. Save each first response before deriving its label;
+    hash and resume only matching checkpoints. Never regenerate to choose a nicer
+    answer or replenish a censored unit.
+
+    6. Store detector-visible confidence features separately from evaluation-only
+    graph/BFS truth. Retain exact prompts, raw logits, parser category, response hash,
+    node/edge hash, split and independent graph cluster. Compute independent labels
+    with the qualified separate reference. No detector fitting or test-label inspection
+    for tuning occurs.
+
+    7. Set shard_ready_score=1 only for 160 complete, authenticated responses with
+    exact roles, labels, raw receipts and finite backend features after owned checks.
+    Class support and pooled error count belong to corpus admission. One shard failing
+    must not prevent the other scheduled shard from executing.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - shard_ready_score: integer 0 or 1.
+
+    - shard_id, response_rows, label_sidecar_hash, detector_view_hash, split_counts,
+    graph_identity_rows, model_receipt, resource_lease, inference_mode: live_gpu when
+    generation occurs.
+
+
+    Run command: cd {project_root} && CUDA_VISIBLE_DEVICES=0 CARNOT_FORCE_LIVE=1 PYTHONPATH=python
+    .venv/bin/python -u scripts/experiments/experiment_8949_v765_matched_corpus_a.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect matched-population Qwen corpus shard A
+  track: research
+- MODEL_SPECS:
+  - unsloth/Qwen3.8-27B-GGUF
+  agent_type: codex
+  deliverable: results/experiment_8950_v765_matched_corpus_b.json
+  estimated_wall_time_min: 70
+  gated_on:
+  - artifact_field: matched_source_ready_score
+    op: ==
+    upstream: exp8946-matched-source-methods
+    value: 1
+  - artifact_field: depth_source_ready_score
+    op: ==
+    upstream: exp8948-matched-depth-control
+    value: 1
+  - artifact_field: signal_capture_ready_score
+    op: ==
+    upstream: exp8948-matched-depth-control
+    value: 1
+  id: exp8950-matched-corpus-b
+  inference_substrate_class: model_bounded_generation
+  max_turns: 50
+  milestone: 2026.11.765
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 2
+  prior_failures:
+  - addressed_by: Replace the failed old source chain with current-milestone equal-cardinality
+      methods and a fresh depth gate; distinct shard identities, first-response custody
+      and 160 predeclared graphs prevent silent carryover.
+    experiment_id: exp8935-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    V764 collection was stopped by a failed depth control. Only the new qualified
+    matched-population source may release this shard. Each shard has its own scheduler
+    identity and does not require the other shard to succeed.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/graph_source_8931.py
+
+    - python/carnot/reporting/depth_control_runner_8934.py
+
+    - results/experiment_8946_v765_matched_source_methods.json
+
+    - results/experiment_8948_v765_matched_depth_control.json
+
+
+    TASK:
+
+    Collect matched-population Qwen corpus shard B. Deliver results/experiment_8950_v765_matched_corpus_b.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8950 / SCENARIO-REPORT-8950-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Check the cached mandated GGUF through cached_sota_pair() and its actual model_path,
+    llama_cpp GPU-offload support, GPU 0 availability and the existing resource lease
+    before load. GPU 1 is detached. Use an owned llama.cpp server; never terminate
+    another job. Record actual offloaded layers, GGUF/server/prompt hashes, raw content,
+    token usage and logprobs. MODEL_SPECS must contain unsloth/Qwen3.8-27B-GGUF. Use
+    Q4_K_M, temperature 0, reasoning off,16 output tokens and no retries; CARNOT_FORCE_LIVE=1
+    forbids simulated fallback. Actual short generation is model_bounded_generation
+    (10s floor); a real load without generation is model_load_no_generation (2s),
+    never full generation (60s). Never pad elapsed time.
+
+    5. Execute only frozen shard B:160 new graphs, k2,80 train/40 calibration/40 test.
+    All graphs belong to the equal-cardinality source population, although collection
+    asks k2 only. Bound preflight/load to 240 seconds each, generation to 1800 seconds
+    and requests to 30 seconds. Save each first response before deriving its label;
+    hash and resume only matching checkpoints. Never regenerate to choose a nicer
+    answer or replenish a censored unit.
+
+    6. Store detector-visible confidence features separately from evaluation-only
+    graph/BFS truth. Retain exact prompts, raw logits, parser category, response hash,
+    node/edge hash, split and independent graph cluster. Compute independent labels
+    with the qualified separate reference. No detector fitting or test-label inspection
+    for tuning occurs.
+
+    7. Set shard_ready_score=1 only for 160 complete, authenticated responses with
+    exact roles, labels, raw receipts and finite backend features after owned checks.
+    Class support and pooled error count belong to corpus admission. One shard failing
+    must not prevent the other scheduled shard from executing.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - shard_ready_score: integer 0 or 1.
+
+    - shard_id, response_rows, label_sidecar_hash, detector_view_hash, split_counts,
+    graph_identity_rows, model_receipt, resource_lease, inference_mode: live_gpu when
+    generation occurs.
+
+
+    Run command: cd {project_root} && CUDA_VISIBLE_DEVICES=0 CARNOT_FORCE_LIVE=1 PYTHONPATH=python
+    .venv/bin/python -u scripts/experiments/experiment_8950_v765_matched_corpus_b.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: true
+  title: Collect matched-population Qwen corpus shard B
+  track: research
+- MODEL_SPECS: []
+  agent_type: codex
+  deliverable: results/experiment_8951_v765_matched_corpus_admission.json
+  estimated_wall_time_min: 55
+  gated_on:
+  - artifact_field: shard_ready_score
+    op: ==
+    upstream: exp8949-matched-corpus-a
+    value: 1
+  - artifact_field: shard_ready_score
+    op: ==
+    upstream: exp8950-matched-corpus-b
+    value: 1
+  - artifact_field: matched_source_ready_score
+    op: ==
+    upstream: exp8946-matched-source-methods
+    value: 1
+  id: exp8951-matched-corpus-admission
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.765
+  model: gpt-6.1-sol
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: The prior admission lacked source shards after the depth gate failed;
+      admit only two new shards from the changed source, retaining 200-error and per-split
+      support requirements.
+    experiment_id: exp8935-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    The old admission chain never received its two shards. Current corpus admission
+    must certify independent labels and support before training, while retaining the
+    original minimum of 200 independently labeled errors.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/graph_source_8931.py
+
+    - python/carnot/autoresearch/graph_calibration_benchmark.py
+
+    - python/carnot/reporting/calibration_methods_8937.py
+
+    - results/experiment_8946_v765_matched_source_methods.json
+
+    - results/experiment_8949_v765_matched_corpus_a.json
+
+    - results/experiment_8950_v765_matched_corpus_b.json
+
+
+    TASK:
+
+    Authenticate matched graph labels and frozen calibration authority. Deliver results/experiment_8951_v765_matched_corpus_admission.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8951 / SCENARIO-REPORT-8951-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Join exactly 320 graph identities and their first responses. Authenticate source
+    protocol, both shard receipts, the frozen calibration method and all raw hashes.
+    Check 160 train/80 calibration/80 test, no repeated graph across roles/shards/pilots,
+    equal k2/k3 opportunity in all graphs and exact independent BFS/reference agreement.
+    Split rejection follows the frozen rule; never rebalance after seeing outcomes.
+
+    5. Require at least 200 incorrect final answers and at least 5 correct and 5 incorrect
+    answers in each split. Report semantic and format errors separately and the exact
+    minimum achieved. These are feasibility minima, not a statistical-power guarantee.
+    A complete corpus missing class support is null; unavailable shards are blocked.
+
+    6. Check detector-view import/access isolation and mutation-test that changing
+    labels, true distances, answer sets or graph IDs cannot change features or scores.
+    Requalify the retained calibration methods under the current protocol using development
+    fixtures only. No live data fitting or test threshold search is allowed here.
+
+    7. Set corpus_ready_score=1 only after all custody, class-support, calibration-method
+    and owned checks pass. Do not assert detector accuracy from oracle label agreement.
+    Preserve historical scheduler skips at their real recorded paths.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - corpus_ready_score: integer 0 or 1.
+
+    - corpus_manifest, role_counts, error_type_counts, independent_error_count, class_support_rows,
+    feature_access_controls, calibration_protocol_hash, source_protocol_hash.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8951_v765_matched_corpus_admission.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Authenticate matched graph labels and frozen calibration authority
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8952_v765_matched_calibrated_decisions.json
+  estimated_wall_time_min: 65
+  gated_on:
+  - artifact_field: corpus_ready_score
+    op: ==
+    upstream: exp8951-matched-corpus-admission
+    value: 1
+  id: exp8952-matched-calibrated-decisions
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.765
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: The previous detector evaluation never received admitted data. Execute
+      only with a new admitted matched-population corpus; preserve the already frozen
+      selector and original comparison thresholds.
+    experiment_id: exp8935-graph-corpus-a
+    retire_if_same_verdict: true
+    verdict: blocked_gate_check_failed
+  priority: high
+  prompt: 'CONTEXT:
+
+    Independent graph labels and a frozen small Gibbs selector now allow a bounded
+    final-answer calibration test. The learned detector sees response confidence only;
+    it neither traverses graphs nor scores against the oracle at inference. This advances
+    the calibrated-decision training floor.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/autoresearch/graph_calibration_benchmark.py
+
+    - python/carnot/reporting/calibration_methods_8937.py
+
+    - results/experiment_8946_v765_matched_source_methods.json
+
+    - results/experiment_8951_v765_matched_corpus_admission.json
+
+
+    TASK:
+
+    Evaluate energy decisions on unseen matched-population model errors. Deliver results/experiment_8952_v765_matched_calibrated_decisions.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8952 / SCENARIO-REPORT-8952-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Fit the frozen tiny Gibbs selector and same-feature logistic comparator on
+    160 train graphs, calibrate on 80 calibration graphs and open 80 test labels once.
+    Use the exact qualified protocol and training budget; freeze and hash model states
+    before test evaluation. Never alter Qwen weights. This task has MODEL_SPECS=[]
+    and no_model_load: numerical small-head training is not a new LLM invocation;
+    retain opaque live provenance from the source shards.
+
+    5. Evaluate prevalence and format/length controls alongside the learned arms.
+    Emit per-test-graph probabilities, typed accept/reject/escalate decisions, Brier
+    loss, correctness and coverage membership. At exactly 50-percent diagnostic coverage
+    rank by predicted correctness with deterministic label-blind ties. Preserve the
+    frozen typed decision thresholds separately from the diagnostic coverage ranking.
+
+    6. Use 10000 graph-cluster bootstrap draws with family alpha 0.05 across three
+    one-sided tests. Benefit requires lower Brier improvement bounds strictly>0 versus
+    prevalence and logistic, and upper accepted-error delta versus logistic<=0 at
+    50-percent coverage. Report AUPRC/AUROC and class counts descriptively. Tiny samples
+    can yield a valid inconclusive null; no extra collection or test tuning follows.
+
+    7. Adversarially test oracle/label access isolation, shuffled labels and token-length/format
+    confounds. Set detector_rows_ready_score based on complete valid measurement;
+    set detector_benefit_score only if all three scientific bounds and owned checks
+    pass. Positive evidence is limited to unseen graphs in the restricted source population,
+    not natural-language hallucinations or first-error localization.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - detector_rows_ready_score: integer 0 or 1.
+
+    - detector_benefit_score: integer 0 or 1.
+
+    - test_prediction_rows, paired_intervals, coverage_rows, model_state_hashes, feature_allowlist,
+    oracle_access_controls, calibration_protocol_hash, upstream_compute_references.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8952_v765_matched_calibrated_decisions.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Evaluate energy decisions on unseen matched-population model errors
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8953_v765_gradient_causal_streams.json
+  estimated_wall_time_min: 70
+  gated_on:
+  - artifact_field: gradient_methods_ready_score
+    op: ==
+    upstream: exp8947-gradient-replay-methods
+    value: 1
+  id: exp8953-gradient-causal-streams
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.765
+  per_unit_rows: true
+  phase: 3
+  prior_failures:
+  - addressed_by: Execute a changed released-gradient selector with a sixth signature
+      comparator and charged scans on freshly sealed streams; reuse causal/restart
+      handling, not historical measurements.
+    experiment_id: exp8940-compatible-replay-streams
+    retire_if_same_verdict: true
+    verdict: complete_null_compatible_replay_streams
+  - addressed_by: Address the input-distance proxy with actual label-dependent gradient
+      direction while preserving prior bounds and adding the signature contrast.
+    experiment_id: exp8941-compatible-replay-benefit
+    retire_if_same_verdict: true
+    verdict: complete_null_compatible_replay_benefit
+  priority: high
+  prompt: 'CONTEXT:
+
+    The CPU learning branch is independent of live graph collection. Exp8947 changes
+    replay selection using released-label gradients and retains all previous safety
+    criteria. Training loss and promotions cannot establish future benefit.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/compatible_replay_streams_8940.py
+
+    - python/carnot/reporting/compatible_replay_stream_runner_8940.py
+
+    - python/carnot/reporting/compatible_replay_methods_8933.py
+
+    - results/experiment_8947_v765_gradient_replay_methods.json
+
+
+    TASK:
+
+    Measure continuous gradient-informed replay on sealed future streams. Deliver
+    results/experiment_8953_v765_gradient_causal_streams.json for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8953 / SCENARIO-REPORT-8953-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Run exactly 24 presealed independent streams across all six arms,48 online
+    predictions each. Evaluate 48 untouched retention queries at checkpoints 0/24/48.
+    Seal each prediction before releasing its delayed labels; preserve pending tails
+    without scoring them as observed feedback. This gives 27648 query/arm/checkpoint
+    comparison rows and 55296 Brier/error endpoint cells; the independent sample size
+    is 24.
+
+    5. Run exact restart at query 24 against uninterrupted controls, restoring committed/candidate
+    weights, TRAIN buffer, pending feedback, RNG, template memory and scan ledgers.
+    Keep all arms on the same causal feedback schedule. Frozen_verified receives equal
+    template information without weight updates.
+
+    6. Capture current and candidate gradients, chosen unit, cosine, evaluated/applied
+    gradient counts, guard decisions and all six arms including no-op or rejected
+    updates. Check equal scan/work budgets among trainable arms. Perturb unreleased
+    future labels and retention rows in private controls: earlier predictions and
+    selected IDs must stay unchanged.
+
+    7. Set gradient_rows_ready_score=1 only after complete authenticated rows, causal
+    controls, exact restart and owned validation. Do not set a learning-benefit claim
+    here. Exp8954 reduces all 11 prospective/retention bounds. If methods are externally
+    blocked, emit terminal blocked instead of attempting old replay again.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - gradient_rows_ready_score: integer 0 or 1.
+
+    - prediction_rows, feedback_rows, candidate_gradient_rows, replay_rows, promotion_rows,
+    restart_rows, retention_rows, pending_feedback_rows, state_hashes, independent_count:
+    24.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8953_v765_gradient_causal_streams.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Measure continuous gradient-informed replay on sealed future streams
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8954_v765_gradient_benefit_audit.json
+  estimated_wall_time_min: 55
+  gated_on:
+  - artifact_field: gradient_rows_ready_score
+    op: ==
+    upstream: exp8953-gradient-causal-streams
+    value: 1
+  id: exp8954-gradient-benefit-audit
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.765
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Audit a new gradient-based method against the old signature method
+      as an explicit control, retaining all prior future/retention gates and fresh
+      independent streams.
+    experiment_id: exp8941-compatible-replay-benefit
+    retire_if_same_verdict: true
+    verdict: complete_null_compatible_replay_benefit
+  priority: high
+  prompt: 'CONTEXT:
+
+    Exp8941 preserved retention but failed all four future-benefit bounds. The new
+    candidate must beat frozen,current,uniform,signature and permuted controls without
+    weakening any earlier threshold. The audit cannot retrain or choose a favorable
+    stream subset.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/compatible_replay_benefit_8941.py
+
+    - python/carnot/reporting/compatible_replay_benefit_runner_8941.py
+
+    - results/experiment_8947_v765_gradient_replay_methods.json
+
+    - results/experiment_8953_v765_gradient_causal_streams.json
+
+
+    TASK:
+
+    Audit prospective gradient-selection benefit and joint retention. Deliver results/experiment_8954_v765_gradient_benefit_audit.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8954 / SCENARIO-REPORT-8954-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Reduce every row from the frozen 24-stream six-arm union. Recompute per-stream
+    future-query 25-48 Brier contrasts and retention Brier/error deltas at 0/24/48.
+    Treat streams as clusters; repeated queries, endpoints, bootstrap draws and restart
+    controls are not independent samples.
+
+    5. Apply 10000 whole-stream paired bootstrap draws with 11 one-sided bounds at
+    family alpha 0.01, alpha per bound 0.01/11. Candidate-minus-frozen upper<=-0.01;
+    candidate-minus-current/uniform/signature/permuted upper<0; each of six retention
+    upper bounds<=0.01. All 11 must pass. Keep the original 10 conditions visible
+    with the new signature condition separately identified.
+
+    6. Report gradient-selection disagreement, actual update diversity, guard rejection
+    frequency and paired mechanism diagnostics. These cannot rescue a failed proper-loss
+    bound. A fixture/oracle-world success is circular_positive with independent_generalization_score=0;
+    it is not live-model self-improvement.
+
+    7. Set gradient_audit_ready_score from authenticated complete reduction and owned
+    checks, independent of benefit. Set gradient_benefit_score only on all 11 bounds.
+    If null, retire this exact gradient-cosine/buffer 32/SGD 0.1/delay 8/guard/48-query
+    mechanism; recommend changed representation or a new causal diagnosis before another
+    attempt. Missing upstream is blocked, not partial.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - gradient_audit_ready_score: integer 0 or 1.
+
+    - gradient_benefit_score: integer 0 or 1.
+
+    - paired_stream_rows, acceptance_gate_rows, multiplicity_ledger, retention_bounds,
+    mechanism_diagnostics, continuation_decision.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8954_v765_gradient_benefit_audit.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Audit prospective gradient-selection benefit and joint retention
+  track: research
+- MODEL_SPECS: []
+  deliverable: results/experiment_8955_v765_gradient_complete_cost.json
+  estimated_wall_time_min: 70
+  gated_on:
+  - artifact_field: gradient_methods_ready_score
+    op: ==
+    upstream: exp8947-gradient-replay-methods
+    value: 1
+  id: exp8955-gradient-complete-cost
+  inference_substrate_class: no_model_load
+  max_turns: 50
+  milestone: 2026.11.765
+  per_unit_rows: true
+  phase: 4
+  prior_failures:
+  - addressed_by: Measure new buffer-wide gradient scans, including a genuine no-scan
+      deployment baseline; reuse qualified outer clocks and retain null hardware fractions
+      rather than rerunning intrusive phase timing.
+    experiment_id: exp8942-replay-complete-cost
+    retire_if_same_verdict: true
+    verdict: complete_null_replay_complete_cost
+  priority: high
+  prompt: 'CONTEXT:
+
+    The old service-cost experiment had valid outer clocks but no deployment benefit
+    and no component attribution. The new operation is a buffer-wide gradient scan.
+    Measure its complete cost even when scientific benefit is null; a deployment recommendation
+    still requires benefit.
+
+
+    EXISTING CODE TO READ FIRST:
+
+    - CLAUDE.md
+
+    - CODEX.md
+
+    - research-program.md
+
+    - openspec/capabilities/research-reporting/spec.md
+
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+
+    - scripts/experiment_template.py
+
+    - python/carnot/reporting/current_work_receipt.py
+
+    - python/carnot/reporting/primary_publication.py
+
+    - ops/e2e-test-plan.md
+
+    - python/carnot/reporting/replay_complete_cost_8942.py
+
+    - python/carnot/reporting/replay_complete_cost_runner_8942.py
+
+    - results/experiment_8947_v765_gradient_replay_methods.json
+
+    - results/experiment_8954_v765_gradient_benefit_audit.json
+
+    - research-hardware-wishlist.md
+
+
+    TASK:
+
+    Measure complete gradient-selection costs and hardware limits. Deliver results/experiment_8955_v765_gradient_complete_cost.json
+    for 2026.11.765.
+
+
+    CONCRETE STEPS:
+
+    1. Read the sources and REQ-REPORT-8955 / SCENARIO-REPORT-8955-CONTRACT. Work
+    in {project_root}. Authenticate branch inputs before costly work. Historical references
+    are retained inputs, never runtime gates on retired task IDs.
+
+    2. Emit a flushed progress line at every phase boundary and before and after every
+    model load, generation, benchmark or subprocess that can take minutes. Use python
+    -u and print(..., flush=True); forward child output. Inside long loops and subprocess
+    supervision print completed/pending counts at least every 60 seconds. Keep every
+    silence gap below 600 seconds, including time between tool calls. Target work
+    below 4200 seconds and retain validation time within the 4800-second hard cap.
+
+    3. Keep each tool call bounded. Write any file over about 200 lines in several
+    tool calls of at most 150-200 lines, with a progress message between calls. Put
+    experiment scripts in scripts/experiments/, tests in tests/python/, and scratch
+    in /tmp; never put scratch files in the repository root.
+
+    4. Use 24 fresh paired process/world seeds and the five trainable arms for 48
+    complete cycles, with cold initialization, feature extraction, feedback checks,
+    selection scans, guard evaluation, serialization, fsync, exact restart at 24 and
+    pending-feedback tail drain included. Use complete outer clocks only, with predeclared
+    randomized arm order. Keep failed or censored processes in the denominator.
+
+    5. Compare matched-work signature/current/uniform arms to the gradient selector.
+    Also run the existing ordinary guarded_current service without artificial candidate
+    scans under the same seed and durability work as a separately named deployment
+    baseline. Report both comparisons; scan-and-discard fairness must not hide real
+    deployment overhead. Use paired process intervals, p50/p95, memory, evaluated/applied
+    gradients and durable bytes.
+
+    6. Map measured operations: CPU runs the complete service; batch gradient dot-products
+    can map to GPU/NPU only as unmeasured candidates. KV 260 retains qualified quadratic
+    sampling with k_max<=5 and has no gradient-scan implementation. PolarFire is CPU
+    dispatch only. GateMate remains physically blocked at 0xffffffff. TSU/NPU runtimes
+    remain unqualified. Do not probe boards, install toolchains or infer sampler speedups
+    when sampling_call_count=0.
+
+    7. Keep removable_fraction and service_100x_projection null without qualified
+    component evidence. Explain the hardware path and why the 100x aspiration remains
+    unmet. Set cost_rows_ready_score from correct complete measurements. Deployment
+    requires gradient_benefit_score=1 and a favorable measured cost/quality tradeoff;
+    absent benefit evidence makes recommendation false with an exact diagnostic but
+    does not erase valid timings.
+
+    8. Before implementation, extend the named REQ/SCENARIO and write failing tests.
+    Reuse existing helpers and preserve original assertions and producer bytes. Run
+    scoped pytest with measured 100-percent newly owned unit/child statement coverage
+    and zero exclusions, Ruff check and format --check, strict mypy, and scripts/check_spec_coverage.py
+    with positional test paths. Run applicable private E2E-018/021 CLI cases, cold
+    replay and rehashed-tamper refusal. Keep writes in private scratch during tests.
+    Record existing global test debt separately; do not waive failed owned checks.
+
+    9. Publish the final artifact only after required checks pass through primary_publication.
+    Preserve comparison rows, input/code/config/raw hashes, actual clocks, counts
+    and reproduction commands. Missing external evidence is terminal blocked with
+    gate_check_summary naming upstream, check, exact field, expected and observed
+    value. Failed owned validation is disqualified. partial is only for unfinished
+    owned work that another attempt can complete; never for unchanged external blocks.
+    Never fabricate or sleep to meet a duration floor.
+
+
+    REQUIRED ARTIFACT FIELDS:
+
+    - experiment_id, task_id, milestone, run_date, random_seed, reproducibility_checksum,
+    execution_venue, methodology_note.
+
+    - honest_verdict: terminal prefix complete_ followed by the actual disposition
+    and scope; retain the prior disposition for unchanged rerun failures so retirement
+    can compare it.
+
+    - verdict_class: exactly one of positive | circular_positive | null | blocked
+    | disqualified | partial; verifier_is_oracle=true forbids positive; any failed
+    acceptance gate forbids positive.
+
+    - inference_substrate, inference_substrate_class, MODEL_SPECS, model_specs, model_invocation_counts,
+    numerical_training_calls, duration_s, phase_spans, preconditions_checked.
+
+    - verifier_is_oracle, exposure_scope, independent_generalization_score, intended_count,
+    completed_count, failed_count, censored_count, excluded_count, independent_count.
+
+    - rows: one typed metric/value/numerator/denominator row per scheduled unit, arm
+    and condition, including status and censor reason; cluster_id states the independent
+    unit. Aggregate claims must recompute from rows.
+
+    - gate_check_summary: exact upstream, path/hash, check, artifact_field, expected
+    and observed for every blocked prerequisite; distinguish missing_file, missing_field,
+    observed_zero and rejected_producer.
+
+    - source_artifact_hashes, code_config_hashes, raw_shard_hashes, field_principles,
+    acceptance_gates, required_checks_passed, owned_statement_coverage, validation_receipts,
+    global_test_debt.
+
+    - cost_rows_ready_score: integer 0 or 1.
+
+    - service_cost_rows, paired_cost_intervals, deployment_baseline_rows, durability_rows,
+    operation_counts, peak_memory_bytes, hardware_compatibility_rows, sampling_call_count,
+    removable_fraction, service_100x_projection, deployment_recommendation.
+
+
+    Run command: cd {project_root} && PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_8955_v765_gradient_complete_cost.py
+    --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.'
+  requires_gpu: false
+  title: Measure complete gradient-selection costs and hardware limits
+  track: research

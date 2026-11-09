@@ -1,0 +1,109 @@
+......F.                                                                 [100%]
+=================================== FAILURES ===================================
+____________________ test_private_publication_and_cold_cli _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261109T064717-361886-79ada57a/test_private_publication_and_c0')
+
+    def test_private_publication_and_cold_cli(tmp_path):
+        """SCENARIO-REPORT-8944-CONTRACT: private publication and real foreign-directory replay."""
+        import os
+        import subprocess
+    
+        from coverage import Coverage
+        from carnot.reporting.primary_publication import publish_primary
+    
+        work = c.freeze(tree(tmp_path / "root"), tmp_path / "raw", "20261109")
+        value = c.build(work, validation(False))
+        output = tmp_path / "results" / (c.NAME + ".json")
+        publish_primary(output, value, c.replay)
+        argv = [sys.executable]
+        tracer = Coverage.current()
+        if tracer:
+            argv += [
+                "-m",
+                "coverage",
+                "run",
+                "--rcfile",
+                tracer.config.config_file or "pyproject.toml",
+                "--data-file",
+                tracer.config.data_file,
+                "--parallel-mode",
+            ]
+        argv += [str(c.ROOT / c.CLI), "--cold-replay", str(output)]
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        print("phase=private_cold_cli_before completed=0 pending=2", flush=True)
+        good = subprocess.run(argv, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=90)
+        print(good.stdout, good.stderr, flush=True)
+>       assert good.returncode == 0 and "replay_passed" in good.stdout
+E       AssertionError: assert (1 == 0)
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcf...riment_8944_v765_branch_contract/invocations/1794206835442592026/.coverage.icbfl1.pid362456.XQ1Af1lx.HWm2Nd1VXXKh\'\n').returncode
+
+tests/python/test_v765_branch_contract_8944.py:268: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8944] phase=preconditions_before completed=0 pending=13
+[exp8944] phase=historical_outcomes completed=1 pending=13
+[exp8944] phase=historical_outcomes completed=2 pending=12
+[exp8944] phase=historical_outcomes completed=3 pending=11
+[exp8944] phase=historical_outcomes completed=4 pending=10
+[exp8944] phase=historical_outcomes completed=5 pending=9
+[exp8944] phase=historical_outcomes completed=6 pending=8
+[exp8944] phase=historical_outcomes completed=7 pending=7
+[exp8944] phase=historical_outcomes completed=8 pending=6
+[exp8944] phase=historical_outcomes completed=9 pending=5
+[exp8944] phase=historical_outcomes completed=10 pending=4
+[exp8944] phase=historical_outcomes completed=11 pending=3
+[exp8944] phase=historical_outcomes completed=12 pending=2
+[exp8944] phase=historical_outcomes completed=13 pending=1
+[exp8944] phase=historical_outcomes completed=14 pending=0
+[exp8944] phase=control_missing completed=1 pending=4
+[exp8944] phase=control_order completed=2 pending=3
+[exp8944] phase=control_prompt completed=3 pending=2
+[exp8944] phase=control_gate completed=4 pending=1
+[exp8944] phase=control_path completed=5 pending=0
+[exp8944] phase=preconditions_after completed=13 pending=0
+phase=private_cold_cli_before completed=0 pending=2
+{"passed": true, "reason": "replay_passed"}
+ Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+    runner.run()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+    exec(code, main_mod.__dict__)
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8944_v765_branch_contract.py", line 17, in <module>
+    raise SystemExit(runner.main(["--date", "20261109", *sys.argv[1:]]))
+SystemExit: 0
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+    status = CoverageScript().command_line(argv)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+    return self.do_run(options, args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+    self.coverage.save()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+    data.write()
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+    os.rename(current_filename, self._filename)
+  File "/tmp/carnot-child-results-guard-u6ttdl_e/sitecustomize.py", line 76, in moved
+    return real(src, dest if dest is not None else dst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8944_v765_branch_contract/invocations/1794206835442592026/.coverage.icbfl1.pid362456.XQ1Af1lx' -> '/tmp/carnot-pytest-artifacts-z7ie4ocu/raw/experiment_8944_v765_branch_contract/invocations/1794206835442592026/.coverage.icbfl1.pid362456.XQ1Af1lx.HWm2Nd1VXXKh'
+
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v765_branch_contract_8944.py::test_private_publication_and_cold_cli
+1 failed, 7 passed, 1 warning in 91.72s (0:01:31)

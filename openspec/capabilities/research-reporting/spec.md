@@ -110244,9 +110244,43 @@ Each requirement inherits the progress, evidence, validation and failure rules i
 
 The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8944_v765_branch_contract.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
 
+Execution contract, 2026-11-09: Compare the visible table, full embedded objects
+and staged or matching activated queue with explicit milestone2026.11.765,
+first_id8944 and count13. Preserve all prompts, routes, priors, paths and gate
+fields; consumed staging is valid only with matching activated authority.
+Snapshot exact bytes before checks. Historical V764 producers SHALL use their
+retained original design and queue, never the mutable vNEXT document. Preserve
+all14 outcomes, actual primary and scheduler-log paths, and the failed depth
+source gate without inventing absent sibling artifacts. No current runtime
+requires retired tasks or gates science on contract_ready_score. Ingest the
+November9 literature map as source/method/control rows with explicit limits.
+Current model and training calls remain zero; historical compute stays opaque.
+
 #### SCENARIO-REPORT-8944-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8944-branch-contract` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+Tests SHALL first fail for missing tasks, reordered tasks, changed prompts or
+paths, missing producer fields, altered retained bytes and consumed staging.
+Rehashed authority, historical outcomes and aggregate edits SHALL fail cold
+replay. Administrative rows SHALL retain typed metrics, numerators, denominators,
+status, censor reason and cluster identity with independent_count0. Readiness1
+requires all owned checks and custody controls and establishes no science gain.
+Run scoped unit/child coverage at100percent with zero exclusions, Ruff check
+and format, strict mypy, positional spec tracing, private E2E-018/021 and terminal
+validators before primary_publication. Run the global Python suite once and
+record existing failures or bounded timeout separately; never waive owned
+failures. Conductor owns ops/status/changelog/traceability reconciliation.
+
+Implementation update, 2026-11-09: `v765_branch_contract.py` and the direct
+Exp8944 CLI implement the contract. Eight requirement-linked tests cover
+consumed staging, independent full-object comparison, missing producer fields,
+retained-byte drift, rehashed authority/history/aggregate refusal, private
+publication and outside-checkout cold CLI replay. Combined owned unit/child
+coverage measures228/228 statements with zero exclusions. The full Python suite
+was attempted once and timed out during collection at its180-second bound;
+this is repository-health debt separate from the owned checks. Final publication
+remains conditional on the checked CLI's validation receipts.
 
 ### REQ-REPORT-8945: Measure answer-set opportunity in the failed depth control
 
