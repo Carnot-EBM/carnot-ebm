@@ -23425,3 +23425,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Evaluate energy decisions on unseen matched-population model errors (⚠️ Research Finding) — honest_verdict=complete_null_matched_population_final_answer_calibration; results/experiment_8952_v765_matched_calibrated_decisions.json
 - 2026-11-09: Measure continuous gradient-informed replay on sealed future streams (⚠️ Research Finding) — honest_verdict=complete_null_gradient_causal_streams; results/experiment_8953_v765_gradient_causal_streams.json
 - 2026-11-09: Audit prospective gradient-selection benefit and joint retention (⚠️ Research Finding) — honest_verdict=complete_null_gradient_benefit_audit; results/experiment_8954_v765_gradient_benefit_audit.json
+- 2026-11-09: Measure complete gradient-selection costs and hardware limits (⚠️ Research Finding) — honest_verdict=complete_null_gradient_complete_cost; results/experiment_8955_v765_gradient_complete_cost.json
