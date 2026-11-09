@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.764",
+  "generated_at": "2026-11-09T04:02:49Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 122.0,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete replay service cost and hardware limits",
+      "duration_minutes": 25.55,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure future predictions after compatible delayed replay",
+      "duration_minutes": 15.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Audit future replay benefit and untouched retention",
+      "duration_minutes": 14.17,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure paired graph depth sensitivity with mandated Qwen",
+      "duration_minutes": 13.49,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Freeze compatible feedback replay for continuous energy learning",
+      "duration_minutes": 12.43,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.764 completed 10 experiments (1 compute-bound, 9 synthesis-only) in 122.0 wall-time minutes (122 minutes / 2.0 hours, averaging 12 minutes per experiment) reconstructed via disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log). The sole compute-bound experiment was 'Measure paired graph depth sensitivity with mandated Qwen' at 13.49 minutes (13min), while four synthesis-only tasks accounted for the rest of the top five durations: 'Measure complete replay service cost and hardware limits' (25.55 minutes / 26min), 'Measure future predictions after compatible delayed replay' (15.1 minutes / 15min), 'Audit future replay benefit and untouched retention' (14.17 minutes / 14min), and 'Freeze compatible feedback replay for continuous energy learning' (12.43 minutes / 12min). Locked gpu_idle_on_compute_bound_tasks is false, DualGPURunner did not apply to the single mandated Qwen model task (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% utilization on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0%, Temp 48C) across the 9 synthesis-only tasks is expected behavior.",
+  "bottlenecks_identified": [
+    "The single compute-bound experiment (1 of 10 completed experiments), 'Measure paired graph depth sensitivity with mandated Qwen', required 13.49 minutes (13min) to evaluate paired graph depth sensitivity with the mandated Qwen model; locked gpu_idle_on_compute_bound_tasks is false.",
+    "Overall wall time across the 122.0-minute (122 minutes / 2.0 hours, 12 minutes average per experiment) milestone was concentrated in four synthesis-only replay tasks: 'Measure complete replay service cost and hardware limits' at 25.55 minutes (26min), 'Measure future predictions after compatible delayed replay' at 15.1 minutes (15min), 'Audit future replay benefit and untouched retention' at 14.17 minutes (14min), and 'Freeze compatible feedback replay for continuous energy learning' at 12.43 minutes (12min).",
+    "Live git-log timing path found 0 commits, requiring disk-mtime reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across the 10 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse replay service cost/hardware-limit fixtures, compatible delayed-replay prediction inputs, future replay benefit/untouched-retention audit artifacts, and compatible feedback-replay states across the 4 slowest synthesis-only experiments (25.55 minutes / 26min, 15.1 minutes / 15min, 14.17 minutes / 14min, and 12.43 minutes / 12min) to reduce the 12-minute per-experiment average.",
+    "Batch or parallelize paired graph depth sensitivity evaluation in the 13.49-minute (13min) single-model compute-bound task 'Measure paired graph depth sensitivity with mandated Qwen' while keeping DualGPURunner unengaged unless 2+ models are loaded in parallel.",
+    "Persist explicit per-experiment start and completion timestamps in conductor artifacts so milestone retrospectives do not rely on disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Free the residual 4MB allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 48C) when idle per the GPU Monitor Report suggestion."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache and reuse shared replay service cost, delayed-replay prediction, replay benefit/retention audit, and compatible feedback-replay fixtures across the 4 slowest synthesis-only experiments (25.55 minutes / 26min, 15.1 minutes / 15min, 14.17 minutes / 14min, and 12.43 minutes / 12min).",
+    "Batch or parallelize paired graph depth sensitivity evaluation with the mandated Qwen model in the 13.49-minute (13min) compute-bound task 'Measure paired graph depth sensitivity with mandated Qwen'.",
+    "Persist direct per-experiment timing metadata in conductor artifacts to eliminate disk-mtime fallback (retro_timing_fallback, 0 commits in live git-log) and release the idle 4MB allocation on GPU 0 (4/24576MB, 0% utilization, Temp 48C)."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.764 completed 10 experiments (1 compute-bound, 9 synthesis-only) in 122.0 wall-time minutes (122 minutes / 2.0 hours, averaging 12 minutes per experiment), with gpu_idle_on_compute_bound_tasks locked at false, DualGPURunner not applicable to the single mandated Qwen model task (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% GPU 0 utilization (4/24576MB, Temp 48C) expected across the 9 synthesis-only tasks. Caching shared replay fixtures across the 4 slowest synthesis-only tasks (25.55 minutes / 26min, 15.1 minutes / 15min, 14.17 minutes / 14min, and 12.43 minutes / 12min), batching the 13.49-minute (13min) compute-bound paired graph depth sensitivity evaluation, and persisting direct timing metadata are the primary operational improvements for the next milestone."
+}

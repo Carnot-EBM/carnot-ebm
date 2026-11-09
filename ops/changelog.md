@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-11-09 UTC — Operational retrospective for milestone 2026.11.764
+
+- Updated `results/operational_retro_2026_11_764.json` (schema `carnot.operational_retro.v64`) for milestone `2026.11.764`. Authoritative disk-mtime fallback timing data (`retro_timing_fallback`, 0 commits in live git-log) records 10 completed experiments (1 compute-bound, 9 synthesis-only) across 122.0 wall-time minutes (122 minutes / 2.0 hours, averaging 12 minutes per experiment).
+- The five slowest experiments were: `Measure complete replay service cost and hardware limits` (25.55 minutes / 26min, `compute_bound: false`), `Measure future predictions after compatible delayed replay` (15.1 minutes / 15min, `compute_bound: false`), `Audit future replay benefit and untouched retention` (14.17 minutes / 14min, `compute_bound: false`), `Measure paired graph depth sensitivity with mandated Qwen` (13.49 minutes / 13min, `compute_bound: true`), and `Freeze compatible feedback replay for continuous energy learning` (12.43 minutes / 12min, `compute_bound: false`).
+- GPU monitor report (`2026-11-09T04:02:49.164006+00:00`) recorded GPU 0 (NVIDIA GeForce RTX 3090) at 4/24576MB (0%), 0% utilization, and Temp 48C; locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply to the single mandated Qwen model task (no data available this milestone for any compute-bound task loading 2+ models in parallel), and 0% GPU utilization across the 9 synthesis-only experiments is expected behavior.
+- Suggested improvements: cache and reuse replay service cost/hardware-limit, compatible delayed-replay prediction, future replay benefit/untouched-retention audit, and compatible feedback-replay fixtures across the 4 slowest synthesis-only tasks (25.55 minutes / 26min, 15.1 minutes / 15min, 14.17 minutes / 14min, and 12.43 minutes / 12min), batch or parallelize paired graph depth sensitivity evaluation in the 13.49-minute (13min) compute-bound task with mandated Qwen, persist direct per-experiment timing metadata to eliminate `retro_timing_fallback` when live git-log has 0 commits, and free the idle 4MB GPU 0 allocation.
+
 ## 2026-11-08 UTC — Stage V764 research plan
 
 - Record the current arXiv and secondary-source review in research references
