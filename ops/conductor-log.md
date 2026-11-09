@@ -21637,3 +21637,4 @@ code |
 | 2026-11-09 08:51 UTC | Freeze equal-opportunity graph sources and unchang | OK | 96 passed, 1 warning in 104.59s (0:01:44) |
 | 2026-11-09 09:53 UTC | Freeze released-label gradient selection for conti | OK | 94 passed, 1 warning in 117.63s (0:01:57) |
 | 2026-11-09 10:33 UTC | Test paired depth sensitivity with equal answer op | OK | 108 passed, 1 warning in 29.81s |
+| 2026-11-09 11:17 UTC | Collect matched-population Qwen corpus shard A | OK | 105 passed, 1 warning in 34.71s |
