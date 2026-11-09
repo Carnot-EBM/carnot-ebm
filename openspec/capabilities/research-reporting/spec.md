@@ -110618,11 +110618,25 @@ only private scratch. Ops/status/traceability reconciliation is conductor-owned.
 
 ### REQ-REPORT-8955: Measure complete gradient-selection costs and hardware limits
 
-The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8955_v765_gradient_complete_cost.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8955_v765_gradient_complete_cost.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Implemented** in `gradient_complete_cost_8955.py`, `gradient_complete_cost_runner_8955.py` and the direct CLI. Owned unit/child coverage measures 322/322 statements with zero exclusions. The named artifact records measured cost readiness and the separate deployment gate.
 
 #### SCENARIO-REPORT-8955-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8955-gradient-complete-cost` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+The cost census SHALL freeze 24 fresh world/process seeds, randomized six-arm order,
+five trainable matched-scan arms and an ordinary_guarded_current deployment baseline.
+Each cell SHALL include 48 predictions, all delayed feedback, exact process restart
+at prediction24, file and directory fsync, evaluated/applied gradients, durable bytes
+and peak RSS. Complete outer clocks SHALL cover child startup through final exit.
+Paired intervals SHALL compare gradient_replay against current, uniform, signature
+and ordinary deployment services. Missing benefit SHALL prohibit deployment while
+leaving valid cost readiness intact. Hardware mappings SHALL preserve null removable
+fractions and projections, zero sampling calls and existing board limits.
+Tests SHALL reject changed counts, state, outer clocks, input bytes, recommendations
+and rehashed aggregate drift. All new statements SHALL have measured unit/child
+coverage with zero exclusions. Full-suite debt SHALL remain separate from owned
+qualification. Tests and CLI controls SHALL write only to private scratch.
 
 ### REQ-REPORT-8956: Reconcile thirteen outcomes and close exact unchanged scopes
 
