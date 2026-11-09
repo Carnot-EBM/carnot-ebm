@@ -1,0 +1,150 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --rcfile=/tmp/carnot8934-final-coverage/coverage.ini --data-file=/tmp/carnot8934-final-coverage/.coverage -m pytest -n0 -o addopts= --no-cov -q --basetemp=/tmp/carnot8934-final-coverage/pytest tests/python/test_depth_control_8934.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot8934-final-coverage/coverage.ini",
+        "--data-file=/tmp/carnot8934-final-coverage/.coverage",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot8934-final-coverage/pytest",
+        "tests/python/test_depth_control_8934.py"
+      ],
+      "duration_s": 129.1060471360106,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8934_v764_depth_control/invocations/1794176869272357057/coverage_amendment/00_owned_unit_child.log",
+      "log_sha256": "sha256:840dfc8eb09c1e4409263c71e15f1356c3cfda14823b0e56a7ea3c5ca4fdaded",
+      "name": "owned_unit_child",
+      "output_tail": "......................                                                   [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n22 passed, 1 warning in 48.66s\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --data-file=/tmp/carnot8934-final-coverage/.coverage /tmp/carnot8934-final-coverage",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot8934-final-coverage/.coverage",
+        "/tmp/carnot8934-final-coverage"
+      ],
+      "duration_s": 0.06467871798668057,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8934_v764_depth_control/invocations/1794176869272357057/coverage_amendment/01_coverage_combine.log",
+      "log_sha256": "sha256:c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0",
+      "name": "coverage_combine",
+      "output_tail": "Combined 2 files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --rcfile=/tmp/carnot8934-final-coverage/coverage.ini --data-file=/tmp/carnot8934-final-coverage/.coverage -o /tmp/carnot8934-final-coverage/coverage.json --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot8934-final-coverage/coverage.ini",
+        "--data-file=/tmp/carnot8934-final-coverage/.coverage",
+        "-o",
+        "/tmp/carnot8934-final-coverage/coverage.json",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.08184700296260417,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8934_v764_depth_control/invocations/1794176869272357057/coverage_amendment/02_coverage_json.log",
+      "log_sha256": "sha256:e390345c823d3cb00c6dfd0dc08e9d55ae0e88f5584fa5d5b963b7295e13ec57",
+      "name": "coverage_json",
+      "output_tail": "Wrote JSON report to /tmp/carnot8934-final-coverage/coverage.json\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/depth_control_8934.py python/carnot/inference/depth_runtime_8934.py python/carnot/reporting/depth_control_runner_8934.py scripts/experiments/experiment_8934_v764_depth_control.py tests/python/test_depth_control_8934.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/depth_control_8934.py",
+        "python/carnot/inference/depth_runtime_8934.py",
+        "python/carnot/reporting/depth_control_runner_8934.py",
+        "scripts/experiments/experiment_8934_v764_depth_control.py",
+        "tests/python/test_depth_control_8934.py"
+      ],
+      "duration_s": 0.013175899046473205,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8934_v764_depth_control/invocations/1794176869272357057/coverage_amendment/03_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/depth_control_8934.py python/carnot/inference/depth_runtime_8934.py python/carnot/reporting/depth_control_runner_8934.py scripts/experiments/experiment_8934_v764_depth_control.py tests/python/test_depth_control_8934.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/depth_control_8934.py",
+        "python/carnot/inference/depth_runtime_8934.py",
+        "python/carnot/reporting/depth_control_runner_8934.py",
+        "scripts/experiments/experiment_8934_v764_depth_control.py",
+        "tests/python/test_depth_control_8934.py"
+      ],
+      "duration_s": 0.010893543949350715,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8934_v764_depth_control/invocations/1794176869272357057/coverage_amendment/04_ruff_format.log",
+      "log_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "name": "ruff_format",
+      "output_tail": "5 files already formatted\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --config-file=/tmp/carnot8934-final-coverage/mypy.ini python/carnot/reporting/depth_control_8934.py python/carnot/inference/depth_runtime_8934.py python/carnot/reporting/depth_control_runner_8934.py scripts/experiments/experiment_8934_v764_depth_control.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/tmp/carnot8934-final-coverage/mypy.ini",
+        "python/carnot/reporting/depth_control_8934.py",
+        "python/carnot/inference/depth_runtime_8934.py",
+        "python/carnot/reporting/depth_control_runner_8934.py",
+        "scripts/experiments/experiment_8934_v764_depth_control.py"
+      ],
+      "duration_s": 0.12217491201590747,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8934_v764_depth_control/invocations/1794176869272357057/coverage_amendment/05_strict_mypy.log",
+      "log_sha256": "sha256:71144743c83babea384888a735db0c4daba3d4d7b7942b6839984bd5c21b52bb",
+      "name": "strict_mypy",
+      "output_tail": "Success: no issues found in 4 source files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_depth_control_8934.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_depth_control_8934.py"
+      ],
+      "duration_s": 0.021148007013835013,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8934_v764_depth_control/invocations/1794176869272357057/coverage_amendment/06_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}

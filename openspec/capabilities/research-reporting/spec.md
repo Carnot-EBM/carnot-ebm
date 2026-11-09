@@ -110309,11 +110309,36 @@ rehashed-tamper refusal. Repository-wide test debt SHALL remain separate.
 
 ### REQ-REPORT-8946: Freeze equal-opportunity graph sources and unchanged calibration controls
 
-The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8946_v765_matched_source_methods.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8946_v765_matched_source_methods.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation: `matched_source_methods_8946.py`, `matched_source_runner_8946.py` and the direct experiment CLI; qualification is recorded in the artifact. Tests: `tests/python/test_matched_source_methods_8946.py`.
 
 #### SCENARIO-REPORT-8946-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8946-matched-source-methods` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+Freeze 50 paired controls and 320 distinct collection graphs, each with 50–60
+nodes, edge probability 3/(n-1), and equal nonempty shortest-distance k2/k3
+answer sets. Exclude every retained V763/V764 identity, including unused graphs.
+Retain every rejected seed; at most 2000 proposals per slot and 240 seconds total
+are allowed. Exhaustion SHALL produce a terminal feasibility null with all
+unfinished slots visible, without changing the population. Labels and edge order
+are randomized before inference and fixed within each pair; condition order is
+balanced. Each independent 160-graph shard has 80 train/40 calibration/40 test
+roles assigned without responses or class labels. Prompts never disclose counts.
+
+Reuse Exp8937's exact feature allowlist, Gibbs/logistic/prevalence/nuisance
+training, calibrator, budget and decision thresholds; preserve Brier superiority
+over prevalence/logistic and accepted-error noninferiority at 50-percent coverage.
+Freeze the strict parser, separate label sidecars, bounded first-response runner,
+Qwen3.8-27B Q4_K_M on GPU0, temperature0, reasoning off, max_tokens16, and missing
+backend signal refusal. No model SHALL load here. Test learnable, permuted-label,
+duplicate-graph, altered-feature and role-leak fixtures. Readiness is one only
+after complete source/protocol and owned validation pass; live source feasibility,
+error_k3 > error_k2 with error_k2 >= 20%, and detector benefit remain future gates.
+Require measured 100-percent owned unit/child statements with zero exclusions,
+Ruff check/format, strict mypy, positional spec tracing, private E2E-018/021,
+cold replay and rehashed-tamper refusal before primary_publication. Preserve exact
+producer bytes, actual clocks, hashes and separate global test debt. Ops and
+traceability reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-8947: Freeze released-label gradient selection for continuous energy learning
 
