@@ -23380,3 +23380,4 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-08: Freeze compatible feedback replay for continuous energy learning (⚠️ Research Finding) — honest_verdict=complete_null_compatible_replay_methods; results/experiment_8933_v764_compatible_replay_methods.json
 - 2026-11-08: Measure paired graph depth sensitivity with mandated Qwen (⚠️ Research Finding) — honest_verdict=complete_null_paired_depth_control; results/experiment_8934_v764_depth_control.json
 - 2026-11-08: Freeze a small energy selector and strong calibration controls (⚠️ Research Finding) — honest_verdict=complete_null_calibration_methods; results/experiment_8937_v764_calibration_methods.json
+- 2026-11-09: Measure future predictions after compatible delayed replay (⚠️ Research Finding) — honest_verdict=complete_null_compatible_replay_streams; results/experiment_8940_v764_compatible_replay_streams.json
