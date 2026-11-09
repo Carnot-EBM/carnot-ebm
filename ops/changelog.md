@@ -23420,3 +23420,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Freeze released-label gradient selection for continuous energy learning (⚠️ Research Finding) — honest_verdict=complete_null_gradient_replay_methods; results/experiment_8947_v765_gradient_replay_methods.json
 - 2026-11-09: Test paired depth sensitivity with equal answer opportunity (⚠️ Research Finding) — honest_verdict=complete_circular_positive_paired_depth_control; results/experiment_8948_v765_matched_depth_control.json
 - 2026-11-09: Collect matched-population Qwen corpus shard A (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_a; results/experiment_8949_v765_matched_corpus_a.json
+- 2026-11-09: Collect matched-population Qwen corpus shard B (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_b; results/experiment_8950_v765_matched_corpus_b.json
