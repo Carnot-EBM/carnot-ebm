@@ -110551,9 +110551,40 @@ primary_publication after validation. Ops and traceability are conductor-owned.
 
 The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8953_v765_gradient_causal_streams.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
 
+The authenticated Exp8947 producer SHALL freeze exactly24 independent evaluation
+streams, six arms and48 predictions per arm. Each arm SHALL score48 untouched
+retention queries at0/24/48:27648 comparison rows with Brier and error endpoints
+(55296 cells). Labels SHALL release only after sealed predictions under the
+unchanged delay8/block8 schedule; eight terminal labels per arm remain pending.
+Frozen_verified receives the same verified templates without weight updates.
+Every trainable arm SHALL record and pay for the same W1 gradient scan budget;
+current/candidate gradients, cosine, selected IDs, applied/evaluated counts,
+rejected guards and no-op arms remain visible. Only released TRAIN labels enter
+selection. Retained historical producers are byte inputs, never runtime gates
+on retired task IDs. Externally blocked methods stop without old replay.
+
+Readiness SHALL require authenticated complete rows, exact query24 restart of
+committed/candidate weights, buffers, pending feedback, RNG, template memory and
+scan ledgers against uninterrupted controls, future-label and retention mutation
+isolation, and100-percent newly owned unit/child statements with zero exclusions.
+Owned checks include Ruff check/format, strict mypy, positional spec tracing,
+private E2E-018/021, semantic cold replay and rehashed-tamper refusal. Record one
+bounded global-suite attempt separately. Failed owned validation disqualifies;
+absent external evidence blocks with exact field/hash diagnostics. Publish only
+through primary_publication. gradient_rows_ready_score is0 or1 and grants no
+learning-benefit claim: Exp8954 owns all11 prospective/retention bounds.
+
 #### SCENARIO-REPORT-8953-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8953-gradient-causal-streams` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+Tests SHALL retain all scheduled cells on external blocking, distinguish missing
+files/fields, observed zero and rejected producers, authenticate original heads,
+recompute scores and work from complete rows, and reject rehashed causal drift.
+Private future-label and retention perturbations SHALL preserve earlier sealed
+predictions and selected IDs; exact restarts SHALL preserve every subsequent seal
+and full durable state. Full-suite debt never waives failed owned checks. Ops,
+status and traceability reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-8954: Audit prospective gradient-selection benefit and joint retention
 

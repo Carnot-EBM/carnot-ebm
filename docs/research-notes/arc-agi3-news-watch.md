@@ -858,3 +858,13 @@ Live Kaggle standings and full discussions remained unreadable; the mirrored pub
 
 Live Kaggle/Discord threads remained inaccessible; discussion coverage relied on indexed or quoted copies.
 
+## 2026-11-09 14:09 UTC -- NEW
+
+- **October 31 — No deadline extension:** An ARC Prize moderator reportedly rejected an extension despite Kaggle scoring queues and GPU slowdowns. [Reported organizer clarification](https://arc.markbarney.net/news/2026-10-30-special-arc-deadline-no-extension).
+
+- **November 3 — Closing tally:** Greg Kamradt reported approximately **18,500 entrants and 67,000 submissions** for ARC-AGI-3. [Organizer post](https://x.com/GregKamradt/status/2117407059364958226), [indexed copy](https://teapawt.net/GregKamradt?filter=posts).
+
+- **November 9 — Public leaderboard:** **Yi-Chia Chen @ Fields Model leads with 75.56**, followed by **Tufa Labs, 70.24**, and **NVARC3, 60.95**. [Public-board mirror](https://arc.markbarney.net/arc-leaderboards).
+
+Direct Kaggle/Discord discussion access remained unavailable; public standings are provisional.
+

@@ -657,3 +657,17 @@ Not independently checked: complete code or causal gains. These mechanisms requi
 
 Not independently reproduced; classifications cover disclosed mechanisms. Complete-submission source-reading and hardcoding status remains unverified.
 
+## 2026-11-09 14:34 UTC -- NEW
+
+**Grigoriy Zatravkin & co — newly located details from its November 4 release, absent from the previous report:**
+
+- **(b), general-purpose attention-guided caching:** Uses the sparse-attention indexer’s approximately **2,048 selected KV rows** to populate a **12,288-row GPU cache per session/layer**. Recorded-trace LRU misses were **6.6%**, versus **4.8%** for an oracle; frequency-based eviction did no better. These mechanisms require no game-source access or per-game rules. [Details, §4.3](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/WRITEUP.md#43-a-host-ram-kv-tier-whose-hot-region-is-filled-by-the-models-own-attention)  
+  **POSSIBLE CARNOT LEVER:** For a sparse-attention generator, size GPU cache residency from actual attention selections to retain longer verifier histories.
+
+- **(b), general-purpose scheduling:** Holds pending prompt processing while other sessions decode, releasing it at **90% of available token capacity**, when accumulated waiting cost exceeds a live-fitted processing overhead, or after **10 seconds**. The selected serving configuration enables this policy; its isolated gameplay benefit was not established. No game-source access or per-game rules are involved. [Implementation](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/serving/prefill_hold.py)  
+  **POSSIBLE CARNOT LEVER:** Batch prompt processing across concurrent candidate searches to reduce interference with ongoing generation.
+
+- **(b), general-purpose negative result:** “Trim holes” deleted middle-history attention-cache entries without recomputing recurrent state, retaining removed information and accumulating rotary-position gaps. One paired rehearsal favored clean recomputation **68.3 versus 64.0 levels** at equal token budgets; evidence was marginal (**one-sided p=0.06**). The shortcut was disabled in final bundles. [Details, §6](https://github.com/gzatravkin/pathbreaker-arc-agi-3/blob/main/WRITEUP.md#6-scheduling-for-agent-traffic)
+
+Measurements were not independently reproduced; complete-submission source-reading and hardcoding status remains unaudited.
+
