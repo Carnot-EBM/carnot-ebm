@@ -23418,3 +23418,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Measure answer-set opportunity in the failed depth control (⚠️ Research Finding) — honest_verdict=complete_null_depth_opportunity_audit; results/experiment_8945_v765_depth_opportunity_audit.json
 - 2026-11-09: Freeze equal-opportunity graph sources and unchanged calibration controls (⚠️ Research Finding) — honest_verdict=complete_null_matched_source_methods; results/experiment_8946_v765_matched_source_methods.json
 - 2026-11-09: Freeze released-label gradient selection for continuous energy learning (⚠️ Research Finding) — honest_verdict=complete_null_gradient_replay_methods; results/experiment_8947_v765_gradient_replay_methods.json
+- 2026-11-09: Test paired depth sensitivity with equal answer opportunity (⚠️ Research Finding) — honest_verdict=complete_circular_positive_paired_depth_control; results/experiment_8948_v765_matched_depth_control.json
