@@ -110290,6 +110290,23 @@ The experiment SHALL follow the exact V765 task contract and produce `results/ex
 
 Given frozen branch authority and authenticated prerequisites, when `exp8945-depth-opportunity-audit` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
 
+The audit SHALL pin retained Exp8931/8934 producer bytes, authenticate all 50
+graphs and 100 original prompts/responses without model calls, and compare stored
+BFS labels with an independent Floyd-Warshall all-pairs reference. Disconnected
+nodes and walks longer than the shortest path SHALL have explicit fixtures.
+Each graph SHALL retain both valid-set sizes, size/node-count chance accuracy,
+direct-neighbor overlap, degree, answer category, emitted token count and paired
+error. Typed condition rows SHALL reduce to 50 independent graph pairs, including
+the original graph-paired depth interval and failed source disposition unchanged.
+Diagnosis readiness requires all records and labels to authenticate; opportunity
+imbalance means only mean size(k3) > mean size(k2). Causal explanation SHALL be
+null. Only a separately frozen matched-cardinality protocol is licensed.
+Missing evidence SHALL name upstream, exact field, expected/observed value and
+failure kind. All newly owned statements, including CLI children, SHALL have
+measured 100-percent coverage with zero exclusions. Publication SHALL use
+primary_publication after scoped checks, private E2E-018/021, cold replay and
+rehashed-tamper refusal. Repository-wide test debt SHALL remain separate.
+
 ### REQ-REPORT-8946: Freeze equal-opportunity graph sources and unchanged calibration controls
 
 The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8946_v765_matched_source_methods.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
