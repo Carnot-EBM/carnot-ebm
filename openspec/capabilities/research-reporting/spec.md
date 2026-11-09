@@ -110348,6 +110348,42 @@ The experiment SHALL follow the exact V765 task contract and produce `results/ex
 
 Given frozen branch authority and authenticated prerequisites, when `exp8947-gradient-replay-methods` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
 
+Execution contract, 2026-11-09: Preserve signed-local-v1, SGD0.1, buffer32,
+delay8, the operational guard and untouched retention. Six arms are
+frozen_verified, guarded_current, uniform_replay, signature_replay,
+gradient_replay and gradient_permuted. At W1 after the current TRAIN update,
+evaluate the current gradient and every prior TRAIN buffer gradient. Select
+maximal cosine, with zero-norm score zero and stable unit-ID ties. Empty
+buffers repeat current. Every trainable arm pays for the same scan at its own
+W1, discards unused gradients and applies exactly two updates. Record evaluated
+and applied gradients separately. No pending, guard or retention label enters
+selection. Only released TRAIN targets are permuted, within their release
+block; all arms receive identical true feedback and template information.
+
+Run eight fresh development streams. Method readiness requires nonzero
+gradients, at least one signature/gradient selection disagreement and all owned
+controls. Development benefit and promotions cannot grant readiness. Freeze24
+fresh evaluation recipes,48 online and48 retention queries at0/24/48, without
+opening evaluation worlds. Preserve the ten prior bounds and add the signature
+comparator: eleven bounds, family alpha0.01,10000 whole-stream bootstrap draws.
+Frozen future upper<=-0.01, other future upper<0, retention upper<=0.01.
+
+Tests shall first fail without the implementation. Cover delayed access,
+label/signature permutations, identical features with opposite gradients,
+all/none aligned buffers, zero norms, stable ties, equal scans and updates,
+read-only retention, exact restart, private CLI, cold replay and rehashed
+tamper rejection. Authenticate retained producer bytes without runtime gates
+on retired task readiness. Require100-percent newly owned unit/child statements
+with zero exclusions, scoped Ruff/format/strict types/spec checks, private
+E2E-018/021 and terminal scanners before primary_publication. Record one full
+Python-suite attempt as separate global health debt. Ops and traceability
+reconciliation are conductor-owned for this invocation.
+
+Implementation update, 2026-11-09: The gradient store, development methods,
+checked runner and direct CLI implement this contract. Tests live in
+`tests/python/test_gradient_replay_methods_8947.py`. The artifact records measured
+qualification and method exercise; evaluation benefit remains unopened.
+
 ### REQ-REPORT-8948: Test paired depth sensitivity with equal answer opportunity
 
 The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8948_v765_matched_depth_control.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
