@@ -9,10 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 4 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_8922_v763_interpolated_causal_streams.json
+## experiment_8933_v764_compatible_replay_methods.json
 
 **CANNOT_DETERMINE**
 
@@ -23,14 +23,14 @@ CANNOT_DETERMINE
 no claim
 
 ## WHAT IS MISSING
-The artifact is truncated inside "cluster_manifest"; any subsequent claim, verdict, outcome rows, or blocker diagnostic is unavailable. The visible "acceptance_gates", "arm_work_ledger", and "attempt_rows" do not establish a comparative outcome or blocked verdict.
+The artifact cuts off inside "acceptance_gates.frozen_evaluation_manifest". "evaluation_plan" records planned comparisons, and "evaluation_opened" is false; the remainder containing any verdict, observed results, or blocker diagnostic is unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Does the missing remainder assert a comparative result or blocked outcome with the required supporting evidence?
+Does the omitted remainder make a comparative or blocked claim and provide supporting per-unit results or a blocker reason?
 
-Only the supplied fragment was checked; the missing remainder could change the classification.
+Unseen content was not checked; truncation could conceal either failure.
 
-## experiment_8923_label_demand_evaluation.json
+## experiment_8934_v764_depth_control.json
 
 **CHECKABLE**
 
@@ -38,7 +38,7 @@ Only the supplied fragment was checked; the missing remainder could change the c
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because upstream `label_demand_ready_score` was 0, while the gate required 1.
+The paired depth control reports a null result: errors of 0.84 at k=2 and 0.78 at k=3, with a paired 95% interval spanning zero.
 
 ## WHAT IS MISSING
 nothing
@@ -46,7 +46,9 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8924_v763_qwen_natural_canary.json
+Execution and external artifacts were not checked; this assessment covers the supplied record only.
+
+## experiment_8935_graph_corpus_a.json
 
 **CHECKABLE**
 
@@ -54,7 +56,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The 24-case canary completed, recording operational extraction and dependent annotation sensitivity without claiming independent generalization.
+Collection was blocked because `depth_source_ready_score` was 0, while the gate required 1, as recorded in `gate_check_summary` and `gates_evaluated`.
 
 ## WHAT IS MISSING
 nothing
@@ -62,77 +64,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-External receipts were not checked; independent ground truth is explicitly absent.
-
-## experiment_8925_v763_interpolated_benefit_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The fixed interpolated optimizer failed all three online benefit gates while passing all six retention gates.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-Execution and external files were not checked; this verdict covers the supplied record.
-
-## experiment_8926_v763_durable_cost_qualification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Historical adaptation costs qualify, while the benefit gate fails with “observed”: 0 versus “expected”: 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-Upstream files and execution were not checked; this assessment covers the supplied excerpt, which ends mid-row.
-
-## experiment_8927_inline_request_cost.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Experiment 8927 was blocked because upstream `inline_clock_ready_score` was 0, failing the required equality to 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8928_v763_hardware_operation_budget.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The hardware mapping audit passed, but hardware-operation budget readiness is blocked by documented upstream failures, and physical acceleration has not been demonstrated.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8929_v763_capstone.json
+## experiment_8937_v764_calibration_methods.json
 
 **CANNOT_DETERMINE**
 
@@ -140,12 +72,80 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible pilot branch claims all 50 cases completed and the gate requiring at least 10 errors passed.
+The visible fixture diagnostics report that the benefit gate failed because energy performed worse than logistic on Brier score.
 
 ## WHAT IS MISSING
-The artifact’s remainder: it cuts off inside `"frozen_evaluation_manifest"`, before an overall verdict or measured outcome rows are visible. The visible `"unit_id"`, `"world_seed"`, and `"error_type"` fields describe scheduled conditions, not measured results.
+The artifact ends mid-row in "development_evidence.rows"; complete paired rows for the comparison arms are unavailable. "fixture_diagnostics.contrasts.brier_vs_logistic" records the failure diagnostic: estimate −0.0573125, bound −0.108932.
 
 ## THE CHECK A READER CANNOT DO
-Do per-case completion and error outcomes substantiate `"all_fifty_completed": true` and `"at_least_ten_errors": true`?
+Do paired per-unit results support the reported Brier difference? The truncated remainder cannot be checked and may contain the required rows.
 
-Only the supplied excerpt was assessed; truncation prevents establishing whether supporting rows appear later.
+## experiment_8940_v764_compatible_replay_streams.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+No headline claim is visible in the supplied excerpt.
+
+## WHAT IS MISSING
+The artifact’s ending and headline conclusion/verdict: it cuts off mid-row in "feedback_rows". "acceptance_gates" records "benefit_required": false, and "attempt_rows" records completion, but neither establishes the final claim.
+
+## THE CHECK A READER CANNOT DO
+Does the missing ending assert a comparative result, report a blocker, or simply record completed work?
+
+Only the supplied excerpt was checked; its truncation prevents reliable classification.
+
+## experiment_8941_v764_compatible_replay_benefit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The fixed compatible-replay configuration failed the required online benefit gates despite passing all retention bounds.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+Not checked: experiment execution or truncated content; this verdict covers the supplied text.
+
+## experiment_8942_v764_replay_complete_cost.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The finite-workload cost comparison reports a null result, and deployment is withheld because the quality gate observed 0 against an expected 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8943_v764_capstone.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible portion asserts complete fourteen-slot accounting and owned checks, with no scientific benefit, but the overall verdict is not shown.
+
+## WHAT IS MISSING
+The complete "branch_conclusions" and overall verdict: the supplied artifact stops mid-entry inside "frozen_evaluation_manifest", which records planned units rather than measured outcomes.
+
+## THE CHECK A READER CANNOT DO
+Does the completed artifact make a comparative or blocked claim with supporting measurements or diagnostics?
+
+The omitted remainder cannot be checked; assuming what it contains would require trust.

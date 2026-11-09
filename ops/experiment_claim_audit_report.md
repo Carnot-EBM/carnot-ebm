@@ -11,10 +11,71 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 6 |
+| CLAIM_SUPPORTED | 4 |
+| NO_CLAIM | 4 |
 
-## experiment_8922_v763_interpolated_causal_streams.json
+## experiment_8933_v764_compatible_replay_methods.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Compatible replay has not demonstrated comparative benefit in the constructed development runs; independent evaluation remains unopened.
+
+## WHAT WOULD REFUTE IT
+Paired Brier differences establishing an advantage over both guarded-current updates and uniform replay, while meeting the frozen-arm improvement and retention requirements, would contradict the descriptive null.
+
+## WAS THAT CHECKED
+Yes, descriptively: compatible replay’s mean Brier differences are positive against guarded-current updates and uniform replay, so both serious comparators outperform it. Replay selection uses feature distance; scoring uses Brier, allowing either outcome. The oracle supplies correctness labels, but no added verifier value is claimed.
+
+Independent evaluation was not checked. The result supports a development null, not equivalence or generalization.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_compatible_replay_methods`
+- `against`: `guarded_current`; `mean`: `0.01511427512174313`
+- `against`: `uniform_replay`; `mean`: `0.010792920669549191`
+- `scope`: `development descriptive only; no readiness or benefit gate`
+- `evaluation_opened`: `false`
+- `methodology_note`: `Oracle constructed streams do not establish natural-language generalization, prospective benefit or a verifier moat.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8934_v764_depth_control.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The paired control did not establish that depth 3 increases final-answer error relative to depth 2.
+
+## WHAT WOULD REFUTE IT
+A positive depth-3-minus-depth-2 error difference with a paired confidence interval wholly above zero would contradict the reported null.
+
+## WAS THAT CHECKED
+Yes. Across 50 paired graphs, depth-3 error was 0.78 versus 0.84 at depth 2; the difference was −0.06, with an interval spanning zero. Discordant pairs occurred in both directions, so the outcome was not predetermined.
+
+The oracle supplies correctness labels; no verifier-value claim is made. No generalization benefit is claimed. Depth 2 supplies the relevant comparator. Reported exclusions and censoring are zero, and the displayed paired rows contain both error fields.
+
+## EVIDENCE
+
+- `honest_verdict`: `complete_null_paired_depth_control`
+- `error_rate_k2`: `0.84`; `error_rate_k3`: `0.78`
+- `mean_difference`: `-0.06`; `low`: `-0.22239701586189017`; `high`: `0.10239701586189018`
+- `k2_correct_k3_wrong`: `7`; `k2_wrong_k3_correct`: `10`
+- `accepted`: `false`; `collection_authorized`: `false`
+- `excluded_count`: `0`; `censored_count`: `0`
+
+## RECOMMENDATION
+KEEP
+
+Review limited to the supplied excerpt; elided rows were not inspected. This null does not establish equivalence.
+
+## experiment_8935_graph_corpus_a.json
 
 **NO_CLAIM**
 
@@ -25,76 +86,78 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative benefit claim is asserted. Such a claim would fail if interpolated_true tied or lost to frozen_verified or guarded_true on future Brier loss, or exceeded the retention degradation limit.
+Not applicable: this artifact records a blocked prerequisite check and makes no experimental or comparative claim.
 
 ## WAS THAT CHECKED
-No completed benefit analysis is shown. Those comparisons appear in the evaluation plan, while benefit inference is explicitly assigned to Exp8925. The displayed retention controls address causal custody.
+No experimental claim was tested. The prerequisite gate was checked and failed: the observed readiness score was 0, while 1 was required. No rerun or upstream validation was performed for this review.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_interpolated_causal_streams`
+`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `depth_source_ready_score`; `blocked_reason`: `actual=0 == expected=1`; `blocked_at_layer`: `conductor_pre_gate`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8937_v764_calibration_methods.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is a methods-readiness receipt, not a comparative scientific claim. Failed implementation controls or Brier values inconsistent with their probability/error operands would undermine its limited readiness assertion.
+
+## WAS THAT CHECKED
+Yes, within the fixture scope: implementation controls and owned validation report passing. Same-feature logistic—the cheapest serious baseline—is present and beats energy on fixture Brier. The benefit gate fails, and the artifact records a null.
+
+Live quality and independent generalization were not checked; readiness cannot establish either.
+
+## EVIDENCE
+
+- `title`: `Frozen response calibration methods`
+- `methodology_note`: `Fixtures verify implementation only; graph labels remain outside the response-only scorer. No natural-language generalization or verifier moat is measured.`
+- `honest_verdict`: `complete_null_calibration_methods`
+- `verdict_class`: `null`
+- `brier_vs_logistic`: `estimate`: `-0.057312465264168964`; `one_sided_bound`: `-0.10893172085153909`; `passed`: `false`
+- `benefit_passed`: `false`
+- `real_quality_evaluated`: `false`
+- `independent_count`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8940_v764_compatible_replay_streams.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative benefit claim is asserted. Operational readiness would be refuted by retention mutation, feedback reaching training before prediction sealing, or restart divergence from uninterrupted controls.
+
+## WAS THAT CHECKED
+Partly visible: retention controls pass, and the shown prediction precedes label evaluation and feedback release. Restart outcomes and aggregate comparator results are outside the excerpt. Benefit assessment is explicitly assigned to Exp8941; this artifact does not claim verifier value or generalization.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_compatible_replay_streams`
 - `benefit_required`: `false`
-- `methodology_note`: `Original three-class Brier loss; readiness measures causal custody only. Exp8925 owns benefit inference.`
-- `independent_generalization_score`: `0`
-- `check`: `retention_read_only`; `passed`: `true`
+- `benefit_owner`: `Exp8941`
+- `replay_rows_ready_score`: `Complete causal rows, unchanged methods and owned checks; loss improvement is not a gate.`
+- `methodology_note`: `23040 Brier query comparisons retain typed error alongside each score;46080 endpoint cells. Exp8941 owns benefit. Oracle graphs establish no natural-language generalization.`
 
 ## RECOMMENDATION
 KEEP
 
-Review limited to the supplied excerpt; readiness must not be interpreted as demonstrated benefit.
+Not checked: elided rows or external artifacts. Risk: interpreting this readiness receipt as demonstrated benefit.
 
-## experiment_8923_label_demand_evaluation.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No empirical claim is advanced. A claim of label savings with unchanged certificate decisions would be refuted by no savings or any changed decision.
-
-## WAS THAT CHECKED
-No. This is a blocked-gate receipt. The upstream readiness check failed; label savings and certificate-decision equivalence were not evaluated.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`; `status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `failed_field`: `label_demand_ready_score`; `failed_expected`: `1`; `failed_observed`: `0`; `blocked_at_layer`: `conductor_pre_gate`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8924_v763_qwen_natural_canary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Missing generations or paired measurements would contradict the operational completeness report. Parse failures, invalid spans, or poor agreement would not: readiness explicitly does not imply output quality or scientific benefit.
-
-## WAS THAT CHECKED
-Yes, at the reported operational level: 24 intended cases completed, with 24 completed generation calls. Two parse failures are disclosed. The artifact makes no comparative benefit, verifier-value, or independent generalization claim; its null designation does not assert statistical equivalence.
-
-## EVIDENCE
-- `honest_verdict`: `complete_null_paired_criterion_canary`
-- `verdict_class`: `null`
-- `Complete operational paired evidence, independent of output quality or scientific benefit.`
-- `intended_count`: `24`; `completed_count`: `24`; `generation_calls_completed`: `24`
-- `parse_failures`: `2`
-- `independent_count`: `0`; `preferred_criterion`: `null`
-- `Exact offsets locate retained source bytes; semantic correctness is unmeasured.`
-
-## RECOMMENDATION
-KEEP
-
-Elided rows were not inspectable; this review is limited to the supplied excerpt.
-
-## experiment_8925_v763_interpolated_benefit_audit.json
+## experiment_8941_v764_compatible_replay_benefit.json
 
 **CLAIM_SUPPORTED**
 
@@ -102,31 +165,33 @@ Elided rows were not inspectable; this review is limited to the supplied excerpt
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The fixed interpolated optimizer, guard and schedule did not meet the prespecified prospective-benefit and retention conjunction.
+This fixed compatible-replay configuration did not demonstrate the prespecified future benefit, warranting retirement of that configuration.
 
 ## WHAT WOULD REFUTE IT
-All nine simultaneous bounds passing: future Brier improvement versus frozen of at least 0.01, strict improvement versus both permuted and guarded arms, and retention Brier/error increases bounded by 0.01 at every checkpoint.
+All ten acceptance bounds passing on valid evaluation data, including a future Brier upper bound at most −0.01 against frozen verification and strictly below zero against guarded-current and uniform-replay baselines.
 
 ## WAS THAT CHECKED
-Yes. Paired-stream intervals test those gates across 24 streams. All three future gates fail; retention gates pass. This supports failure to establish the required benefit, not proof of zero benefit.
+Yes. The artifact reports paired comparisons across 24 streams with multiplicity-adjusted bounds. Three displayed future-benefit gates fail. Guarded-current and uniform replay are serious baselines; both achieve lower mean future Brier than compatible replay. Passing retention bounds cannot compensate.
 
-The cheapest serious baseline—keeping the frozen predictor—is present. The guarded comparator also achieves better mean Brier than the interpolated candidate. Oracle-defined correctness creates no circular verifier-value claim here, and no generalization success is asserted.
+The oracle defines correctness, but the headline makes no claim about verifier value. Reported controls include zero evaluation units used for selection and read-only retention evaluation; the generalization score is zero. Visible scoring rows are complete. False promotion eligibility flags describe rejected updates, rather than invalid scoring rows; the failed repository-health check is explicitly separate.
 
-Displayed rows contain the scored metric and show no false validity flag. Elided rows cannot be independently checked from this excerpt.
+This supports failure to demonstrate the specified benefit, without establishing zero effect.
 
 ## EVIDENCE
 
-- `honest_verdict`: `complete_null_interpolated_benefit_audit`; `interpolated_benefit_score`: `0`; `verdict_class`: `null`.
-- `interpolated_true_minus_frozen_verified`: `upper`: `-0.0006505695069113319`; `threshold`: `-0.01`; `passed`: `false`.
-- `interpolated_true_minus_interpolated_permuted`: `upper`: `0.011558705667271879`; `threshold`: `0`; `passed`: `false`.
-- `interpolated_true_minus_guarded_true`: `mean`: `0.012901702455741654`; `upper`: `0.03395365867612195`; `passed`: `false`.
-- `retention_bounds`; `retention_checkpoints`: `0`, `24`, `48`; `retention_upper`: `0.01`.
-- `independent_generalization_score`: `0`; `continuous_learning_in_general_retired`: `false`.
+- `honest_verdict`: `complete_null_compatible_replay_benefit`; `compatible_benefit_score`: `0`.
+- `compatible_replay_minus_frozen_verified`: `upper`: `6.387491138142021e-05`; `threshold`: `-0.01`; `passed`: `false`.
+- `compatible_replay_minus_guarded_current`: `mean`: `0.005552042868489988`; `passed`: `false`.
+- `compatible_replay_minus_uniform_replay`: `mean`: `0.0008375842080466413`; `passed`: `false`.
+- `evaluation_units_used_for_selection`: `0`; `independent_generalization_score`: `0`; `required_checks_passed`: `true`.
+- `completed_count`: `23040`; `intended_count`: `23040`; `excluded_count`: `0`; `censored_count`: `0`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8926_v763_durable_cost_qualification.json
+Elided rows and upstream execution were not independently checked; this null supports only the stated configuration and acceptance criterion.
+
+## experiment_8942_v764_replay_complete_cost.json
 
 **CLAIM_SUPPORTED**
 
@@ -134,109 +199,55 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The retained historical guarded-service measurements establish no speed–quality advantage.
+Complete-service costs were measured, but compatible replay has no demonstrated cost advantage and does not qualify for deployment.
 
 ## WHAT WOULD REFUTE IT
-A reliable whole-service cost reduction against frozen_verified with preserved quality, or an authenticated quality improvement sufficient to justify its measured cost.
+A simultaneous cost-difference interval entirely below zero against guarded current would refute the cost null; combined with a passing quality gate, it would support deployment. Incomplete timing rows or failed durability controls would refute measurement readiness.
 
 ## WAS THAT CHECKED
-Yes, within the historical scope: all three paired cost intervals against frozen_verified span zero, and the authenticated benefit gate reports zero benefit. This supports the limited null conclusion, not equivalence.
+Yes. Across 24 paired process/world seeds, compatible replay’s complete-service difference against guarded current spans zero, so a cost advantage was possible to detect but was not established. The authenticated quality gate also fails.
 
-The oracle verifier is not credited with added value, and no generalization benefit is asserted. Displayed comparison rows contain the cited cost fields; the failed repository-health receipt is explicitly outside comparisons.
+Elapsed-time measurement is independent of verifier-defined correctness. The artifact claims neither verifier added value nor generalization. Guarded current and uniform replay provide substantive comparators. Completion counts match the intended count, and displayed timing rows are complete; no false validity flag is shown on them.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_durable_cost_qualification`
-- `verdict_class`: `null`
-- `benefit_gate`: `authenticated`: `true`, `observed`: `0`
-- `arm`: `guarded_true`, `control`: `frozen_verified`, `lower_ns`: `-1039895692.2749208`, `upper_ns`: `650763317.9415876`
-- `speed_quality_recommendation_score`: `0`
+- `honest_verdict`: `complete_null_replay_complete_cost`; `verdict_class`: `null`.
+- `cost_rows_ready_score`: `1`; `Complete costs and valid controls; no speedup or learning prerequisite.`
+- `arm`: `compatible_replay`; `against`: `guarded_current`; `metric`: `complete_process_s`; `independent_count`: `24`; `lower`: `-0.2133998699147004`; `upper`: `0.6134695434980337`.
+- `compatible_benefit_score`: `0`; `deployment_recommendation`: `false`.
+- `completed_count`: `288`; `intended_count`: `288`; `excluded_count`: `0`; `failed_count`: `0`.
+- `exposure_scope`: `Finite constructed recurring topology streams only; no natural-language generalization, verifier moat or generator learning.`
+
+## RECOMMENDATION
+KEEP
+
+Not checked: reruns or elided rows. Scope limit: the supplied finite-stream evidence.
+
+## experiment_8943_v764_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative scientific claim is asserted. The accounting would be contradicted by reporting failed prerequisites as qualified scientific success.
+
+## WAS THAT CHECKED
+Yes, within the visible reconciliation: the depth prerequisite failed, collection remained blocked, and detector benefit was not evaluated. The capstone preserves that blocked outcome. Oracle-defined correctness is not presented as evidence of verifier value, and readiness is not presented as generalization.
+
+## EVIDENCE
+- `honest_verdict`: `complete_blocked_v764_capstone`
+- `scientific_benefit`: `false`
 - `independent_generalization_score`: `0`
-- `scope`: `unrelated_repository_health`
+- `accepted`: `false`
+- `missing_reason`: `depth_source_ready_score=0; no collection executed`
+- `missing_reason`: `no admitted collection corpus`
+- `paper_ready_scope`: `No separately authorized publication process; accounting only.`
 
 ## RECOMMENDATION
 KEEP
 
-Not checked: elided rows or linked artifacts.
-Risk: these historical null results do not establish equivalence.
-
-## experiment_8927_inline_request_cost.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable. This is a blocked-gate receipt, not a claim about measured request costs or the observer’s added value.
-
-## WAS THAT CHECKED
-No request-cost claim was tested. The recorded readiness gate failed: observed 0 versus required 1. The artifact contains no cost measurements or comparisons to assess.
-
-## EVIDENCE
-- `schema`: `blocked_gate_check_v1`
-- `status`: `blocked`
-- `honest_verdict`: `blocked_gate_check_failed`
-- `failed_field`: `inline_clock_ready_score`
-- `failed_expected`: `1`
-- `failed_observed`: `0`
-- `passed`: `false`
-- `blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8928_v763_hardware_operation_budget.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. A valid matched-workload receipt demonstrating whole-service acceleration, including host, transfer and durability costs, would contradict the inventory’s recorded absence of measured acceleration.
-
-## WAS THAT CHECKED
-No hardware performance comparison is shown. The artifact records zero physical probes, unknown compatible fractions and a failed acceleration gate, then reports a blocked outcome. Its successful mapping audit does not assert acceleration. Rejected producers remain separate from admitted evidence.
-
-## EVIDENCE
-- `honest_verdict`: `complete_blocked_hardware_operation_budget`
-- `Valid mapping evidence does not establish acceleration`
-- `physical_acceleration_demonstrated`: `false`
-- `physical_probes_performed`: `0`
-- `feasibility`: `unknown_without_measured_compatible_fraction`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-
-## RECOMMENDATION
-KEEP
-
-Unchecked: elided rows and upstream contents. Hardware performance remains unmeasured.
-
-## experiment_8929_v763_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative scientific claim is asserted. This capstone records administrative reconciliation and blocked scientific gates; it does not claim verifier benefit or generalization.
-
-## WAS THAT CHECKED
-Not applicable. Failed producer gates are recorded, independent generalization remains zero, and the inherited circular pilot result is not promoted to a positive capstone verdict.
-
-## EVIDENCE
-`honest_verdict`: `complete_blocked_v763_capstone`; `scientific_benefit`: `false`; `milestone_paper_ready`: `false`; `independent_generalization_score`: `0`; `inference_substrate`: `aggregation_from_upstream_artifacts`; `prior_verdict`: `circular_positive`.
-
-## RECOMMENDATION
-KEEP
-
-Not checked: elided rows or upstream artifacts; this assessment covers only the supplied excerpt.
+Not checked: elided rows or upstream execution. This accounting receipt establishes no comparative scientific benefit.

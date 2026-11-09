@@ -55851,3 +55851,93 @@ structural learner. Reuse its label-blind selector and collision/permutation
 controls where applicable. This precedent does not establish future Brier
 benefit in the current signed head. V764 therefore tests transfer to that head
 under equal gradient budgets; it does not claim signature replay is new.
+
+## 2026-11-09 — V765 planning source scan (before experiment design)
+
+Primary pages were checked on 2026-11-09. The findings below are external
+claims or local hypotheses, not new Carnot measurements. All eight requested
+research topics and all six secondary channels were checked.
+
+### Promising methods
+
+- [ImplicitHop](https://arxiv.org/abs/2610.41169), October 30, 2026,
+  varies graph topology and inference depth. Carnot's Exp8934 measured 42/50
+  errors at k=2 and 39/50 at k=3, with paired difference interval
+  [-0.222397, 0.102397]. A possible confound is the number of valid answer
+  nodes at each depth: more valid nodes can make guessing easier. Audit that
+  quantity before a new source protocol. Equal answer-set cardinality and
+  fixed topology are prospective controls, not an explanation already proved.
+- [Revisiting Replay and Gradient Alignment for Continual Pre-Training of
+  Large Language Models](https://arxiv.org/abs/2508.01908), August 3, 2025;
+  [full text](https://arxiv.org/html/2508.01908v1): studies replay and gradient
+  alignment, including efficient meta-experience replay. Carnot's signature
+  selector ignores the gradient's label-dependent direction. A small-head
+  experiment can compare actual released-label gradient alignment with that
+  proxy, uniform replay and repeated-current updates. This is a local method
+  adaptation, not a reproduction of the paper's LLM training results. Charge
+  every candidate-gradient evaluation; never update the mandated generator.
+- [Reasoning or Pattern Exploitation? Mechanistic Insights from RL-Trained
+  Language Models](https://arxiv.org/abs/2610.39182), October 29, 2026,
+  reports reliance on explicit prompt features in a finite game domain.
+  Use label, edge-order and answer-position controls in graph experiments.
+  It does not prove Carnot's graph source has the same mechanism.
+- [KG-Guard](https://arxiv.org/abs/2606.00328), submitted May 29, 2026,
+  treats verification as answer-node classification with graph context.
+  Relevant future comparator: context-aware verification versus confidence
+  alone. Do not put exact shortest-path answers into a learned detector's
+  features or call an oracle-backed score independent detection.
+
+### Required topic coverage and adoption limits
+
+| Topic | Primary source checked | Local consequence |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092); [ARM–EBM v4](https://arxiv.org/abs/2512.15605); [Distributional EBMs](https://arxiv.org/abs/2605.18871) | Separate learned confidence, deterministic constraints and evaluation truth. Preserve generator/verifier roles. |
+| Neural constraint satisfaction | [Certified correctness requires symbolic integration](https://arxiv.org/abs/2608.14569), 2026 position paper | Exact graph labels are useful; neural confidence alone is no certificate. |
+| Ising in ML | [Learning-to-sample phase transition](https://arxiv.org/abs/2605.24752), May 2026 | Parameter learning does not establish efficient sampling. Do not add MCMC to a normalized small decision head. |
+| Hallucination detection | KG-Guard above; [HalluScoring 2026](https://arxiv.org/abs/2609.38355) | Report source-bound scope and shift, with per-graph errors and calibration. |
+| KAN | [KAC](https://arxiv.org/abs/2503.21076), CVPR 2025; [KAN forgetting study](https://ojs.aaai.org/index.php/AAAI/article/view/33986), AAAI 2025 | A new spline architecture is not justified by retention that already passes. Preserve as a later representation option. |
+| Energy-guided generation | [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), July 2025 | The paper concerns visual-object hallucination. It does not justify modifying this milestone's text error-source generator. |
+| FPGA/thermodynamic sampling | [FPGA–ASIC co-design v2](https://arxiv.org/abs/2602.15985), September 2026 revision | Orchestration and memory costs matter. Measure whole requests and candidate scans; no local speedup follows from published hardware numbers. |
+| Continuous learning | Replay/gradient alignment above; [Trust Region Continual Learning v3](https://arxiv.org/abs/2602.02417), October 23 revision | Prefer testing the information in replay selection first. A new Fisher optimizer would add another cause of change. |
+
+### Secondary channels, checked and bounded
+
+- **OpenReview:** [EBT ICLR 2026 manuscript](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  appeared in search, but both the forum and PDF direct requests hit browser
+  verification. The arXiv manuscript supplies the verified method description.
+  [Cross-Regression](https://openreview.net/pdf?id=re2e15nmzt) appeared as an
+  ICLR 2026 ReALM-GEN workshop paper; no new dependency is adopted from it.
+- **Semantic Scholar:** web requests failed; direct read-only API requests
+  returned HTTP 200 for [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=10)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10).
+  Ten records were read from each. EBT had a next-page marker, so coverage is
+  partial. The pattern-exploitation paper and Distributional EBMs were followed
+  to their arXiv sources. Other leads include P(Yes), Certified Access and d-OPD.
+- **Hugging Face:** [EBT](https://huggingface.co/papers/2507.02092) loaded;
+  [KG-Guard](https://huggingface.co/papers/2606.00328) was inaccessible. The
+  arXiv source was used. No claim about current feed rank is made.
+- **GitHub:** [weekly Python trending](https://github.com/trending/python?since=weekly)
+  supplied navigation without a usable relevant ranking. Author-repository
+  search surfaced [lean-ebm](https://github.com/StanfordLeanClub/lean-ebm),
+  [EMFuse](https://github.com/JackHKJ/EMFuse) and
+  [KANA](https://github.com/Flowychie/KANA-base). These are discovery leads,
+  not verified trending entries or qualified dependencies. Lean-EBM's generation
+  direction does not reopen Carnot's closed energy-as-generator experiments.
+- **Extropic:** [Writing](https://extropic.ai/writing) exposes only a shell.
+  [Hardware](https://extropic.ai/hardware) advertises Z1 Stick and Card early
+  access in 2027. These are vendor statements, not local availability receipts.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  describes constraint decisions beneath an AI stack. The checked page supplies
+  no new executable architecture, public weights or local reproduction protocol.
+
+### Local boundaries carried forward
+
+Exp8932 authenticated 43 semantic errors among the original 50 pilot answers;
+there were no malformed answers. Exp8934's source gate is still failed.
+Exp8941's compatible replay misses all four future-benefit bounds; retention
+passes. Its unchanged buffer32/signature/two-gradient/delay8 scope is closed.
+Exp8942 measures complete durable service but establishes no deployment benefit
+or hardware speedup. GPU 0 has a working bounded-generation receipt; GPU 1 is
+detached. ARC remains suspended. No label-demand or inner-clock repair is
+scheduled by this scan. New experiments must state what changes and preserve
+all failed evidence and thresholds.

@@ -21629,3 +21629,4 @@ code |
 | 2026-11-09 01:58 UTC | Audit future replay benefit and untouched retentio | OK | 104 passed, 1 warning in 96.93s (0:01:36) |
 | 2026-11-09 03:04 UTC | Measure complete replay service cost and hardware  | OK | 90 passed, 1 warning in 50.38s |
 | 2026-11-09 03:50 UTC | Reconcile fourteen outcomes and exact continuation | OK | 90 passed, 2 warnings in 125.92s (0:02:05) |
+| 2026-11-09 05:33 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |

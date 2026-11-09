@@ -983,3 +983,27 @@ operation counts. Hardware fractions require qualified complete-service clocks.
 
 The full architecture, exact gates and thirteen-task execution contract are in
 `openspec/change-proposals/research-roadmap-vNEXT.md`. ARC remains suspended.
+
+## V765 planned boundary — 2026-11-09
+
+V765 proposes thirteen tasks, Exp8944–Exp8956; this planning change implements
+no runtime behavior. The graph source keeps the original shortest-distance
+question but conditions random graphs on equal nonzero k2/k3 answer-set sizes.
+A fresh paired depth gate precedes two independent source shards. Exact graph
+truth remains separate from response-confidence features. The existing small
+Gibbs/logistic calibration methods train only after corpus custody and support
+qualify. Results apply to the restricted graph population, not general text.
+
+The independent continuous-learning branch replaces signature-distance replay
+with released-TRAIN-label gradient alignment in the existing signed energy
+head. Candidate and committed states, delayed feedback, promotion guards,
+untouched retention and exact restart remain. All prior benefit/retention
+conditions remain, with an additional signature-replay contrast. Generator
+weights and the suspended ARC agent remain untouched.
+
+Whole durable-service clocks include gradient scans and compare both matched
+research work and ordinary current-update service without artificial scans.
+GPU/NPU batching is a possible future path; no qualified accelerator, removable
+fraction or service speedup is asserted. KV 260 sampler, PolarFire CPU and
+GateMate physical limits remain. The unconditional capstone preserves all
+thirteen outcomes and separates methods readiness from scientific benefit.

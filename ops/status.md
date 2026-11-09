@@ -19044,3 +19044,30 @@ The literature scan preceded design. Requirements and traceability are planned.
 
 Planning validation is in progress. No V763 experiment or model has run, and
 the active roadmap, conductor and exclusion manifest have not been changed.
+
+## 2026-11-09 — V765 research plan staged
+
+V764 completed fourteen slots. The original pilot labels are authenticated,
+but the paired depth-rise gate failed: k2 had 42/50 errors and k3 had 39/50.
+Four downstream source/calibration slots were skipped. Compatible replay failed
+all four future-benefit bounds while passing retention. Complete costs exist;
+no learning deployment or hardware acceleration is established.
+
+The proposed next milestone is 2026.11.765: exactly thirteen tasks,
+Exp8944–Exp8956, across four phases. It diagnoses answer opportunity, freezes
+matched-cardinality graphs, gates fresh bounded Qwen collection, tests the
+existing calibrated selector, and measures released-gradient replay with all
+prior safety/effect thresholds. Its cost comparator includes ordinary service
+without artificial scans. CPU science remains independent of GPU collection.
+
+Both roadmap files agree by construction; validation is in progress. The
+literature scan preceded design. Original V764 design and queue bytes are
+preserved in dated change-proposal archives. Requirements and traceability are
+Planned. No experiment, model load, activation, push or publication occurred.
+The active queue, conductor and exclusion manifest remain unchanged.
+
+V765 planning validation completed: schema, exact full contract, all 15 gate
+references, all 13 prior-failure blocks, exclusion lint, ARC precondition lint
+and scoped spec coverage pass. The six-file unit/private-CLI suite passes
+131 tests, including E2E-018/021. The plan remains staged only. Experiments and
+hardware were not run; source yield and scientific benefit remain unknown.

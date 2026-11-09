@@ -23391,3 +23391,26 @@ User request: "cleanup the 9.7 MB audio file and associated video file and clean
 - 2026-11-09: Audit future replay benefit and untouched retention (⚠️ Research Finding) — honest_verdict=complete_null_compatible_replay_benefit; results/experiment_8941_v764_compatible_replay_benefit.json
 - 2026-11-09: Measure complete replay service cost and hardware limits (⚠️ Research Finding) — honest_verdict=complete_null_replay_complete_cost; results/experiment_8942_v764_replay_complete_cost.json
 - 2026-11-09: Reconcile fourteen outcomes and exact continuation boundaries (⚠️ Blocked) — honest_verdict=complete_blocked_v764_capstone; results/experiment_8943_v764_capstone.json
+
+## 2026-11-09 — Plan milestone 2026.11.765
+
+- Recorded the 2025–2026 source scan before design, including gradient alignment,
+  graph controls, secondary-source access limits and partial citation coverage.
+- Preserved the completed V764 design/queue and staged exactly thirteen matching
+  full task objects, Exp8944–Exp8956, across four phases.
+- Added a diagnosis for unequal valid-answer counts, a matched source population
+  with the unchanged depth-rise gate, and current-gated collection/calibration.
+- Proposed released-label gradient selection, preserving all ten earlier bounds
+  and adding the signature comparator. Charge scans in full and compare an
+  ordinary no-scan service for deployment cost.
+- Added planned requirements, traceability, architecture and ops boundaries.
+  Every prompt includes numbered progress and bounded-write rules, exact gate
+  fields, verdict classes, per-unit rows and complete rerun-retirement metadata.
+- Planning validation is in progress. No activation, experiment, push or external
+  publication occurred; the active queue and conductor are unchanged.
+
+V765 validation: 131 scoped unit/private CLI tests pass, including E2E-018/021;
+spec coverage, schema, exact contract, 15 gate references, 13 prior-failure
+blocks and exclusion/precondition lint pass. Scoped whitespace checks pass.
+Whole-worktree whitespace failures are confined to pre-existing unrelated audit
+reports. No experiment or model was run; protected files retain their hashes.

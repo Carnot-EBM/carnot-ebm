@@ -4742,3 +4742,24 @@ Planning only. Active V763 and historical results remain unchanged.
 | REQ-REPORT-8941 / SCENARIO-REPORT-8941-CONTRACT | exp8941-compatible-replay-benefit | `results/experiment_8941_v764_compatible_replay_benefit.json` | Planned |
 | REQ-REPORT-8942 / SCENARIO-REPORT-8942-CONTRACT | exp8942-replay-complete-cost | `results/experiment_8942_v764_replay_complete_cost.json` | Planned |
 | REQ-REPORT-8943 / SCENARIO-REPORT-8943-CONTRACT | exp8943-capstone | `results/experiment_8943_v764_capstone.json` | Planned |
+
+
+## V765 planned research traceability — 2026-11-09
+
+Planning only; completed V764 and its archived authority remain unchanged.
+
+| Requirement / scenario | Task | Deliverable | State |
+|---|---|---|---|
+| REQ-REPORT-8944 / SCENARIO-REPORT-8944-CONTRACT | exp8944-branch-contract | `results/experiment_8944_v765_branch_contract.json` | Planned |
+| REQ-REPORT-8945 / SCENARIO-REPORT-8945-CONTRACT | exp8945-depth-opportunity-audit | `results/experiment_8945_v765_depth_opportunity_audit.json` | Planned |
+| REQ-REPORT-8946 / SCENARIO-REPORT-8946-CONTRACT | exp8946-matched-source-methods | `results/experiment_8946_v765_matched_source_methods.json` | Planned |
+| REQ-REPORT-8947 / SCENARIO-REPORT-8947-CONTRACT | exp8947-gradient-replay-methods | `results/experiment_8947_v765_gradient_replay_methods.json` | Planned |
+| REQ-REPORT-8948 / SCENARIO-REPORT-8948-CONTRACT | exp8948-matched-depth-control | `results/experiment_8948_v765_matched_depth_control.json` | Planned |
+| REQ-REPORT-8949 / SCENARIO-REPORT-8949-CONTRACT | exp8949-matched-corpus-a | `results/experiment_8949_v765_matched_corpus_a.json` | Planned |
+| REQ-REPORT-8950 / SCENARIO-REPORT-8950-CONTRACT | exp8950-matched-corpus-b | `results/experiment_8950_v765_matched_corpus_b.json` | Planned |
+| REQ-REPORT-8951 / SCENARIO-REPORT-8951-CONTRACT | exp8951-matched-corpus-admission | `results/experiment_8951_v765_matched_corpus_admission.json` | Planned |
+| REQ-REPORT-8952 / SCENARIO-REPORT-8952-CONTRACT | exp8952-matched-calibrated-decisions | `results/experiment_8952_v765_matched_calibrated_decisions.json` | Planned |
+| REQ-REPORT-8953 / SCENARIO-REPORT-8953-CONTRACT | exp8953-gradient-causal-streams | `results/experiment_8953_v765_gradient_causal_streams.json` | Planned |
+| REQ-REPORT-8954 / SCENARIO-REPORT-8954-CONTRACT | exp8954-gradient-benefit-audit | `results/experiment_8954_v765_gradient_benefit_audit.json` | Planned |
+| REQ-REPORT-8955 / SCENARIO-REPORT-8955-CONTRACT | exp8955-gradient-complete-cost | `results/experiment_8955_v765_gradient_complete_cost.json` | Planned |
+| REQ-REPORT-8956 / SCENARIO-REPORT-8956-CONTRACT | exp8956-capstone | `results/experiment_8956_v765_capstone.json` | Planned |

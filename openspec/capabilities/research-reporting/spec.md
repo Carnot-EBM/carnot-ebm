@@ -110233,3 +110233,113 @@ Implementation status: implemented by `v764_capstone_sources.py`,
 private child tests precede implementation. The dated primary retains measured
 coverage, owned validation, source hashes and terminal replay receipts;
 conductor owns the separate ops and traceability reconciliation.
+
+
+## V765 proposed research contract — 2026-11-09
+
+Status: Planned, not implemented. The design and next queue contain exactly 13 tasks, Exp8944–Exp8956.
+Each requirement inherits the progress, evidence, validation and failure rules in the full task contract.
+
+### REQ-REPORT-8944: Bind thirteen tasks and preserve completed V764 authority
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8944_v765_branch_contract.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8944-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8944-branch-contract` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8945: Measure answer-set opportunity in the failed depth control
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8945_v765_depth_opportunity_audit.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8945-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8945-depth-opportunity-audit` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8946: Freeze equal-opportunity graph sources and unchanged calibration controls
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8946_v765_matched_source_methods.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8946-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8946-matched-source-methods` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8947: Freeze released-label gradient selection for continuous energy learning
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8947_v765_gradient_replay_methods.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8947-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8947-gradient-replay-methods` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8948: Test paired depth sensitivity with equal answer opportunity
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8948_v765_matched_depth_control.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8948-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8948-matched-depth-control` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8949: Collect matched-population Qwen corpus shard A
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8949_v765_matched_corpus_a.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8949-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8949-matched-corpus-a` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8950: Collect matched-population Qwen corpus shard B
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8950_v765_matched_corpus_b.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8950-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8950-matched-corpus-b` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8951: Authenticate matched graph labels and frozen calibration authority
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8951_v765_matched_corpus_admission.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8951-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8951-matched-corpus-admission` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8952: Evaluate energy decisions on unseen matched-population model errors
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8952_v765_matched_calibrated_decisions.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8952-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8952-matched-calibrated-decisions` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8953: Measure continuous gradient-informed replay on sealed future streams
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8953_v765_gradient_causal_streams.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8953-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8953-gradient-causal-streams` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8954: Audit prospective gradient-selection benefit and joint retention
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8954_v765_gradient_benefit_audit.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8954-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8954-gradient-benefit-audit` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8955: Measure complete gradient-selection costs and hardware limits
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8955_v765_gradient_complete_cost.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8955-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8955-gradient-complete-cost` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+### REQ-REPORT-8956: Reconcile thirteen outcomes and close exact unchanged scopes
+
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8956_v765_capstone.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8956-CONTRACT
+
+Given frozen branch authority and authenticated prerequisites, when `exp8956-capstone` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
