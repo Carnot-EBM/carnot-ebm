@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections import Counter
 import json
 import math
+import sys
+from types import ModuleType
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +23,9 @@ Json = dict[str, Any]
 ROOT = depth.ROOT
 NAME = "experiment_8949_v765_matched_corpus_a"
 TASK = "exp8949-matched-corpus-a"
+EXPERIMENT_ID = 8949
+SHARD = "A"
+SEED = 765049
 CLI = f"scripts/experiments/{NAME}.py"
 OWNED = [
     "python/carnot/reporting/matched_corpus_a_8949.py",
@@ -29,6 +34,7 @@ OWNED = [
     CLI,
 ]
 TEST = "tests/python/test_matched_corpus_a_8949.py"
+TESTS = [TEST]
 INPUTS = [
     *depth.INPUTS,
     (
@@ -78,28 +84,28 @@ def authenticate(root: Path) -> Json:
     return evidence
 
 
-def check_units(units: list[Json]) -> None:
+def check_units(units: list[Json], shard: str = "A") -> None:
     """A censored slot keeps its original graph and role rather than drawing a replacement."""
     if (
         len(units) != 160
         or len({u["graph_hash"] for u in units}) != 160
         or len({u["seed"] for u in units}) != 160
         or Counter(u["role"] for u in units) != dict(train=80, calibration=40, test=40)
-        or any(u["shard"] != "A" or u["k"] != 2 for u in units)
+        or any(u["shard"] != shard or u["k"] != 2 for u in units)
     ):
         raise ValueError("shard_roster")
 
 
-def ordered_units(protocol: Json) -> list[Json]:
+def ordered_units(protocol: Json, shard: str = "A") -> list[Json]:
     """Use the frozen label-blind order and never depend on the other scheduled shard."""
-    units: list[Json] = source.scheduled(protocol, "A")
-    check_units(units)
+    units: list[Json] = source.scheduled(protocol, shard)
+    check_units(units, shard)
     return units
 
 
-def reduce(units: list[Json], rows: list[Json]) -> Json:
+def reduce(units: list[Json], rows: list[Json], shard: str = "A") -> Json:
     """Recompute labels by edge relaxation while features remain response-only values."""
-    check_units(units)
+    check_units(units, shard)
     if [r["unit_id"] for r in rows] != [u["unit_id"] for u in units]:
         raise ValueError("row_roster")
     labels, identities, typed = [], [], []
@@ -127,7 +133,7 @@ def reduce(units: list[Json], rows: list[Json]) -> Json:
                 graph_hash=unit["graph_hash"],
                 node_edge_hash=source.graph_hash(unit),
                 role=unit["role"],
-                shard_id="A",
+                shard_id=shard,
                 prompt_hash=unit["prompt_hash"],
                 seed=unit["seed"],
             )
@@ -195,16 +201,19 @@ def raw_complete(work: Json) -> bool:
         return False
 
 
-def build(work: Json, validation: Json, fixture: bool) -> Json:
+def build(
+    work: Json, validation: Json, fixture: bool, *, producer: ModuleType | None = None
+) -> Json:
     """Readiness certifies one shard's custody, never pooled support or learned benefit."""
+    config = producer or sys.modules[__name__]
     runtime = work["runtime"]
-    result = reduce(work["units"], runtime["rows"])
+    result = config.reduce(work["units"], runtime["rows"])
     owned = (
-        qualified(validation)
+        config.qualified(validation)
         and not runtime["owned_failure"]
         and not validation.get("terminal_rejected", False)
         and result["labels_verified"]
-        and (result["completed_count"] != 160 or raw_complete(work))
+        and (result["completed_count"] != 160 or config.raw_complete(work))
     )
     failures = work["authentication"]["failures"] + runtime["checks"]
     ready = int(
@@ -229,11 +238,11 @@ def build(work: Json, validation: Json, fixture: bool) -> Json:
     value = dict(work["template"])
     value.update(
         {k: v for k, v in result.items() if k not in {"detector_view", "label_sidecar"}},
-        experiment_id=8949,
-        task_id=TASK,
+        experiment_id=config.EXPERIMENT_ID,
+        task_id=config.TASK,
         milestone="2026.11.765",
         run_date="20261109",
-        honest_verdict="complete_" + cls + "_matched_corpus_a",
+        honest_verdict="complete_" + cls + "_matched_corpus_" + config.SHARD.lower(),
         verdict_class=cls,
         status="error" if cls == "disqualified" else "blocked" if cls == "blocked" else "success",
         inference_substrate="live_llm_inference"
@@ -250,10 +259,10 @@ def build(work: Json, validation: Json, fixture: bool) -> Json:
         inference_mode="live_gpu" if runtime["live"] else "no_generation",
         started_at=work["started_at"],
         finished_at=work["finished_at"],
-        methodology_note="Frozen matched-population shard A only. Independent graph labels are evaluation-only; detector features use backend confidence alone. No fitting, balancing, retries or pooled admission claim.",
+        methodology_note=f"Frozen matched-population shard {config.SHARD} only. Independent graph labels are evaluation-only; detector features use backend confidence alone. No fitting, balancing, retries or pooled admission claim.",
         reproduction_commands=[
-            f"CUDA_VISIBLE_DEVICES=0 CARNOT_FORCE_LIVE=1 PYTHONPATH=python .venv/bin/python -u {CLI} --date 20261109",
-            f".venv/bin/python -u {CLI} --cold-replay <primary.json>",
+            f"CUDA_VISIBLE_DEVICES=0 CARNOT_FORCE_LIVE=1 PYTHONPATH=python .venv/bin/python -u {config.CLI} --date 20261109",
+            f".venv/bin/python -u {config.CLI} --cold-replay <primary.json>",
         ],
         MODEL_SPECS=[dict(hf_id=source.SETTINGS["model"], quantization="Q4_K_M", gpu=0)],
         model_invocation_counts=counts,
@@ -271,7 +280,7 @@ def build(work: Json, validation: Json, fixture: bool) -> Json:
             generator_weights_frozen=True,
             gpu=0,
         ),
-        random_seed=765049,
+        random_seed=config.SEED,
         source_artifact_hashes=work["input_references"],
         code_config_hashes=work["sources"],
         raw_shard_hashes=[
@@ -286,7 +295,7 @@ def build(work: Json, validation: Json, fixture: bool) -> Json:
             all_responses=result["completed_count"] == 160,
             independent_labels=result["labels_verified"],
             finite_features=result["usable_signals"],
-            raw_receipts=raw_complete(work),
+            raw_receipts=config.raw_complete(work),
             no_detector_fitting=True,
         ),
         required_checks_passed=owned,
@@ -294,7 +303,7 @@ def build(work: Json, validation: Json, fixture: bool) -> Json:
         owned_statement_coverage=validation["coverage"],
         global_test_debt=work["repository_health"],
         shard_ready_score=ready,
-        shard_id="A",
+        shard_id=config.SHARD,
         model_receipt=runtime["model_receipt"],
         resource_lease=runtime["resource_lease"],
         generator_settings=runtime["settings"],
@@ -331,7 +340,7 @@ def build(work: Json, validation: Json, fixture: bool) -> Json:
     return value
 
 
-def qualified(validation: Json) -> bool:
+def qualified(validation: Json, owned: list[str] = OWNED) -> bool:
     """Require the complete check roster and measured statements from this producer."""
     receipts = validation["receipts"]
     return (
@@ -340,5 +349,5 @@ def qualified(validation: Json) -> bool:
         and all(
             r["passed"] and r.get("exit_code") == 0 and not r.get("timed_out") for r in receipts
         )
-        and verify_measured(validation["coverage"], OWNED)
+        and verify_measured(validation["coverage"], owned)
     )

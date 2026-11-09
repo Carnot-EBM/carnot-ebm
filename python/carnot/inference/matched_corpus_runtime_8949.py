@@ -19,7 +19,7 @@ from carnot.verify.qwen_development_capture_7995 import Ledger
 Json = dict[str, Any]
 
 
-def run(units: list[Json], raw: Path) -> Json:
+def run(units: list[Json], raw: Path, *, task_id: str = "exp8949-matched-corpus-a") -> Json:
     """Use the pilot's authenticated CUDA path without retries, repair or CPU fallback."""
     os.environ.update(CARNOT_FORCE_LIVE="1", CUDA_VISIBLE_DEVICES="0")
     raw.mkdir(parents=True, exist_ok=True)
@@ -50,7 +50,7 @@ def run(units: list[Json], raw: Path) -> Json:
         stage = "gpu_lease"
         lease = GpuLease.acquire(
             runtime_dir=os.environ.get("CARNOT_GPU_LEASE_RUNTIME_DIR", "/tmp/carnot-gpu-leases"),
-            task_id="exp8949-matched-corpus-a",
+            task_id=task_id,
             device_uuid=gpu["uuid"],
             expected_model=spec["model_path"],
             vram_before_mb=gpu["used_mb"],
@@ -160,7 +160,7 @@ def run(units: list[Json], raw: Path) -> Json:
         result["checks"].append(
             dict(
                 check=stage,
-                upstream="exp8949-matched-corpus-a",
+                upstream=task_id,
                 artifact_field=stage,
                 expected="authenticated GPU-0 Qwen with supported log probabilities",
                 observed=str(error),

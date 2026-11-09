@@ -110457,6 +110457,27 @@ The experiment SHALL follow the exact V765 task contract and produce `results/ex
 
 Given frozen branch authority and authenticated prerequisites, when `exp8950-matched-corpus-b` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
 
+The shard B producer SHALL share the already qualified collection implementation
+while keeping its own experiment ID, task ID, resource lease, raw directory and
+frozen B graph roster. It SHALL authenticate Exp8946 and Exp8948 before model
+work, without depending on shard A success or gating on retired task IDs.
+Execute exactly 160 B k2 units (80 train, 40 calibration, 40 test), preserve each
+first response before labeling, resume only matching hashes and never replenish.
+Equal nonzero k2/k3 cardinalities SHALL be independently checked by edge relaxation.
+Detector features SHALL remain response-only in a separate sidecar. Readiness
+requires 160 authenticated raw responses, finite features, exact roles and passing
+owned checks; class support belongs to pooled admission. Oracle labels forbid positive.
+Use cached unsloth/Qwen3.8-27B-GGUF Q4_K_M, GPU 0 only, owned server and lease,
+reasoning off, temperature 0, 16 tokens, zero retries; preflight/load limits 240s,
+generation 1800s and requests 30s. Record actual hashes, clocks, offload and usage.
+Tests SHALL precede implementation and cover independent B identity, A compatibility,
+private CLI publication, cold replay, rehashed tamper refusal and external blocking.
+Measure 100-percent new/shared owned unit and child statements with zero exclusions;
+run Ruff, strict mypy, positional spec coverage and private E2E-018/021. Record one
+bounded full-suite attempt separately as global debt. Publish only through
+primary_publication after owned checks. Ops and traceability reconciliation are
+conductor-owned for this invocation.
+
 ### REQ-REPORT-8951: Authenticate matched graph labels and frozen calibration authority
 
 The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8951_v765_matched_corpus_admission.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.

@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import tempfile
 import time
+from types import ModuleType
 from typing import Any
 
 from carnot.inference import matched_corpus_runtime_8949 as runtime
@@ -25,18 +26,19 @@ from carnot.reporting.v756_branch_qualification import measured
 Json = dict[str, Any]
 
 
-def validation_plan(private: Path) -> list[CommandSpec]:
+def validation_plan(private: Path, *, producer: ModuleType | None = None) -> list[CommandSpec]:
     """Measure only new files while keeping the unchanged private CLI acceptance checks."""
+    config = producer or d
     commands = pilot.validation_plan(private)
     substitutions = {
-        pilot.OWNED[0]: d.OWNED[:3],
+        pilot.OWNED[0]: config.OWNED[:-1],
         pilot.OWNED[1]: [],
-        pilot.OWNED[2]: [d.CLI],
-        pilot.TEST: [d.TEST],
+        pilot.OWNED[2]: [config.CLI],
+        pilot.TEST: config.TESTS,
     }
     (private / "coverage.ini").write_text(
         "[run]\nparallel = true\npatch = subprocess\ninclude =\n"
-        + "".join("    */" + name + "\n" for name in d.OWNED)
+        + "".join("    */" + name + "\n" for name in config.OWNED)
         + "[report]\nexclude_lines =\n"
     )
     return [
@@ -45,14 +47,15 @@ def validation_plan(private: Path) -> list[CommandSpec]:
     ]
 
 
-def freeze(root: Path, raw: Path, fixture: bool) -> Json:
+def freeze(root: Path, raw: Path, fixture: bool, *, producer: ModuleType | None = None) -> Json:
     """Seal original inputs, execution order and source bytes before live generation."""
+    config = producer or d
     started = time.monotonic()
     started_at = datetime.now(UTC).isoformat()
     source.progress("before_input_authentication", 0, 160)
     inputs = raw / "inputs"
     for name in [
-        *(row[0] for row in d.INPUTS),
+        *(row[0] for row in config.INPUTS),
         *matched.INPUTS,
         matched.branch.DESIGN,
         matched.branch.ACTIVE,
@@ -63,16 +66,16 @@ def freeze(root: Path, raw: Path, fixture: bool) -> Json:
             target = inputs / name
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(path.read_bytes())
-    evidence = d.authenticate(inputs)
+    evidence = config.authenticate(inputs)
     # The frozen method roster still defines all slots when an external gate is absent.
-    protocol = evidence["protocol"] or json.loads((d.ROOT / d.INPUTS[0][0]).read_text())
-    units = d.ordered_units(protocol)
+    protocol = evidence["protocol"] or json.loads((config.ROOT / config.INPUTS[0][0]).read_text())
+    units = config.ordered_units(protocol)
     atomic_json(raw / "scheduled_units.json", dict(units=units))
     source.progress("after_input_authentication", 0, 160)
     sources = []
     for name in [
-        *d.OWNED,
-        d.TEST,
+        *config.OWNED,
+        *config.TESTS,
         "tests/python/test_matched_depth_control_8948.py",
         "python/carnot/reporting/depth_control_8934.py",
         "python/carnot/reporting/matched_depth_control_8948.py",
@@ -98,12 +101,12 @@ def freeze(root: Path, raw: Path, fixture: bool) -> Json:
     ]:
         target = raw / "sources" / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes((d.ROOT / name).read_bytes())
+        target.write_bytes((config.ROOT / name).read_bytes())
         sources.append(
             dict(
                 methods.reference(target),
-                source_path=str(d.ROOT / name),
-                executed_source=name in d.OWNED,
+                source_path=str(config.ROOT / name),
+                executed_source=name in config.OWNED,
             )
         )
     auth_duration = time.monotonic() - started
@@ -124,13 +127,17 @@ def freeze(root: Path, raw: Path, fixture: bool) -> Json:
         )
         atomic_json(raw / "runtime" / "runtime.json", result)
     else:
-        result = runtime.run(units, raw / "runtime")
-    reduced = d.reduce(units, result["rows"])
+        result = runtime.run(
+            units, raw / "runtime", **(dict(task_id=config.TASK) if producer else {})
+        )
+    reduced = config.reduce(units, result["rows"])
     atomic_json(raw / "evaluation_labels.json", dict(rows=reduced["label_sidecar"]))
     atomic_json(raw / "detector_view.json", dict(rows=reduced["detector_view"]))
     return dict(
-        template=d.ExperimentTemplate(
-            8949, "Matched graph corpus shard A", f"results/{d.NAME}.json"
+        template=config.ExperimentTemplate(
+            config.EXPERIMENT_ID,
+            f"Matched graph corpus shard {config.SHARD}",
+            f"results/{config.NAME}.json",
         ).build_result({}, status="success"),
         raw=str(raw),
         started=started,
@@ -154,8 +161,9 @@ def freeze(root: Path, raw: Path, fixture: bool) -> Json:
     )
 
 
-def replay(path: Path) -> Json:
+def replay(path: Path, *, producer: ModuleType | None = None) -> Json:
     """Rebuild labels, signals and gates from authenticated raw bytes, not headline values."""
+    config = producer or d
     try:
         value = json.loads(path.read_text())
         for ref in (
@@ -169,10 +177,10 @@ def replay(path: Path) -> Json:
         work = json.loads((raw / "work.json").read_text())
         validation = json.loads((raw / "validation.json").read_text())
         if (
-            d.authenticate(raw / "inputs") != work["authentication"]
-            or d.ordered_units(
+            config.authenticate(raw / "inputs") != work["authentication"]
+            or config.ordered_units(
                 work["authentication"]["protocol"]
-                or json.loads((d.ROOT / d.INPUTS[0][0]).read_text())
+                or json.loads((config.ROOT / config.INPUTS[0][0]).read_text())
             )
             != work["units"]
         ):
@@ -188,54 +196,61 @@ def replay(path: Path) -> Json:
                 )
                 if rebuilt != row:
                     raise ValueError("response_label_drift")
-        rebuilt_views = d.reduce(work["units"], work["runtime"]["rows"])
+        rebuilt_views = config.reduce(work["units"], work["runtime"]["rows"])
         for filename, key in (
             ("evaluation_labels.json", "label_sidecar"),
             ("detector_view.json", "detector_view"),
         ):
             if json.loads((raw / filename).read_text()) != dict(rows=rebuilt_views[key]):
                 raise ValueError("sidecar_reduction_drift")
-        passed = d.build(work, validation, value["fixture_only"]) == value
+        passed = config.build(work, validation, value["fixture_only"]) == value
         return dict(passed=passed, replay_passed=passed)
     except (OSError, ValueError, KeyError, TypeError):
         return dict(passed=False, replay_passed=False)
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, producer: ModuleType | None = None) -> int:
     """Private CLI cases cannot load weights or recursively qualify their own fixtures."""
+    config = producer or d
+    options = dict(producer=producer) if producer else {}
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date")
     parser.add_argument("--fixture-e2e", type=Path)
     parser.add_argument("--cold-replay", type=Path)
     args = parser.parse_args(argv)
     if args.cold_replay is not None:
-        report = replay(args.cold_replay)
+        report = replay(args.cold_replay, **options)
         print(json.dumps(report), flush=True)
         return 0 if report["passed"] else 1
     if args.date != "20261109":
         parser.error("this producer requires --date 20261109")
     fixture = args.fixture_e2e is not None
-    output = args.fixture_e2e or d.ROOT / "results" / (d.NAME + ".json")
-    raw = output.parent / "raw" / d.NAME / "invocations" / str(time.time_ns())
-    work = freeze(d.ROOT, raw, fixture)
+    output = args.fixture_e2e or config.ROOT / "results" / (config.NAME + ".json")
+    raw = output.parent / "raw" / config.NAME / "invocations" / str(time.time_ns())
+    work = freeze(config.ROOT, raw, fixture, **options)
     validation_started = time.monotonic()
     validation: Json = dict(receipts=[], coverage={})
     if not fixture:
-        private = Path(tempfile.mkdtemp(prefix="carnot-8949-validation-"))
+        private = Path(tempfile.mkdtemp(prefix=f"carnot-{config.EXPERIMENT_ID}-validation-"))
         source.progress("before_owned_checks")
         validation["receipts"] = run_commands(
-            d.ROOT, validation_plan(private), log_dir=raw / "validation", heartbeat_s=15
+            config.ROOT,
+            validation_plan(private, **options),
+            log_dir=raw / "validation",
+            heartbeat_s=15,
         )
         if (private / ".coverage").is_file():
-            validation["coverage"] = measured([private / ".coverage"], d.OWNED, raw / "measured")
+            validation["coverage"] = measured(
+                [private / ".coverage"], config.OWNED, raw / "measured"
+            )
         source.progress("after_owned_checks")
         work["repository_health"] = dict(
             receipts=run_commands(
-                d.ROOT,
+                config.ROOT,
                 [
                     CommandSpec(
                         "full_python_suite",
-                        (str(d.ROOT / ".venv/bin/pytest"), "tests/python", "-q"),
+                        (str(config.ROOT / ".venv/bin/pytest"), "tests/python", "-q"),
                         "repository_health",
                         300,
                     )
@@ -255,13 +270,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     atomic_json(raw / "work.json", work)
     atomic_json(raw / "validation.json", validation)
-    value = d.build(work, validation, fixture)
+    value = config.build(work, validation, fixture)
     receipts: list[Json] = []
 
     def validate(candidate: Path) -> Json:
-        report = replay(candidate)
+        report = replay(candidate, **options)
         if not fixture:
-            py = str(d.ROOT / ".venv/bin/python")
+            py = str(config.ROOT / ".venv/bin/python")
             commands = [
                 CommandSpec(
                     "cold_replay_cli",
@@ -272,7 +287,7 @@ def main(argv: list[str] | None = None) -> int:
                         "import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('PYTHONPATH',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=60).returncode)",
                         py,
                         "-u",
-                        str(d.ROOT / d.CLI),
+                        str(config.ROOT / config.CLI),
                         "--cold-replay",
                         str(candidate),
                     ),
@@ -293,7 +308,9 @@ def main(argv: list[str] | None = None) -> int:
                 ),
             ]
             receipts.extend(
-                run_commands(d.ROOT, commands, log_dir=raw / "terminal_validation", heartbeat_s=15)
+                run_commands(
+                    config.ROOT, commands, log_dir=raw / "terminal_validation", heartbeat_s=15
+                )
             )
             report.update(
                 passed=report["passed"] and pilot.terminal_passed(receipts), receipts=receipts
@@ -309,8 +326,8 @@ def main(argv: list[str] | None = None) -> int:
         validation["terminal_rejected"] = True
         validation["receipts"].extend(receipts)
         atomic_json(raw / "validation.json", validation)
-        value = d.build(work, validation, fixture)
-        published = publish_primary(output, value, replay)
+        value = config.build(work, validation, fixture)
+        published = publish_primary(output, value, lambda path: replay(path, **options))
     source.progress("terminal_published", 160, 0)
     print(
         json.dumps(
