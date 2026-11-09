@@ -55941,3 +55941,41 @@ or hardware speedup. GPU 0 has a working bounded-generation receipt; GPU 1 is
 detached. ARC remains suspended. No label-demand or inner-clock repair is
 scheduled by this scan. New experiments must state what changes and preserve
 all failed evidence and thresholds.
+
+## 2026-11-09 — V766 planning source scan (recorded before design)
+
+This scan checks 2025–2026 work. Paper results below are external claims, not
+Carnot results. The latest local evidence is V765: 320 Qwen answers with 233
+independent final-answer errors, but no qualified confidence-only detector gain.
+
+| Topic | Source checked | Research consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), revised May 2026 | Energy compatibility is a learned score, not proof of correctness. Keep an ordinary classifier with the same inputs as a control. |
+| Neural constraint satisfaction | [PAL](https://arxiv.org/abs/2503.19466), March 2025; [T-SKM-Net](https://arxiv.org/abs/2512.10461), December 2025 | Exact constraint enforcement is valuable but cannot establish an oracle-distinct learned detector. No new solver layer is needed for the current label source. |
+| Ising applications and hardware sampling | [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985), February 2026, revised September | Graph decomposition and host work can dominate a fast Ising core. Measure whole requests and actual sampler calls before proposing acceleration. |
+| Hallucination detection | [KG-Guard](https://arxiv.org/abs/2606.00328), May 2026; [full text](https://arxiv.org/html/2606.00328v1) | Graph context and marked proposed-answer nodes provide information absent from response confidence. Test a small relational energy head with labels and exact traversal excluded from inference. This is an adaptation to anonymous graphs, not a reproduction of KBQA results. |
+| KANs | [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026; [sample efficiency](https://arxiv.org/abs/2610.10627), October 2026 | Local spline parameters motivate retention controls. Defer a new spline architecture until the current representation question is answered; do not replace a feature test with an architecture sweep. |
+| Energy-guided/constrained generation | [Primal-Dual Guided Decoding](https://arxiv.org/abs/2605.09749), May 2026; [Future Validity](https://arxiv.org/abs/2605.07698), May 2026 | Constraint steering can change the sampling law. Keep the Qwen source protocol frozen while comparing detectors; decoding changes would confound the source. |
+| Continual/online constraint learning | [Continual Calibration](https://arxiv.org/abs/2604.23987), April 2026; [full text](https://arxiv.org/html/2604.23987v1); [TOOD](https://arxiv.org/abs/2607.29592), July 2026 | Separate score calibration from representation learning. A small delayed-feedback calibration update on real Qwen errors is a different question from another synthetic gradient-replay run. Measure proper loss and untouched retention. These papers do not guarantee validity for Carnot's adaptive streams. |
+| Confidence limitations | [Semantic Energy](https://arxiv.org/abs/2508.14496), August 2025 | Multiple-response and logit signals are a possible later comparator. The immediate test adds task context instead of simply adding more confidence features. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** Checked the [ICLR 2026 EBT paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf), an [ICML 2026 energy-control submission](https://openreview.net/pdf/0c9c933094c8561fa26e21bcdbbb38617d6bed1a.pdf), and [NeurIPS 2025 workshop work on energy-shaped projections](https://openreview.net/forum?noteId=saOUZ7cICb). Conference headers alone do not establish acceptance. No new local dependency follows from these search results.
+- **Extropic:** [Writing](https://extropic.ai/writing) exposed no article text. [Hardware](https://extropic.ai/hardware) lists Z1 Stick/Card early access in 2027; [Software](https://extropic.ai/software) describes Torx and THRML. This is vendor information. Local TSU availability and end-to-end speed remain unproved.
+- **Semantic Scholar:** The browser could not open the citation endpoints. Direct HTTPS retrieval succeeded for both `ARXIV:2507.02092/citations` and `ARXIV:2512.15605/citations`, with fields `title,year,externalIds` and limit 10. EBT returned `next=10`; this is a partial citation scan. ARM–EBM returned ten entries without a next page. A newly surfaced EBT citation, [Energy-Based Policy Orchestration](https://arxiv.org/abs/2611.02546), November 2, 2026, is a robotics composition lead, not evidence for Carnot's text verifier. ARM–EBM citations again include [Distributional EBMs](https://arxiv.org/abs/2605.18871). Do not treat either citation list as an exhaustive literature review.
+- **HuggingFace papers:** Individual Semantic Energy and KG-Guard pages failed to load. The paper search did expose [DiffuTruth](https://huggingface.co/papers/2602.11364). It is a discovery lead involving an additional diffusion model and critic; defer it pending independent source/label review and a justified compute budget.
+- **GitHub:** Checked weekly [Python](https://github.com/trending/python?since=weekly) and [Rust](https://github.com/trending/rust?since=weekly) trending pages. No relevant new ranking was established. The author-linked [KG-Guard repository](https://github.com/graphml-lab-pwr/KG-Guard) is a concrete implementation lead. Read its license before reusing code; the proposed Carnot adaptation should use existing JAX/Gibbs components.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona) describes an energy-based constraint decision layer. The checked page provides no executable protocol or weights that establish its advertised guarantees. Treat the architecture positioning as context only.
+
+### Adoption boundary
+
+Promote graph-conditioned scoring and delayed score calibration into falsifiable
+experiments. Keep V765's failed detector and gradient-replay verdicts intact.
+Its historical test split is now exposed development data; confirmation needs
+fresh graphs and frozen roles. A learned detector on BFS-labeled graphs can be
+oracle-distinct in implementation, yet still cannot close the north-star claim
+for domains without a cheap executable oracle. Natural-language and first-error
+localization remain separate open questions. The November 7 append-only lift in
+CLAUDE.md and ops/north-star.md restores an opportunistic ARC slot; V765's older
+"suspended" text is not the current scheduling authority.

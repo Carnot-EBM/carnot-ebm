@@ -4763,3 +4763,24 @@ Planning only; completed V764 and its archived authority remain unchanged.
 | REQ-REPORT-8954 / SCENARIO-REPORT-8954-CONTRACT | exp8954-gradient-benefit-audit | `results/experiment_8954_v765_gradient_benefit_audit.json` | Planned |
 | REQ-REPORT-8955 / SCENARIO-REPORT-8955-CONTRACT | exp8955-gradient-complete-cost | `results/experiment_8955_v765_gradient_complete_cost.json` | Planned |
 | REQ-REPORT-8956 / SCENARIO-REPORT-8956-CONTRACT | exp8956-capstone | `results/experiment_8956_v765_capstone.json` | Planned |
+
+## V766 planned research traceability — 2026-11-09
+
+Planning only; original V765 authority is archived unchanged.
+
+| Requirement / scenario | Task | Deliverable | State |
+|---|---|---|---|
+| REQ-REPORT-8957 / SCENARIO-REPORT-8957-CONTRACT | exp8957-branch-contract | `results/experiment_8957_v766_branch_contract.json` | Planned |
+| REQ-REPORT-8958 / SCENARIO-REPORT-8958-CONTRACT | exp8958-confidence-diagnosis | `results/experiment_8958_v766_confidence_diagnosis.json` | Planned |
+| REQ-REPORT-8959 / SCENARIO-REPORT-8959-CONTRACT | exp8959-relational-methods | `results/experiment_8959_v766_relational_methods.json` | Planned |
+| REQ-REPORT-8960 / SCENARIO-REPORT-8960-CONTRACT | exp8960-online-calibration-methods | `results/experiment_8960_v766_online_calibration_methods.json` | Planned |
+| REQ-REPORT-8961 / SCENARIO-REPORT-8961-CONTRACT | exp8961-graph-corpus-a | `results/experiment_8961_v766_graph_corpus_a.json` | Planned |
+| REQ-REPORT-8962 / SCENARIO-REPORT-8962-CONTRACT | exp8962-graph-corpus-b | `results/experiment_8962_v766_graph_corpus_b.json` | Planned |
+| REQ-REPORT-8963 / SCENARIO-REPORT-8963-CONTRACT | exp8963-corpus-admission | `results/experiment_8963_v766_corpus_admission.json` | Planned |
+| REQ-REPORT-8964 / SCENARIO-REPORT-8964-CONTRACT | exp8964-relational-decisions | `results/experiment_8964_v766_relational_decisions.json` | Planned |
+| REQ-REPORT-8965 / SCENARIO-REPORT-8965-CONTRACT | exp8965-relational-controls | `results/experiment_8965_v766_relational_controls.json` | Planned |
+| REQ-REPORT-8966 / SCENARIO-REPORT-8966-CONTRACT | exp8966-online-response-streams | `results/experiment_8966_v766_online_response_streams.json` | Planned |
+| REQ-REPORT-8967 / SCENARIO-REPORT-8967-CONTRACT | exp8967-online-benefit-audit | `results/experiment_8967_v766_online_benefit_audit.json` | Planned |
+| REQ-REPORT-8968 / SCENARIO-REPORT-8968-CONTRACT | exp8968-complete-service-cost | `results/experiment_8968_v766_complete_service_cost.json` | Planned |
+| REQ-REPORT-8969 / SCENARIO-REPORT-8969-CONTRACT | exp8969-arc-transfer-evidence | `results/experiment_8969_v766_arc_transfer_evidence.json` | Planned |
+| REQ-REPORT-8970 / SCENARIO-REPORT-8970-CONTRACT | exp8970-capstone | `results/experiment_8970_v766_capstone.json` | Planned |

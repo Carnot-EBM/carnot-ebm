@@ -23434,3 +23434,20 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Audit prospective gradient-selection benefit and joint retention (⚠️ Research Finding) — honest_verdict=complete_null_gradient_benefit_audit; results/experiment_8954_v765_gradient_benefit_audit.json
 - 2026-11-09: Measure complete gradient-selection costs and hardware limits (⚠️ Research Finding) — honest_verdict=complete_null_gradient_complete_cost; results/experiment_8955_v765_gradient_complete_cost.json
 - 2026-11-09: Reconcile thirteen outcomes and close exact unchanged scopes (⚠️ Blocked) — honest_verdict=complete_blocked_v765_capstone; results/experiment_8956_v765_capstone.json
+
+## 2026-11-09 — Plan milestone 2026.11.766
+
+- Recorded the2025–2026 primary-source scan before design, including graph
+  conditioning, continual calibration, secondary-source checks and access limits.
+- Preserved full V765 design/queue bytes and staged exactly fourteen matching
+  tasks, Exp8957–Exp8970, across four phases.
+- Closed unchanged confidence-only scoring and synthetic gradient replay;
+  proposed fresh graph-conditioned scoring and real-error calibration with
+  frozen roles, matched controls and explicit causal/retention bounds.
+- Restored the opportunistic ARC slot under the November7 directive, with a
+  structured gate requiring new supported live outcomes before analysis.
+- Added planned requirements, traceability and architecture/ops boundaries.
+  Every prompt includes numbered progress/bounded-write rules, exact gate fields,
+  per-unit rows, verdict classes and full rerun-retirement metadata.
+- Planning validation is in progress. No activation, model run, push or external
+  publication occurred. Active roadmap and conductor bytes remain unchanged.

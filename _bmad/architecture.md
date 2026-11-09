@@ -1007,3 +1007,21 @@ GPU/NPU batching is a possible future path; no qualified accelerator, removable
 fraction or service speedup is asserted. KV 260 sampler, PolarFire CPU and
 GateMate physical limits remain. The unconditional capstone preserves all
 thirteen outcomes and separates methods readiness from scientific benefit.
+
+## V766 planned evidence boundary — 2026-11-09
+
+V766 proposes fourteen tasks, Exp8957–Exp8970, without implementing runtime
+behavior. It adds raw graph context to learned energy scoring while isolating
+BFS truth from inference. All 320 V765 answers become exposed development;
+1024 new bounded Qwen answers have frozen calibration/test/online roles.
+The graph-energy arm must beat both confidence and same-encoder logistic controls.
+
+The continuous-learning branch updates only a two-scalar calibration adapter
+from delayed real-response labels. Predictions precede feedback; development
+guards, untouched retention and exact restart remain separate. The synthetic
+gradient-replay mechanism stays closed under its original eleven-bound result.
+Whole-service clocks include graph work, guard evaluation and durable recovery.
+No Rust or accelerator speedup is assumed. The November7 ARC suspension lift
+restores one opportunistic task, gated on newly supported live supervisor events.
+The oracle-distinct verifier remains the north star; graph-domain gains alone
+cannot establish verification where no cheap exact oracle exists.

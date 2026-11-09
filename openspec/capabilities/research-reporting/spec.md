@@ -110667,3 +110667,233 @@ strict lint/type checks and measured 100 percent owned unit/child statements
 with zero exclusions SHALL qualify publication. Global suite debt SHALL be
 recorded separately. ARC remains suspended; natural-language verification,
 generative self-learning, 10x Rust and 100x hardware claims remain open.
+
+## V766 planned research — 2026-11-09
+
+All fourteen requirements below are **Planned**, not implemented. The full
+contract in research-roadmap-vNEXT.md defines equations, roles, bounds and gates.
+The November7 ARC suspension lift applies; earlier suspension text is history.
+
+### REQ-REPORT-8957: Bind fourteen tasks and qualify only new ARC evidence
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8957_v766_branch_contract.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8957-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8957-branch-contract`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8958: Diagnose confidence-only errors and freeze development-only evidence
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8958_v766_confidence_diagnosis.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8958-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8958-confidence-diagnosis`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8959: Freeze relational energy models and fresh graph roles
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8959_v766_relational_methods.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8959-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8959-relational-methods`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8960: Freeze delayed online calibration on real model errors
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8960_v766_online_calibration_methods.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8960-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8960-online-calibration-methods`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8961: Collect fresh Qwen graph evidence shard A
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8961_v766_graph_corpus_a.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8961-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8961-graph-corpus-a`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8962: Collect fresh Qwen graph evidence shard B
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8962_v766_graph_corpus_b.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8962-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8962-graph-corpus-b`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8963: Authenticate fresh graph roles and inference-only views
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8963_v766_corpus_admission.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8963-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8963-corpus-admission`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8964: Test graph-conditioned energy decisions on fresh Qwen errors
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8964_v766_relational_decisions.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8964-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8964-relational-decisions`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8965: Challenge relational scores with invariance and removed-context controls
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8965_v766_relational_controls.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8965-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8965-relational-controls`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8966: Measure continuous calibration with sealed real-error feedback
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8966_v766_online_response_streams.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8966-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8966-online-response-streams`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8967: Audit future calibration benefit and shared-panel retention
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8967_v766_online_benefit_audit.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8967-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8967-online-benefit-audit`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8968: Measure relational decision and adaptation costs with hardware limits
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8968_v766_complete_service_cost.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8968-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8968-complete-service-cost`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8969: Assess held-family AVO transfer from new live outcomes
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8969_v766_arc_transfer_evidence.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8969-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8969-arc-transfer-evidence`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.
+
+### REQ-REPORT-8970: Reconcile fourteen outcomes and keep claim boundaries explicit
+
+The experiment SHALL follow the V766 full task contract and produce
+`results/experiment_8970_v766_capstone.json`. It SHALL retain per-unit rows,
+actual substrate, source/code/raw hashes, a terminal honest verdict and closed
+verdict class. Readiness and scientific benefit SHALL remain separate.
+Implementation status: **Planned**.
+
+#### SCENARIO-REPORT-8970-CONTRACT
+
+Given frozen authority and authenticated inputs, when `exp8970-capstone`
+runs, then registered comparisons and causal controls SHALL determine the result.
+External absence SHALL be terminal blocked with exact gate_check_summary. Failed
+owned validation SHALL disqualify. Tests SHALL exercise private publication,
+cold replay and rehashed-tamper refusal before claiming completion.

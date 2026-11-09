@@ -19075,3 +19075,22 @@ references, all 13 prior-failure blocks, exclusion lint, ARC precondition lint
 and scoped spec coverage pass. The six-file unit/private-CLI suite passes
 131 tests, including E2E-018/021. The plan remains staged only. Experiments and
 hardware were not run; source yield and scientific benefit remain unknown.
+
+## 2026-11-09 — V766 research plan staged
+
+V765 completed thirteen task slots. It supplied320 live Qwen answers and233
+independent final-answer errors, but the confidence-only detector failed its
+benefit conjunction. Gradient replay also failed its complete future-benefit
+gate. Complete service timings qualified without a deployment recommendation.
+Exp8945 remains quarantined; the V765 capstone is blocked on that producer.
+
+The next plan is 2026.11.766: exactly fourteen tasks, Exp8957–Exp8970, across
+four phases. It tests learned graph-conditioned decisions, fresh frozen data
+roles, delayed real-error calibration, complete service costs and an opportunistic
+ARC transfer analysis gated on new live evidence. The November7 ARC lift is the
+current authority; earlier suspended text below remains historical.
+
+Research sources were recorded before design. Complete V765 design/queue bytes
+are archived. Requirements and traceability are Planned. Validation is pending;
+this plan has not been activated. The active roadmap, conductor and exclusion
+manifest remain unchanged. No model, experiment, hardware run or push occurred.

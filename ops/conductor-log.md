@@ -21645,3 +21645,4 @@ code |
 | 2026-11-09 15:57 UTC | Audit prospective gradient-selection benefit and j | OK | 107 passed, 1 warning in 208.32s (0:03:28) |
 | 2026-11-09 17:12 UTC | Measure complete gradient-selection costs and hard | OK | 92 passed, 1 warning in 74.68s (0:01:14) |
 | 2026-11-09 18:20 UTC | Reconcile thirteen outcomes and close exact unchan | OK | 91 passed, 1 warning in 187.84s (0:03:07) |
+| 2026-11-09 20:19 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
