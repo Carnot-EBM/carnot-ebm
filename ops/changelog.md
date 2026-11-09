@@ -23422,3 +23422,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Collect matched-population Qwen corpus shard A (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_a; results/experiment_8949_v765_matched_corpus_a.json
 - 2026-11-09: Collect matched-population Qwen corpus shard B (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_b; results/experiment_8950_v765_matched_corpus_b.json
 - 2026-11-09: Authenticate matched graph labels and frozen calibration authority (⚠️ Research Finding) — honest_verdict=complete_circular_positive_matched_corpus_admission; results/experiment_8951_v765_matched_corpus_admission.json
+- 2026-11-09: Evaluate energy decisions on unseen matched-population model errors (⚠️ Research Finding) — honest_verdict=complete_null_matched_population_final_answer_calibration; results/experiment_8952_v765_matched_calibrated_decisions.json
