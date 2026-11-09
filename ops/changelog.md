@@ -23451,3 +23451,4 @@ reports. No experiment or model was run; protected files retain their hashes.
   per-unit rows, verdict classes and full rerun-retirement metadata.
 - Planning validation is in progress. No activation, model run, push or external
   publication occurred. Active roadmap and conductor bytes remain unchanged.
+- 2026-11-09: Bind fourteen tasks and qualify only new ARC evidence (⚠️ Blocked) — honest_verdict=complete_blocked_v766_branch_contract; results/experiment_8957_v766_branch_contract.json
