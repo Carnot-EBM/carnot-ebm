@@ -110480,11 +110480,37 @@ conductor-owned for this invocation.
 
 ### REQ-REPORT-8951: Authenticate matched graph labels and frozen calibration authority
 
-The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8951_v765_matched_corpus_admission.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8951_v765_matched_corpus_admission.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation: `matched_corpus_admission_8951.py`, `matched_admission_runner_8951.py` and the direct CLI. Tests: `tests/python/test_matched_corpus_admission_8951.py`; measured qualification is recorded in the artifact.
 
 #### SCENARIO-REPORT-8951-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8951-matched-corpus-admission` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+Execution contract, 2026-11-09: Authenticate the original Exp8946 source protocol,
+both current 160-response shard receipts and Exp8937 calibration bytes, including
+every retained raw operand. Historical scheduler skips retain their recorded paths
+and never gate the new corpus. Join exactly 320 independent first responses with
+160 train,80 calibration,80 test graphs. Reject duplicate graphs or seeds across
+roles, shards, controls and retained pilots. Independently compare every BFS answer
+set with edge relaxation and require equal nonempty k2/k3 opportunity. Frozen role
+and rejection decisions SHALL remain unchanged after outcomes are opened.
+
+Admission requires at least200 incorrect final answers and at least5 correct and
+5 incorrect in each split. Report exact support, semantic, malformed and absent-node
+counts separately. These are feasibility minima, not statistical power. Complete
+data missing support is terminal null; unavailable or rejected shards are blocked.
+Requalify the unchanged calibration methods only on development fixtures. Inspect
+scorer imports and mutation-test labels, distances, answer sets and graph IDs for
+unchanged response features and scores. Never fit live data or search test thresholds.
+Oracle agreement cannot establish detector accuracy or independent generalization.
+
+Tests SHALL precede implementation. Require100-percent newly owned unit/child
+statements with zero exclusions, Ruff check/format, strict mypy, positional spec
+tracing, private E2E-018/021, cold replay and rehashed tamper refusal. Publish through
+primary_publication only after owned qualification. Preserve typed per-graph rows,
+comparison rows, actual clocks, producer bytes and hashes. Record one full-suite
+attempt as separate global debt; failed owned checks disqualify. Ops and
+traceability reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-8952: Evaluate energy decisions on unseen matched-population model errors
 
