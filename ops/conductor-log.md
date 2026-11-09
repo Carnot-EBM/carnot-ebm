@@ -21639,3 +21639,4 @@ code |
 | 2026-11-09 10:33 UTC | Test paired depth sensitivity with equal answer op | OK | 108 passed, 1 warning in 29.81s |
 | 2026-11-09 11:17 UTC | Collect matched-population Qwen corpus shard A | OK | 105 passed, 1 warning in 34.71s |
 | 2026-11-09 11:57 UTC | Collect matched-population Qwen corpus shard B | OK | 85 passed, 1 warning in 22.85s |
+| 2026-11-09 12:47 UTC | Authenticate matched graph labels and frozen calib | OK | 114 passed, 1 warning in 48.60s |
