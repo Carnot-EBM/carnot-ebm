@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.11.765",
+  "generated_at": "2026-11-09T18:33:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 198.8,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure continuous gradient-informed replay on sealed future streams",
+      "duration_minutes": 39.09,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure complete gradient-selection costs and hardware limits",
+      "duration_minutes": 34.71,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Audit prospective gradient-selection benefit and joint retention",
+      "duration_minutes": 17.11,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Freeze released-label gradient selection for continuous energy learning",
+      "duration_minutes": 14.81,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Collect matched-population Qwen corpus shard B",
+      "duration_minutes": 12.96,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.11.765 completed 13 experiments (13 compute-bound) in 198.8 wall-time minutes under disk-mtime reconstruction. Runtime was led by 'Measure continuous gradient-informed replay on sealed future streams' (39.09 minutes), 'Measure complete gradient-selection costs and hardware limits' (34.71 minutes), 'Audit prospective gradient-selection benefit and joint retention' (17.11 minutes), 'Freeze released-label gradient selection for continuous energy learning' (14.81 minutes), and 'Collect matched-population Qwen corpus shard B' (12.96 minutes). Locked gpu_idle_on_compute_bound_tasks is false, and no data is available this milestone for any multi-model parallel task requiring DualGPURunner.",
+  "bottlenecks_identified": [
+    "All 13 completed experiments (0 synthesis-only) across 198.8 wall-time minutes (199 minutes / 3.3 hours, averaging 15 minutes per experiment) were compute-bound, led by 'Measure continuous gradient-informed replay on sealed future streams' (39.09 minutes / 39min) for continuous gradient-informed replay on sealed future streams and 'Measure complete gradient-selection costs and hardware limits' (34.71 minutes / 35min) for full gradient-selection cost and hardware-limit measurement.",
+    "Three additional compute-bound experiments completed the top 5 durations—'Audit prospective gradient-selection benefit and joint retention' (17.11 minutes / 17min), 'Freeze released-label gradient selection for continuous energy learning' (14.81 minutes / 15min), and single-model 'Collect matched-population Qwen corpus shard B' (12.96 minutes / 13min)—while no data is available this milestone for internal sub-step profiles or for the names and durations of the remaining compute-bound tasks among the 13 completed experiments.",
+    "Live git-log timing lookup found 0 commits, requiring disk-mtime fallback reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across all 13 completed experiments."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse shared gradient-selection intermediates and sealed future-stream checkpoints across 'Measure continuous gradient-informed replay on sealed future streams' (39.09 minutes / 39min), 'Measure complete gradient-selection costs and hardware limits' (34.71 minutes / 35min), 'Audit prospective gradient-selection benefit and joint retention' (17.11 minutes / 17min), and 'Freeze released-label gradient selection for continuous energy learning' (14.81 minutes / 15min) to lower the 15-minute per-experiment average.",
+    "Batch single-model Qwen inference requests and overlap shard serialization in 'Collect matched-population Qwen corpus shard B' (12.96 minutes / 13min) on GPU 0 without proposing DualGPURunner enforcement (DualGPURunner applies only when 2+ models are loaded in parallel, and no data is available this milestone for any multi-model parallel task).",
+    "Write explicit per-experiment start and completion timestamps into experiment result JSONs so retrospective timing avoids disk-mtime reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Release the residual 4MB memory allocation on GPU 0 (NVIDIA GeForce RTX 3090, 4/24576MB / 0% utilization, Temp 49C at 2026-11-09T18:33:29.681435+00:00) after compute-bound execution finishes, per the 1 GPU Monitor Report suggestion."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share cached gradient-selection vectors and sealed future-stream checkpoints across the gradient-selection compute-bound tasks (39.09 minutes / 39min, 34.71 minutes / 35min, 17.11 minutes / 17min, and 14.81 minutes / 15min).",
+    "Increase single-GPU request batching for 'Collect matched-population Qwen corpus shard B' (12.96 minutes / 13min) while keeping DualGPURunner scoped strictly to tasks loading 2+ models in parallel.",
+    "Record direct start and end timestamps in experiment artifacts to avoid disk-mtime fallback (retro_timing_fallback on 0 git-log commits) and free the residual 4MB idle memory on GPU 0 (4/24576MB, 0% utilization, Temp 49C)."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.765 executed 13 compute-bound experiments (0 synthesis-only) in 198.8 wall-time minutes (199 minutes / 3.3 hours, averaging 15 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, no data available this milestone for in-flight GPU utilization traces or for any task loading 2+ models in parallel for DualGPURunner, and GPU 0 (NVIDIA GeForce RTX 3090) reporting 4/24576MB (0%), 0% utilization, and Temp 49C at milestone close. Reusing gradient-selection and sealed-stream intermediates across the 39.09-minute, 34.71-minute, 17.11-minute, and 14.81-minute tasks, batching single-model Qwen inference in the 12.96-minute corpus shard task, recording direct experiment timestamps when live git-log has 0 commits, and freeing the idle 4MB GPU 0 allocation offer the clearest speedup path for the next milestone."
+}

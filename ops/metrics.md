@@ -1,5 +1,16 @@
 # Carnot — Session Metrics
 
+## Session: 2026-11-09 Milestone 2026.11.765 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-11-09T18:33:45Z | 2026-11-09T18:38:48Z | User requested operational retrospective for milestone 2026.11.765; updated `results/operational_retro_2026_11_765.json`, `ops/changelog.md`, `docs/research-log.md`, and `ops/status.md`, and launched adversarial audit subagent (`70a68af8-2652-4f53-8174-92be311da572`, ~80s, ~6k tokens) | ~20k |
+| 2 | 2026-11-09T18:40:08Z | 2026-11-09T18:40:17Z | Received adversarial audit PASS (0 discrepancies) and recorded session metrics in `ops/metrics.md` | ~5k |
+
+---
+
 ## Session: 2026-11-09 Milestone 2026.11.764 Operational Retrospective
 
 ### Turn Log

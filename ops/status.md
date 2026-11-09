@@ -1,5 +1,9 @@
 # Carnot — Operational Status
 
+## 2026-11-09 UTC — Milestone 2026.11.765 operational retrospective
+
+Operational retrospective recorded in `results/operational_retro_2026_11_765.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log) records 13 completed compute-bound experiments (0 synthesis-only) across 198.8 wall-time minutes (199 minutes / 3.3 hours, averaging 15 minutes per experiment), led by continuous gradient-informed replay on sealed future streams (39.09 min / 39min), complete gradient-selection costs and hardware limits (34.71 min / 35min), prospective gradient-selection benefit and joint retention audit (17.11 min / 17min), released-label gradient selection freeze for continuous energy learning (14.81 min / 15min), and matched-population Qwen corpus shard B collection (12.96 min / 13min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and post-run GPU 0 (NVIDIA GeForce RTX 3090) reported 4/24576MB (0%), 0% utilization, and Temp 49C. Next operational focus: cache shared gradient-selection/replay intermediates, batch single-GPU Qwen shard collection, persist direct experiment timestamps, and release the residual 4MB GPU 0 allocation.
+
 ## Next research milestone staged — 2026-11-08
 
 V764 is planned, not activated: fourteen tasks, Exp8930–Exp8943, in four phases.
