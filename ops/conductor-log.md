@@ -21634,3 +21634,4 @@ code |
 | 2026-11-09 06:32 UTC | Milestone 2026.11.765 activated | OK | 13 tasks queued |
 | 2026-11-09 07:12 UTC | Bind thirteen tasks and preserve completed V764 au | OK | 89 passed, 1 warning in 34.69s |
 | 2026-11-09 07:56 UTC | Measure answer-set opportunity in the failed depth | FLAGGED | adversarial_verify CRITICAL: SUBSTRATE_CLASS_MISMATCH, EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 57.36s |
+| 2026-11-09 08:51 UTC | Freeze equal-opportunity graph sources and unchang | OK | 96 passed, 1 warning in 104.59s (0:01:44) |
