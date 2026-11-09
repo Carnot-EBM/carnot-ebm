@@ -110588,11 +110588,33 @@ status and traceability reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-8954: Audit prospective gradient-selection benefit and joint retention
 
-The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8954_v765_gradient_benefit_audit.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8954_v765_gradient_benefit_audit.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Implemented** in `gradient_benefit_audit_8954.py` and `gradient_benefit_runner_8954.py`; publication requires the recorded owned checks.
 
 #### SCENARIO-REPORT-8954-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8954-gradient-benefit-audit` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+The audit SHALL authenticate the exact Exp8953 and Exp8947 producer bytes before
+reduction. It SHALL reduce all 27648 six-arm query rows from 24 frozen streams,
+without model loads, training, new oracle calls or stream selection. Future Brier
+contrasts use queries 25–48. Retention Brier/error contrasts use checkpoints
+0/24/48. All 11 one-sided bounds SHALL use the same 10000 whole-stream paired
+bootstrap draws, seed 765200, and family alpha 0.01 divided by 11. The original
+ten conditions SHALL remain identifiable; signature replay is the added condition.
+Frozen upper<=-0.01, four attribution uppers<0, and six retention uppers<=0.01
+are jointly necessary. No diagnostic can replace a failed proper-loss bound.
+
+The audit SHALL report paired selection disagreement, actual gradient/update
+diversity and guard rejection rates. A complete reduction and owned checks grant
+`gradient_audit_ready_score` independently of `gradient_benefit_score`. Constructed
+oracle success SHALL be `circular_positive` with independent generalization zero.
+A null SHALL retire exactly gradient-cosine selection, buffer32, SGD0.1, delay8,
+the unchanged guard and 48-query schedule; recommend a changed representation or
+new causal diagnosis. Missing upstream SHALL block the whole audit with exact
+field/hash diagnostics. Failed owned validation SHALL disqualify. Rehashed score,
+roster, selection and aggregate tampering SHALL fail cold replay. Owned unit/child
+statement coverage SHALL be 100 percent with zero exclusions. Tests SHALL write
+only private scratch. Ops/status/traceability reconciliation is conductor-owned.
 
 ### REQ-REPORT-8955: Measure complete gradient-selection costs and hardware limits
 

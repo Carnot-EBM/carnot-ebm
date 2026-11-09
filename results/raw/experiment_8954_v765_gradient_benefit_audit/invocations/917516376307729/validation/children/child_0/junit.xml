@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="1" skipped="0" tests="26" time="238.001" timestamp="2026-11-09T10:13:53.091347-05:00" hostname="icbfl1"><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_authentication" time="10.859" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_complete_null" time="12.505" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_bootstrap_and_boundaries" time="0.801" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[truth]" time="1.318" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[release]" time="1.848" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[retention]" time="1.234" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[prediction]" time="1.231" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[frozen]" time="1.227" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[denominator]" time="1.795" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[drop]" time="1.182" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[seal]" time="1.190" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[score]" time="1.186" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[split]" time="1.232" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_rehashed_semantics[control]" time="1.813" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_runner_routes[]" time="15.978" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_runner_routes[external]" time="4.876" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_runner_routes[resources]" time="4.884" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_runner_routes[reduction]" time="4.913" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_runner_routes[validation]" time="16.194" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_runner_routes[terminal]" time="16.256" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_private_cli_and_tampering" time="32.014" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_original_replay" time="96.411"><failure message="ValueError: terminal_semantics">tmp_path = PosixPath('/tmp/carnot8954-validation-enx_i2mr/collection-48242e8020b84cbfa8e76f4f4f438826/0/tmp/test_original_replay0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7fcdee83ae70&gt;
+
+    def test_original_replay(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -&gt; None:
+        """REQ-REPORT-8954: complete null replay recomputes every published aggregate."""
+        from carnot.reporting import gradient_benefit_runner_8954 as r
+    
+        validation = dict(
+            receipts=[dict(passed=True)],
+            union=dict(passed=True),
+            coverage=dict(
+                complete=True,
+                percent=100,
+                files=[dict(path=p, statements=1, missing=[], excluded=[]) for p in m.OWNED],
+            ),
+            raw_references=[],
+        )
+        monkeypatch.setattr(r, "validate", lambda *args: deepcopy(validation))
+        monkeypatch.setattr(r, "terminal", lambda *args: [dict(passed=True)])
+        output = tmp_path / (m.NAME + ".json")
+        assert r.main(["--output", str(output)]) == 0
+        assert r.replay(output)["passed"]
+        value = json.loads(output.read_bytes())
+        assert value["gradient_audit_ready_score"] == 1 and value["verdict_class"] == "null"
+        assert all(v == 0 for v in value["model_invocation_counts"].values())
+        failed = dict(
+            value,
+            owned_errors=["owned_validation_failure"],
+            required_checks_passed=False,
+            gradient_audit_ready_score=0,
+            verdict_class="disqualified",
+            honest_verdict="complete_disqualified_gradient_replay_benefit",
+        )
+        failed.pop("reproducibility_checksum")
+        failed["reproducibility_checksum"] = canonical_hash(failed)
+        atomic_json(tmp_path / "failed.json", failed)
+&gt;       assert r.replay(tmp_path / "failed.json")["passed"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_gradient_benefit_audit_8954.py:309: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/gradient_benefit_runner_8954.py:190: in replay
+    m.require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+passed = False, reason = 'terminal_semantics'
+
+    def require(passed: bool, reason: str) -&gt; None:
+        """Use an explicit exception so checks remain active under optimized Python."""
+        if not passed:
+&gt;           raise ValueError(reason)
+E           ValueError: terminal_semantics
+
+python/carnot/reporting/causal_learning_audit_8810.py:55: ValueError</failure></testcase><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_original_replay" time="0.000"><error message="failed on teardown with &quot;Failed: Memory leak: +682MB&quot;">Memory leak: +682MB
+
+During handling of the above exception, another exception occurred:
+Memory leak: +682MB</error></testcase><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_validation_adapters" time="0.001" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_mechanism_diagnostics" time="0.013" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_diagnostic_custody[replay_rows]" time="1.319" /><testcase classname="tests.python.test_gradient_benefit_audit_8954" name="test_diagnostic_custody[gradient_ledger]" time="1.258" /></testsuite></testsuites>
