@@ -110386,11 +110386,38 @@ qualification and method exercise; evaluation benefit remains unopened.
 
 ### REQ-REPORT-8948: Test paired depth sensitivity with equal answer opportunity
 
-The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8948_v765_matched_depth_control.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation status: **Planned**.
+The experiment SHALL follow the exact V765 task contract and produce `results/experiment_8948_v765_matched_depth_control.json` with complete typed rows, provenance, verdict class and validation receipts. Implementation: `matched_depth_control_8948.py`, `matched_depth_runtime_8948.py`, `matched_depth_runner_8948.py` and the direct experiment CLI. Tests: `tests/python/test_matched_depth_control_8948.py`; the artifact records qualification and the measured source disposition.
 
 #### SCENARIO-REPORT-8948-CONTRACT
 
 Given frozen branch authority and authenticated prerequisites, when `exp8948-matched-depth-control` runs, then its registered checks determine readiness and scientific benefit separately. Missing external evidence SHALL be terminal blocked with the exact failing gate; failed owned controls SHALL be disqualified. Tests SHALL include private publication, replay and tamper refusal before completion.
+
+Execution contract, 2026-11-09: Authenticate the pinned Exp8946 producer and its
+retained bytes before loading weights. Use its 50 frozen paired graphs, prompts
+and balanced order exactly once per condition. Every pair must retain equal,
+nonempty k2/k3 valid-answer sets. Use the mandated cached Qwen3.8-27B Q4_K_M,
+GPU0 only, temperature0, reasoning off,16 output tokens, no retries or fallback.
+Bound preflight/load to240 seconds each, generation to1200 and requests to30.
+Check cached_sota_pair actual paths, CUDA offload and the resource lease; stop
+only the owned server. Preserve durable raw content, usage, logprobs and hashes
+before independent edge-relaxation truth checks. Keep all100 scheduled slots,
+including failed or censored answers, with graph-level independent identities.
+
+Depth readiness requires all100 answers, authenticated labels, usable confidence
+signals, error_k3>error_k2 and error_k2>=0.20, plus all owned validation. Report
+signal readiness separately. Report a seeded10000-draw whole-graph paired
+bootstrap95-percent interval separately from the operational inequality. Retain
+per-pair cardinality, chance accuracy and parser/semantic counts. Oracle labels
+cannot establish detector advantage or independent generalization. A failed
+source gate closes collection without changing the frozen protocol or old null.
+
+Tests must first fail without the implementation, then measure100-percent new
+unit/child statements with zero exclusions. Require scoped Ruff check/format,
+strict mypy, positional spec tracing, private E2E-018/021, cold replay and
+rehashed-tamper refusal before primary_publication. Record one bounded full
+Python-suite attempt and existing global debt separately; failed owned checks
+disqualify. Preserve actual clocks and producer bytes. Ops and traceability
+reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-8949: Collect matched-population Qwen corpus shard A
 

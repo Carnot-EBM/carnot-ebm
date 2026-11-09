@@ -1,0 +1,69 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8948_v765_matched_depth_control.json",
+  "primary_sha256": "sha256:da6efe2bb0adcc3e48f6b04b2b387d4e653a0cb9bed9df92a66dbc7f9e1fd9dd",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('\"'\"'PYTHONPATH'\"'\"',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=60).returncode)' /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8948_v765_matched_depth_control.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8948_v765_matched_depth_control/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('PYTHONPATH',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=60).returncode)",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8948_v765_matched_depth_control.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8948_v765_matched_depth_control/terminal_candidate.json"
+        ],
+        "duration_s": 2.189607218024321,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8948_v765_matched_depth_control/invocations/1794218746797114754/terminal_validation/00_cold_replay_cli.log",
+        "log_sha256": "sha256:c129090fb245c31cf8cf3938db21510c288cc87c01630cb31296e1839bdf19e7",
+        "name": "cold_replay_cli",
+        "output_tail": "{\"passed\": true, \"replay_passed\": true}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8948_v765_matched_depth_control/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8948_v765_matched_depth_control/terminal_candidate.json"
+        ],
+        "duration_s": 1.8565914880018681,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8948_v765_matched_depth_control/invocations/1794218746797114754/terminal_validation/01_adversarial.log",
+        "log_sha256": "sha256:455c007db399318dc96b5f03fb6d4609495d1b4876a3d225557469dcdda8e4d8",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8948_v765_matched_depth_control/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8948,\n      \"title\": \"Paired graph depth control\",\n      \"honest_verdict\": \"complete_circular_positive_paired_depth_control\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8948_v765_matched_depth_control/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8948_v765_matched_depth_control/terminal_candidate.json"
+        ],
+        "duration_s": 0.04643568804021925,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8948_v765_matched_depth_control/invocations/1794218746797114754/terminal_validation/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ],
+    "replay_passed": true
+  }
+}
