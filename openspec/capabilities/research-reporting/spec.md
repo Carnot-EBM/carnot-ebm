@@ -111333,11 +111333,37 @@ no-cheap-oracle claim. Qwen weights stay frozen. Only the declared small heads l
 The experiment SHALL follow the V767 full task contract and produce
 `results/experiment_8971_v767_branch_contract.json`. It SHALL retain every required artifact field,
 statistical bound, causal control and exact upstream gate named in its prompt.
+The producer SHALL independently pin all fourteen complete ordered task objects,
+compare the visible table and embedded JSON with staged or activated authority,
+and reject changed titles, order, prompts, gates, deliverables and coordinated
+rehashing. Same-roadmap outputs SHALL be declared future dependencies, never
+claimed as existing inputs. Every task SHALL pass exclusion-scope checks and
+retain all four prior-failure fields. Original V766 producer and design bytes,
+completion records and conductor outcomes SHALL remain separately authenticated.
+Missing capstones and scheduler skips SHALL NOT be global science prerequisites.
+Administrative readiness SHALL depend only on contract authority, exact declared
+gate fields, resource preconditions and successful owned checks. Optional ARC
+absence SHALL set only arc_new_outcomes_ready_score=0 and record one cheap skip;
+qualification requires 30 new uncensored episodes, three families and both arms
+in each held family. No models, games, generators or numerical heads SHALL run.
 #### SCENARIO-REPORT-8971-V767
 Given the declared inputs and protocol, when the task executes, then its private
 tests SHALL verify the stated acceptance rules and reject changed authority.
 Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+Given valid administrative authority and no new ARC episodes, publication SHALL
+report complete_null with contract_ready_score=1 and ARC readiness zero. Missing
+required resources SHALL produce exact blocked diagnostics; failed owned checks
+SHALL disqualify. Private CLI publication, fresh-process primitive replay and
+self-consistently rehashed tamper refusal SHALL pass with 100 percent newly owned
+statements, zero coverage exclusions and no changes to shared validators.
 **Implementation status:** Planned; experiment code and tests remain to be written.
+**Implementation update (2026-11-10):** The producer, retained-evidence reader,
+thin dated runner and eight owned regression tests are implemented. All eight
+owned tests pass. The runner requires measured unit and child coverage, private
+E2E-018/021, lint, strict typing, spec coverage, scanners and fresh primitive
+replay before atomic publication. Full-suite failures and its 600-second timeout
+are retained separately as global debt and cannot qualify failed owned checks.
+Administrative qualification admits no scientific benefit or new ARC outcomes.
 
 ### REQ-REPORT-8972: Separate encoder information from head optimization on exposed graph evidence
 The experiment SHALL follow the V767 full task contract and produce
@@ -111468,4 +111494,3 @@ Given the declared inputs and protocol, when the task executes, then its private
 tests SHALL verify the stated acceptance rules and reject changed authority.
 Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
 **Implementation status:** Planned; experiment code and tests remain to be written.
-

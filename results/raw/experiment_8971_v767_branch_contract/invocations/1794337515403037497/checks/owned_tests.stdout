@@ -1,0 +1,94 @@
+.....F..                                                                 [100%]
+=================================== FAILURES ===================================
+_____________________________ test_real_cli_child ______________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261110T190520-42261-a925c0bc/test_real_cli_child0')
+
+    def test_real_cli_child(tmp_path):
+        """SCENARIO-REPORT-8971-V767: direct child statements are measured in real interpreters."""
+        import os
+        import subprocess
+        from coverage import Coverage
+    
+        config = tmp_path / "coverage.ini"
+        config.write_text(
+            "[run]\ninclude =\n"
+            + "".join(f"    {c.ROOT / p}\n" for p in c.OWNED)
+            + "[report]\nexclude_lines =\n"
+        )
+        tracer = Coverage.current()
+        data_file = tracer.config.data_file if tracer else str(tmp_path / ".coverage")
+        for args, expected in [
+            (["--date", "bad"], 2),
+            (["--cold-replay", str(tmp_path / "absent")], 1),
+        ]:
+            child = subprocess.run(
+                [
+                    sys.executable,
+                    "-u",
+                    "-m",
+                    "coverage",
+                    "run",
+                    "--rcfile",
+                    str(config),
+                    "--data-file",
+                    data_file,
+                    "--parallel-mode",
+                    str(c.ROOT / c.CLI),
+                    *args,
+                ],
+                cwd="/var/tmp",
+                env=dict(os.environ, PYTHONPATH=f"{c.ROOT / 'python'}:{c.ROOT}"),
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+>           assert child.returncode == expected, child.stdout + child.stderr
+E           AssertionError: invalid_date
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E                 runner.run()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E                 exec(code, main_mod.__dict__)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8971_v767_branch_contract.py", line 17, in <module>
+E                 raise SystemExit(runner.main(["--date", "20261110", *sys.argv[1:]]))
+E             SystemExit: 2
+E             
+E             During handling of the above exception, another exception occurred:
+E             
+E             Traceback (most recent call last):
+E               File "<frozen runpy>", line 198, in _run_module_as_main
+E               File "<frozen runpy>", line 88, in _run_code
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E                 sys.exit(main())
+E                          ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E                 status = CoverageScript().command_line(argv)
+E                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E                 return self.do_run(options, args)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E                 self.coverage.save()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E                 data.write()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E                 os.rename(current_filename, self._filename)
+E               File "/tmp/carnot-child-results-guard-qdtsq1de/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8971_v767_branch_contract/invocations/1794337515403037497/.coverage.icbfl1.pid42712.Xcoyqxix' -> '/tmp/carnot-pytest-artifacts-brs48v_l/raw/experiment_8971_v767_branch_contract/invocations/1794337515403037497/.coverage.icbfl1.pid42712.Xcoyqxix.Hqp5KJgBEvxh'
+E             
+E           assert 1 == 2
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '-m', 'coverage', 'run', ...eriment_8971_v767_branch_contract/invocations/1794337515403037497/.coverage.icbfl1.pid42712.Xcoyqxix.Hqp5KJgBEvxh\'\n').returncode
+
+tests/python/test_v767_branch_contract_8971.py:211: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v767_branch_contract_8971.py::test_real_cli_child - ...
+1 failed, 7 passed, 1 warning in 86.46s (0:01:26)
