@@ -21721,3 +21721,4 @@ code |
 | 2026-11-10 22:58 UTC | Measure causal head learning on real Qwen errors w | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8974-feature-online-methods, exp8979-shared-feature-decisions) |
 | 2026-11-10 22:58 UTC | Audit future feature-learning benefit and shared-p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8980-feature-online-streams) |
 | 2026-11-10 22:58 UTC | Measure complete shared-feature service costs agai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8974-feature-online-methods, exp8979-shared-feature-decisions) |
+| 2026-11-10 23:05 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8971-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
