@@ -23457,3 +23457,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-10: Freeze delayed online calibration on real model errors (⚠️ Research Finding) — honest_verdict=complete_null_online_calibration_methods; results/experiment_8960_v766_online_calibration_methods.json
 - 2026-11-10: Collect fresh Qwen graph evidence shard A (⚠️ Research Finding) — honest_verdict=complete_circular_positive_graph_corpus_a; results/experiment_8961_v766_graph_corpus_a.json
 - 2026-11-10: Collect fresh Qwen graph evidence shard B (⚠️ Research Finding) — honest_verdict=complete_circular_positive_graph_corpus_b; results/experiment_8962_v766_graph_corpus_b.json
+- 2026-11-10: Authenticate fresh graph roles and inference-only views (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v766_corpus_admission; results/experiment_8963_v766_corpus_admission.json
