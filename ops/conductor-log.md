@@ -21681,3 +21681,4 @@ code |
 | 2026-11-10 00:39 UTC | OPERATOR-ATTENTION: GPU_CHECK_UNAVAILABLE | WARN | host 2026-11-10: nvidia-smi could not run; GPU health is UNKNOWN, not clean |
 | 2026-11-10 00:53 UTC | Freeze delayed online calibration on real model er | OK | Deliverable already exists in repo |
 | 2026-11-10 01:47 UTC | Collect fresh Qwen graph evidence shard A | OK | 112 passed, 1 warning in 55.20s |
+| 2026-11-10 02:30 UTC | Collect fresh Qwen graph evidence shard B | OK | 85 passed, 1 warning in 28.09s |
