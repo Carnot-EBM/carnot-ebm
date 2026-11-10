@@ -21684,3 +21684,4 @@ code |
 | 2026-11-10 02:30 UTC | Collect fresh Qwen graph evidence shard B | OK | 85 passed, 1 warning in 28.09s |
 | 2026-11-10 03:21 UTC | Authenticate fresh graph roles and inference-only  | OK | 108 passed, 1 warning in 83.24s (0:01:23) |
 | 2026-11-10 04:08 UTC | Test graph-conditioned energy decisions on fresh Q | OK | 105 passed, 1 warning in 43.69s |
+| 2026-11-10 05:02 UTC | Challenge relational scores with invariance and re | OK | 97 passed, 1 warning in 64.75s (0:01:04) |
