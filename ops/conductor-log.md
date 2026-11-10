@@ -21680,3 +21680,4 @@ code |
 | 2026-11-10 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 6: OPEN 42 days: S |
 | 2026-11-10 00:39 UTC | OPERATOR-ATTENTION: GPU_CHECK_UNAVAILABLE | WARN | host 2026-11-10: nvidia-smi could not run; GPU health is UNKNOWN, not clean |
 | 2026-11-10 00:53 UTC | Freeze delayed online calibration on real model er | OK | Deliverable already exists in repo |
+| 2026-11-10 01:47 UTC | Collect fresh Qwen graph evidence shard A | OK | 112 passed, 1 warning in 55.20s |
