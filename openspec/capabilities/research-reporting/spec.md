@@ -111369,11 +111369,41 @@ Administrative qualification admits no scientific benefit or new ARC outcomes.
 The experiment SHALL follow the V767 full task contract and produce
 `results/experiment_8972_v767_encoder_head_diagnosis.json`. It SHALL retain every required artifact field,
 statistical bound, causal control and exact upstream gate named in its prompt.
+Authenticate the five original producers and their operands before numerical work.
+Preserve the original256 fit and64 guard roles. All historical graph labels are
+exposed development evidence. Recompute the original128-graph metrics and all five
+Bonferroni bounds without promoting them to new confirmation. Extract the existing
+27 inference features from each frozen logistic and Gibbs encoder at seeds71–73.
+Train each fresh linear and eight-unit Gibbs head for200 full batches at rate0.01
+from its original initialization. Never transfer a trained head between bases.
+Seal the logistic encoder candidate before scoring exposed graphs. Save all twelve
+states, features, predictions and step0/1/200 gradient norms. Distinguish potential
+encoder gradients from actual frozen updates and from original joint-training
+gradients. A zero first gradient alone SHALL NOT establish persistent failure.
+Diagnosis readiness requires complete reproducible reduction and owned controls,
+not a scientific benefit. No graph result establishes oracle-free generalization.
+Current model calls are zero. CPU work SHALL NOT require optional hardware.
 #### SCENARIO-REPORT-8972-V767
 Given the declared inputs and protocol, when the task executes, then its private
 tests SHALL verify the stated acceptance rules and reject changed authority.
 Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+Controls SHALL reject missing files, fields, zero/boolean gates, changed bytes,
+truth-bearing features, role overlap and self-consistently rehashed predictions.
+Feature readout must reproduce the existing head logits. Frozen bytes must match
+before and after training. Step1 gradients must be measured after the first update.
+Cold CLI replay SHALL recompute numerical primitives and reductions in a fresh
+process outside the checkout. Require100-percent new unit and child statements,
+zero exclusions, private E2E-018/021, lint, strict types, positional spec coverage,
+unchanged terminal scanners and checked atomic publication. Record global test
+debt separately. Ops/status/changelog/traceability reconciliation is conductor-owned.
 **Implementation status:** Planned; experiment code and tests remain to be written.
+**Implementation update (2026-11-10):** The dated thin runner, numerical module,
+authenticated producer and eleven owned controls are implemented. Qualification
+requires measured zero-exclusion coverage, private CLI replay and tamper refusal,
+unchanged E2E-018/021 and terminal scanners. The artifact separates diagnosis
+readiness from benefit and preserves the original null bounds. The logistic
+encoder candidate is fixed before diagnostic scores. No new confirmation,
+generator training, JEPA reproduction or oracle-free benefit is claimed.
 
 ### REQ-REPORT-8973: Freeze identical graph features and a development admission gate before new collection
 The experiment SHALL follow the V767 full task contract and produce

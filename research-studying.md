@@ -6775,3 +6775,12 @@ All eight requested topics and six secondary channels retain scan provenance.
 Semantic Scholar coverage remains partial: EBT returned twenty entries and a
 cursor; ARM–EBM returned HTTP 429. Vendor claims and GitHub discovery supply
 no physical hardware or ranking result. KAN and Ising variants stay deferred.
+# 2026-11-10 — V767 Exp8972 ingestion status
+
+Ingested Message Passing Complexity2509.01254v2, EnerGNN2610.33930,
+Energy-Based Reasoners2611.08977 and LEF-JEPA2611.08989 from primary methods.
+Equations, implementation needs and failure modes appear in
+`docs/research-notes/v767-method-ingestion.md`. Exact source bytes and hashes are
+retained under the Exp8972 raw directory. Use frozen-feature controls and separate
+gradient paths. No generator, JEPA, solver or hardware result is reproduced.
+The four methods motivate a diagnosis; they do not establish local energy benefit.
