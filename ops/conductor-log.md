@@ -21689,3 +21689,4 @@ code |
 | 2026-11-10 07:07 UTC | Audit future calibration benefit and shared-panel  | OK | 99 passed, 1 warning in 59.19s |
 | 2026-11-10 08:06 UTC | Measure relational decision and adaptation costs w | OK | 99 passed, 1 warning in 53.21s |
 | 2026-11-10 08:15 UTC | Assess held-family AVO transfer from new live outc | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8957-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
+| 2026-11-10 08:29 UTC | Reconcile fourteen outcomes and keep claim boundar | FAIL | Codex CLI error: Timed out |
