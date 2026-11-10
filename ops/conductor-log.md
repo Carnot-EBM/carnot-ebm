@@ -21715,3 +21715,9 @@ code |
 | 2026-11-10 22:05 UTC | Freeze delayed feature-level head learning with ma | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1) |
 | 2026-11-10 22:09 UTC | Audit AuthenHallu dialogue access and independent  | FAIL | Codex CLI error: ieval in data["retrievals"]: for key in ("body", "he |
 | 2026-11-10 22:45 UTC | Audit AuthenHallu dialogue access and independent  | OK | 100 passed, 1 warning in 20.33s |
+| 2026-11-10 22:56 UTC | Collect fresh Qwen answers for the shared-feature  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1) |
+| 2026-11-10 22:58 UTC | Authenticate fresh shared-feature graph roles and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8976-graph-corpus-a, exp8977-graph-corpus-b) |
+| 2026-11-10 22:58 UTC | Test calibrated energy value with identical repres | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8978-corpus-admission) |
+| 2026-11-10 22:58 UTC | Measure causal head learning on real Qwen errors w | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8974-feature-online-methods, exp8979-shared-feature-decisions) |
+| 2026-11-10 22:58 UTC | Audit future feature-learning benefit and shared-p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8980-feature-online-streams) |
+| 2026-11-10 22:58 UTC | Measure complete shared-feature service costs agai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8974-feature-online-methods, exp8979-shared-feature-decisions) |
