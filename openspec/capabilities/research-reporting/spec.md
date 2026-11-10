@@ -111409,11 +111409,31 @@ generator training, JEPA reproduction or oracle-free benefit is claimed.
 The experiment SHALL follow the V767 full task contract and produce
 `results/experiment_8973_v767_shared_feature_methods.json`. It SHALL retain every required artifact field,
 statistical bound, causal control and exact upstream gate named in its prompt.
+The producer SHALL authenticate Exp8972 and its retained primitives before numerical work.
+It SHALL reuse the three logistic encoders and their fitted linear and Gibbs heads,
+with identical 27-coordinate inputs and frozen fit scaling. At temperature one,
+the original 64 guard graphs SHALL require energy AUROC >= 0.65, prevalence Brier
+improvement >= 0.005, and energy Brier minus shared logistic Brier <= 0.01.
+These operational thresholds SHALL NOT change after inspection. Failure SHALL
+close fresh response collection, retain complete states and publish a null.
+Mechanics SHALL qualify finite gradients, fixed encoder bytes, feature equality,
+permutation drift <= 1e-6, label denial and permuted-label head controls.
+Before any responses, the producer SHALL freeze 1024 distinct matched-cardinality
+k2 graph constructions, the five simultaneous bounds, and two 512-graph shards.
+Each shard SHALL contain 64 calibration, 64 test and 384 online graphs in twelve
+32-query streams. Historical seeds and isomorphic graphs SHALL be excluded.
+Construction SHALL stop at 2000 proposals per graph or 600 seconds without relaxation.
 #### SCENARIO-REPORT-8973-V767
 Given the declared inputs and protocol, when the task executes, then its private
 tests SHALL verify the stated acceptance rules and reject changed authority.
 Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
-**Implementation status:** Planned; experiment code and tests remain to be written.
+Private CLI tests SHALL cover dated publication, cold replay from retained
+primitives, and refusal of rehashed aggregate or operand tampering. Owned unit
+and actual child statements SHALL have 100 percent coverage with no exclusions.
+**Implementation status:** Implemented by `shared_feature_methods_8973.py`,
+`shared_feature_runner_8973.py` and the dated experiment CLI. The owned tests
+check the fixed guard null, frozen roles, input custody and private replay.
+The primary records measured qualification and the actual collection disposition.
 
 ### REQ-REPORT-8974: Freeze delayed feature-level head learning with matched online controls
 The experiment SHALL follow the V767 full task contract and produce
