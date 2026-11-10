@@ -21691,3 +21691,4 @@ code |
 | 2026-11-10 08:15 UTC | Assess held-family AVO transfer from new live outc | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8957-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
 | 2026-11-10 08:29 UTC | Reconcile fourteen outcomes and keep claim boundar | FAIL | Codex CLI error: Timed out |
 | 2026-11-10 08:42 UTC | Reconcile fourteen outcomes and keep claim boundar | FAIL | Codex CLI error: Timed out |
+| 2026-11-10 08:56 UTC | Reconcile fourteen outcomes and keep claim boundar | FAIL | Codex CLI error: Timed out |
