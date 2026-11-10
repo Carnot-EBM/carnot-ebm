@@ -110915,7 +110915,28 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8962_v766_graph_corpus_b.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `graph_corpus_b_8962.py` and the direct
+CLI, using the qualified shared V766 runtime and publication runner.
+Tests: `tests/python/test_graph_corpus_b_8962.py` and the shared shard A controls.
+Final collection and qualification outcomes belong to the terminal artifact.
+
+Shard B SHALL retain its frozen order of512 independent graphs:64 calibration,
+64 final-test and384 online graphs in twelve32-query streams. It SHALL not read
+shard A outcomes or borrow missing units. Authenticate the immutable methods
+primary, source, weights and roles before costly work. Historical producers are
+retained inputs, never runtime prerequisites. Use only cached Qwen Q4_K_M on
+leased GPU0 through llama.cpp with its embedded tokenizer and chat template.
+Preserve the V765 k2 prompt, seed, reasoning off, temperature0 and16-token limit.
+Preflight and load each have240 seconds; each request has30 seconds; total
+generation has2700 seconds. No downloads, retries, replacement units or training.
+Keep complete requests, original wire responses, actual token usage, backend NLL,
+first-answer margin and offload receipts. Checkpoint every16 responses and emit
+supervised progress. Exact labels remain evaluation-only. Malformed answers keep
+their row and feature mask; transport failures remain censored. Readiness needs
+512 complete authentic first responses. Incomplete measured work is terminal
+null; missing external runtime evidence is terminal blocked. Actual generation
+declares model_bounded_generation with a10-second floor; actual load-only failure
+declares model_load_no_generation with a2-second floor. Never pad duration.
 
 #### SCENARIO-REPORT-8962-CONTRACT
 
@@ -110924,6 +110945,14 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+Tests SHALL verify B identity, independent frozen roles, response-only features,
+malformed answers, missing inputs, owned-check failure and B lease ownership.
+Reuse the shared runtime fault controls. Require100-percent owned unit and child
+statement coverage with zero exclusions, scoped Ruff, strict mypy, positional
+spec tracing and private E2E-018/021. Run the global Python suite once and record
+unrelated debt separately. Publish checked bytes only through primary_publication.
+Preserve unchanged terminal verdicts on unchanged failures. Ops and traceability
+reconciliation for this invocation belongs to the conductor.
 
 ### REQ-REPORT-8963: Authenticate fresh graph roles and inference-only views
 
