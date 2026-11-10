@@ -111006,7 +111006,35 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8964_v766_relational_decisions.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Before fresh test truth is opened, authenticate the original Exp8959/8963
+producer bytes and retained operands, load inference-only views and all three
+frozen seed components, select one temperature per arm on exactly128 calibration
+graphs from the registered grid, and durably seal all five calibrated states,
+fixed accept<=0.1/reject>=0.9 thresholds and128 five-arm test predictions.
+Inference SHALL use only anonymous graph inputs and response confidence, without
+shortest-path traversal or label access. No training or selection follows test
+access. Export the qualified frozen relational-energy ensemble logit service
+even for a scientific null; its logit is the logit of the mean calibrated seed
+probabilities, clipped only for finite conversion.
+
+Report graph-level Brier/log loss, AUROC/AUPRC, typed decisions, coverage and
+accepted errors. Resample128 paired graphs10000 times with seed766059, reranking
+exactly half per arm inside every draw with the existing frozen label-blind tie
+rule. Require all five registered Bonferroni bounds (family alpha0.05): positive
+Brier-improvement lower bounds against prevalence, confidence logistic and
+relational logistic; nonpositive accepted-error-delta upper bounds against both
+logistic controls. All original and relational conditions remain required.
+Complete authenticated qualified predictions determine detector_rows_ready_score
+independently of detector_benefit_score. Scope SHALL be
+fresh_matched_graph_final_answers, independent_generalization_score SHALL be0,
+and a within-population positive SHALL carry this restricted scope.
+Implementation status: **Implemented** in `relational_decisions_8964.py`,
+`relational_decisions_runner_8964.py` and the direct experiment CLI. Tests:
+`tests/python/test_relational_decisions_8964.py` (24 passed; measured unit/CLI
+coverage318/318 statements, zero exclusions). The primary artifact records the
+current validation receipts, scientific disposition and separate global debt.
+Ops/status/changelog and traceability reconciliation are conductor-owned for
+this invocation.
 
 #### SCENARIO-REPORT-8964-CONTRACT
 
@@ -111015,6 +111043,15 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+Controls SHALL reject absent/malformed/zero/boolean producer gates, altered
+retained bytes, contaminated inference inputs, incorrect rosters, invalid
+probabilities, early label release, altered sealed states and rehashed headline
+or prediction tampering. Unit and real CLI child statements SHALL achieve100
+percent with zero exclusions, alongside scoped Ruff, strict mypy, positional
+spec tracing and private E2E-018/021. An unchanged blocked/disqualified rerun
+SHALL preserve its prior honest_verdict. Global suite debt SHALL be recorded
+separately and SHALL NOT waive any failed owned check.
 
 ### REQ-REPORT-8965: Challenge relational scores with invariance and removed-context controls
 

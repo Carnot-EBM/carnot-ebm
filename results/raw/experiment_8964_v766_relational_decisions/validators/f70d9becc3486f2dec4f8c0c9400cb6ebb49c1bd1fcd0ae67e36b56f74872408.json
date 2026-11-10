@@ -1,0 +1,69 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8964_v766_relational_decisions.json",
+  "primary_sha256": "sha256:f70d9becc3486f2dec4f8c0c9400cb6ebb49c1bd1fcd0ae67e36b56f74872408",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('\"'\"'PYTHONPATH'\"'\"',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=120).returncode)' /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8964_v766_relational_decisions.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8964_v766_relational_decisions/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os,subprocess,sys,tempfile; env=dict(os.environ); env.pop('PYTHONPATH',None); raise SystemExit(subprocess.run(sys.argv[1:],cwd=tempfile.gettempdir(),env=env,timeout=120).returncode)",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8964_v766_relational_decisions.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8964_v766_relational_decisions/terminal_candidate.json"
+        ],
+        "duration_s": 6.0459681270003784,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8964_v766_relational_decisions/invocations/1794282032511151276/terminal_validation/00_cold_replay_cli.log",
+        "log_sha256": "sha256:766001becdae58e18ed5a2ba15355a1b4db0bc38487d8794ee4bc15e5b892360",
+        "name": "cold_replay_cli",
+        "output_tail": "[exp8937] phase=8964_before_cold_replay completed=0 pending=0\n[exp8937] phase=8964_before_frozen_small_head_state_read completed=0 pending=12\n[exp8937] phase=8964_after_frozen_small_head_state_read completed=12 pending=0\n[exp8937] phase=8964_before_calibration_only_temperature completed=0 pending=5\n[exp8937] phase=8964_calibration_temperature completed=1 pending=4\n[exp8937] phase=8964_calibration_temperature completed=2 pending=3\n[exp8937] phase=8964_calibration_temperature completed=3 pending=2\n[exp8937] phase=8964_calibration_temperature completed=4 pending=1\n[exp8937] phase=8964_after_calibration_only_temperature completed=5 pending=0\n[exp8937] phase=8964_before_frozen_test_prediction completed=0 pending=128\n[exp8937] phase=8964_after_frozen_test_prediction completed=128 pending=0\n[exp8937] phase=8964_before_final_test_truth_release completed=0 pending=128\n[exp8937] phase=8964_before_paired_graph_bootstrap completed=0 pending=10000\n[exp8937] phase=8964_paired_graph_bootstrap completed=1000 pending=9000\n[exp8937] phase=8964_paired_graph_bootstrap completed=2000 pending=8000\n[exp8937] phase=8964_paired_graph_bootstrap completed=3000 pending=7000\n[exp8937] phase=8964_paired_graph_bootstrap completed=4000 pending=6000\n[exp8937] phase=8964_paired_graph_bootstrap completed=5000 pending=5000\n[exp8937] phase=8964_paired_graph_bootstrap completed=6000 pending=4000\n[exp8937] phase=8964_paired_graph_bootstrap completed=7000 pending=3000\n[exp8937] phase=8964_paired_graph_bootstrap completed=8000 pending=2000\n[exp8937] phase=8964_paired_graph_bootstrap completed=9000 pending=1000\n[exp8937] phase=8964_paired_graph_bootstrap completed=10000 pending=0\n[exp8937] phase=8964_after_paired_graph_bootstrap completed=10000 pending=0\n[exp8937] phase=8964_after_final_test_truth_release completed=128 pending=0\n[exp8937] phase=8964_after_cold_replay completed=1 pending=0\n{\"passed\": true, \"replay_passed\": true}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8964_v766_relational_decisions/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8964_v766_relational_decisions/terminal_candidate.json"
+        ],
+        "duration_s": 0.9289519300000393,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8964_v766_relational_decisions/invocations/1794282032511151276/terminal_validation/01_adversarial.log",
+        "log_sha256": "sha256:63df07ac5a381e7eb98889576d98ee9b3797756b5fcc0460078d621fe908d841",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8964_v766_relational_decisions/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8964,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_fresh_matched_graph_final_answers\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8964_v766_relational_decisions/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8964_v766_relational_decisions/terminal_candidate.json"
+        ],
+        "duration_s": 0.0479401289994712,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8964_v766_relational_decisions/invocations/1794282032511151276/terminal_validation/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ],
+    "replay_passed": true
+  }
+}
