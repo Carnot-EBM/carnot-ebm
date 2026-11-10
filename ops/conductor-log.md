@@ -21692,3 +21692,13 @@ code |
 | 2026-11-10 08:29 UTC | Reconcile fourteen outcomes and keep claim boundar | FAIL | Codex CLI error: Timed out |
 | 2026-11-10 08:42 UTC | Reconcile fourteen outcomes and keep claim boundar | FAIL | Codex CLI error: Timed out |
 | 2026-11-10 08:56 UTC | Reconcile fourteen outcomes and keep claim boundar | FAIL | Codex CLI error: Timed out |
+| 2026-11-10 09:50 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | timeout after 720s |
+| 2026-11-10 10:20 UTC | Audit receipt STALE: verifier-authenticity-audit | BLOCK | timeout after 1800s |
+| 2026-11-10 11:00 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 2400s |
+| 2026-11-10 11:15 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
+| 2026-11-10 11:37 UTC | Audit receipt STALE: experiment-claim-audit | BLOCK | timeout after 1350s |
+| 2026-11-10 11:53 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-10 11:58 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | timeout after 300s |
+| 2026-11-10 12:58 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
+| 2026-11-10 13:19 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-11-10 13:21 UTC | Stop-authority receipt STALE | WARN | receipt 322 min old (janitor cadence is 30) |
