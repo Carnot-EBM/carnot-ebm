@@ -23460,3 +23460,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-10: Authenticate fresh graph roles and inference-only views (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v766_corpus_admission; results/experiment_8963_v766_corpus_admission.json
 - 2026-11-10: Test graph-conditioned energy decisions on fresh Qwen errors (⚠️ Research Finding) — honest_verdict=complete_null_fresh_matched_graph_final_answers; results/experiment_8964_v766_relational_decisions.json
 - 2026-11-10: Challenge relational scores with invariance and removed-context controls (⚠️ Research Finding) — honest_verdict=complete_null_relational_integrity_controls; results/experiment_8965_v766_relational_controls.json
+- 2026-11-10: Measure continuous calibration with sealed real-error feedback (⚠️ Research Finding) — honest_verdict=complete_null_sealed_real_error_online_calibration; results/experiment_8966_v766_online_response_streams.json
