@@ -21712,3 +21712,4 @@ code |
 | 2026-11-10 19:36 UTC | Bind fourteen tasks and separate administrative re | OK | 89 passed, 1 warning in 85.09s (0:01:25) |
 | 2026-11-10 20:39 UTC | Separate encoder information from head optimizatio | OK | 92 passed, 1 warning in 133.95s (0:02:13) |
 | 2026-11-10 21:57 UTC | Freeze identical graph features and a development  | OK | 92 passed, 2 warnings in 286.87s (0:04:46) |
+| 2026-11-10 22:05 UTC | Freeze delayed feature-level head learning with ma | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1) |
