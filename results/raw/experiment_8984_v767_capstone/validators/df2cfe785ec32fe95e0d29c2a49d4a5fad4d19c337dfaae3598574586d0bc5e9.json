@@ -1,0 +1,66 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8984_v767_capstone.json",
+  "primary_sha256": "sha256:df2cfe785ec32fe95e0d29c2a49d4a5fad4d19c337dfaae3598574586d0bc5e9",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8984_v767_capstone.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8984_v767_capstone.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 3.7533183109990205,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/terminal_checks/00_cold_replay.log",
+        "log_sha256": "sha256:b86cb04951a727c5fc47ae5698e6edc25153f102cfdbf3a30c6bad9d34deee45",
+        "name": "cold_replay",
+        "output_tail": "[exp8984] phase=imports_before completed=0 pending=1\n[exp8984] phase=start completed=0 pending=0\n[exp8937] phase=8964_before_paired_graph_bootstrap completed=0 pending=10000\n[exp8937] phase=8964_paired_graph_bootstrap completed=1000 pending=9000\n[exp8937] phase=8964_paired_graph_bootstrap completed=2000 pending=8000\n[exp8937] phase=8964_paired_graph_bootstrap completed=3000 pending=7000\n[exp8937] phase=8964_paired_graph_bootstrap completed=4000 pending=6000\n[exp8937] phase=8964_paired_graph_bootstrap completed=5000 pending=5000\n[exp8937] phase=8964_paired_graph_bootstrap completed=6000 pending=4000\n[exp8937] phase=8964_paired_graph_bootstrap completed=7000 pending=3000\n[exp8937] phase=8964_paired_graph_bootstrap completed=8000 pending=2000\n[exp8937] phase=8964_paired_graph_bootstrap completed=9000 pending=1000\n[exp8937] phase=8964_paired_graph_bootstrap completed=10000 pending=0\n[exp8937] phase=8964_after_paired_graph_bootstrap completed=10000 pending=0\n[exp8967] phase=bootstrap_bounds completed=1 pending=8\n[exp8967] phase=bootstrap_bounds completed=2 pending=7\n[exp8967] phase=bootstrap_bounds completed=3 pending=6\n[exp8967] phase=bootstrap_bounds completed=4 pending=5\n[exp8967] phase=bootstrap_bounds completed=5 pending=4\n[exp8967] phase=bootstrap_bounds completed=6 pending=3\n[exp8967] phase=bootstrap_bounds completed=7 pending=2\n[exp8967] phase=bootstrap_bounds completed=8 pending=1\n[exp8967] phase=bootstrap_bounds completed=9 pending=0\n{\"passed\": true, \"replay_passed\": true, \"slots\": 14}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 0.16691536600046675,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/terminal_checks/01_adversarial.log",
+        "log_sha256": "sha256:c9a531367e9477f324a0e41512d0204ff7388e03427bdca622deefbf9e6dffe1",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8984,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_external_science_and_source_access\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/terminal_candidate.json"
+        ],
+        "duration_s": 0.025073007000173675,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/terminal_checks/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

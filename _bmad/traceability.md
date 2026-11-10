@@ -4787,8 +4787,8 @@ Planning only; original V765 authority is archived unchanged.
 
 ## Planned milestone 2026.11.767 — 2026-11-10
 
-All rows below are planned, not implemented. The design and queue share the full
-fourteen-task contract. No future runner is claimed to exist.
+The design and queue share the full fourteen-task contract. Implementation
+updates are recorded in the status column and the repair notes below.
 
 | Requirement | Planned task | Deliverable | Status |
 |---|---|---|---|
@@ -4805,4 +4805,22 @@ fourteen-task contract. No future runner is claimed to exist.
 | REQ-REPORT-8981; SCENARIO-REPORT-8981-V767 | `exp8981-feature-online-benefit` | `results/experiment_8981_v767_feature_online_benefit.json` | Planned |
 | REQ-REPORT-8982; SCENARIO-REPORT-8982-V767 | `exp8982-matched-service-cost` | `results/experiment_8982_v767_matched_service_cost.json` | Planned |
 | REQ-REPORT-8983; SCENARIO-REPORT-8983-V767 | `exp8983-arc-transfer-evidence` | `results/experiment_8983_v767_arc_transfer_evidence.json` | Planned |
-| REQ-REPORT-8984; SCENARIO-REPORT-8984-V767 | `exp8984-capstone` | `results/experiment_8984_v767_capstone.json` | Planned |
+| REQ-REPORT-8984; SCENARIO-REPORT-8984-V767 | `exp8984-capstone` | `results/experiment_8984_v767_capstone.json` | Implemented; receipt isolation repaired 2026-11-10 |
+
+## Exp8984 validation receipt custody repair — 2026-11-10
+
+| Requirement | Implementation | Validation |
+|---|---|---|
+| REQ-REPORT-8984; SCENARIO-REPORT-8984-V767 | Default receipts follow the selected output directory; explicit `--receipts` retains precedence | Original private publication/replay test plus two new local/override cases pass |
+| REQ-CONDUCTOR-FIXGATE-1 | All seven original test-function ASTs and conductor bytes preserved | Ten fix-gate tests pass; no skipped, weakened or deleted tests and no reversions |
+
+All 125 selected tests pass, including the original 88-test subset and private
+E2E-018/021 checks. Fresh unit and actual child SQLite covers all 212 owned
+module/CLI statements with zero exclusions. Scoped Ruff, formatting, strict mypy
+and spec tracing pass. An outside-checkout CLI also accepts fresh output-local
+measured receipts, publishes through unchanged validators and passes cold replay.
+Evidence: `/var/tmp/carnot-8984-fix-xv8g2l/`.
+
+Global tracing retains 1,142 existing gaps and architecture freshness retains
+2026-10-11. The full repository suite was not repeated. The mutation guard records an unattributed concurrent addition to
+`ops/anomaly-escalations.md`; that ledger and its pending marker are preserved.

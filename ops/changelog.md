@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-11-10 UTC — Exp8984 output-local validation receipts
+
+- Fix private capstone CLI runs importing checkout qualification: default receipt
+  lookup follows the selected output directory; explicit `--receipts` wins.
+- Preserve all seven original test functions and conductor bytes. Add local
+  receipt and override regressions; all 125 selected tests pass, including the
+  original failing publication/replay case, fix-gate and private E2E-018/021 checks.
+- Measure 212/212 owned module/CLI statements through fresh unit and real child
+  coverage, with zero exclusions. Scoped lint, formatting, strict types and spec
+  tracing pass. Fresh output-local receipts also qualify outside-checkout private
+  CLI publication, unchanged terminal validators and cold replay.
+- Preserve the unrelated concurrent anomaly-ledger change and its mutation
+  marker; global tracing retains 1,142 pre-existing gaps and architecture
+  freshness retains its 2026-10-11 date. Receipts live
+  under `/var/tmp/carnot-8984-fix-xv8g2l/`.
+
 ## 2026-11-10 UTC — Operational retrospective for milestone 2026.11.766
 
 - Triggered by user instruction to write the operational retrospective for milestone `2026.11.766`: updated `results/operational_retro_2026_11_766.json` (schema `carnot.operational_retro.v64`). Authoritative disk-mtime reconstruction (`retro_timing_fallback`, 0 commits in live git-log) records 12 completed experiments (all 12 compute-bound, 0 synthesis-only) across 155.0 wall-time minutes (155 minutes / 2.6 hours, averaging 13 minutes per experiment).

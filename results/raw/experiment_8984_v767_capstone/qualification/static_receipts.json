@@ -1,0 +1,79 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py tests/python/test_v767_capstone_8984.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v767_capstone.py",
+        "scripts/experiments/experiment_8984_v767_capstone.py",
+        "tests/python/test_v767_capstone_8984.py"
+      ],
+      "duration_s": 0.012449234000087017,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/00_ruff.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py tests/python/test_v767_capstone_8984.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v767_capstone.py",
+        "scripts/experiments/experiment_8984_v767_capstone.py",
+        "tests/python/test_v767_capstone_8984.py"
+      ],
+      "duration_s": 0.011314522998873144,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/01_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=silent python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v767_capstone.py",
+        "scripts/experiments/experiment_8984_v767_capstone.py"
+      ],
+      "duration_s": 1.249399230000563,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/02_strict_mypy.log",
+      "log_sha256": "sha256:a848646a0d83ccfa15aabcf4cf144a397ed425f6880d658336305b283bcbb54a",
+      "name": "strict_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_v767_capstone_8984.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_v767_capstone_8984.py"
+      ],
+      "duration_s": 0.02061702999708359,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/03_spec.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}

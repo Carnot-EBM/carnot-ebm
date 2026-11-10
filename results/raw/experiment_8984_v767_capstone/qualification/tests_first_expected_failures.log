@@ -1,0 +1,184 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+___________________________ test_census_and_science ____________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261110T231327-100434-989083aa/test_census_and_science0')
+
+    def test_census_and_science(tmp_path):
+        """REQ-REPORT-8984: scientific nulls and external blocks retain independent findings."""
+>       work = m.collect(tmp_path / "raw", "20261110")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v767_capstone_8984.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v767_capstone.py:138: in collect
+    code = [retain(ROOT / p, raw, sha256_file(ROOT / p)) for p in [*OWNED, TEST,
+                                  ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:52: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8984_v767_capstone.py')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8984_v767_capstone.py'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8984] phase=start_authentication completed=0 pending=14
+______________________________ test_slot_controls ______________________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261110T231327-100434-989083aa/test_slot_controls0')
+
+    def test_slot_controls(tmp_path):
+        """SCENARIO-REPORT-8984-V767: missing fields, changed bytes and quarantine cannot qualify."""
+        task = dict(id="exp8973-shared-feature-methods", deliverable="results/expected.json", gated_on=[])
+        producer = dict(experiment_id=8973, task_id=task["id"], milestone=m.MILESTONE,
+                        honest_verdict="complete_null_test", verdict_class="null",
+                        required_checks_passed=True, flagged_adversarial=False,
+                        owned_statement_coverage=dict(complete=True), rows=[])
+        path = tmp_path / "expected.json"
+        atomic_json(path, producer)
+        ref = m.retain(path, tmp_path / "retained", m.sha256_file(path))
+>       assert m.slot(task, producer, ref, [], {})["disposition"] == "qualified_primary"
+E       AssertionError: assert 'quarantined_primary' == 'qualified_primary'
+E         
+E         - qualified_primary
+E         ?    ^ ^^
+E         + quarantined_primary
+E         ?    ^^^^ ^
+
+tests/python/test_v767_capstone_8984.py:59: AssertionError
+______________________ test_resources_and_empty_reduction ______________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261110T231327-100434-989083aa/test_resources_and_empty_reduc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe3d2467080>
+
+    def test_resources_and_empty_reduction(tmp_path, monkeypatch):
+        """REQ-REPORT-8984: resource failure blocks science; optional hardware never blocks CPU."""
+>       work = m.collect(tmp_path / "raw", "20261110", sources=tmp_path / "absent")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_v767_capstone_8984.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v767_capstone.py:138: in collect
+    code = [retain(ROOT / p, raw, sha256_file(ROOT / p)) for p in [*OWNED, TEST,
+                                  ^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:52: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8984_v767_capstone.py')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8984_v767_capstone.py'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8984] phase=start_authentication completed=0 pending=14
+_______________ test_cli_publication_replay_and_rehashed_tamper ________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261110T231327-100434-989083aa/test_cli_publication_replay_an0')
+
+    def test_cli_publication_replay_and_rehashed_tamper(tmp_path):
+        """SCENARIO-REPORT-8984-V767: E2E-018/021 actual children publish and refuse forged aggregates."""
+        output = tmp_path / (m.NAME + ".json")
+        command = [sys.executable, "-u", str(m.ROOT / m.CLI)]
+        env = dict(os.environ)
+        env.pop("PYTHONPATH", None)
+        child = subprocess.run([*command, "--date", "20261110", "--output", str(output)],
+                               cwd=tmp_path, env=env, capture_output=True, text=True, timeout=180)
+>       assert child.returncode == 0, child.stdout + child.stderr
+E       AssertionError: /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python: can't open file '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8984_v767_capstone.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...hub.com/ianblenke/carnot/scripts/experiments/experiment_8984_v767_capstone.py': [Errno 2] No such file or directory\n").returncode
+
+tests/python/test_v767_capstone_8984.py:103: AssertionError
+_____________________ test_checksum_refusal_and_cli_errors _____________________
+
+tmp_path = PosixPath('/var/tmp/pytest-carnot-ianblenke/20261110T231327-100434-989083aa/test_checksum_refusal_and_cli_0')
+
+    def test_checksum_refusal_and_cli_errors(tmp_path):
+        """REQ-REPORT-8984: malformed evidence and invalid dates fail visibly."""
+        path = tmp_path / "bad.json"
+        atomic_json(path, dict(reproducibility_checksum="bad"))
+        with pytest.raises(ValueError, match="checksum"):
+>           m.replay(path)
+            ^^^^^^^^
+E           AttributeError: module 'carnot.reporting.v767_capstone' has no attribute 'replay'
+
+tests/python/test_v767_capstone_8984.py:123: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_v767_capstone_8984.py::test_census_and_science - Fil...
+FAILED tests/python/test_v767_capstone_8984.py::test_slot_controls - Assertio...
+FAILED tests/python/test_v767_capstone_8984.py::test_resources_and_empty_reduction
+FAILED tests/python/test_v767_capstone_8984.py::test_cli_publication_replay_and_rehashed_tamper
+FAILED tests/python/test_v767_capstone_8984.py::test_checksum_refusal_and_cli_errors
+5 failed, 1 warning in 14.19s

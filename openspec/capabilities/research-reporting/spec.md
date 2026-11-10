@@ -111573,11 +111573,41 @@ Missing external inputs SHALL be terminal blocked; failed owned checks disqualif
 **Implementation status:** Planned; experiment code and tests remain to be written.
 
 ### REQ-REPORT-8984: Reconcile fourteen outcomes and decide graph and natural-evidence continuations
+The capstone SHALL retain an immutable fourteen-slot census in exact design order.
+It SHALL authenticate producer identity and scheduler gate operands before reduction.
+Missing primaries, conductor skips, quarantines and scientific nulls SHALL remain distinct.
+Reconciliation readiness SHALL measure truthful accounting, including external blocks.
+Development admission SHALL NOT establish fresh benefit or natural-language generalization.
+The fixed shared-energy failure SHALL close collection; source access needs changed authorization.
+Current model and numerical training counters SHALL be zero. Replay SHALL rebuild from
+retained source rows and reject rehashed changes. Owned statements and actual CLI children
+SHALL have 100 percent coverage with no exclusions. Publication requires unchanged validators.
+Default validation receipts SHALL resolve under the selected output directory's
+`raw/experiment_8984_v767_capstone/validation.json`. Private outputs SHALL NOT
+inherit checkout qualification; an explicit `--receipts` path SHALL take precedence.
 The experiment SHALL follow the V767 full task contract and produce
 `results/experiment_8984_v767_capstone.json`. It SHALL retain every required artifact field,
 statistical bound, causal control and exact upstream gate named in its prompt.
 #### SCENARIO-REPORT-8984-V767
+Private tests SHALL exercise exact ordering, absent primaries, scheduler skips with
+changed hashes and missing fields, qualified nulls, quarantines, resource blocks,
+independent natural access findings, private publication, cold replay and rehashed tampering.
+Private CLI runs without local receipts SHALL remain disqualified even when checkout
+receipts exist. Local receipts and explicit receipt overrides SHALL retain their own
+validation state.
+**2026-11-10 implementation note:** The module and dated runner implement this
+contract. Receipt custody now follows the output directory, with explicit overrides
+preserved. All seven original test functions remain unchanged; two new parameterized
+cases cover local receipts and override precedence. All 125 selected tests pass:
+the original 88-test subset, two regressions, ten fix-gate checks and 25 private
+E2E-018/021 checks. Actual unit and CLI child coverage includes all 212 owned
+statements with zero exclusions. Ruff, strict mypy and scoped spec coverage pass.
+The earlier global suite attempt timed out at 300 seconds without a summary;
+global health was not repeated, and global tracing retains 1,142 existing gaps.
+The measured fixed shared-energy
+development gate fails all three criteria, and authorized natural source joins
+remain zero of 800. Full accounting grants no fresh scientific benefit.
 Given the declared inputs and protocol, when the task executes, then its private
 tests SHALL verify the stated acceptance rules and reject changed authority.
 Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
-**Implementation status:** Planned; experiment code and tests remain to be written.
+**Implementation status:** Implemented; validation receipt isolation repaired 2026-11-10.

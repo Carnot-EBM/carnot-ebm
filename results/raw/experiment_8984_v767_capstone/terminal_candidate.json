@@ -1,0 +1,3336 @@
+{
+  "G1": {
+    "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+    "pass": true,
+    "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+  },
+  "G2": {
+    "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+    "pass": true
+  },
+  "G3": {
+    "detail": "no retracted phrasings asserted as live claims",
+    "hits": [],
+    "pass": true
+  },
+  "G4": {
+    "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+    "pass": true,
+    "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+  },
+  "MODEL_SPECS": [],
+  "acceptance_gates": {
+    "complete_accounting": true,
+    "fresh_scientific_benefit": false,
+    "natural_evidence_access": false,
+    "owned_checks": true
+  },
+  "actual_task_order": [
+    "exp8971-branch-contract",
+    "exp8972-encoder-head-diagnosis",
+    "exp8973-shared-feature-methods",
+    "exp8974-feature-online-methods",
+    "exp8975-natural-label-eligibility",
+    "exp8976-graph-corpus-a",
+    "exp8977-graph-corpus-b",
+    "exp8978-corpus-admission",
+    "exp8979-shared-feature-decisions",
+    "exp8980-feature-online-streams",
+    "exp8981-feature-online-benefit",
+    "exp8982-matched-service-cost",
+    "exp8983-arc-transfer-evidence",
+    "exp8984-capstone"
+  ],
+  "branch_outcomes": {
+    "literature_mapping": [
+      {
+        "decision": "Use frozen-feature control; do not claim MPC implementation",
+        "equation": "MPC=-log P(lossyWL_L suffices for f)",
+        "failure_modes": "Finite width, oversquashing and inaccessible distant evidence",
+        "implementation_requirements": "Graph-family and lossy-message model; task-specific analysis",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2509.01254v2.html",
+        "read_date": "20261110",
+        "sha256": "sha256:5e3eafac1a70d63e7a43c32af3a02bc4d871b81fd0cd6cd38df4bb2c56ff5b3e",
+        "status": "ingested_primary_method",
+        "title": "Message Passing Complexity",
+        "url": "https://arxiv.org/html/2509.01254v2"
+      },
+      {
+        "decision": "Ingest interface separation; no solver or paper reproduction",
+        "equation": "L=KL(p_star||softmax(-E/T))+lambda_cal L_cal+lambda_inf L_inf",
+        "failure_modes": "Solver cost; correctness relative to explicit constraints, not semantic truth",
+        "implementation_requirements": "Affine or exactly linearizable readout, ReLU head, bounded MIP formulation",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2610.33930.html",
+        "read_date": "20261110",
+        "sha256": "sha256:c586a1966f7958447e3289a38e4187b8d0733f46cb87c0ebd9701244af5f9d63",
+        "status": "ingested_primary_method",
+        "title": "EnerGNN",
+        "url": "https://arxiv.org/html/2610.33930"
+      },
+      {
+        "decision": "Ingest only; retired energy-as-generator scope stays closed",
+        "equation": "z_next=Pi_M(RMS(z)+sigma xi-alpha grad_z E_theta(z;x))",
+        "failure_modes": "Learned energy minima need not be correct; extra training and inference cost",
+        "implementation_requirements": "Trajectory supervision, random descent, second derivatives and state-based exploration",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08977.html",
+        "read_date": "20261110",
+        "sha256": "sha256:ebd26ee5b9a263f6c85b6cd8c39f96967954c5a8808b4a7f9856555cb56c29e3",
+        "status": "ingested_primary_method",
+        "title": "Energy-Based Reasoners",
+        "url": "https://arxiv.org/html/2611.08977"
+      },
+      {
+        "decision": "Ingest frozen evaluation and gradient routing only; no JEPA training",
+        "equation": "q_next=q-alpha clip_tau(grad_q E_phi(C,q)); L_enc=gamma softplus((E_bar(C,S)-stopgrad(E_bar(C,T)))/gamma)",
+        "failure_modes": "Visual labels, gradient routing and physical solver cost do not transfer",
+        "implementation_requirements": "EMA target encoder, denoising displacement, separate energy and encoder gradient paths",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08989.html",
+        "read_date": "20261110",
+        "sha256": "sha256:d5586fb2c492667f9b535e10083aba2fca8e8f03155e3975691bea7b8c706dfd",
+        "status": "ingested_primary_method",
+        "title": "LEF-JEPA",
+        "url": "https://arxiv.org/html/2611.08989"
+      }
+    ],
+    "natural_evidence": {
+      "intended_pairs": 800,
+      "joined_pairs": 0,
+      "metadata_audited": 800,
+      "ready": false,
+      "retry_requires": "changed authorized source access and model terms; no unchanged retry",
+      "status": "complete_blocked_source_access"
+    },
+    "shared_feature": {
+      "admission_rows": [
+        {
+          "independent_count": 64,
+          "metric": "shared_energy_auroc",
+          "operator": ">=",
+          "passed": false,
+          "scope": "exposed_development_only",
+          "temperature": 1.0,
+          "threshold": 0.65,
+          "value": 0.3502604166666667
+        },
+        {
+          "independent_count": 64,
+          "metric": "brier_improvement_over_fit_prevalence",
+          "operator": ">=",
+          "passed": false,
+          "scope": "exposed_development_only",
+          "temperature": 1.0,
+          "threshold": 0.005,
+          "value": -0.012695407226601063
+        },
+        {
+          "independent_count": 64,
+          "metric": "brier_excess_over_shared_logistic",
+          "operator": "<=",
+          "passed": false,
+          "scope": "exposed_development_only",
+          "temperature": 1.0,
+          "threshold": 0.01,
+          "value": 0.020722842744012537
+        }
+      ],
+      "collection_permitted": false,
+      "fixed_method": "logistic encoder; identical27 features; eight-unit Gibbs head; T=1; seeds71/72/73",
+      "fresh_scientific_benefit": false,
+      "metrics": {
+        "auroc": 0.3502604166666667,
+        "energy_brier": 0.20094308789066356,
+        "logistic_brier": 0.18022024514665103,
+        "prevalence_brier": 0.1882476806640625
+      },
+      "status": "exposed_development_only"
+    },
+    "v766": {
+      "answers": 1024,
+      "archive_state": "V766 now archived; planning archive lag was historical, not a missing scientific result",
+      "costs": [
+        {
+          "arm": "adaptive",
+          "mean_complete_process_s": 5.937647835666667,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        },
+        {
+          "arm": "bias_only",
+          "mean_complete_process_s": 5.804932911833333,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        },
+        {
+          "arm": "confidence_logistic",
+          "mean_complete_process_s": 3.398361770333333,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        },
+        {
+          "arm": "frozen",
+          "mean_complete_process_s": 6.621382103999999,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        }
+      ],
+      "detector": {
+        "descriptive_rows": [
+          {
+            "arm": "relational_energy",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.19981341624170273
+          },
+          {
+            "arm": "relational_energy",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.589673165331017
+          },
+          {
+            "arm": "relational_energy",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.4344086021505376
+          },
+          {
+            "arm": "relational_energy",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7034138632055784
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.1902940192239859
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.5664268063090236
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.8079877112135178
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.9153545489436794
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.20133589452432357
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.5928705119407094
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.511520737327189
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7520397124770314
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.20847077156493754
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.609702670654757
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.49278033794162834
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7133252259397721
+          },
+          {
+            "arm": "prevalence",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.1986846923828125
+          },
+          {
+            "arm": "prevalence",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.5866861364426075
+          },
+          {
+            "arm": "prevalence",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.5
+          },
+          {
+            "arm": "prevalence",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7265625
+          }
+        ],
+        "paired_intervals": {
+          "alpha_per_contrast": 0.01,
+          "benefit_passed": false,
+          "bootstrap_seed": 766059,
+          "contrasts": {
+            "accepted_error_vs_confidence_logistic": {
+              "direction": "upper",
+              "estimate": 0.046875,
+              "one_sided_bound": 0.171875,
+              "passed": false
+            },
+            "accepted_error_vs_relational_logistic": {
+              "direction": "upper",
+              "estimate": 0.171875,
+              "one_sided_bound": 0.359375,
+              "passed": false
+            },
+            "brier_vs_confidence_logistic": {
+              "direction": "lower",
+              "estimate": 0.008657355323234833,
+              "one_sided_bound": -0.010313093765709085,
+              "passed": false
+            },
+            "brier_vs_prevalence": {
+              "direction": "lower",
+              "estimate": -0.0011287238588903181,
+              "one_sided_bound": -0.005943697107204875,
+              "passed": false
+            },
+            "brier_vs_relational_logistic": {
+              "direction": "lower",
+              "estimate": -0.009519397017716952,
+              "one_sided_bound": -0.018690732577001417,
+              "passed": false
+            }
+          },
+          "draws": 10000,
+          "family_alpha": 0.05,
+          "independent_clusters": 128,
+          "multiplicity": "Bonferroni five one-sided percentile bounds"
+        }
+      },
+      "errors": 719,
+      "exp8969_state": "authenticated_scheduler_skip",
+      "exp8970_state": "absent_primary",
+      "learning": {
+        "acceptance_gate_rows": [
+          {
+            "against": "frozen",
+            "bound_id": 0,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0008872641892848349,
+            "estimate": -0.00027610032917641376,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "ordinals": [
+              17,
+              32
+            ],
+            "passed": false,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "online",
+            "status": "completed",
+            "strict": false,
+            "threshold": -0.01,
+            "upper": 0.0008872641892848348
+          },
+          {
+            "against": "bias_only",
+            "bound_id": 1,
+            "comparison": "adaptive_minus_bias_only",
+            "conditional_on_panel_upper": 0.0004791929617041227,
+            "estimate": -0.0001380129585674514,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<",
+            "ordinals": [
+              17,
+              32
+            ],
+            "passed": false,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "online",
+            "status": "completed",
+            "strict": true,
+            "threshold": 0,
+            "upper": 0.0004791929617041229
+          },
+          {
+            "against": "permuted",
+            "bound_id": 2,
+            "comparison": "adaptive_minus_permuted",
+            "conditional_on_panel_upper": 9.466157860862062e-05,
+            "estimate": 1.3710351995199682e-05,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<",
+            "ordinals": [
+              17,
+              32
+            ],
+            "passed": false,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "online",
+            "status": "completed",
+            "strict": true,
+            "threshold": 0,
+            "upper": 9.466157860862062e-05
+          },
+          {
+            "against": "frozen",
+            "bound_id": 3,
+            "checkpoint": 0,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          },
+          {
+            "against": "frozen",
+            "bound_id": 4,
+            "checkpoint": 0,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "error",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          },
+          {
+            "against": "frozen",
+            "bound_id": 5,
+            "checkpoint": 16,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 6.696750544206213e-07,
+            "estimate": -0.00013471673647633025,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0012726707341356438
+          },
+          {
+            "against": "frozen",
+            "bound_id": 6,
+            "checkpoint": 16,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "error",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          },
+          {
+            "against": "frozen",
+            "bound_id": 7,
+            "checkpoint": 32,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.00020317018153087827,
+            "estimate": -4.16699435353055e-05,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0018268404676125274
+          },
+          {
+            "against": "frozen",
+            "bound_id": 8,
+            "checkpoint": 32,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "error",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          }
+        ]
+      }
+    }
+  },
+  "censored_count": 0,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "8963",
+      "fields_imported": [
+        "historical_rows_only"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8963_v766_corpus_admission.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/586a8f5bff118cd9416f0f03cf9606bc35db0eb4068d946bbf17105329547d24/experiment_8963_v766_corpus_admission.json",
+      "sha256": "sha256:586a8f5bff118cd9416f0f03cf9606bc35db0eb4068d946bbf17105329547d24"
+    },
+    {
+      "experiment_id": "8964",
+      "fields_imported": [
+        "historical_rows_only"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8964_v766_relational_decisions.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/f70d9becc3486f2dec4f8c0c9400cb6ebb49c1bd1fcd0ae67e36b56f74872408/experiment_8964_v766_relational_decisions.json",
+      "sha256": "sha256:f70d9becc3486f2dec4f8c0c9400cb6ebb49c1bd1fcd0ae67e36b56f74872408"
+    },
+    {
+      "experiment_id": "8967",
+      "fields_imported": [
+        "historical_rows_only"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8967_v766_online_benefit_audit.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/dbb48d10ce064fb08fe6d0efcd6671111863641c7591dcfc4bf6df68c5dc3f21/experiment_8967_v766_online_benefit_audit.json",
+      "sha256": "sha256:dbb48d10ce064fb08fe6d0efcd6671111863641c7591dcfc4bf6df68c5dc3f21"
+    },
+    {
+      "experiment_id": "8968",
+      "fields_imported": [
+        "historical_rows_only"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8968_v766_complete_service_cost.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/7fc603abadcfe0e42c9a4dbf9ddf3d5f9d34088bcd0ec06d19e0eb2905d39df0/experiment_8968_v766_complete_service_cost.json",
+      "sha256": "sha256:7fc603abadcfe0e42c9a4dbf9ddf3d5f9d34088bcd0ec06d19e0eb2905d39df0"
+    },
+    {
+      "experiment_id": "8969",
+      "fields_imported": [
+        "historical_rows_only"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8969_arc_transfer_evidence.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/633f2a4a9bfc7d81781ef14fa2d918efe1372918c034d0417b3ba6c72830aeb2/experiment_8969_arc_transfer_evidence.json",
+      "sha256": "sha256:633f2a4a9bfc7d81781ef14fa2d918efe1372918c034d0417b3ba6c72830aeb2"
+    }
+  ],
+  "code_config_hashes": [
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v767_capstone.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/9f17b99396923b5e3be97fc9d910dd2499d069ccb817f84821c123b6e997eb9e/v767_capstone.py",
+      "sha256": "sha256:9f17b99396923b5e3be97fc9d910dd2499d069ccb817f84821c123b6e997eb9e"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8984_v767_capstone.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/1da836b9521af646d06832bf1146004040132e5c213012f13afe8f0e767bc7f8/experiment_8984_v767_capstone.py",
+      "sha256": "sha256:1da836b9521af646d06832bf1146004040132e5c213012f13afe8f0e767bc7f8"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_v767_capstone_8984.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/025ef5d95ca431fee3cfbc3ddc8082ba58d1d45568a07be5cba39a11e03b4b5b/test_v767_capstone_8984.py",
+      "sha256": "sha256:025ef5d95ca431fee3cfbc3ddc8082ba58d1d45568a07be5cba39a11e03b4b5b"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/18dfabaaed325c91bd03cd584c8f7b945a068529f00cbd68e45c0e0c013d49d2/adversarial_verify.py",
+      "sha256": "sha256:18dfabaaed325c91bd03cd584c8f7b945a068529f00cbd68e45c0e0c013d49d2"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    }
+  ],
+  "completed_count": 14,
+  "continuation_evidence": {
+    "activation_authorized": false,
+    "evidence_changes_prior_odds": "Common features did not rescue this fixed energy head. Coordinate mismatch alone does not explain its failure.",
+    "natural_evidence": "Obtain already-authorized original dialogue access before a grouped annotation-relative evaluation.",
+    "strongest_next_experiment": "Only a changed head objective or optimization with a fixed representation development gate; no new collection before it passes."
+  },
+  "current_work_receipt": {
+    "MODEL_SPECS": [],
+    "current_invocation_events": [],
+    "current_owner_pid": 105877,
+    "current_run_id": "26673571896530",
+    "duration_s": 2.732036743,
+    "ended_monotonic_ns": 26676303933273,
+    "event_count": 0,
+    "event_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "execution_venue": "host",
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "inference_substrate_class": "no_model_load",
+    "inference_substrate_details": {
+      "operation": "retained prediction and scheduler row reduction"
+    },
+    "invocation_counts": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "model_invoked": false,
+    "phase_spans": [
+      {
+        "end_s": 2.732036743,
+        "phase": "authentication_and_reconciliation",
+        "start_s": 0
+      }
+    ],
+    "receipt_sidecars": [],
+    "small_ebm_training": {
+      "performed": false
+    },
+    "started_monotonic_ns": 26673571896530
+  },
+  "duration_s": 2.732036743,
+  "excluded_count": 0,
+  "experiment_id": 8984,
+  "exposure_scope": "Exposed development graphs and historical BFS truth; no fresh scientific benefit or no-cheap-oracle claim.",
+  "failed_count": 0,
+  "field_principles": {
+    "G1": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "G2": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "G3": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "G4": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "MODEL_SPECS": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "acceptance_gates": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "actual_task_order": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "branch_outcomes": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "censored_count": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "cited_upstream_artifacts": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "code_config_hashes": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "completed_count": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "continuation_evidence": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "current_work_receipt": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "duration_s": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "excluded_count": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "experiment_id": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "exposure_scope": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "failed_count": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "field_principles": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "flagged_adversarial": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "gate_check_summary": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "gate_edge_rows": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "honest_verdict": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "independent_count": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "independent_generalization_score": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "inference_substrate": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "inference_substrate_class": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "intended_count": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "milestone": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "model_invocation_counts": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "numerical_training_calls": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "owned_statement_coverage": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "paper_ready": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "phase_spans": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "preconditions_checked": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "publication_gate": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "random_seed": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "raw_shard_hashes": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "reconciliation_ready_score": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "repository_health": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "reproducibility_checksum": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "required_checks_passed": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "retirement_scope_rows": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "rows": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "run_date": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "scientific_reductions": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "slot_rows": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "source_artifact_hashes": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "task_id": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "unmet_gates": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "validation_receipts": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "validation_state": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "verdict_class": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "verifier_is_oracle": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit.",
+    "work_reference": "Exact retained inputs and local denominators; accounting readiness and historical publication gates grant no fresh scientific credit."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": [
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "primary",
+      "check": "missing_file",
+      "expected": true,
+      "observed": "missing_file",
+      "operator": "exists",
+      "path": "results/experiment_8977_v767_graph_corpus_b.json",
+      "sha256": null,
+      "upstream": "exp8977-graph-corpus-b"
+    },
+    {
+      "artifact_field": "shard_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_field",
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f/experiment_8976_graph_corpus_a.json",
+      "sha256": "sha256:280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f",
+      "upstream": "exp8976-graph-corpus-a"
+    },
+    {
+      "artifact_field": "shard_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8977-graph-corpus-b"
+    },
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "primary",
+      "check": "missing_file",
+      "expected": true,
+      "observed": "missing_file",
+      "operator": "exists",
+      "path": "results/experiment_8978_v767_corpus_admission.json",
+      "sha256": null,
+      "upstream": "exp8978-corpus-admission"
+    },
+    {
+      "artifact_field": "corpus_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8978-corpus-admission"
+    },
+    {
+      "artifact_field": "primary",
+      "check": "missing_file",
+      "expected": true,
+      "observed": "missing_file",
+      "operator": "exists",
+      "path": "results/experiment_8979_v767_shared_feature_decisions.json",
+      "sha256": null,
+      "upstream": "exp8979-shared-feature-decisions"
+    },
+    {
+      "artifact_field": "online_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_field",
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+      "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426",
+      "upstream": "exp8974-feature-online-methods"
+    },
+    {
+      "artifact_field": "detector_rows_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8979-shared-feature-decisions"
+    },
+    {
+      "artifact_field": "primary",
+      "check": "missing_file",
+      "expected": true,
+      "observed": "missing_file",
+      "operator": "exists",
+      "path": "results/experiment_8980_v767_feature_online_streams.json",
+      "sha256": null,
+      "upstream": "exp8980-feature-online-streams"
+    },
+    {
+      "artifact_field": "online_rows_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8980-feature-online-streams"
+    },
+    {
+      "artifact_field": "primary",
+      "check": "missing_file",
+      "expected": true,
+      "observed": "missing_file",
+      "operator": "exists",
+      "path": "results/experiment_8981_v767_feature_online_benefit.json",
+      "sha256": null,
+      "upstream": "exp8981-feature-online-benefit"
+    },
+    {
+      "artifact_field": "online_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_field",
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+      "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426",
+      "upstream": "exp8974-feature-online-methods"
+    },
+    {
+      "artifact_field": "detector_rows_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8979-shared-feature-decisions"
+    },
+    {
+      "artifact_field": "primary",
+      "check": "missing_file",
+      "expected": true,
+      "observed": "missing_file",
+      "operator": "exists",
+      "path": "results/experiment_8982_v767_matched_service_cost.json",
+      "sha256": null,
+      "upstream": "exp8982-matched-service-cost"
+    },
+    {
+      "artifact_field": "arc_new_outcomes_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212/experiment_8971_v767_branch_contract.json",
+      "sha256": "sha256:5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212",
+      "upstream": "exp8971-branch-contract"
+    },
+    {
+      "check": "eligibility:authorized_local_use",
+      "expected": true,
+      "field": "authorized_local_use",
+      "observed": false,
+      "operator": "==",
+      "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+      "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+      "upstream": "AuthenHallu/LMSYS-Chat-1M"
+    },
+    {
+      "check": "eligibility:joined_pairs",
+      "expected": 800,
+      "field": "joined_pairs",
+      "observed": 0,
+      "operator": "==",
+      "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+      "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+      "upstream": "AuthenHallu/LMSYS-Chat-1M"
+    },
+    {
+      "check": "eligibility:source_access.local_use_authorized",
+      "expected": "explicit existing authorization",
+      "field": "source_access.local_use_authorized",
+      "observed": "missing_field",
+      "operator": "==",
+      "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+      "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+      "upstream": "AuthenHallu/LMSYS-Chat-1M"
+    },
+    {
+      "check": "eligibility:source_access.model_terms_verified",
+      "expected": "explicit existing authorization",
+      "field": "source_access.model_terms_verified",
+      "observed": "missing_field",
+      "operator": "==",
+      "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+      "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+      "upstream": "AuthenHallu/LMSYS-Chat-1M"
+    },
+    {
+      "check": "eligibility:source_access.license_reference",
+      "expected": "explicit existing authorization",
+      "field": "source_access.license_reference",
+      "observed": "missing_field",
+      "operator": "==",
+      "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+      "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+      "upstream": "AuthenHallu/LMSYS-Chat-1M"
+    }
+  ],
+  "gate_edge_rows": [
+    {
+      "artifact_field": "diagnosis_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4/experiment_8972_v767_encoder_head_diagnosis.json",
+      "sha256": "sha256:aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4",
+      "upstream": "exp8972-encoder-head-diagnosis"
+    },
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "shard_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_field",
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f/experiment_8976_graph_corpus_a.json",
+      "sha256": "sha256:280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f",
+      "upstream": "exp8976-graph-corpus-a"
+    },
+    {
+      "artifact_field": "shard_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8977-graph-corpus-b"
+    },
+    {
+      "artifact_field": "shared_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+      "upstream": "exp8973-shared-feature-methods"
+    },
+    {
+      "artifact_field": "corpus_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8978-corpus-admission"
+    },
+    {
+      "artifact_field": "online_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_field",
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+      "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426",
+      "upstream": "exp8974-feature-online-methods"
+    },
+    {
+      "artifact_field": "detector_rows_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8979-shared-feature-decisions"
+    },
+    {
+      "artifact_field": "online_rows_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8980-feature-online-streams"
+    },
+    {
+      "artifact_field": "online_methods_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_field",
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+      "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426",
+      "upstream": "exp8974-feature-online-methods"
+    },
+    {
+      "artifact_field": "detector_rows_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": "missing_file",
+      "operator": "==",
+      "passed": false,
+      "path": null,
+      "sha256": null,
+      "upstream": "exp8979-shared-feature-decisions"
+    },
+    {
+      "artifact_field": "arc_new_outcomes_ready_score",
+      "check": "declared_gate",
+      "expected": 1,
+      "observed": 0,
+      "operator": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212/experiment_8971_v767_branch_contract.json",
+      "sha256": "sha256:5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212",
+      "upstream": "exp8971-branch-contract"
+    }
+  ],
+  "honest_verdict": "complete_blocked_external_science_and_source_access",
+  "independent_count": 0,
+  "independent_generalization_score": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "no_model_load",
+  "intended_count": 14,
+  "milestone": "2026.11.767",
+  "model_invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "numerical_training_calls": 0,
+  "owned_statement_coverage": {
+    "complete": true,
+    "data_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/.coverage",
+      "sha256": "sha256:8e89597f73b10c97c17a1d8c822854834192dbf7b1c27aee38e1c06174b77058"
+    },
+    "files": [
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "python/carnot/reporting/v767_capstone.py",
+        "statements": 204
+      },
+      {
+        "excluded": [],
+        "missing": [],
+        "path": "scripts/experiments/experiment_8984_v767_capstone.py",
+        "statements": 7
+      }
+    ],
+    "percent": 100.0,
+    "report_reference": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/coverage.json",
+      "sha256": "sha256:ce05c6e0e2147b42867d072da704a77e6a5d67116c8fb9df6fa78282f8c347a1"
+    },
+    "rows": [
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 136,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 137,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 138,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 139,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 140,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 141,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 142,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 143,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 151,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 152,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 157,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 205,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 206,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      },
+      {
+        "excluded": false,
+        "executed": false,
+        "line": 207,
+        "path": "python/carnot/reporting/v755_branch_runner.py"
+      }
+    ]
+  },
+  "paper_ready": true,
+  "phase_spans": [
+    {
+      "end_s": 2.732036743,
+      "phase": "authentication_and_reconciliation",
+      "start_s": 0
+    }
+  ],
+  "preconditions_checked": {
+    "activation_authorized": false,
+    "available_memory_bytes": 11678883840,
+    "dependencies_available": true,
+    "free_bytes": 777508401152,
+    "no_device_probes": true,
+    "no_game_runs": true,
+    "no_model_loads": true,
+    "producer_argv": [
+      ".venv/bin/python",
+      "-u",
+      "scripts/experiments/experiment_8984_v767_capstone.py",
+      "--date",
+      "20261110"
+    ],
+    "repository_virtualenv": true,
+    "run_date_matches": true,
+    "writable_disk": true
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "scope": "Historic FoVer only; does not certify this milestone or authorize publication.",
+    "unmet_gates": []
+  },
+  "random_seed": 7678984,
+  "raw_shard_hashes": [
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/f6b4cd77f27fc64054a2dcb345eb300a4e694838ec541f00b868fee3331a203d/research-roadmap-vNEXT.md",
+      "sha256": "sha256:f6b4cd77f27fc64054a2dcb345eb300a4e694838ec541f00b868fee3331a203d"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/conductor-log.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/ef8f9064c1503a10beae5980996daeea86b0b3dc9523380da9e428877b4ae3ce/conductor-log.md",
+      "sha256": "sha256:ef8f9064c1503a10beae5980996daeea86b0b3dc9523380da9e428877b4ae3ce"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/74afb5583176f1dc9261fbbc54e0857590c175db01fa096ee42abed8f8ee861e/research-complete.yaml",
+      "sha256": "sha256:74afb5583176f1dc9261fbbc54e0857590c175db01fa096ee42abed8f8ee861e"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/cb8d5d0222a495853a2227e4e21f33e9027b47dd3323a61f4bc9d05bab672af8/research-references.md",
+      "sha256": "sha256:cb8d5d0222a495853a2227e4e21f33e9027b47dd3323a61f4bc9d05bab672af8"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8971_v767_branch_contract.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212/experiment_8971_v767_branch_contract.json",
+      "sha256": "sha256:5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8972_v767_encoder_head_diagnosis.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4/experiment_8972_v767_encoder_head_diagnosis.json",
+      "sha256": "sha256:aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8973_v767_shared_feature_methods.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8974_feature_online_methods.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+      "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8975_v767_natural_label_eligibility.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/4203efad6223b48bd6627a0953a289c26ce9a7df0832e878cf37317f84bb0089/experiment_8975_v767_natural_label_eligibility.json",
+      "sha256": "sha256:4203efad6223b48bd6627a0953a289c26ce9a7df0832e878cf37317f84bb0089"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8976_graph_corpus_a.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f/experiment_8976_graph_corpus_a.json",
+      "sha256": "sha256:280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8983_arc_transfer_evidence.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/4a6286d70721fae54ed8b4d4cfa0c06ada3e77ab7bbd2525611c766f66adbe99/experiment_8983_arc_transfer_evidence.json",
+      "sha256": "sha256:4a6286d70721fae54ed8b4d4cfa0c06ada3e77ab7bbd2525611c766f66adbe99"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8963_v766_corpus_admission.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/586a8f5bff118cd9416f0f03cf9606bc35db0eb4068d946bbf17105329547d24/experiment_8963_v766_corpus_admission.json",
+      "sha256": "sha256:586a8f5bff118cd9416f0f03cf9606bc35db0eb4068d946bbf17105329547d24"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8964_v766_relational_decisions.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/f70d9becc3486f2dec4f8c0c9400cb6ebb49c1bd1fcd0ae67e36b56f74872408/experiment_8964_v766_relational_decisions.json",
+      "sha256": "sha256:f70d9becc3486f2dec4f8c0c9400cb6ebb49c1bd1fcd0ae67e36b56f74872408"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8967_v766_online_benefit_audit.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/dbb48d10ce064fb08fe6d0efcd6671111863641c7591dcfc4bf6df68c5dc3f21/experiment_8967_v766_online_benefit_audit.json",
+      "sha256": "sha256:dbb48d10ce064fb08fe6d0efcd6671111863641c7591dcfc4bf6df68c5dc3f21"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8968_v766_complete_service_cost.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/7fc603abadcfe0e42c9a4dbf9ddf3d5f9d34088bcd0ec06d19e0eb2905d39df0/experiment_8968_v766_complete_service_cost.json",
+      "sha256": "sha256:7fc603abadcfe0e42c9a4dbf9ddf3d5f9d34088bcd0ec06d19e0eb2905d39df0"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8969_arc_transfer_evidence.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/633f2a4a9bfc7d81781ef14fa2d918efe1372918c034d0417b3ba6c72830aeb2/experiment_8969_arc_transfer_evidence.json",
+      "sha256": "sha256:633f2a4a9bfc7d81781ef14fa2d918efe1372918c034d0417b3ba6c72830aeb2"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2509.01254v2.html",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/5e3eafac1a70d63e7a43c32af3a02bc4d871b81fd0cd6cd38df4bb2c56ff5b3e/2509.01254v2.html",
+      "sha256": "sha256:5e3eafac1a70d63e7a43c32af3a02bc4d871b81fd0cd6cd38df4bb2c56ff5b3e"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2610.33930.html",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/c586a1966f7958447e3289a38e4187b8d0733f46cb87c0ebd9701244af5f9d63/2610.33930.html",
+      "sha256": "sha256:c586a1966f7958447e3289a38e4187b8d0733f46cb87c0ebd9701244af5f9d63"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08977.html",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/ebd26ee5b9a263f6c85b6cd8c39f96967954c5a8808b4a7f9856555cb56c29e3/2611.08977.html",
+      "sha256": "sha256:ebd26ee5b9a263f6c85b6cd8c39f96967954c5a8808b4a7f9856555cb56c29e3"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08989.html",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/d5586fb2c492667f9b535e10083aba2fca8e8f03155e3975691bea7b8c706dfd/2611.08989.html",
+      "sha256": "sha256:d5586fb2c492667f9b535e10083aba2fca8e8f03155e3975691bea7b8c706dfd"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8963_v766_corpus_admission/invocations/1794279377519150970/sealed_labels/calibration.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/a32f33fb9976ea33e87ce11a152e05b17c8710f3157c5fa53e00356f6e64f0ca/calibration.json",
+      "sha256": "sha256:a32f33fb9976ea33e87ce11a152e05b17c8710f3157c5fa53e00356f6e64f0ca"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8963_v766_corpus_admission/invocations/1794279377519150970/sealed_labels/online.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/95927e23d7fa4e98179c7eccd10565feabe4ad8315721161d44e2f19de3a834d/online.json",
+      "sha256": "sha256:95927e23d7fa4e98179c7eccd10565feabe4ad8315721161d44e2f19de3a834d"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8963_v766_corpus_admission/invocations/1794279377519150970/sealed_labels/test.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/001edc0aec93bf8cf740ef1fc07a7f9323c59aaf557e78745fd1b9403c9485d3/test.json",
+      "sha256": "sha256:001edc0aec93bf8cf740ef1fc07a7f9323c59aaf557e78745fd1b9403c9485d3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/publication/00_publication_gate.log",
+      "sha256": "sha256:e1b5f037271823dc0bcb132094749a1a0ce08f27d22c7f17573e052379a2a725"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/03d7d8ce109e2372cbaf55d799553fcf099874c6673bc1b8cc176d20351bfea7/research-roadmap.yaml",
+      "sha256": "sha256:03d7d8ce109e2372cbaf55d799553fcf099874c6673bc1b8cc176d20351bfea7"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4/publication_gate.py",
+      "sha256": "sha256:e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/publication_gate_state.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/46fc9829af95ec5465a6adaf11ca507d92ef9eef7188520b09707a2c8e37ffa8/publication_gate_state.json",
+      "sha256": "sha256:46fc9829af95ec5465a6adaf11ca507d92ef9eef7188520b09707a2c8e37ffa8"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/technical-report.md",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/20c048e7848709b309a0ce0c42b2e21f8ddb81bee3d0a667c8d794b15701ed53/technical-report.md",
+      "sha256": "sha256:20c048e7848709b309a0ce0c42b2e21f8ddb81bee3d0a667c8d794b15701ed53"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/7ce70cb4407b60236756ad9abd1afc722d5110e33bf368cd46fe5d78a74af4ca/main.tex",
+      "sha256": "sha256:7ce70cb4407b60236756ad9abd1afc722d5110e33bf368cd46fe5d78a74af4ca"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/b1beb0456398b3a0cc5c673ff40a6e192f514c084346a6467b8d0acd31028f93/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "sha256": "sha256:b1beb0456398b3a0cc5c673ff40a6e192f514c084346a6467b8d0acd31028f93"
+    }
+  ],
+  "reconciliation_ready_score": 1,
+  "repository_health": [
+    {
+      "affects_owned_qualification": false,
+      "attempts": 1,
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 124,
+      "finding": "The bounded full-suite invocation ended without a test summary. This cannot establish that all repository tests pass.",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/repository_health/full_python_suite.log",
+      "log_sha256": "sha256:e3aacda51df003a85d2c543044d9c4f14628e4e8f751512fba8ef9ea76daf7f4",
+      "name": "full_python_suite",
+      "passed": false,
+      "scope": "repository_health",
+      "timed_out": true,
+      "timeout_s": 300
+    }
+  ],
+  "reproducibility_checksum": "sha256:7811d4111f528bf280aa0bb701355930fd8c3bac51bde60dae94b85417b449b5",
+  "required_checks_passed": true,
+  "retirement_scope_rows": [
+    {
+      "action": "close_collection",
+      "broader_hypothesis_retired": false,
+      "evidence": {
+        "admission_rows": [
+          {
+            "independent_count": 64,
+            "metric": "shared_energy_auroc",
+            "operator": ">=",
+            "passed": false,
+            "scope": "exposed_development_only",
+            "temperature": 1.0,
+            "threshold": 0.65,
+            "value": 0.3502604166666667
+          },
+          {
+            "independent_count": 64,
+            "metric": "brier_improvement_over_fit_prevalence",
+            "operator": ">=",
+            "passed": false,
+            "scope": "exposed_development_only",
+            "temperature": 1.0,
+            "threshold": 0.005,
+            "value": -0.012695407226601063
+          },
+          {
+            "independent_count": 64,
+            "metric": "brier_excess_over_shared_logistic",
+            "operator": "<=",
+            "passed": false,
+            "scope": "exposed_development_only",
+            "temperature": 1.0,
+            "threshold": 0.01,
+            "value": 0.020722842744012537
+          }
+        ],
+        "collection_permitted": false,
+        "fixed_method": "logistic encoder; identical27 features; eight-unit Gibbs head; T=1; seeds71/72/73",
+        "fresh_scientific_benefit": false,
+        "metrics": {
+          "auroc": 0.3502604166666667,
+          "energy_brier": 0.20094308789066356,
+          "logistic_brier": 0.18022024514665103,
+          "prevalence_brier": 0.1882476806640625
+        },
+        "status": "exposed_development_only"
+      },
+      "exclusion_manifest_edit_authorized": false,
+      "scope": "fixed_shared_feature_Gibbs_head"
+    },
+    {
+      "action": "await_changed_authorized_source_access",
+      "scope": "natural_labels"
+    },
+    {
+      "action": "unmeasured_scheduler_or_absent; no scientific null inferred",
+      "scope": "fresh_energy_online_cost"
+    }
+  ],
+  "rows": [
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8971-branch-contract",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8972-encoder-head-diagnosis",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8973-shared-feature-methods",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8974-feature-online-methods",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8975-natural-label-eligibility",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8976-graph-corpus-a",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8977-graph-corpus-b",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8978-corpus-admission",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8979-shared-feature-decisions",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8980-feature-online-streams",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8981-feature-online-benefit",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8982-matched-service-cost",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8983-arc-transfer-evidence",
+      "value": 1
+    },
+    {
+      "arm": "reconciliation",
+      "censor_reason": null,
+      "cluster_id": "administrative_contract",
+      "condition": "task_accounting",
+      "denominator": 1,
+      "metric": "task_slot_accounted",
+      "numerator": 1,
+      "status": "completed",
+      "unit_id": "exp8984-capstone",
+      "value": 1
+    }
+  ],
+  "run_date": "20261110",
+  "scientific_reductions": {
+    "literature_mapping": [
+      {
+        "decision": "Use frozen-feature control; do not claim MPC implementation",
+        "equation": "MPC=-log P(lossyWL_L suffices for f)",
+        "failure_modes": "Finite width, oversquashing and inaccessible distant evidence",
+        "implementation_requirements": "Graph-family and lossy-message model; task-specific analysis",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2509.01254v2.html",
+        "read_date": "20261110",
+        "sha256": "sha256:5e3eafac1a70d63e7a43c32af3a02bc4d871b81fd0cd6cd38df4bb2c56ff5b3e",
+        "status": "ingested_primary_method",
+        "title": "Message Passing Complexity",
+        "url": "https://arxiv.org/html/2509.01254v2"
+      },
+      {
+        "decision": "Ingest interface separation; no solver or paper reproduction",
+        "equation": "L=KL(p_star||softmax(-E/T))+lambda_cal L_cal+lambda_inf L_inf",
+        "failure_modes": "Solver cost; correctness relative to explicit constraints, not semantic truth",
+        "implementation_requirements": "Affine or exactly linearizable readout, ReLU head, bounded MIP formulation",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2610.33930.html",
+        "read_date": "20261110",
+        "sha256": "sha256:c586a1966f7958447e3289a38e4187b8d0733f46cb87c0ebd9701244af5f9d63",
+        "status": "ingested_primary_method",
+        "title": "EnerGNN",
+        "url": "https://arxiv.org/html/2610.33930"
+      },
+      {
+        "decision": "Ingest only; retired energy-as-generator scope stays closed",
+        "equation": "z_next=Pi_M(RMS(z)+sigma xi-alpha grad_z E_theta(z;x))",
+        "failure_modes": "Learned energy minima need not be correct; extra training and inference cost",
+        "implementation_requirements": "Trajectory supervision, random descent, second derivatives and state-based exploration",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08977.html",
+        "read_date": "20261110",
+        "sha256": "sha256:ebd26ee5b9a263f6c85b6cd8c39f96967954c5a8808b4a7f9856555cb56c29e3",
+        "status": "ingested_primary_method",
+        "title": "Energy-Based Reasoners",
+        "url": "https://arxiv.org/html/2611.08977"
+      },
+      {
+        "decision": "Ingest frozen evaluation and gradient routing only; no JEPA training",
+        "equation": "q_next=q-alpha clip_tau(grad_q E_phi(C,q)); L_enc=gamma softplus((E_bar(C,S)-stopgrad(E_bar(C,T)))/gamma)",
+        "failure_modes": "Visual labels, gradient routing and physical solver cost do not transfer",
+        "implementation_requirements": "EMA target encoder, denoising displacement, separate energy and encoder gradient paths",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8972_v767_encoder_head_diagnosis/methods/2611.08989.html",
+        "read_date": "20261110",
+        "sha256": "sha256:d5586fb2c492667f9b535e10083aba2fca8e8f03155e3975691bea7b8c706dfd",
+        "status": "ingested_primary_method",
+        "title": "LEF-JEPA",
+        "url": "https://arxiv.org/html/2611.08989"
+      }
+    ],
+    "natural_evidence": {
+      "intended_pairs": 800,
+      "joined_pairs": 0,
+      "metadata_audited": 800,
+      "ready": false,
+      "retry_requires": "changed authorized source access and model terms; no unchanged retry",
+      "status": "complete_blocked_source_access"
+    },
+    "shared_feature": {
+      "admission_rows": [
+        {
+          "independent_count": 64,
+          "metric": "shared_energy_auroc",
+          "operator": ">=",
+          "passed": false,
+          "scope": "exposed_development_only",
+          "temperature": 1.0,
+          "threshold": 0.65,
+          "value": 0.3502604166666667
+        },
+        {
+          "independent_count": 64,
+          "metric": "brier_improvement_over_fit_prevalence",
+          "operator": ">=",
+          "passed": false,
+          "scope": "exposed_development_only",
+          "temperature": 1.0,
+          "threshold": 0.005,
+          "value": -0.012695407226601063
+        },
+        {
+          "independent_count": 64,
+          "metric": "brier_excess_over_shared_logistic",
+          "operator": "<=",
+          "passed": false,
+          "scope": "exposed_development_only",
+          "temperature": 1.0,
+          "threshold": 0.01,
+          "value": 0.020722842744012537
+        }
+      ],
+      "collection_permitted": false,
+      "fixed_method": "logistic encoder; identical27 features; eight-unit Gibbs head; T=1; seeds71/72/73",
+      "fresh_scientific_benefit": false,
+      "metrics": {
+        "auroc": 0.3502604166666667,
+        "energy_brier": 0.20094308789066356,
+        "logistic_brier": 0.18022024514665103,
+        "prevalence_brier": 0.1882476806640625
+      },
+      "status": "exposed_development_only"
+    },
+    "v766": {
+      "answers": 1024,
+      "archive_state": "V766 now archived; planning archive lag was historical, not a missing scientific result",
+      "costs": [
+        {
+          "arm": "adaptive",
+          "mean_complete_process_s": 5.937647835666667,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        },
+        {
+          "arm": "bias_only",
+          "mean_complete_process_s": 5.804932911833333,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        },
+        {
+          "arm": "confidence_logistic",
+          "mean_complete_process_s": 3.398361770333333,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        },
+        {
+          "arm": "frozen",
+          "mean_complete_process_s": 6.621382103999999,
+          "scope": "historical cached service; no V767 cost or deployment benefit",
+          "units": 24
+        }
+      ],
+      "detector": {
+        "descriptive_rows": [
+          {
+            "arm": "relational_energy",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.19981341624170273
+          },
+          {
+            "arm": "relational_energy",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.589673165331017
+          },
+          {
+            "arm": "relational_energy",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.4344086021505376
+          },
+          {
+            "arm": "relational_energy",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7034138632055784
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.1902940192239859
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.5664268063090236
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.8079877112135178
+          },
+          {
+            "arm": "relational_logistic",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.9153545489436794
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.20133589452432357
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.5928705119407094
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.511520737327189
+          },
+          {
+            "arm": "confidence_energy",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7520397124770314
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.20847077156493754
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.609702670654757
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.49278033794162834
+          },
+          {
+            "arm": "confidence_logistic",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7133252259397721
+          },
+          {
+            "arm": "prevalence",
+            "metric": "brier",
+            "scope": "descriptive",
+            "value": 0.1986846923828125
+          },
+          {
+            "arm": "prevalence",
+            "metric": "log_loss",
+            "scope": "descriptive",
+            "value": 0.5866861364426075
+          },
+          {
+            "arm": "prevalence",
+            "metric": "auroc",
+            "scope": "descriptive",
+            "value": 0.5
+          },
+          {
+            "arm": "prevalence",
+            "metric": "auprc",
+            "scope": "descriptive",
+            "value": 0.7265625
+          }
+        ],
+        "paired_intervals": {
+          "alpha_per_contrast": 0.01,
+          "benefit_passed": false,
+          "bootstrap_seed": 766059,
+          "contrasts": {
+            "accepted_error_vs_confidence_logistic": {
+              "direction": "upper",
+              "estimate": 0.046875,
+              "one_sided_bound": 0.171875,
+              "passed": false
+            },
+            "accepted_error_vs_relational_logistic": {
+              "direction": "upper",
+              "estimate": 0.171875,
+              "one_sided_bound": 0.359375,
+              "passed": false
+            },
+            "brier_vs_confidence_logistic": {
+              "direction": "lower",
+              "estimate": 0.008657355323234833,
+              "one_sided_bound": -0.010313093765709085,
+              "passed": false
+            },
+            "brier_vs_prevalence": {
+              "direction": "lower",
+              "estimate": -0.0011287238588903181,
+              "one_sided_bound": -0.005943697107204875,
+              "passed": false
+            },
+            "brier_vs_relational_logistic": {
+              "direction": "lower",
+              "estimate": -0.009519397017716952,
+              "one_sided_bound": -0.018690732577001417,
+              "passed": false
+            }
+          },
+          "draws": 10000,
+          "family_alpha": 0.05,
+          "independent_clusters": 128,
+          "multiplicity": "Bonferroni five one-sided percentile bounds"
+        }
+      },
+      "errors": 719,
+      "exp8969_state": "authenticated_scheduler_skip",
+      "exp8970_state": "absent_primary",
+      "learning": {
+        "acceptance_gate_rows": [
+          {
+            "against": "frozen",
+            "bound_id": 0,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0008872641892848349,
+            "estimate": -0.00027610032917641376,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "ordinals": [
+              17,
+              32
+            ],
+            "passed": false,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "online",
+            "status": "completed",
+            "strict": false,
+            "threshold": -0.01,
+            "upper": 0.0008872641892848348
+          },
+          {
+            "against": "bias_only",
+            "bound_id": 1,
+            "comparison": "adaptive_minus_bias_only",
+            "conditional_on_panel_upper": 0.0004791929617041227,
+            "estimate": -0.0001380129585674514,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<",
+            "ordinals": [
+              17,
+              32
+            ],
+            "passed": false,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "online",
+            "status": "completed",
+            "strict": true,
+            "threshold": 0,
+            "upper": 0.0004791929617041229
+          },
+          {
+            "against": "permuted",
+            "bound_id": 2,
+            "comparison": "adaptive_minus_permuted",
+            "conditional_on_panel_upper": 9.466157860862062e-05,
+            "estimate": 1.3710351995199682e-05,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<",
+            "ordinals": [
+              17,
+              32
+            ],
+            "passed": false,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "online",
+            "status": "completed",
+            "strict": true,
+            "threshold": 0,
+            "upper": 9.466157860862062e-05
+          },
+          {
+            "against": "frozen",
+            "bound_id": 3,
+            "checkpoint": 0,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          },
+          {
+            "against": "frozen",
+            "bound_id": 4,
+            "checkpoint": 0,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "error",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          },
+          {
+            "against": "frozen",
+            "bound_id": 5,
+            "checkpoint": 16,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 6.696750544206213e-07,
+            "estimate": -0.00013471673647633025,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0012726707341356438
+          },
+          {
+            "against": "frozen",
+            "bound_id": 6,
+            "checkpoint": 16,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "error",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          },
+          {
+            "against": "frozen",
+            "bound_id": 7,
+            "checkpoint": 32,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.00020317018153087827,
+            "estimate": -4.16699435353055e-05,
+            "independent_count": 24,
+            "metric": "brier",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0018268404676125274
+          },
+          {
+            "against": "frozen",
+            "bound_id": 8,
+            "checkpoint": 32,
+            "comparison": "adaptive_minus_frozen",
+            "conditional_on_panel_upper": 0.0,
+            "estimate": 0.0,
+            "independent_count": 24,
+            "metric": "error",
+            "operator": "<=",
+            "passed": true,
+            "principle": "All nine prespecified bounds must pass; retention shares one graph draw across histories.",
+            "split": "retention",
+            "status": "completed",
+            "strict": false,
+            "threshold": 0.01,
+            "upper": 0.0
+          }
+        ]
+      }
+    }
+  },
+  "slot_rows": [
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": [],
+      "conductor_rows": [],
+      "disposition": "qualified_primary",
+      "experiment_id": 8971,
+      "gate_check_summary": [],
+      "honest_verdict": "complete_null_v767_branch_contract",
+      "producer_counts": {
+        "censored_count": 0,
+        "completed_count": 14,
+        "excluded_count": 0,
+        "failed_count": 0,
+        "independent_count": 0,
+        "intended_count": 14
+      },
+      "qualified": true,
+      "reference": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8971_v767_branch_contract.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212/experiment_8971_v767_branch_contract.json",
+        "sha256": "sha256:5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212"
+      },
+      "task_id": "exp8971-branch-contract",
+      "verdict_class": "null"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": [],
+      "conductor_rows": [],
+      "disposition": "qualified_primary",
+      "experiment_id": 8972,
+      "gate_check_summary": [],
+      "honest_verdict": "complete_null_exposed_encoder_head_diagnosis",
+      "producer_counts": {
+        "censored_count": 0,
+        "completed_count": 1344,
+        "excluded_count": 0,
+        "failed_count": 0,
+        "independent_count": 1344,
+        "intended_count": 1344
+      },
+      "qualified": true,
+      "reference": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8972_v767_encoder_head_diagnosis.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4/experiment_8972_v767_encoder_head_diagnosis.json",
+        "sha256": "sha256:aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4"
+      },
+      "task_id": "exp8972-encoder-head-diagnosis",
+      "verdict_class": "null"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": [],
+      "conductor_rows": [],
+      "disposition": "qualified_primary",
+      "experiment_id": 8973,
+      "gate_check_summary": [
+        {
+          "artifact_field": "diagnosis_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": 1,
+          "operator": "==",
+          "passed": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4/experiment_8972_v767_encoder_head_diagnosis.json",
+          "sha256": "sha256:aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4",
+          "upstream": "exp8972-encoder-head-diagnosis"
+        }
+      ],
+      "honest_verdict": "complete_null_development_admission_failed",
+      "producer_counts": {
+        "censored_count": 0,
+        "completed_count": 1088,
+        "excluded_count": 0,
+        "failed_count": 0,
+        "independent_count": 1088,
+        "intended_count": 1088
+      },
+      "qualified": true,
+      "reference": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8973_v767_shared_feature_methods.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+        "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6"
+      },
+      "task_id": "exp8973-shared-feature-methods",
+      "verdict_class": "null"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1)",
+      "conductor_rows": [
+        "| 2026-11-10 22:05 UTC | Freeze delayed feature-level head learning with ma | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1) |"
+      ],
+      "disposition": "authenticated_scheduler_skip",
+      "experiment_id": 8974,
+      "gate_check_summary": [
+        {
+          "artifact_field": "shared_methods_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+          "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+          "upstream": "exp8973-shared-feature-methods"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8974_feature_online_methods.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+        "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426"
+      },
+      "task_id": "exp8974-feature-online-methods",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": [
+        {
+          "check": "eligibility:authorized_local_use",
+          "expected": true,
+          "field": "authorized_local_use",
+          "observed": false,
+          "operator": "==",
+          "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+          "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+          "upstream": "AuthenHallu/LMSYS-Chat-1M"
+        },
+        {
+          "check": "eligibility:joined_pairs",
+          "expected": 800,
+          "field": "joined_pairs",
+          "observed": 0,
+          "operator": "==",
+          "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+          "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+          "upstream": "AuthenHallu/LMSYS-Chat-1M"
+        },
+        {
+          "check": "eligibility:source_access.local_use_authorized",
+          "expected": "explicit existing authorization",
+          "field": "source_access.local_use_authorized",
+          "observed": "missing_field",
+          "operator": "==",
+          "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+          "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+          "upstream": "AuthenHallu/LMSYS-Chat-1M"
+        },
+        {
+          "check": "eligibility:source_access.model_terms_verified",
+          "expected": "explicit existing authorization",
+          "field": "source_access.model_terms_verified",
+          "observed": "missing_field",
+          "operator": "==",
+          "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+          "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+          "upstream": "AuthenHallu/LMSYS-Chat-1M"
+        },
+        {
+          "check": "eligibility:source_access.license_reference",
+          "expected": "explicit existing authorization",
+          "field": "source_access.license_reference",
+          "observed": "missing_field",
+          "operator": "==",
+          "path": "/home/ianblenke/.cache/carnot8975-release/input_manifest.json",
+          "sha256": "sha256:4422dfe316218a645960aafb32349a254cd5a06f36a5f7ec3fc3c110c7375a5d",
+          "upstream": "AuthenHallu/LMSYS-Chat-1M"
+        }
+      ],
+      "conductor_rows": [],
+      "disposition": "qualified_primary",
+      "experiment_id": 8975,
+      "gate_check_summary": [],
+      "honest_verdict": "complete_blocked_source_access",
+      "producer_counts": {
+        "censored_count": 800,
+        "completed_count": 0,
+        "excluded_count": 0,
+        "failed_count": 0,
+        "independent_count": 0,
+        "intended_count": 800
+      },
+      "qualified": true,
+      "reference": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8975_v767_natural_label_eligibility.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/4203efad6223b48bd6627a0953a289c26ce9a7df0832e878cf37317f84bb0089/experiment_8975_v767_natural_label_eligibility.json",
+        "sha256": "sha256:4203efad6223b48bd6627a0953a289c26ce9a7df0832e878cf37317f84bb0089"
+      },
+      "task_id": "exp8975-natural-label-eligibility",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1)",
+      "conductor_rows": [
+        "| 2026-11-10 22:56 UTC | Collect fresh Qwen answers for the shared-feature  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1) |"
+      ],
+      "disposition": "authenticated_scheduler_skip",
+      "experiment_id": 8976,
+      "gate_check_summary": [
+        {
+          "artifact_field": "shared_methods_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+          "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+          "upstream": "exp8973-shared-feature-methods"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8976_graph_corpus_a.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f/experiment_8976_graph_corpus_a.json",
+        "sha256": "sha256:280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f"
+      },
+      "task_id": "exp8976-graph-corpus-a",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": null,
+      "conductor_rows": [
+        "| 2026-11-10 22:56 UTC | Collect fresh Qwen answers for the shared-feature  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8973-shared-feature-methods.shared_methods_ready_score (actual=0 == expected=1) |"
+      ],
+      "disposition": "conductor_skip_without_primary",
+      "experiment_id": 8977,
+      "gate_check_summary": [
+        {
+          "artifact_field": "shared_methods_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+          "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+          "upstream": "exp8973-shared-feature-methods"
+        },
+        {
+          "artifact_field": "primary",
+          "check": "missing_file",
+          "expected": true,
+          "observed": "missing_file",
+          "operator": "exists",
+          "path": "results/experiment_8977_v767_graph_corpus_b.json",
+          "sha256": null,
+          "upstream": "exp8977-graph-corpus-b"
+        }
+      ],
+      "honest_verdict": null,
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": null,
+      "task_id": "exp8977-graph-corpus-b",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": null,
+      "conductor_rows": [
+        "| 2026-11-10 22:58 UTC | Authenticate fresh shared-feature graph roles and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8976-graph-corpus-a, exp8977-graph-corpus-b) |"
+      ],
+      "disposition": "conductor_skip_without_primary",
+      "experiment_id": 8978,
+      "gate_check_summary": [
+        {
+          "artifact_field": "shard_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_field",
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f/experiment_8976_graph_corpus_a.json",
+          "sha256": "sha256:280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f",
+          "upstream": "exp8976-graph-corpus-a"
+        },
+        {
+          "artifact_field": "shard_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_file",
+          "operator": "==",
+          "passed": false,
+          "path": null,
+          "sha256": null,
+          "upstream": "exp8977-graph-corpus-b"
+        },
+        {
+          "artifact_field": "shared_methods_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+          "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6",
+          "upstream": "exp8973-shared-feature-methods"
+        },
+        {
+          "artifact_field": "primary",
+          "check": "missing_file",
+          "expected": true,
+          "observed": "missing_file",
+          "operator": "exists",
+          "path": "results/experiment_8978_v767_corpus_admission.json",
+          "sha256": null,
+          "upstream": "exp8978-corpus-admission"
+        }
+      ],
+      "honest_verdict": null,
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": null,
+      "task_id": "exp8978-corpus-admission",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": null,
+      "conductor_rows": [
+        "| 2026-11-10 22:58 UTC | Test calibrated energy value with identical repres | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8978-corpus-admission) |"
+      ],
+      "disposition": "conductor_skip_without_primary",
+      "experiment_id": 8979,
+      "gate_check_summary": [
+        {
+          "artifact_field": "corpus_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_file",
+          "operator": "==",
+          "passed": false,
+          "path": null,
+          "sha256": null,
+          "upstream": "exp8978-corpus-admission"
+        },
+        {
+          "artifact_field": "primary",
+          "check": "missing_file",
+          "expected": true,
+          "observed": "missing_file",
+          "operator": "exists",
+          "path": "results/experiment_8979_v767_shared_feature_decisions.json",
+          "sha256": null,
+          "upstream": "exp8979-shared-feature-decisions"
+        }
+      ],
+      "honest_verdict": null,
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": null,
+      "task_id": "exp8979-shared-feature-decisions",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": null,
+      "conductor_rows": [
+        "| 2026-11-10 22:58 UTC | Measure causal head learning on real Qwen errors w | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8974-feature-online-methods, exp8979-shared-feature-decisions) |"
+      ],
+      "disposition": "conductor_skip_without_primary",
+      "experiment_id": 8980,
+      "gate_check_summary": [
+        {
+          "artifact_field": "online_methods_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_field",
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+          "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426",
+          "upstream": "exp8974-feature-online-methods"
+        },
+        {
+          "artifact_field": "detector_rows_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_file",
+          "operator": "==",
+          "passed": false,
+          "path": null,
+          "sha256": null,
+          "upstream": "exp8979-shared-feature-decisions"
+        },
+        {
+          "artifact_field": "primary",
+          "check": "missing_file",
+          "expected": true,
+          "observed": "missing_file",
+          "operator": "exists",
+          "path": "results/experiment_8980_v767_feature_online_streams.json",
+          "sha256": null,
+          "upstream": "exp8980-feature-online-streams"
+        }
+      ],
+      "honest_verdict": null,
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": null,
+      "task_id": "exp8980-feature-online-streams",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": null,
+      "conductor_rows": [
+        "| 2026-11-10 22:58 UTC | Audit future feature-learning benefit and shared-p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8980-feature-online-streams) |"
+      ],
+      "disposition": "conductor_skip_without_primary",
+      "experiment_id": 8981,
+      "gate_check_summary": [
+        {
+          "artifact_field": "online_rows_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_file",
+          "operator": "==",
+          "passed": false,
+          "path": null,
+          "sha256": null,
+          "upstream": "exp8980-feature-online-streams"
+        },
+        {
+          "artifact_field": "primary",
+          "check": "missing_file",
+          "expected": true,
+          "observed": "missing_file",
+          "operator": "exists",
+          "path": "results/experiment_8981_v767_feature_online_benefit.json",
+          "sha256": null,
+          "upstream": "exp8981-feature-online-benefit"
+        }
+      ],
+      "honest_verdict": null,
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": null,
+      "task_id": "exp8981-feature-online-benefit",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": null,
+      "conductor_rows": [
+        "| 2026-11-10 22:58 UTC | Measure complete shared-feature service costs agai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8974-feature-online-methods, exp8979-shared-feature-decisions) |"
+      ],
+      "disposition": "conductor_skip_without_primary",
+      "experiment_id": 8982,
+      "gate_check_summary": [
+        {
+          "artifact_field": "online_methods_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_field",
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+          "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426",
+          "upstream": "exp8974-feature-online-methods"
+        },
+        {
+          "artifact_field": "detector_rows_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": "missing_file",
+          "operator": "==",
+          "passed": false,
+          "path": null,
+          "sha256": null,
+          "upstream": "exp8979-shared-feature-decisions"
+        },
+        {
+          "artifact_field": "primary",
+          "check": "missing_file",
+          "expected": true,
+          "observed": "missing_file",
+          "operator": "exists",
+          "path": "results/experiment_8982_v767_matched_service_cost.json",
+          "sha256": null,
+          "upstream": "exp8982-matched-service-cost"
+        }
+      ],
+      "honest_verdict": null,
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": null,
+      "task_id": "exp8982-matched-service-cost",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "conductor_gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8971-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1)",
+      "conductor_rows": [
+        "| 2026-11-10 23:05 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8971-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |"
+      ],
+      "disposition": "authenticated_scheduler_skip",
+      "experiment_id": 8983,
+      "gate_check_summary": [
+        {
+          "artifact_field": "arc_new_outcomes_ready_score",
+          "check": "declared_gate",
+          "expected": 1,
+          "observed": 0,
+          "operator": "==",
+          "passed": false,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212/experiment_8971_v767_branch_contract.json",
+          "sha256": "sha256:5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212",
+          "upstream": "exp8971-branch-contract"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "producer_counts": {
+        "censored_count": null,
+        "completed_count": null,
+        "excluded_count": null,
+        "failed_count": null,
+        "independent_count": null,
+        "intended_count": null
+      },
+      "qualified": false,
+      "reference": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8983_arc_transfer_evidence.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/4a6286d70721fae54ed8b4d4cfa0c06ada3e77ab7bbd2525611c766f66adbe99/experiment_8983_arc_transfer_evidence.json",
+        "sha256": "sha256:4a6286d70721fae54ed8b4d4cfa0c06ada3e77ab7bbd2525611c766f66adbe99"
+      },
+      "task_id": "exp8983-arc-transfer-evidence",
+      "verdict_class": "blocked"
+    },
+    {
+      "accounted": true,
+      "disposition": "self_slot",
+      "experiment_id": 8984,
+      "qualified": true,
+      "task_id": "exp8984-capstone",
+      "verdict_class": "blocked"
+    }
+  ],
+  "source_artifact_hashes": [
+    {
+      "experiment_id": 8971,
+      "fields_imported": [
+        "original_terminal_outcome",
+        "rows",
+        "gate_check_summary"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8971_v767_branch_contract.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212/experiment_8971_v767_branch_contract.json",
+      "sha256": "sha256:5d42cd9cec9edd0339d367b3352af0f1b05392562497c9d2a0a194c7077d4212"
+    },
+    {
+      "experiment_id": 8972,
+      "fields_imported": [
+        "original_terminal_outcome",
+        "rows",
+        "gate_check_summary"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8972_v767_encoder_head_diagnosis.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4/experiment_8972_v767_encoder_head_diagnosis.json",
+      "sha256": "sha256:aca5e51be78c64c911d49e6ce3cf3e036393ff59f1a300af29486f91733c56f4"
+    },
+    {
+      "experiment_id": 8973,
+      "fields_imported": [
+        "original_terminal_outcome",
+        "rows",
+        "gate_check_summary"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8973_v767_shared_feature_methods.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6/experiment_8973_v767_shared_feature_methods.json",
+      "sha256": "sha256:3870b7055fbff26bc4a35316f60555abe99c0f2326c14156540af78a2e5b8fa6"
+    },
+    {
+      "experiment_id": 8974,
+      "fields_imported": [
+        "original_terminal_outcome",
+        "rows",
+        "gate_check_summary"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8974_feature_online_methods.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426/experiment_8974_feature_online_methods.json",
+      "sha256": "sha256:3f6e717933d5534c02c24c2feac4a77be02e21d84b9c43adff33363c4817d426"
+    },
+    {
+      "experiment_id": 8975,
+      "fields_imported": [
+        "original_terminal_outcome",
+        "rows",
+        "gate_check_summary"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8975_v767_natural_label_eligibility.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/4203efad6223b48bd6627a0953a289c26ce9a7df0832e878cf37317f84bb0089/experiment_8975_v767_natural_label_eligibility.json",
+      "sha256": "sha256:4203efad6223b48bd6627a0953a289c26ce9a7df0832e878cf37317f84bb0089"
+    },
+    {
+      "experiment_id": 8976,
+      "fields_imported": [
+        "original_terminal_outcome",
+        "rows",
+        "gate_check_summary"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8976_graph_corpus_a.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f/experiment_8976_graph_corpus_a.json",
+      "sha256": "sha256:280d98da49ee01991d8694cbcc961594f230a712f211269ac0a765bd902d5f3f"
+    },
+    {
+      "experiment_id": 8983,
+      "fields_imported": [
+        "original_terminal_outcome",
+        "rows",
+        "gate_check_summary"
+      ],
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8983_arc_transfer_evidence.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/retained/4a6286d70721fae54ed8b4d4cfa0c06ada3e77ab7bbd2525611c766f66adbe99/experiment_8983_arc_transfer_evidence.json",
+      "sha256": "sha256:4a6286d70721fae54ed8b4d4cfa0c06ada3e77ab7bbd2525611c766f66adbe99"
+    }
+  ],
+  "task_id": "exp8984-capstone",
+  "unmet_gates": [],
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py tests/python/test_v767_capstone_8984.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v767_capstone.py",
+        "scripts/experiments/experiment_8984_v767_capstone.py",
+        "tests/python/test_v767_capstone_8984.py"
+      ],
+      "duration_s": 0.012449234000087017,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/00_ruff.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py tests/python/test_v767_capstone_8984.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v767_capstone.py",
+        "scripts/experiments/experiment_8984_v767_capstone.py",
+        "tests/python/test_v767_capstone_8984.py"
+      ],
+      "duration_s": 0.011314522998873144,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/01_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=silent python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v767_capstone.py",
+        "scripts/experiments/experiment_8984_v767_capstone.py"
+      ],
+      "duration_s": 1.249399230000563,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/02_strict_mypy.log",
+      "log_sha256": "sha256:a848646a0d83ccfa15aabcf4cf144a397ed425f6880d658336305b283bcbb54a",
+      "name": "strict_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_v767_capstone_8984.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_v767_capstone_8984.py"
+      ],
+      "duration_s": 0.02061702999708359,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/03_spec.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "COVERAGE_RCFILE=/tmp/carnot8984-coverage.rc COVERAGE_FILE=/tmp/carnot8984-coverage/.coverage PYTHONPATH=python:. timeout 600 .venv/bin/python -m coverage run -m pytest -n 0 -o addopts= --no-cov tests/python/test_v767_capstone_8984.py -q",
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/owned_pytest.log",
+      "log_sha256": "sha256:4a9fa746201a0d87e11240d538076cc0b05a7c98e3a2708ac2fac20ee526c0b3",
+      "name": "owned_unit_and_private_e2e018_021",
+      "passed": true,
+      "scope": "owned_unit_and_actual_cli_children",
+      "tests_passed": 7
+    },
+    {
+      "actual_sqlite_shard_count": 18,
+      "data_reference": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/.coverage",
+        "sha256": "sha256:8e89597f73b10c97c17a1d8c822854834192dbf7b1c27aee38e1c06174b77058"
+      },
+      "excluded_count": 0,
+      "name": "owned_statement_coverage",
+      "passed": true,
+      "percent": 100.0,
+      "report_reference": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/coverage.json",
+        "sha256": "sha256:ce05c6e0e2147b42867d072da704a77e6a5d67116c8fb9df6fa78282f8c347a1"
+      },
+      "scope": "owned_unit_and_actual_cli_children"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8984_v767_capstone.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_8984_v767_capstone.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json"
+      ],
+      "duration_s": 3.7467283559999487,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight_checks/00_cold_replay.log",
+      "log_sha256": "sha256:b86cb04951a727c5fc47ae5698e6edc25153f102cfdbf3a30c6bad9d34deee45",
+      "name": "cold_replay",
+      "output_tail": "[exp8984] phase=imports_before completed=0 pending=1\n[exp8984] phase=start completed=0 pending=0\n[exp8937] phase=8964_before_paired_graph_bootstrap completed=0 pending=10000\n[exp8937] phase=8964_paired_graph_bootstrap completed=1000 pending=9000\n[exp8937] phase=8964_paired_graph_bootstrap completed=2000 pending=8000\n[exp8937] phase=8964_paired_graph_bootstrap completed=3000 pending=7000\n[exp8937] phase=8964_paired_graph_bootstrap completed=4000 pending=6000\n[exp8937] phase=8964_paired_graph_bootstrap completed=5000 pending=5000\n[exp8937] phase=8964_paired_graph_bootstrap completed=6000 pending=4000\n[exp8937] phase=8964_paired_graph_bootstrap completed=7000 pending=3000\n[exp8937] phase=8964_paired_graph_bootstrap completed=8000 pending=2000\n[exp8937] phase=8964_paired_graph_bootstrap completed=9000 pending=1000\n[exp8937] phase=8964_paired_graph_bootstrap completed=10000 pending=0\n[exp8937] phase=8964_after_paired_graph_bootstrap completed=10000 pending=0\n[exp8967] phase=bootstrap_bounds completed=1 pending=8\n[exp8967] phase=bootstrap_bounds completed=2 pending=7\n[exp8967] phase=bootstrap_bounds completed=3 pending=6\n[exp8967] phase=bootstrap_bounds completed=4 pending=5\n[exp8967] phase=bootstrap_bounds completed=5 pending=4\n[exp8967] phase=bootstrap_bounds completed=6 pending=3\n[exp8967] phase=bootstrap_bounds completed=7 pending=2\n[exp8967] phase=bootstrap_bounds completed=8 pending=1\n[exp8967] phase=bootstrap_bounds completed=9 pending=0\n{\"passed\": true, \"replay_passed\": true, \"slots\": 14}\n",
+      "passed": true,
+      "scope": "owned_terminal",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json"
+      ],
+      "duration_s": 0.1789884850004455,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight_checks/01_adversarial.log",
+      "log_sha256": "sha256:1ba1d042a275e33e3cecea449dcb550dbcef62bd91f7c89ad1a56a833f8ed5f6",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json\",\n      \"loaded\": true,\n      \"exp_id\": 8984,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_external_science_and_source_access\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "owned_terminal",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json"
+      ],
+      "duration_s": 0.028617632000532467,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight_checks/02_strict_rows.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "owned_terminal",
+      "timed_out": false
+    }
+  ],
+  "validation_state": {
+    "coverage": {
+      "complete": true,
+      "data_reference": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/.coverage",
+        "sha256": "sha256:8e89597f73b10c97c17a1d8c822854834192dbf7b1c27aee38e1c06174b77058"
+      },
+      "files": [
+        {
+          "excluded": [],
+          "missing": [],
+          "path": "python/carnot/reporting/v767_capstone.py",
+          "statements": 204
+        },
+        {
+          "excluded": [],
+          "missing": [],
+          "path": "scripts/experiments/experiment_8984_v767_capstone.py",
+          "statements": 7
+        }
+      ],
+      "percent": 100.0,
+      "report_reference": {
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/coverage.json",
+        "sha256": "sha256:ce05c6e0e2147b42867d072da704a77e6a5d67116c8fb9df6fa78282f8c347a1"
+      },
+      "rows": [
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 136,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 137,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 138,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 139,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 140,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 141,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 142,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 143,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 151,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 152,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 157,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 205,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 206,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        },
+        {
+          "excluded": false,
+          "executed": false,
+          "line": 207,
+          "path": "python/carnot/reporting/v755_branch_runner.py"
+        }
+      ]
+    },
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py tests/python/test_v767_capstone_8984.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "check",
+          "python/carnot/reporting/v767_capstone.py",
+          "scripts/experiments/experiment_8984_v767_capstone.py",
+          "tests/python/test_v767_capstone_8984.py"
+        ],
+        "duration_s": 0.012449234000087017,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/00_ruff.log",
+        "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "name": "ruff",
+        "output_tail": "All checks passed!\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py tests/python/test_v767_capstone_8984.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+          "format",
+          "--check",
+          "python/carnot/reporting/v767_capstone.py",
+          "scripts/experiments/experiment_8984_v767_capstone.py",
+          "tests/python/test_v767_capstone_8984.py"
+        ],
+        "duration_s": 0.011314522998873144,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/01_format.log",
+        "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+        "name": "format",
+        "output_tail": "3 files already formatted\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=silent python/carnot/reporting/v767_capstone.py scripts/experiments/experiment_8984_v767_capstone.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+          "--strict",
+          "--follow-imports=silent",
+          "python/carnot/reporting/v767_capstone.py",
+          "scripts/experiments/experiment_8984_v767_capstone.py"
+        ],
+        "duration_s": 1.249399230000563,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/02_strict_mypy.log",
+        "log_sha256": "sha256:a848646a0d83ccfa15aabcf4cf144a397ed425f6880d658336305b283bcbb54a",
+        "name": "strict_mypy",
+        "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_v767_capstone_8984.py",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/check_spec_coverage.py",
+          "tests/python/test_v767_capstone_8984.py"
+        ],
+        "duration_s": 0.02061702999708359,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/qualification/static_checks/03_spec.log",
+        "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+        "name": "spec",
+        "output_tail": "OK: All tests reference specification requirements.\n",
+        "passed": true,
+        "scope": "owned",
+        "timed_out": false
+      },
+      {
+        "command": "COVERAGE_RCFILE=/tmp/carnot8984-coverage.rc COVERAGE_FILE=/tmp/carnot8984-coverage/.coverage PYTHONPATH=python:. timeout 600 .venv/bin/python -m coverage run -m pytest -n 0 -o addopts= --no-cov tests/python/test_v767_capstone_8984.py -q",
+        "exit_code": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/owned_pytest.log",
+        "log_sha256": "sha256:4a9fa746201a0d87e11240d538076cc0b05a7c98e3a2708ac2fac20ee526c0b3",
+        "name": "owned_unit_and_private_e2e018_021",
+        "passed": true,
+        "scope": "owned_unit_and_actual_cli_children",
+        "tests_passed": 7
+      },
+      {
+        "actual_sqlite_shard_count": 18,
+        "data_reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/.coverage",
+          "sha256": "sha256:8e89597f73b10c97c17a1d8c822854834192dbf7b1c27aee38e1c06174b77058"
+        },
+        "excluded_count": 0,
+        "name": "owned_statement_coverage",
+        "passed": true,
+        "percent": 100.0,
+        "report_reference": {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/coverage/coverage.json",
+          "sha256": "sha256:ce05c6e0e2147b42867d072da704a77e6a5d67116c8fb9df6fa78282f8c347a1"
+        },
+        "scope": "owned_unit_and_actual_cli_children"
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8984_v767_capstone.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/experiments/experiment_8984_v767_capstone.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json"
+        ],
+        "duration_s": 3.7467283559999487,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight_checks/00_cold_replay.log",
+        "log_sha256": "sha256:b86cb04951a727c5fc47ae5698e6edc25153f102cfdbf3a30c6bad9d34deee45",
+        "name": "cold_replay",
+        "output_tail": "[exp8984] phase=imports_before completed=0 pending=1\n[exp8984] phase=start completed=0 pending=0\n[exp8937] phase=8964_before_paired_graph_bootstrap completed=0 pending=10000\n[exp8937] phase=8964_paired_graph_bootstrap completed=1000 pending=9000\n[exp8937] phase=8964_paired_graph_bootstrap completed=2000 pending=8000\n[exp8937] phase=8964_paired_graph_bootstrap completed=3000 pending=7000\n[exp8937] phase=8964_paired_graph_bootstrap completed=4000 pending=6000\n[exp8937] phase=8964_paired_graph_bootstrap completed=5000 pending=5000\n[exp8937] phase=8964_paired_graph_bootstrap completed=6000 pending=4000\n[exp8937] phase=8964_paired_graph_bootstrap completed=7000 pending=3000\n[exp8937] phase=8964_paired_graph_bootstrap completed=8000 pending=2000\n[exp8937] phase=8964_paired_graph_bootstrap completed=9000 pending=1000\n[exp8937] phase=8964_paired_graph_bootstrap completed=10000 pending=0\n[exp8937] phase=8964_after_paired_graph_bootstrap completed=10000 pending=0\n[exp8967] phase=bootstrap_bounds completed=1 pending=8\n[exp8967] phase=bootstrap_bounds completed=2 pending=7\n[exp8967] phase=bootstrap_bounds completed=3 pending=6\n[exp8967] phase=bootstrap_bounds completed=4 pending=5\n[exp8967] phase=bootstrap_bounds completed=5 pending=4\n[exp8967] phase=bootstrap_bounds completed=6 pending=3\n[exp8967] phase=bootstrap_bounds completed=7 pending=2\n[exp8967] phase=bootstrap_bounds completed=8 pending=1\n[exp8967] phase=bootstrap_bounds completed=9 pending=0\n{\"passed\": true, \"replay_passed\": true, \"slots\": 14}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json"
+        ],
+        "duration_s": 0.1789884850004455,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight_checks/01_adversarial.log",
+        "log_sha256": "sha256:1ba1d042a275e33e3cecea449dcb550dbcef62bd91f7c89ad1a56a833f8ed5f6",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json\",\n      \"loaded\": true,\n      \"exp_id\": 8984,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_external_science_and_source_access\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight.json"
+        ],
+        "duration_s": 0.028617632000532467,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8984_v767_capstone/invocations/26673571891390/preflight_checks/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "owned_terminal",
+        "timed_out": false
+      }
+    ],
+    "repository_health": [
+      {
+        "affects_owned_qualification": false,
+        "attempts": 1,
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 124,
+        "finding": "The bounded full-suite invocation ended without a test summary. This cannot establish that all repository tests pass.",
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/qualification/repository_health/full_python_suite.log",
+        "log_sha256": "sha256:e3aacda51df003a85d2c543044d9c4f14628e4e8f751512fba8ef9ea76daf7f4",
+        "name": "full_python_suite",
+        "passed": false,
+        "scope": "repository_health",
+        "timed_out": true,
+        "timeout_s": 300
+      }
+    ]
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true,
+  "work_reference": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8984_v767_capstone/invocations/26673571891390/work.json",
+    "sha256": "sha256:e89fed6202a825f9c3eaa05b56c0e41e23ca4eb00407512de2eb4182864e4b19"
+  }
+}

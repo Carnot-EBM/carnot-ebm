@@ -1,5 +1,26 @@
 # Carnot — Operational Status
 
+## 2026-11-10 UTC — Exp8984 private validation receipt repair
+
+Default validation receipts now resolve under the selected output directory.
+Private CLI runs without local receipts remain disqualified even when checkout
+qualification exists. Explicit receipt overrides retain precedence.
+
+All 125 selected tests pass: the original 88-test subset, two new regression
+cases, ten repair-gate checks and 25 private E2E-018/021 checks. Combined unit and
+actual CLI child coverage measures 212/212 owned statements with zero exclusions.
+Scoped Ruff, formatting, strict mypy and spec tracing pass. All seven original
+test-function ASTs and `scripts/research_conductor.py` bytes remain unchanged.
+An outside-checkout private CLI publication accepts fresh output-local SQLite
+receipts, passes both unchanged terminal validators and cold replay, and keeps
+the scientific verdict blocked while accounting readiness is one.
+
+The whole repository suite was not repeated. Global spec tracing still reports
+1,142 existing missing references, and architecture freshness still points to
+2026-10-11. The mutation guard also records an
+unattributed concurrent addition to `ops/anomaly-escalations.md`; the ledger and
+pending marker remain intact. Evidence: `/var/tmp/carnot-8984-fix-xv8g2l/`.
+
 ## 2026-11-10 UTC — Milestone 2026.11.766 operational retrospective
 
 Operational retrospective recorded in `results/operational_retro_2026_11_766.json` (schema `carnot.operational_retro.v64`), with narrative entries appended to `ops/changelog.md` and `docs/research-log.md`. Authoritative disk-mtime fallback timing (`retro_timing_fallback`, 0 commits in live git-log) records 12 completed compute-bound experiments (0 synthesis-only) across 155.0 wall-time minutes (155 minutes / 2.6 hours, averaging 13 minutes per experiment), led by measuring continuous calibration with sealed real-error feedback (18.96 min / 19min), measuring relational decision and adaptation costs with hardware limits (18.95 min / 19min), collecting fresh Qwen graph evidence shard B (18.49 min / 18min), collecting fresh Qwen graph evidence shard A (18.43 min / 18min), and freezing relational energy models and fresh graph roles (13.18 min / 13min). Locked `gpu_idle_on_compute_bound_tasks` is `false`, `DualGPURunner` did not apply (no data available this milestone for any compute-bound task loading 2+ models in parallel), and the GPU STATE block reported `GPU monitor not available` (no data available this milestone for GPU state telemetry). Next operational focus: cache shared frozen relational energy model and real-error feedback intermediates, batch single-GPU Qwen graph evidence shard collection, persist direct experiment timestamps, and restore GPU monitor availability.
