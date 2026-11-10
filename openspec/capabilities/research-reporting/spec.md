@@ -111059,7 +111059,31 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8965_v766_relational_controls.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Freeze four label-blind node bijections and edge-order permutations for each of
+the128 test graphs before scoring. Preserve query and proposed-answer markers.
+All frozen arms and seed components SHALL have probability drift<=1e-6.
+Perturbations remain repeated measurements of128 independent graph clusters.
+Using the same weights and temperatures, remove adjacency (including degree),
+the source marker, the answer marker, and replace confidence with fit means.
+Report paired graph Brier differences and95-percent intervals from10000 draws
+with seed766065. Ablations are distribution-shift diagnostics, not benefit gates.
+
+A separate scoring child SHALL accept only frozen weights and exact-schema raw
+graph inputs. During scoring it SHALL deny file access and traversal/label-helper
+imports. Private copies of final-test labels and oracle distance sidecars SHALL
+be mutated; unchanged predictions and active denial probes SHALL be recorded.
+Unknown graph or confidence keys SHALL be refused. Retained original producer,
+state, inference, truth and code bytes SHALL be authenticated before scoring.
+No training, model repair, threshold selection or tuning SHALL occur.
+relational_controls_ready_score SHALL be1 only when custody, invariance and all
+owned checks pass. An integrity failure disqualifies the offending service.
+The original Exp8964 statistical benefit SHALL remain unchanged. This study
+makes no oracle-free generalization or scientific benefit claim.
+Implementation status: **Implemented** in `relational_controls_8965.py`, its
+runner, the isolated `relational_controls_worker.py` and the direct experiment
+CLI. The16 owned tests pass. The primary artifact retains measured unit/child
+coverage, private E2E receipts and separate global debt. Ops and traceability
+are conductor-owned for this invocation.
 
 #### SCENARIO-REPORT-8965-CONTRACT
 
@@ -111068,6 +111092,16 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+Tests SHALL first fail for absent implementation, then verify marker-preserving
+bijections,128-cluster accounting, all four diagnostic conditions, immutable
+weights, unknown-key refusal, denied sidecar/traversal access, private truth
+mutation, exact upstream gate failures and semantic replay tamper refusal.
+Require100-percent newly owned unit/child statement coverage with zero exclusions,
+scoped Ruff check/format, strict mypy, positional spec tracing and private
+E2E-018/021. Run the global Python suite once and retain unrelated debt separately.
+Publish only through primary_publication after owned validation. An unchanged
+blocked/disqualified rerun SHALL preserve the prior honest_verdict.
 
 ### REQ-REPORT-8966: Measure continuous calibration with sealed real-error feedback
 
