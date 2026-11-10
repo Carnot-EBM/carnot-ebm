@@ -868,3 +868,13 @@ Live Kaggle/Discord threads remained inaccessible; discussion coverage relied on
 
 Direct Kaggle/Discord discussion access remained unavailable; public standings are provisional.
 
+## 2026-11-10 16:06 UTC -- NEW
+
+- **October 1 — Milestone #2 winners:** Daniel Franzen **27.9% ($25,000)**; Lord Han Solo **23.8% ($7,500)**; Lohit Siriki **22.5% ($5,000)**. All three open-sourced their agents. [Organizer announcement](https://x.com/arcprize/status/2105737436450201734), [indexed copy](https://site.twstalker.com/arcprize).
+
+- **September 3 — Evaluation policy update:** ARC Prize announced separate reporting for Standard and Provider Adapter harnesses. GPT-6 Astra scored **62.7% Standard** and **99.9% Provider Adapter** on the semi-private set. [Official blog](https://arcprize.org/blog/astra).
+
+- **November 9 — New Standard-harness record:** Claude Fable 5.2 reached **81.2%** at XHigh reasoning; its best Provider Adapter score was **97.7%** at High reasoning. [Official results](https://arcprize.org/results/anthropic-claude-fable-5-2).
+
+Undated changes excluded. Benchmark scores above are separate from Kaggle competition standings.
+

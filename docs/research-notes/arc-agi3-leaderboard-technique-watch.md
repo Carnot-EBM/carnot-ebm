@@ -671,3 +671,19 @@ Not independently reproduced; classifications cover disclosed mechanisms. Comple
 
 Measurements were not independently reproduced; complete-submission source-reading and hardcoding status remains unaudited.
 
+## 2026-11-10 16:09 UTC -- NEW
+
+- **Tufa Labs — (b), general-purpose world-model tooling.** Its new ablation study estimates that making world models mandatory loses **3.5 ± 2.0 points**, while removing them loses **2.7 ± 2.1**, relative to optional use (95% CIs). These are regression estimates from **108 simulated competition runs**, using public/custom games. The mechanism uses models induced during play, without game-source access or fixed per-game rules. [Ablations](https://tufalabs.github.io/arc-writeups/supplementary/arc3_ablations/arc3_ablations.html)
+
+- **Tufa Labs — (b), general-purpose executable perception.** Compresses observed frame changes and animations into Python edit scripts, choosing compact descriptions and executing assertions that verify reconstruction against the pixels. This requires observations rather than game source or per-game logic. **POSSIBLE CARNOT LEVER:** Give induction exact, executable visual deltas to reduce spatial transcription errors. [Implementation specification](https://tufalabs.github.io/arc-writeups/supplementary/harness_framediff/harness_framediff.html)
+
+- **Tufa Labs — (b), general-purpose learned pruning.** Beyond REAP, learns individual expert-retention weights through teacher distillation, reducing **307 experts to 205 on average**, distributed unevenly across layers (**108–268**). Routers and rank-8 LoRA adapters on shared experts/attention train together; routed-expert weights remain frozen. Training uses gameplay traces, without source-dependent rules. **POSSIBLE CARNOT LEVER:** Learn where compression is tolerable instead of pruning every generator layer equally. [Training and serving details](https://tufalabs.github.io/arc-writeups/supplementary/throughput_and_serving/throughput_and_serving.html)
+
+- **Majkel1337 — (b), general-purpose restart memory.** After **135K generated tokens without clearing a level**, resets the level and restores its starting conversation, notes, files and trackers. Each retry receives previous attempts’ failure summaries; at most two restarts occur. No game-source access or per-game rules are described. **POSSIBLE CARNOT LEVER:** Restart stalled induction from a clean checkpoint while retaining verified counterexamples. [Final writeup, §3.1](https://www.kaggle.com/competitions/arc-prize-2026-paper-track/writeups/new-writeup-1794070358037)
+
+- **Majkel1337 — (b), general-purpose compaction.** Rewrites structured notes, then retains recent whole turns—including the notes-rewrite turn’s reasoning—within **60%** of its context budget. The author reports worse scores when that reasoning is removed. No source-specific logic is described. **POSSIBLE CARNOT LEVER:** Test preserving the compaction turn’s reasoning, which Carnot’s current tool loop discards. [§2.3](https://www.kaggle.com/competitions/arc-prize-2026-paper-track/writeups/new-writeup-1794070358037)
+
+- **Majkel1337 — (b), general-purpose scheduling.** Reassigns model sessions at compaction boundaries; waiting levels receive priority `w × 0.5^((t / 256K)²)`, using scoring weight and cumulative tokens across retries. No source access or per-game rules are needed. **POSSIBLE CARNOT LEVER:** Rotate stalled searches when their contexts already require recomputation. [§3](https://www.kaggle.com/competitions/arc-prize-2026-paper-track/writeups/new-writeup-1794070358037)
+
+Results were not independently reproduced; complete submissions were not audited for source exploitation.
+

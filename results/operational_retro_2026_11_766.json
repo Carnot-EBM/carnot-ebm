@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.11.766",
-  "generated_at": "2026-11-10T13:32:26Z",
+  "generated_at": "2026-11-10T16:12:40Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 155.0,
   "experiments_completed": 12,
@@ -36,10 +36,23 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "",
-  "bottlenecks_identified": [],
-  "improvements_suggested": [],
-  "top_3_highest_leverage_actions": [],
-  "estimated_time_savings_pct": 0,
-  "meta_reflection": ""
+  "summary": "Milestone 2026.11.766 completed 12 experiments (12 compute-bound, 0 synthesis-only) in 155.0 wall-time minutes (155 minutes / 2.6 hours, averaging 13 minutes per experiment) under disk-mtime reconstruction (retro_timing_fallback, 0 commits in live git-log). The slowest compute-bound tasks were 'Measure continuous calibration with sealed real-error feedback' (18.96 minutes / 19min), 'Measure relational decision and adaptation costs with hardware limits' (18.95 minutes / 19min), 'Collect fresh Qwen graph evidence shard B' (18.49 minutes / 18min), 'Collect fresh Qwen graph evidence shard A' (18.43 minutes / 18min), and 'Freeze relational energy models and fresh graph roles' (13.18 minutes / 13min). Locked gpu_idle_on_compute_bound_tasks is false, GPU monitor telemetry was not available (no data available this milestone), and no data is available this milestone for any compute-bound task loading 2+ models in parallel requiring DualGPURunner.",
+  "bottlenecks_identified": [
+    "All 12 completed experiments (0 synthesis-only) across 155.0 wall-time minutes (155 minutes / 2.6 hours, averaging 13 minutes per experiment) were compute-bound, led by 'Measure continuous calibration with sealed real-error feedback' (18.96 minutes / 19min) and 'Measure relational decision and adaptation costs with hardware limits' (18.95 minutes / 19min).",
+    "Fresh Qwen graph evidence collection and relational model freezing completed the top 5 slowest compute-bound tasks—'Collect fresh Qwen graph evidence shard B' (18.49 minutes / 18min), 'Collect fresh Qwen graph evidence shard A' (18.43 minutes / 18min), and 'Freeze relational energy models and fresh graph roles' (13.18 minutes / 13min)—while no data is available this milestone for internal sub-step profiles or for the names and durations of the remaining compute-bound tasks among the 12 completed experiments.",
+    "Live git-log timing lookup found 0 commits, requiring disk-mtime fallback reconstruction (retro_timing_fallback, reconstructed_from_disk_mtime: true) across all 12 completed experiments, and the GPU monitor was not available (no data available this milestone for GPU state telemetry)."
+  ],
+  "improvements_suggested": [
+    "Cache and reuse frozen relational energy model checkpoints, fresh graph role bindings, and sealed real-error feedback intermediates across 'Freeze relational energy models and fresh graph roles' (13.18 minutes / 13min), 'Measure continuous calibration with sealed real-error feedback' (18.96 minutes / 19min), and 'Measure relational decision and adaptation costs with hardware limits' (18.95 minutes / 19min) to reduce the 13-minute per-experiment average.",
+    "Batch single-GPU Qwen inference requests and share graph evidence preparation across 'Collect fresh Qwen graph evidence shard B' (18.49 minutes / 18min) and 'Collect fresh Qwen graph evidence shard A' (18.43 minutes / 18min) without proposing DualGPURunner enforcement on single-model tasks (DualGPURunner applies only when 2+ models are loaded in parallel, and no data is available this milestone for any multi-model parallel task).",
+    "Write explicit per-experiment start and completion timestamps into experiment result JSONs to avoid disk-mtime fallback reconstruction (retro_timing_fallback) when the live git-log path finds 0 commits.",
+    "Restore GPU monitor availability during milestone execution so compute-bound task telemetry is captured instead of reporting 'GPU monitor not available' (no data available this milestone)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Share cached frozen relational energy model states and sealed real-error feedback intermediates across the 13.18-minute (13min), 18.96-minute (19min), and 18.95-minute (19min) relational/calibration compute-bound tasks.",
+    "Batch single-model Qwen inference requests across 'Collect fresh Qwen graph evidence shard B' (18.49 minutes / 18min) and 'Collect fresh Qwen graph evidence shard A' (18.43 minutes / 18min) while keeping DualGPURunner scoped strictly to tasks loading 2+ models in parallel.",
+    "Persist direct per-experiment start/end timestamps to eliminate disk-mtime fallback (retro_timing_fallback on 0 git-log commits) and restore GPU monitor availability for compute-bound runs."
+  ],
+  "estimated_time_savings_pct": 25,
+  "meta_reflection": "Milestone 2026.11.766 executed 12 compute-bound experiments (0 synthesis-only) in 155.0 wall-time minutes (155 minutes / 2.6 hours, averaging 13 minutes per experiment) with locked gpu_idle_on_compute_bound_tasks set to false, GPU monitor not available (no data available this milestone for GPU telemetry), and no data available this milestone for any compute-bound task loading 2+ models in parallel for DualGPURunner. Reusing frozen relational energy model and real-error feedback intermediates across the 18.96-minute (19min), 18.95-minute (19min), and 13.18-minute (13min) relational/calibration tasks, batching single-model Qwen inference across the 18.49-minute (18min) shard B and 18.43-minute (18min) shard A collection tasks, and recording direct experiment timestamps alongside GPU monitor telemetry will reduce runtime and improve observability in the next milestone."
 }
