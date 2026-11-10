@@ -110816,7 +110816,40 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8960_v766_online_calibration_methods.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented**. The terminal artifact records measured
+owned checks and the final readiness disposition. Fresh benefit is downstream.
+
+The frozen adapter SHALL use `sigmoid(a*logit(p_base)+b)` with initial `(1,0)`.
+Only logit conversion SHALL clamp base probabilities to `[1e-6,1-1e-6]`.
+Four arms SHALL be frozen, bias-only, slope-and-bias, and slope-and-bias with
+the fixed permutation `[1,0,3,2]` within each released block. Each block SHALL
+receive one mean binary-log-loss SGD step with rate0.05 and penalty
+`0.01*((a-1)^2+b^2)`. Bounds SHALL be a=[0.25,4], b=[-2,2].
+The encoder, energy head, temperature and generator SHALL remain frozen.
+
+The source-bound roster SHALL contain24 streams of32 distinct real-response
+slots. All arms SHALL seal predictions durably before the broker releases
+labels1-4 after prediction8, labels5-8 after prediction12, through labels21-24
+after prediction32. Eight feedback items SHALL remain pending at termination.
+Only the broker SHALL read the sealed online-label file. Adapters SHALL receive
+released numeric blocks only. Retention-label requests SHALL be refused.
+Promotion SHALL compare64 historical guard graphs against the initial adapter,
+requiring Brier increase<=0.005 and classification-error increase<=0.
+Repeated guards SHALL be declared a development safeguard without a guarantee.
+
+Private constructed probabilities SHALL establish nonzero updates, actual-arm
+disagreement, future-label invariance, retention refusal, pending feedback and
+exact durable restart at query16. They SHALL NOT establish scientific benefit.
+Readiness SHALL depend on mechanics and owned validation, regardless of gain.
+The protocol SHALL freeze nine Bonferroni bounds at family alpha0.01 using10000
+paired whole-stream draws. Queries17-32 SHALL compare adaptive against frozen
+(upper<=-0.01), bias-only and permuted (upper<0). Retention at0/16/32 SHALL
+compare adaptive-minus-frozen Brier and classification error (upper<=0.01).
+The same128 fresh test graphs SHALL be shared across streams; retention graph
+IDs and streams SHALL be resampled independently. The old eleven-bound
+synthetic claim SHALL remain failed. Fresh scientific evaluation is downstream.
+The service manifest SHALL include extraction, score, broker, guards, update,
+durable writes and restart; CPU is current, other hardware is an unmeasured map.
 
 #### SCENARIO-REPORT-8960-CONTRACT
 
@@ -110825,6 +110858,14 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+Private tests SHALL independently check the analytic update and guard rejection,
+mutate labels before their release, compare complete restarted state, reject
+malformed inputs, and rehash altered protocol, rows or readiness. Cold replay
+SHALL rebuild mechanics and the primary from retained primitive operands.
+Owned unit and real child statements SHALL have100 percent measured coverage
+with zero exclusions. Global suite debt SHALL remain separate. Reconciliation
+of ops and traceability for this invocation belongs to the conductor.
 
 ### REQ-REPORT-8961: Collect fresh Qwen graph evidence shard A
 

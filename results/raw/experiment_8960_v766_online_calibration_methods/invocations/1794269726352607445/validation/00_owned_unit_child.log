@@ -1,0 +1,125 @@
+..F..FF...                                                               [100%]
+=================================== FAILURES ===================================
+______________________ test_protocol_and_private_controls ______________________
+
+tmp_path = PosixPath('/tmp/carnot8960-validation-6g54bmjo/pytest/test_protocol_and_private_cont0')
+
+    def test_protocol_and_private_controls(tmp_path):
+        """REQ-REPORT-8960: all nine bounds are frozen before future responses exist."""
+        evidence = m.authenticate(m.ROOT)
+        assert not evidence["failures"]
+        plan = m.protocol(evidence)
+        assert len(plan["streams"]) == 24
+        assert all(len(s["unit_ids"]) == 32 for s in plan["streams"])
+        assert len({u for s in plan["streams"] for u in s["unit_ids"]}) == 768
+        assert len(plan["retention_ids"]) == 128 and len(plan["guard_manifest"]["rows"]) == 64
+        ledger = plan["multiplicity_ledger"]
+        assert len(ledger["bounds"]) == 9 and ledger["draws"] == 10000
+        assert ledger["alpha_per_bound"] == 0.01 / 9
+        assert ledger["shared_retention_panel"] is True
+        result = m.development(tmp_path)
+>       assert all(c["passed"] for c in result["control_rows"])
+E       assert False
+E        +  where False = all(<generator object test_protocol_and_private_controls.<locals>.<genexpr> at 0x7fcc46a5a4d0>)
+
+tests/python/test_online_calibration_methods_8960.py:118: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8960] phase=authenticate_operands completed=0 pending=907
+[exp8960] phase=authenticate_operands completed=200 pending=707
+[exp8960] phase=authenticate_operands completed=400 pending=507
+[exp8960] phase=authenticate_operands completed=600 pending=307
+[exp8960] phase=authenticate_operands completed=800 pending=107
+[exp8960] phase=private_mechanics_before completed=0 pending=3
+[exp8960] phase=private_mechanics_after completed=3 pending=0
+_________________ test_qualification_and_failed_owned_controls _________________
+
+tmp_path = PosixPath('/tmp/carnot8960-validation-6g54bmjo/pytest/test_qualification_and_failed_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fcc48ecc530>
+
+    def test_qualification_and_failed_owned_controls(tmp_path, monkeypatch):
+        """REQ-REPORT-8960: failed owned checks or controls cannot grant readiness."""
+        from carnot.reporting import v756_branch_qualification as coverage
+    
+        work = r.freeze(m.ROOT, tmp_path / "work")
+        validation = dict(
+            receipts=[dict(name=n, passed=True, exit_code=0, timed_out=False) for n in m.CHECKS],
+            coverage={},
+        )
+        assert not m.qualified(validation)
+        monkeypatch.setattr(coverage, "verify_measured", lambda *_: True)
+        assert m.qualified(validation)
+        value = m.build(work, validation, False)
+>       assert value["online_methods_ready_score"] == 1 and value["verdict_class"] == "null"
+E       assert (0 == 1)
+
+tests/python/test_online_calibration_methods_8960.py:182: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8960] phase=authentication_before completed=0 pending=0
+[exp8960] phase=authenticate_operands completed=0 pending=907
+[exp8960] phase=authenticate_operands completed=200 pending=707
+[exp8960] phase=authenticate_operands completed=400 pending=507
+[exp8960] phase=authenticate_operands completed=600 pending=307
+[exp8960] phase=authenticate_operands completed=800 pending=107
+[exp8960] phase=authentication_after completed=909 pending=0
+[exp8960] phase=private_mechanics_before completed=0 pending=3
+[exp8960] phase=private_mechanics_after completed=3 pending=0
+_________________ test_supervised_production_paths_are_private _________________
+
+tmp_path = PosixPath('/tmp/carnot8960-validation-6g54bmjo/pytest/test_supervised_production_pat0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fcc48c88500>
+
+    def test_supervised_production_paths_are_private(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8960-CONTRACT: publication waits for owned checks; global debt is separate."""
+        from carnot.reporting import matched_corpus_runner_8949 as shared
+        from carnot.reporting import v756_branch_qualification as coverage
+    
+        work = r.freeze(m.ROOT, tmp_path / "original")
+        private = tmp_path / "validation"
+        private.mkdir()
+        (private / ".coverage").write_bytes(b"private unit fixture")
+        monkeypatch.setattr(r, "freeze", lambda *_: deepcopy(work))
+        monkeypatch.setattr(r.tempfile, "mkdtemp", lambda **_: str(private))
+        monkeypatch.setattr(shared, "validation_plan", lambda *_a, **_kw: [])
+        monkeypatch.setattr(coverage, "measured", lambda *_: {})
+        monkeypatch.setattr(r, "run_commands", lambda *_a, **_kw: [])
+        monkeypatch.setattr(m, "ROOT", tmp_path)
+        with pytest.raises(ValueError, match="owned_checks_failed"):
+            r.main(["--date", "20261109"])
+        published = []
+        monkeypatch.setattr(m, "qualified", lambda _: True)
+        monkeypatch.setattr(
+            r, "publish_primary", lambda output, value, validator: published.append(value) or {}
+        )
+        assert r.main(["--date", "20261109"]) == 0
+>       assert published[0]["online_methods_ready_score"] == 1
+E       assert 0 == 1
+
+tests/python/test_online_calibration_methods_8960.py:222: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8960] phase=authentication_before completed=0 pending=0
+[exp8960] phase=authenticate_operands completed=0 pending=907
+[exp8960] phase=authenticate_operands completed=200 pending=707
+[exp8960] phase=authenticate_operands completed=400 pending=507
+[exp8960] phase=authenticate_operands completed=600 pending=307
+[exp8960] phase=authenticate_operands completed=800 pending=107
+[exp8960] phase=authentication_after completed=909 pending=0
+[exp8960] phase=private_mechanics_before completed=0 pending=3
+[exp8960] phase=private_mechanics_after completed=3 pending=0
+[exp8960] phase=owned_checks_before completed=0 pending=0
+[exp8960] phase=owned_checks_after completed=0 pending=0
+[exp8960] phase=owned_checks_before completed=0 pending=0
+[exp8960] phase=owned_checks_after completed=0 pending=0
+[exp8960] phase=primary_publication_before completed=0 pending=0
+[exp8960] phase=terminal_published completed=128 pending=0
+{"honest_verdict": "complete_disqualified_online_calibration_methods", "online_methods_ready_score": 0}
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_online_calibration_methods_8960.py::test_protocol_and_private_controls
+FAILED tests/python/test_online_calibration_methods_8960.py::test_qualification_and_failed_owned_controls
+FAILED tests/python/test_online_calibration_methods_8960.py::test_supervised_production_paths_are_private
+3 failed, 7 passed, 1 warning in 134.75s (0:02:14)
