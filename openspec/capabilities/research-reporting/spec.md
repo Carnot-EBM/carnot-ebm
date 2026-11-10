@@ -111317,3 +111317,155 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+## Planned V767 research contract — 2026-11-10
+
+Status: planned only. No experiment implementation or scientific benefit is claimed.
+The exact design and queue define fourteen tasks, Exp8971–Exp8984.
+All tasks preserve historical evidence, require spec-first tests, typed verdicts,
+per-unit rows, exact gate diagnostics, immutable inputs and private replay checks.
+Flushed phase/operation progress and bounded file writes are mandatory.
+The common encoder and all source roles freeze before fresh generation.
+BFS labels cannot enter learned scoring. Graph results do not close the natural
+no-cheap-oracle claim. Qwen weights stay frozen. Only the declared small heads learn.
+
+### REQ-REPORT-8971: Bind fourteen tasks and separate administrative readiness from optional ARC evidence
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8971_v767_branch_contract.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8971-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8972: Separate encoder information from head optimization on exposed graph evidence
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8972_v767_encoder_head_diagnosis.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8972-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8973: Freeze identical graph features and a development admission gate before new collection
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8973_v767_shared_feature_methods.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8973-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8974: Freeze delayed feature-level head learning with matched online controls
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8974_v767_feature_online_methods.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8974-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8975: Audit AuthenHallu dialogue access and independent annotation eligibility
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8975_v767_natural_label_eligibility.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8975-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8976: Collect fresh Qwen answers for the shared-feature test in shard A
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8976_v767_graph_corpus_a.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8976-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8977: Collect fresh Qwen answers for the shared-feature test in shard B
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8977_v767_graph_corpus_b.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8977-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8978: Authenticate fresh shared-feature graph roles and independent truth sidecars
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8978_v767_corpus_admission.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8978-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8979: Test calibrated energy value with identical representations and integrity controls
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8979_v767_shared_feature_decisions.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8979-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8980: Measure causal head learning on real Qwen errors with delayed feedback
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8980_v767_feature_online_streams.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8980-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8981: Audit future feature-learning benefit and shared-panel retention
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8981_v767_feature_online_benefit.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8981-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8982: Measure complete shared-feature service costs against the strong linear baseline
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8982_v767_matched_service_cost.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8982-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8983: Assess held-family supervisor transfer only from new supported live outcomes
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8983_v767_arc_transfer_evidence.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8983-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+
+### REQ-REPORT-8984: Reconcile fourteen outcomes and decide graph and natural-evidence continuations
+The experiment SHALL follow the V767 full task contract and produce
+`results/experiment_8984_v767_capstone.json`. It SHALL retain every required artifact field,
+statistical bound, causal control and exact upstream gate named in its prompt.
+#### SCENARIO-REPORT-8984-V767
+Given the declared inputs and protocol, when the task executes, then its private
+tests SHALL verify the stated acceptance rules and reject changed authority.
+Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
+**Implementation status:** Planned; experiment code and tests remain to be written.
+

@@ -11,36 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 5 |
+| CLAIM_SUPPORTED | 4 |
+| NO_CLAIM | 4 |
 
-## experiment_8949_v765_matched_corpus_a.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. The narrower shard-readiness assertion would fail if intended responses were missing, unauthenticated, or lacked usable confidence features.
-
-## WAS THAT CHECKED
-Yes for readiness: intended and completed counts both equal 160, and the acceptance gates pass. Oracle-defined correctness cannot establish detector benefit, but this artifact explicitly limits itself to collection custody. The positive verdict label supplies no comparative finding. Most rows are elided, limiting row-level inspection.
-
-## EVIDENCE
-- `title`: `Matched graph corpus shard A`
-- `All 160 authentic responses and owned checks; pooled class support belongs to admission.`
-- `Current first-response custody only; oracle truth does not establish detector benefit.`
-- `methodology_note`: `Frozen matched-population shard A only. Independent graph labels are evaluation-only; detector features use backend confidence alone. No fitting, balancing, retries or pooled admission claim.`
-- `honest_verdict`: `complete_circular_positive_matched_corpus_a`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8950_v765_matched_corpus_b.json
+## experiment_8962_v766_graph_corpus_b.json
 
 **NO_CLAIM**
 
@@ -51,26 +25,120 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-The collection/readiness result would fail if responses were missing, confidence features unusable, or required owned checks failed. The artifact makes no comparative detector-value claim to falsify.
+This is a corpus collection receipt, with no comparative detector or verifier claim. Its narrower readiness assertion would fail if required responses were missing, unauthenticated, unusable, or an owned check failed.
 
 ## WAS THAT CHECKED
-Yes, for collection: intended and completed counts are both 160, failures are zero, and usable signals and required checks are reported true. Oracle labels establish correctness labels; they do not establish detector benefit. The generalization score is zero, with no generalization success asserted.
+Yes, for readiness: the artifact reports 512 completed responses, zero failures, usable signals, and passing owned checks. Those checks could have failed.
+
+Oracle labels establish answer correctness, not verifier benefit; no such benefit is asserted. The frozen protocol names prevalence and logistic controls, but reports no comparative results here. The generalization score is not presented as demonstrated generalization.
 
 ## EVIDENCE
 - `title`: `Matched graph corpus shard B`
-- `No fitting, balancing, retries or pooled admission claim.`
 - `Current first-response custody only; oracle truth does not establish detector benefit.`
-- `All 160 authentic responses and owned checks; pooled class support belongs to admission.`
-- `completed_count`: `160`
+- `methodology_note`: `Frozen matched-population shard B only. Independent graph labels are evaluation-only; detector features use backend confidence alone. No fitting, balancing, retries or pooled admission claim.`
+- `completed_count`: `512`; `failed_count`: `0`
+- `usable_signals`: `true`; `required_checks_passed`: `true`
+- `verdict_class`: `circular_positive`; `verifier_is_oracle`: `true`
+
+## RECOMMENDATION
+KEEP
+
+Not checked: elided rows or external receipts. Risk: treating corpus readiness as detector benefit would exceed this evidence.
+
+## experiment_8963_v766_corpus_admission.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is a corpus-admission receipt. Its readiness assertion would fail if required class support were insufficient, scheduled first responses were missing, or oracle-sidecar mutations changed detector inputs or prelabel scores.
+
+## WAS THAT CHECKED
+Yes, for admission: intended, completed, and independent counts are all 1,024; both classes exceed the minimum in every role; and four oracle-mutation controls pass. These checks could fail independently of oracle agreement.
+
+No comparative verifier benefit or generalization claim is made. Review is limited to the supplied artifact; referenced files were not inspected.
+
+## EVIDENCE
+- `task_id`: `exp8963-corpus-admission`
+- `metric`: `response_admitted`
+- `Every admission gate is required; oracle agreement certifies labels, not learned benefit.`
+- `independent_generalization_score`: `0`
+- `mutate_label`, `mutate_expected`, `mutate_distances`, `mutate_answer_set`
 - `required_checks_passed`: `true`
-- `independent_generalization_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-Elided rows were not checked; collection readiness provides no evidence of detector benefit.
+## experiment_8964_v766_relational_decisions.json
 
-## experiment_8951_v765_matched_corpus_admission.json
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Relational energy did not demonstrate the registered comparative benefit on 128 fresh matched graphs.
+
+## WHAT WOULD REFUTE IT
+Passing all five registered superiority bounds: Brier improvements against prevalence and both logistic controls, plus lower accepted error at 50% coverage against both logistic controls.
+
+## WAS THAT CHECKED
+Yes. All five paired comparisons were evaluated using 10,000 graph bootstrap draws with multiplicity correction; all failed. Serious inexpensive rivals were included: relational logistic achieved accepted error of 0.59375 versus relational energy’s 0.765625, and both prevalence and relational logistic had better Brier point estimates.
+
+The reported controls separate calibration from test evaluation, seal predictions before test labels, and isolate the correctness oracle. The comparison could therefore have supported benefit; the reported null was not predetermined. No excluded or censored observations are reported, and typed acceptance with zero coverage correctly has an undefined error rate.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_fresh_matched_graph_final_answers`
+- `verdict_class`: `null`; `detector_benefit_score`: `0`
+- `benefit_passed`: `false`
+- `multiplicity`: `Bonferroni five one-sided percentile bounds`
+- `relational_energy`: `diagnostic_50`, `value`: `0.765625`
+- `relational_logistic`: `diagnostic_50`, `value`: `0.59375`
+- `state_and_predictions_sealed_before_truth`: `true`
+- `verifier_is_oracle`: `false`
+- `excluded_count`: `0`; `censored_count`: `0`
+- `typed_accept`: `coverage`: `0.0`, `value`: `null`
+
+## RECOMMENDATION
+KEEP
+
+Elided rows were not individually audited; this null establishes no demonstrated benefit, not equivalence.
+
+## experiment_8965_v766_relational_controls.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Integrity controls passed on the frozen 128-graph panel, while added detector benefit was not demonstrated.
+
+## WHAT WOULD REFUTE IT
+Required comparisons against prevalence and logistic baselines clearing the corrected benefit gates would overturn the reported null. Predictions changing under private-oracle mutations, failed access restrictions, or permutation drift exceeding the accepted tolerance would refute control readiness.
+
+## WAS THAT CHECKED
+Yes. All five retained benefit contrasts failed their gates, including comparisons against serious baselines: prevalence, confidence logistic, and relational logistic. Prevalence and relational logistic have favorable point estimates relative to the detector on Brier score. Oracle-mutation rows report unchanged predictions, custody and invariance checks pass, and all 128 graphs count without exclusions. The artifact reports a null rather than converting successful integrity checks into a positive value claim.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_relational_integrity_controls`; `verdict_class`: `null`.
+- `benefit_passed`: `false`; `detector_benefit_score`: `0`; `independent_generalization_score`: `0`.
+- `brier_vs_prevalence`: `estimate`: `-0.0011287238588903181`.
+- `brier_vs_relational_logistic`: `estimate`: `-0.009519397017716952`.
+- `truth_mutations_unchanged`: `true`; `file_and_traversal_denied`: `true`; `baseline_reproduced`: `true`.
+- `maximum_probability_drift`: `1.7881393432617188e-07`; `completed_count`: `128`; `excluded_count`: `0`.
+
+## RECOMMENDATION
+KEEP
+
+Elided rows and execution were not independently checked. The supported null means benefit was not demonstrated; it does not establish equivalence.
+
+## experiment_8966_v766_online_response_streams.json
 
 **NO_CLAIM**
 
@@ -81,29 +149,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-The corpus admission would fail if independent references disagreed, frozen responses were missing, total errors fell below 200, or either class had fewer than five examples in any split. These are contingent admission checks; the artifact makes no comparative claim about verifier value.
+There is no comparative benefit claim to falsify. The operational readiness assertion would fail if mutating unreleased labels changed earlier prediction seals, or restarting produced a different final state.
 
 ## WAS THAT CHECKED
-Yes, according to the admission summaries: all 320 responses completed, independent-label checks passed, 233 errors exceeded the required 200, and minimum class support was 22 against five required. Oracle-defined correctness serves labeling here, without establishing verifier benefit. Development comparisons are explicitly scoped to fixtures.
+Yes, for readiness: displayed mutation controls preserve prediction seals, and displayed restart rows match control and resumed state hashes. Scientific benefit was explicitly unevaluated. The frozen and bias-only arms provide serious comparators, but their displayed initial ties establish no overall result.
 
 ## EVIDENCE
-- `title`: `Matched corpus admission`
-- `Independent final-answer custody and feasibility only; no detector accuracy or inherited compute claim.`
-- `independent_error_count`: `233`
-- `minimum_independent_errors_required`: `200`
-- `minimum_class_support_achieved`: `22`
-- `minimum_required`: `5`
-- `independent_reference_agrees`: `true`
-- `condition`: `development_only`
-- `independent_generalization_score`: `0`
-- `verifier_is_oracle`: `true`
+- `scientific_benefit_evaluated`: `false`
+- `online_benefit_score`: `null`
+- `honest_verdict`: `complete_null_sealed_real_error_online_calibration`
+- `future_label_seals_unchanged`: `true`
+- `retention_label_seals_unchanged`: `true`
+- `online_rows_ready_score`: `1`
 
 ## RECOMMENDATION
 KEEP
 
-Review limited to the supplied excerpt; elided rows were not inspected. This receipt establishes no comparative verifier benefit.
+Unchecked: elided rows. Risk: readiness does not establish scientific benefit.
 
-## experiment_8952_v765_matched_calibrated_decisions.json
+## experiment_8967_v766_online_benefit_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -111,32 +175,63 @@ Review limited to the supplied excerpt; elided rows were not inspected. This rec
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Energy calibration did not demonstrate simultaneous benefit over logistic and prevalence baselines on the 80-graph test split under the frozen acceptance rules.
+The fixed V766 adapter failed its prespecified online-benefit criteria, supporting retirement of this exact protocol.
 
 ## WHAT WOULD REFUTE IT
-Passing all three frozen gates: positive lower bounds for Brier improvement over both baselines, and a nonpositive upper bound for accepted-error difference versus logistic at 50% diagnostic coverage.
+Retained paired losses satisfying all nine acceptance bounds, with discriminating feedback and nonzero frozen headroom, would contradict the reported null. Failure to establish benefit does not establish that the true effect is zero.
 
 ## WAS THAT CHECKED
-Yes. The paired intervals check those exact contrasts, and all three gates fail. Logistic and constant prevalence are serious cheap baselines; energy’s point-estimate Brier is slightly worse than prevalence.
+Yes. The displayed bounds compare adaptive performance against frozen, bias-only and permuted arms across 24 independent histories. All three fail; any one failure defeats the all-nine criterion. Bias-only is a cheap serious baseline, and adaptive superiority over it is not established.
 
-Success was possible: fitting used training data, temperature selection used calibration data, and test predictions were sealed before truth opened. The verifier is not the correctness oracle. Reported counts exclude no cases; the displayed prediction rows contain the cited metric fields and show no invalid-row contradiction. This supports failure to demonstrate benefit, not equivalence or absence of any effect.
+Feedback differences and frozen headroom show that improvement had a real opportunity to occur. Oracle-defined correctness does not make this comparative null circular. The artifact explicitly limits its exposure claims, and reported counts show no exclusions or censoring.
 
 ## EVIDENCE
-- `honest_verdict`: `complete_null_matched_population_final_answer_calibration`; `verdict_class`: `null`.
-- `test_fitting`: `false`; `temperature_selection`: `calibration Brier, ascending temperature ties`.
-- `state_and_predictions_sealed_before_truth`: `true`; `verifier_is_oracle`: `false`.
-- `accepted_error_vs_logistic`: `one_sided_bound` = `0.07500000000000007`; `passed` = `false`.
-- `brier_vs_logistic`: `one_sided_bound` = `-0.007679164672155063`; `passed` = `false`.
-- `brier_vs_prevalence`: `estimate` = `-0.00021831114692899556`; `one_sided_bound` = `-0.010454500233107525`; `passed` = `false`.
-- `benefit_passed`: `false`; `detector_benefit_score`: `0`.
-- `completed_count`: `80`; `excluded_count`: `0`; `censored_count`: `0`.
+- `honest_verdict`: `complete_null_real_response_online_benefit_audit`
+- `principle`: `All nine prespecified bounds must pass; retention shares one graph draw across histories.`
+- `adaptive_minus_frozen`: `upper`: `0.0008872641892848348`; `threshold`: `-0.01`; `passed`: `false`
+- `adaptive_minus_bias_only`: `upper`: `0.0004791929617041229`; `threshold`: `0`; `passed`: `false`
+- `adaptive_minus_permuted`: `estimate`: `1.3710351995199682e-05`; `passed`: `false`
+- `feedback_blocks_differ`: `116`; `frozen_future_brier_headroom`: `0.19539885350820918`
+- `intended_count`: `39936`; `completed_count`: `39936`; `excluded_count`: `0`; `censored_count`: `0`
+- `action`: `retire_exact_protocol`; `self_learning_in_general_retired`: `false`
 
 ## RECOMMENDATION
 KEEP
 
-Not checked: elided individual rows. Risk: this population-specific null does not establish equivalence.
+Not checked: elided rows or upstream execution; this verdict supports only the scoped failure to meet acceptance criteria.
 
-## experiment_8953_v765_gradient_causal_streams.json
+## experiment_8968_v766_complete_service_cost.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Adaptive service does not demonstrate a favorable complete-cost/quality tradeoff against confidence logistic on the cached workload.
+
+## WHAT WOULD REFUTE IT
+An adaptive-minus-confidence-logistic timing interval with its upper bound below zero, together with all three authenticated quality gates equal to one, would overturn this null conclusion.
+
+## WAS THAT CHECKED
+Yes. Across 24 paired process seeds, adaptive was slower by 2.539 seconds on average, with an interval entirely above zero: 2.122–2.956 seconds. The serious, cheap baseline—two-feature confidence logistic—wins this cost comparison.
+
+The quality scores also fail the stated benefit requirements. The verifier is not the oracle, and the artifact claims no independent generalization. All 96 scheduled units completed without exclusions or censoring. The reported null agrees with these results.
+
+## EVIDENCE
+- `honest_verdict`: `complete_null_cached_relational_complete_service_cost`; `verdict_class`: `null`.
+- `arm`: `adaptive`; `against`: `confidence_logistic`; `metric`: `complete_process_s`; `independent_count`: `24`.
+- `mean`: `2.539286065333333`; `lower`: `2.1221246880805706`; `upper`: `2.9564474425860956`.
+- `detector_benefit_score`: `0`; `online_benefit_score`: `0`; `independent_generalization_score`: `0`.
+- `completed_count`: `96`; `excluded_count`: `0`; `censored_count`: `0`; `failed_count`: `0`.
+- `verifier_is_oracle`: `false`; `favorable`: `false`; `deployment_recommendation`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+Elided rows and source code were not inspected; this verdict covers only the supplied cached-workload evidence.
+
+## experiment_8969_arc_transfer_evidence.json
 
 **NO_CLAIM**
 
@@ -147,125 +242,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. A gradient replay benefit claim would fail if prospective Brier scores tied or lost to guarded current updates or uniform replay, or failed the prespecified retention bounds.
+Not applicable: this artifact reports a blocked prerequisite check, not a conclusion about held-family transfer.
 
 ## WAS THAT CHECKED
-No completed benefit assessment is shown; this artifact records measurements and readiness, and assigns benefit assessment to Exp8954. Serious comparator arms are present, but their identical initial predictions establish no overall tie. Oracle correctness supplies labels without establishing verifier value, and generalization is expressly disclaimed.
+The prerequisite was checked and failed: readiness was 0 against a required 1. Execution stopped before transfer evaluation, so transfer remains unassessed.
 
 ## EVIDENCE
-
-- `honest_verdict`: `complete_null_gradient_causal_streams`
-- `benefit_required`: `false`
-- `benefit_owner`: `Exp8954`
-- `Complete causal rows, unchanged methods and owned checks; loss improvement is not a gate.`
-- `27648 Brier query comparisons retain typed error alongside each score;55296 endpoint cells. Exp8954 owns all11 prospective and retention bounds. Oracle graphs establish no natural-language generalization.`
-- `guarded_current`, `uniform_replay`, `gradient_replay`
+- `schema`: `blocked_gate_check_v1`
+- `status`: `blocked`
+- `honest_verdict`: `blocked_gate_check_failed`
+- `failed_field`: `arc_new_outcomes_ready_score`
+- `blocked_reason`: `actual=0 == expected=1`
+- `blocked_at_layer`: `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
-
-No rerun performed; deferred benefit conclusions remain unassessed in the supplied excerpt.
-
-## experiment_8954_v765_gradient_benefit_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-This fixed gradient-replay configuration did not meet the required future-benefit and retention acceptance criteria.
-
-## WHAT WOULD REFUTE IT
-Valid paired results passing all eleven bounds: the required future Brier improvements over the comparator arms, together with acceptable retention at every checkpoint. That would contradict the reported failure to qualify; the headline does not claim that the true effect is zero.
-
-## WAS THAT CHECKED
-Yes. The acceptance rows compare measured paired losses against explicit thresholds. Three visible future bounds fail, each sufficient to prevent qualification.
-
-The oracle defines correctness, but the headline claims no added verifier value. Retention read-only controls are reported, evaluation units used for selection are zero, and independent generalization is explicitly disclaimed.
-
-The cheapest serious rival, guarded current updates, is present and has lower mean future Brier than gradient replay. Uniform and signature replay controls are also present.
-
-Visible scored rows are complete and contain the cited metric fields. False promotion eligibility concerns update admission, not evaluation validity. No wrong-key or invalid-row inclusion is demonstrated.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_null_gradient_benefit_audit`; `gradient_benefit_score`: `0`; `verdict_class`: `null`.
-- `gradient_replay_minus_frozen_verified`: `upper`: `-0.008752952484137192`; `threshold`: `-0.01`; `passed`: `false`.
-- `gradient_replay_minus_guarded_current`: `mean`: `0.007290678525250675`; `upper`: `0.02290960307702598`; `passed`: `false`.
-- `gradient_replay_minus_uniform_replay`: `upper`: `0.008236456959305824`; `passed`: `false`.
-- `evaluation_units_used_for_selection`: `0`; `check`: `retention_read_only`; `passed`: `true`.
-- `methodology_note`: `Read-only constructed-oracle evidence; no live-model self-improvement or independent generalization.`
-- `completed_count`: `27648`; `intended_count`: `27648`; `excluded_count`: `0`; `status`: `complete`.
-
-## RECOMMENDATION
-KEEP
-
-Unchecked: elided rows and upstream execution. Risk: this scoped null does not establish zero benefit or justify rejecting continuous learning generally.
-
-## experiment_8955_v765_gradient_complete_cost.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Complete-service costs were measured on finite constructed workloads, but gradient replay did not establish deployment benefit.
-
-## WHAT WOULD REFUTE IT
-A quality-benefit score of 1 together with a paired complete-process cost upper bound below zero against ordinary deployment would overturn the deployment null. Incomplete timing or failed durability controls would undermine cost readiness.
-
-## WAS THAT CHECKED
-Yes, within the reported scope. Elapsed process time is measured independently of replay scoring, so a cost advantage was possible. The deployment gate requires both quality benefit and lower cost; authenticated upstream quality is zero.
-
-Ordinary guarded deployment is the cheapest serious baseline and is present. Displayed comparisons against guarded-current and signature replay include zero, supporting no demonstrated speedup—not equivalence.
-
-The verifier defines correctness, but no verifier-value or generalization claim is asserted. Shown cost rows are complete, with no reported exclusions. The ordinary-deployment interval and remaining rows are elided, limiting inspection.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_null_gradient_complete_cost`; `verdict_class`: `null`.
-- `clock`: `time.monotonic_ns`; `observer_subtraction`: `false`.
-- `gradient_benefit_score`: `0`; `deployment_recommendation`: `false`.
-- `rationale`: `Benefit score must equal1 and the paired complete-process upper bound versus ordinary deployment must be below0; valid costs do not imply deployment benefit.`
-- `against`: `guarded_current`; `lower`: `-0.4271415696108175`; `upper`: `0.495916273027484`.
-- `against`: `signature_replay`; `lower`: `-0.6407267463776262`; `upper`: `0.48786941837762604`.
-- `cost_rows_ready_score`: `1`; `intended_count`: `432`; `completed_count`: `432`; `excluded_count`: `0`.
-
-## RECOMMENDATION
-KEEP
-
-Unchecked: elided rows and upstream quality calculations. The null does not establish equivalence or extend beyond these finite workloads.
-
-## experiment_8956_v765_capstone.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative scientific claim is asserted. This artifact records blocked qualification and administrative reconciliation, so there is no claimed method advantage to falsify.
-
-## WAS THAT CHECKED
-Not applicable. The visible adversarial producer is rejected and excluded from scientific reductions. Oracle provenance does not create circularity here because no verifier benefit is claimed. FoVer readiness is explicitly scoped separately from V765 findings.
-
-## EVIDENCE
-
-- `honest_verdict`: `complete_blocked_v765_capstone`
-- `scientific_benefit`: `false`
-- `upstream_evidence_qualified`: `false`
-- `independent_generalization_score`: `0`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `disposition`: `rejected_producer`
-- `admitted_to_scientific_reductions`: `false`
-- `paper_ready_scope`: `FoVer paper only; stable G1-G4 do not certify V765 findings or authorize publication.`
-
-## RECOMMENDATION
-KEEP
-
-Not checked: elided upstream rows; this verdict does not validate upstream scientific conclusions.

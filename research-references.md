@@ -55979,3 +55979,107 @@ for domains without a cheap executable oracle. Natural-language and first-error
 localization remain separate open questions. The November 7 append-only lift in
 CLAUDE.md and ops/north-star.md restores an opportunistic ARC slot; V765's older
 "suspended" text is not the current scheduling authority.
+
+## 2026-11-10 — V767 planning source scan (before experiment design)
+
+This scan separates external results from local evidence. All eight requested
+topics and six secondary channels were checked. Access limits appear below.
+
+### Methods worth testing
+
+- [Message Passing Complexity, 2509.01254v2](https://arxiv.org/html/2509.01254v2),
+  September 2025, revised October 2025, studies practical information propagation
+  limits beyond graph expressivity. V766's graph logistic arm has AUROC 0.807988;
+  its separately trained graph energy arm has 0.434409. Those local observations
+  motivate separating representation learning from head training. Freeze the
+  same encoder for both heads before another confirmation. This is a local
+  controlled experiment, not an implementation of the paper's complexity metric.
+- [EnerGNN, 2610.33930](https://arxiv.org/abs/2610.33930), October 24, 2026,
+  combines a graph encoder and learned nonlinear energy with constrained
+  optimization. Its feasibility claims rely on explicit constraints. It supports
+  studying encoder/head interfaces, but does not prove a semantic verifier moat.
+  Carnot should compare heads on identical features before adding a solver.
+- [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987), April 2026,
+  distinguishes accuracy retention from calibration reliability. V766's scalar
+  adapter changed predictions but missed all three future-benefit bounds.
+  A changed experiment can update the small head from informative graph features,
+  with delayed labels, frozen representation and a matched online linear control.
+  This does not inherit conformal coverage guarantees or reopen scalar calibration.
+- [AuthenHallu, 2510.10539v2](https://arxiv.org/abs/2510.10539), revised March 5,
+  2026, provides human labels from genuine dialogues. Its
+  [author repository](https://github.com/TAI-HAMBURG/AuthenHallu) contains labels
+  and conversation IDs; users must recover text from LMSYS-Chat-1M under its
+  dataset terms. This materially limits immediate evaluation. Audit existing
+  authorized access, dialogue grouping, annotation criteria and evidence coverage
+  before promising a learned natural-language result. Never reconstruct missing
+  dialogues with a model or equate human annotation with executable truth.
+
+### New citation leads, with adoption limits
+
+- [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977),
+  November 6, 2026, introduces exploration-trained latent energies for recurrent
+  reasoning. This is newly relevant evidence against a universal claim that
+  energy-based generation cannot work. It does not invalidate Carnot's measured
+  negative protocols. Ingest its training difference and reproducibility needs;
+  do not reopen the locally retired generator scope or reproduce its performance
+  without a separately authorized protocol.
+- [LEF-JEPA, 2611.08989](https://arxiv.org/abs/2611.08989), November 6, 2026,
+  uses relative energies during visual pretraining and evaluates frozen encoders.
+  It reinforces the value of separating representation and inference costs.
+  Its visual and Ising-hardware results do not transfer to Carnot's text task.
+- [Energy and Reconstruction are Complementary, 2608.14186](https://arxiv.org/abs/2608.14186),
+  August 2026, reports complementarity on two tabular anomaly datasets.
+  Keep this as a future comparator lead; another score ensemble would confound
+  the immediate shared-representation question.
+
+### Required topic coverage
+
+| Topic | Primary source checked | Consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://arxiv.org/abs/2507.02092); [ARM–EBM v4](https://arxiv.org/abs/2512.15605); EBR above | Compatibility is not correctness; retain matched controls and historical negative scope. |
+| Neural constraint satisfaction | EnerGNN and Message Passing Complexity above | Separate encoder information from energy-head optimization. Explicit MIP feasibility is circular verification. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models](https://arxiv.org/abs/2607.00170), June 2026 | Binary sampling incurs an accuracy/cost tradeoff. A deterministic normalized decision head needs no sampler. |
+| Hallucination detection | AuthenHallu above; [RT4CHART](https://arxiv.org/abs/2603.27752), March 2026 | Label criteria and text availability need independent inspection. Source faithfulness and open-world factuality differ. |
+| KAN | [PostHoc FREE Calibrating on KANs](https://arxiv.org/abs/2503.01195), March 2025; [KAC](https://arxiv.org/abs/2503.21076), March 2025 | Splines do not guarantee calibration or retention. Defer another architecture until the shared-input comparison resolves. |
+| Guided/constrained decoding | [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), July 2025 | This is a visual-object method. Preserve the fixed text generator while testing detectors. |
+| Hardware sampling | [FPGA–ASIC co-design v2](https://arxiv.org/abs/2602.15985), revised September 2026 | Measure complete service, including graph encoding and durable feedback; do not infer speed from a sampling core. |
+| Continuous learning | Continual Calibration above | Update a small feature-aware head and test future proper loss plus shared-panel retention. |
+
+### Secondary sources and bounded discovery
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verifier submissions.
+  [AtomGraph](https://openreview.net/forum?id=dNsIZln2uv) supplied an ICLR 2026
+  workshop graph-verification lead. The EBT PDF and VFScale forum returned browser
+  verification. The indexed [VFScale PDF](https://openreview.net/pdf?id=8ta0xgtsJK)
+  was readable in search; no acceptance or reproduction claim is inferred beyond
+  the displayed record.
+- **Semantic Scholar:** direct API retrieval returned 20
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  with `next=20`. EBR, LEF-JEPA and the anomaly paper were followed to arXiv.
+  Two bounded direct requests for
+  [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=10)
+  returned HTTP 429. Browser API access also failed. This is partial coverage;
+  the ARM–EBM paper itself was checked successfully.
+- **HuggingFace:** the [AuthenHallu paper page](https://huggingface.co/papers/2510.10539)
+  links the released dataset. Method claims above use the author paper and repo,
+  not the page's generated summary.
+- **GitHub:** weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages returned navigation
+  without a usable relevant ranking. AuthenHallu is an author-linked release,
+  not a claimed trending repository. No dependency was installed.
+- **Extropic:** [Writing](https://extropic.ai/writing) returned a shell.
+  [Hardware](https://extropic.ai/hardware) advertises Z1 Stick/Card early access
+  in 2027. These are vendor plans, not local hardware receipts.
+- **Logical Intelligence:** the [Kona page](https://logicalintelligence.com/kona)
+  loaded after one failed request. It describes a constraint decision layer but
+  supplies no executable architecture or weights that establish its guarantees.
+
+### Local evidence boundary
+
+V766 admitted 1024 Qwen answers with 719 errors: 714 semantic and five
+out-of-graph errors. All five energy benefit bounds failed. Online adaptation
+passed retention but missed all three future-benefit bounds. The exact scalar
+adapter protocol is closed. No extra graph collection is justified until a
+development-only shared-feature prototype shows useful signal. The cheap BFS
+oracle keeps even a successful graph detector short of the current north star.
+The independent natural-label audit must continue if the graph branch stops.

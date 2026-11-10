@@ -4784,3 +4784,25 @@ Planning only; original V765 authority is archived unchanged.
 | REQ-REPORT-8968 / SCENARIO-REPORT-8968-CONTRACT | exp8968-complete-service-cost | `results/experiment_8968_v766_complete_service_cost.json` | Planned |
 | REQ-REPORT-8969 / SCENARIO-REPORT-8969-CONTRACT | exp8969-arc-transfer-evidence | `results/experiment_8969_v766_arc_transfer_evidence.json` | Planned |
 | REQ-REPORT-8970 / SCENARIO-REPORT-8970-CONTRACT | exp8970-capstone | `results/experiment_8970_v766_capstone.json` | Planned |
+
+## Planned milestone 2026.11.767 — 2026-11-10
+
+All rows below are planned, not implemented. The design and queue share the full
+fourteen-task contract. No future runner is claimed to exist.
+
+| Requirement | Planned task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-8971; SCENARIO-REPORT-8971-V767 | `exp8971-branch-contract` | `results/experiment_8971_v767_branch_contract.json` | Planned |
+| REQ-REPORT-8972; SCENARIO-REPORT-8972-V767 | `exp8972-encoder-head-diagnosis` | `results/experiment_8972_v767_encoder_head_diagnosis.json` | Planned |
+| REQ-REPORT-8973; SCENARIO-REPORT-8973-V767 | `exp8973-shared-feature-methods` | `results/experiment_8973_v767_shared_feature_methods.json` | Planned |
+| REQ-REPORT-8974; SCENARIO-REPORT-8974-V767 | `exp8974-feature-online-methods` | `results/experiment_8974_v767_feature_online_methods.json` | Planned |
+| REQ-REPORT-8975; SCENARIO-REPORT-8975-V767 | `exp8975-natural-label-eligibility` | `results/experiment_8975_v767_natural_label_eligibility.json` | Planned |
+| REQ-REPORT-8976; SCENARIO-REPORT-8976-V767 | `exp8976-graph-corpus-a` | `results/experiment_8976_v767_graph_corpus_a.json` | Planned |
+| REQ-REPORT-8977; SCENARIO-REPORT-8977-V767 | `exp8977-graph-corpus-b` | `results/experiment_8977_v767_graph_corpus_b.json` | Planned |
+| REQ-REPORT-8978; SCENARIO-REPORT-8978-V767 | `exp8978-corpus-admission` | `results/experiment_8978_v767_corpus_admission.json` | Planned |
+| REQ-REPORT-8979; SCENARIO-REPORT-8979-V767 | `exp8979-shared-feature-decisions` | `results/experiment_8979_v767_shared_feature_decisions.json` | Planned |
+| REQ-REPORT-8980; SCENARIO-REPORT-8980-V767 | `exp8980-feature-online-streams` | `results/experiment_8980_v767_feature_online_streams.json` | Planned |
+| REQ-REPORT-8981; SCENARIO-REPORT-8981-V767 | `exp8981-feature-online-benefit` | `results/experiment_8981_v767_feature_online_benefit.json` | Planned |
+| REQ-REPORT-8982; SCENARIO-REPORT-8982-V767 | `exp8982-matched-service-cost` | `results/experiment_8982_v767_matched_service_cost.json` | Planned |
+| REQ-REPORT-8983; SCENARIO-REPORT-8983-V767 | `exp8983-arc-transfer-evidence` | `results/experiment_8983_v767_arc_transfer_evidence.json` | Planned |
+| REQ-REPORT-8984; SCENARIO-REPORT-8984-V767 | `exp8984-capstone` | `results/experiment_8984_v767_capstone.json` | Planned |

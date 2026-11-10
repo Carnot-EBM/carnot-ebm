@@ -19098,3 +19098,21 @@ Research sources were recorded before design. Complete V765 design/queue bytes
 are archived. Requirements and traceability are Planned. Validation is pending;
 this plan has not been activated. The active roadmap, conductor and exclusion
 manifest remain unchanged. No model, experiment, hardware run or push occurred.
+
+## Next milestone staged: 2026.11.767 — 2026-11-10
+
+Exactly fourteen tasks, Exp8971–Exp8984, are planned across four phases in
+`research-roadmap-next.yaml` and `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Full V766 design/queue bytes are preserved. The active queue is unchanged.
+
+V766's graph logistic AUROC was 0.807988 versus energy 0.434409. All five
+energy bounds failed. Scalar online calibration passed retention but missed all
+three future-benefit bounds. V767 separates encoder and head training, requires
+development signal before new collection, and tests conditional head updates
+with an online linear control. An independent AuthenHallu audit checks source
+access and human-label eligibility. Complete service and optional ARC evidence
+retain their own gates. No new scientific benefit is claimed by this plan.
+
+The V766 archive lags at V765. Exp8969 has a conductor gate-skip receipt;
+Exp8970 has no primary at planning time. Do not infer a successful capstone.
+Planning validation is in progress. No experiments, activation or push occurred.

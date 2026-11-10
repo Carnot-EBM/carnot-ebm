@@ -1025,3 +1025,20 @@ No Rust or accelerator speedup is assumed. The November7 ARC suspension lift
 restores one opportunistic task, gated on newly supported live supervisor events.
 The oracle-distinct verifier remains the north star; graph-domain gains alone
 cannot establish verification where no cheap exact oracle exists.
+
+## Planned V767 representation and evidence boundaries — 2026-11-10
+
+The staged fourteen-task plan freezes one learned graph representation before
+comparing energy and linear heads. A fixed development gate precedes fresh Qwen
+collection. Original graph roles, oracle exclusion and all five detector bounds
+remain intact. Small conditional head updates use sealed predictions and delayed
+feedback. An online linear control joins the previous benefit/retention bounds.
+Encoder, scaling and generator weights remain fixed.
+
+AuthenHallu source access and annotation eligibility form an independent branch.
+Released dialogue IDs alone do not establish usable natural-language evidence.
+Complete service costs include raw graph encoding and durable feedback for both
+compared model families. ARC analysis requires new supported live receipts.
+These are planned experiments, not deployed behavior or new scientific results.
+Design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`; active V766 remains unchanged.

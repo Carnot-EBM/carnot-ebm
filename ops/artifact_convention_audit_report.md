@@ -9,28 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 1 |
-| CANNOT_DETERMINE | 7 |
+| CHECKABLE | 2 |
+| CANNOT_DETERMINE | 6 |
 
-## experiment_8949_v765_matched_corpus_a.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible fragment reports 160 completed responses with all listed acceptance gates passing.
-
-## WHAT IS MISSING
-The artifact ends mid-entry in "graph_identity_rows". Actual "honest_verdict", "status", "response_rows", and "rows" values are unavailable; these names appear only in "field_principles". The visible "gate_check_summary" is empty, but no blocked verdict is visible.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact make a comparative or blocked claim with supporting rows or diagnostics?
-
-The truncated remainder could change the classification; it was unavailable for review.
-
-## experiment_8950_v765_matched_corpus_b.json
+## experiment_8962_v766_graph_corpus_b.json
 
 **CANNOT_DETERMINE**
 
@@ -38,15 +20,17 @@ The truncated remainder could change the classification; it was unavailable for 
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible portion reports 160 completed responses and all listed acceptance gates passing.
+The visible portion reports 512 completed responses and passing readiness gates.
 
 ## WHAT IS MISSING
-The artifact cuts off inside "graph_identity_rows". Actual "honest_verdict", "status", and "verdict_class" values are absent; their descriptions in "field_principles" do not supply them. "gate_check_summary" is present but empty.
+The artifact cuts off mid-"graph_identity_rows"; "honest_verdict", "status", and "response_rows" are named in "field_principles", but their actual values are not supplied.
 
 ## THE CHECK A READER CANNOT DO
-Does the missing remainder report a comparative result or a blocked outcome, and supply the corresponding per-unit rows or blocker diagnostic?
+Does the final verdict make a comparative claim supported by per-unit metrics?
 
-## experiment_8951_v765_matched_corpus_admission.json
+Unchecked: the truncated remainder, which could resolve the classification.
+
+## experiment_8963_v766_corpus_admission.json
 
 **CANNOT_DETERMINE**
 
@@ -54,15 +38,17 @@ Does the missing remainder report a comparative result or a blocked outcome, and
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible fragment marks all "acceptance_gates" true, but truncation leaves the headline claim unknown.
+The visible “acceptance_gates” report that every corpus admission gate passed.
 
 ## WHAT IS MISSING
-The artifact cuts off inside "corpus_manifest" at "unit_id": "matched-graph-077-"; its final verdict and any subsequent supporting evidence are unavailable. "class_support_rows" does contain counts and thresholds for the class-support check.
+The artifact ends mid-string inside “corpus_manifest”; “acceptance_gates” and “class_support_rows” are visible, but the remaining claims and evidence are unavailable.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted remainder make a comparative claim supported by per-unit outcomes or report a blocker with a diagnostic?
+Does the omitted remainder contain a comparative claim without supporting per-unit metrics?
 
-## experiment_8952_v765_matched_calibrated_decisions.json
+Only the supplied excerpt was checked; truncation could change the verdict.
+
+## experiment_8964_v766_relational_decisions.json
 
 **CANNOT_DETERMINE**
 
@@ -70,17 +56,17 @@ Does the omitted remainder make a comparative claim supported by per-unit outcom
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The completed calibration experiment failed to establish benefit under its three comparative acceptance gates.
+The completed 128-graph study failed to establish relational-energy benefit in all five registered comparisons.
 
 ## WHAT IS MISSING
-The supplied artifact ends mid-string inside "preconditions_checked.references". Visible "coverage_rows", "descriptive_rows", and "paired_intervals" contain aggregates; "test_prediction_rows" appears only in "field_principles", without actual per-graph data shown.
+The supplied artifact truncates inside "rows", showing only relational_energy records. Complete paired rows for all arms—including "unit_id", "value", "error", and "selected_50"—are unavailable; "descriptive_rows" and "paired_intervals" provide aggregate results.
 
 ## THE CHECK A READER CANNOT DO
-Do the 80 graphs’ labels and paired arm predictions support the reported comparative results?
+Do the paired per-graph results reproduce all five failed comparisons?
 
-Unchecked: truncated contents; declaring per-unit rows absent would require an assumption.
+The truncated remainder cannot be checked; the comparative null remains unverified.
 
-## experiment_8953_v765_gradient_causal_streams.json
+## experiment_8965_v766_relational_controls.json
 
 **CANNOT_DETERMINE**
 
@@ -88,17 +74,35 @@ Unchecked: truncated contents; declaring per-unit rows absent would require an a
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no claim
+No headline claim is visible before the artifact cuts off mid-row.
 
 ## WHAT IS MISSING
-The supplied JSON ends mid-entry in "candidate_gradient_rows". "acceptance_gates" records counts and scores, and "attempt_rows" records completion statuses, but no headline result or blocking verdict is visible.
+The remainder of the artifact, including any headline conclusion or verdict. Present "ablation_rows" contain per-unit "unit_id", "brier", "baseline_probability", and "value", but stop during a "confidence_logistic" row.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact assert a comparative result or blocked outcome and provide the corresponding evidence?
+Does the complete artifact provide per-unit evidence for its headline conclusion?
 
-The omitted remainder was not checked; it could change the classification.
+The missing remainder was not assessed; it could change the classification.
 
-## experiment_8954_v765_gradient_benefit_audit.json
+## experiment_8966_v766_online_response_streams.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible "acceptance_gates" reports that authenticated inputs, causal controls, and owned checks passed.
+
+## WHAT IS MISSING
+The complete artifact: the supplied text ends mid-"sha256" value inside "adapter_state_hashes", leaving any subsequent claims, metric rows, verdict, or diagnostics unavailable.
+
+## THE CHECK A READER CANNOT DO
+Does the omitted remainder contain a comparative claim without per-unit metrics or a blocked verdict without a diagnostic?
+
+The remainder could not be checked; its contents could change this assessment.
+
+## experiment_8967_v766_online_benefit_audit.json
 
 **CHECKABLE**
 
@@ -106,7 +110,7 @@ The omitted remainder was not checked; it could change the classification.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The tested gradient-replay configuration failed the required acceptance gates and should be retired.
+The V766 protocol failed the required online-benefit gate, so only this exact protocol is retired.
 
 ## WHAT IS MISSING
 nothing
@@ -114,27 +118,9 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-Experiment not rerun; assessment limited to the supplied excerpt.
+Not checked: experiment execution or referenced files.
 
-## experiment_8955_v765_gradient_complete_cost.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible excerpt withholds deployment recommendation, recording “gradient_benefit_score” as 0 against a required 1.
-
-## WHAT IS MISSING
-The remainder of the artifact: it ends mid-“durability_rows”. “deployment_baseline_rows” provides per-seed baseline timings; corresponding trainable-arm timings and the final verdict are unavailable in this excerpt. “deployment_quality_gate” does record a diagnostic: “observed”: 0, “expected”: 1.
-
-## THE CHECK A READER CANNOT DO
-For each seed, how does gradient replay’s complete-process time compare with ordinary deployment?
-
-The omitted remainder could not be checked; truncation prevents distinguishing missing evidence from evidence outside the excerpt.
-
-## experiment_8956_v765_capstone.json
+## experiment_8968_v766_complete_service_cost.json
 
 **CANNOT_DETERMINE**
 
@@ -142,10 +128,28 @@ The omitted remainder could not be checked; truncation prevents distinguishing m
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The arc is suspended, with scientific benefit and upstream evidence qualification marked false.
+The adaptive arm did not meet the joint cost-and-quality criterion against confidence_logistic.
 
 ## WHAT IS MISSING
-The artifact cuts off inside "frozen_evaluation_manifest"; any subsequent verdict, diagnostics, or measured outcomes are unavailable. The visible "gate_check_summary" arrays are empty.
+The text truncates inside "field_principles": "service_cost_rows", "paired_cost_intervals", and "quality_reference" are described, but their results are absent from the supplied fragment; "durability_rows" provides durability metrics, not per-unit timings or quality outcomes.
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted remainder explain the suspension? Omitted content was not checked; truncation prevents a definitive classification.
+Which paired cost or quality result establishes "complete_cost_quality_comparison.favorable": false?
+
+Only the supplied fragment was checked; the missing remainder may contain the required evidence.
+
+## experiment_8969_arc_transfer_evidence.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The assessment was blocked because `exp8957-branch-contract.arc_new_outcomes_ready_score` was 0, while the gate required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
