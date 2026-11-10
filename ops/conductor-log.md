@@ -21678,3 +21678,5 @@ code |
 | 2026-11-10 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_check_terminal_prefix_vs_partial_class age-week 6: OPEN  |
 | 2026-11-10 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_arc_live_search_win age-week 6: OPEN 42 days: SIL |
 | 2026-11-10 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_measured_arc_live_metric age-week 6: OPEN 42 days: S |
+| 2026-11-10 00:39 UTC | OPERATOR-ATTENTION: GPU_CHECK_UNAVAILABLE | WARN | host 2026-11-10: nvidia-smi could not run; GPU health is UNKNOWN, not clean |
+| 2026-11-10 00:53 UTC | Freeze delayed online calibration on real model er | OK | Deliverable already exists in repo |

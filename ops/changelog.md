@@ -23454,3 +23454,4 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-09: Bind fourteen tasks and qualify only new ARC evidence (⚠️ Blocked) — honest_verdict=complete_blocked_v766_branch_contract; results/experiment_8957_v766_branch_contract.json
 - 2026-11-09: Diagnose confidence-only errors and freeze development-only evidence (⚠️ Research Finding) — honest_verdict=complete_null_development_only_confidence_diagnosis; results/experiment_8958_v766_confidence_diagnosis.json
 - 2026-11-09: Freeze relational energy models and fresh graph roles (⚠️ Research Finding) — honest_verdict=complete_null_relational_methods_frozen; results/experiment_8959_v766_relational_methods.json
+- 2026-11-10: Freeze delayed online calibration on real model errors (⚠️ Research Finding) — honest_verdict=complete_null_online_calibration_methods; results/experiment_8960_v766_online_calibration_methods.json
