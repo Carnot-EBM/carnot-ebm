@@ -110873,7 +110873,26 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8961_v766_graph_corpus_a.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `graph_corpus_a_8961.py`,
+`graph_corpus_runtime_8961.py`, `graph_corpus_runner_8961.py` and the direct CLI.
+Tests: `tests/python/test_graph_corpus_a_8961.py`. Final qualification and
+collection outcomes belong to the terminal artifact.
+
+Shard A SHALL preserve the original V766 order of512 independent graphs:
+64 calibration,64 final-test and384 online graphs in twelve32-query streams.
+The producer SHALL authenticate the immutable methods primary, source, weights
+and role manifests without requiring retired producers at runtime. Only the
+cached current Qwen Q4_K_M model on leased GPU0 is permitted. Preflight and
+load each have240 seconds; each first response has30 seconds; generation has
+2700 seconds total. Preserve the V765 k2 prompt, seed, reasoning-off settings
+and16-token budget. No downloads, retries, replacement graphs or training.
+Raw requests, wire responses, token usage, confidence signals and measured
+offload SHALL remain durable. Checkpoint every16 responses. Exact labels SHALL
+remain in an evaluation-only sidecar. Invalid answers retain their row and
+feature mask. Incomplete measured collection is terminal null; missing external
+runtime evidence is terminal blocked. Readiness requires512 authentic responses.
+Declare bounded generation with a10-second floor, or actual load-only work with
+a2-second floor. Never pad clocks or claim full generation.
 
 #### SCENARIO-REPORT-8961-CONTRACT
 
@@ -110882,6 +110901,13 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+Tests SHALL cover the frozen roster, label isolation, malformed answers,
+missing/zero/boolean gates, custody drift, resource failure, bounded collection
+and unchanged rerun verdicts. Measure100-percent owned unit and child statements
+with zero exclusions. Run scoped Ruff, strict mypy, positional spec tracing and
+private E2E-018/021. Run the global Python suite once and record unrelated debt.
+Only publish checked bytes through primary_publication. Ops and traceability
+reconciliation for this invocation belongs to the conductor.
 
 ### REQ-REPORT-8962: Collect fresh Qwen graph evidence shard B
 
