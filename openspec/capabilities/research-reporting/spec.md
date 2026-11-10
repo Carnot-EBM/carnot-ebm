@@ -111221,6 +111221,31 @@ actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
 Implementation status: **Planned**.
 
+The cost census SHALL retain24 fresh paired process seeds and96 service units.
+Each seed SHALL randomize four arms: ordinary confidence-logistic, frozen
+relational, bias-only online and full online. Each arm SHALL serve32 cached
+real-response requests. Parent monotonic clocks SHALL include interpreter startup,
+frozen state initialization, actual request parsing and scoring, two process
+segments with restart after query16, and final pending-feedback drain. Online
+arms SHALL include the real delayed broker, scalar updates,64-row guard and
+file/directory fsync. Ordinary and frozen arms SHALL perform no updates or guards.
+Confidence scoring SHALL reproduce the frozen logistic ensemble without graph
+encoding. No intrusive timer subtraction or component fraction is permitted.
+
+Every process unit SHALL retain startup-through-exit clocks, RSS, response count,
+durable bytes, actual operation counts, failure status and restart parity.
+Report p50/p95 and paired process intervals; dependent controls do not increase n.
+Cached Qwen generation costs SHALL remain separately attributed retained evidence.
+Cost readiness SHALL not depend on detector or online benefit. Deployment SHALL
+require typed detector_benefit_score=1, relational_controls_ready_score=1,
+online_benefit_score=1 and an explicit favorable complete cost/quality comparison.
+Hardware rows SHALL map CPU work, possible Rust/SIMD and GPU/NPU batch work,
+including transfer and break-even evidence still needed, without speed estimates.
+KV260 is qualified only for quadratic sampling k_max<=5; PolarFire is CPU dispatch;
+GateMate remains blocked at0xffffffff; TSU/NPU are locally unqualified. No hardware
+probe, install, purchase or sampler call is permitted. Zero sampling keeps both
+removable_fraction and service_100x_projection null.
+
 #### SCENARIO-REPORT-8968-CONTRACT
 
 Given frozen authority and authenticated inputs, when `exp8968-complete-service-cost`
@@ -111228,6 +111253,38 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+Tests SHALL first fail without implementation, then verify real score parity,
+ordinary baseline work, delayed feedback and final drain, exact restart states,
+complete/failing/censored rosters, paired reduction, missing/zero/malformed
+upstream evidence, valid null costs, deployment gates and rehashed tampering.
+Require measured100-percent newly owned unit/child statements with zero exclusions,
+Ruff check/format, strict mypy, positional spec tracing and private E2E-018/021.
+Run the full Python suite once; retain global debt separately. Owned failures
+disqualify. External absence is terminal blocked with exact field diagnostics.
+Publish through primary_publication after owned checks. Preserve unchanged failed
+rerun verdicts. Ops, changelog and traceability reconciliation are conductor-owned.
+
+Implementation update (2026-11-10): the dedicated worker, cost reducer, runner
+and CLI are implemented. Eighteen owned tests pass. The first measured unit/child
+coverage run covers all423 owned statements with zero missing or excluded lines.
+Production repeats the owned checks after measuring its96 scheduled services.
+It records exact results and global Python debt in the primary and retained logs.
+Readiness stays separate from the retained zero detector and online benefit scores.
+
+Execution update (2026-11-10): all96 measured services completed with independent
+n=24,3072 responses,384 scalar updates and zero failures or censoring. All96
+restart/durability controls pass. The retained rows report4656 file barriers,
+4656 directory barriers and zero sampler calls. The paired adaptive-minus-ordinary
+mean is+2.539286 seconds per complete32-request service; its simultaneous95-percent
+interval is[2.122125,2.956447]. No favorable cost comparison or deployment is earned.
+The primary carries the repeated owned checks and the separate global suite receipt.
+
+Qualification update (2026-11-10): the repeated18 owned tests pass with all426
+unit/child statements measured, zero missing lines and zero exclusions. Ruff
+check/format, strict mypy and positional spec tracing pass. Private E2E-018
+passes18 cases; private E2E-021 passes seven. The full Python suite runs once
+as separate repository health; its receipt cannot waive an owned failure.
 
 ### REQ-REPORT-8969: Assess held-family AVO transfer from new live outcomes
 
