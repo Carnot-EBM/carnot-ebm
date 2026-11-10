@@ -21702,3 +21702,7 @@ code |
 | 2026-11-10 12:58 UTC | Audit receipt STALE: autoresearch-conductor-round | BLOCK | timeout after 3600s |
 | 2026-11-10 13:19 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-11-10 13:21 UTC | Stop-authority receipt STALE | WARN | receipt 322 min old (janitor cadence is 30) |
+| 2026-11-10 14:13 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | timeout after 720s |
+| 2026-11-10 14:43 UTC | Audit receipt STALE: verifier-authenticity-audit | BLOCK | timeout after 1800s |
+| 2026-11-10 15:23 UTC | Audit receipt STALE: qa-layer-authenticity-audit | BLOCK | timeout after 2400s |
+| 2026-11-10 15:38 UTC | Audit receipt STALE: artifact-convention-audit | BLOCK | timeout after 900s |
