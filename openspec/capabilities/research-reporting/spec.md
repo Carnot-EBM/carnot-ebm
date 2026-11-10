@@ -111165,7 +111165,34 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8967_v766_online_benefit_audit.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `online_benefit_audit_8967.py`,
+`online_benefit_runner_8967.py` and the direct dated CLI. All18 owned tests pass
+with100-percent newly owned unit/child statements and zero exclusions. Scoped
+Ruff, strict mypy and positional spec tracing pass. Private E2E-018/021 pass25
+cases. The primary artifact records terminal measurements and repository debt.
+
+The reducer SHALL authenticate the original Exp8960 and Exp8966 bytes and all
+retained operands before reduction. It SHALL reconstruct all39936 query rows
+and four arm identities from24 durable histories without adapter fitting,
+generator calls or new labels. Future comparisons use queries17–32. Retention
+compares adaptive against frozen Brier and classification error at0/16/32.
+Repeated queries, checkpoints, seeds and restart controls add no streams.
+Use the methods artifact's10000 draws, seed766060, numpy default_rng and linear
+one-sided percentile quantile at1-0.01/9. Each draw samples24 paired stream
+indices followed by128 graph indices independently. Reuse that one graph sample
+across every arm, stream and checkpoint. Also report conditional-on-panel bounds.
+The frozen future upper SHALL be<=-0.01; bias-only and permuted uppers SHALL
+be<0; all six retention uppers SHALL be<=0.01. Report all nine bounds.
+Report feedback disagreement, parameter and decision changes and frozen Brier
+headroom. A non-discriminating feedback control or zero headroom forbids benefit.
+Audit readiness requires complete reproducible reduction and owned checks;
+benefit additionally requires all nine bounds and integrity. A null retires
+only this adapter/data/delay/guard protocol. Preserve V765's eleven-bound null.
+Use aggregation_from_upstream_artifacts/no_model_load, host venue, empty model
+specifications and zero current model and training calls. External absence is
+terminal blocked with exact upstream, path/hash, field, expected and observed
+receipts. Failed owned checks disqualify. Unchanged terminal failures preserve
+their prior honest_verdict. No margins or data change after testing.
 
 #### SCENARIO-REPORT-8967-CONTRACT
 
@@ -111174,6 +111201,17 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+Tests SHALL first fail without the reducer, then cover complete and malformed
+rosters, typed metric reconstruction, graph sampling shared across histories,
+interleaved RNG order, conditional intervals, inclusive and strict gate equality,
+non-discriminating controls, zero headroom, absent or zero upstream gates,
+operand drift, valid nulls, failed owned controls and unchanged failure reruns.
+Require100-percent newly owned unit/child statement coverage with zero exclusions,
+Ruff check/format, strict mypy, positional spec tracing and private E2E-018/021.
+Run the complete Python suite once and record unrelated debt separately.
+Publish through primary_publication only after owned checks. Ops, changelog and
+traceability reconciliation are conductor-owned for this invocation.
 
 ### REQ-REPORT-8968: Measure relational decision and adaptation costs with hardware limits
 
