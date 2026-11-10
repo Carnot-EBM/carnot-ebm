@@ -111455,6 +111455,43 @@ tests SHALL verify the stated acceptance rules and reject changed authority.
 Missing external inputs SHALL be terminal blocked; failed owned checks disqualify.
 **Implementation status:** Planned; experiment code and tests remain to be written.
 
+Invocation contract, 2026-11-10: authenticate the pinned author label release and
+March 2026 paper before reduction. Audit all 400 dialogue IDs and 800 pair slots.
+Keep both pairs in one group. Retain missing source text, source model, source
+row/message offsets, accepted local-use authority and model terms as explicit
+missing fields. A public label list cannot qualify source access. Read only
+existing authorized local source records; never accept agreements or fetch the
+full corpus. Preserve source metadata outside git and primitive rows below raw/.
+
+SCENARIO-REPORT-8975-V767 controls SHALL distinguish absent files, missing fields,
+changed hashes and observed zero joins. Duplicate IDs, malformed labels, partial
+pairs and absent model-specific permission cannot set readiness. Independent
+citations are absent from the released annotation schema. Expert judgments can
+support only annotation-relative evaluation, with input/context contradictions
+separate from open-world factuality. Emit an eligibility matrix and deterministic
+group splits only for a fully joined, permitted annotation-relative corpus.
+Current work loads no models and performs no training. Publish terminal blocked
+source-access when authorized text is absent. Rebuild derived claims from immutable
+primitives in a fresh CLI process and reject repaired-checksum tampering. Require
+100 percent owned unit and actual child statement coverage, without exclusions,
+scoped Ruff/format/strict types/spec checks, private E2E-018/021 and unchanged
+terminal validators. Record one global suite result separately. Ops and traceability
+reconciliation are conductor-owned for this invocation.
+
+Implementation update, 2026-11-10: the owned reducer, publication runner and
+script-path CLI implement this contract. The authenticated release has400 unique
+IDs and800 labels:549 without hallucination,85 input-conflicting,157
+fact-conflicting and9 context-conflicting. No authorized local LMSYS source
+index was found. All800 text joins remain censored; readiness is zero and group
+splits remain empty. The completed source-access audit is terminal blocked.
+Owned validation passes19 tests and243/243 statements, including real CLI
+children, with zero exclusions. Ruff, format, strict mypy and positional spec
+tracing pass. Private E2E-018/021 passes25 cases after one retained180-second
+timeout and a successful300-second attempt. One global suite attempt was
+interrupted after33 failures,3021 passes and8 collection errors outside owned
+files. Its full diagnostics and an unattributed historical log mutation remain
+in repository-health evidence. The conductor owns ops and traceability updates.
+
 ### REQ-REPORT-8976: Collect fresh Qwen answers for the shared-feature test in shard A
 The experiment SHALL follow the V767 full task contract and produce
 `results/experiment_8976_v767_graph_corpus_a.json`. It SHALL retain every required artifact field,
