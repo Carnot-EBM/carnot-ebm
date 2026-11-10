@@ -23490,3 +23490,4 @@ reports. No experiment or model was run; protected files retain their hashes.
   external publication or push occurred. Protected runtime files are unchanged.
 - 2026-11-10: Bind fourteen tasks and separate administrative readiness from optional ARC evidence (⚠️ Research Finding) — honest_verdict=complete_null_v767_branch_contract; results/experiment_8971_v767_branch_contract.json
 - 2026-11-10: Separate encoder information from head optimization on exposed graph evidence (⚠️ Research Finding) — honest_verdict=complete_null_exposed_encoder_head_diagnosis; results/experiment_8972_v767_encoder_head_diagnosis.json
+- 2026-11-10: Freeze identical graph features and a development admission gate before new collection (⚠️ Research Finding) — honest_verdict=complete_null_development_admission_failed; results/experiment_8973_v767_shared_feature_methods.json
