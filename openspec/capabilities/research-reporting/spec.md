@@ -110960,7 +110960,30 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8963_v766_corpus_admission.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `corpus_admission_8963.py`,
+`corpus_views_8963.py`, `corpus_admission_runner_8963.py` and the direct CLI.
+Tests: `tests/python/test_corpus_admission_8963.py`. The terminal artifact records
+measured owned qualification and the actual admission disposition.
+
+Admission SHALL pin Exp8959/8961/8962 bytes and every retained operand before
+joining exactly1024 original responses in128 calibration,128 final-test and768
+online slots (24 streams of32). Reconstruct seeded construction and frozen roles
+against all historical manifests, independently check BFS using the existing
+all-pairs reference, and keep format, out-of-graph and generation errors distinct.
+Require complete responses, finite server confidence, no repeated graphs or roles,
+200 independent wrong answers overall and five of each class in each pooled role.
+Support shortfalls are null; absent or rejected inputs are blocked without repair.
+No response-dependent selection, replenishment or role changes are permitted.
+
+Publish separate fit, guard, calibration, final-test and online inference views.
+Only anonymous graph context, proposed-node markers and server confidence enter
+the frozen scorer. Oracle/label sidecar mutations SHALL leave those views and
+pre-label scores unchanged. Final-test labels require a durable full prediction
+seal; online labels use the frozen delay8/block4 broker. Historical V765 data
+remains exposed development. Traversal and label admission are evaluation-only.
+Successful admission is circular_positive with verifier_is_oracle=true;
+independent_generalization_score is always0. Use cached scoring/no_model_load,
+host venue, empty model specs and zero current model/training invocations.
 
 #### SCENARIO-REPORT-8963-CONTRACT
 
@@ -110969,6 +110992,13 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+Tests SHALL first fail, then measure100-percent newly owned unit/child statements
+with zero exclusions. Scoped Ruff, strict mypy, positional spec coverage and
+private E2E-018/021 must pass before primary_publication. Record one bounded
+global Python-suite attempt separately, never waive an owned failure. Preserve
+original producers, quarantines and unchanged terminal failure verdicts. For this
+invocation ops/status/changelog and traceability reconciliation are conductor-owned.
 
 ### REQ-REPORT-8964: Test graph-conditioned energy decisions on fresh Qwen errors
 
