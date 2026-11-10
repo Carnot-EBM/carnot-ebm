@@ -111109,7 +111109,36 @@ The experiment SHALL follow the V766 full task contract and produce
 `results/experiment_8966_v766_online_response_streams.json`. It SHALL retain per-unit rows,
 actual substrate, source/code/raw hashes, a terminal honest verdict and closed
 verdict class. Readiness and scientific benefit SHALL remain separate.
-Implementation status: **Planned**.
+Implementation status: **Implemented** in `online_response_streams_8966.py`, its
+runner, `online_response_worker_8966.py` and the direct experiment CLI. The15
+owned tests pass with100-percent measured unit/child statements and zero
+exclusions. Private E2E-018/021 pass. The primary retains its invocation's
+validation and separate global debt; ops and traceability are conductor-owned.
+
+Authenticate the original Exp8960/8963/8964/8965 bytes and retained operands before
+scoring. Use the frozen Exp8964 relational ensemble and temperature for768
+distinct first responses in24 independent32-query histories. Each history owns
+four adapter states initialized to(1,0). Reuse Exp8960 block-mean SGD, projections,
+the(1,0,3,2) within-block permutation and its64 historical development guard IDs,
+rescored at the frozen fresh temperature. No generator call or training occurs.
+Seal each prediction before releasing1–4 at8,5–8 at12, through25–28 at32.
+The actual final pending queue SHALL contain29–32; the historical eight-label
+queue bookkeeping in the methods demonstration SHALL NOT override this schedule.
+Record candidates, commits, guard losses, promotion decisions and released IDs.
+Terminate an owned private child after its durable query16 commit, resume all
+state and compare every later prediction and commit against uninterrupted replay.
+Future-label mutation SHALL preserve earlier seals. Retention-label mutation
+SHALL preserve every seal and adapter state. Evaluate128 shared final-test graphs
+at0/16/32, after that checkpoint's update, without promotion-label access.
+Emit3072 online plus36864 retention query rows, each carrying separate typed
+Brier and classification-error metrics. Preserve exactly24 independent histories;
+restarts and the shared retention panel never increase that denominator.
+Count504 scheduled adapter steps and1512 dependent-control steps separately;
+numerical_training_calls SHALL report their2016-step measured execution total.
+Qualification tests and cold replay SHALL remain separately scoped validation.
+online_rows_ready_score SHALL depend only on custody, causal controls and owned
+validation. online_benefit_score remains unmeasured for Exp8967. Ready evidence
+without demonstrated benefit SHALL be null. Failed owned controls disqualify.
 
 #### SCENARIO-REPORT-8966-CONTRACT
 
@@ -111118,6 +111147,17 @@ runs, then registered comparisons and causal controls SHALL determine the result
 External absence SHALL be terminal blocked with exact gate_check_summary. Failed
 owned validation SHALL disqualify. Tests SHALL exercise private publication,
 cold replay and rehashed-tamper refusal before claiming completion.
+
+Tests SHALL first fail for absent implementation, then check exact release and
+pending queues, frozen equations, accepted/rejected proposals, immutable response
+custody, all39936 typed query rows, private child termination/resume, future and
+retention mutation seals, semantic replay and exact upstream failure receipts.
+Measure100-percent newly owned unit/child statements with zero exclusions; require
+Ruff check/format, strict mypy, positional spec tracing and private E2E-018/021.
+Run the complete Python suite once and record global debt separately. Publish
+through primary_publication only after owned checks pass. Preserve the prior
+honest_verdict when an unchanged terminal failure is rerun. Ops and traceability
+are conductor-owned for this invocation.
 
 ### REQ-REPORT-8967: Audit future calibration benefit and shared-panel retention
 
