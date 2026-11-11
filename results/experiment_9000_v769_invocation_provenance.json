@@ -174,7 +174,7 @@
     "verifier_is_oracle": "Current work is separate from cited history; primitive bytes and normal exits determine readiness."
   },
   "fixture_only": false,
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "gate_check_summary": [
     {
       "artifact_field": "sha256",
@@ -79329,5 +79329,18 @@
     }
   ],
   "verdict_class": "disqualified",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial_provenance": {
+    "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-11-11T12:49:50Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_9000_v769_invocation_provenance.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+    }
+  ]
 }
