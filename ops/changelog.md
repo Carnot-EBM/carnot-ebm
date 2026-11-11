@@ -23603,3 +23603,21 @@ reports. No experiment or model was run; protected files retain their hashes.
 - 2026-11-11: Qualify producer provenance with separate scoped checks and repository health (⚠️ Research Finding) — honest_verdict=complete_disqualified_scoped_provenance; results/experiment_9014_v770_scoped_provenance_qualification.json
 - 2026-11-11: Qualify Mu-SHROOM groups and original human disagreement labels (⚠️ Blocked) — honest_verdict=complete_blocked_source_resolution_access; results/experiment_9015_v770_human_disagreement_source.json
 - 2026-11-11: Reconcile fourteen outcomes and separate graph and independent-label claims (⚠️ Blocked) — honest_verdict=complete_blocked_declared_gate; results/experiment_9026_v770_capstone.json
+
+## 2026-11-11 — Plan milestone 2026.11.771
+
+- Recorded the requested arXiv and secondary-source scan before design, including
+  annotation-disagreement findings and explicit citation/access limitations.
+- Preserved the V770 design and queue and staged fourteen matching full task
+  objects, Exp9027–Exp9040, across four phases.
+- Diagnosed six historical authority failures behind provenance disqualification;
+  proposed original-authority fixture/reader repair without weakening assertions.
+- Separated resumable multilingual metadata resolution from original human-label
+  qualification after the retained HTTP429 and incomplete exposure joins.
+- Kept the seven graph, ten learning and four human-pilot bounds. Added descriptive
+  annotator sensitivities while retaining all primary groups and criteria.
+- Aligned planned specs, BMAD traceability and architecture/ops boundaries. All
+  prompts require bounded writes, flushed progress, exact gate fields, per-unit
+  rows, complete rerun metadata, verdict classes and accurate model substrates.
+- Planning validation is in progress. Active roadmap, conductor, exclusion
+  manifest and historical results remain unchanged; nothing was pushed.

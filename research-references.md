@@ -56341,3 +56341,105 @@ full-suite timeout independently disqualified publication. Exp9012 also failed
 owned acceptance after a full-suite timeout despite complete slot accounting.
 These facts justify a new, prospectively specified validation boundary. They
 do not authorize deleting failed receipts or making old artifacts eligible.
+
+## 2026-11-11 — V771 planning scan, recorded before experiment design
+
+This scan follows completed V770 scheduling. It revisits all eight requested
+arXiv topics and all six secondary channels. Paper claims below are external
+results, not Carnot measurements. Previously indexed papers are updates or
+reconfirmed methods, not newly discovered work.
+
+### Findings to use
+
+- **Human annotation and disagreement:** [Mu-SHROOM, 2504.11975](https://arxiv.org/abs/2504.11975)
+  (April 2025) and its [author release](https://huggingface.co/datasets/Helsinki-NLP/mu-shroom)
+  provide multilingual span judgments. The release lists CC-BY-4.0 and fourteen
+  languages. Original annotator records, source grouping and prior exposure must
+  qualify before deriving a response-level target. The proposed target measures
+  human annotation agreement, not a certified factual truth or the span leaderboard.
+- **New annotation-sensitivity lead:** [Beyond Majority Vote, 2609.03953](https://arxiv.org/abs/2609.03953)
+  (September 2026) finds missed errors and disagreement across medical annotation
+  and adjudication passes. Transfer to Mu-SHROOM is a hypothesis. Retain each
+  annotator's response-level judgment and report predeclared unanimous/disputed
+  strata; do not replace the original target with an LLM judge or select the
+  favorable criterion after evaluation. This is a sensitivity analysis, not a
+  new medical experiment.
+- **Strong simple control:** [The Hallucination Signal Is a Mean Shift,
+  2608.28930v2](https://arxiv.org/abs/2608.28930) (October 2026 revision) reports
+  strong linear probes under matched representations. Keep both identical-PCA
+  and full-embedding logistic controls in the natural energy pilot. A small
+  nonlinear head must earn its complexity. Final-layer pooling is not LayerMix.
+- **Continual learning and KAN:** [Ultrafast On-Chip Online Learning,
+  2602.02056v4](https://arxiv.org/abs/2602.02056) (June 2026 revision) supports
+  testing local spline coefficient updates and measuring their full cost.
+  [Catastrophic Forgetting in KANs, 2511.12828](https://arxiv.org/abs/2511.12828)
+  (November 2025) cautions that local spline support does not ensure retention.
+  [Continual Calibration, 2604.23987](https://arxiv.org/abs/2604.23987) (April 2026)
+  motivates separate calibration and accuracy retention bounds. Finish the frozen
+  delayed-feedback experiment; do not borrow a hardware speedup or coverage theorem.
+- **Cross-task labels:** [SHAM-Bench, 2610.27370](https://arxiv.org/abs/2610.27370)
+  (October 2026) combines existing human sources and reports transfer degradation.
+  It reinforces source-group exclusion and original-criterion reporting; packaging
+  an exposed source in a new benchmark does not make it unseen.
+
+### Relevant work retained without a new branch
+
+- **EBM verification/reasoning:** [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977)
+  (November 6, 2026) studies energy-guided latent recurrent refinement on algorithmic
+  tasks. This is a current lead, but neither independent natural-text verification
+  nor permission to reopen Carnot's retired generator line. The verifier target
+  remains separate from energy-minimizing generation.
+- **Neural constraints:** [Large Neighborhood Search meets Iterative Neural
+  Constraint Heuristics, 2603.20801](https://arxiv.org/abs/2603.20801) (March 2026)
+  separates destroy and repair operators. Keep this for a future measured search
+  bottleneck; adding a solver does not address today's label or custody blockers.
+- **Ising ML/thermodynamic hardware:** [Scaling Up Thermodynamic AI Models,
+  2607.00170](https://arxiv.org/abs/2607.00170) (June 2026) analyzes sampled Ising
+  inference and cost/accuracy tradeoffs. It is not evidence that Carnot's current
+  FPGA sampler implements spline basis evaluation or durable updates.
+- **Constrained generation:** [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484)
+  (May 2026 revision) uses an energy term for inference-time alignment.
+  [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731) (July 2025)
+  concerns visual object hallucinations. Both remain deferred until a qualified
+  verifier signal justifies steering; the latter is outside the text/code scope.
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** [EBT, ICLR 2026](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  was accessible. Rechecked against [arXiv 2507.02092](https://arxiv.org/abs/2507.02092).
+  Its input/candidate compatibility objective is relevant background, not a new
+  local verification result.
+- **Semantic Scholar:** attempted both Graph API citation endpoints for
+  `ARXIV:2507.02092` and `ARXIV:2512.15605`, ten records each. Browser access failed
+  and bounded direct requests both returned HTTP 429. Citation coverage is
+  incomplete; this scan cannot claim to enumerate citing papers. The original
+  [ARM/EBM paper](https://arxiv.org/abs/2512.15605), revised May 2026, was accessible.
+- **Hugging Face papers:** searched verification/hallucination work. Direct paper
+  pages for EBR, Beyond Majority Vote and SHAM-Bench were inaccessible in this
+  scan. Their arXiv originals were verified. The Mu-SHROOM dataset card was accessible.
+- **GitHub trending:** checked [weekly Python](https://github.com/trending/python?since=weekly)
+  and [weekly Rust](https://github.com/trending/rust?since=weekly). Returned pages
+  were cached two months earlier; no current EBM/KAN/constraint ranking is asserted.
+- **Extropic:** [writing](https://extropic.ai/writing) and the [Summer 2026 Torx,
+  thermalizers and Z1 announcement](https://extropic.ai/writing/from-one-to-one-billion)
+  were accessible. Vendor architecture and efficiency claims are not local TSU access.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona) describes
+  an energy-based constraint layer. No reproducible model, algorithm specification
+  or local execution path was established from that page.
+
+### Operational finding that changes the next attempt
+
+Exp9014's retained direct-consumer log records six V767 tests failing at
+`task_authority`; the historical reader follows mutable active/staged authority.
+The supposedly valid receipt control then rejects the same failed validation
+set. This is not evidence that the receipt checker should be relaxed. Supply
+private, hash-pinned V767 authority to those tests and rerun the unchanged
+assertions; current command/hash/exit validation must stay strict.
+
+Exp9015 reached HTTP 429 while resolving German Wikipedia identities, leaving
+cross-language exposure resolution incomplete and labels deferred. A separate,
+checkpointed metadata pass can reuse authenticated successful responses, deduplicate
+requests, pace them and honor Retry-After before any labels are reduced. Follow
+[MediaWiki API etiquette](https://www.mediawiki.org/wiki/API:Etiquette). Preserve
+all original failures and unresolved identities; no smaller cohort, changed
+language subset or unknown-as-unseen shortcut is justified.

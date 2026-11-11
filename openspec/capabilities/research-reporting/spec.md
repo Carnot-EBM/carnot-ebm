@@ -112547,3 +112547,192 @@ source and aggregate tampering, foreign CLI replay, publication and deadlines.
 Accounting readiness grants no graph, human-label, learning or deployment benefit.
 Original failed health remains failed. Ops and traceability reconciliation is
 delegated to the conductor under the explicit task instruction.
+
+
+## V771 planned research contract — 2026-11-11
+
+The fourteen tasks below are planned, not implemented or measured. Their full
+protocol, unchanged thresholds and exact order are bound by the V771 design
+and research-roadmap-next.yaml. Historical scientific outcomes stay unchanged.
+
+### REQ-REPORT-9027-V771: Bind fourteen tasks and preserve V769 failures and frozen scientific methods
+
+Task `exp9027-branch-contract` SHALL deliver `results/experiment_9027_v771_branch_contract.json` under its frozen V771 protocol. V770 closed scheduling, not science. Exp9013 qualified authority; Exp9014 is disqualified; Exp9015 is source-blocked; Exp9026 qualified accounting with blocked science. Preserve those results and bind V771 without rerunning a development fit.
+
+#### SCENARIO-REPORT-9027-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9028-V771: Qualify provenance with immutable historical test authority
+
+Task `exp9028-historical-provenance-qualification` SHALL deliver `results/experiment_9028_v771_historical_provenance_qualification.json` under its frozen V771 protocol. Exp9014 failed six original V767 consumer tests at task_authority: the reader follows mutable vNEXT/queue bytes. Its valid receipt control correctly rejected that failed validation set. Change historical test input custody, not receipt acceptance or scientific gates.
+
+#### SCENARIO-REPORT-9028-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9029-V771: Resolve multilingual source identities with bounded resumable metadata
+
+Task `exp9029-source-identity-resolution` SHALL deliver `results/experiment_9029_v771_source_identity_resolution.json` under its frozen V771 protocol. Exp9015 retained a German Wikipedia HTTP429 and incomplete cross-language exposure joins. Labels were deferred. Separate metadata acquisition from label reduction, reuse successful receipts, and resume only unresolved identities with respectful bounded requests.
+
+#### SCENARIO-REPORT-9029-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9030-V771: Authenticate retained shard A without new generation or revised labels
+
+Task `exp9030-retained-shard-a` SHALL deliver `results/experiment_9030_v771_retained_shard_a.json` under its frozen V771 protocol. Exp8990 retained 512 first Qwen responses but remains disqualified. Exp9016 never passed its provenance gate. New primitive custody can qualify only after the current historical-authority repair passes.
+
+#### SCENARIO-REPORT-9030-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9031-V771: Complete the frozen bounded Qwen source with shard B
+
+Task `exp9031-graph-corpus-b` SHALL deliver `results/experiment_9031_v771_graph_corpus_b.json` under its frozen V771 protocol. Exp9017 never passed provenance qualification. The original B identities and method stay fixed. A current qualified producer is the changed prerequisite; collect only the missing bounded Qwen shard.
+
+#### SCENARIO-REPORT-9031-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9032-V771: Join authenticated shards under the original graph role contract
+
+Task `exp9032-corpus-admission` SHALL deliver `results/experiment_9032_v771_corpus_admission.json` under its frozen V771 protocol. V770 corpus admission never ran after upstream disqualification. Join only two currently qualified shards; keep original population, roles, error support and truth isolation.
+
+#### SCENARIO-REPORT-9032-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9033-V771: Qualify original human labels and freeze matched probe methods
+
+Task `exp9033-human-label-methods` SHALL deliver `results/experiment_9033_v771_human_label_methods.json` under its frozen V771 protocol. Exp9019 never ran because cross-language source identities were incomplete. Current metadata resolution must qualify before original human labels or the frozen matched-head protocol can qualify. Mu-SHROOM and Beyond Majority Vote motivate explicit disagreement reporting, not relabeling.
+
+#### SCENARIO-REPORT-9033-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9034-V771: Test frozen spline decisions against all registered graph controls
+
+Task `exp9034-spline-calibrated-decisions` SHALL deliver `results/experiment_9034_v771_spline_calibrated_decisions.json` under its frozen V771 protocol. The V768 convex spline passed development admission; its confirmation remains unmeasured. V770 blocked before data admission. Use the same fitted states and seven bounds after new current-qualified inputs.
+
+#### SCENARIO-REPORT-9034-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9035-V771: Measure continuous coefficient learning on sealed future response streams
+
+Task `exp9035-online-spline-streams` SHALL deliver `results/experiment_9035_v771_online_spline_streams.json` under its frozen V771 protocol. Continuous Self-Learning Tier1 and FR-11 require future benefit, not update mechanics alone. V770 did not reach the qualified Exp8988 five-arm protocol. Current authenticated data are the only changed prerequisite; retain every causal and retention bound.
+
+#### SCENARIO-REPORT-9035-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9036-V771: Audit future spline benefit and simultaneous shared-panel retention
+
+Task `exp9036-online-benefit-audit` SHALL deliver `results/experiment_9036_v771_online_benefit_audit.json` under its frozen V771 protocol. V770 had no online rows. Reduce the fixed ten-bound future-benefit and retention question only after current sealed streams qualify. Continual Calibration and KAN forgetting work motivate keeping both metrics.
+
+#### SCENARIO-REPORT-9036-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9037-V771: Measure energy decisions against independent human disagreement
+
+Task `exp9037-human-energy-pilot` SHALL deliver `results/experiment_9037_v771_human_energy_pilot.json` under its frozen V771 protocol. V770 never reached the independent human pilot. The new metadata path and source/label gate must qualify before Qwen forward passes. Compare frozen spline with both identical-feature and full-embedding linear controls; report annotation agreement, not certified truth.
+
+#### SCENARIO-REPORT-9037-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9038-V771: Measure complete spline service costs and actual acceleration limits
+
+Task `exp9038-complete-spline-cost` SHALL deliver `results/experiment_9038_v771_complete_spline_cost.json` under its frozen V771 protocol. V770 produced no complete-service measurements. Qualified current graph and stream rows unlock the unchanged cost question, independent of whether they show benefit. Online KAN hardware results motivate operation-level mapping, not assumed speedup.
+
+#### SCENARIO-REPORT-9038-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9039-V771: Assess held-family supervisor transfer only from new live outcomes
+
+Task `exp9039-arc-transfer-evidence` SHALL deliver `results/experiment_9039_v771_arc_transfer_evidence.json` under its frozen V771 protocol. The November7 directive reserves opportunistic ARC work. V770 had no new supported outcomes. Only a current changed frontier with the registered support can reopen association analysis; unchanged support skips before synthesis.
+
+#### SCENARIO-REPORT-9039-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.
+
+### REQ-REPORT-9040-V771: Reconcile fourteen outcomes and separate graph and independent-label claims
+
+Task `exp9040-capstone` SHALL deliver `results/experiment_9040_v771_capstone.json` under its frozen V771 protocol. V770 demonstrates that complete accounting may be terminal blocked and still qualify. Reconcile new V771 rows and skips without reciting old positives or upgrading quarantined history.
+
+#### SCENARIO-REPORT-9040-V771
+
+The task SHALL retain per-unit rows, exact upstream gate operands, measured
+substrate, verdict_class and original failed evidence. Missing external inputs
+SHALL be terminal blocked. Current owned/direct-consumer failures SHALL disqualify.
+Private tests and real CLI replay SHALL preserve assertions and reject changed
+authority. All scientific controls and original support/effect thresholds SHALL
+remain fixed. Implementation status: Planned.

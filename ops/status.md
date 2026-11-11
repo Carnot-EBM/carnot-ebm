@@ -19210,3 +19210,19 @@ new-evidence-gated ARC analysis preserve their original claim limits.
 The literature scan preceded design. Planned requirements and traceability are
 aligned. Planning validation is in progress. No experiment, model load, hardware
 change, queue activation, external publication or push occurred during planning.
+
+## Planned milestone 2026.11.771 — 2026-11-11
+
+Exactly fourteen tasks, Exp9027–Exp9040, are staged in the new design and next
+roadmap. V770 scheduling closed, but graph, independent-label, learning and cost
+science remained unmeasured. Exp9014 failed six historical V767 consumer checks
+at task_authority; Exp9015 stopped on metadata HTTP429 and incomplete exposure
+joins. Exp9026 completed qualified accounting with terminal blocked science.
+
+The next plan repairs historical authority custody, separates resumable metadata
+acquisition from human-label qualification, and retains all original science
+thresholds. It includes five-arm continuous spline learning, strong matched
+linear controls, annotation sensitivity, complete service costs and a gated ARC
+slot. Both V770 documents are preserved. Planned REQ/SCENARIO and BMAD entries
+are aligned. Planning validation is in progress. No experiments, model loads,
+queue activation, external publication, hardware changes or push occurred.

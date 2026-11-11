@@ -1089,3 +1089,24 @@ ARC analysis requires newly supported live outcomes. Hardware scope is unchanged
 Full design: `openspec/change-proposals/research-roadmap-vNEXT.md`.
 Proposed execution: `research-roadmap-next.yaml`. The overview's October 11
 reconciliation date is historical; this addition records planning only.
+
+## V771 planned evidence boundaries — 2026-11-11
+
+V771 stages fourteen tasks, Exp9027–Exp9040; planning changes no runtime behavior.
+Historical V767 consumer tests must use immutable original authority while keeping
+their existing assertions and strict receipt checks. The graph branch reuses the
+frozen V768 spline, original 1024 source identities and unchanged seven detector
+and ten continuous-learning bounds after current provenance qualification.
+
+The independent natural branch separates checkpointed source-identity acquisition
+from original human-label qualification. Complete multilingual and historical
+exposure joins precede the same 400-group cohort and matched Qwen-feature heads.
+New annotator-disagreement sensitivities are descriptive and do not alter primary
+bounds. Prediction sealing precedes delayed feedback; untouched retention labels
+never enter guards or updates. Qwen weights, spline knots and live ARC policy stay
+fixed. Complete CPU service costs precede any proposed accelerator implementation.
+ARC analysis requires new supported live outcomes and remains opportunistic.
+
+Design and full task contract: `openspec/change-proposals/research-roadmap-vNEXT.md`.
+Execution proposal: `research-roadmap-next.yaml`. V770 design/queue bytes are
+preserved separately; the active queue and conductor are unchanged.
