@@ -112079,3 +112079,54 @@ requirement-linked tests. Primitive evidence includes the unchanged rejection,
 normalized historical candidate, all control exits, byte custody and SQLite
 statement coverage. Mandatory full-suite failure disqualifies readiness. The
 conductor owns ops/status/changelog and traceability reconciliation.
+
+### REQ-REPORT-9001-AUTHORITY: Original decisions and unseen groups are separate gates
+Pin original RAGTruth commit c103204b9ce28d6bbad859304bf30de72b8ed8fe,
+its source/response JSONL, README annotation policy and MIT license by byte hash.
+Use QA and Summary only. Preserve original spans, categories, implicit_true,
+comments and quality flags. Manual annotation claims require the author policy;
+annotator independence is not established by a dataset name. No model may load.
+Merge source IDs, normalized content and overlapping document text before roles.
+Subtract all prior source exposures, including the complete Exp7423 evaluator
+roster, later natural cohorts and Exp8908/8924. Exposed groups are development.
+Freeze one quality-good response per group by SHA256(salt + ':' + response ID),
+then fit320/calibration80 from official train and test200 from official test,
+using salt v769-human-v1 and hashed group order before reading labels.
+Do not replace a selected response after inspecting its spans. The primary
+label is any original human unsupported span, including implicit_true spans;
+retain exclusion of implicit_true and every original category as sensitivities.
+Require documented human authority and200 independent source groups for label
+eligibility; the natural pilot additionally requires all600 unseen role groups,
+with both classes at least5 in fit/calibration and20 in test. A shortage is
+complete_blocked_unseen_source_groups, never partial or a machine-label fallback.
+Keep labels in separate evaluator sidecars and publish exact IDs and hashes.
+This audit cannot establish generalization or a verifier benefit.
+
+#### SCENARIO-REPORT-9001-ORIGINAL
+Private tests cover original Unicode span alignment, quality exclusions,
+transitive document overlap, duplicate identities, exposure subtraction,
+label-blind deterministic selection, class floors and machine-only authority.
+
+#### SCENARIO-REPORT-9001-CUSTODY
+The actual CLI runs outside the checkout without PYTHONPATH. Success,
+missing input, source tamper and rehashed summary tamper are tested. Replay
+recomputes from original release and exposure witnesses. Owned failures zero
+readiness. Preserve real normal-exit receipts, log hashes and100 percent new
+statement coverage; unchanged scanners and private E2E-018/021 run before
+atomic primary publication. Full-suite failure remains visible and disqualifies.
+
+Implementation status for REQ-REPORT-9001-AUTHORITY, 2026-11-11: The original
+four release files match both pinned SHA256 and author Git blob identities.
+The audit retains11592 QA/Summary responses and4999 original manual spans.
+Its1932 source IDs form1823 document components. Exp7423's five authenticated
+evaluator shards expose every source ID. The new pool has zero unseen groups;
+all600 role slots remain censored, with no response replacement or model load.
+The local primary inventory checks7650 artifacts and retains130 matches.
+All13 owned tests,295 owned statements at100 percent coverage with zero
+exclusions,25 private E2E-018/021 cases, Ruff, format, strict mypy and explicit
+spec coverage pass. An independent reduction and the actual foreign-directory
+CLI pass. Original-byte replay and both unchanged terminal scanners pass.
+The full84351-test suite reports failures and errors, then reaches its900-second
+bound. This failed check disqualifies production readiness. The final artifact
+retains that receipt and the external unseen-pool blocker. Ops and traceability
+reconciliation are delegated to the conductor by the task's final instruction.

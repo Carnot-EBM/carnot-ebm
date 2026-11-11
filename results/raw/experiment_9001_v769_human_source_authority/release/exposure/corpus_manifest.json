@@ -1,0 +1,342 @@
+{
+  "asset_receipt": {
+    "attribution": "RAGTruth, Particle Media; human annotations released by the authors.",
+    "authenticated": true,
+    "cache_root": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth",
+    "commit": "c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+    "commit_url": "https://github.com/ParticleMedia/RAGTruth/commit/c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+    "files": [
+      {
+        "cache_path": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth/source_info.jsonl",
+        "path": "dataset/source_info.jsonl",
+        "sha256": "sha256:0dffc26ea9f3c1c3d7c7e8336b56ef1646e3cec876edffcca3c9c624d12d578b",
+        "size_bytes": 15117971,
+        "url": "https://raw.githubusercontent.com/ParticleMedia/RAGTruth/c103204b9ce28d6bbad859304bf30de72b8ed8fe/dataset/source_info.jsonl"
+      },
+      {
+        "cache_path": "/home/ianblenke/.cache/carnot-rewrite-20260731/work/data/ragtruth/response.jsonl",
+        "path": "dataset/response.jsonl",
+        "sha256": "sha256:e4c2e4ac24fff676d8984cc61c35d791612fadc58015335d97dd632375e18073",
+        "size_bytes": 21458735,
+        "url": "https://raw.githubusercontent.com/ParticleMedia/RAGTruth/c103204b9ce28d6bbad859304bf30de72b8ed8fe/dataset/response.jsonl"
+      }
+    ],
+    "license": "MIT",
+    "repository": "https://github.com/ParticleMedia/RAGTruth",
+    "total_bytes": 36576706
+  },
+  "attribution": "RAGTruth, Particle Media; human annotations released by the authors.",
+  "commit": "c103204b9ce28d6bbad859304bf30de72b8ed8fe",
+  "evaluator_fields": [
+    "row_key",
+    "group_id",
+    "partition",
+    "task_type",
+    "source_id",
+    "response_id",
+    "source_name",
+    "model",
+    "temperature",
+    "official_split",
+    "quality",
+    "annotations",
+    "primary_label",
+    "implicit_true_excluded_label",
+    "certificate_selected"
+  ],
+  "evaluator_row_count": 17617,
+  "exclusion_counts": {
+    "excluded_incorrect_refusal": 144,
+    "excluded_truncated": 29
+  },
+  "feature_contract": {
+    "definitions": {
+      "bounds": [
+        0.0,
+        1.0
+      ],
+      "normalization": "Unicode NFKC and lowercase lexical matching",
+      "ordered_source_features": [
+        "numeric_novelty_with_context",
+        "falsifiability_score",
+        "normalized_number_token_overlap",
+        "normalized_content_token_overlap",
+        "max_answer_source_sentence_overlap",
+        "missing_or_empty_source"
+      ],
+      "response_only_ablation": {
+        "context": "empty string to preserve the shipped two-feature PCIB representation",
+        "ordered_features": [
+          "entity_uptake",
+          "falsifiability_score"
+        ]
+      },
+      "semantic_scope": "interpretable_proxy_not_entailment",
+      "source_features": {
+        "falsifiability_score": {
+          "empty_denominator": 0.0,
+          "rule": "existing PCIBProbe falsifiability score with actual bounded context"
+        },
+        "max_answer_source_sentence_overlap": {
+          "empty_denominator": 0.0,
+          "rule": "maximum response-content overlap against one bounded source sentence"
+        },
+        "missing_or_empty_source": {
+          "empty_denominator": 1.0,
+          "rule": "one for missing or whitespace-only context, else zero"
+        },
+        "normalized_content_token_overlap": {
+          "empty_denominator": 0.0,
+          "rule": "unique response content words in context divided by response content words"
+        },
+        "normalized_number_token_overlap": {
+          "empty_denominator": 0.0,
+          "rule": "unique response numbers in context divided by unique response numbers"
+        },
+        "numeric_novelty_with_context": {
+          "empty_denominator": 0.0,
+          "empty_source": "all response numbers are novel",
+          "rule": "unique response numbers absent from context divided by unique response numbers"
+        }
+      },
+      "token_limits": {
+        "answer": 1024,
+        "context": 4096,
+        "question": 1024,
+        "selected_sentence": 1024
+      }
+    },
+    "denied_predictor_fields": [
+      "annotations",
+      "primary_label",
+      "implicit_true_excluded_label",
+      "model",
+      "quality",
+      "source_id",
+      "response_id",
+      "official_split",
+      "temperature"
+    ],
+    "predictor_fields": [
+      "row_key",
+      "group_id",
+      "partition",
+      "task_type",
+      "source_text",
+      "response_text",
+      "source_token_count",
+      "response_token_count",
+      "source_truncated",
+      "response_truncated",
+      "certificate_selected",
+      "features"
+    ],
+    "response_token_limit": 1024,
+    "semantics": "lexical and PCIB proxy inputs; not entailment or proof",
+    "source_feature_names": [
+      "numeric_novelty_with_context",
+      "falsifiability_score",
+      "normalized_number_token_overlap",
+      "normalized_content_token_overlap",
+      "max_answer_source_sentence_overlap",
+      "missing_or_empty_source"
+    ],
+    "source_token_limit": 4096
+  },
+  "independent_group_count": 2964,
+  "label_authority": "human_annotation_source_support",
+  "label_authority_limit": "fallible human source-support judgment; not formal truth",
+  "license": "MIT",
+  "manifest_hash": "sha256:5e09e80789b5579194d22018a9b336558da4668cfa1facbf58d2e6c403fccdb8",
+  "partition_group_counts": {
+    "final_test": 450,
+    "fit": 1002,
+    "policy_calibration": 386,
+    "probability_calibration": 373,
+    "prospective_stream": 753
+  },
+  "predictor_fields": [
+    "row_key",
+    "group_id",
+    "partition",
+    "task_type",
+    "source_text",
+    "response_text",
+    "source_token_count",
+    "response_token_count",
+    "source_truncated",
+    "response_truncated",
+    "certificate_selected",
+    "features"
+  ],
+  "predictor_row_count": 17617,
+  "protocol": {
+    "accept_thresholds": [
+      0.01,
+      0.025,
+      0.05
+    ],
+    "arms": [
+      "training_prevalence",
+      "l2_logistic_six_input",
+      "response_only_2_4_1_gibbs",
+      "source_aware_6_4_1_gibbs"
+    ],
+    "feedback_delays": [
+      1,
+      32
+    ],
+    "feedback_regimes": [
+      "deterministic_75_percent",
+      "frozen_baseline_selected"
+    ],
+    "final_static_role": "final_test",
+    "fit_role": "fit",
+    "group_caps": {
+      "final_test": 1000,
+      "fit": 2000,
+      "policy_calibration": 500,
+      "probability_calibration": 500,
+      "prospective_stream": 1000
+    },
+    "online_orders": [
+      "hash_order",
+      "reversed_block_order"
+    ],
+    "partition_salt": "carnot-v651-human-1",
+    "policy_calibration_role": "policy_calibration",
+    "primary_label": "1 means no human-annotated source-unsupported span",
+    "probability_calibration_role": "probability_calibration",
+    "reject_thresholds": [
+      0.9,
+      0.95,
+      0.99
+    ],
+    "sensitivity_label": "ignore only spans marked implicit_true; never tune on this view",
+    "stream_role": "prospective_stream",
+    "training_budget_steps": 500,
+    "training_seeds": [
+      65101,
+      65102,
+      65103,
+      65104,
+      65105
+    ]
+  },
+  "repository": "https://github.com/ParticleMedia/RAGTruth",
+  "response_truncation_count": 0,
+  "schema": "carnot.exp7423.corpus_manifest.v1",
+  "shards": [
+    {
+      "kind": "predictor",
+      "path": "predictor-fit-000.jsonl",
+      "rows": 2707,
+      "sha256": "sha256:1447ed36f10f68a09c21023ad23eaf1c2bc92949c1bacdb5eaeb27e2ab2e0f35",
+      "size_bytes": 8388457
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-fit-001.jsonl",
+      "rows": 1904,
+      "sha256": "sha256:e8c7ddb2dcfe1ea3e37a99568ab3b8d104807302953337af68b2665a87f1772c",
+      "size_bytes": 8384684
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-fit-002.jsonl",
+      "rows": 1333,
+      "sha256": "sha256:a0eef4fbb623f3e9200c9f262bc9fc50745acede7eb0113e8d240f7c738a1f4f",
+      "size_bytes": 4882903
+    },
+    {
+      "kind": "evaluator",
+      "path": "evaluator-fit-000.jsonl",
+      "rows": 5944,
+      "sha256": "sha256:b0e6c2fc6fa08f71f2072daabba7012f78e5aa1b867b115fb0741213dfb04bff",
+      "size_bytes": 3677803
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-probability_calibration-000.jsonl",
+      "rows": 2219,
+      "sha256": "sha256:501fcae5671620addd707e662354c26fcdf89e00471d726b1ed9fab206f325be",
+      "size_bytes": 7956588
+    },
+    {
+      "kind": "evaluator",
+      "path": "evaluator-probability_calibration-000.jsonl",
+      "rows": 2219,
+      "sha256": "sha256:f80749dfa509c566bbc258994d134119eeccc1bd53f13d54891b84caed3c3f2f",
+      "size_bytes": 1433508
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-policy_calibration-000.jsonl",
+      "rows": 2293,
+      "sha256": "sha256:bc64ecbfc344377d7a47b81b899fee6ab03b2f78b27252a834f9c5c191ba0238",
+      "size_bytes": 7996082
+    },
+    {
+      "kind": "evaluator",
+      "path": "evaluator-policy_calibration-000.jsonl",
+      "rows": 2293,
+      "sha256": "sha256:50e8015aea3227047148aec83986153ecf9e4b888ead42901955a7cfe0bb0000",
+      "size_bytes": 1480786
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-prospective_stream-000.jsonl",
+      "rows": 2558,
+      "sha256": "sha256:62da9b6ad5b826ca217d29e221d731a93e0633277635099c875bd2902b20853c",
+      "size_bytes": 8388299
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-prospective_stream-001.jsonl",
+      "rows": 1928,
+      "sha256": "sha256:bc95b2e9f9b614ea289f866bbd52152d4bf99d791c025e7ddad29d06aa3eb767",
+      "size_bytes": 7641618
+    },
+    {
+      "kind": "evaluator",
+      "path": "evaluator-prospective_stream-000.jsonl",
+      "rows": 4486,
+      "sha256": "sha256:eb1965f408b2278d7161998aa0b552cf77bb6e4811b408e556969f550bae9f98",
+      "size_bytes": 2916379
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-final_test-000.jsonl",
+      "rows": 2344,
+      "sha256": "sha256:0eacb8edda1c1ee6f2f0ccd4c2053b12c2845536a264387dc1864e3a155fcd2f",
+      "size_bytes": 8385332
+    },
+    {
+      "kind": "predictor",
+      "path": "predictor-final_test-001.jsonl",
+      "rows": 331,
+      "sha256": "sha256:2cb50175c3095c3d05f6ecfd7509ea4892a40af510a762b58805551f5aafc760",
+      "size_bytes": 1204713
+    },
+    {
+      "kind": "evaluator",
+      "path": "evaluator-final_test-000.jsonl",
+      "rows": 2675,
+      "sha256": "sha256:1d5dfb032fc5489835542fc63b34ecc9ca91500fbdc072bb1c56c8ca8af2fc8f",
+      "size_bytes": 1481895
+    },
+    {
+      "kind": "disposition",
+      "path": "dispositions-000.jsonl",
+      "rows": 173,
+      "sha256": "sha256:77267da77c67191d33644a3331c9cd3a09b4cb8f4cdb607d0ac70fa1015f18a8",
+      "size_bytes": 18250
+    }
+  ],
+  "source_truncation_count": 0,
+  "task_type_counts": {
+    "Data2txt": 6195,
+    "QA": 5767,
+    "Summary": 5655
+  }
+}

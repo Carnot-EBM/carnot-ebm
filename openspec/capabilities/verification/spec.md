@@ -59210,3 +59210,23 @@ original, normalized and private positive/negative candidates. Historical load
 request/response hashes, token usage, owner/clocks and raw requests are checked
 without model loading. Private CLI replay and statement coverage qualify custody;
 full-suite failures remain visible and zero readiness.
+
+### REQ-VERIFY-9001: Human authority custody and exposure denial
+Authenticate original release bytes and every prior exposure witness before
+interpreting labels. Freeze public roles before opening evaluator spans. Retain
+rejected evidence. Recompute role and label summaries on cold replay; repaired
+summary hashes cannot hide drift. Missing external bytes block. Owned checks
+that fail disqualify all readiness, with no claim of natural generalization.
+
+#### SCENARIO-VERIFY-9001-CUSTODY
+Private CLI controls reject changed inputs, changed code, altered logs and
+rehashed aggregate drift. Empty unseen pools retain the complete development
+exposure roster and exact failed gate operands. No fixture grants readiness.
+
+Implementation status for REQ-VERIFY-9001, 2026-11-11: Private controls cover
+missing release, altered original bytes, changed cited authority, resource
+failure, changed code/logs and repaired aggregate hashes. The foreign-directory
+CLI uses original release bytes with PYTHONPATH removed. Independent summary
+reduction, replay, unchanged scanners,13 owned tests and100 percent of295
+new statements pass. Full-suite timeout/failures remain a disqualifying receipt;
+they cannot be promoted to passing validation or hidden behind external blocking.
