@@ -878,3 +878,9 @@ Direct Kaggle/Discord discussion access remained unavailable; public standings a
 
 Undated changes excluded. Benchmark scores above are separate from Kaggle competition standings.
 
+## 2026-11-11 14:09 UTC -- NEW
+
+**November 10 — Gemini 4 Carbon:** ARC Prize published semi-private ARC-AGI-3 scores of **65.1% Standard (Low reasoning)** and **99.1% Provider Adapter (Medium reasoning)**. Its High-reasoning Standard result was omitted after session expirations limited completion to **30/55 games**. [Official results](https://arcprize.org/results/google-gemini-4-carbon).
+
+Live Kaggle pages were unreadable; indexed discussions were checked and may omit recent posts.
+
