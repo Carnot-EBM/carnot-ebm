@@ -1289168,5 +1289168,23 @@
     }
   ],
   "verdict_class": "disqualified",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-11-11T07:38:43Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+      "severity": "critical",
+      "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_inference', live_evidence_count=5, negative_evidence_count=5. The duration check fails closed until the invocation scope agrees."
+    },
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_invoked', 'model_loads_attempted']). Contradictory."
+    }
+  ]
 }
