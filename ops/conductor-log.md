@@ -21785,3 +21785,5 @@ code |
 | 2026-11-11 14:16 UTC | Assess held-family supervisor transfer only from n | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp8999-branch-contract.arc_new_outcomes_ready_score (actual=0 == expected=1) |
 | 2026-11-11 14:59 UTC | Reconcile fourteen outcomes and separate graph and | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 86 passed, 1 warning in 56.94s |
 | 2026-11-11 16:35 UTC | Audit receipt STALE: arc-self-solve-audit | BLOCK | timeout after 900s |
+| 2026-11-11 17:13 UTC | Plan milestone 2026.11.770 | OK | 14 tasks proposed |
+| 2026-11-11 17:28 UTC | Milestone 2026.11.770 activated | OK | 14 tasks queued |
