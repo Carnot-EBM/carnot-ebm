@@ -1,0 +1,27 @@
+{
+  "reports": [
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8990_v768_graph_corpus_a/terminal_candidate.json",
+      "loaded": true,
+      "exp_id": 8990,
+      "title": "Matched graph corpus shard A",
+      "honest_verdict": "complete_circular_positive_graph_corpus_a",
+      "flag_count": 2,
+      "max_severity": 2,
+      "flags": [
+        {
+          "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+          "severity": "critical",
+          "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_inference', live_evidence_count=5, negative_evidence_count=5. The duration check fails closed until the invocation scope agrees."
+        },
+        {
+          "kind": "SUBSTRATE_CLASS_MISMATCH",
+          "severity": "critical",
+          "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_invoked', 'model_loads_attempted']). Contradictory."
+        }
+      ],
+      "gate_version": "0dccc66a720b8582d8ec49efc1cae7e3505c34647b5f9a58d4762b1315235cf8"
+    }
+  ],
+  "flagged_count": 1
+}

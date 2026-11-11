@@ -111708,6 +111708,28 @@ per-unit evidence, progress requirements and closed verdict class.
 Missing offload, transport failure and timeout preserve actual first responses and bounded-generation provenance.
 **Implementation status:** Planned.
 
+REQ-REPORT-8990 SHALL pin the Exp8987 primary, collection_ready_score=1,
+graph and role manifests, fitted states and spline protocol before GPU work.
+Collect only the 512 shard A first responses:64 calibration,64 test,384 online.
+Reuse the V765 temperature-zero, reasoning-off,16-token GPU0 runtime and lease.
+Preserve every failed slot, checkpoint16 requests, and retain a separate BFS
+truth sidecar. Source readiness establishes circular evidence only.
+Missing authority, resources, cache, lease or offload yields terminal blocked
+with the actual gate operand and zero readiness. Owned check failure disqualifies.
+New statements and CLI children require100 percent coverage. Freeze validation
+argv, run private E2E-018/021 and foreign-directory replay, and publish atomically.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
+
+#### SCENARIO-REPORT-8990-CUSTODY
+Private tests accept exact manifests, reject missing/boolean/zero gates and
+changed graph, query, state or runtime bytes, preserve first-response failures,
+and reject rehashed aggregate or raw-byte tampering during cold replay.
+Fixture evidence never qualifies as new model observations.
+
+Implementation status,2026-11-11: The shard adapter, bounded runtime binding,
+direct CLI and private custody tests implement REQ-REPORT-8990. The dated
+primary records actual collection, qualification and terminal scanner results.
+
 ### REQ-REPORT-8991: Collect bounded Qwen graph evidence for the convex test in shard B
 The experiment SHALL implement the frozen V768 task `exp8991-graph-corpus-b` and produce
 `results/experiment_8991_v768_graph_corpus_b.json`. It SHALL preserve its declared gates, substrate,

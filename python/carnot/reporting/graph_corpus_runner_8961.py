@@ -56,6 +56,9 @@ def freeze(root: Path, raw: Path, fixture: bool, *, producer: ModuleType | None 
     for name in [
         *config.OWNED,
         *config.TESTS,
+        "python/carnot/reporting/graph_corpus_a_8961.py",
+        "python/carnot/reporting/graph_corpus_runner_8961.py",
+        "python/carnot/inference/graph_corpus_runtime_8961.py",
         "tests/python/test_matched_depth_control_8948.py",
         "python/carnot/reporting/depth_control_8934.py",
         "python/carnot/reporting/matched_depth_control_8948.py",
@@ -207,8 +210,9 @@ def main(argv: list[str] | None = None, *, producer: ModuleType | None = None) -
         report = replay(args.cold_replay, **options)
         print(json.dumps(report), flush=True)
         return 0 if report["passed"] else 1
-    if args.date != "20261110":
-        parser.error("this producer requires --date 20261110")
+    run_date = getattr(config, "RUN_DATE", "20261110")
+    if args.date != run_date:
+        parser.error(f"this producer requires --date {run_date}")
     fixture = args.fixture_e2e is not None
     output = args.fixture_e2e or config.ROOT / "results" / (config.NAME + ".json")
     if fixture and output.resolve().is_relative_to(config.ROOT):
