@@ -56254,3 +56254,90 @@ Qualification must preserve the original rejection, authenticate primitive rows,
 and separate cited historical work from current work. It must not weaken the
 validator or claim cached rows were generated again. RAGognize remains machine-
 annotation-only under Exp8989. New human-source eligibility is a separate question.
+
+## 2026-11-11 — V770 planning research, recorded before experiment design
+
+This scan follows completed V769 scheduling. It distinguishes new literature
+from rechecked sources. It does not turn published results into Carnot results.
+
+### Findings selected for the next plan
+
+- **Human disagreement with inspectable annotation provenance:**
+  [Mu-SHROOM, arXiv 2504.11975](https://arxiv.org/abs/2504.11975), April 2025,
+  and its [author dataset](https://huggingface.co/datasets/Helsinki-NLP/mu-shroom)
+  expose fourteen languages, labeled validation/test splits, raw annotator IDs,
+  and hard/soft character labels. The [organizer FAQ](https://helsinki-nlp.github.io/shroom/2025/FAQ_2025.html)
+  explains disagreement and reference access. This is a rechecked source with
+  a new local use: audit independent question groups after RAGTruth yielded
+  zero unseen groups in Exp9001. Do not count translations or repeated responses
+  as independent evidence. Keep original annotation criteria. A response-level
+  pilot is a derived task, not a reproduction of the span-detection leaderboard.
+- **A strong simple control:** [The Hallucination Signal Is a Mean Shift,
+  arXiv 2608.28930](https://arxiv.org/abs/2608.28930), August 2026, revised October,
+  also appears in the [EMNLP proceedings](https://aclanthology.org/2026.emnlp-main.1626/).
+  The controlled paired-example study supports testing a converged linear probe
+  before attributing value to a nonlinear head. Its scope does not establish
+  free-generation transfer. Use the same Qwen representation for both heads;
+  do not claim to reproduce LayerMix with final-layer pooled embeddings.
+- **Continuous learning:** [Online KAN, arXiv 2602.02056](https://arxiv.org/abs/2602.02056),
+  February 2026, revised June, supports local spline updates. [Continual
+  Calibration, arXiv 2604.23987](https://arxiv.org/abs/2604.23987), April 2026,
+  motivates separate accuracy and calibration retention checks. These are
+  rechecked sources. Complete the already frozen delayed coefficient test;
+  do not invent another learner or borrow exchangeability guarantees.
+- **Cross-domain caution:** [SHAM-Bench, arXiv 2610.27370](https://arxiv.org/html/2610.27370v1),
+  October 2026, reports transfer and annotation difficulties across constituent
+  datasets. Preserve criteria, source grouping and exposure checks. Its claimed
+  aggregate release was not authenticated in this scan.
+
+### Primary topic scan and deferred leads
+
+| Topic | Primary source | Consequence |
+|---|---|---|
+| EBM reasoning | [Energy-Based Reasoners, 2611.08977](https://arxiv.org/abs/2611.08977), November 2026 | Energy descent is promising for recurrent reasoning; it does not prove natural-answer correctness. No generator training is scheduled. |
+| Neural constraints | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), December 2025 | Feasibility assumes supplied linear constraints. It cannot supply missing human labels. |
+| Ising and learning | [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752), May 2026 | Parameter fitting does not guarantee efficient faithful sampling. The binary decision head needs no new sampler. |
+| Energy-guided decoding | [Energy-Guided Decoding, 2507.07731](https://arxiv.org/abs/2507.07731), July 2025 | Visual-object results do not justify changing the frozen text generator. |
+| FPGA sampling | [Million-p-bit computer, 2606.25313](https://arxiv.org/abs/2606.25313), June 2026; [continuous-state computer, 2610.31339](https://arxiv.org/abs/2610.31339), October 2026 | Boundary communication and core-only timings reinforce complete-service cost accounting. Neither establishes local device support. |
+| New Ising/JEPA lead | [LEF-JEPA, 2611.08989](https://arxiv.org/abs/2611.08989), November 6, 2026 | Conditional Ising optimization shapes a visual representation during pretraining. Defer: text verification is the present scope. |
+| New energy composition lead | [Energy-Based Policy Orchestration, 2611.02546](https://arxiv.org/abs/2611.02546), November 2, 2026 | Policy-specific energies compose robotic policies. Keep as a future modular-controller lead; no direct ARC or verifier transfer is established. |
+
+### Secondary sources checked and access limits
+
+- **Semantic Scholar:** both public citation endpoints returned data through a
+  bounded HTTP read after the browser tool could not open them:
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=10&fields=title,year,externalIds,url)
+  returned ten records with `next=10`;
+  [ARM-EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=10&fields=title,year,externalIds,url)
+  returned ten records without a next marker. EBT led to LEF-JEPA and policy
+  orchestration above. ARM-EBM included d-OPD, constitutional distillation and
+  distributional EBMs. This is a bounded citation scan, not an exhaustive review.
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM work. The indexed
+  [ICLR 2026 PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) and its forum
+  required browser verification. No review decision was independently read.
+- **Hugging Face papers:** [HalluScoring 2026](https://huggingface.co/papers/2609.38355)
+  and [HalluGuard](https://huggingface.co/papers/2601.18753) were discovery leads.
+  The search also recovered the mean-shift paper, followed to primary sources.
+  Generated paper-page summaries are not methodological authority.
+- **GitHub trending:** inspected [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) weekly pages. Returned
+  content did not establish a useful current EBM/constraint/KAN ranking.
+  No dependency was selected on a popularity claim.
+- **Extropic:** [Writing](https://extropic.ai/writing) returned navigation;
+  [From One to One Billion](https://extropic.ai/writing/from-one-to-one-billion)
+  describes Torx, thermalizers and Z1. [Hardware](https://extropic.ai/hardware)
+  advertises early access in 2027. Vendor plans are not Carnot TSU access.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona)
+  remains a product-level description. This scan established no new reproducible
+  architecture, downloadable weights or local execution path.
+
+### Local evidence that constrains use of these findings
+
+Exp9000 passed its eight scoped receipts and all provenance controls, but its
+full Python-suite attempt timed out. Its producer included that failed health
+receipt in owned acceptance. The original verdict remains disqualified.
+Exp9001 reports 1,823 human-authority groups and zero unseen groups; its own
+full-suite timeout independently disqualified publication. Exp9012 also failed
+owned acceptance after a full-suite timeout despite complete slot accounting.
+These facts justify a new, prospectively specified validation boundary. They
+do not authorize deleting failed receipts or making old artifacts eligible.

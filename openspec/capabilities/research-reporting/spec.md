@@ -112169,3 +112169,194 @@ The full84351-test suite reports failures and errors, then reaches its900-second
 bound. This failed check disqualifies production readiness. The final artifact
 retains that receipt and the external unseen-pool blocker. Ops and traceability
 reconciliation are delegated to the conductor by the task's final instruction.
+
+
+## Planned V770 evidence and scientific continuation — 2026-11-11
+
+Status: Planned only. No runtime implementation or experimental result is claimed.
+The exact fourteen-task contract is in `openspec/change-proposals/research-roadmap-vNEXT.md`.
+V769 failed broad validation remains historical failed evidence. New scoped claims
+require a frozen manifest, original direct-consumer tests and rejecting receipt controls.
+
+### REQ-REPORT-9013-V770: Bind fourteen tasks and preserve V769 failures and frozen scientific methods
+
+The planned `exp9013-branch-contract` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9013_v770_branch_contract.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9013-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9014-V770: Qualify producer provenance with separate scoped checks and repository health
+
+The planned `exp9014-scoped-provenance-qualification` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9014_v770_scoped_provenance_qualification.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9014-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9015-V770: Qualify Mu-SHROOM groups and original human disagreement labels
+
+The planned `exp9015-human-disagreement-source` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9015_v770_human_disagreement_source.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9015-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9016-V770: Authenticate retained shard A without new generation or revised labels
+
+The planned `exp9016-retained-shard-a` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9016_v770_retained_shard_a.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9016-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9017-V770: Complete the frozen bounded Qwen source with shard B
+
+The planned `exp9017-graph-corpus-b` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9017_v770_graph_corpus_b.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9017-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9018-V770: Join authenticated shards under the original graph role contract
+
+The planned `exp9018-corpus-admission` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9018_v770_corpus_admission.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9018-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9019-V770: Freeze matched energy and linear probes for human disagreement
+
+The planned `exp9019-human-pilot-methods` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9019_v770_human_pilot_methods.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9019-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9020-V770: Test frozen spline decisions against all registered graph controls
+
+The planned `exp9020-spline-calibrated-decisions` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9020_v770_spline_calibrated_decisions.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9020-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9021-V770: Measure continuous coefficient learning on sealed future response streams
+
+The planned `exp9021-online-spline-streams` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9021_v770_online_spline_streams.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9021-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9022-V770: Audit future spline benefit and simultaneous shared-panel retention
+
+The planned `exp9022-online-benefit-audit` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9022_v770_online_benefit_audit.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9022-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9023-V770: Measure energy decisions against independent human disagreement
+
+The planned `exp9023-human-energy-pilot` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9023_v770_human_energy_pilot.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9023-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9024-V770: Measure complete spline service costs and actual acceleration limits
+
+The planned `exp9024-complete-spline-cost` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9024_v770_complete_spline_cost.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9024-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9025-V770: Assess held-family supervisor transfer only from new live outcomes
+
+The planned `exp9025-arc-transfer-evidence` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9025_v770_arc_transfer_evidence.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9025-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+
+### REQ-REPORT-9026-V770: Reconcile fourteen outcomes and separate graph and independent-label claims
+
+The planned `exp9026-capstone` SHALL execute its exact frozen V770 prompt and publish
+`results/experiment_9026_v770_capstone.json`. It SHALL preserve prior verdicts, per-unit rows,
+closed verdict classes, source hashes and explicit gate operands.
+
+#### SCENARIO-REPORT-9026-V770
+
+Before implementation, private tests SHALL cover qualified input, missing input,
+changed authority, failed current validation and cold replay for this task.
+Applicable scientific bounds SHALL remain fixed. External blocks SHALL be terminal.
+Implementation status: Planned.
+

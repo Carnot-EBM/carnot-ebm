@@ -4862,3 +4862,23 @@ Global tracing retains 1,142 existing gaps and architecture freshness retains
 | REQ-REPORT-9010; SCENARIO-REPORT-9010-V769 | `exp9010-complete-spline-cost` | `results/experiment_9010_v769_complete_spline_cost.json` | Planned |
 | REQ-REPORT-9011; SCENARIO-REPORT-9011-V769 | `exp9011-arc-transfer-evidence` | `results/experiment_9011_v769_arc_transfer_evidence.json` | Planned |
 | REQ-REPORT-9012; SCENARIO-REPORT-9012-V769 | `exp9012-capstone` | `results/experiment_9012_v769_capstone.json` | Planned |
+
+
+## V770 planned traceability — 2026-11-11
+
+| Requirement and scenario | Task | Deliverable | Status |
+|---|---|---|---|
+| REQ-REPORT-9013-V770; SCENARIO-REPORT-9013-V770 | `exp9013-branch-contract` | `results/experiment_9013_v770_branch_contract.json` | Planned |
+| REQ-REPORT-9014-V770; SCENARIO-REPORT-9014-V770 | `exp9014-scoped-provenance-qualification` | `results/experiment_9014_v770_scoped_provenance_qualification.json` | Planned |
+| REQ-REPORT-9015-V770; SCENARIO-REPORT-9015-V770 | `exp9015-human-disagreement-source` | `results/experiment_9015_v770_human_disagreement_source.json` | Planned |
+| REQ-REPORT-9016-V770; SCENARIO-REPORT-9016-V770 | `exp9016-retained-shard-a` | `results/experiment_9016_v770_retained_shard_a.json` | Planned |
+| REQ-REPORT-9017-V770; SCENARIO-REPORT-9017-V770 | `exp9017-graph-corpus-b` | `results/experiment_9017_v770_graph_corpus_b.json` | Planned |
+| REQ-REPORT-9018-V770; SCENARIO-REPORT-9018-V770 | `exp9018-corpus-admission` | `results/experiment_9018_v770_corpus_admission.json` | Planned |
+| REQ-REPORT-9019-V770; SCENARIO-REPORT-9019-V770 | `exp9019-human-pilot-methods` | `results/experiment_9019_v770_human_pilot_methods.json` | Planned |
+| REQ-REPORT-9020-V770; SCENARIO-REPORT-9020-V770 | `exp9020-spline-calibrated-decisions` | `results/experiment_9020_v770_spline_calibrated_decisions.json` | Planned |
+| REQ-REPORT-9021-V770; SCENARIO-REPORT-9021-V770 | `exp9021-online-spline-streams` | `results/experiment_9021_v770_online_spline_streams.json` | Planned |
+| REQ-REPORT-9022-V770; SCENARIO-REPORT-9022-V770 | `exp9022-online-benefit-audit` | `results/experiment_9022_v770_online_benefit_audit.json` | Planned |
+| REQ-REPORT-9023-V770; SCENARIO-REPORT-9023-V770 | `exp9023-human-energy-pilot` | `results/experiment_9023_v770_human_energy_pilot.json` | Planned |
+| REQ-REPORT-9024-V770; SCENARIO-REPORT-9024-V770 | `exp9024-complete-spline-cost` | `results/experiment_9024_v770_complete_spline_cost.json` | Planned |
+| REQ-REPORT-9025-V770; SCENARIO-REPORT-9025-V770 | `exp9025-arc-transfer-evidence` | `results/experiment_9025_v770_arc_transfer_evidence.json` | Planned |
+| REQ-REPORT-9026-V770; SCENARIO-REPORT-9026-V770 | `exp9026-capstone` | `results/experiment_9026_v770_capstone.json` | Planned |
